@@ -25,7 +25,7 @@ SECRET_KEY = 'grb%s=$ddb_0&alrc^5w$0g7%wgj@^%m$9l64m6!pg9-z)l+h_'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
