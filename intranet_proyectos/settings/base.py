@@ -40,6 +40,8 @@ DJANGO_APPS = [
 
 MY_APPS = [
     'index.apps.IndexConfig',
+    'cguno.apps.CgunoConfig',
+    'model_utils',
 ]
 
 THIRD_PART_APPS = [
