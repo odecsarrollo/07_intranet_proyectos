@@ -19,4 +19,4 @@ class ItemBiableAdmin(admin.ModelAdmin):
     list_filter = ['activo']
 
 
-admin.site.register(ItemsBiable)
+admin.site.register(ItemsBiable, ItemBiableAdmin)
