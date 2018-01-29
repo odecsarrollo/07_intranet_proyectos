@@ -18,6 +18,7 @@ class ItemBiableAdmin(admin.ModelAdmin):
     readonly_fields = [
         'id_item',
         'id_referencia',
+        'descripcion_dos',
         'descripcion',
         'activo',
         'nombre_tercero',

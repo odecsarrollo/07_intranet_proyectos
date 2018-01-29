@@ -15,7 +15,7 @@ class ItemsBiable(models.Model):
 
     class Meta:
         verbose_name = 'Item'
-        verbose_name_plural = 'C-2.1 Items'
+        verbose_name_plural = 'Items'
 
     def __str__(self):
         return self.descripcion
