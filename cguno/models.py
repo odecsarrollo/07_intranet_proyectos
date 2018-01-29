@@ -1,8 +1,7 @@
 from django.db import models
-from model_utils.models import TimeStampedModel
 
 
-class ItemsBiable(TimeStampedModel):
+class ItemsBiable(models.Model):
     id_item = models.PositiveIntegerField(primary_key=True)
     id_referencia = models.CharField(max_length=20)
     descripcion = models.CharField(max_length=40)
