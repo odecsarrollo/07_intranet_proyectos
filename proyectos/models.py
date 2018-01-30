@@ -15,7 +15,7 @@ class Proyecto(models.Model):
 
 
 class Literal(models.Model):
-    id_literal = models.CharField(max_length=15, primary_key=True)
+    id_literal = models.CharField(max_length=15, unique=True)
     proyecto = models.ForeignKey(Proyecto, related_name='mis_literales', on_delete=models.PROTECT)
     descripcion = models.CharField(max_length=300, null=True, blank=True)
 
