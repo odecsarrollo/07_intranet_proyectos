@@ -1,7 +1,11 @@
 from django.contrib import admin
 
-from .models import Proyecto, Literal
+from .models import Proyecto, Literal, HoraColaboradorLiteralProyecto
 from cguno.models import ItemsLiteralBiable
+
+
+# class HoraColaboradorLiteralProyectoInline(admin.TabularInline):
+#     model = HoraColaboradorLiteralProyecto.literal_proyecto.through
 
 
 class LiteralInLine(admin.TabularInline):
@@ -19,8 +23,11 @@ class ProyectoAdmin(admin.ModelAdmin):
         'cerrado',
         'costo_total'
     ]
-    readonly_fields = ['costo_total',]
-    inlines = [LiteralInLine, ]
+    readonly_fields = ['costo_total', ]
+    inlines = [
+        LiteralInLine,
+        # HoraColaboradorLiteralProyectoInline
+    ]
 
 
 admin.site.register(Proyecto, ProyectoAdmin)
