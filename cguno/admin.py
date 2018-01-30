@@ -32,4 +32,21 @@ class ItemBiableAdmin(admin.ModelAdmin):
 
 admin.site.register(ItemsBiable, ItemBiableAdmin)
 
-admin.site.register(ColaboradorBiable)
+
+class ColaboradorBiableAdmin(admin.ModelAdmin):
+    list_display = [
+        'cedula',
+        'nombres',
+        'apellidos',
+        'en_proyectos',
+        'es_cguno'
+    ]
+    readonly_fields = ['es_cguno']
+    list_filter = [
+        'es_cguno',
+        'en_proyectos'
+    ]
+    search_fields = ['nombres', 'apellidos', 'cedula']
+
+
+admin.site.register(ColaboradorBiable, ColaboradorBiableAdmin)
