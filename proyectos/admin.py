@@ -32,8 +32,8 @@ class ItemLiteralBiableInLine(admin.TabularInline):
 
 
 class LiteralAdmin(admin.ModelAdmin):
-    list_display = ['id_literal', 'descripcion']
-    readonly_fields = ['id_literal', 'descripcion', 'proyecto']
+    list_display = ['id', 'id_literal', 'descripcion']
+    readonly_fields = ['id', 'id_literal', 'descripcion', 'proyecto']
     inlines = [ItemLiteralBiableInLine, ]
 
 
