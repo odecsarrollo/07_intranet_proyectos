@@ -6,7 +6,7 @@ from cguno.models import ItemsLiteralBiable
 
 class LiteralInLine(admin.TabularInline):
     model = Literal
-    readonly_fields = ['id', 'id_literal', 'descripcion']
+    readonly_fields = ['id', 'id_literal', 'descripcion', 'costo_total']
     extra = 0
     can_delete = False
 
@@ -32,8 +32,8 @@ class ItemLiteralBiableInLine(admin.TabularInline):
 
 
 class LiteralAdmin(admin.ModelAdmin):
-    list_display = ['id', 'id_literal', 'descripcion']
-    readonly_fields = ['id', 'id_literal', 'descripcion', 'proyecto']
+    list_display = ['id', 'id_literal', 'descripcion', 'proyecto', 'costo_total']
+    readonly_fields = ['id', 'id_literal', 'descripcion', 'proyecto', 'costo_total']
     inlines = [ItemLiteralBiableInLine, ]
 
 
