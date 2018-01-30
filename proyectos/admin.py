@@ -16,8 +16,10 @@ class ProyectoAdmin(admin.ModelAdmin):
         'id',
         'id_proyecto',
         'fecha_prometida',
-        'cerrado'
+        'cerrado',
+        'costo_total'
     ]
+    readonly_fields = ['costo_total',]
     inlines = [LiteralInLine, ]
 
 

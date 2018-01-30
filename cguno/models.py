@@ -26,7 +26,7 @@ class ItemsLiteralBiable(models.Model):
     item_biable = models.ForeignKey(ItemsBiable, on_delete=models.PROTECT)
     literal = models.ForeignKey(Literal, on_delete=models.PROTECT, verbose_name='mis_items_biable')
     cantidad = models.DecimalField(decimal_places=2, max_digits=10)
-    costo_total = models.DecimalField(decimal_places=2, max_digits=10)
+    costo_total = models.DecimalField(decimal_places=2, max_digits=12)
 
     class Meta:
         verbose_name = 'Item Literales Proyecto'
