@@ -41,6 +41,7 @@ DJANGO_APPS = [
 MY_APPS = [
     'index.apps.IndexConfig',
     'cguno.apps.CgunoConfig',
+    'proyectos.apps.ProyectosConfig',
     'model_utils',
 ]
 
