@@ -18,7 +18,6 @@ class Literal(models.Model):
     id_literal = models.CharField(max_length=15, primary_key=True)
     proyecto = models.ForeignKey(Proyecto, related_name='mis_literales', on_delete=models.PROTECT)
     descripcion = models.CharField(max_length=300, null=True, blank=True)
-    fecha_iniciacion = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return self.id_literal
