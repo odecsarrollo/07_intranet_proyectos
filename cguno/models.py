@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 from proyectos.models import Literal
 
 
@@ -35,3 +36,19 @@ class ItemsLiteralBiable(models.Model):
 
     def __str__(self):
         return self.item_biable.descripcion
+
+
+class ColaboradorBiable(models.Model):
+    usuario = models.OneToOneField(User, related_name='colaborador', on_delete=models.PROTECT)
+    cedula = models.CharField(max_length=20, unique=True)
+    nombres = models.CharField(max_length=200, null=True, blank=True)
+    apellidos = models.CharField(max_length=200, null=True, blank=True)
+    en_proyectos = models.BooleanField(default=False)
+    es_cguno = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = 'Colaborador'
+        verbose_name_plural = 'Colaboradores'
+
+    def __str__(self):
+        return '%s %s' % (self.nombres, self.apellidos)

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import ItemsBiable
+from .models import ItemsBiable, ColaboradorBiable
 
 
 class ItemBiableAdmin(admin.ModelAdmin):
@@ -31,3 +31,5 @@ class ItemBiableAdmin(admin.ModelAdmin):
 
 
 admin.site.register(ItemsBiable, ItemBiableAdmin)
+
+admin.site.register(ColaboradorBiable)
