@@ -39,7 +39,7 @@ class ItemsLiteralBiable(models.Model):
 
 
 class ColaboradorBiable(models.Model):
-    usuario = models.OneToOneField(User, related_name='colaborador', on_delete=models.PROTECT)
+    usuario = models.OneToOneField(User, related_name='colaborador', on_delete=models.PROTECT, null=True, blank=True)
     cedula = models.CharField(max_length=20, unique=True)
     nombres = models.CharField(max_length=200, null=True, blank=True)
     apellidos = models.CharField(max_length=200, null=True, blank=True)
