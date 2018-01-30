@@ -31,6 +31,7 @@ class ItemsLiteralBiable(models.Model):
     class Meta:
         verbose_name = 'Item Literales Proyecto'
         verbose_name_plural = 'Items Literales Proyecto'
+        unique_together = ['item_biable', 'literal']
 
     def __str__(self):
         return self.item_biable.descripcion
