@@ -4,8 +4,8 @@ from .models import Proyecto, Literal, HoraColaboradorLiteralProyecto
 from cguno.models import ItemsLiteralBiable
 
 
-# class HoraColaboradorLiteralProyectoInline(admin.TabularInline):
-#     model = HoraColaboradorLiteralProyecto.literal_proyecto.through
+class HoraColaboradorLiteralProyectoInline(admin.TabularInline):
+    model = HoraColaboradorLiteralProyecto
 
 
 class LiteralInLine(admin.TabularInline):
@@ -25,8 +25,7 @@ class ProyectoAdmin(admin.ModelAdmin):
     ]
     readonly_fields = ['costo_total', ]
     inlines = [
-        LiteralInLine,
-        # HoraColaboradorLiteralProyectoInline
+        LiteralInLine
     ]
 
 
@@ -43,7 +42,10 @@ class ItemLiteralBiableInLine(admin.TabularInline):
 class LiteralAdmin(admin.ModelAdmin):
     list_display = ['id', 'id_literal', 'descripcion', 'proyecto', 'costo_total']
     readonly_fields = ['id', 'id_literal', 'descripcion', 'proyecto', 'costo_total']
-    inlines = [ItemLiteralBiableInLine, ]
+    inlines = [
+        ItemLiteralBiableInLine,
+        HoraColaboradorLiteralProyectoInline
+    ]
 
 
 admin.site.register(Literal, LiteralAdmin)
