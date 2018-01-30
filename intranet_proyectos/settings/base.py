@@ -132,3 +132,4 @@ USE_THOUSAND_SEPARATOR = True
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = "media"
+STATIC_ROOT = "/static/"
