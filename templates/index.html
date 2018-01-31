@@ -1,4 +1,5 @@
 {% load static %}
+{% load render_bundle from webpack_loader %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,6 +22,11 @@
     </div>
     <div class="col-12 col-md-6">
         <i class="fab fa-accessible-icon">ja</i>
+    </div>
+    <div class="col-12">
+        <div class="cosa">
+        </div>
+        {% render_bundle 'app' %}
     </div>
 </div>
 

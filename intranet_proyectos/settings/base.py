@@ -47,6 +47,7 @@ MY_APPS = [
 THIRD_PART_APPS = [
     'model_utils',
     'rest_framework',
+    'webpack_loader',
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
