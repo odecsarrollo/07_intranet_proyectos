@@ -42,11 +42,11 @@ MY_APPS = [
     'index.apps.IndexConfig',
     'cguno.apps.CgunoConfig',
     'proyectos.apps.ProyectosConfig',
-    'model_utils',
 ]
 
 THIRD_PART_APPS = [
-
+    'model_utils',
+    'rest_framework',
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
