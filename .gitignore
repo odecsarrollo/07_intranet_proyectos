@@ -3,3 +3,4 @@ db.sqlite3
 /intranet_proyectos/settings/production.py
 /secretsLocal.json
 /cositas.txt
+/node_modules
