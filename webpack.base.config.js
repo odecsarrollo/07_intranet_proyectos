@@ -8,7 +8,7 @@ module.exports = {
     context: __dirname,
     entry: {
         //'admin_usuarios': './static/assets/js/admin_usuarios/index',
-        'app': './static/assets/js/base_react/index'
+        'app': './static/assets/js/03_app/index'
         //'programador_modelos': './static/assets/js/programador_modelos/index'
     },
     output: {
