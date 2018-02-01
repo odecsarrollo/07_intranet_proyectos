@@ -1,22 +1,12 @@
+{% extends 'base.html' %}
 {% load static %}
 {% load render_bundle from webpack_loader %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-            crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-            crossorigin="anonymous"></script>
-    <script defer src="{% static 'js/fontawesome-all.min.js' %}"></script>
-    <script defer src="{% static 'js/bootstrap.min.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <meta charset="UTF-8">
-    <title>Odecopack Proyectos</title>
-</head>
-<body>
-<div class="row">
+
+{% block title %}
+    N Odecopack Proyectos
+{% endblock %}
+
+{% block content %}
     <div class="col-12 col-md-6">
         Página de Inicio de Proyectos desde fuera hola
     </div>
@@ -28,7 +18,4 @@
         </div>
         {% render_bundle 'app' %}
     </div>
-</div>
-
-</body>
-</html>
+{% endblock %}

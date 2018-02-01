@@ -31,6 +31,8 @@ ALLOWED_HOSTS = ['*']
 
 DJANGO_APPS = [
     'django.contrib.admin',
+    'django.contrib.sites',
+    'registration',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -46,6 +48,7 @@ MY_APPS = [
 
 THIRD_PART_APPS = [
     'model_utils',
+    'crispy_forms',
     'rest_framework',
     'webpack_loader',
 ]
@@ -124,6 +127,8 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+SITE_ID = 1
 
 USE_THOUSAND_SEPARATOR = True
 
