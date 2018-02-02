@@ -18,6 +18,7 @@ const createStoreWithMiddleware = applyMiddleware(ReduxPromise, thunk)(createSto
 const store = createStoreWithMiddleware(reducers);
 
 import ProyectosList from './00_maestras/containers/proyectos/proyectos/proyectos_list';
+import ProyectosDetail from './00_maestras/containers/proyectos/proyectos/proyectos_detail';
 
 
 ReactDOM.render(
@@ -31,6 +32,7 @@ ReactDOM.render(
                     </div>
                     <Switch>
                         <Route path='/app/maestras/proyectos/proyectos/list' component={ProyectosList}/>
+                        <Route path='/app/maestras/proyectos/proyectos/detail/:id' component={ProyectosDetail}/>
                     </Switch>
                 </div>
             </BrowserRouter>

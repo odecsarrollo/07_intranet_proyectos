@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {formatMoney} from 'accounting';
+import {Link} from 'react-router-dom';
 
 export default class TablaProyectos extends Component {
     renderItemTabla(item, onSelectItem) {
@@ -7,10 +8,6 @@ export default class TablaProyectos extends Component {
         return (
             <tr key={item.id}
                 className={item_seleccionado && item_seleccionado.id === item.id ? 'tr-seleccionado' : ''}
-                style={{cursor: "pointer"}}
-                onClick={() => {
-                    onSelectItem(item)
-                }}
             >
                 <td>
                     {item.id_proyecto}
@@ -19,7 +16,22 @@ export default class TablaProyectos extends Component {
                     {formatMoney(Number(item.costo_materiales), "$", 0, ".", ",")}
                 </td>
                 <td className='text-center'>
-                    {item.abierto && <div><i className="fas fa-check"></i></div>}
+                    {item.abierto && <i className="fas fa-check"></i>}
+                </td>
+                <td className='text-center'>
+                    <i className="fas fa-edit"
+                       style={{cursor: "pointer"}}
+                       onClick={() => {
+                           onSelectItem(item)
+                       }}
+                    ></i>
+                </td>
+                <td className='text-center'>
+                    {item.mis_literales.length > 0 &&
+                    <Link className="right" to={`/app/maestras/proyectos/proyectos/detail/${item.id}`}>
+                        <i className="fas fa-plus"></i>
+                    </Link>
+                    }
                 </td>
             </tr>
         )
@@ -34,6 +46,8 @@ export default class TablaProyectos extends Component {
                     <th>Proyecto</th>
                     <th>Costo Materiales</th>
                     <th>Abierto</th>
+                    <th>Editar</th>
+                    <th>Ver Literales</th>
                 </tr>
                 </thead>
                 <tbody>

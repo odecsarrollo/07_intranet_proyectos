@@ -8130,12 +8130,19 @@ Object.defineProperty(exports, "__esModule", {
 });
 var FETCH_PERMISSIONS = exports.FETCH_PERMISSIONS = 'fetch_permisos';
 
-////empresas
+////proyectos
 var FETCH_PROYECTOS = exports.FETCH_PROYECTOS = 'fetch_proyectos';
 var FETCH_PROYECTO = exports.FETCH_PROYECTO = 'fetch_proyecto';
 var UPDATE_PROYECTO = exports.UPDATE_PROYECTO = 'update_proyecto';
 var CREATE_PROYECTO = exports.CREATE_PROYECTO = 'create_proyecto';
 var DELETE_PROYECTO = exports.DELETE_PROYECTO = 'delete_proyecto';
+
+////literales
+var FETCH_LITERALES = exports.FETCH_LITERALES = 'fetch_literales';
+var FETCH_LITERAL = exports.FETCH_LITERAL = 'fetch_literal';
+
+////items literales
+var FETCH_ITEMS_LITERALES = exports.FETCH_ITEMS_LITERALES = 'fetch_items_literales';
 
 //usuarios
 var FETCH_MI_CUENTA = exports.FETCH_MI_CUENTA = 'fetch_mi_cuenta';
@@ -26237,6 +26244,10 @@ var _proyectos_list = __webpack_require__(602);
 
 var _proyectos_list2 = _interopRequireDefault(_proyectos_list);
 
+var _proyectos_detail = __webpack_require__(700);
+
+var _proyectos_detail2 = _interopRequireDefault(_proyectos_detail);
+
 function _interopRequireDefault(obj) {
     return obj && obj.__esModule ? obj : { default: obj };
 }
@@ -26244,7 +26255,7 @@ function _interopRequireDefault(obj) {
 var createStoreWithMiddleware = (0, _redux.applyMiddleware)(_reduxPromise2.default, _reduxThunk2.default)(_redux.createStore);
 var store = createStoreWithMiddleware(_index2.default);
 
-_reactDom2.default.render(_react2.default.createElement(_reactRedux.Provider, { store: store }, _react2.default.createElement(_MuiThemeProvider2.default, { muiTheme: (0, _getMuiTheme2.default)() }, _react2.default.createElement(_reactRouterDom.BrowserRouter, null, _react2.default.createElement('div', null, _react2.default.createElement(_reactReduxNotify.Notify, null), _react2.default.createElement('div', { id: 'react-no-print' }, _react2.default.createElement(_menu2.default, null)), _react2.default.createElement(_reactRouterDom.Switch, null, _react2.default.createElement(_reactRouterDom.Route, { path: '/app/maestras/proyectos/proyectos/list', component: _proyectos_list2.default })))))), document.querySelector('.react_app'));
+_reactDom2.default.render(_react2.default.createElement(_reactRedux.Provider, { store: store }, _react2.default.createElement(_MuiThemeProvider2.default, { muiTheme: (0, _getMuiTheme2.default)() }, _react2.default.createElement(_reactRouterDom.BrowserRouter, null, _react2.default.createElement('div', null, _react2.default.createElement(_reactReduxNotify.Notify, null), _react2.default.createElement('div', { id: 'react-no-print' }, _react2.default.createElement(_menu2.default, null)), _react2.default.createElement(_reactRouterDom.Switch, null, _react2.default.createElement(_reactRouterDom.Route, { path: '/app/maestras/proyectos/proyectos/list', component: _proyectos_list2.default }), _react2.default.createElement(_reactRouterDom.Route, { path: '/app/maestras/proyectos/proyectos/detail/:id', component: _proyectos_detail2.default })))))), document.querySelector('.react_app'));
 
 /***/ }),
 /* 251 */
@@ -38695,12 +38706,22 @@ var _proyectosReducer = __webpack_require__(531);
 
 var _proyectosReducer2 = _interopRequireDefault(_proyectosReducer);
 
+var _literalesReducer = __webpack_require__(703);
+
+var _literalesReducer2 = _interopRequireDefault(_literalesReducer);
+
+var _itemsliteralesReducer = __webpack_require__(704);
+
+var _itemsliteralesReducer2 = _interopRequireDefault(_itemsliteralesReducer);
+
 function _interopRequireDefault(obj) {
     return obj && obj.__esModule ? obj : { default: obj };
 }
 
 var rootReducer = (0, _redux.combineReducers)({
+    literales: _literalesReducer2.default,
     proyectos: _proyectosReducer2.default,
+    items_literales: _itemsliteralesReducer2.default,
     notifications: _reactReduxNotify2.default,
     form: _reduxForm.reducer
 });
@@ -60527,6 +60548,30 @@ Object.keys(_proyectosAction).forEach(function (key) {
   });
 });
 
+var _literalesAction = __webpack_require__(702);
+
+Object.keys(_literalesAction).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _literalesAction[key];
+    }
+  });
+});
+
+var _itemsliteralesAction = __webpack_require__(705);
+
+Object.keys(_itemsliteralesAction).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _itemsliteralesAction[key];
+    }
+  });
+});
+
 /***/ }),
 /* 604 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -62836,6 +62881,8 @@ var _react2 = _interopRequireDefault(_react);
 
 var _accounting = __webpack_require__(631);
 
+var _reactRouterDom = __webpack_require__(152);
+
 function _interopRequireDefault(obj) {
     return obj && obj.__esModule ? obj : { default: obj };
 }
@@ -62873,12 +62920,13 @@ var TablaProyectos = function (_Component) {
             var item_seleccionado = this.props.item_seleccionado;
 
             return _react2.default.createElement('tr', { key: item.id,
-                className: item_seleccionado && item_seleccionado.id === item.id ? 'tr-seleccionado' : '',
+                className: item_seleccionado && item_seleccionado.id === item.id ? 'tr-seleccionado' : ''
+            }, _react2.default.createElement('td', null, item.id_proyecto), _react2.default.createElement('td', null, (0, _accounting.formatMoney)(Number(item.costo_materiales), "$", 0, ".", ",")), _react2.default.createElement('td', { className: 'text-center' }, item.abierto && _react2.default.createElement('i', { className: 'fas fa-check' })), _react2.default.createElement('td', { className: 'text-center' }, _react2.default.createElement('i', { className: 'fas fa-edit',
                 style: { cursor: "pointer" },
                 onClick: function onClick() {
                     onSelectItem(item);
                 }
-            }, _react2.default.createElement('td', null, item.id_proyecto), _react2.default.createElement('td', null, (0, _accounting.formatMoney)(Number(item.costo_materiales), "$", 0, ".", ",")), _react2.default.createElement('td', { className: 'text-center' }, item.abierto && _react2.default.createElement('div', null, _react2.default.createElement('i', { className: 'fas fa-check' }))));
+            })), _react2.default.createElement('td', { className: 'text-center' }, item.mis_literales.length > 0 && _react2.default.createElement(_reactRouterDom.Link, { className: 'right', to: '/app/maestras/proyectos/proyectos/detail/' + item.id }, _react2.default.createElement('i', { className: 'fas fa-plus' }))));
         }
     }, {
         key: 'render',
@@ -62889,7 +62937,7 @@ var TablaProyectos = function (_Component) {
                 lista = _props.lista,
                 onSelectItem = _props.onSelectItem;
 
-            return _react2.default.createElement('table', { className: 'table table-responsive table-striped tabla-maestra' }, _react2.default.createElement('thead', null, _react2.default.createElement('tr', null, _react2.default.createElement('th', null, 'Proyecto'), _react2.default.createElement('th', null, 'Costo Materiales'), _react2.default.createElement('th', null, 'Abierto'))), _react2.default.createElement('tbody', null, _.map(lista, function (item) {
+            return _react2.default.createElement('table', { className: 'table table-responsive table-striped tabla-maestra' }, _react2.default.createElement('thead', null, _react2.default.createElement('tr', null, _react2.default.createElement('th', null, 'Proyecto'), _react2.default.createElement('th', null, 'Costo Materiales'), _react2.default.createElement('th', null, 'Abierto'), _react2.default.createElement('th', null, 'Editar'), _react2.default.createElement('th', null, 'Ver Literales'))), _react2.default.createElement('tbody', null, _.map(lista, function (item) {
                 return _this2.renderItemTabla(item, onSelectItem);
             })), _react2.default.createElement('tfoot', null));
         }
@@ -73593,6 +73641,638 @@ function CargarDatos(props) {
         }
     }, _react2.default.createElement('i', { className: 'fas fa-sync-alt fa-2x', 'aria-hidden': 'true' }));
 }
+
+/***/ }),
+/* 700 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () {
+    function defineProperties(target, props) {
+        for (var i = 0; i < props.length; i++) {
+            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+        }
+    }return function (Constructor, protoProps, staticProps) {
+        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+    };
+}();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(21);
+
+var _index = __webpack_require__(603);
+
+var actions = _interopRequireWildcard(_index);
+
+var _proyectos_literales_tabla = __webpack_require__(701);
+
+var _proyectos_literales_tabla2 = _interopRequireDefault(_proyectos_literales_tabla);
+
+var _proyectos_literales_detail = __webpack_require__(706);
+
+var _proyectos_literales_detail2 = _interopRequireDefault(_proyectos_literales_detail);
+
+function _interopRequireWildcard(obj) {
+    if (obj && obj.__esModule) {
+        return obj;
+    } else {
+        var newObj = {};if (obj != null) {
+            for (var key in obj) {
+                if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
+            }
+        }newObj.default = obj;return newObj;
+    }
+}
+
+function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { default: obj };
+}
+
+function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+        throw new TypeError("Cannot call a class as a function");
+    }
+}
+
+function _possibleConstructorReturn(self, call) {
+    if (!self) {
+        throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }return call && ((typeof call === "undefined" ? "undefined" : _typeof(call)) === "object" || typeof call === "function") ? call : self;
+}
+
+function _inherits(subClass, superClass) {
+    if (typeof superClass !== "function" && superClass !== null) {
+        throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : _typeof(superClass)));
+    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+var ProyectoDetail = function (_Component) {
+    _inherits(ProyectoDetail, _Component);
+
+    function ProyectoDetail(props) {
+        _classCallCheck(this, ProyectoDetail);
+
+        var _this = _possibleConstructorReturn(this, (ProyectoDetail.__proto__ || Object.getPrototypeOf(ProyectoDetail)).call(this, props));
+
+        _this.state = {
+            busqueda: "",
+            item_seleccionado: null,
+            mostrar_literal_info: false
+        };
+        return _this;
+    }
+
+    _createClass(ProyectoDetail, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var id = this.props.match.params.id;
+
+            this.props.fetchProyecto(id);
+        }
+    }, {
+        key: 'onLiteralSelect',
+        value: function onLiteralSelect(item) {
+            var _this2 = this;
+
+            var error_callback = function error_callback(error) {
+                _this2.props.notificarErrorAjaxAction(error);
+            };
+            this.props.fetchLiteral(item.id, function (response) {
+                _this2.setState({ item_seleccionado: response, mostrar_literal_info: true });
+                _this2.props.fetchItemsLiterales(response.id, null, error_callback);
+            }, error_callback);
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var _props = this.props,
+                proyecto = _props.proyecto,
+                items_literales = _props.items_literales;
+            var item_seleccionado = this.state.item_seleccionado;
+
+            if (!proyecto) {
+                return _react2.default.createElement('div', null, 'Cargando ...');
+            }
+            return _react2.default.createElement('div', { className: 'row' }, _react2.default.createElement('div', { className: 'col-12' }, _react2.default.createElement('h3', { className: 'h3-responsive' }, 'Proyecto: ', _react2.default.createElement('small', null, proyecto.id_proyecto))), _react2.default.createElement('div', { className: 'col-12 col-md-4 col-lg-3' }, _react2.default.createElement('h5', { className: 'h5-responsive' }, 'Literales'), _react2.default.createElement(_proyectos_literales_tabla2.default, {
+                lista_literales: proyecto.mis_literales,
+                onSelectItem: this.onLiteralSelect.bind(this),
+                item_seleccionado: item_seleccionado
+            })), item_seleccionado && _react2.default.createElement('div', { className: 'col-12 col-md-8 col-lg-9' }, _react2.default.createElement(_proyectos_literales_detail2.default, {
+                literal: item_seleccionado,
+                items_literales: items_literales
+            })));
+        }
+    }]);
+
+    return ProyectoDetail;
+}(_react.Component);
+
+function mapPropsToState(state, ownProps) {
+    var id = ownProps.match.params.id;
+
+    return {
+        proyecto: state.proyectos[id],
+        items_literales: state.items_literales
+    };
+}
+
+exports.default = (0, _reactRedux.connect)(mapPropsToState, actions)(ProyectoDetail);
+
+/***/ }),
+/* 701 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () {
+    function defineProperties(target, props) {
+        for (var i = 0; i < props.length; i++) {
+            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+        }
+    }return function (Constructor, protoProps, staticProps) {
+        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+    };
+}();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _accounting = __webpack_require__(631);
+
+function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { default: obj };
+}
+
+function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+        throw new TypeError("Cannot call a class as a function");
+    }
+}
+
+function _possibleConstructorReturn(self, call) {
+    if (!self) {
+        throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }return call && ((typeof call === "undefined" ? "undefined" : _typeof(call)) === "object" || typeof call === "function") ? call : self;
+}
+
+function _inherits(subClass, superClass) {
+    if (typeof superClass !== "function" && superClass !== null) {
+        throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : _typeof(superClass)));
+    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+var TablaProyectosLiterales = function (_Component) {
+    _inherits(TablaProyectosLiterales, _Component);
+
+    function TablaProyectosLiterales() {
+        _classCallCheck(this, TablaProyectosLiterales);
+
+        return _possibleConstructorReturn(this, (TablaProyectosLiterales.__proto__ || Object.getPrototypeOf(TablaProyectosLiterales)).apply(this, arguments));
+    }
+
+    _createClass(TablaProyectosLiterales, [{
+        key: 'renderItemTabla',
+        value: function renderItemTabla(item, onSelectItem) {
+            var item_seleccionado = this.props.item_seleccionado;
+
+            return _react2.default.createElement('tr', { key: item.id,
+                className: item_seleccionado && item_seleccionado.id === item.id ? 'tr-seleccionado' : '',
+                style: { cursor: "pointer" },
+                onClick: function onClick() {
+                    onSelectItem(item);
+                }
+            }, _react2.default.createElement('td', null, item.id_literal), _react2.default.createElement('td', null, (0, _accounting.formatMoney)(Number(item.costo_materiales), "$", 0, ".", ",")));
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var _this2 = this;
+
+            var _props = this.props,
+                lista_literales = _props.lista_literales,
+                onSelectItem = _props.onSelectItem;
+
+            return _react2.default.createElement('table', { className: 'table table-responsive table-striped tabla-maestra' }, _react2.default.createElement('thead', null, _react2.default.createElement('tr', null, _react2.default.createElement('th', null, 'Proyecto'), _react2.default.createElement('th', null, 'Costo Materiales'))), _react2.default.createElement('tbody', null, _.map(lista_literales, function (item) {
+                return _this2.renderItemTabla(item, onSelectItem);
+            })), _react2.default.createElement('tfoot', null));
+        }
+    }]);
+
+    return TablaProyectosLiterales;
+}(_react.Component);
+
+exports.default = TablaProyectosLiterales;
+
+/***/ }),
+/* 702 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.fetchLiterales = fetchLiterales;
+exports.fetchLiteral = fetchLiteral;
+
+var _types = __webpack_require__(137);
+
+var _axios = __webpack_require__(237);
+
+var _axios2 = _interopRequireDefault(_axios);
+
+var _general_fuctions = __webpack_require__(236);
+
+function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { default: obj };
+}
+
+var axios_instance = _axios2.default.create({
+    baseURL: '/api/literales'
+});
+
+var FORMAT = 'format=json';
+
+function fetchLiterales() {
+    var callback = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+    var callback_error = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+    return function (dispatch) {
+        var SUB_URL = '/';
+        var FULL_URL = SUB_URL + '?' + FORMAT;
+        var request = axios_instance.get(FULL_URL);
+        var dispatches = function dispatches(response) {
+            dispatch({ type: _types.FETCH_LITERALES, payload: response });
+        };
+        (0, _general_fuctions.createRequest)(request, dispatches, callback, callback_error);
+    };
+}
+
+function fetchLiteral(id) {
+    var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+    var callback_error = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+
+    return function (dispatch) {
+        var SUB_URL = '/' + id + '/';
+        var FULL_URL = SUB_URL + '?' + FORMAT;
+        var request = axios_instance.get(FULL_URL);
+        var dispatches = function dispatches(response) {
+            dispatch({ type: _types.FETCH_LITERAL, payload: response });
+        };
+        (0, _general_fuctions.createRequest)(request, dispatches, callback, callback_error);
+    };
+}
+
+/***/ }),
+/* 703 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _extends = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+        var source = arguments[i];for (var key in source) {
+            if (Object.prototype.hasOwnProperty.call(source, key)) {
+                target[key] = source[key];
+            }
+        }
+    }return target;
+};
+
+exports.default = function () {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+    var action = arguments[1];
+
+    switch (action.type) {
+        case _types.FETCH_LITERALES:
+            return _lodash2.default.mapKeys(action.payload.data, 'id');
+            break;
+        case _types.FETCH_LITERAL:
+            return _extends({}, state, _defineProperty({}, action.payload.data.id, action.payload.data));
+            break;
+        default:
+            return state;
+    }
+};
+
+var _types = __webpack_require__(137);
+
+var _lodash = __webpack_require__(221);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { default: obj };
+}
+
+function _defineProperty(obj, key, value) {
+    if (key in obj) {
+        Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });
+    } else {
+        obj[key] = value;
+    }return obj;
+}
+
+/***/ }),
+/* 704 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+exports.default = function () {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+    var action = arguments[1];
+
+    switch (action.type) {
+        case _types.FETCH_ITEMS_LITERALES:
+            return _lodash2.default.mapKeys(action.payload.data, 'id');
+            break;
+        default:
+            return state;
+    }
+};
+
+var _types = __webpack_require__(137);
+
+var _lodash = __webpack_require__(221);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { default: obj };
+}
+
+/***/ }),
+/* 705 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.fetchItemsLiterales = fetchItemsLiterales;
+
+var _types = __webpack_require__(137);
+
+var _axios = __webpack_require__(237);
+
+var _axios2 = _interopRequireDefault(_axios);
+
+var _general_fuctions = __webpack_require__(236);
+
+function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { default: obj };
+}
+
+var axios_instance = _axios2.default.create({
+    baseURL: '/api/items_literales'
+});
+
+var FORMAT = 'format=json';
+
+function fetchItemsLiterales(id_literal) {
+    var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+    var callback_error = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+
+    return function (dispatch) {
+        var SUB_URL = '/listar_items_x_literal?id_literal=' + id_literal + '&';
+        var FULL_URL = '' + SUB_URL + FORMAT;
+        var request = axios_instance.get(FULL_URL);
+        var dispatches = function dispatches(response) {
+            dispatch({ type: _types.FETCH_ITEMS_LITERALES, payload: response });
+        };
+        (0, _general_fuctions.createRequest)(request, dispatches, callback, callback_error);
+    };
+}
+
+/***/ }),
+/* 706 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () {
+    function defineProperties(target, props) {
+        for (var i = 0; i < props.length; i++) {
+            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+        }
+    }return function (Constructor, protoProps, staticProps) {
+        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+    };
+}();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _accounting = __webpack_require__(631);
+
+var _TextField = __webpack_require__(48);
+
+var _TextField2 = _interopRequireDefault(_TextField);
+
+var _proyectos_literales_materiales_tabla = __webpack_require__(707);
+
+var _proyectos_literales_materiales_tabla2 = _interopRequireDefault(_proyectos_literales_materiales_tabla);
+
+function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { default: obj };
+}
+
+function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+        throw new TypeError("Cannot call a class as a function");
+    }
+}
+
+function _possibleConstructorReturn(self, call) {
+    if (!self) {
+        throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }return call && ((typeof call === "undefined" ? "undefined" : _typeof(call)) === "object" || typeof call === "function") ? call : self;
+}
+
+function _inherits(subClass, superClass) {
+    if (typeof superClass !== "function" && superClass !== null) {
+        throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : _typeof(superClass)));
+    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+var ProyectoLiteralDetail = function (_Component) {
+    _inherits(ProyectoLiteralDetail, _Component);
+
+    function ProyectoLiteralDetail(props) {
+        _classCallCheck(this, ProyectoLiteralDetail);
+
+        var _this = _possibleConstructorReturn(this, (ProyectoLiteralDetail.__proto__ || Object.getPrototypeOf(ProyectoLiteralDetail)).call(this, props));
+
+        _this.state = {
+            busqueda: ""
+        };
+        return _this;
+    }
+
+    _createClass(ProyectoLiteralDetail, [{
+        key: 'render',
+        value: function render() {
+            var _this2 = this;
+
+            var _props = this.props,
+                literal = _props.literal,
+                items_literales = _props.items_literales;
+            var busqueda = this.state.busqueda;
+
+            if (!literal || !items_literales) {
+                return _react2.default.createElement('div', null, 'Cargando ...');
+            }
+
+            var listado_materiales = items_literales;
+
+            if (!busqueda.toUpperCase().includes('TODO')) {
+                listado_materiales = _.pickBy(items_literales, function (objeto) {
+                    return objeto.item_biable.descripcion.toUpperCase().includes(busqueda.toUpperCase()) || objeto.item_biable.id_referencia.toUpperCase().includes(busqueda.toUpperCase()) || objeto.item_biable.id_item.toString().toUpperCase().includes(busqueda.toUpperCase());
+                });
+            }
+
+            return _react2.default.createElement('div', { className: 'row' }, _react2.default.createElement('div', { className: 'col-12' }, _react2.default.createElement('h4', { className: 'h4-responsive' }, 'Literal: ', _react2.default.createElement('small', null, literal.id_literal))), _react2.default.createElement('div', { className: 'col-12' }, _react2.default.createElement('div', { className: 'row' }, _react2.default.createElement('div', { className: 'col-12' }, _react2.default.createElement('h5', { className: 'h5-response' }, literal.descripcion)), _react2.default.createElement('div', { className: 'col-12' }, _react2.default.createElement('h6', { className: 'h6-response' }, 'Costo Materiales: ', _react2.default.createElement('small', null, (0, _accounting.formatMoney)(Number(literal.costo_materiales), "$", 0, ".", ",")))), _react2.default.createElement('div', { className: 'col-12' }, _react2.default.createElement(_TextField2.default, {
+                floatingLabelText: 'A buscar',
+                fullWidth: true,
+                onChange: function onChange(e) {
+                    _this2.setState({ busqueda: e.target.value });
+                },
+                autoComplete: 'off',
+                value: busqueda
+            })), _react2.default.createElement('div', { className: 'col-12' }, _react2.default.createElement(_proyectos_literales_materiales_tabla2.default, { lista_materiales: listado_materiales })))));
+        }
+    }]);
+
+    return ProyectoLiteralDetail;
+}(_react.Component);
+
+exports.default = ProyectoLiteralDetail;
+
+/***/ }),
+/* 707 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () {
+    function defineProperties(target, props) {
+        for (var i = 0; i < props.length; i++) {
+            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+        }
+    }return function (Constructor, protoProps, staticProps) {
+        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+    };
+}();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _accounting = __webpack_require__(631);
+
+function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { default: obj };
+}
+
+function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+        throw new TypeError("Cannot call a class as a function");
+    }
+}
+
+function _possibleConstructorReturn(self, call) {
+    if (!self) {
+        throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }return call && ((typeof call === "undefined" ? "undefined" : _typeof(call)) === "object" || typeof call === "function") ? call : self;
+}
+
+function _inherits(subClass, superClass) {
+    if (typeof superClass !== "function" && superClass !== null) {
+        throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : _typeof(superClass)));
+    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+var TablaProyectosLiteralesMateriales = function (_Component) {
+    _inherits(TablaProyectosLiteralesMateriales, _Component);
+
+    function TablaProyectosLiteralesMateriales() {
+        _classCallCheck(this, TablaProyectosLiteralesMateriales);
+
+        return _possibleConstructorReturn(this, (TablaProyectosLiteralesMateriales.__proto__ || Object.getPrototypeOf(TablaProyectosLiteralesMateriales)).apply(this, arguments));
+    }
+
+    _createClass(TablaProyectosLiteralesMateriales, [{
+        key: 'renderItemTabla',
+        value: function renderItemTabla(item) {
+            var item_biable = item.item_biable;
+
+            return _react2.default.createElement('tr', { key: item.id }, _react2.default.createElement('td', null, item_biable.id_item), _react2.default.createElement('td', null, item_biable.id_referencia), _react2.default.createElement('td', null, item_biable.descripcion), _react2.default.createElement('td', null, item.cantidad), _react2.default.createElement('td', null, item_biable.unidad_medida_inventario), _react2.default.createElement('td', null, (0, _accounting.formatMoney)(Number(item.costo_total), "$", 0, ".", ",")));
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var _this2 = this;
+
+            var lista_materiales = this.props.lista_materiales;
+
+            return _react2.default.createElement('table', { className: 'table table-responsive table-striped tabla-maestra' }, _react2.default.createElement('thead', null, _react2.default.createElement('tr', null, _react2.default.createElement('th', null, 'Id CGUNO'), _react2.default.createElement('th', null, 'Referencia'), _react2.default.createElement('th', null, 'Nombre'), _react2.default.createElement('th', null, 'Cantidad'), _react2.default.createElement('th', null, 'Unidad'), _react2.default.createElement('th', null, 'Costo Total'))), _react2.default.createElement('tbody', null, _.map(lista_materiales, function (item) {
+                return _this2.renderItemTabla(item);
+            })), _react2.default.createElement('tfoot', null));
+        }
+    }]);
+
+    return TablaProyectosLiteralesMateriales;
+}(_react.Component);
+
+exports.default = TablaProyectosLiteralesMateriales;
 
 /***/ })
 /******/ ]);

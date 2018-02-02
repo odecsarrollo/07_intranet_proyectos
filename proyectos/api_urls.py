@@ -6,4 +6,4 @@ from .api_views import (
 
 router = routers.DefaultRouter()
 router.register(r'proyectos', ProyectoViewSet)
-router.register(r'literal', LiteralViewSet)
+router.register(r'literales', LiteralViewSet)
