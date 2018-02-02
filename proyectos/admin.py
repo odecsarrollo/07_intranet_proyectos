@@ -10,7 +10,7 @@ class HoraColaboradorLiteralProyectoInline(admin.TabularInline):
 
 class LiteralInLine(admin.TabularInline):
     model = Literal
-    readonly_fields = ['id', 'id_literal', 'descripcion', 'costo_total']
+    readonly_fields = ['id', 'id_literal', 'descripcion', 'costo_materiales']
     extra = 0
     can_delete = False
 
@@ -20,10 +20,10 @@ class ProyectoAdmin(admin.ModelAdmin):
         'id',
         'id_proyecto',
         'fecha_prometida',
-        'cerrado',
-        'costo_total'
+        'abierto',
+        'costo_materiales'
     ]
-    readonly_fields = ['costo_total', ]
+    readonly_fields = ['costo_materiales', ]
     inlines = [
         LiteralInLine
     ]
@@ -40,8 +40,8 @@ class ItemLiteralBiableInLine(admin.TabularInline):
 
 
 class LiteralAdmin(admin.ModelAdmin):
-    list_display = ['id', 'id_literal', 'descripcion', 'proyecto', 'costo_total']
-    readonly_fields = ['id', 'id_literal', 'descripcion', 'proyecto', 'costo_total']
+    list_display = ['id', 'id_literal', 'descripcion', 'proyecto', 'costo_materiales']
+    readonly_fields = ['id', 'id_literal', 'descripcion', 'proyecto', 'costo_materiales']
     inlines = [
         ItemLiteralBiableInLine,
         HoraColaboradorLiteralProyectoInline

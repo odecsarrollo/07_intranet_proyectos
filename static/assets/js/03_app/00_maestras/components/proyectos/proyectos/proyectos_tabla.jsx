@@ -16,10 +16,10 @@ export default class TablaProyectos extends Component {
                     {item.id_proyecto}
                 </td>
                 <td>
-                    {formatMoney(Number(item.costo_total), "$", 0, ".", ",")}
+                    {formatMoney(Number(item.costo_materiales), "$", 0, ".", ",")}
                 </td>
                 <td className='text-center'>
-                    {!item.cerrado && <div><i className="fas fa-check"></i></div>}
+                    {item.abierto && <div><i className="fas fa-check"></i></div>}
                 </td>
             </tr>
         )

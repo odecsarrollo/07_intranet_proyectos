@@ -18,7 +18,8 @@ class ProyectoForm extends Component {
             reset,
             onCancel,
             onDelete,
-            initialValues
+            initialValues,
+            cantidad_literales
         } = this.props;
         return (
             <form className="card" onSubmit={handleSubmit(onSubmit)}>
@@ -26,21 +27,24 @@ class ProyectoForm extends Component {
                     <h5 className="h5-responsive mt-2">{initialValues ? 'Editar ' : 'Crear '} Proyecto</h5>
                     <div className="row">
                         <div className="col-12">
-                            <Field
-                                fullWidth={true}
-                                name="id_proyecto"
-                                component={TextField}
-                                hintText="OP Proyecto"
-                                autoComplete="off"
-                                floatingLabelText="OP Proyecto"
-                                normalize={upper}
-                            />
+                            {cantidad_literales === 0 || !initialValues ?
+                                <Field
+                                    fullWidth={true}
+                                    name="id_proyecto"
+                                    component={TextField}
+                                    hintText="OP Proyecto"
+                                    autoComplete="off"
+                                    floatingLabelText="OP Proyecto"
+                                    normalize={upper}
+                                /> :
+                                <span>{initialValues.id_proyecto}</span>
+                            }
                         </div>
                         <div className="col-12">
                             <Field
-                                name="cerrado"
+                                name="abierto"
                                 component={Checkbox}
-                                label="Esta Cerrado"
+                                label="Proyecto Abierto"
                                 normalize={v => !!v}
                             />
                         </div>

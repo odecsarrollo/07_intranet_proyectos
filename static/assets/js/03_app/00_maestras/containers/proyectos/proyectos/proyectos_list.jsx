@@ -122,6 +122,7 @@ class ProyectoLista extends Component {
                             item_seleccionado={item_seleccionado}
                             onCancel={this.onCancel.bind(this)}
                             onDelete={this.onDelete.bind(this)}
+                            cantidad_literales={item_seleccionado ? item_seleccionado.mis_literales.length : 0}
                         />
                     </div>
                 }
