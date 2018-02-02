@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import * as actions from '../../../../../01_actions/01_index';
 import TablaProyectoLiterales from './../../../components/proyectos/proyectos/proyectos_literales_tabla';
 import ProyectoLiteralDetail from './../../../components/proyectos/proyectos/proyectos_literales_detail';
+import CargarDatos from '../../../../components/cargar_datos';
 
 class ProyectoDetail extends Component {
     constructor(props) {
@@ -15,8 +16,28 @@ class ProyectoDetail extends Component {
     }
 
     componentDidMount() {
+        this.cargarDatos();
+    }
+
+    cargarDatos() {
+        const error_callback = (error) => {
+            this.props.notificarErrorAjaxAction(error);
+        };
+
         const {match: {params: {id}}} = this.props;
-        this.props.fetchProyecto(id);
+        const {item_seleccionado} = this.state;
+
+        this.props.fetchProyecto(id, null, error_callback);
+        if (item_seleccionado) {
+            this.props.fetchLiteral(
+                item_seleccionado.id,
+                response => {
+                    this.setState({item_seleccionado: response, mostrar_literal_info: true});
+                    this.props.fetchItemsLiterales(response.id, null, error_callback);
+                },
+                error_callback
+            );
+        }
     }
 
     onLiteralSelect(item) {
@@ -61,6 +82,7 @@ class ProyectoDetail extends Component {
                         />
                     </div>
                 }
+                <CargarDatos cargarDatos={this.cargarDatos.bind(this)}/>
             </div>
         )
     }

@@ -6,11 +6,18 @@ import FontIcon from 'material-ui/FontIcon';
 import {Link} from 'react-router-dom';
 import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
 
-const MenuMaestras = () => (
-    <IconMenu iconButtonElement={<IconButton><FontIcon className="fas fa-puzzle-piece"/></IconButton>
-    }>
-        <MenuItem primaryText="Proyectos" containerElement={<Link to="/app/maestras/proyectos/proyectos/list"/>}/>
-    </IconMenu>
-);
+const MenuMaestras = (props) => {
+    const {can_list_productos} = props;
+    return (
+        <IconMenu iconButtonElement={<IconButton><FontIcon className="fas fa-puzzle-piece"/></IconButton>
+        }>
+            {
+                can_list_productos &&
+                <MenuItem primaryText="Proyectos"
+                          containerElement={<Link to="/app/maestras/proyectos/proyectos/list"/>}/>
+            }
+        </IconMenu>
+    )
+};
 
 export default MenuMaestras;

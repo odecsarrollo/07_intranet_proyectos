@@ -29,3 +29,23 @@
 .boton-flotante :active {
   color: #008000;
 }
+form .btn {
+  font-size: 0.8rem;
+  margin: 0.4rem;
+}
+.btn-limpiar {
+  background-color: #a9a9a9;
+  color: #fff;
+}
+.btn-guardar {
+  background-color: #000;
+  color: #fff;
+}
+.btn-cancelar {
+  background-color: #87cefa;
+  color: #fff;
+}
+.btn-eliminar {
+  background-color: #f00;
+  color: #fff;
+}

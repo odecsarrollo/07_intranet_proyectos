@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom';
 
 export default class TablaProyectos extends Component {
     renderItemTabla(item, onSelectItem) {
-        const {item_seleccionado} = this.props;
+        const {item_seleccionado, can_change, can_see_details} = this.props;
         return (
             <tr key={item.id}
                 className={item_seleccionado && item_seleccionado.id === item.id ? 'tr-seleccionado' : ''}
@@ -18,27 +18,33 @@ export default class TablaProyectos extends Component {
                 <td className='text-center'>
                     {item.abierto && <i className="fas fa-check"></i>}
                 </td>
-                <td className='text-center'>
-                    <i className="fas fa-edit"
-                       style={{cursor: "pointer"}}
-                       onClick={() => {
-                           onSelectItem(item)
-                       }}
-                    ></i>
-                </td>
-                <td className='text-center'>
-                    {item.mis_literales.length > 0 &&
-                    <Link className="right" to={`/app/maestras/proyectos/proyectos/detail/${item.id}`}>
-                        <i className="fas fa-plus"></i>
-                    </Link>
-                    }
-                </td>
+                {
+                    can_change &&
+                    <td className='text-center'>
+                        <i className="fas fa-edit"
+                           style={{cursor: "pointer"}}
+                           onClick={() => {
+                               onSelectItem(item)
+                           }}
+                        ></i>
+                    </td>
+                }
+                {
+                    can_see_details &&
+                    <td className='text-center'>
+                        {item.mis_literales.length > 0 &&
+                        <Link className="right" to={`/app/maestras/proyectos/proyectos/detail/${item.id}`}>
+                            <i className="fas fa-plus"></i>
+                        </Link>
+                        }
+                    </td>
+                }
             </tr>
         )
     }
 
     render() {
-        const {lista, onSelectItem} = this.props;
+        const {lista, onSelectItem, can_change, can_see_details} = this.props;
         return (
             <table className="table table-responsive table-striped tabla-maestra">
                 <thead>
@@ -46,8 +52,14 @@ export default class TablaProyectos extends Component {
                     <th>Proyecto</th>
                     <th>Costo Materiales</th>
                     <th>Abierto</th>
-                    <th>Editar</th>
-                    <th>Ver Literales</th>
+                    {
+                        can_change &&
+                        <th>Editar</th>
+                    }
+                    {
+                        can_see_details &&
+                        <th>Ver Literales</th>
+                    }
                 </tr>
                 </thead>
                 <tbody>

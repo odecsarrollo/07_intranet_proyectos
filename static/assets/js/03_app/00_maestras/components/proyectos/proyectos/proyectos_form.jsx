@@ -6,6 +6,8 @@ import {
 } from 'redux-form-material-ui'
 import {connect} from "react-redux";
 
+import BotoneriaForm from "../../../../components/botoneria_form";
+
 const upper = value => value && value.toUpperCase();
 
 class ProyectoForm extends Component {
@@ -19,6 +21,7 @@ class ProyectoForm extends Component {
             onCancel,
             onDelete,
             initialValues,
+            can_delete,
             cantidad_literales
         } = this.props;
         return (
@@ -48,28 +51,15 @@ class ProyectoForm extends Component {
                                 normalize={v => !!v}
                             />
                         </div>
-
-                        <div className="col-12">
-                            <button type="button" className="btn btn-secondary" onClick={reset}
-                                    disabled={pristine || submitting}>
-                                Limpiar
-                            </button>
-                            <button type="submit" className="btn btn-primary" disabled={pristine || submitting}>
-                                {initialValues ? 'Editar ' : 'Crear '} Proyecto
-                            </button>
-                            {initialValues &&
-                            <button type="button" className="btn btn-deep-orange" onClick={() => {
-                                onDelete(initialValues.id)
-                            }}>
-                                Eliminar
-                            </button>
-                            }
-                            <button type="button" className="btn btn-deep-orange" onClick={() => {
-                                onCancel()
-                            }}>
-                                Cancelar
-                            </button>
-                        </div>
+                        <BotoneriaForm
+                            pristine={pristine}
+                            submitting={submitting}
+                            reset={reset}
+                            initialValues={initialValues}
+                            onCancel={onCancel}
+                            onDelete={onDelete}
+                            can_delete={can_delete && cantidad_literales === 0}
+                        />
                     </div>
                 </div>
             </form>
@@ -86,8 +76,8 @@ function mapPropsToState(state, ownProps) {
 
 const validate = values => {
     const errors = {};
-    if (!values.nombre) {
-        errors.nombre = 'Requerido';
+    if (!values.id_proyecto) {
+        errors.id_proyecto = 'Requerido';
     }
     return errors;
 };

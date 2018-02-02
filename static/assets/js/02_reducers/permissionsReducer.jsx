@@ -1,6 +1,6 @@
 import {
     FETCH_PERMISSIONS
-} from '../1_actions/00_types';
+} from '../01_actions/00_types';
 
 import _ from 'lodash';
 

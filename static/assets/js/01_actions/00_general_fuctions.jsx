@@ -20,3 +20,10 @@ export function createRequest(request, dispatches = null, callback = null, callb
             }
         );
 }
+
+export function tengoPermiso(permisos, permiso) {
+    const permisos_array = _.map(permisos, permiso => {
+        return permiso
+    });
+    return permisos_array.includes(permiso);
+}

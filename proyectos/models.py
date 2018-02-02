@@ -14,6 +14,10 @@ class Proyecto(models.Model):
     class Meta:
         verbose_name = 'Proyecto'
         verbose_name_plural = 'Proyectos'
+        permissions = [
+            ("list_proyecto", "Can see list proyectos"),
+            ("detail_proyecto", "Can see detail proyecto"),
+        ]
 
 
 class Literal(models.Model):

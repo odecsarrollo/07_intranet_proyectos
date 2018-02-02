@@ -7,7 +7,7 @@ import {createRequest} from './00_general_fuctions';
 import axios from 'axios';
 
 const axios_instance = axios.create({
-    baseURL: '/api/Permisos'
+    baseURL: '/api/permisos'
 });
 const FORMAT = 'format=json';
 

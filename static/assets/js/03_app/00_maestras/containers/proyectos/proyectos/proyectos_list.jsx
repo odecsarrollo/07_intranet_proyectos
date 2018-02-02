@@ -6,6 +6,8 @@ import TablaProyectos from '../../../components/proyectos/proyectos/proyectos_ta
 import ProyectoForm from '../../../components/proyectos/proyectos/proyectos_form';
 import CargarDatos from '../../../../components/cargar_datos';
 
+import {tengoPermiso} from './../../../../../01_actions/00_general_fuctions';
+
 class ProyectoLista extends Component {
     constructor(props) {
         super(props);
@@ -73,14 +75,23 @@ class ProyectoLista extends Component {
     }
 
     cargarDatos() {
-        this.props.fetchProyectos()
+        this.props.fetchProyectos();
+        this.props.fetchMisPermisos();
     }
 
     render() {
         const {busqueda, item_seleccionado, mostrar_form} = this.state;
         const {
-            lista_objetos
+            lista_objetos,
+            mis_permisos
         } = this.props;
+
+        if (!mis_permisos) {
+            return (<div>Cargando...</div>)
+        }
+        else if (!tengoPermiso(mis_permisos, 'list_proyecto')) {
+            return (<div>No tiene suficientes permisos.</div>)
+        }
 
         let items_tabla_list = lista_objetos;
         if (!busqueda.toUpperCase().includes('TODO')) {
@@ -92,16 +103,19 @@ class ProyectoLista extends Component {
             <div className="row">
                 <div className="col-12">
                     <h3 className="h3-responsive">Proyectos</h3>
-                    <button
-                        className="btn btn-primary"
-                        style={{cursor: "pointer"}}
-                        onClick={() => {
-                            this.setState({item_seleccionado: null, mostrar_form: true})
-                        }}
-                    >
-                        <i className="fas fa-plus"
-                           aria-hidden="true"></i>
-                    </button>
+                    {
+                        tengoPermiso(mis_permisos, 'add_proyecto') &&
+                        <button
+                            className="btn btn-primary"
+                            style={{cursor: "pointer"}}
+                            onClick={() => {
+                                this.setState({item_seleccionado: null, mostrar_form: true})
+                            }}
+                        >
+                            <i className="fas fa-plus"
+                               aria-hidden="true"></i>
+                        </button>
+                    }
                 </div>
                 <div className="col-12">
                     <TextField
@@ -116,12 +130,17 @@ class ProyectoLista extends Component {
                 </div>
                 {
                     mostrar_form &&
+                    (
+                        tengoPermiso(mis_permisos, 'add_proyecto') ||
+                        tengoPermiso(mis_permisos, 'change_proyecto')
+                    ) &&
                     <div className="col-12 col-md-6 pl-3 order-md-1">
                         <ProyectoForm
                             onSubmit={this.onSubmit.bind(this)}
                             item_seleccionado={item_seleccionado}
                             onCancel={this.onCancel.bind(this)}
                             onDelete={this.onDelete.bind(this)}
+                            can_delete={tengoPermiso(mis_permisos, 'delete_proyecto')}
                             cantidad_literales={item_seleccionado ? item_seleccionado.mis_literales.length : 0}
                         />
                     </div>
@@ -130,6 +149,8 @@ class ProyectoLista extends Component {
                     <h5>Proyectos</h5>
                     <TablaProyectos
                         lista={items_tabla_list}
+                        can_change={tengoPermiso(mis_permisos, 'change_proyecto')}
+                        can_see_details={tengoPermiso(mis_permisos, 'detail_proyecto')}
                         item_seleccionado={item_seleccionado}
                         onSelectItem={this.onSelectItem.bind(this)}
                     />
@@ -142,7 +163,8 @@ class ProyectoLista extends Component {
 
 function mapPropsToState(state, ownProps) {
     return {
-        lista_objetos: state.proyectos
+        lista_objetos: state.proyectos,
+        mis_permisos: state.mis_permisos
     }
 }
 
