@@ -7,7 +7,6 @@ import {
 import {connect} from "react-redux";
 
 import BotoneriaForm from "../../../../components/botoneria_form";
-import {tengoPermiso} from "../../../../../01_actions/00_general_fuctions";
 
 const upper = value => value && value.toUpperCase();
 
@@ -81,6 +80,7 @@ class ProyectoForm extends Component {
                             />
                         </div>
                         <BotoneriaForm
+                            texto_botones='Proyecto'
                             pristine={pristine}
                             submitting={submitting}
                             reset={reset}
@@ -108,6 +108,31 @@ const validate = values => {
     if (!values.id_proyecto) {
         errors.id_proyecto = 'Requerido';
     }
+
+    if (!values.costo_presupuestado) {
+        errors.costo_presupuestado = 'Requerido';
+    } else {
+        if (values.costo_presupuestado < 0) {
+            errors.costo_presupuestado = 'El costo presupuestado debe de ser positivo';
+        }
+        let re = /^-{0,1}\d*\.{0,1}\d+$/;
+        if (!re.test(values.costo_presupuestado)) {
+            errors.costo_presupuestado = 'Debe ser solamente números';
+        }
+    }
+
+    if (!values.valor_cliente) {
+        errors.valor_cliente = 'Requerido';
+    } else {
+        if (values.valor_cliente < 0) {
+            errors.valor_cliente = 'El precio debe de ser positivo';
+        }
+        let re = /^-{0,1}\d*\.{0,1}\d+$/;
+        if (!re.test(values.valor_cliente)) {
+            errors.valor_cliente = 'Debe ser solamente números';
+        }
+    }
+
     return errors;
 };
 

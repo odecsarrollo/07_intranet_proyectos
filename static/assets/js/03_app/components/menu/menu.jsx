@@ -24,7 +24,9 @@ class Menu extends Component {
             <Toolbar>
                 <ToolbarGroup firstChild={true}>
                     <Paper style={style}>
-                        <MenuMaestras can_list_productos={tengoPermiso(this.props.mis_permisos, 'list_proyecto')}/>
+                        <MenuMaestras
+                            can_list_productos={tengoPermiso(this.props.mis_permisos, 'list_proyecto')}
+                        />
                     </Paper>
                 </ToolbarGroup>
             </Toolbar>

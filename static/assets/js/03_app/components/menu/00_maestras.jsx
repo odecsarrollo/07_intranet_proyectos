@@ -16,6 +16,8 @@ const MenuMaestras = (props) => {
                 <MenuItem primaryText="Proyectos"
                           containerElement={<Link to="/app/maestras/proyectos/proyectos/list"/>}/>
             }
+            <MenuItem primaryText="Mano Obra"
+                      containerElement={<Link to="/app/maestras/mano_obra/tasas/list"/>}/>
         </IconMenu>
     )
 };

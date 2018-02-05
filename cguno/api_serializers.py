@@ -15,6 +15,7 @@ class ColaboradorBiableSerializer(serializers.ModelSerializer):
             'apellidos',
             'en_proyectos',
             'es_cguno',
+            'autogestion_horas_trabajadas',
         ]
 
 

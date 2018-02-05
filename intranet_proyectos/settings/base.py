@@ -44,6 +44,7 @@ MY_APPS = [
     'index.apps.IndexConfig',
     'cguno.apps.CgunoConfig',
     'proyectos.apps.ProyectosConfig',
+    'mano_obra.apps.ManoObraConfig',
 ]
 
 THIRD_PART_APPS = [

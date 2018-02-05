@@ -45,10 +45,15 @@ class ColaboradorBiable(models.Model):
     apellidos = models.CharField(max_length=200, null=True, blank=True)
     en_proyectos = models.BooleanField(default=False)
     es_cguno = models.BooleanField(default=False)
+    autogestion_horas_trabajadas = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = 'Colaborador'
         verbose_name_plural = 'Colaboradores'
 
     def __str__(self):
+        return '%s %s' % (self.nombres, self.apellidos)
+
+    @property
+    def full_name(self):
         return '%s %s' % (self.nombres, self.apellidos)

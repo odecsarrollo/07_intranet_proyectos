@@ -15,6 +15,7 @@ export default class BotoneriaForm extends Component {
             onCancel,
             onDelete,
             can_delete = true,
+            texto_botones = null
         } = this.props;
         const {mostrar_avanzado} = this.state;
 
@@ -34,7 +35,7 @@ export default class BotoneriaForm extends Component {
                             !pristine &&
                             !submitting &&
                             <button type="submit" className="btn btn-guardar" disabled={pristine || submitting}>
-                                {initialValues ? 'Editar ' : 'Crear '} Proyecto
+                                {initialValues ? 'Editar ' : 'Crear '} {texto_botones && texto_botones}
                             </button>
                         }
                         <button type="button" className="btn btn-cancelar" onClick={() => {
