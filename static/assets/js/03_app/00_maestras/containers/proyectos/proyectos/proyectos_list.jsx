@@ -30,7 +30,7 @@ class ProyectoLista extends Component {
         const callback = (response) => {
             this.props.fetchProyecto(response.id);
             this.setState({mostrar_form: false, item_seleccionado: null});
-            this.props.notificarAction(`El registro de la proyecto ${response.id_proyecto} ha sido exitoso!`);
+            this.props.notificarAction(`El registro de el proyecto ${response.id_proyecto} ha sido exitoso!`);
         };
         if (id) {
             this.props.updateProyecto(
@@ -55,7 +55,7 @@ class ProyectoLista extends Component {
         const {item_seleccionado} = this.state;
         const {deleteProyecto} = this.props;
         deleteProyecto(id, () => {
-                this.props.notificarAction(`Se ha eliminado la proyecto ${item_seleccionado.id_proyecto}!`);
+                this.props.notificarAction(`Se ha eliminado el proyecto ${item_seleccionado.id_proyecto}!`);
             }, error_callback
         );
         this.setState({item_seleccionado: null, mostrar_form: false});
@@ -134,7 +134,7 @@ class ProyectoLista extends Component {
                         tengoPermiso(mis_permisos, 'add_proyecto') ||
                         tengoPermiso(mis_permisos, 'change_proyecto')
                     ) &&
-                    <div className="col-12 col-md-6 pl-3 order-md-1">
+                    <div className="col-12 pl-3">
                         <ProyectoForm
                             onSubmit={this.onSubmit.bind(this)}
                             item_seleccionado={item_seleccionado}
@@ -142,14 +142,19 @@ class ProyectoLista extends Component {
                             onDelete={this.onDelete.bind(this)}
                             can_delete={tengoPermiso(mis_permisos, 'delete_proyecto')}
                             cantidad_literales={item_seleccionado ? item_seleccionado.mis_literales.length : 0}
+                            can_see_costo_presupuestado={tengoPermiso(mis_permisos, 'costo_presupuestado_proyecto')}
+                            can_see_valor={tengoPermiso(mis_permisos, 'valor_proyecto')}
                         />
                     </div>
                 }
-                <div className="col-12 col-md-6 order-md-0">
+                <div className="col-12">
                     <h5>Proyectos</h5>
                     <TablaProyectos
                         lista={items_tabla_list}
                         can_change={tengoPermiso(mis_permisos, 'change_proyecto')}
+                        can_see_costo_presupuestado={tengoPermiso(mis_permisos, 'costo_presupuestado_proyecto')}
+                        can_see_costo_materiales={tengoPermiso(mis_permisos, 'costo_materiales_proyecto')}
+                        can_see_valor={tengoPermiso(mis_permisos, 'valor_proyecto')}
                         can_see_details={tengoPermiso(mis_permisos, 'detail_proyecto')}
                         item_seleccionado={item_seleccionado}
                         onSelectItem={this.onSelectItem.bind(this)}

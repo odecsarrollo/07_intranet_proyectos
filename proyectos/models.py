@@ -6,6 +6,8 @@ class Proyecto(models.Model):
     id_proyecto = models.CharField(max_length=15, unique=True)
     fecha_prometida = models.DateField(null=True, blank=True)
     abierto = models.BooleanField(default=True)
+    valor_cliente = models.DecimalField(decimal_places=2, max_digits=12, default=0)
+    costo_presupuestado = models.DecimalField(decimal_places=2, max_digits=12, default=0)
     costo_materiales = models.DecimalField(decimal_places=2, max_digits=12, default=0)
 
     def __str__(self):
@@ -17,6 +19,10 @@ class Proyecto(models.Model):
         permissions = [
             ("list_proyecto", "Can see list proyectos"),
             ("detail_proyecto", "Can see detail proyecto"),
+            ("valor_proyecto", "Ver valor proyecto"),
+            ("costo_proyecto", "Ver costo proyecto"),
+            ("costo_materiales_proyecto", "Ver costo materiales proyecto"),
+            ("costo_presupuestado_proyecto", "Ver costo presupuestado proyecto"),
         ]
 
 

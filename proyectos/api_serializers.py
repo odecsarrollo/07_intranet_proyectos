@@ -28,4 +28,6 @@ class ProyectoSerializer(serializers.ModelSerializer):
             'abierto',
             'costo_materiales',
             'mis_literales',
+            'valor_cliente',
+            'costo_presupuestado',
         ]

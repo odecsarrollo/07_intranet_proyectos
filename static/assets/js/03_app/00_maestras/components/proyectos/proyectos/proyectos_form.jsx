@@ -7,6 +7,7 @@ import {
 import {connect} from "react-redux";
 
 import BotoneriaForm from "../../../../components/botoneria_form";
+import {tengoPermiso} from "../../../../../01_actions/00_general_fuctions";
 
 const upper = value => value && value.toUpperCase();
 
@@ -22,14 +23,16 @@ class ProyectoForm extends Component {
             onDelete,
             initialValues,
             can_delete,
-            cantidad_literales
+            cantidad_literales,
+            can_see_costo_presupuestado,
+            can_see_valor
         } = this.props;
         return (
             <form className="card" onSubmit={handleSubmit(onSubmit)}>
                 <div className="m-2">
                     <h5 className="h5-responsive mt-2">{initialValues ? 'Editar ' : 'Crear '} Proyecto</h5>
                     <div className="row">
-                        <div className="col-12">
+                        <div className="col-12 col-md-4 col-lg-3">
                             {cantidad_literales === 0 || !initialValues ?
                                 <Field
                                     fullWidth={true}
@@ -43,7 +46,33 @@ class ProyectoForm extends Component {
                                 <span>{initialValues.id_proyecto}</span>
                             }
                         </div>
-                        <div className="col-12">
+                        {
+                            can_see_costo_presupuestado &&
+                            <div className="col-12 col-md-4 col-lg-3">
+                                <Field
+                                    fullWidth={true}
+                                    name="costo_presupuestado"
+                                    component={TextField}
+                                    hintText="Costo Presupuestado"
+                                    autoComplete="off"
+                                    floatingLabelText="Costo Presupuestado"
+                                />
+                            </div>
+                        }
+                        {
+                            can_see_valor &&
+                            <div className="col-12 col-md-4 col-lg-3">
+                                <Field
+                                    fullWidth={true}
+                                    name="valor_cliente"
+                                    component={TextField}
+                                    hintText="Precio"
+                                    autoComplete="off"
+                                    floatingLabelText="Precio"
+                                />
+                            </div>
+                        }
+                        <div className="col-12 col-md-4 col-lg-3">
                             <Field
                                 name="abierto"
                                 component={Checkbox}

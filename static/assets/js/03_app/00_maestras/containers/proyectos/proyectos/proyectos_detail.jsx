@@ -5,6 +5,8 @@ import TablaProyectoLiterales from './../../../components/proyectos/proyectos/pr
 import ProyectoLiteralDetail from './../../../components/proyectos/proyectos/proyectos_literales_detail';
 import CargarDatos from '../../../../components/cargar_datos';
 
+import {tengoPermiso} from './../../../../../01_actions/00_general_fuctions';
+
 class ProyectoDetail extends Component {
     constructor(props) {
         super(props);
@@ -23,7 +25,6 @@ class ProyectoDetail extends Component {
         const error_callback = (error) => {
             this.props.notificarErrorAjaxAction(error);
         };
-
         const {match: {params: {id}}} = this.props;
         const {item_seleccionado} = this.state;
 
