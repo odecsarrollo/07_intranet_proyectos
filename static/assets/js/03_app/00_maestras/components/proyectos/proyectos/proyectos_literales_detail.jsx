@@ -24,8 +24,8 @@ export default class ProyectoLiteralDetail extends Component {
         if (!busqueda.toUpperCase().includes('TODO')) {
             listado_materiales = _.pickBy(items_literales, objeto => {
                 return (
-                    objeto.item_biable.descripcion.toUpperCase().includes(busqueda.toUpperCase())||
-                    objeto.item_biable.id_referencia.toUpperCase().includes(busqueda.toUpperCase())||
+                    objeto.item_biable.descripcion.toUpperCase().includes(busqueda.toUpperCase()) ||
+                    objeto.item_biable.id_referencia.toUpperCase().includes(busqueda.toUpperCase()) ||
                     objeto.item_biable.id_item.toString().toUpperCase().includes(busqueda.toUpperCase())
                 )
             });
@@ -44,6 +44,17 @@ export default class ProyectoLiteralDetail extends Component {
                         <div className="col-12">
                             <h6 className='h6-response'>Costo
                                 Materiales: <small>{formatMoney(Number(literal.costo_materiales), "$", 0, ".", ",")}</small>
+                            </h6>
+                        </div>
+                        <div className="col-12">
+                            <h6 className='h6-response'>Costo
+                                Mano
+                                Obra: <small>{formatMoney(Number(literal.costo_mano_obra), "$", 0, ".", ",")}</small>
+                            </h6>
+                        </div>
+                        <div className="col-12">
+                            <h6 className='h6-response'>Costo
+                                Total: <small>{formatMoney(Number(literal.costo_mano_obra) + Number(literal.costo_materiales), "$", 0, ".", ",")}</small>
                             </h6>
                         </div>
                         <div className="col-12">

@@ -54,10 +54,6 @@ class TasaHoraHombreForm extends Component {
             colaboradores
         } = this.props;
 
-        const colaboradores_array = _.map(colaboradores, (colaborador) => {
-            return colaborador
-        });
-
         return (
             <form className="card" onSubmit={handleSubmit(onSubmit)}>
                 <div className="m-2">
@@ -82,21 +78,7 @@ class TasaHoraHombreForm extends Component {
                                 floatingLabelText="Colaborador"
                             >
                                 {
-                                    colaboradores_array.sort(
-                                        (a, b) => {
-                                            if (`${a.nombres} ${a.apellidos}` > `${b.nombres} ${b.apellidos}`) {
-                                                return 1;
-                                            }
-                                            if (`${b.nombres} ${b.apellidos}` > `${a.nombres} ${a.apellidos}`) {
-                                                return -1;
-                                            }
-                                            return 0;
-                                        }
-                                    ).filter(
-                                        colaborador=>{
-                                            return colaborador.en_proyectos && !colaborador.autogestion_horas_trabajadas
-                                        }
-                                    ).map((colaborador) => {
+                                    _.map(_.sortBy(colaboradores, ['nombres','apelli', 'mes']), (colaborador) => {
                                         return (this.renderSelectItem(colaborador))
                                     })
                                 }

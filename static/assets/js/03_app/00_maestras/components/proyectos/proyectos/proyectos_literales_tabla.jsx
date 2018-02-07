@@ -18,6 +18,12 @@ export default class TablaProyectosLiterales extends Component {
                 <td>
                     {formatMoney(Number(item.costo_materiales), "$", 0, ".", ",")}
                 </td>
+                <td>
+                    {formatMoney(Number(item.costo_mano_obra), "$", 0, ".", ",")}
+                </td>
+                <td>
+                    {formatMoney(Number(item.costo_mano_obra) + Number(item.costo_materiales), "$", 0, ".", ",")}
+                </td>
             </tr>
         )
     }
@@ -30,6 +36,8 @@ export default class TablaProyectosLiterales extends Component {
                 <tr>
                     <th>Proyecto</th>
                     <th>Costo Materiales</th>
+                    <th>Costo MO</th>
+                    <th>Costo Total</th>
                 </tr>
                 </thead>
                 <tbody>

@@ -11,6 +11,12 @@ class ColaboradorBiableViewSet(viewsets.ModelViewSet):
     serializer_class = ColaboradorBiableSerializer
 
     @list_route(http_method_names=['get', ])
+    def en_proyectos(self, request):
+        lista = self.queryset.filter(en_proyectos=True).all()
+        serializer = self.get_serializer(lista, many=True)
+        return Response(serializer.data)
+
+    @list_route(http_method_names=['get', ])
     def en_proyectos_para_gestion_horas_trabajadas(self, request):
         lista = self.queryset.filter(en_proyectos=True, autogestion_horas_trabajadas=False).all()
         serializer = self.get_serializer(lista, many=True)

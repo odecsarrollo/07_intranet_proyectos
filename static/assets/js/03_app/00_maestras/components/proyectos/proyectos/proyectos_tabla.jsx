@@ -32,6 +32,9 @@ export default class TablaProyectos extends Component {
                         {formatMoney(Number(item.costo_materiales), "$", 0, ".", ",")}
                     </td>
                 }
+                <td>
+                    {formatMoney(Number(item.costo_mano_obra), "$", 0, ".", ",")}
+                </td>
 
                 {
                     can_see_valor &&
@@ -90,6 +93,7 @@ export default class TablaProyectos extends Component {
                         can_see_costo_materiales &&
                         <th>Costo Materiales</th>
                     }
+                    <th>Costo MO</th>
                     {
                         can_see_valor &&
                         <th>Precio</th>

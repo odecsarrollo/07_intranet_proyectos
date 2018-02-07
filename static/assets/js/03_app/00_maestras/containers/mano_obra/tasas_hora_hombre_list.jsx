@@ -23,13 +23,6 @@ class TasaHoraHombreLista extends Component {
     }
 
     onSubmit(values) {
-
-        // console.log(values.fecha.getYear())
-        // console.log(values.fecha.getMonth())
-        // console.log(values.fecha.getDate())
-
-        console.log(values);
-
         const {id} = values;
         const error_callback = (error) => {
             this.props.notificarErrorAjaxAction(error);
@@ -37,7 +30,7 @@ class TasaHoraHombreLista extends Component {
         const callback = (response) => {
             this.props.fetchTasaHoraHombre(response.id);
             this.setState({mostrar_form: false, item_seleccionado: null});
-            this.props.notificarAction(`El registro de la tasa hora hombre ${response.id_proyecto} ha sido exitoso!`);
+            this.props.notificarAction(`El registro de la tasa hora hombre para ${values.colaborador_nombre} ha sido exitoso!`);
         };
         if (id) {
             this.props.updateTasaHoraHombre(
@@ -62,7 +55,7 @@ class TasaHoraHombreLista extends Component {
         const {item_seleccionado} = this.state;
         const {deleteTasaHoraHombre} = this.props;
         deleteTasaHoraHombre(id, () => {
-                this.props.notificarAction(`Se ha eliminado la tasa hora hombre ${item_seleccionado.id_proyecto}!`);
+                this.props.notificarAction(`Se ha eliminado la tasa hora hombre para ${item_seleccionado.colaborador_nombre}!`);
             }, error_callback
         );
         this.setState({item_seleccionado: null, mostrar_form: false});
@@ -83,7 +76,7 @@ class TasaHoraHombreLista extends Component {
 
     cargarDatos() {
         this.props.fetchTasasHorasHombres();
-        this.props.fetchColaboradoresGestionHorasTrabajadas();
+        this.props.fetchColaboradoresEnProyectos();
         this.props.fetchMisPermisos();
     }
 

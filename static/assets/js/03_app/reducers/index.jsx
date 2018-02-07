@@ -7,6 +7,8 @@ import literalesReducer from '../../02_reducers/00_maestras/proyectos/literalesR
 import itemsLiteralesReducer from '../../02_reducers/00_maestras/proyectos/itemsliteralesReducer';
 import tasasHorasHombresReducer from '../../02_reducers/00_maestras/mano_obra/tasasHoraHombreReducer';
 import colaboradoresReducer from '../../02_reducers/00_maestras/cguno/colaboradoresReducer';
+import hojasTrabajosDiariosReducer from '../../02_reducers/01_mano_obra/hoja_trabajo_diario/hojasTrabajoDiarioReducer';
+import horasHojaTrabajoReducer from '../../02_reducers/01_mano_obra/hoja_trabajo_diario/horasHojaTrabajoReducer';
 
 const rootReducer = combineReducers({
     literales: literalesReducer,
@@ -15,6 +17,8 @@ const rootReducer = combineReducers({
     items_literales: itemsLiteralesReducer,
     mis_permisos: permisosReducer,
     tasas_horas_hombres: tasasHorasHombresReducer,
+    hojas_trabajos_diarios: hojasTrabajosDiariosReducer,
+    horas_hoja_trabajo: horasHojaTrabajoReducer,
     notifications: NotifyReducer,
     form: formReducer
 });

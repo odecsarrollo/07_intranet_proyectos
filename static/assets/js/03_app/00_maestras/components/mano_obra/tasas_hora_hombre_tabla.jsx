@@ -27,12 +27,16 @@ export default class TablaTasasHorasHombres extends Component {
                 {
                     can_change &&
                     <td className='text-center'>
-                        <i className="fas fa-edit"
-                           style={{cursor: "pointer"}}
-                           onClick={() => {
-                               onSelectItem(item)
-                           }}
-                        ></i>
+                        {
+                           item.colaborador_en_proyectos ?
+                            <i className="fas fa-edit"
+                               style={{cursor: "pointer"}}
+                               onClick={() => {
+                                   onSelectItem(item)
+                               }}
+                            ></i>
+                            : <span>Ya no esta en proyectos</span>
+                        }
                     </td>
                 }
             </tr>
@@ -60,7 +64,7 @@ export default class TablaTasasHorasHombres extends Component {
                 </tr>
                 </thead>
                 <tbody>
-                {_.map(_.sortBy(lista, ['ano','colaborador', 'mes']), item => {
+                {_.map(_.sortBy(lista, ['ano', 'colaborador', 'mes']), item => {
                     return this.renderItemTabla(item, onSelectItem)
                 })}
                 </tbody>

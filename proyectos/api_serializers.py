@@ -4,14 +4,18 @@ from .models import Proyecto, Literal
 
 
 class LiteralSerializer(serializers.ModelSerializer):
+    abierto = serializers.BooleanField(source='proyecto.abierto', read_only=True)
+
     class Meta:
         model = Literal
         fields = [
             'url',
             'id',
             'id_literal',
+            'abierto',
             'descripcion',
             'costo_materiales',
+            'costo_mano_obra'
         ]
 
 
@@ -30,4 +34,5 @@ class ProyectoSerializer(serializers.ModelSerializer):
             'mis_literales',
             'valor_cliente',
             'costo_presupuestado',
+            'costo_mano_obra'
         ]

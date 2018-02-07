@@ -4,6 +4,7 @@ import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui
 import {tengoPermiso} from './../../../01_actions/00_general_fuctions';
 
 import MenuMaestras from './00_maestras';
+import MenuManoObra from './01_mano_obra';
 import * as actions from "../../../01_actions/01_index";
 import {connect} from "react-redux";
 
@@ -27,6 +28,7 @@ class Menu extends Component {
                         <MenuMaestras
                             can_list_productos={tengoPermiso(this.props.mis_permisos, 'list_proyecto')}
                         />
+                        <MenuManoObra/>
                     </Paper>
                 </ToolbarGroup>
             </Toolbar>

@@ -29,6 +29,23 @@ export function fetchLiterales(callback = null, callback_error = null) {
     }
 }
 
+export function fetchLiteralesAbiertos(callback = null, callback_error = null) {
+    return function (dispatch) {
+        const SUB_URL = '/abiertos/';
+        const FULL_URL = `${SUB_URL}?${FORMAT}`;
+        const request = axios_instance.get(FULL_URL);
+        const dispatches = (response) => {
+            dispatch({type: FETCH_LITERALES, payload: response})
+        };
+        createRequest(
+            request,
+            dispatches,
+            callback,
+            callback_error
+        );
+    }
+}
+
 export function fetchLiteral(id, callback = null, callback_error = null) {
     return function (dispatch) {
         const SUB_URL = `/${id}/`;

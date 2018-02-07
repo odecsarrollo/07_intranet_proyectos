@@ -66,7 +66,7 @@ class ProyectoDetail extends Component {
                 <div className="col-12">
                     <h3 className="h3-responsive">Proyecto: <small>{proyecto.id_proyecto}</small></h3>
                 </div>
-                <div className="col-12 col-md-4 col-lg-3">
+                <div className="col-12 col-lg-4">
                     <h5 className='h5-responsive'>Literales</h5>
                     <TablaProyectoLiterales
                         lista_literales={proyecto.mis_literales}
@@ -76,7 +76,7 @@ class ProyectoDetail extends Component {
                 </div>
                 {
                     item_seleccionado &&
-                    <div className="col-12 col-md-8 col-lg-9">
+                    <div className="col-12 col-lg-8">
                         <ProyectoLiteralDetail
                             literal={item_seleccionado}
                             items_literales={items_literales}

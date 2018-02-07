@@ -1,11 +1,7 @@
 from django.contrib import admin
 
-from .models import Proyecto, Literal, HoraColaboradorLiteralProyecto
+from .models import Proyecto, Literal
 from cguno.models import ItemsLiteralBiable
-
-
-class HoraColaboradorLiteralProyectoInline(admin.TabularInline):
-    model = HoraColaboradorLiteralProyecto
 
 
 class LiteralInLine(admin.TabularInline):
@@ -43,8 +39,7 @@ class LiteralAdmin(admin.ModelAdmin):
     list_display = ['id', 'id_literal', 'descripcion', 'proyecto', 'costo_materiales']
     readonly_fields = ['id', 'id_literal', 'descripcion', 'proyecto', 'costo_materiales']
     inlines = [
-        ItemLiteralBiableInLine,
-        HoraColaboradorLiteralProyectoInline
+        ItemLiteralBiableInLine
     ]
 
 

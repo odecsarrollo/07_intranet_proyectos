@@ -32,6 +32,23 @@ export function fetchColaboradores(callback = null, callback_error = null) {
     }
 }
 
+export function fetchColaboradoresEnProyectos(callback = null, callback_error = null) {
+    return function (dispatch) {
+        const SUB_URL = `/en_proyectos/`;
+        const FULL_URL = `${SUB_URL}?${FORMAT}`;
+        const request = axios_instance.get(FULL_URL);
+        const dispatches = (response) => {
+            dispatch({type: FETCH_COLABORADORES, payload: response})
+        };
+        createRequest(
+            request,
+            dispatches,
+            callback,
+            callback_error
+        );
+    }
+}
+
 export function fetchColaboradoresGestionHorasTrabajadas(callback = null, callback_error = null) {
     return function (dispatch) {
         const SUB_URL = `/en_proyectos_para_gestion_horas_trabajadas/`;
