@@ -1,3 +1,4 @@
+from django.db.models import Q
 from rest_framework import viewsets, serializers, status
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
@@ -46,3 +47,28 @@ class ItemBiableViewSet(viewsets.ModelViewSet):
     queryset = ItemsBiable.objects.all()
     serializer_class = ItemsBiableSerializer
     http_method_names = ['get', ]
+
+    @list_route(http_method_names=['get', ])
+    def listar_items_x_parametro(self, request):
+        parametro: str = request.GET.get('parametro')
+        tipo_parametro: int = int(request.GET.get('tipo_parametro'))
+        lista = None
+
+        if (tipo_parametro == 1 and len(parametro) >= 3):
+            lista = self.queryset.filter(
+                Q(descripcion__icontains=parametro) |
+                Q(nombre_tercero__icontains=parametro) |
+                Q(descripcion_dos__icontains=parametro)
+            ).all()
+
+        if (tipo_parametro == 2 and parametro.isnumeric()):
+            lista = self.queryset.filter(
+                id_item=int(parametro)
+            ).all()
+
+        if (tipo_parametro == 3 and len(parametro) >= 3):
+            lista = self.queryset.filter(
+                id_referencia__icontains=parametro
+            ).all()
+        serializer = self.get_serializer(lista, many=True)
+        return Response(serializer.data)

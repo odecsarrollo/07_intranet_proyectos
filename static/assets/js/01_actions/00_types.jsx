@@ -7,6 +7,10 @@ export const UPDATE_PROYECTO = 'update_proyecto';
 export const CREATE_PROYECTO = 'create_proyecto';
 export const DELETE_PROYECTO = 'delete_proyecto';
 
+////items_biable
+export const FETCH_ITEMS_BIABLE = 'fetch_items_biable';
+export const FETCH_ITEM_BIABLE = 'fetch_item_biable';
+
 ////colaboradores
 export const FETCH_COLABORADORES = 'fetch_colaboradores';
 export const FETCH_COLABORADOR = 'fetch_colaborador';

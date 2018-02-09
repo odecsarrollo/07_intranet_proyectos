@@ -18,6 +18,10 @@ class ItemsBiable(models.Model):
     class Meta:
         verbose_name = 'Item'
         verbose_name_plural = 'Items'
+        permissions = [
+            ("list_itemsbiable", "Can see list items CGUNO"),
+            ("ultimo_costo_itemsbiable", "Can see ultimo costo items CGUNO"),
+        ]
 
     def __str__(self):
         return self.descripcion

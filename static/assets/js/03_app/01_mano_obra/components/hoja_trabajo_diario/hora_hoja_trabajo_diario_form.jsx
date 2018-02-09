@@ -7,7 +7,7 @@ import {
 } from 'redux-form-material-ui'
 import {connect} from "react-redux";
 
-import BotoneriaForm from "../../../components/botoneria_form";
+import BotoneriaForm from "../../../components/utilidades/forms/botoneria_form";
 
 
 const upper = value => value && value.toUpperCase();

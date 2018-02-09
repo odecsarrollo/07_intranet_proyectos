@@ -1,14 +1,10 @@
 import React, {Component} from 'react';
-import {Field, reduxForm} from 'redux-form';
-import {
-    TextField,
-    Checkbox
-} from 'redux-form-material-ui'
+import {reduxForm} from 'redux-form';
+import {REGEX_SOLO_NUMEROS} from '../../../../components/utilidades/forms/common';
+import {MyCheckboxSimple, MyTextFieldSimple} from '../../../../components/utilidades/forms/fields';
+import {MyFormTag} from '../../../../components/utilidades/forms/templates';
 import {connect} from "react-redux";
-
-import BotoneriaForm from "../../../../components/botoneria_form";
-
-const upper = value => value && value.toUpperCase();
+import {tengoPermiso} from './../../../../../01_actions/00_general_fuctions';
 
 class ProyectoForm extends Component {
     render() {
@@ -21,77 +17,58 @@ class ProyectoForm extends Component {
             onCancel,
             onDelete,
             initialValues,
-            can_delete,
-            cantidad_literales,
-            can_see_costo_presupuestado,
-            can_see_valor
+            mis_permisos,
+            cantidad_literales
         } = this.props;
+
+        const can_delete = tengoPermiso(mis_permisos, 'delete_proyecto');
+        const can_see_costo_presupuestado = tengoPermiso(mis_permisos, 'costo_presupuestado_proyecto');
+        const can_see_valor = tengoPermiso(mis_permisos, 'valor_proyecto');
+
         return (
-            <form className="card" onSubmit={handleSubmit(onSubmit)}>
-                <div className="m-2">
-                    <h5 className="h5-responsive mt-2">{initialValues ? 'Editar ' : 'Crear '} Proyecto</h5>
-                    <div className="row">
-                        <div className="col-12 col-md-4 col-lg-3">
-                            {cantidad_literales === 0 || !initialValues ?
-                                <Field
-                                    fullWidth={true}
-                                    name="id_proyecto"
-                                    component={TextField}
-                                    hintText="OP Proyecto"
-                                    autoComplete="off"
-                                    floatingLabelText="OP Proyecto"
-                                    normalize={upper}
-                                /> :
-                                <span>{initialValues.id_proyecto}</span>
-                            }
-                        </div>
-                        {
-                            can_see_costo_presupuestado &&
-                            <div className="col-12 col-md-4 col-lg-3">
-                                <Field
-                                    fullWidth={true}
-                                    name="costo_presupuestado"
-                                    component={TextField}
-                                    hintText="Costo Presupuestado"
-                                    autoComplete="off"
-                                    floatingLabelText="Costo Presupuestado"
-                                />
-                            </div>
-                        }
-                        {
-                            can_see_valor &&
-                            <div className="col-12 col-md-4 col-lg-3">
-                                <Field
-                                    fullWidth={true}
-                                    name="valor_cliente"
-                                    component={TextField}
-                                    hintText="Precio"
-                                    autoComplete="off"
-                                    floatingLabelText="Precio"
-                                />
-                            </div>
-                        }
-                        <div className="col-12 col-md-4 col-lg-3">
-                            <Field
-                                name="abierto"
-                                component={Checkbox}
-                                label="Proyecto Abierto"
-                                normalize={v => !!v}
-                            />
-                        </div>
-                        <BotoneriaForm
-                            texto_botones='Proyecto'
-                            pristine={pristine}
-                            submitting={submitting}
-                            reset={reset}
-                            initialValues={initialValues}
-                            onCancel={onCancel}
-                            onDelete={onDelete}
-                            can_delete={can_delete && cantidad_literales === 0}
-                        />
+            <MyFormTag
+                nombre='Proyecto'
+                onSubmit={handleSubmit(onSubmit)}
+                pristine={pristine}
+                submitting={submitting}
+                reset={reset}
+                initialValues={initialValues}
+                onCancel={onCancel}
+                onDelete={onDelete}
+                can_delete={can_delete && cantidad_literales === 0}
+            >
+                {cantidad_literales === 0 || !initialValues ?
+                    <MyTextFieldSimple
+                        className="col-md-4 col-lg-3"
+                        nombre='OP Proyecto'
+                        name='id_proyecto'
+                        case='U'/> :
+                    <div className="col-md-4 col-lg-3">
+                        <span>{initialValues.id_proyecto}</span>
                     </div>
-                </div>
-            </form>
+                }
+                {
+                    can_see_costo_presupuestado &&
+                    <MyTextFieldSimple
+                        className="col-md-4 col-lg-3"
+                        nombre='Costo Presupuestado'
+                        name='costo_presupuestado'/>
+                }
+                {
+                    can_see_valor &&
+                    <MyTextFieldSimple
+                        className="col-md-4 col-lg-3"
+                        nombre='Precio'
+                        name='valor_cliente'
+                        case='U'/>
+
+                }
+                <MyCheckboxSimple
+                    className="col-md-4 col-lg-3"
+                    nombre='Abierto'
+                    name='abierto'/>
+
+            </MyFormTag>
         )
     }
 }
@@ -115,8 +92,7 @@ const validate = values => {
         if (values.costo_presupuestado < 0) {
             errors.costo_presupuestado = 'El costo presupuestado debe de ser positivo';
         }
-        let re = /^-{0,1}\d*\.{0,1}\d+$/;
-        if (!re.test(values.costo_presupuestado)) {
+        if (!REGEX_SOLO_NUMEROS.test(values.costo_presupuestado)) {
             errors.costo_presupuestado = 'Debe ser solamente números';
         }
     }
@@ -127,8 +103,7 @@ const validate = values => {
         if (values.valor_cliente < 0) {
             errors.valor_cliente = 'El precio debe de ser positivo';
         }
-        let re = /^-{0,1}\d*\.{0,1}\d+$/;
-        if (!re.test(values.valor_cliente)) {
+        if (!REGEX_SOLO_NUMEROS.test(values.valor_cliente)) {
             errors.valor_cliente = 'Debe ser solamente números';
         }
     }

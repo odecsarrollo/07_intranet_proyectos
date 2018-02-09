@@ -15,7 +15,7 @@ import moment from 'moment-timezone';
 moment.tz.setDefault("America/Bogota");
 momentLocaliser(moment);
 
-import BotoneriaForm from "../../../components/botoneria_form";
+import BotoneriaForm from "../../../components/utilidades/forms/botoneria_form";
 
 const upper = value => value && value.toUpperCase();
 

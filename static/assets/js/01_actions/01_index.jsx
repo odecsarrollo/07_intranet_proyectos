@@ -5,5 +5,6 @@ export * from './00_maestras/proyectos/literalesAction';
 export * from './00_maestras/proyectos/itemsliteralesAction';
 export * from './00_maestras/mano_obra/tasasHoraHombreAction';
 export * from './00_maestras/cguno/colaboradoresAction';
+export * from './00_maestras/cguno/itemsBiableAction';
 export * from './01_mano_obra/hoja_trabajo_diario/hojasTrabajoDiarioAction';
 export * from './01_mano_obra/hoja_trabajo_diario/horasHojaTrabajoAction';

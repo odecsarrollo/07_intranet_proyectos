@@ -18,6 +18,8 @@ const MenuMaestras = (props) => {
             }
             <MenuItem primaryText="Mano Obra"
                       containerElement={<Link to="/app/maestras/mano_obra/tasas/list"/>}/>
+            <MenuItem primaryText="Consulta Item CGUNO"
+                      containerElement={<Link to="/app/maestras/cguno/item_cguno/list"/>}/>
         </IconMenu>
     )
 };

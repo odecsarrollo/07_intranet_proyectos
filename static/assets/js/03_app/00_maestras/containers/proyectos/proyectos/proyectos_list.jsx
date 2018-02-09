@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import * as actions from '../../../../../01_actions/01_index';
-import TextField from 'material-ui/TextField';
 import TablaProyectos from '../../../components/proyectos/proyectos/proyectos_tabla';
 import ProyectoForm from '../../../components/proyectos/proyectos/proyectos_form';
 import CargarDatos from '../../../../components/cargar_datos';
+import {SinPermisos, ListaTitulo, ListaBusqueda} from '../../../../components/utiles';
 
 import {tengoPermiso} from './../../../../../01_actions/00_general_fuctions';
 
@@ -15,7 +15,12 @@ class ProyectoLista extends Component {
             busqueda: "",
             item_seleccionado: null,
             mostrar_form: false
-        })
+        });
+        this.onCancel = this.onCancel.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
+        this.onDelete = this.onDelete.bind(this);
+        this.onSelectItem = this.onSelectItem.bind(this);
+        this.cargarDatos = this.cargarDatos.bind(this);
     }
 
     componentDidMount() {
@@ -86,12 +91,6 @@ class ProyectoLista extends Component {
             mis_permisos
         } = this.props;
 
-        if (!mis_permisos) {
-            return (<div>Cargando...</div>)
-        }
-        else if (!tengoPermiso(mis_permisos, 'list_proyecto')) {
-            return (<div>No tiene suficientes permisos.</div>)
-        }
 
         let items_tabla_list = lista_objetos;
         if (!busqueda.toUpperCase().includes('TODO')) {
@@ -100,68 +99,57 @@ class ProyectoLista extends Component {
             });
         }
         return (
-            <div className="row">
-                <div className="col-12">
-                    <h3 className="h3-responsive">Proyectos</h3>
-                    {
-                        tengoPermiso(mis_permisos, 'add_proyecto') &&
-                        <button
-                            className="btn btn-primary"
-                            style={{cursor: "pointer"}}
+            <SinPermisos
+                nombre='Proyectos'
+                mis_permisos={mis_permisos}
+                can_see={!tengoPermiso(mis_permisos, 'list_proyecto')}
+            >
+                <div className="row">
+                    <div className="col-12">
+                        <ListaTitulo
+                            titulo='Proyectos'
+                            can_add={tengoPermiso(mis_permisos, 'add_proyecto')}
                             onClick={() => {
                                 this.setState({item_seleccionado: null, mostrar_form: true})
                             }}
-                        >
-                            <i className="fas fa-plus"
-                               aria-hidden="true"></i>
-                        </button>
-                    }
-                </div>
-                <div className="col-12">
-                    <TextField
-                        floatingLabelText="A buscar"
-                        fullWidth={true}
-                        onChange={e => {
-                            this.setState({busqueda: e.target.value});
-                        }}
-                        autoComplete="off"
-                        value={busqueda}
-                    />
-                </div>
-                {
-                    mostrar_form &&
-                    (
-                        tengoPermiso(mis_permisos, 'add_proyecto') ||
-                        tengoPermiso(mis_permisos, 'change_proyecto')
-                    ) &&
-                    <div className="col-12 pl-3">
-                        <ProyectoForm
-                            onSubmit={this.onSubmit.bind(this)}
-                            item_seleccionado={item_seleccionado}
-                            onCancel={this.onCancel.bind(this)}
-                            onDelete={this.onDelete.bind(this)}
-                            can_delete={tengoPermiso(mis_permisos, 'delete_proyecto')}
-                            cantidad_literales={item_seleccionado ? item_seleccionado.mis_literales.length : 0}
-                            can_see_costo_presupuestado={tengoPermiso(mis_permisos, 'costo_presupuestado_proyecto')}
-                            can_see_valor={tengoPermiso(mis_permisos, 'valor_proyecto')}
                         />
                     </div>
-                }
-                <div className="col-12">
-                    <h5>Proyectos</h5>
-                    <TablaProyectos
-                        lista={items_tabla_list}
-                        can_change={tengoPermiso(mis_permisos, 'change_proyecto')}
-                        can_see_costo_presupuestado={tengoPermiso(mis_permisos, 'costo_presupuestado_proyecto')}
-                        can_see_costo_materiales={tengoPermiso(mis_permisos, 'costo_materiales_proyecto')}
-                        can_see_valor={tengoPermiso(mis_permisos, 'valor_proyecto')}
-                        can_see_details={tengoPermiso(mis_permisos, 'detail_proyecto')}
-                        item_seleccionado={item_seleccionado}
-                        onSelectItem={this.onSelectItem.bind(this)}
-                    />
+                    <div className="col-12">
+                        <ListaBusqueda
+                            busqueda={busqueda}
+                            onChange={e => {
+                                this.setState({busqueda: e.target.value});
+                            }}/>
+                    </div>
+                    {
+                        mostrar_form &&
+                        (
+                            tengoPermiso(mis_permisos, 'add_proyecto') ||
+                            tengoPermiso(mis_permisos, 'change_proyecto')
+                        ) &&
+                        <div className="col-12 pl-3">
+                            <ProyectoForm
+                                mis_permisos={mis_permisos}
+                                onSubmit={this.onSubmit}
+                                item_seleccionado={item_seleccionado}
+                                onCancel={this.onCancel}
+                                onDelete={this.onDelete}
+                                cantidad_literales={item_seleccionado ? item_seleccionado.mis_literales.length : 0}
+                            />
+                        </div>
+                    }
+                    <div className="col-12">
+                        <h5>Proyectos</h5>
+                        <TablaProyectos
+                            lista={items_tabla_list}
+                            mis_permisos={mis_permisos}
+                            item_seleccionado={item_seleccionado}
+                            onSelectItem={this.onSelectItem}
+                        />
+                    </div>
+                    <CargarDatos cargarDatos={this.cargarDatos}/>
                 </div>
-                <CargarDatos cargarDatos={this.cargarDatos.bind(this)}/>
-            </div>
+            </SinPermisos>
         )
     }
 }

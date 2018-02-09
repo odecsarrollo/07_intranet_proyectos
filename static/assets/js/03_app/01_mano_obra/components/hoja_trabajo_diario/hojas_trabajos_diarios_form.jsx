@@ -10,7 +10,7 @@ import moment from 'moment-timezone';
 
 import {connect} from "react-redux";
 
-import BotoneriaForm from "../../../components/botoneria_form";
+import BotoneriaForm from "../../../components/utilidades/forms/botoneria_form";
 
 moment.tz.setDefault("America/Bogota");
 momentLocaliser(moment);
