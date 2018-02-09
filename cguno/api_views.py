@@ -50,8 +50,8 @@ class ItemBiableViewSet(viewsets.ModelViewSet):
 
     @list_route(http_method_names=['get', ])
     def listar_items_x_parametro(self, request):
-        parametro: str = request.GET.get('parametro')
-        tipo_parametro: int = int(request.GET.get('tipo_parametro'))
+        parametro = request.GET.get('parametro')
+        tipo_parametro = int(request.GET.get('tipo_parametro'))
         lista = None
 
         if (tipo_parametro == 1 and len(parametro) >= 3):
