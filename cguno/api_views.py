@@ -1,6 +1,6 @@
 from django.db.models import Q
 from rest_framework import viewsets, serializers, status
-from rest_framework.decorators import list_route
+from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 
 from .models import ColaboradorBiable, ItemsLiteralBiable, ItemsBiable
@@ -8,7 +8,7 @@ from .api_serializers import ColaboradorBiableSerializer, ItemsLiteralBiableSeri
 
 
 class ColaboradorBiableViewSet(viewsets.ModelViewSet):
-    queryset = ColaboradorBiable.objects.all()
+    queryset = ColaboradorBiable.objects.select_related('usuario').all()
     serializer_class = ColaboradorBiableSerializer
 
     @list_route(http_method_names=['get', ])
@@ -27,6 +27,27 @@ class ColaboradorBiableViewSet(viewsets.ModelViewSet):
     def en_proyectos_autogestion_horas_trabajadas(self, request):
         lista = self.queryset.filter(en_proyectos=True, autogestion_horas_trabajadas=True).all()
         serializer = self.get_serializer(lista, many=True)
+        return Response(serializer.data)
+
+    @detail_route(methods=['post'])
+    def crear_usuario(self, request, pk=None):
+        colaborador = self.get_object()
+        if (not colaborador.usuario):
+            colaborador.create_user()
+        serializer = self.get_serializer(colaborador)
+        return Response(serializer.data)
+
+
+    @detail_route(methods=['post'])
+    def cambiar_activacion(self, request, pk=None):
+        colaborador = self.get_object()
+        usuario = colaborador.usuario
+        if usuario:
+            colaborador.cambiar_activacion()
+            if not usuario.is_active:
+                colaborador.autogestion_horas_trabajadas = False
+                colaborador.save()
+        serializer = self.get_serializer(colaborador)
         return Response(serializer.data)
 
 

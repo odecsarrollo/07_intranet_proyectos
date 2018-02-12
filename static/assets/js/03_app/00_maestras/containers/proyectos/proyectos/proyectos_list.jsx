@@ -14,7 +14,8 @@ class ProyectoLista extends Component {
         this.state = ({
             busqueda: "",
             item_seleccionado: null,
-            mostrar_form: false
+            mostrar_form: false,
+            cargando: false
         });
         this.onCancel = this.onCancel.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -80,8 +81,20 @@ class ProyectoLista extends Component {
     }
 
     cargarDatos() {
-        this.props.fetchProyectos();
-        this.props.fetchMisPermisos();
+        const error_callback = (error) => {
+            this.props.notificarErrorAjaxAction(error);
+        };
+
+        this.setState({cargando: true});
+        this.props.fetchMisPermisos(() => {
+                this.props.fetchProyectos(() => {
+                        this.setState({cargando: false});
+                    },
+                    error_callback
+                );
+            },
+            error_callback
+        );
     }
 
     render() {
@@ -101,6 +114,7 @@ class ProyectoLista extends Component {
         return (
             <SinPermisos
                 nombre='Proyectos'
+                cargando={this.state.cargando}
                 mis_permisos={mis_permisos}
                 can_see={!tengoPermiso(mis_permisos, 'list_proyecto')}
             >

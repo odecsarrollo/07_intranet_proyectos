@@ -58,10 +58,15 @@ class ItemsCGUNOLista extends Component {
                             busqueda={busqueda}
                             onChange={e => {
                                 this.setState({busqueda: e.target.value});
+
+                                if (this.state.tipo_consulta === 2) {
+                                    this.props.fetchItemsBiablexParametro(this.state.tipo_consulta, e.target.value);
+                                }
+
                                 if ((this.state.tipo_consulta === 1 || this.state.tipo_consulta === 3) && e.target.value.length >= 3) {
                                     this.props.fetchItemsBiablexParametro(this.state.tipo_consulta, e.target.value);
-                                } else if (this.state.tipo_consulta === 2) {
-                                    this.props.fetchItemsBiablexParametro(this.state.tipo_consulta, e.target.value);
+                                } else {
+                                    this.props.clearItemsBiable()
                                 }
                             }}/>
                     </div>

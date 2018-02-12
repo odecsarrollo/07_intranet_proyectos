@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import TextField from 'material-ui/TextField';
 
 export const SinPermisos = (props) => {
-    const {mis_permisos, can_see} = props;
-    if (!mis_permisos) {
+    const {mis_permisos, can_see, cargando} = props;
+    if (!mis_permisos || cargando) {
         return (<div>Cargando...</div>)
     }
     else if (can_see) {
@@ -14,6 +14,7 @@ export const SinPermisos = (props) => {
 };
 SinPermisos.propTypes = {
     can_see: PropTypes.bool,
+    cargando: PropTypes.bool,
     nombre: PropTypes.string,
     mis_permisos: PropTypes.any.isRequired
 };

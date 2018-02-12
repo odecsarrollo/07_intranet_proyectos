@@ -1,6 +1,7 @@
 import {
     FETCH_ITEMS_BIABLE,
-    FETCH_ITEM_BIABLE
+    FETCH_ITEM_BIABLE,
+    CLEAR_ITEM_BIABLE
 } from '../../00_types';
 
 import {
@@ -9,6 +10,12 @@ import {
 } from './../../00_general_fuctions'
 
 const current_url_api = 'items_biable';
+
+export function clearItemsBiable() {
+    return function (dispatch) {
+        dispatch({type: CLEAR_ITEM_BIABLE});
+    }
+}
 
 export function fetchItemsBiablexParametro(tipo_consulta, parametro, callback = null, callback_error = null) {
     return function (dispatch) {

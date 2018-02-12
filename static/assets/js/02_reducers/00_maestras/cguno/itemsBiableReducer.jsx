@@ -1,6 +1,7 @@
 import {
     FETCH_ITEMS_BIABLE,
-    FETCH_ITEM_BIABLE
+    FETCH_ITEM_BIABLE,
+    CLEAR_ITEM_BIABLE
 } from '../../../01_actions/00_types';
 
 import _ from 'lodash';
@@ -12,6 +13,9 @@ export default function (state = [], action) {
             break;
         case FETCH_ITEM_BIABLE:
             return {...state, [action.payload.data.id_item]: action.payload.data};
+            break;
+        case CLEAR_ITEM_BIABLE:
+            return {};
             break;
         default:
             return state;

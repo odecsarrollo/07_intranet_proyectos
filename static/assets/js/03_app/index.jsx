@@ -20,6 +20,8 @@ const store = createStoreWithMiddleware(reducers);
 import TasasHorasHombresList from './00_maestras/containers/mano_obra/tasas_hora_hombre_list';
 import HojaTrabajoDiarioList from './01_mano_obra/containers/hoja_trabajo_diario/hojas_trabajos_diarios_list';
 import HojaTrabajoDiarioDetail from './01_mano_obra/containers/hoja_trabajo_diario/hoja_trabajo_diario_detail';
+import ColaboradoresList from './00_maestras/containers/cguno/colaboradores/colaboradores_list';
+
 import ProyectosList from './00_maestras/containers/proyectos/proyectos/proyectos_list';
 import ItemsCgunoList from './00_maestras/containers/cguno/items_cguno/items_cguno_list';
 import ProyectosDetail from './00_maestras/containers/proyectos/proyectos/proyectos_detail';
@@ -37,6 +39,7 @@ ReactDOM.render(
                     <Switch>
                         <Route path='/app/maestras/proyectos/proyectos/list' component={ProyectosList}/>
                         <Route path='/app/maestras/cguno/item_cguno/list' component={ItemsCgunoList}/>
+                        <Route path='/app/maestras/cguno/colaboradores/list' component={ColaboradoresList}/>
 
                         <Route path='/app/mano_obra/hojas_trabajo/list' component={HojaTrabajoDiarioList}/>
                         <Route path='/app/mano_obra/hojas_trabajo/detail/:id' component={HojaTrabajoDiarioDetail}/>

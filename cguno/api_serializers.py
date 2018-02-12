@@ -4,12 +4,17 @@ from .models import ColaboradorBiable, ItemsLiteralBiable, ItemsBiable
 
 
 class ColaboradorBiableSerializer(serializers.ModelSerializer):
+    usuario_username = serializers.CharField(source='usuario.username', read_only=True)
+    usuario_activo = serializers.BooleanField(source='usuario.is_active', read_only=True)
+
     class Meta:
         model = ColaboradorBiable
         fields = [
             'url',
             'id',
             'usuario',
+            'usuario_username',
+            'usuario_activo',
             'cedula',
             'nombres',
             'apellidos',

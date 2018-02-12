@@ -113,3 +113,18 @@ export function deleteObject(url, id, dispatches = null, callback = null, callba
     );
 }
 
+
+export function callApiMethod(url, id, method, dispatches = null, callback = null, callback_error = null) {
+    console.log(`entro call api method para ${url} para ${id}`);
+    axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+    axios_instance.defaults.xsrfCookieName = "csrftoken";
+    const FULL_URL = `${url}/${id}/${method}/`;
+    const request = axios_instance.post(FULL_URL);
+    createRequest(
+        request,
+        dispatches,
+        callback,
+        callback_error
+    );
+}
+

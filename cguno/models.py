@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from proyectos.models import Literal
 
 
@@ -43,7 +43,7 @@ class ItemsLiteralBiable(models.Model):
 
 
 class ColaboradorBiable(models.Model):
-    usuario = models.OneToOneField(User, related_name='colaborador', on_delete=models.PROTECT, null=True, blank=True)
+    usuario = models.OneToOneField(User, related_name='colaborador', on_delete=models.SET_NULL, null=True, blank=True)
     cedula = models.CharField(max_length=20, unique=True)
     nombres = models.CharField(max_length=200, null=True, blank=True)
     apellidos = models.CharField(max_length=200, null=True, blank=True)
@@ -51,9 +51,36 @@ class ColaboradorBiable(models.Model):
     es_cguno = models.BooleanField(default=False)
     autogestion_horas_trabajadas = models.BooleanField(default=False)
 
+    def create_user(self):
+        nombre_split = self.nombres.split()
+        apellidos_split = self.apellidos.split()
+        username = 'c-'
+        for parte in nombre_split:
+            username += parte[0:3]
+        for parte in apellidos_split:
+            username += parte[0:3]
+        user = User.objects.create_user(
+            username=username.lower(),
+            password=self.cedula,
+            first_name=self.nombres.upper(),
+            last_name=self.apellidos.upper()
+        )
+        self.usuario = user
+        new_group, created = Group.objects.get_or_create(name='Autogestion Horas Trabajo')
+        user.groups.add(new_group)
+        self.save()
+
+    def cambiar_activacion(self):
+        user = self.usuario
+        user.is_active = not user.is_active
+        user.save()
+
     class Meta:
         verbose_name = 'Colaborador'
         verbose_name_plural = 'Colaboradores'
+        permissions = [
+            ("list_colaboradorbiable", "Can see list colaboradores CGUNO")
+        ]
 
     def __str__(self):
         return '%s %s' % (self.nombres, self.apellidos)

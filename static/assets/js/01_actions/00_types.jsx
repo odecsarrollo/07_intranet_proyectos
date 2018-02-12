@@ -10,6 +10,7 @@ export const DELETE_PROYECTO = 'delete_proyecto';
 ////items_biable
 export const FETCH_ITEMS_BIABLE = 'fetch_items_biable';
 export const FETCH_ITEM_BIABLE = 'fetch_item_biable';
+export const CLEAR_ITEM_BIABLE = 'clear_item_biable';
 
 ////colaboradores
 export const FETCH_COLABORADORES = 'fetch_colaboradores';
@@ -17,6 +18,7 @@ export const FETCH_COLABORADOR = 'fetch_colaborador';
 export const UPDATE_COLABORADOR = 'update_colaborador';
 export const CREATE_COLABORADOR = 'create_colaborador';
 export const DELETE_COLABORADOR = 'delete_colaborador';
+export const CLEAR_COLABORADORES = 'clear_colaboradores';
 
 
 ////hojas de trabajo diarios

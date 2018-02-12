@@ -1,7 +1,8 @@
 import {
     FETCH_COLABORADORES,
     FETCH_COLABORADOR,
-    DELETE_COLABORADOR
+    DELETE_COLABORADOR,
+    CLEAR_COLABORADORES
 } from '../../../01_actions/00_types';
 
 import _ from 'lodash';
@@ -16,6 +17,9 @@ export default function (state = [], action) {
             break;
         case DELETE_COLABORADOR:
             return _.omit(state, action.payload);
+            break;
+        case CLEAR_COLABORADORES:
+            return {};
             break;
         default:
             return state;
