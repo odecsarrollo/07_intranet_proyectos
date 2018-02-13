@@ -1,5 +1,5 @@
-from django.db.models import Q
-from rest_framework import viewsets, serializers, status
+from intranet_proyectos.utils_queryset import query_varios_campos
+from rest_framework import viewsets
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 
@@ -37,7 +37,6 @@ class ColaboradorBiableViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(colaborador)
         return Response(serializer.data)
 
-
     @detail_route(methods=['post'])
     def cambiar_activacion(self, request, pk=None):
         colaborador = self.get_object()
@@ -73,23 +72,18 @@ class ItemBiableViewSet(viewsets.ModelViewSet):
     def listar_items_x_parametro(self, request):
         parametro = request.GET.get('parametro')
         tipo_parametro = int(request.GET.get('tipo_parametro'))
-        lista = None
+        search_fields = None
 
         if (tipo_parametro == 1 and len(parametro) >= 3):
-            lista = self.queryset.filter(
-                Q(descripcion__icontains=parametro) |
-                Q(nombre_tercero__icontains=parametro) |
-                Q(descripcion_dos__icontains=parametro)
-            ).all()
+            search_fields = ['descripcion', 'nombre_tercero', 'descripcion_dos']
 
         if (tipo_parametro == 2 and parametro.isnumeric()):
-            lista = self.queryset.filter(
-                id_item=int(parametro)
-            ).all()
+            search_fields = ['=id_item']
 
         if (tipo_parametro == 3 and len(parametro) >= 3):
-            lista = self.queryset.filter(
-                id_referencia__icontains=parametro
-            ).all()
-        serializer = self.get_serializer(lista, many=True)
+            search_fields = ['=id_referencia']
+
+        if search_fields:
+            self.queryset = query_varios_campos(self.queryset, search_fields, parametro)
+        serializer = self.get_serializer(self.queryset, many=True)
         return Response(serializer.data)

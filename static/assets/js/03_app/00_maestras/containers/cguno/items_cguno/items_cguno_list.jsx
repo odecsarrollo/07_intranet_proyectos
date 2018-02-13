@@ -17,10 +17,24 @@ class ItemsCGUNOLista extends Component {
             tipo_consulta: 0
         });
         this.handleChangeTipoConsulta = this.handleChangeTipoConsulta.bind(this);
+        this.onBuscar = this.onBuscar.bind(this);
     }
 
     handleChangeTipoConsulta(event, index, tipo_consulta) {
         this.setState({tipo_consulta});
+    }
+
+    onBuscar(e) {
+        e.preventDefault();
+        if (this.state.tipo_consulta === 2) {
+            this.props.fetchItemsBiablexParametro(this.state.tipo_consulta, this.state.busqueda);
+        }
+
+        if ((this.state.tipo_consulta === 1 || this.state.tipo_consulta === 3) && this.state.busqueda.length >= 3) {
+            this.props.fetchItemsBiablexParametro(this.state.tipo_consulta, this.state.busqueda);
+        } else {
+            this.props.clearItemsBiable()
+        }
     }
 
     render() {
@@ -54,21 +68,20 @@ class ItemsCGUNOLista extends Component {
                         </SelectField>
                     </div>
                     <div className="col-12 col-md-8">
-                        <ListaBusqueda
-                            busqueda={busqueda}
-                            onChange={e => {
-                                this.setState({busqueda: e.target.value});
-
-                                if (this.state.tipo_consulta === 2) {
-                                    this.props.fetchItemsBiablexParametro(this.state.tipo_consulta, e.target.value);
-                                }
-
-                                if ((this.state.tipo_consulta === 1 || this.state.tipo_consulta === 3) && e.target.value.length >= 3) {
-                                    this.props.fetchItemsBiablexParametro(this.state.tipo_consulta, e.target.value);
-                                } else {
-                                    this.props.clearItemsBiable()
-                                }
-                            }}/>
+                        <form action="" onSubmit={this.onBuscar}>
+                            <div className="row">
+                                <div className="col-md-9">
+                                    <ListaBusqueda
+                                        busqueda={busqueda}
+                                        onChange={e => {
+                                            this.setState({busqueda: e.target.value});
+                                        }}/>
+                                </div>
+                                <div className="col-md-3">
+                                    <input type="submit" className='btn btn-primary' value="Submit"></input>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                     <div className="col-12">
                         <TablaItemsCGUNO mis_permisos={mis_permisos} lista={lista_objetos}/>
