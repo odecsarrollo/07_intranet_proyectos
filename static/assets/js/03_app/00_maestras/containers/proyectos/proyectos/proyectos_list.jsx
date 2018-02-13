@@ -22,6 +22,11 @@ class ProyectoLista extends Component {
         this.onDelete = this.onDelete.bind(this);
         this.onSelectItem = this.onSelectItem.bind(this);
         this.cargarDatos = this.cargarDatos.bind(this);
+        this.error_callback = this.error_callback.bind(this);
+    }
+
+    error_callback(error) {
+        this.props.notificarErrorAjaxAction(error);
     }
 
     componentDidMount() {
@@ -30,9 +35,6 @@ class ProyectoLista extends Component {
 
     onSubmit(values) {
         const {id} = values;
-        const error_callback = (error) => {
-            this.props.notificarErrorAjaxAction(error);
-        };
         const callback = (response) => {
             this.props.fetchProyecto(response.id);
             this.setState({mostrar_form: false, item_seleccionado: null});
@@ -43,10 +45,10 @@ class ProyectoLista extends Component {
                 id,
                 values,
                 callback,
-                error_callback
+                this.error_callback
             )
         } else {
-            this.props.createProyecto(values, callback, error_callback)
+            this.props.createProyecto(values, callback, this.error_callback)
         }
     }
 
@@ -55,45 +57,35 @@ class ProyectoLista extends Component {
     }
 
     onDelete(id) {
-        const error_callback = (error) => {
-            this.props.notificarErrorAjaxAction(error);
-        };
         const {item_seleccionado} = this.state;
         const {deleteProyecto} = this.props;
         deleteProyecto(id, () => {
                 this.props.notificarAction(`Se ha eliminado el proyecto ${item_seleccionado.id_proyecto}!`);
-            }, error_callback
+            }, this.error_callback
         );
         this.setState({item_seleccionado: null, mostrar_form: false});
     }
 
     onSelectItem(item_seleccionado) {
-        const error_callback = (error) => {
-            this.props.notificarErrorAjaxAction(error);
-        };
         this.props.fetchProyecto(
             item_seleccionado.id,
             response => {
                 this.setState({item_seleccionado: response, mostrar_form: true})
             },
-            error_callback
+            this.error_callback
         );
     }
 
     cargarDatos() {
-        const error_callback = (error) => {
-            this.props.notificarErrorAjaxAction(error);
-        };
-
         this.setState({cargando: true});
         this.props.fetchMisPermisos(() => {
                 this.props.fetchProyectos(() => {
                         this.setState({cargando: false});
                     },
-                    error_callback
+                    this.error_callback
                 );
             },
-            error_callback
+            this.error_callback
         );
     }
 
@@ -116,7 +108,7 @@ class ProyectoLista extends Component {
                 nombre='Proyectos'
                 cargando={this.state.cargando}
                 mis_permisos={mis_permisos}
-                can_see={!tengoPermiso(mis_permisos, 'list_proyecto')}
+                can_see={tengoPermiso(mis_permisos, 'list_proyecto')}
             >
                 <div className="row">
                     <div className="col-12">

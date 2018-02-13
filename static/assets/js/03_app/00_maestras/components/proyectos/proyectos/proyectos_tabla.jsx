@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {pesosColombianos} from '../../../../components/utilidades/forms/common';
+import {pesosColombianos} from '../../../../components/utilidades/common';
 import {tengoPermiso} from './../../../../../01_actions/00_general_fuctions';
 import {Link} from 'react-router-dom';
 

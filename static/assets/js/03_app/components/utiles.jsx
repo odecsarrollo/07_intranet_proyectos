@@ -7,7 +7,7 @@ export const SinPermisos = (props) => {
     if (!mis_permisos || cargando) {
         return (<div>Cargando...</div>)
     }
-    else if (can_see) {
+    else if (!can_see) {
         return (<div>{`No tiene suficientes permisos para ver ${props.nombre}.`}</div>)
     }
     return props.children;

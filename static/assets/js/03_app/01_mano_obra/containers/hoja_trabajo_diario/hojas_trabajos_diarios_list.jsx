@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import * as actions from '../../../../01_actions/01_index';
-import TextField from 'material-ui/TextField';
 import TablaHojasTrabajosDiarios from '../../components/hoja_trabajo_diario/hojas_trabajos_diarios_tabla';
 import HojaTrabajoDiarioForm from '../../components/hoja_trabajo_diario/hojas_trabajos_diarios_form';
 import CargarDatos from '../../../components/cargar_datos';
+import {SinPermisos, ListaTitulo, ListaBusqueda} from '../../../components/utiles';
 
 import {tengoPermiso} from './../../../../01_actions/00_general_fuctions';
 
@@ -14,8 +14,19 @@ class HojaTrabajoDiarioLista extends Component {
         this.state = ({
             busqueda: "",
             item_seleccionado: null,
-            mostrar_form: false
-        })
+            mostrar_form: false,
+            cargando: false
+        });
+        this.error_callback = this.error_callback.bind(this);
+        this.onCancel = this.onCancel.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
+        this.onDelete = this.onDelete.bind(this);
+        this.onSelectItem = this.onSelectItem.bind(this);
+        this.cargarDatos = this.cargarDatos.bind(this);
+    }
+
+    error_callback(error) {
+        this.props.notificarErrorAjaxAction(error);
     }
 
     componentDidMount() {
@@ -24,15 +35,12 @@ class HojaTrabajoDiarioLista extends Component {
 
     onSubmit(values) {
         const {id} = values;
-        const error_callback = (error) => {
-            this.props.notificarErrorAjaxAction(error);
-        };
         const callback = (response) => {
             this.props.fetchHojaTrabajoDiario(response.id, () => {
                     this.setState({mostrar_form: false, item_seleccionado: null});
                     this.props.notificarAction(`El registro de hoja de trabajo para ${response.colaborador_nombre} ha sido exitoso!`);
                 },
-                error_callback
+                this.error_callback
             );
         };
         if (id) {
@@ -40,10 +48,10 @@ class HojaTrabajoDiarioLista extends Component {
                 id,
                 values,
                 callback,
-                error_callback
+                this.error_callback
             )
         } else {
-            this.props.createHojaTrabajoDiario(values, callback, error_callback)
+            this.props.createHojaTrabajoDiario(values, callback, this.error_callback)
         }
     }
 
@@ -52,34 +60,42 @@ class HojaTrabajoDiarioLista extends Component {
     }
 
     onDelete(id) {
-        const error_callback = (error) => {
-            this.props.notificarErrorAjaxAction(error);
-        };
         const {deleteHojaTrabajoDiario} = this.props;
         deleteHojaTrabajoDiario(id, () => {
                 this.props.notificarAction(`Se ha eliminado hoja de trabajo!`);
-            }, error_callback
+            }, this.error_callback
         );
         this.setState({item_seleccionado: null, mostrar_form: false});
     }
 
     onSelectItem(item_seleccionado) {
-        const error_callback = (error) => {
-            this.props.notificarErrorAjaxAction(error);
-        };
         this.props.fetchHojaTrabajoDiario(
             item_seleccionado.id,
             response => {
                 this.setState({item_seleccionado: response, mostrar_form: true})
             },
-            error_callback
+            this.error_callback
         );
     }
 
     cargarDatos() {
-        this.props.fetchHojasTrabajosDiarios();
-        this.props.fetchColaboradoresEnProyectos();
-        this.props.fetchMisPermisos();
+        this.setState({cargando: true});
+        this.props.fetchMisPermisos(
+            () => {
+                this.props.fetchHojasTrabajosDiarios(
+                    () => {
+                        this.props.fetchColaboradoresEnProyectos(
+                            () => {
+                                this.setState({cargando: false});
+                            },
+                            this.error_callback
+                        );
+                    },
+                    this.error_callback
+                );
+            },
+            this.error_callback
+        );
     }
 
     render() {
@@ -89,12 +105,6 @@ class HojaTrabajoDiarioLista extends Component {
             mis_permisos,
             colaboradores
         } = this.props;
-        if (!mis_permisos) {
-            return (<div>Cargando...</div>)
-        }
-        else if (!tengoPermiso(mis_permisos, 'list_hojatrabajodiario')) {
-            return (<div>No tiene suficientes permisos.</div>)
-        }
 
         let items_tabla_list = lista_objetos;
         if (!busqueda.toUpperCase().includes('TODO')) {
@@ -106,64 +116,60 @@ class HojaTrabajoDiarioLista extends Component {
             });
         }
         return (
-            <div className="row">
-                <div className="col-12">
-                    <h3 className="h3-responsive">Hojas de Trabajos Diarios</h3>
-                    {
-                        tengoPermiso(mis_permisos, 'add_hojatrabajodiario') &&
-                        <button
-                            className="btn btn-primary"
-                            style={{cursor: "pointer"}}
+            <SinPermisos
+                nombre='Hojas de Trabajo'
+                cargando={this.state.cargando}
+                mis_permisos={mis_permisos}
+                can_see={tengoPermiso(mis_permisos, 'list_hojatrabajodiario')}
+            >
+                <div className="row">
+                    <div className="col-12">
+                        <ListaTitulo
+                            titulo='Hojas de Trabajos Diarios'
+                            can_add={tengoPermiso(mis_permisos, 'add_hojatrabajodiario')}
                             onClick={() => {
                                 this.setState({item_seleccionado: null, mostrar_form: true})
                             }}
-                        >
-                            <i className="fas fa-plus"
-                               aria-hidden="true"></i>
-                        </button>
-                    }
-                </div>
-                <div className="col-12">
-                    <TextField
-                        floatingLabelText="A buscar"
-                        fullWidth={true}
-                        onChange={e => {
-                            this.setState({busqueda: e.target.value});
-                        }}
-                        autoComplete="off"
-                        value={busqueda}
-                    />
-                </div>
-                {
-                    mostrar_form &&
-                    (
-                        tengoPermiso(mis_permisos, 'add_hojatrabajodiario') ||
-                        tengoPermiso(mis_permisos, 'change_hojatrabajodiario')
-                    ) &&
-                    <div className="col-12 pl-3">
-                        <HojaTrabajoDiarioForm
-                            onSubmit={this.onSubmit.bind(this)}
-                            item_seleccionado={item_seleccionado}
-                            onCancel={this.onCancel.bind(this)}
-                            onDelete={this.onDelete.bind(this)}
-                            can_delete={item_seleccionado && tengoPermiso(mis_permisos, 'delete_hojatrabajodiario') && Number(item_seleccionado.costo_total) === 0}
-                            colaboradores={colaboradores}
                         />
                     </div>
-                }
-                <div className="col-12">
-                    <h5>Hojas de Trabajos Diarios</h5>
-                    <TablaHojasTrabajosDiarios
-                        lista={items_tabla_list}
-                        can_change={tengoPermiso(mis_permisos, 'delete_hojatrabajodiario')}
-                        can_see_costos={tengoPermiso(mis_permisos, 'costos_hojatrabajodiario')}
-                        can_see_details={tengoPermiso(mis_permisos, 'detail_hojatrabajodiario') && tengoPermiso(mis_permisos, 'list_horahojatrabajo')}
-                        item_seleccionado={item_seleccionado}
-                        onSelectItem={this.onSelectItem.bind(this)}
-                    />
+                    <div className="col-12">
+                        <ListaBusqueda
+                            busqueda={busqueda}
+                            onChange={e => {
+                                this.setState({busqueda: e.target.value});
+                            }}/>
+                    </div>
+                    {
+                        mostrar_form &&
+                        (
+                            tengoPermiso(mis_permisos, 'add_hojatrabajodiario') ||
+                            tengoPermiso(mis_permisos, 'change_hojatrabajodiario')
+                        ) &&
+                        <div className="col-12 pl-3">
+                            <HojaTrabajoDiarioForm
+                                onSubmit={this.onSubmit}
+                                item_seleccionado={item_seleccionado}
+                                onCancel={this.onCancel}
+                                onDelete={this.onDelete}
+                                can_delete={item_seleccionado && tengoPermiso(mis_permisos, 'delete_hojatrabajodiario') && Number(item_seleccionado.costo_total) === 0}
+                                colaboradores={colaboradores}
+                            />
+                        </div>
+                    }
+                    <div className="col-12">
+                        <h5>Hojas de Trabajos Diarios</h5>
+                        <TablaHojasTrabajosDiarios
+                            lista={items_tabla_list}
+                            can_change={tengoPermiso(mis_permisos, 'delete_hojatrabajodiario')}
+                            can_see_costos={tengoPermiso(mis_permisos, 'costos_hojatrabajodiario')}
+                            can_see_details={tengoPermiso(mis_permisos, 'detail_hojatrabajodiario') && tengoPermiso(mis_permisos, 'list_horahojatrabajo')}
+                            item_seleccionado={item_seleccionado}
+                            onSelectItem={this.onSelectItem}
+                        />
+                    </div>
+                    <CargarDatos cargarDatos={this.cargarDatos}/>
                 </div>
-                <CargarDatos cargarDatos={this.cargarDatos.bind(this)}/>
-            </div>
+            </SinPermisos>
         )
     }
 }

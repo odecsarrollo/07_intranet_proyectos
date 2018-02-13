@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from "prop-types";
 import {tengoPermiso} from './../../../../../01_actions/00_general_fuctions';
-import {pesosColombianos} from '../../../../components/utilidades/forms/common';
+import {pesosColombianos} from '../../../../components/utilidades/common';
 
 const ItemTabla = (props) => {
     const {item, can_see_costo_item} = props;

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {reduxForm} from 'redux-form';
-import {REGEX_SOLO_NUMEROS} from '../../../../components/utilidades/forms/common';
+import {REGEX_SOLO_NUMEROS_DINERO} from '../../../../components/utilidades/common';
 import {MyCheckboxSimple, MyTextFieldSimple} from '../../../../components/utilidades/forms/fields';
 import {MyFormTag} from '../../../../components/utilidades/forms/templates';
 import {connect} from "react-redux";
@@ -92,7 +92,7 @@ const validate = values => {
         if (values.costo_presupuestado < 0) {
             errors.costo_presupuestado = 'El costo presupuestado debe de ser positivo';
         }
-        if (!REGEX_SOLO_NUMEROS.test(values.costo_presupuestado)) {
+        if (!REGEX_SOLO_NUMEROS_DINERO.test(values.costo_presupuestado)) {
             errors.costo_presupuestado = 'Debe ser solamente números';
         }
     }
@@ -103,7 +103,7 @@ const validate = values => {
         if (values.valor_cliente < 0) {
             errors.valor_cliente = 'El precio debe de ser positivo';
         }
-        if (!REGEX_SOLO_NUMEROS.test(values.valor_cliente)) {
+        if (!REGEX_SOLO_NUMEROS_DINERO.test(values.valor_cliente)) {
             errors.valor_cliente = 'Debe ser solamente números';
         }
     }

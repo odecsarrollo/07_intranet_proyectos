@@ -21,6 +21,15 @@ class TasaHoraViewSet(viewsets.ModelViewSet):
         [x.actualizar_costos_mano_obra() for x in literales.all()]
         [x.actualizar_costos_mano_obra() for x in proyectos.all()]
 
+    def perform_destroy(self, instance):
+        if not instance.mis_dias_trabajados.exists():
+            super().perform_destroy(instance)
+        else:
+            cantidad = instance.mis_dias_trabajados.count()
+            content = {
+                'error': [('No se puede eliminar, hay %s hojas de trabajo relacionadas con esta tasa') % (cantidad)]}
+            raise serializers.ValidationError(content)
+
 
 class HojaTrabajoDiarioViewSet(viewsets.ModelViewSet):
     queryset = HojaTrabajoDiario.objects.select_related('tasa', 'colaborador').all()

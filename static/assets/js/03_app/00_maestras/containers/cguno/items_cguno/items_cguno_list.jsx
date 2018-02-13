@@ -14,10 +14,16 @@ class ItemsCGUNOLista extends Component {
         super(props);
         this.state = ({
             busqueda: "",
-            tipo_consulta: 0
+            tipo_consulta: 0,
+            cargando: false
         });
         this.handleChangeTipoConsulta = this.handleChangeTipoConsulta.bind(this);
         this.onBuscar = this.onBuscar.bind(this);
+        this.error_callback = this.error_callback.bind(this);
+    }
+
+    error_callback(error) {
+        this.props.notificarErrorAjaxAction(error);
     }
 
     handleChangeTipoConsulta(event, index, tipo_consulta) {
@@ -26,14 +32,24 @@ class ItemsCGUNOLista extends Component {
 
     onBuscar(e) {
         e.preventDefault();
+        this.setState({cargando: true});
         if (this.state.tipo_consulta === 2) {
-            this.props.fetchItemsBiablexParametro(this.state.tipo_consulta, this.state.busqueda);
+            this.props.fetchItemsBiablexParametro(
+                this.state.tipo_consulta, this.state.busqueda,
+                () => this.setState({cargando: false}),
+                this.error_callback
+            );
         }
 
         if ((this.state.tipo_consulta === 1 || this.state.tipo_consulta === 3) && this.state.busqueda.length >= 3) {
-            this.props.fetchItemsBiablexParametro(this.state.tipo_consulta, this.state.busqueda);
+            this.props.fetchItemsBiablexParametro(
+                this.state.tipo_consulta, this.state.busqueda,
+                () => this.setState({cargando: false}),
+                this.error_callback
+            );
         } else {
-            this.props.clearItemsBiable()
+            this.props.clearItemsBiable();
+            this.setState({cargando: false})
         }
     }
 
@@ -47,7 +63,7 @@ class ItemsCGUNOLista extends Component {
             <SinPermisos
                 nombre='Items CGUNO'
                 mis_permisos={mis_permisos}
-                can_see={!tengoPermiso(mis_permisos, 'list_itemsbiable')}
+                can_see={tengoPermiso(mis_permisos, 'list_itemsbiable')}
             >
                 <div className="row">
                     <div className="col-12">
@@ -56,7 +72,7 @@ class ItemsCGUNOLista extends Component {
                             can_add={false}
                         />
                     </div>
-                    <div className="col-12 col-md-3 mr-1">
+                    <div className="col-12">
                         <SelectField
                             floatingLabelText="Tipo Consulta"
                             value={this.state.tipo_consulta}
@@ -78,7 +94,7 @@ class ItemsCGUNOLista extends Component {
                                         }}/>
                                 </div>
                                 <div className="col-md-3">
-                                    <input type="submit" className='btn btn-primary' value="Submit"></input>
+                                    <input type="submit" className='btn btn-primary' value="Buscar"></input>
                                 </div>
                             </div>
                         </form>

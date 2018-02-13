@@ -5,6 +5,7 @@ import TextField from 'material-ui/TextField';
 import TablaTasaHoraHombres from '../../components/mano_obra/tasas_hora_hombre_tabla';
 import TasaHoraHombreForm from '../../components/mano_obra/tasas_hora_hombre_form';
 import CargarDatos from '../../../components/cargar_datos';
+import {SinPermisos, ListaTitulo, ListaBusqueda} from '../../../components/utiles';
 
 import {tengoPermiso} from './../../../../01_actions/00_general_fuctions';
 
@@ -14,8 +15,19 @@ class TasaHoraHombreLista extends Component {
         this.state = ({
             busqueda: "",
             item_seleccionado: null,
-            mostrar_form: false
-        })
+            mostrar_form: false,
+            cargando: false
+        });
+        this.onSubmit = this.onSubmit.bind(this);
+        this.onCancel = this.onCancel.bind(this);
+        this.onDelete = this.onDelete.bind(this);
+        this.cargarDatos = this.cargarDatos.bind(this);
+        this.onSelectItem = this.onSelectItem.bind(this);
+        this.error_callback = this.error_callback.bind(this);
+    }
+
+    error_callback(error) {
+        this.props.notificarErrorAjaxAction(error);
     }
 
     componentDidMount() {
@@ -24,9 +36,6 @@ class TasaHoraHombreLista extends Component {
 
     onSubmit(values) {
         const {id} = values;
-        const error_callback = (error) => {
-            this.props.notificarErrorAjaxAction(error);
-        };
         const callback = (response) => {
             this.props.fetchTasaHoraHombre(response.id);
             this.setState({mostrar_form: false, item_seleccionado: null});
@@ -37,10 +46,10 @@ class TasaHoraHombreLista extends Component {
                 id,
                 values,
                 callback,
-                error_callback
+                this.error_callback
             )
         } else {
-            this.props.createTasaHoraHombre(values, callback, error_callback)
+            this.props.createTasaHoraHombre(values, callback, this.error_callback)
         }
     }
 
@@ -49,35 +58,41 @@ class TasaHoraHombreLista extends Component {
     }
 
     onDelete(id) {
-        const error_callback = (error) => {
-            this.props.notificarErrorAjaxAction(error);
-        };
         const {item_seleccionado} = this.state;
         const {deleteTasaHoraHombre} = this.props;
         deleteTasaHoraHombre(id, () => {
                 this.props.notificarAction(`Se ha eliminado la tasa hora hombre para ${item_seleccionado.colaborador_nombre}!`);
-            }, error_callback
+            },
+            this.error_callback
         );
         this.setState({item_seleccionado: null, mostrar_form: false});
     }
 
     onSelectItem(item_seleccionado) {
-        const error_callback = (error) => {
-            this.props.notificarErrorAjaxAction(error);
-        };
         this.props.fetchTasaHoraHombre(
             item_seleccionado.id,
             response => {
                 this.setState({item_seleccionado: response, mostrar_form: true})
             },
-            error_callback
+            this.error_callback
         );
     }
 
     cargarDatos() {
-        this.props.fetchTasasHorasHombres();
-        this.props.fetchColaboradoresEnProyectos();
-        this.props.fetchMisPermisos();
+        this.setState({cargando: true});
+        this.props.fetchMisPermisos(() => {
+                this.props.fetchTasasHorasHombres(() => {
+                        this.props.fetchColaboradoresEnProyectos(() => {
+                                this.setState({cargando: false})
+                            },
+                            this.error_callback
+                        );
+                    },
+                    this.error_callback
+                );
+            },
+            this.error_callback
+        );
     }
 
     render() {
@@ -87,13 +102,6 @@ class TasaHoraHombreLista extends Component {
             mis_permisos,
             colaboradores
         } = this.props;
-
-        if (!mis_permisos) {
-            return (<div>Cargando...</div>)
-        }
-        else if (!tengoPermiso(mis_permisos, 'list_tasas_horas_hombres')) {
-            return (<div>No tiene suficientes permisos.</div>)
-        }
 
         let items_tabla_list = lista_objetos;
         if (!busqueda.toUpperCase().includes('TODO')) {
@@ -109,62 +117,58 @@ class TasaHoraHombreLista extends Component {
             });
         }
         return (
-            <div className="row">
-                <div className="col-12">
-                    <h3 className="h3-responsive">Tasas Horas Hombres</h3>
-                    {
-                        tengoPermiso(mis_permisos, 'add_tasahora') &&
-                        <button
-                            className="btn btn-primary"
-                            style={{cursor: "pointer"}}
+            <SinPermisos
+                nombre='Tasas Hombre'
+                cargando={this.state.cargando}
+                mis_permisos={mis_permisos}
+                can_see={tengoPermiso(mis_permisos, 'list_tasas_horas_hombres')}
+            >
+                <div className="row">
+                    <div className="col-12">
+                        <ListaTitulo
+                            titulo='Tasas Horas Hombres'
+                            can_add={tengoPermiso(mis_permisos, 'add_tasahora')}
                             onClick={() => {
                                 this.setState({item_seleccionado: null, mostrar_form: true})
                             }}
-                        >
-                            <i className="fas fa-plus"
-                               aria-hidden="true"></i>
-                        </button>
-                    }
-                </div>
-                <div className="col-12">
-                    <TextField
-                        floatingLabelText="A buscar"
-                        fullWidth={true}
-                        onChange={e => {
-                            this.setState({busqueda: e.target.value});
-                        }}
-                        autoComplete="off"
-                        value={busqueda}
-                    />
-                </div>
-                {
-                    mostrar_form &&
-                    (
-                        tengoPermiso(mis_permisos, 'add_tasahora') ||
-                        tengoPermiso(mis_permisos, 'change_tasahora')
-                    ) &&
-                    <div className="col-12 pl-3">
-                        <TasaHoraHombreForm
-                            onSubmit={this.onSubmit.bind(this)}
-                            item_seleccionado={item_seleccionado}
-                            onCancel={this.onCancel.bind(this)}
-                            onDelete={this.onDelete.bind(this)}
-                            colaboradores={colaboradores}
-                            can_delete={tengoPermiso(mis_permisos, 'delete_tasahora')}
                         />
                     </div>
-                }
-                <div className="col-12">
-                    <h5>Tasas Horas Hombres</h5>
-                    <TablaTasaHoraHombres
-                        lista={items_tabla_list}
-                        can_change={tengoPermiso(mis_permisos, 'change_tasahora')}
-                        item_seleccionado={item_seleccionado}
-                        onSelectItem={this.onSelectItem.bind(this)}
-                    />
+                    <div className="col-12">
+                        <ListaBusqueda
+                            busqueda={busqueda}
+                            onChange={e => {
+                                this.setState({busqueda: e.target.value});
+                            }}/>
+                    </div>
+                    {
+                        mostrar_form &&
+                        (
+                            tengoPermiso(mis_permisos, 'add_tasahora') ||
+                            tengoPermiso(mis_permisos, 'change_tasahora')
+                        ) &&
+                        <div className="col-12 pl-3">
+                            <TasaHoraHombreForm
+                                onSubmit={this.onSubmit}
+                                item_seleccionado={item_seleccionado}
+                                onCancel={this.onCancel}
+                                onDelete={this.onDelete}
+                                colaboradores={colaboradores}
+                                can_delete={tengoPermiso(mis_permisos, 'delete_tasahora')}
+                            />
+                        </div>
+                    }
+                    <div className="col-12">
+                        <h5>Tasas Horas Hombres</h5>
+                        <TablaTasaHoraHombres
+                            lista={items_tabla_list}
+                            can_change={tengoPermiso(mis_permisos, 'change_tasahora')}
+                            item_seleccionado={item_seleccionado}
+                            onSelectItem={this.onSelectItem}
+                        />
+                    </div>
+                    <CargarDatos cargarDatos={this.cargarDatos}/>
                 </div>
-                <CargarDatos cargarDatos={this.cargarDatos.bind(this)}/>
-            </div>
+            </SinPermisos>
         )
     }
 }

@@ -1,20 +1,14 @@
 import React, {Component} from 'react';
 import {Field, reduxForm} from 'redux-form';
-import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import MenuItem from 'material-ui/MenuItem';
+import {MyFormTag} from '../../../components/utilidades/forms/templates';
 import {
     SelectField
 } from 'redux-form-material-ui'
-import momentLocaliser from 'react-widgets-moment';
-import moment from 'moment-timezone';
 
 import {connect} from "react-redux";
-
-import BotoneriaForm from "../../../components/utilidades/forms/botoneria_form";
-
-moment.tz.setDefault("America/Bogota");
-momentLocaliser(moment);
-
+import {MyDateTimePickerField} from '../../../components/utilidades/forms/fields';
+import {fechaFormatoUno} from '../../../components/utilidades/common';
 
 const upper = value => value && value.toUpperCase();
 
@@ -22,21 +16,6 @@ class HojaTrabajoDiarioForm extends Component {
     renderSelectItem(item) {
         return (
             <MenuItem key={item.id} value={item.id} primaryText={`${item.nombres} ${item.apellidos}`}/>
-        )
-    }
-
-    renderDateTimePicker({input: {onChange, value}, showTime}) {
-        const now = moment();
-        return (
-            <div>
-                <DateTimePicker
-                    onChange={onChange}
-                    format="YYYY-MM-DD"
-                    time={false}
-                    max={new Date()}
-                    value={!value ? null : new Date(value)}
-                />
-            </div>
         )
     }
 
@@ -54,59 +33,44 @@ class HojaTrabajoDiarioForm extends Component {
             colaboradores
         } = this.props;
         return (
-            <form className="card" onSubmit={handleSubmit(onSubmit)}>
-                <div className="m-2">
-                    <h5 className="h5-responsive mt-2">{initialValues ? 'Editar ' : 'Crear '} Hojas de Trabajo
-                        Diario</h5>
-                    <div className="row">
-                        {initialValues && initialValues.fecha ?
-                            <div className="col-12 col-md-6">
-                                <h5>Fecha: <small>{moment.tz(initialValues.fecha, "America/Bogota").format('MMMM D [de] YYYY')}</small></h5>
-                            </div> :
-                            <div className="col-12 col-md-6">
-                                <label>Fecha</label>
-                                <Field
-                                    name="fecha"
-                                    type="date"
-                                    fullWidth={true}
-                                    label="Fecha"
-                                    component={this.renderDateTimePicker}
-                                />
-                            </div>
-                        }
-                        {initialValues && initialValues.colaborador ?
-                            <div className="col-12">
-                                <h5>Colaborador: <small>{initialValues.colaborador_nombre}</small></h5>
-                            </div> :
-                            <div className="col-12">
-                                <Field
-                                    fullWidth={true}
-                                    name="colaborador"
-                                    component={SelectField}
-                                    hintText="Colaborador"
-                                    floatingLabelText="Colaborador"
-                                >
-                                    {
-                                        _.map(_.sortBy(colaboradores, ['nombres', 'apellidos']), (colaborador) => {
-                                            return (this.renderSelectItem(colaborador))
-                                        })
-                                    }
-                                </Field>
-                            </div>
-                        }
-                        <BotoneriaForm
-                            texto_botones='Hoja Trabajo'
-                            pristine={pristine}
-                            submitting={submitting}
-                            reset={reset}
-                            initialValues={initialValues}
-                            onCancel={onCancel}
-                            onDelete={onDelete}
-                            can_delete={can_delete}
-                        />
+            <MyFormTag
+                nombre='Hoja Trabajo'
+                onSubmit={handleSubmit(onSubmit)}
+                pristine={pristine}
+                submitting={submitting}
+                reset={reset}
+                initialValues={initialValues}
+                onCancel={onCancel}
+                onDelete={onDelete}
+                can_delete={can_delete}
+            >
+                {initialValues && initialValues.fecha ?
+                    <div className="col-12 col-md-6">
+                        <h5>Fecha: <small>{fechaFormatoUno(initialValues.fecha)}</small></h5>
+                    </div> :
+                    <MyDateTimePickerField nombre='Fecha' name='fecha' className='col-md-6'/>
+                }
+                {initialValues && initialValues.colaborador ?
+                    <div className="col-12">
+                        <h5>Colaborador: <small>{initialValues.colaborador_nombre}</small></h5>
+                    </div> :
+                    <div className="col-12">
+                        <Field
+                            fullWidth={true}
+                            name="colaborador"
+                            component={SelectField}
+                            hintText="Colaborador"
+                            floatingLabelText="Colaborador"
+                        >
+                            {
+                                _.map(_.sortBy(colaboradores, ['nombres', 'apellidos']), (colaborador) => {
+                                    return (this.renderSelectItem(colaborador))
+                                })
+                            }
+                        </Field>
                     </div>
-                </div>
-            </form>
+                }
+            </MyFormTag>
         )
     }
 }

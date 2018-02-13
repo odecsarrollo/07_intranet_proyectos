@@ -51,11 +51,14 @@ const ItemTabla = (props) => {
             {
                 can_change &&
                 <td className='text-center'>
-                    <i className="fas fa-edit puntero"
-                       style={{cursor: "pointer"}}
-                       onClick={() => onSelectItem(item)}
-                    >
-                    </i>
+                    {
+                        !item.es_cguno &&
+                        <i className="fas fa-edit puntero"
+                           style={{cursor: "pointer"}}
+                           onClick={() => onSelectItem(item)}
+                        >
+                        </i>
+                    }
                 </td>
             }
         </tr>

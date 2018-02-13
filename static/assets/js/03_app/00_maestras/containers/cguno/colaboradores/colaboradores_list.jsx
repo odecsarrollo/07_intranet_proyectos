@@ -23,8 +23,13 @@ class ColaboradoresLista extends Component {
         this.onUpdate = this.onUpdate.bind(this);
         this.onSelectItem = this.onSelectItem.bind(this);
         this.cargarDatos = this.cargarDatos.bind(this);
-        this.onCreateColaboradorUsuario = this.onCreateColaboradorUsuario.bind(this)
-        this.onCambiarActivacion = this.onCambiarActivacion.bind(this)
+        this.onCreateColaboradorUsuario = this.onCreateColaboradorUsuario.bind(this);
+        this.onCambiarActivacion = this.onCambiarActivacion.bind(this);
+        this.error_callback = this.error_callback.bind(this);
+    }
+
+    error_callback(error) {
+        this.props.notificarErrorAjaxAction(error);
     }
 
     componentDidMount() {
@@ -36,9 +41,6 @@ class ColaboradoresLista extends Component {
     }
 
     onUpdate(item) {
-        const error_callback = (error) => {
-            this.props.notificarErrorAjaxAction(error);
-        };
         this.props.updateColaborador(
             item.id,
             item,
@@ -48,44 +50,35 @@ class ColaboradoresLista extends Component {
                     (response) => {
                         this.props.notificarAction(`El registro del colaborador ${response.nombres} ${response.apellidos} ha sido exitoso!`)
                     },
-                    error_callback
+                    this.error_callback
                 )
             },
-            error_callback
+            this.error_callback
         )
     }
 
     onCreateColaboradorUsuario(item) {
-        const error_callback = (error) => {
-            this.props.notificarErrorAjaxAction(error);
-        };
         this.props.createColaboradorUsuario(
             item.id,
             (response) => {
                 this.props.notificarAction(`Se ha creado el usuario ${response.usuario_username} para ${response.nombres} ${response.apellidos} con exitoso!`)
             },
-            error_callback
+            this.error_callback
         )
     }
 
     onCambiarActivacion(item) {
-        const error_callback = (error) => {
-            this.props.notificarErrorAjaxAction(error);
-        };
         this.props.activateColaboradorUsuario(
             item.id,
             (response) => {
                 this.props.notificarAction(`Se ha cambiado la activacion del usuario ${response.usuario_username} para ${response.nombres} ${response.apellidos} con exitoso!`)
             },
-            error_callback
+            this.error_callback
         )
     }
 
     onSubmit(values) {
         const {id} = values;
-        const error_callback = (error) => {
-            this.props.notificarErrorAjaxAction(error);
-        };
         const callback = (response) => {
             this.props.fetchColaborador(response.id);
             this.setState({mostrar_form: false, item_seleccionado: null});
@@ -96,10 +89,10 @@ class ColaboradoresLista extends Component {
                 id,
                 values,
                 callback,
-                error_callback
+                this.error_callback
             )
         } else {
-            this.props.createColaborador({...values, es_cguno: false}, callback, error_callback)
+            this.props.createColaborador({...values, es_cguno: false}, callback, this.error_callback)
         }
     }
 
@@ -108,44 +101,35 @@ class ColaboradoresLista extends Component {
     }
 
     onDelete(id) {
-        const error_callback = (error) => {
-            this.props.notificarErrorAjaxAction(error);
-        };
         const {item_seleccionado} = this.state;
         const {deleteColaborador} = this.props;
         deleteColaborador(id, () => {
                 this.props.notificarAction(`Se ha eliminado el colaborador ${item_seleccionado.nombres} ${item_seleccionado.apellidos}!`);
-            }, error_callback
+            }, this.error_callback
         );
         this.setState({item_seleccionado: null, mostrar_form: false});
     }
 
     onSelectItem(item_seleccionado) {
-        const error_callback = (error) => {
-            this.props.notificarErrorAjaxAction(error);
-        };
         this.props.fetchColaborador(
             item_seleccionado.id,
             response => {
                 this.setState({item_seleccionado: response, mostrar_form: true})
             },
-            error_callback
+            this.error_callback
         );
     }
 
     cargarDatos() {
-        const error_callback = (error) => {
-            this.props.notificarErrorAjaxAction(error);
-        };
         this.setState({cargando: true});
         this.props.fetchMisPermisos(() => {
                 this.props.fetchColaboradores(() => {
                         this.setState({cargando: false});
                     },
-                    error_callback
+                    this.error_callback
                 );
             },
-            error_callback
+            this.error_callback
         );
     }
 
@@ -172,7 +156,7 @@ class ColaboradoresLista extends Component {
                 nombre='Colaboradores'
                 cargando={this.state.cargando}
                 mis_permisos={mis_permisos}
-                can_see={!tengoPermiso(mis_permisos, 'list_colaboradorbiable')}
+                can_see={tengoPermiso(mis_permisos, 'list_colaboradorbiable')}
             >
                 <div className="row">
                     <div className="col-12">

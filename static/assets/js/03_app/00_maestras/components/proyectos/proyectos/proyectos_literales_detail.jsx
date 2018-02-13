@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import {formatMoney} from 'accounting';
-import TextField from 'material-ui/TextField';
+import {pesosColombianos} from '../../../../components/utilidades/common';
+import {ListaBusqueda} from '../../../../components/utiles';
 import TablaProyectoLiteralesMateriales from './../../../components/proyectos/proyectos/proyectos_literales_materiales_tabla';
 
 export default class ProyectoLiteralDetail extends Component {
@@ -43,30 +43,26 @@ export default class ProyectoLiteralDetail extends Component {
                         </div>
                         <div className="col-12">
                             <h6 className='h6-response'>Costo
-                                Materiales: <small>{formatMoney(Number(literal.costo_materiales), "$", 0, ".", ",")}</small>
+                                Materiales: <small>{pesosColombianos(literal.costo_materiales)}</small>
                             </h6>
                         </div>
                         <div className="col-12">
                             <h6 className='h6-response'>Costo
                                 Mano
-                                Obra: <small>{formatMoney(Number(literal.costo_mano_obra), "$", 0, ".", ",")}</small>
+                                Obra: <small>{pesosColombianos(literal.costo_mano_obra)}</small>
                             </h6>
                         </div>
                         <div className="col-12">
                             <h6 className='h6-response'>Costo
-                                Total: <small>{formatMoney(Number(literal.costo_mano_obra) + Number(literal.costo_materiales), "$", 0, ".", ",")}</small>
+                                Total: <small>{pesosColombianos(Number(literal.costo_mano_obra) + Number(literal.costo_materiales))}</small>
                             </h6>
                         </div>
                         <div className="col-12">
-                            <TextField
-                                floatingLabelText="A buscar"
-                                fullWidth={true}
+                            <ListaBusqueda
+                                busqueda={busqueda}
                                 onChange={e => {
                                     this.setState({busqueda: e.target.value});
-                                }}
-                                autoComplete="off"
-                                value={busqueda}
-                            />
+                                }}/>
                         </div>
                         <div className="col-12">
                             <TablaProyectoLiteralesMateriales lista_materiales={listado_materiales}/>
