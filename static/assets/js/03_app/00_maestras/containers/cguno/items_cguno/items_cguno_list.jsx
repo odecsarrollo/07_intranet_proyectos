@@ -61,6 +61,7 @@ class ItemsCGUNOLista extends Component {
         } = this.props;
         return (
             <SinPermisos
+                cargando={this.state.cargando}
                 nombre='Items CGUNO'
                 mis_permisos={mis_permisos}
                 can_see={tengoPermiso(mis_permisos, 'list_itemsbiable')}
