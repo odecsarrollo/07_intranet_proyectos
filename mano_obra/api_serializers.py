@@ -45,6 +45,7 @@ class HoraHojaTrabajoSerializer(serializers.ModelSerializer):
     literal_nombre = serializers.CharField(source='literal.id_literal', read_only=True)
     literal_descripcion = serializers.CharField(source='literal.descripcion', read_only=True)
     literal_abierto = serializers.BooleanField(source='literal.proyecto.abierto', read_only=True)
+    proyecto = serializers.IntegerField(source='literal.proyecto_id', read_only=True)
 
     class Meta:
         model = HoraHojaTrabajo
@@ -57,5 +58,6 @@ class HoraHojaTrabajoSerializer(serializers.ModelSerializer):
             'costo_total',
             'literal_nombre',
             'literal_abierto',
-            'literal_descripcion'
+            'literal_descripcion',
+            'proyecto'
         ]

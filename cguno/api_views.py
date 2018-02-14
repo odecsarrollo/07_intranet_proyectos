@@ -74,16 +74,17 @@ class ItemBiableViewSet(viewsets.ModelViewSet):
         tipo_parametro = int(request.GET.get('tipo_parametro'))
         search_fields = None
 
+        if (tipo_parametro == 2 and parametro.isnumeric()):
+            self.queryset = self.queryset.filter(id_item=int(parametro))
+
         if (tipo_parametro == 1 and len(parametro) >= 3):
             search_fields = ['descripcion', 'nombre_tercero', 'descripcion_dos']
-
-        if (tipo_parametro == 2 and parametro.isnumeric()):
-            search_fields = ['=id_item']
 
         if (tipo_parametro == 3 and len(parametro) >= 3):
             search_fields = ['=id_referencia']
 
         if search_fields:
             self.queryset = query_varios_campos(self.queryset, search_fields, parametro)
+
         serializer = self.get_serializer(self.queryset, many=True)
         return Response(serializer.data)

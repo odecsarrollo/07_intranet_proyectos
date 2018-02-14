@@ -15,7 +15,8 @@ class LiteralSerializer(serializers.ModelSerializer):
             'abierto',
             'descripcion',
             'costo_materiales',
-            'costo_mano_obra'
+            'costo_mano_obra',
+            'proyecto'
         ]
 
 

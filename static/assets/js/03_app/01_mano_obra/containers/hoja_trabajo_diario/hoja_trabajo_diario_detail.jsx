@@ -76,11 +76,16 @@ class HojaTrabajoDiarioDetail extends Component {
     }
 
     onSelectItem(item_seleccionado) {
-        this.props.fetchHoraHojaTrabajo(
-            item_seleccionado.id,
-            response => {
-                this.setState({item_seleccionado: response, mostrar_form: true})
-            },
+        this.props.fetchLiteralesAbiertos(
+            this.props.fetchProyectosAbiertos(() =>
+                this.props.fetchHoraHojaTrabajo(
+                    item_seleccionado.id,
+                    response => {
+                        this.setState({item_seleccionado: response, mostrar_form: true})
+                    },
+                    this.error_callback
+                ), this.error_callback
+            ),
             this.error_callback
         );
     }
@@ -96,10 +101,7 @@ class HojaTrabajoDiarioDetail extends Component {
                         this.props.fetchHorasHojasTrabajosxHoja(
                             response.id,
                             () => {
-                                this.props.fetchLiteralesAbiertos(
-                                    this.setState({cargando: false}),
-                                    this.error_callback
-                                );
+                                this.setState({cargando: false});
                             },
                             this.error_callback
                         )
@@ -118,7 +120,8 @@ class HojaTrabajoDiarioDetail extends Component {
             objeto,
             horas_hoja_trabajo,
             mis_permisos,
-            literales
+            literales,
+            proyectos
         } = this.props;
 
         const {
@@ -129,6 +132,9 @@ class HojaTrabajoDiarioDetail extends Component {
         if (!objeto) {
             return (<div>Cargando ...</div>)
         }
+
+        const seleccionado_literal_id = [item_seleccionado ? item_seleccionado.id : 0];
+        const literales_disponibles = _.omit(literales, _.map(_.omit(horas_hoja_trabajo, seleccionado_literal_id), registro => registro.literal));
         return (
             <SinPermisos
                 nombre='detalle de Hoja de Trabajo'
@@ -171,7 +177,16 @@ class HojaTrabajoDiarioDetail extends Component {
                                         className="btn btn-primary"
                                         style={{cursor: "pointer"}}
                                         onClick={() => {
-                                            this.setState({item_seleccionado: null, mostrar_form: true})
+                                            this.props.fetchLiteralesAbiertos(
+                                                this.props.fetchProyectosAbiertos(
+                                                    () => this.setState({
+                                                        item_seleccionado: null,
+                                                        mostrar_form: true
+                                                    }),
+                                                    this.error_callback
+                                                ),
+                                                this.error_callback
+                                            );
                                         }}
                                     >
                                         <i className="fas fa-plus"
@@ -187,8 +202,9 @@ class HojaTrabajoDiarioDetail extends Component {
                                 ) &&
                                 <div className="col-12 pl-3">
                                     <HoraTrabajoDiarioForm
+                                        proyectos={proyectos}
                                         onSubmit={this.onSubmit}
-                                        literales_lista={literales}
+                                        literales_disponibles_lista={literales_disponibles}
                                         item_seleccionado={item_seleccionado}
                                         onCancel={this.onCancel}
                                         onDelete={this.onDelete}
@@ -226,7 +242,8 @@ function mapPropsToState(state, ownProps) {
         objeto: state.hojas_trabajos_diarios[id],
         mis_permisos: state.mis_permisos,
         horas_hoja_trabajo: state.horas_hoja_trabajo,
-        literales: state.literales
+        literales: state.literales,
+        proyectos: state.proyectos
     }
 }
 

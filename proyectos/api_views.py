@@ -10,6 +10,12 @@ class ProyectoViewSet(viewsets.ModelViewSet):
     queryset = Proyecto.objects.prefetch_related('mis_literales').all()
     serializer_class = ProyectoSerializer
 
+    @list_route(http_method_names=['get', ])
+    def abiertos(self, request):
+        lista = self.queryset.filter(abierto=True).all()
+        serializer = self.get_serializer(lista, many=True)
+        return Response(serializer.data)
+
 
 class LiteralViewSet(viewsets.ModelViewSet):
     queryset = Literal.objects.select_related(

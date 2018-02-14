@@ -4,9 +4,11 @@ import {Field} from 'redux-form';
 import PropTypes from "prop-types";
 import {
     TextField,
-    Checkbox
+    Checkbox,
+    SelectField
 } from 'redux-form-material-ui'
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';
+import MenuItem from 'material-ui/MenuItem';
 
 import momentLocaliser from 'react-widgets-moment';
 import moment from 'moment-timezone';
@@ -101,39 +103,3 @@ MyDateTimePickerField.propTypes = {
     className: PropTypes.string,
     nombre: PropTypes.string
 };
-
-// const MySelectFieldItem = (props) => {
-//     const {
-//         item
-//     } = props;
-//     return (
-//         <MenuItem key={item.id} value={item.id}
-//                   primaryText={`${item.id_literal} - ${item.descripcion}`}/>
-//     )
-// };
-//
-// export const MySelectFieldSimple = (props) => {
-//     let normalize = null;
-//     if (props.case === 'U') {
-//         normalize = upper
-//     } else if (props.case === 'L') {
-//         normalize = lower
-//     }
-//     return (
-//         <div className={props.className}  >
-//             <Field
-//                 fullWidth={true}
-//                 name="literal"
-//                 component={SelectField}
-//                 hintText="Literal Op"
-//                 floatingLabelText="Literal Op"
-//             >
-//                 {
-//                     _.map(_.sortBy(literales_lista, ['id_literal']), (literal) => {
-//                         return <MySelectFieldItem item={item}/>
-//                     })
-//                 }
-//             </Field>
-//         </div>
-//     )
-// };
