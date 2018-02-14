@@ -20,7 +20,7 @@ const ItemTabla = (props) => {
                 {pesosColombianos(item.costo_mano_obra)}
             </td>
             <td>
-                {pesosColombianos(item.costo_mano_obra)}
+                {pesosColombianos(Number(item.costo_mano_obra) + Number(item.costo_materiales))}
             </td>
         </tr>
     )
@@ -28,7 +28,8 @@ const ItemTabla = (props) => {
 
 
 const TablaProyectosLiterales = (props) => {
-    const {lista_literales} = props;
+    const {lista_literales, proyecto} = props;
+    console.log(proyecto)
     return (
         <table className="table table-responsive table-striped tabla-maestra">
             <thead>
@@ -45,7 +46,12 @@ const TablaProyectosLiterales = (props) => {
             })}
             </tbody>
             <tfoot>
-
+            <tr>
+                <td></td>
+                <td>{pesosColombianos(proyecto.costo_materiales)}</td>
+                <td>{pesosColombianos(proyecto.costo_mano_obra)}</td>
+                <td>{pesosColombianos(Number(proyecto.costo_mano_obra) + Number(proyecto.costo_materiales))}</td>
+            </tr>
             </tfoot>
         </table>
     )

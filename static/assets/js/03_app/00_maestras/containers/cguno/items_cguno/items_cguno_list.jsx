@@ -14,8 +14,7 @@ class ItemsCGUNOLista extends Component {
         super(props);
         this.state = ({
             busqueda: "",
-            tipo_consulta: 0,
-            cargando: false
+            tipo_consulta: 0
         });
         this.handleChangeTipoConsulta = this.handleChangeTipoConsulta.bind(this);
         this.onBuscar = this.onBuscar.bind(this);
@@ -32,11 +31,11 @@ class ItemsCGUNOLista extends Component {
 
     onBuscar(e) {
         e.preventDefault();
-        this.setState({cargando: true});
+        this.props.cargando();
         if (this.state.tipo_consulta === 2) {
             this.props.fetchItemsBiablexParametro(
                 this.state.tipo_consulta, this.state.busqueda,
-                () => this.setState({cargando: false}),
+                () => this.props.noCargando(),
                 this.error_callback
             );
         }
@@ -44,12 +43,12 @@ class ItemsCGUNOLista extends Component {
         if ((this.state.tipo_consulta === 1 || this.state.tipo_consulta === 3) && this.state.busqueda.length >= 3) {
             this.props.fetchItemsBiablexParametro(
                 this.state.tipo_consulta, this.state.busqueda,
-                () => this.setState({cargando: false}),
+                () => this.props.noCargando(),
                 this.error_callback
             );
         } else {
             this.props.clearItemsBiable();
-            this.setState({cargando: false})
+            this.props.noCargando();
         }
     }
 
@@ -57,11 +56,12 @@ class ItemsCGUNOLista extends Component {
         const {busqueda} = this.state;
         const {
             lista_objetos,
-            mis_permisos
+            mis_permisos,
+            esta_cargando
         } = this.props;
         return (
             <SinPermisos
-                cargando={this.state.cargando}
+                cargando={esta_cargando}
                 nombre='Items CGUNO'
                 mis_permisos={mis_permisos}
                 can_see={tengoPermiso(mis_permisos, 'list_itemsbiable')}
@@ -112,6 +112,7 @@ class ItemsCGUNOLista extends Component {
 function mapPropsToState(state, ownProps) {
     return {
         lista_objetos: state.items_cguno,
+        esta_cargando: state.esta_cargando,
         mis_permisos: state.mis_permisos
     }
 }

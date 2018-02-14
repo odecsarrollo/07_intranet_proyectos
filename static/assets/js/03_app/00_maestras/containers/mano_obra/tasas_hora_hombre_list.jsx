@@ -15,8 +15,7 @@ class TasaHoraHombreLista extends Component {
         this.state = ({
             busqueda: "",
             item_seleccionado: null,
-            mostrar_form: false,
-            cargando: false
+            mostrar_form: false
         });
         this.onSubmit = this.onSubmit.bind(this);
         this.onCancel = this.onCancel.bind(this);
@@ -35,11 +34,13 @@ class TasaHoraHombreLista extends Component {
     }
 
     onSubmit(values) {
+        this.props.cargando();
         const {id} = values;
         const callback = (response) => {
-            this.props.fetchTasaHoraHombre(response.id);
+            this.props.fetchTasaHoraHombre(response.id, null, this.error_callback);
             this.setState({mostrar_form: false, item_seleccionado: null});
             this.props.notificarAction(`El registro de la tasa hora hombre para ${values.colaborador_nombre} ha sido exitoso!`);
+            this.props.noCargando();
         };
         if (id) {
             this.props.updateTasaHoraHombre(
@@ -58,10 +59,12 @@ class TasaHoraHombreLista extends Component {
     }
 
     onDelete(id) {
+        this.props.cargando();
         const {item_seleccionado} = this.state;
         const {deleteTasaHoraHombre} = this.props;
         deleteTasaHoraHombre(id, () => {
                 this.props.notificarAction(`Se ha eliminado la tasa hora hombre para ${item_seleccionado.colaborador_nombre}!`);
+                this.props.noCargando();
             },
             this.error_callback
         );
@@ -69,9 +72,11 @@ class TasaHoraHombreLista extends Component {
     }
 
     onSelectItem(item_seleccionado) {
+        this.props.cargando();
         this.props.fetchTasaHoraHombre(
             item_seleccionado.id,
             response => {
+                this.props.noCargando();
                 this.setState({item_seleccionado: response, mostrar_form: true})
             },
             this.error_callback
@@ -79,11 +84,11 @@ class TasaHoraHombreLista extends Component {
     }
 
     cargarDatos() {
-        this.setState({cargando: true});
+        this.props.cargando();
         this.props.fetchMisPermisos(() => {
                 this.props.fetchTasasHorasHombres(() => {
                         this.props.fetchColaboradoresEnProyectos(() => {
-                                this.setState({cargando: false})
+                                this.props.noCargando();
                             },
                             this.error_callback
                         );
@@ -100,7 +105,8 @@ class TasaHoraHombreLista extends Component {
         const {
             lista_objetos,
             mis_permisos,
-            colaboradores
+            colaboradores,
+            esta_cargando
         } = this.props;
 
         let items_tabla_list = lista_objetos;
@@ -119,7 +125,7 @@ class TasaHoraHombreLista extends Component {
         return (
             <SinPermisos
                 nombre='Tasas Hombre'
-                cargando={this.state.cargando}
+                cargando={esta_cargando}
                 mis_permisos={mis_permisos}
                 can_see={tengoPermiso(mis_permisos, 'list_tasas_horas_hombres')}
             >
@@ -177,6 +183,7 @@ function mapPropsToState(state, ownProps) {
     return {
         lista_objetos: state.tasas_horas_hombres,
         colaboradores: state.colaboradores,
+        esta_cargando: state.esta_cargando,
         mis_permisos: state.mis_permisos
     }
 }

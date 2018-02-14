@@ -1,5 +1,9 @@
 export const FETCH_PERMISSIONS = 'fetch_permisos';
 
+////cargando
+export const LOADING = 'is_loading';
+export const LOADING_STOP = 'in_not_loading';
+
 ////proyectos
 export const FETCH_PROYECTOS = 'fetch_proyectos';
 export const FETCH_PROYECTO = 'fetch_proyecto';

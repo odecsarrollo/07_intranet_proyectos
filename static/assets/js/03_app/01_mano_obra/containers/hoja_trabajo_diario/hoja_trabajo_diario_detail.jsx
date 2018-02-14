@@ -16,8 +16,7 @@ class HojaTrabajoDiarioDetail extends Component {
         this.state = ({
             busqueda: "",
             item_seleccionado: null,
-            mostrar_form: false,
-            cargando: false
+            mostrar_form: false
         });
         this.onSubmit = this.onSubmit.bind(this);
         this.onCancel = this.onCancel.bind(this);
@@ -40,12 +39,21 @@ class HojaTrabajoDiarioDetail extends Component {
     }
 
     onSubmit(values) {
+        this.props.cargando();
         const {id} = values;
         const callback = (response) => {
             this.props.fetchHoraHojaTrabajo(response.id, () => {
-                this.props.fetchHojaTrabajoDiario(this.props.objeto.id, null, this.error_callback);
-                this.props.notificarAction(`El registro del tiempo de la op ${response.literal_descripcion}`);
-            });
+                    this.props.fetchHojaTrabajoDiario(
+                        this.props.objeto.id,
+                        () => {
+                            this.props.noCargando();
+                            this.props.notificarAction(`El registro del tiempo de la op ${response.literal_descripcion}`);
+                        },
+                        this.error_callback
+                    );
+                },
+                this.error_callback
+            );
             this.setState({mostrar_form: false, item_seleccionado: null});
         };
         if (id) {
@@ -65,26 +73,34 @@ class HojaTrabajoDiarioDetail extends Component {
     }
 
     onDelete(id) {
+        this.props.cargando();
         const {item_seleccionado} = this.state;
         const {deleteHoraHojaTrabajo} = this.props;
         deleteHoraHojaTrabajo(id, () => {
-                this.props.fetchHojaTrabajoDiario(this.props.objeto.id, null, this.error_callback);
-                this.props.notificarAction(`Se ha eliminado el tiempo de la op ${item_seleccionado.literal_descripcion}!`);
+                this.props.fetchHojaTrabajoDiario(this.props.objeto.id,
+                    () => {
+                        this.props.noCargando();
+                        this.props.notificarAction(`Se ha eliminado el tiempo de la op ${item_seleccionado.literal_descripcion}!`);
+                    }
+                    , this.error_callback);
             }, this.error_callback
         );
         this.setState({item_seleccionado: null, mostrar_form: false});
     }
 
     onSelectItem(item_seleccionado) {
+        this.props.cargando();
         this.props.fetchLiteralesAbiertos(
             this.props.fetchProyectosAbiertos(() =>
-                this.props.fetchHoraHojaTrabajo(
-                    item_seleccionado.id,
-                    response => {
-                        this.setState({item_seleccionado: response, mostrar_form: true})
-                    },
-                    this.error_callback
-                ), this.error_callback
+                    this.props.fetchHoraHojaTrabajo(
+                        item_seleccionado.id,
+                        response => {
+                            this.setState({item_seleccionado: response, mostrar_form: true})
+                            this.props.noCargando();
+                        },
+                        this.error_callback
+                    ),
+                this.error_callback
             ),
             this.error_callback
         );
@@ -92,7 +108,7 @@ class HojaTrabajoDiarioDetail extends Component {
 
 
     cargarDatos() {
-        this.setState({cargando: true});
+        this.props.cargando();
         const {match: {params: {id}}} = this.props;
         this.props.fetchMisPermisos(
             () => {
@@ -101,7 +117,7 @@ class HojaTrabajoDiarioDetail extends Component {
                         this.props.fetchHorasHojasTrabajosxHoja(
                             response.id,
                             () => {
-                                this.setState({cargando: false});
+                                this.props.noCargando();
                             },
                             this.error_callback
                         )
@@ -121,7 +137,8 @@ class HojaTrabajoDiarioDetail extends Component {
             horas_hoja_trabajo,
             mis_permisos,
             literales,
-            proyectos
+            proyectos,
+            esta_cargando
         } = this.props;
 
         const {
@@ -138,7 +155,7 @@ class HojaTrabajoDiarioDetail extends Component {
         return (
             <SinPermisos
                 nombre='detalle de Hoja de Trabajo'
-                cargando={this.state.cargando}
+                cargando={esta_cargando}
                 mis_permisos={mis_permisos}
                 can_see={tengoPermiso(mis_permisos, 'detail_hojatrabajodiario')}
             >
@@ -177,12 +194,13 @@ class HojaTrabajoDiarioDetail extends Component {
                                         className="btn btn-primary"
                                         style={{cursor: "pointer"}}
                                         onClick={() => {
+                                            this.props.cargando();
                                             this.props.fetchLiteralesAbiertos(
                                                 this.props.fetchProyectosAbiertos(
-                                                    () => this.setState({
-                                                        item_seleccionado: null,
-                                                        mostrar_form: true
-                                                    }),
+                                                    () => {
+                                                        this.setState({item_seleccionado: null, mostrar_form: true})
+                                                        this.props.noCargando();
+                                                    },
                                                     this.error_callback
                                                 ),
                                                 this.error_callback
@@ -243,6 +261,7 @@ function mapPropsToState(state, ownProps) {
         mis_permisos: state.mis_permisos,
         horas_hoja_trabajo: state.horas_hoja_trabajo,
         literales: state.literales,
+        esta_cargando: state.esta_cargando,
         proyectos: state.proyectos
     }
 }

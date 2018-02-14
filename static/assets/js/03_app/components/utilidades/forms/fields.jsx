@@ -4,11 +4,9 @@ import {Field} from 'redux-form';
 import PropTypes from "prop-types";
 import {
     TextField,
-    Checkbox,
-    SelectField
+    Checkbox
 } from 'redux-form-material-ui'
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';
-import MenuItem from 'material-ui/MenuItem';
 
 import momentLocaliser from 'react-widgets-moment';
 import moment from 'moment-timezone';

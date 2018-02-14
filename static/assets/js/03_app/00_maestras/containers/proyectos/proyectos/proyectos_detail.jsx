@@ -13,9 +13,7 @@ class ProyectoDetail extends Component {
         this.state = ({
             busqueda: "",
             item_seleccionado: null,
-            mostrar_literal_info: false,
-            cargando: false,
-            cargando_literales: false
+            mostrar_literal_info: false
         });
         this.error_callback = this.error_callback.bind(this);
         this.cargarDatos = this.cargarDatos.bind(this);
@@ -31,7 +29,7 @@ class ProyectoDetail extends Component {
     }
 
     cargarDatos() {
-        this.setState({cargando: true});
+        this.props.cargando();
         const {match: {params: {id}}} = this.props;
         const {item_seleccionado} = this.state;
         this.props.fetchProyecto(id, null, this.error_callback);
@@ -42,7 +40,8 @@ class ProyectoDetail extends Component {
                     this.props.fetchItemsLiterales(
                         response.id,
                         () => {
-                            this.setState({item_seleccionado: response, mostrar_literal_info: true, cargando: false});
+                            this.setState({item_seleccionado: response, mostrar_literal_info: true});
+                            this.props.noCargando()
                         },
                         this.error_callback
                     );
@@ -50,12 +49,12 @@ class ProyectoDetail extends Component {
                 this.error_callback
             );
         } else {
-            this.setState({cargando: false})
+            this.props.noCargando();
         }
     }
 
     onLiteralSelect(item) {
-        this.setState({cargando_literales: true});
+        this.props.cargando();
         this.props.fetchLiteral(
             item.id,
             response => {
@@ -63,9 +62,9 @@ class ProyectoDetail extends Component {
                     () => {
                         this.setState({
                             item_seleccionado: response,
-                            mostrar_literal_info: true,
-                            cargando_literales: false
+                            mostrar_literal_info: true
                         });
+                        this.props.noCargando();
                     },
                     this.error_callback
                 );
@@ -75,7 +74,7 @@ class ProyectoDetail extends Component {
     }
 
     render() {
-        const {proyecto, items_literales, mis_permisos} = this.props;
+        const {proyecto, items_literales, mis_permisos, esta_cargando} = this.props;
         const {item_seleccionado} = this.state;
         if (!proyecto) {
             return (<div>Cargando ...</div>)
@@ -83,7 +82,7 @@ class ProyectoDetail extends Component {
         return (
             <SinPermisos
                 nombre='Proyecto Detalle'
-                cargando={this.state.cargando}
+                cargando={esta_cargando}
                 mis_permisos={mis_permisos}
                 can_see={tengoPermiso(mis_permisos, 'detail_proyecto')}
             >
@@ -97,22 +96,16 @@ class ProyectoDetail extends Component {
                             lista_literales={proyecto.mis_literales}
                             onSelectItem={this.onLiteralSelect}
                             item_seleccionado={item_seleccionado}
+                            proyecto={proyecto}
                         />
                     </div>
                     {
                         item_seleccionado &&
                         <div className="col-12 col-lg-8">
-                            <SinPermisos
-                                nombre='Literales'
-                                cargando={this.state.cargando_literales}
-                                mis_permisos={mis_permisos}
-                                can_see={true}
-                            >
-                                <ProyectoLiteralDetail
-                                    literal={item_seleccionado}
-                                    items_literales={items_literales}
-                                />
-                            </SinPermisos>
+                            <ProyectoLiteralDetail
+                                literal={item_seleccionado}
+                                items_literales={items_literales}
+                            />
                         </div>
                     }
                     <CargarDatos cargarDatos={this.cargarDatos}/>
@@ -127,6 +120,7 @@ function mapPropsToState(state, ownProps) {
     return {
         proyecto: state.proyectos[id],
         items_literales: state.items_literales,
+        esta_cargando: state.esta_cargando,
         mis_permisos: state.mis_permisos
     }
 }

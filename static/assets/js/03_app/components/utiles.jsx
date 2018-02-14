@@ -1,16 +1,19 @@
 import React from 'react';
 import PropTypes from "prop-types";
 import TextField from 'material-ui/TextField';
+import Loading from '../components/utilidades/loading_overlay';
 
 export const SinPermisos = (props) => {
     const {mis_permisos, can_see, cargando} = props;
-    if (!mis_permisos || cargando) {
-        return (<div>Cargando...</div>)
-    }
-    else if (!can_see) {
+    if (can_see || !mis_permisos) {
+        return (
+            <Loading cargando={!mis_permisos || cargando}>
+                {props.children}
+            </Loading>
+        );
+    } else {
         return (<div>{`No tiene suficientes permisos para ver ${props.nombre}.`}</div>)
     }
-    return props.children;
 };
 SinPermisos.propTypes = {
     can_see: PropTypes.bool,

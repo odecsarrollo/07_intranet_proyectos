@@ -15,7 +15,6 @@ class ProyectoLista extends Component {
             busqueda: "",
             item_seleccionado: null,
             mostrar_form: false,
-            cargando: false
         });
         this.onCancel = this.onCancel.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -34,11 +33,17 @@ class ProyectoLista extends Component {
     }
 
     onSubmit(values) {
+        this.props.cargando();
         const {id} = values;
         const callback = (response) => {
-            this.props.fetchProyecto(response.id);
-            this.setState({mostrar_form: false, item_seleccionado: null});
-            this.props.notificarAction(`El registro de el proyecto ${response.id_proyecto} ha sido exitoso!`);
+            this.props.fetchProyecto(
+                response.id,
+                () => {
+                    this.props.noCargando();
+                    this.setState({mostrar_form: false, item_seleccionado: null});
+                    this.props.notificarAction(`El registro de el proyecto ${response.id_proyecto} ha sido exitoso!`);
+                }
+            );
         };
         if (id) {
             this.props.updateProyecto(
@@ -57,30 +62,34 @@ class ProyectoLista extends Component {
     }
 
     onDelete(id) {
+        this.props.cargando();
         const {item_seleccionado} = this.state;
         const {deleteProyecto} = this.props;
         deleteProyecto(id, () => {
                 this.props.notificarAction(`Se ha eliminado el proyecto ${item_seleccionado.id_proyecto}!`);
+                this.setState({item_seleccionado: null, mostrar_form: false});
+                this.props.noCargando();
             }, this.error_callback
         );
-        this.setState({item_seleccionado: null, mostrar_form: false});
     }
 
     onSelectItem(item_seleccionado) {
+        this.props.cargando();
         this.props.fetchProyecto(
             item_seleccionado.id,
             response => {
                 this.setState({item_seleccionado: response, mostrar_form: true})
+                this.props.noCargando();
             },
             this.error_callback
         );
     }
 
     cargarDatos() {
-        this.setState({cargando: true});
+        this.props.cargando();
         this.props.fetchMisPermisos(() => {
                 this.props.fetchProyectos(() => {
-                        this.setState({cargando: false});
+                        this.props.noCargando();
                     },
                     this.error_callback
                 );
@@ -93,7 +102,8 @@ class ProyectoLista extends Component {
         const {busqueda, item_seleccionado, mostrar_form} = this.state;
         const {
             lista_objetos,
-            mis_permisos
+            mis_permisos,
+            esta_cargando
         } = this.props;
 
 
@@ -106,7 +116,7 @@ class ProyectoLista extends Component {
         return (
             <SinPermisos
                 nombre='Proyectos'
-                cargando={this.state.cargando}
+                cargando={esta_cargando}
                 mis_permisos={mis_permisos}
                 can_see={tengoPermiso(mis_permisos, 'list_proyecto')}
             >
@@ -163,6 +173,7 @@ class ProyectoLista extends Component {
 function mapPropsToState(state, ownProps) {
     return {
         lista_objetos: state.proyectos,
+        esta_cargando: state.esta_cargando,
         mis_permisos: state.mis_permisos
     }
 }

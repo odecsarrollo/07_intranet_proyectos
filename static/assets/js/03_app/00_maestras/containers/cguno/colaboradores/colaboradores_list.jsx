@@ -41,6 +41,7 @@ class ColaboradoresLista extends Component {
     }
 
     onUpdate(item) {
+        this.props.cargando();
         this.props.updateColaborador(
             item.id,
             item,
@@ -48,6 +49,7 @@ class ColaboradoresLista extends Component {
                 this.props.fetchColaborador(
                     item.id,
                     (response) => {
+                        this.props.noCargando();
                         this.props.notificarAction(`El registro del colaborador ${response.nombres} ${response.apellidos} ha sido exitoso!`)
                     },
                     this.error_callback
@@ -58,9 +60,11 @@ class ColaboradoresLista extends Component {
     }
 
     onCreateColaboradorUsuario(item) {
+        this.props.cargando();
         this.props.createColaboradorUsuario(
             item.id,
             (response) => {
+                this.props.noCargando();
                 this.props.notificarAction(`Se ha creado el usuario ${response.usuario_username} para ${response.nombres} ${response.apellidos} con exitoso!`)
             },
             this.error_callback
@@ -68,21 +72,25 @@ class ColaboradoresLista extends Component {
     }
 
     onCambiarActivacion(item) {
+        this.props.cargando();
         this.props.activateColaboradorUsuario(
             item.id,
             (response) => {
                 this.props.notificarAction(`Se ha cambiado la activacion del usuario ${response.usuario_username} para ${response.nombres} ${response.apellidos} con exitoso!`)
+                this.props.noCargando();
             },
             this.error_callback
         )
     }
 
     onSubmit(values) {
+        this.props.cargando();
         const {id} = values;
         const callback = (response) => {
             this.props.fetchColaborador(response.id);
             this.setState({mostrar_form: false, item_seleccionado: null});
             this.props.notificarAction(`El registro del colaborador ${response.nombres} ${response.apellidos} ha sido exitoso!`);
+            this.props.noCargando();
         };
         if (id) {
             this.props.updateColaborador(
@@ -101,19 +109,23 @@ class ColaboradoresLista extends Component {
     }
 
     onDelete(id) {
+        this.props.cargando();
         const {item_seleccionado} = this.state;
         const {deleteColaborador} = this.props;
         deleteColaborador(id, () => {
                 this.props.notificarAction(`Se ha eliminado el colaborador ${item_seleccionado.nombres} ${item_seleccionado.apellidos}!`);
+                this.props.noCargando();
             }, this.error_callback
         );
         this.setState({item_seleccionado: null, mostrar_form: false});
     }
 
     onSelectItem(item_seleccionado) {
+        this.props.cargando();
         this.props.fetchColaborador(
             item_seleccionado.id,
             response => {
+                this.props.noCargando();
                 this.setState({item_seleccionado: response, mostrar_form: true})
             },
             this.error_callback
@@ -121,10 +133,10 @@ class ColaboradoresLista extends Component {
     }
 
     cargarDatos() {
-        this.setState({cargando: true});
+        this.props.cargando();
         this.props.fetchMisPermisos(() => {
                 this.props.fetchColaboradores(() => {
-                        this.setState({cargando: false});
+                        this.props.noCargando();
                     },
                     this.error_callback
                 );
@@ -137,7 +149,8 @@ class ColaboradoresLista extends Component {
         const {busqueda, item_seleccionado, mostrar_form} = this.state;
         const {
             lista_objetos,
-            mis_permisos
+            mis_permisos,
+            esta_cargando
         } = this.props;
 
 
@@ -154,7 +167,7 @@ class ColaboradoresLista extends Component {
         return (
             <SinPermisos
                 nombre='Colaboradores'
-                cargando={this.state.cargando}
+                cargando={esta_cargando}
                 mis_permisos={mis_permisos}
                 can_see={tengoPermiso(mis_permisos, 'list_colaboradorbiable')}
             >
@@ -213,6 +226,7 @@ class ColaboradoresLista extends Component {
 function mapPropsToState(state, ownProps) {
     return {
         lista_objetos: state.colaboradores,
+        esta_cargando: state.esta_cargando,
         mis_permisos: state.mis_permisos
     }
 }

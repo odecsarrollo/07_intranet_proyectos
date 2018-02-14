@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import * as actions from '../../../../01_actions/01_index';
 import TablaHojasTrabajosDiarios from '../../components/hoja_trabajo_diario/hojas_trabajos_diarios_tabla';
 import HojaTrabajoDiarioForm from '../../components/hoja_trabajo_diario/hojas_trabajos_diarios_form';
+import CalendarField from '../../../components/utilidades/calendarioField';
 import CargarDatos from '../../../components/cargar_datos';
 import {SinPermisos, ListaTitulo, ListaBusqueda} from '../../../components/utiles';
 
@@ -14,8 +15,7 @@ class HojaTrabajoDiarioLista extends Component {
         this.state = ({
             busqueda: "",
             item_seleccionado: null,
-            mostrar_form: false,
-            cargando: false
+            mostrar_form: false
         });
         this.error_callback = this.error_callback.bind(this);
         this.onCancel = this.onCancel.bind(this);
@@ -34,11 +34,13 @@ class HojaTrabajoDiarioLista extends Component {
     }
 
     onSubmit(values) {
+        this.props.cargando();
         const {id} = values;
         const callback = (response) => {
             this.props.fetchHojaTrabajoDiario(response.id, () => {
                     this.setState({mostrar_form: false, item_seleccionado: null});
                     this.props.notificarAction(`El registro de hoja de trabajo para ${response.colaborador_nombre} ha sido exitoso!`);
+                    this.props.noCargando();
                 },
                 this.error_callback
             );
@@ -60,36 +62,35 @@ class HojaTrabajoDiarioLista extends Component {
     }
 
     onDelete(id) {
+        this.props.cargando();
         const {deleteHojaTrabajoDiario} = this.props;
         deleteHojaTrabajoDiario(id, () => {
                 this.props.notificarAction(`Se ha eliminado hoja de trabajo!`);
+                this.props.noCargando();
+                this.setState({item_seleccionado: null, mostrar_form: false});
             }, this.error_callback
         );
-        this.setState({item_seleccionado: null, mostrar_form: false});
     }
 
     onSelectItem(item_seleccionado) {
+        this.props.cargando();
         this.props.fetchHojaTrabajoDiario(
             item_seleccionado.id,
             response => {
-                this.setState({item_seleccionado: response, mostrar_form: true})
+                this.setState({item_seleccionado: response, mostrar_form: true});
+                this.props.noCargando();
             },
             this.error_callback
         );
     }
 
     cargarDatos() {
-        this.setState({cargando: true});
+        this.props.cargando();
         this.props.fetchMisPermisos(
             () => {
                 this.props.fetchHojasTrabajosDiarios(
                     () => {
-                        this.props.fetchColaboradoresEnProyectos(
-                            () => {
-                                this.setState({cargando: false});
-                            },
-                            this.error_callback
-                        );
+                        this.props.noCargando();
                     },
                     this.error_callback
                 );
@@ -103,7 +104,8 @@ class HojaTrabajoDiarioLista extends Component {
         const {
             lista_objetos,
             mis_permisos,
-            colaboradores
+            colaboradores,
+            esta_cargando
         } = this.props;
 
         let items_tabla_list = lista_objetos;
@@ -118,7 +120,7 @@ class HojaTrabajoDiarioLista extends Component {
         return (
             <SinPermisos
                 nombre='Hojas de Trabajo'
-                cargando={this.state.cargando}
+                cargando={esta_cargando}
                 mis_permisos={mis_permisos}
                 can_see={tengoPermiso(mis_permisos, 'list_hojatrabajodiario')}
             >
@@ -128,7 +130,13 @@ class HojaTrabajoDiarioLista extends Component {
                             titulo='Hojas de Trabajos Diarios'
                             can_add={tengoPermiso(mis_permisos, 'add_hojatrabajodiario')}
                             onClick={() => {
-                                this.setState({item_seleccionado: null, mostrar_form: true})
+                                this.props.fetchColaboradoresEnProyectos(
+                                    () => {
+                                        this.props.noCargando();
+                                        this.setState({item_seleccionado: null, mostrar_form: true});
+                                    },
+                                    this.error_callback
+                                );
                             }}
                         />
                     </div>
@@ -139,6 +147,16 @@ class HojaTrabajoDiarioLista extends Component {
                                 this.setState({busqueda: e.target.value});
                             }}/>
                     </div>
+                    {/*<div className="col-12">*/}
+                    {/*<div className="row">*/}
+                    {/*<CalendarField className='col-12' nombre='Fecha Inicial' onChange={(e) => {*/}
+                    {/*console.log(e)*/}
+                    {/*}}/>*/}
+                    {/*<CalendarField className='col-12' nombre='Fecha Final' onChange={(e) => {*/}
+                    {/*console.log(e)*/}
+                    {/*}}/>*/}
+                    {/*</div>*/}
+                    {/*</div>*/}
                     {
                         mostrar_form &&
                         (
@@ -178,6 +196,7 @@ function mapPropsToState(state, ownProps) {
     return {
         lista_objetos: state.hojas_trabajos_diarios,
         colaboradores: state.colaboradores,
+        esta_cargando: state.esta_cargando,
         mis_permisos: state.mis_permisos
     }
 }
