@@ -28,6 +28,7 @@ export const CLEAR_COLABORADORES = 'clear_colaboradores';
 ////hojas de trabajo diarios
 export const FETCH_HOJAS_TRABAJOS_DIARIOS = 'fetch_hojas_trabajos_diarios';
 export const FETCH_HOJA_TRABAJO_DIARIO = 'fetch_hoja_trabajo_diario';
+export const CLEAR_HOJAS_TRABAJOS_DIARIOS = 'clear_hojas_trabajos_diario';
 export const UPDATE_HOJA_TRABAJO_DIARIO = 'update_hoja_trabajo_diario';
 export const CREATE_HOJA_TRABAJO_DIARIO = 'create_hoja_trabajo_diario';
 export const DELETE_HOJA_TRABAJO_DIARIO = 'delete_hoja_trabajo_diario';

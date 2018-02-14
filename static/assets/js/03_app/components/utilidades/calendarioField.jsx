@@ -19,8 +19,9 @@ const CalendarField = (props) => {
                 onChange={onChange}
                 format="YYYY-MM-DD"
                 time={false}
-                max={max ? max : new Date()}
-                value={!value ? null : new Date(value)}
+                value={value ? moment(value).toDate() : null}
+                max={max ? moment(max).toDate() : new Date()}
+                min={min ? moment(min).toDate() : new Date(1900, 0, 1)}
             />
         </div>
     )

@@ -15,7 +15,9 @@ class HojaTrabajoDiarioLista extends Component {
         this.state = ({
             busqueda: "",
             item_seleccionado: null,
-            mostrar_form: false
+            mostrar_form: false,
+            filtro_fecha_min: null,
+            filtro_fecha_max: null
         });
         this.error_callback = this.error_callback.bind(this);
         this.onCancel = this.onCancel.bind(this);
@@ -23,6 +25,7 @@ class HojaTrabajoDiarioLista extends Component {
         this.onDelete = this.onDelete.bind(this);
         this.onSelectItem = this.onSelectItem.bind(this);
         this.cargarDatos = this.cargarDatos.bind(this);
+        this.cargarHojasTrabajo = this.cargarHojasTrabajo.bind(this);
     }
 
     error_callback(error) {
@@ -31,6 +34,10 @@ class HojaTrabajoDiarioLista extends Component {
 
     componentDidMount() {
         this.cargarDatos()
+    }
+
+    componentWillUnmount() {
+        this.props.clearHojasTrabajos();
     }
 
     onSubmit(values) {
@@ -84,23 +91,33 @@ class HojaTrabajoDiarioLista extends Component {
         );
     }
 
+    cargarHojasTrabajo(e) {
+        e.preventDefault();
+        const {filtro_fecha_min, filtro_fecha_max} = this.state;
+        if (filtro_fecha_max && filtro_fecha_min) {
+            this.props.cargando();
+            this.props.fetchHojasTrabajosxFechas(
+                filtro_fecha_min,
+                filtro_fecha_max,
+                () => {
+                    this.props.noCargando()
+                }, this.error_callback
+            )
+        }
+    }
+
     cargarDatos() {
         this.props.cargando();
         this.props.fetchMisPermisos(
             () => {
-                this.props.fetchHojasTrabajosDiarios(
-                    () => {
-                        this.props.noCargando();
-                    },
-                    this.error_callback
-                );
+                this.props.noCargando();
             },
             this.error_callback
         );
     }
 
     render() {
-        const {busqueda, item_seleccionado, mostrar_form} = this.state;
+        const {busqueda, item_seleccionado, mostrar_form, filtro_fecha_max, filtro_fecha_min} = this.state;
         const {
             lista_objetos,
             mis_permisos,
@@ -141,22 +158,44 @@ class HojaTrabajoDiarioLista extends Component {
                         />
                     </div>
                     <div className="col-12">
+                        <form onSubmit={this.cargarHojasTrabajo}>
+                            <div className="row">
+                                <CalendarField
+                                    className='col-md-6'
+                                    value={filtro_fecha_min}
+                                    nombre='Fecha Inicial'
+                                    onChange={(e, b) => {
+                                        this.setState({filtro_fecha_min: b});
+                                        if (filtro_fecha_max < b) {
+                                            this.setState({filtro_fecha_max: b})
+                                        }
+                                    }}/>
+                                {
+                                    filtro_fecha_min &&
+                                    <CalendarField
+                                        className='col-md-6' nombre='Fecha Final'
+                                        value={filtro_fecha_max}
+                                        min={filtro_fecha_min}
+                                        onChange={(e, b) => {
+                                            this.setState({filtro_fecha_max: b});
+                                        }}/>
+                                }
+                                {
+                                    filtro_fecha_max &&
+                                    <div className="col-md-12">
+                                        <input type="submit" className='btn btn-primary' value="Buscar"></input>
+                                    </div>
+                                }
+                            </div>
+                        </form>
+                    </div>
+                    <div className="col-12">
                         <ListaBusqueda
                             busqueda={busqueda}
                             onChange={e => {
                                 this.setState({busqueda: e.target.value});
                             }}/>
                     </div>
-                    {/*<div className="col-12">*/}
-                    {/*<div className="row">*/}
-                    {/*<CalendarField className='col-12' nombre='Fecha Inicial' onChange={(e) => {*/}
-                    {/*console.log(e)*/}
-                    {/*}}/>*/}
-                    {/*<CalendarField className='col-12' nombre='Fecha Final' onChange={(e) => {*/}
-                    {/*console.log(e)*/}
-                    {/*}}/>*/}
-                    {/*</div>*/}
-                    {/*</div>*/}
                     {
                         mostrar_form &&
                         (

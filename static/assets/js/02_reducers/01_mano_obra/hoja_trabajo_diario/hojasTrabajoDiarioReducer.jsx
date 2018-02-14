@@ -1,6 +1,7 @@
 import {
     FETCH_HOJAS_TRABAJOS_DIARIOS,
     FETCH_HOJA_TRABAJO_DIARIO,
+    CLEAR_HOJAS_TRABAJOS_DIARIOS,
     DELETE_HOJA_TRABAJO_DIARIO
 } from '../../../01_actions/00_types';
 
@@ -16,6 +17,9 @@ export default function (state = [], action) {
             break;
         case DELETE_HOJA_TRABAJO_DIARIO:
             return _.omit(state, action.payload);
+            break;
+        case CLEAR_HOJAS_TRABAJOS_DIARIOS:
+            return {};
             break;
         default:
             return state;

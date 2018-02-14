@@ -1,6 +1,7 @@
 import {
     CREATE_HOJA_TRABAJO_DIARIO,
     FETCH_HOJAS_TRABAJOS_DIARIOS,
+    CLEAR_HOJAS_TRABAJOS_DIARIOS,
     FETCH_HOJA_TRABAJO_DIARIO,
     UPDATE_HOJA_TRABAJO_DIARIO,
     DELETE_HOJA_TRABAJO_DIARIO
@@ -11,10 +12,27 @@ import {
     fetchObject,
     updateObject,
     createObject,
-    deleteObject
+    deleteObject,
+    fetchListWithParameter
 } from './../../00_general_fuctions'
 
 const current_url_api = 'hojas_trabajo_diario';
+
+export function clearHojasTrabajos(callback = null, callback_error = null) {
+    return function (dispatch) {
+        dispatch({type: CLEAR_HOJAS_TRABAJOS_DIARIOS})
+    }
+}
+
+export function fetchHojasTrabajosxFechas(fecha_inicial, fecha_final, callback = null, callback_error = null) {
+    return function (dispatch) {
+        const FULL_URL = `${current_url_api}/listar_x_fechas/?fecha_inicial=${fecha_inicial}&fecha_final=${fecha_final}`;
+        const dispatches = (response) => {
+            dispatch({type: FETCH_HOJAS_TRABAJOS_DIARIOS, payload: response})
+        };
+        fetchListWithParameter(FULL_URL, dispatches, callback, callback_error);
+    }
+}
 
 export function fetchHojasTrabajosDiarios(callback = null, callback_error = null) {
     return function (dispatch) {

@@ -45,6 +45,19 @@ class HojaTrabajoDiarioViewSet(viewsets.ModelViewSet):
         instance.tasa = object
         instance.save()
 
+    @list_route(http_method_names=['get', ])
+    def listar_x_fechas(self, request):
+        fecha_inicial = request.GET.get('fecha_inicial')
+        fecha_final = request.GET.get('fecha_final')
+
+        if fecha_final and fecha_final:
+            self.queryset = self.queryset.filter(fecha__gte=fecha_inicial, fecha__lte=fecha_final)
+        else:
+            self.queryset = None
+
+        serializer = self.get_serializer(self.queryset, many=True)
+        return Response(serializer.data)
+
 
 class HoraHojaTrabajoViewSet(viewsets.ModelViewSet):
     queryset = HoraHojaTrabajo.objects.select_related('literal', 'literal__proyecto').all()
