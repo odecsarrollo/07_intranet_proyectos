@@ -14,6 +14,7 @@ const MenuTerceros = (props) => (
             {props.listar_usuarios &&
             <MenuItem primaryText="Usuarios" containerElement={<Link to='/app/admin/usuarios/list'/>}
             />}
+            <MenuItem primaryText="Colaboradores" containerElement={<Link to='/app/admin/colaboradores/list'/>}/>
         </div>
     </li>
 );

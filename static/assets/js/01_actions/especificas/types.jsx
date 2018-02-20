@@ -21,3 +21,16 @@ export const CLEAR_LITERALES = 'clear_literales';
 
 
 export const FETCH_ITEMS_LITERALES = 'fetch_items_literales';
+
+
+export const CREATE_COLABORADOR = 'create_colaborador';
+export const DELETE_COLABORADOR = 'delete_colaborador';
+export const FETCH_COLABORADORES = 'fetch_colaboradores';
+export const FETCH_COLABORADOR = 'fetch_colaborador';
+export const CLEAR_COLABORADORES = 'clear_colaboradores';
+export const UPDATE_COLABORADOR = 'update_colaborador';
+
+
+export const FETCH_ITEMS_BIABLE = 'fetch_items_biable';
+export const FETCH_ITEM_BIABLE = 'fetch_item_biable';
+export const CLEAR_ITEMS_BIABLE = 'clear_items_biable';

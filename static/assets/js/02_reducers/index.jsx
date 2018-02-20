@@ -13,6 +13,8 @@ import proyectosReducer from '../02_reducers/especificas/cguno/proyectosReducer'
 import tercerosReducer from './especificas/tercerosReducer';
 import literalesReducer from "./especificas/cguno/literalesReducer";
 import itemsLiteralesReducer from "./especificas/cguno/itemsliteralesReducer";
+import colaboradoresReducer from "./especificas/cguno/colaboradoresReducer";
+import itemsCgunoReducer from "./especificas/cguno/itemsBiableReducer";
 
 const rootReducer = combineReducers({
     mis_permisos: misPermisosReducer,
@@ -27,7 +29,9 @@ const rootReducer = combineReducers({
     terceros: tercerosReducer,
     proyectos: proyectosReducer,
     literales: literalesReducer,
-    items_literales: itemsLiteralesReducer
+    items_literales: itemsLiteralesReducer,
+    colaboradores: colaboradoresReducer,
+    items_cguno: itemsCgunoReducer,
 });
 
 export default rootReducer;

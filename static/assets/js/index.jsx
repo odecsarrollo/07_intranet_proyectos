@@ -17,7 +17,7 @@ const store = createStoreWithMiddleware(reducers);
 
 import AppIndex from './IndexApp';
 import AppAdmin from './03_app_admin/App';
-import AppProyectos from './04_app/App';
+import AppProyectos from './04_app_proyectos/App';
 
 
 ReactDOM.render(

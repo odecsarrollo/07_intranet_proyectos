@@ -40,3 +40,12 @@ export const PERMISO_COSTO_MANO_OBRA_PROYECTO = 'costo_mano_obra_proyecto';
 
 
 export const PERMISO_ULTIMO_COSTO_ITEM_BIABLE = 'ultimo_costo_itemsbiable';
+
+export const PERMISO_ADD_COLABORADOR = 'add_colaboradorbiable';
+export const PERMISO_DELETE_COLABORADOR = 'delete_colaboradorbiable';
+export const PERMISO_CHANGE_COLABORADOR = 'change_colaboradorbiable';
+export const PERMISO_LIST_COLABORADOR = 'list_colaboradorbiable';
+export const PERMISO_DETAIL_COLABORADOR = 'detail_colaboradorbiable';
+
+
+export const PERMISO_LIST_ITEM_BIABLE = 'list_itemsbiable';

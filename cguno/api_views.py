@@ -93,6 +93,5 @@ class ItemBiableViewSet(viewsets.ModelViewSet):
 
         if search_fields:
             self.queryset = query_varios_campos(self.queryset, search_fields, parametro)
-
         serializer = self.get_serializer(self.queryset, many=True)
         return Response(serializer.data)
