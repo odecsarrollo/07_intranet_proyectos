@@ -9,12 +9,13 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import {ListaBusqueda} from '../../../../00_utilities/utiles';
 import {
-    PERMISO_LIST_ITEM_BIABLE as can_list_permiso
+    PERMISO_LIST_ITEM_BIABLE as can_list_permiso,
+    PERMISO_ULTIMO_COSTO_ITEM_BIABLE as can_see_ultimo_costo_permiso
 } from "../../../../00_utilities/permisos/types";
 
 import Tabla from '../components/items_tabla';
 
-class ColaboradoresList extends Component {
+class ItemsList extends Component {
     constructor(props) {
         super(props);
         this.state = ({
@@ -78,6 +79,7 @@ class ColaboradoresList extends Component {
     render() {
         const {object_list, mis_permisos} = this.props;
         const can_list = tengoPermiso(mis_permisos, can_list_permiso);
+        const can_see_ultimo_costo = tengoPermiso(mis_permisos, can_see_ultimo_costo_permiso);
         return (
             <ValidarPermisos can_see={can_list} nombre='listas de items CGUno'>
                 <Titulo>Items CGUno</Titulo>
@@ -109,6 +111,7 @@ class ColaboradoresList extends Component {
                     </ListaBusqueda>
                 </div>
                 <Tabla
+                    can_see_ultimo_costo={can_see_ultimo_costo}
                     data={_.map(object_list, e => e)}
                 />
                 <CargarDatos
@@ -126,4 +129,4 @@ function mapPropsToState(state, ownProps) {
     }
 }
 
-export default connect(mapPropsToState, actions)(ColaboradoresList)
+export default connect(mapPropsToState, actions)(ItemsList)

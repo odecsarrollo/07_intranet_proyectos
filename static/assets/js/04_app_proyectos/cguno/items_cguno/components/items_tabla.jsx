@@ -5,14 +5,14 @@ import {pesosColombianos} from "../../../../00_utilities/common";
 class Tabla extends React.Component {
     render() {
 
-        const data = this.props.data;
+        const {data, can_see_ultimo_costo} = this.props;
         return (
             <div>
                 <ReactTable
                     data={data}
                     columns={[
                         {
-                            Header: "Personal",
+                            Header: "Atributos",
                             columns: [
                                 {
                                     Header: "Id CGUNO",
@@ -26,7 +26,7 @@ class Tabla extends React.Component {
                                 {
                                     Header: "Descripción",
                                     accessor: "descripcion",
-                                    maxWidth: 200,
+                                    maxWidth: 300,
                                     filterable: true,
                                     filterMethod: (filter, row) => {
                                         return row[filter.id].includes(filter.value.toUpperCase())
@@ -42,14 +42,14 @@ class Tabla extends React.Component {
                                     }
                                 },
                                 {
-                                    Header: "Uni. Medida",
+                                    Header: "Uni. Med",
                                     accessor: "unidad_medida_inventario",
-                                    maxWidth: 100
+                                    maxWidth: 60
                                 },
                                 {
                                     Header: "Activo",
                                     accessor: "activo",
-                                    maxWidth: 80,
+                                    maxWidth: 40,
                                     Cell: row => (
                                         row.value && <i className='far fa-check-circle'></i>
                                     )
@@ -71,10 +71,16 @@ class Tabla extends React.Component {
                                     filterMethod: (filter, row) => {
                                         return row[filter.id].includes(filter.value.toUpperCase())
                                     }
-                                },
+                                }
+                            ]
+                        },
+                        {
+                            Header: "Costos",
+                            columns: [
                                 {
                                     Header: "Último Costo",
                                     accessor: "ultimo_costo",
+                                    show: can_see_ultimo_costo,
                                     maxWidth: 100,
                                     Cell: row => <div className='text-right'>{pesosColombianos(row.value)}</div>
                                 },
