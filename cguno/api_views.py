@@ -11,6 +11,14 @@ class ColaboradorBiableViewSet(viewsets.ModelViewSet):
     queryset = ColaboradorBiable.objects.select_related('usuario').all()
     serializer_class = ColaboradorBiableSerializer
 
+    @list_route(methods=['get'])
+    def mi_colaborador(self, request):
+        qs = self.get_queryset().filter(
+            usuario_id=request.user.id
+        ).distinct()
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)
+
     @list_route(http_method_names=['get', ])
     def en_proyectos(self, request):
         lista = self.queryset.filter(en_proyectos=True).all()

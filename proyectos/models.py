@@ -32,6 +32,7 @@ class Proyecto(models.Model):
             ("detail_proyecto", "Can see detail proyecto"),
             ("valor_proyecto", "Ver valor proyecto"),
             ("costo_proyecto", "Ver costo proyecto"),
+            ("costo_mano_obra_proyecto", "Ver costo MO proyecto"),
             ("costo_materiales_proyecto", "Ver costo materiales proyecto"),
             ("costo_presupuestado_proyecto", "Ver costo presupuestado proyecto"),
         ]

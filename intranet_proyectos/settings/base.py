@@ -42,6 +42,7 @@ DJANGO_APPS = [
 
 MY_APPS = [
     'index.apps.IndexConfig',
+    'permisos.apps.PermisosConfig',
     'cguno.apps.CgunoConfig',
     'proyectos.apps.ProyectosConfig',
     'mano_obra.apps.ManoObraConfig',

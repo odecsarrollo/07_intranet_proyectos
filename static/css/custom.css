@@ -77,3 +77,43 @@ form .btn {
   padding: 0.5rem;
   color: #fff;
 }
+.left-icon {
+  margin: 0 0 0 12px !important;
+}
+.right-icon {
+  margin: 0 12px 0 0 !important;
+}
+.boton-index a {
+  color: #ed6b00;
+}
+.boton-index a :hover {
+  background-color: #000;
+  color: #fff !important;
+  border: 2px solid #000 !important;
+}
+.boton-index a :active {
+  text-decoration: none;
+}
+.boton-index a :visit {
+  text-decoration: none;
+}
+.boton-index a .icono {
+  border-radius: 25px;
+  border: 2px solid #ed6b00;
+  padding: 1rem;
+  width: 100%;
+}
+.texto-cita {
+  font-size: 10px;
+  position: absolute;
+  color: #808080;
+}
+.texto-cita.bottom {
+  bottom: 0;
+}
+.texto-cita.top {
+  top: -5px;
+}
+.texto-cita.right {
+  right: 0px;
+}

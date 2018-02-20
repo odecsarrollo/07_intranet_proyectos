@@ -27,14 +27,6 @@ export function createRequest(request, dispatches = null, callback = null, callb
         );
 }
 
-export function tengoPermiso(permisos, permiso) {
-    const permisos_array = _.map(permisos, permiso => {
-        return permiso
-    });
-    return permisos_array.includes(permiso);
-}
-
-
 export function fetchList(url, dispatches = null, callback = null, callback_error = null) {
     console.log(`entro nuevo fetch list para ${url}`);
     const FULL_URL = `${url}/?format=json`;
@@ -120,6 +112,21 @@ export function callApiMethod(url, id, method, dispatches = null, callback = nul
     axios_instance.defaults.xsrfCookieName = "csrftoken";
     const FULL_URL = `${url}/${id}/${method}/`;
     const request = axios_instance.post(FULL_URL);
+    createRequest(
+        request,
+        dispatches,
+        callback,
+        callback_error
+    );
+}
+
+
+export function callApiMethodWithParameters(url, id, method, parameters, dispatches = null, callback = null, callback_error = null) {
+    console.log(`entro call api method para ${url} para ${id}`);
+    axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+    axios_instance.defaults.xsrfCookieName = "csrftoken";
+    const FULL_URL = `${url}/${id}/${method}/`;
+    const request = axios_instance.post(FULL_URL, parameters);
     createRequest(
         request,
         dispatches,

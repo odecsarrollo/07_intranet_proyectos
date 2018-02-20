@@ -41,12 +41,13 @@ class HojaTrabajoDiario(TimeStampedModel):
         self.cantidad_minutos = minutos
         self.costo_total = costo_total
         self.save()
-        self.mis_horas_trabajadas.update(costo_total=(F('cantidad_minutos')/60)*costo_hora)
+        self.mis_horas_trabajadas.update(costo_total=(F('cantidad_minutos') / 60) * costo_hora)
 
     class Meta:
         unique_together = [('fecha', 'colaborador')]
         permissions = [
             ("list_hojatrabajodiario", "Can see list hoja trabajo diario"),
+            ("para_otros_hojatrabajodiario", "Can add hoja trabajo diario para otros"),
             ("costos_hojatrabajodiario", "Can see costos hoja trabajo diario"),
             ("detail_hojatrabajodiario", "Can see detail hoja trabajo diario"),
         ]

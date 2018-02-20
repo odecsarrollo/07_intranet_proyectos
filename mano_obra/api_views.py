@@ -49,13 +49,22 @@ class HojaTrabajoDiarioViewSet(viewsets.ModelViewSet):
     def listar_x_fechas(self, request):
         fecha_inicial = request.GET.get('fecha_inicial')
         fecha_final = request.GET.get('fecha_final')
+        qs = None
 
-        if fecha_final and fecha_final:
-            self.queryset = self.queryset.filter(fecha__gte=fecha_inicial, fecha__lte=fecha_final)
+        gestiona_otros = request.user.has_perm('HojaTrabajoDiario.para_otros_hojatrabajodiario')
+
+        if gestiona_otros:
+            qs = self.queryset
         else:
-            self.queryset = None
+            if hasattr(request.user, 'colaborador') and not gestiona_otros:
+                colaborador = request.user.colaborador
+                if colaborador.en_proyectos and colaborador.autogestion_horas_trabajadas:
+                    qs = self.queryset.filter(colaborador=colaborador)
 
-        serializer = self.get_serializer(self.queryset, many=True)
+        if fecha_final and fecha_final and qs:
+            qs = qs.filter(fecha__gte=fecha_inicial, fecha__lte=fecha_final)
+
+        serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
 

@@ -1,7 +1,7 @@
 {
-  "name": "intranet_dr_amor",
+  "name": "intranet_proyectos",
   "version": "1.0.0",
-  "description": "",
+  "description": "Proyecto de desarrollo de App Intranet Odecopack",
   "main": "webpack.base.config.js",
   "dependencies": {
     "accounting": "^0.4.1",
@@ -9,10 +9,11 @@
     "material-ui": "^0.19.4",
     "moment": "^2.19.1",
     "moment-timezone": "^0.5.14",
-    "prop-types": "^15.6.0",
     "react-big-calendar": "^0.17.0",
     "react-print": "^1.3.1",
     "react-redux-notify": "^2.0.0",
+    "react-router-dom": "^4.2.2",
+    "react-table": "^6.7.6",
     "react-widgets": "^4.0.2",
     "react-widgets-moment": "^4.0.2",
     "redux-form-material-ui": "^4.3.0"
@@ -30,7 +31,6 @@
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-redux": "^5.0.6",
-    "react-router-dom": "^4.2.2",
     "redux": "^3.7.2",
     "redux-form": "^7.0.4",
     "redux-promise": "^0.5.3",
@@ -45,12 +45,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Fabitosoft/dramor_intranet.git"
+    "url": "git+https://github.com/Fabitosoft/07_intranet_proyectos.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Fabitosoft/dramor_intranet/issues"
+    "url": "https://github.com/Fabitosoft/07_intranet_proyectos/issues"
   },
-  "homepage": "https://github.com/Fabitosoft/dramor_intranet#readme"
+  "homepage": "https://github.com/Fabitosoft/07_intranet_proyectos#readme"
 }
