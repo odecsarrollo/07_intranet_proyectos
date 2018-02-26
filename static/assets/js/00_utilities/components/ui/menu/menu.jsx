@@ -15,9 +15,10 @@ class MenuBase extends Component {
     render() {
         const {mis_permisos, mi_cuenta} = this.props;
         return (
-            <nav className="navbar sticky-top navbar-expand-lg navbar-light bg-light">
+            <nav className="navbar sticky-top navbar-expand-lg navbar-light bg-light mt-0 mb-0 pt-0 pb-0">
                 <Link to='/app/'>
-                    <FontIcon className="fas fa-home p-2"/>
+                    <img src={`${img_static_url}/logo.png`} width="80" className="d-inline-block align-top mr-2"
+                         alt=""/>
                 </Link>
                 <button className="navbar-toggler" type="button" data-toggle="collapse"
                         data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"

@@ -33,3 +33,8 @@ export const tengoPermiso = (mis_permisos, permisos, tipo = 'and') => {
         return validaciones_array.includes(true);
     }
 };
+
+
+export const permisosAdapter = (mis_permisos, permisos_view) => {
+    return _.mapValues(permisos_view, p => tengoPermiso(mis_permisos, p));
+};

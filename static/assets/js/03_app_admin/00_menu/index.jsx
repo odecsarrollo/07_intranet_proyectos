@@ -21,17 +21,11 @@ const Menu = () => {
                 const menu_permisos = listar_permisos || listar_groups;
                 return (
                     <Fragment>
-                        {
-                            menu_terceros &&
-                            <MenuTerceros listar_usuarios={listar_usuarios}/>
-                        }
-                        {
-                            menu_permisos &&
-                            <MenuPermisos
-                                listar_permisos={listar_permisos}
-                                listar_groups={listar_groups}
-                            />
-                        }
+                        <MenuTerceros listar_usuarios={listar_usuarios}/>
+                        <MenuPermisos
+                            listar_permisos={listar_permisos}
+                            listar_groups={listar_groups}
+                        />
                         <MenuCGuno
                             listar_permisos={listar_permisos}
                             listar_groups={listar_groups}

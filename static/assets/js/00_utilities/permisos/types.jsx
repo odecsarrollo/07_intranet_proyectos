@@ -1,21 +1,28 @@
-export const PERMISO_CHANGE_PERMISSION = 'change_permission';
-export const PERMISO_LIST_PERMISSION = 'list_permission';
-
-export const PERMISO_ADD_GROUP = 'add_group';
-export const PERMISO_DELETE_GROUP = 'delete_group';
-export const PERMISO_CHANGE_GROUP = 'change_group';
 export const PERMISO_CHANGE_PERMISSION_PLUS = 'change_permissionplus';
-export const PERMISO_LIST_GROUP = 'list_group';
-export const PERMISO_DETAIL_GROUP = 'detail_group';
 
-export const PERMISO_ADD_USER = 'add_user';
-export const PERMISO_DELETE_USER = 'delete_user';
-export const PERMISO_CHANGE_USER = 'change_user';
-export const PERMISO_LIST_USER = 'list_user';
-export const PERMISO_DETAIL_USER = 'detail_user';
-export const PERMISO_DETAIL_USER_MAKE_SUPERUSER = 'make_user_superuser';
-export const PERMISO_DETAIL_USER_MAKE_STAFF = 'make_user_staff';
-export const PERMISO_DETAIL_USER_MAKE_ACTIVE = 'make_user_active';
+export const GROUPS = {
+    add: 'add_group',
+    delete: 'delete_group',
+    change: 'change_group',
+    list: 'list_group',
+    detail: 'detail_group',
+};
+
+export const PERMISSION = {
+    change: 'change_permission',
+    list: 'list_permission'
+};
+
+export const USUARIOS = {
+    add: 'add_user',
+    delete: 'delete_user',
+    change: 'change_user',
+    list: 'list_user',
+    detail: 'detail_user',
+    make_user_superuser: 'make_user_superuser',
+    make_user_staff: 'make_user_staff',
+    make_user_active: 'make_user_active',
+};
 
 ///////////////////////////////////////////////////
 
@@ -37,7 +44,6 @@ export const PERMISO_COSTO_PROYECTO = 'costo_proyecto';
 export const PERMISO_COSTO_PRESUPUESTADO_PROYECTO = 'costo_presupuestado_proyecto';
 export const PERMISO_COSTO_MATERIALES_PROYECTO = 'costo_materiales_proyecto';
 export const PERMISO_COSTO_MANO_OBRA_PROYECTO = 'costo_mano_obra_proyecto';
-
 
 
 export const PERMISO_ADD_COLABORADOR = 'add_colaboradorbiable';
