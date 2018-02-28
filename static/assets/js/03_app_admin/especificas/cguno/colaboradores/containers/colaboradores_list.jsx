@@ -1,74 +1,28 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {connect} from "react-redux";
 import * as actions from "../../../../../01_actions/01_index";
 import CargarDatos from "../../../../../00_utilities/components/system/cargar_datos";
 import {Titulo} from "../../../../../00_utilities/templates/fragmentos";
-import ValidarPermisos from "../../../../../00_utilities/permisos/validar_permisos";
-import {tengoPermiso} from "../../../../../00_utilities/common";
+import ListManager from "../../../../../00_utilities/components/CRUDTableManager";
 import {
-    PERMISO_LIST_COLABORADOR as can_list_permiso,
-    PERMISO_DETAIL_COLABORADOR as can_detail_permiso,
-    PERMISO_ADD_COLABORADOR as can_add_permiso,
-    PERMISO_CHANGE_COLABORADOR as can_change_permiso,
-    PERMISO_DELETE_COLABORADOR as can_delete_permiso,
-    PERMISO_DETAIL_USER_MAKE_ACTIVE as can_make_active_permiso,
-    PERMISO_DETAIL_USER_MAKE_STAFF as can_make_staff_permiso,
-    PERMISO_DETAIL_USER_MAKE_SUPERUSER as can_make_superuser_permiso
+    USUARIOS as permisos_view
 } from "../../../../../00_utilities/permisos/types";
+import {permisosAdapter} from "../../../../../00_utilities/common";
 
 import CreateForm from '../components/forms/colaborador_form';
-import {ContainerNuevoButton} from '../../../../../00_utilities/components/ui/icon/iconos';
-
 import Tabla from '../components/colaboradores_tabla';
 
 class ColaboradoresList extends Component {
     constructor(props) {
         super(props);
-
-        this.state = ({
-            item_seleccionado: null,
-            modal_open: false
-        });
-
-        this.error_callback = this.error_callback.bind(this);
-        this.notificar = this.notificar.bind(this);
-        this.onCancel = this.onCancel.bind(this);
-        this.onSelectItem = this.onSelectItem.bind(this);
-        this.handleModalClose = this.handleModalClose.bind(this);
-        this.handleModalOpen = this.handleModalOpen.bind(this);
-
         this.cargarDatos = this.cargarDatos.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
         this.onDelete = this.onDelete.bind(this);
         this.onCreateColaboradorUsuario = this.onCreateColaboradorUsuario.bind(this);
     }
 
-    handleModalClose() {
-        this.setState({modal_open: false})
-    }
-
-    handleModalOpen() {
-        this.setState({modal_open: true})
-    }
-
-    error_callback(error) {
-        this.props.notificarErrorAjaxAction(error);
-    }
-
-    notificar(mensaje) {
-        this.props.notificarAction(mensaje);
-    }
-
     componentDidMount() {
         this.cargarDatos();
-    }
-
-    onSelectItem(item) {
-        this.setState({item_seleccionado: item})
-    }
-
-    onCancel() {
-        this.setState({item_seleccionado: null, mostrar_form: false});
     }
 
     componentWillUnmount() {
@@ -82,94 +36,102 @@ class ColaboradoresList extends Component {
         this.props.fetchMisPermisos(cargarMiCuenta, this.error_callback)
     }
 
-    onSubmit(item) {
-        const {nombres, apellidos} = item;
+    onSubmit(item, tipo) {
+        const nombre = `${item.nombres} ${item.apellidos}`;
+        const {cargando, noCargando, notificarAction, notificarErrorAjaxAction} = this.props;
         const success_callback = () => {
-            this.props.noCargando();
-            this.notificar(`Se ha actualizado con éxito el colaborador ${nombres} ${apellidos}`);
-            this.handleModalClose();
-            this.setState({item_seleccionado: null});
+            notificarAction(`Se ha ${item.id ? 'actualizado' : 'creado'} con éxito ${tipo.toLowerCase()} ${nombre}`);
+            noCargando();
         };
-        this.props.cargando();
+        cargando();
         if (item.id) {
-            this.props.updateColaborador(item.id, item, success_callback, this.error_callback);
+            this.props.updateColaborador(item.id, item, success_callback, notificarErrorAjaxAction);
         } else {
-            this.props.createColaborador(item, success_callback, this.error_callback);
+            this.props.createColaborador(item, success_callback, notificarErrorAjaxAction);
         }
     }
 
-    onDelete(item) {
-        this.setState({item_seleccionado: null});
-        const {nombres, apellidos} = item;
+    onDelete(item, tipo) {
+        const nombre = `${item.nombres} ${item.apellidos}`;
+        const {cargando, noCargando, notificarAction, notificarErrorAjaxAction} = this.props;
         const success_callback = () => {
-            this.props.noCargando();
-            this.notificar(`Se ha eliminado con éxito el colaborador ${nombres} ${apellidos}`)
+            noCargando();
+            notificarAction(`Se ha eliminado con éxito ${tipo.toLowerCase()} ${nombre}`)
         };
-        this.props.cargando();
-        this.props.deleteColaborador(item.id, success_callback, this.error_callback)
+        cargando();
+        this.props.deleteColaborador(item.id, success_callback, notificarErrorAjaxAction)
     }
 
     onCreateColaboradorUsuario(item) {
-        this.props.cargando();
+        const {cargando, noCargando, notificarAction, notificarErrorAjaxAction} = this.props;
+        cargando();
         this.props.createColaboradorUsuario(
             item.id,
             (response) => {
-                this.props.noCargando();
-                this.props.notificarAction(`Se ha creado el usuario ${response.usuario_username} para ${response.nombres} ${response.apellidos} con exitoso!`)
+                noCargando();
+                notificarAction(`Se ha creado el usuario ${response.usuario_username} para ${response.nombres} ${response.apellidos} con exitoso!`)
             },
-            this.error_callback
+            notificarErrorAjaxAction
         )
     }
 
     render() {
         const {object_list, mi_cuenta, mis_permisos} = this.props;
-        const {item_seleccionado, modal_open} = this.state;
-
-        const can_add = tengoPermiso(mis_permisos, can_add_permiso);
-        const can_detail = tengoPermiso(mis_permisos, can_detail_permiso);
-        const can_change = tengoPermiso(mis_permisos, can_change_permiso);
-        const can_delete = tengoPermiso(mis_permisos, can_delete_permiso);
-        const can_list = tengoPermiso(mis_permisos, can_list_permiso);
-        const can_make_staff = tengoPermiso(mis_permisos, can_make_staff_permiso);
-        const can_make_active = tengoPermiso(mis_permisos, can_make_active_permiso);
-        const can_make_superuser = tengoPermiso(mis_permisos, can_make_superuser_permiso);
-
+        const permisos = permisosAdapter(mis_permisos, permisos_view);
         return (
-            <ValidarPermisos can_see={can_list} nombre='listas de colaboradores'>
-                <CreateForm
-                    onCancel={this.onCancel}
-                    item_seleccionado={item_seleccionado}
-                    onSubmit={this.onSubmit}
-                    handleClose={this.handleModalClose}
-                    modal_open={modal_open}
-                />
-                <Titulo>Lista de colaboradores</Titulo>
-                {can_add && <ContainerNuevoButton
-                    onClick={() => {
-                        this.setState({item_seleccionado: null});
-                        this.handleModalOpen();
-                    }}
-                />}
-                <Tabla
-                    data={_.map(object_list, e => e)}
-                    mi_cuenta={mi_cuenta}
-                    can_delete={can_delete}
-                    can_detail={can_detail}
-                    can_change={can_change}
-                    can_make_superuser={can_make_superuser}
-                    can_make_staff={can_make_staff}
-                    can_make_active={can_make_active}
-                    onDelete={this.onDelete}
-                    updateItem={this.onSubmit}
-                    onSelectItem={this.onSelectItem}
-                    handleOpen={this.handleModalOpen}
-                    onCreateColaboradorUsuario={this.onCreateColaboradorUsuario}
-                />
+            <ListManager permisos={permisos} singular_name='colaborador' plural_name='colaboradores'>
+                {
+                    (list_manager_state,
+                     onSelectItem,
+                     onCancel,
+                     handleModalOpen,
+                     handleModalClose) => {
+                        return (
+                            <Fragment>
+                                <CreateForm
+                                    onCancel={onCancel}
+                                    item_seleccionado={list_manager_state.item_seleccionado}
+                                    onSubmit={
+                                        (item) => {
+                                            this.onSubmit(item, list_manager_state.singular_name);
+                                            handleModalClose();
+                                        }
+                                    }
+                                    modal_open={list_manager_state.modal_open}
+                                    element_type={`${list_manager_state.singular_name}`}
+                                />
+                                <Titulo>Lista de {list_manager_state.plural_name}</Titulo>
+                                <Tabla
+                                    data={_.map(object_list, e => e)}
+                                    permisos={permisos}
+                                    element_type={`${list_manager_state.singular_name}`}
+                                    onDelete={(item) => {
+                                        this.onDelete(item, list_manager_state.singular_name);
+                                        handleModalClose();
+                                    }}
+                                    onSelectItemEdit={(item) => {
+                                        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
+                                        cargando();
+                                        this.props.fetchColaborador(item.id, () => {
+                                                onSelectItem(item);
+                                                handleModalOpen();
+                                                noCargando();
+                                            },
+                                            notificarErrorAjaxAction
+                                        )
+                                    }}
+                                    updateItem={(item) => this.onSubmit(item, list_manager_state.singular_name)}
+                                    onCreateColaboradorUsuario={this.onCreateColaboradorUsuario}
+                                />
 
-                <CargarDatos
-                    cargarDatos={this.cargarDatos}
-                />
-            </ValidarPermisos>
+                                <CargarDatos
+                                    cargarDatos={this.cargarDatos}
+                                />
+                            </Fragment>
+                        )
+                    }
+                }
+            </ListManager>
         )
     }
 }

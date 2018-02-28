@@ -8,7 +8,7 @@ from .api_serializers import ColaboradorBiableSerializer, ItemsLiteralBiableSeri
 
 
 class ColaboradorBiableViewSet(viewsets.ModelViewSet):
-    queryset = ColaboradorBiable.objects.select_related('usuario').all()
+    queryset = ColaboradorBiable.objects.select_related('usuario','cargo').all()
     serializer_class = ColaboradorBiableSerializer
 
     @list_route(methods=['get'])

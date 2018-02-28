@@ -12,17 +12,10 @@ class Tabla extends React.Component {
         const data = this.props.data;
         const {
             updateItem,
-            mi_cuenta,
             onDelete,
-            onSelectItem,
+            onSelectItemEdit,
+            permisos,
             onCreateColaboradorUsuario,
-            handleOpen,
-            can_detail,
-            can_make_superuser,
-            can_make_staff,
-            can_make_active,
-            can_delete,
-            can_change
         } = this.props;
 
 
@@ -62,6 +55,24 @@ class Tabla extends React.Component {
                                     }
                                 },
                                 {
+                                    Header: "Cargo",
+                                    accessor: "cargo_descripcion",
+                                    maxWidth: 300,
+                                    filterable: true,
+                                    filterMethod: (filter, row) => {
+                                        return row[filter.id] ? row[filter.id].includes(filter.value.toUpperCase()) : false
+                                    }
+                                },
+                                {
+                                    Header: "Tipo Cargo",
+                                    accessor: "cargo_tipo",
+                                    maxWidth: 200,
+                                    filterable: true,
+                                    filterMethod: (filter, row) => {
+                                        return row[filter.id] ? row[filter.id].includes(filter.value.toUpperCase()) : false
+                                    }
+                                },
+                                {
                                     Header: "De CGUno",
                                     accessor: "es_cguno",
                                     maxWidth: 80,
@@ -74,7 +85,7 @@ class Tabla extends React.Component {
                                     accessor: "en_proyectos",
                                     maxWidth: 80,
                                     Cell: row => (
-                                        can_change ?
+                                        permisos.change ?
                                             <Checkbox
                                                 checked={row.value}
                                                 onCheck={() => updateItem({
@@ -83,6 +94,22 @@ class Tabla extends React.Component {
                                                 })}
                                             />
                                             :
+                                            row.value && <i className='far fa-check-circle'></i>
+                                    )
+                                },
+                                {
+                                    Header: "Salario Fijo",
+                                    accessor: "es_salario_fijo",
+                                    maxWidth: 80,
+                                    Cell: row => (
+                                        permisos.change ?
+                                            <Checkbox
+                                                checked={row.value}
+                                                onCheck={() => updateItem({
+                                                    ...row.original,
+                                                    es_salario_fijo: !row.value
+                                                })}
+                                            /> :
                                             row.value && <i className='far fa-check-circle'></i>
                                     )
                                 },
@@ -100,7 +127,7 @@ class Tabla extends React.Component {
                                         return row[filter.id] ? row[filter.id].includes(filter.value.toLowerCase()) : false
                                     },
                                     Cell: row => (
-                                        !row.value ? can_change &&
+                                        !row.value ? permisos.change &&
                                             <span>Crear Usuario <i
                                                 onClick={() => onCreateColaboradorUsuario(row.original)}
                                                 className='far fa-plus puntero'></i></span> :
@@ -112,7 +139,7 @@ class Tabla extends React.Component {
                                     accessor: "autogestion_horas_trabajadas",
                                     maxWidth: 80,
                                     Cell: row => (
-                                        can_change ?
+                                        permisos.change ?
                                             <Checkbox
                                                 checked={row.value}
                                                 onCheck={() => updateItem({
@@ -130,7 +157,7 @@ class Tabla extends React.Component {
                             columns: [
                                 {
                                     Header: "Elimi.",
-                                    show: can_delete,
+                                    show: permisos.delete,
                                     maxWidth: 60,
                                     Cell: row =>
                                         !row.original.es_cguno &&
@@ -145,27 +172,16 @@ class Tabla extends React.Component {
                                 },
                                 {
                                     Header: "Editar",
-                                    show: can_change,
+                                    show: permisos.change,
                                     maxWidth: 60,
                                     Cell: row =>
                                         !row.original.es_cguno &&
                                         <IconButtonTableEdit
                                             onClick={() => {
-                                                onSelectItem(row.original);
-                                                handleOpen()
+                                                onSelectItemEdit(row.original);
                                             }}/>
 
                                 },
-                                {
-                                    Header: "Ver",
-                                    show: can_detail,
-                                    maxWidth: 60,
-                                    Cell: row =>
-                                        <Link to={`/app/admin/colaboradores/detail/${row.original.id}`}>
-                                            <IconButtonTableSee/>
-                                        </Link>
-
-                                }
                             ]
                         }
                     ]}

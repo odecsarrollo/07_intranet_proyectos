@@ -56,7 +56,8 @@ class ColaboradorBiable(models.Model):
     en_proyectos = models.BooleanField(default=False)
     es_cguno = models.BooleanField(default=False)
     autogestion_horas_trabajadas = models.BooleanField(default=False)
-    salario_fijo = models.BooleanField(default=False)
+    es_salario_fijo = models.BooleanField(default=False)
+    nro_horas_mes = models.PositiveIntegerField(default=0, null=True, blank=True)
     cargo = models.ForeignKey(CargosBiable, on_delete=models.PROTECT, null=True, blank=True)
 
     def create_user(self):

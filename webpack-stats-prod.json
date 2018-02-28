@@ -1,1 +1,1 @@
-{"status":"done","chunks":{"app":[{"name":"app-8c3a39282cfa49dc9e1c.js","path":"/Users/fabioandresgarciasanchez/PycharmProjects/intranet_proyectos/static/assets/bundles/dist/app-8c3a39282cfa49dc9e1c.js"}]}}
+{"status":"error","error":"Error","message":"app-e9f14424b0c6e44fe1ce.js from UglifyJs\nUnexpected token: name (timeoutDuration) [app-e9f14424b0c6e44fe1ce.js:82240,4]"}
