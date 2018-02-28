@@ -13,8 +13,10 @@ import 'react-widgets/dist/css/react-widgets.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'jquery/dist/jquery.js';
 import 'popper.js/dist/popper.js';
+import '../../js/fontawesome-all.min';
 import 'tether/dist/js/tether';
 import 'bootstrap/dist/js/bootstrap';
+import './../../css/custom.css';
 
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
@@ -40,21 +42,21 @@ import AppProyectos from './04_app_proyectos/App';
 
 const App = () => {
     return (
-<Provider store={store}>
-        <MuiThemeProvider muiTheme={getMuiTheme()}>
-            <BrowserRouter>
-                <Fragment>
-                    <Notify/>
-                    <Switch>
-                        <Route exact path='/' component={AppIndex}/>
-                        <Route exact path='/app' component={AppIndex}/>
-                        <Route path='/app/admin' component={AppAdmin}/>
-                        <Route path='/app/proyectos' component={AppProyectos}/>
-                    </Switch>
-                </Fragment>
-            </BrowserRouter>
-        </MuiThemeProvider>
-    </Provider>
+        <Provider store={store}>
+            <MuiThemeProvider muiTheme={getMuiTheme()}>
+                <BrowserRouter>
+                    <Fragment>
+                        <Notify/>
+                        <Switch>
+                            <Route exact path='/' component={AppIndex}/>
+                            <Route exact path='/app' component={AppIndex}/>
+                            <Route path='/app/admin' component={AppAdmin}/>
+                            <Route path='/app/proyectos' component={AppProyectos}/>
+                        </Switch>
+                    </Fragment>
+                </BrowserRouter>
+            </MuiThemeProvider>
+        </Provider>
     )
 };
 
