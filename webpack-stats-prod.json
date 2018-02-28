@@ -1,1 +1,1 @@
-{"status":"error","error":"Error","message":"app-e9f14424b0c6e44fe1ce.js from UglifyJs\nUnexpected token: name (timeoutDuration) [app-e9f14424b0c6e44fe1ce.js:82240,4]"}
+{"status":"done","chunks":{"app":[{"name":"app-e9f14424b0c6e44fe1ce.js","path":"/Users/fabioandresgarciasanchez/PycharmProjects/intranet_proyectos/static/assets/bundles/dist/app-e9f14424b0c6e44fe1ce.js"},{"name":"webpack-style-e9f14424b0c6e44fe1ce.css","path":"/Users/fabioandresgarciasanchez/PycharmProjects/intranet_proyectos/static/assets/bundles/dist/webpack-style-e9f14424b0c6e44fe1ce.css"}]}}

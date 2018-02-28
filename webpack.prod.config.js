@@ -23,12 +23,12 @@ config.plugins = config.plugins.concat([
     // keeps hashes consistent between compilations
     new webpack.optimize.OccurrenceOrderPlugin(),
 
-    // minifies your code
-    new webpack.optimize.UglifyJsPlugin({
-        compressor: {
-            warnings: false
-        },
-    })
+    // // minifies your code
+    // new webpack.optimize.UglifyJsPlugin({
+    //     compressor: {
+    //         warnings: false
+    //     },
+    // })
 
 ]);
 
