@@ -48,6 +48,15 @@ class CargosBiable(models.Model):
     tipo_cargo = models.CharField(max_length=300, null=True, blank=True)
 
 
+class ColaboradorCentroCosto(models.Model):
+    nombre = models.CharField(unique=True, max_length=120)
+
+    class Meta:
+        permissions = [
+            ("list_colaboradorcentrocosto", "Can see list centros costos colaboradores"),
+        ]
+
+
 class ColaboradorBiable(models.Model):
     usuario = models.OneToOneField(User, related_name='colaborador', on_delete=models.SET_NULL, null=True, blank=True)
     cedula = models.CharField(max_length=20, unique=True)
@@ -59,6 +68,8 @@ class ColaboradorBiable(models.Model):
     es_salario_fijo = models.BooleanField(default=False)
     nro_horas_mes = models.PositiveIntegerField(default=0, null=True, blank=True)
     cargo = models.ForeignKey(CargosBiable, on_delete=models.PROTECT, null=True, blank=True)
+    centro_costo = models.ForeignKey(ColaboradorCentroCosto, on_delete=models.PROTECT, related_name='mis_colaboradores',
+                                     null=True, blank=True)
 
     def create_user(self):
         nombre_split = self.nombres.split()
@@ -68,6 +79,8 @@ class ColaboradorBiable(models.Model):
             username += parte[0:3]
         for parte in apellidos_split:
             username += parte[0:3]
+        if User.objects.filter(username=username).exists():
+            username = '%s%s' % (username, User.objects.filter(username=username).count())
         user = User.objects.create_user(
             username=username.lower(),
             password=self.cedula,
@@ -88,7 +101,8 @@ class ColaboradorBiable(models.Model):
         verbose_name = 'Colaborador'
         verbose_name_plural = 'Colaboradores'
         permissions = [
-            ("list_colaboradorbiable", "Can see list colaboradores CGUNO")
+            ("list_colaboradorbiable", "Can see list colaboradores CGUNO"),
+            ("detail_colaboradorbiable", "Can see detail colaborador CGUNO"),
         ]
 
     def __str__(self):
@@ -97,3 +111,14 @@ class ColaboradorBiable(models.Model):
     @property
     def full_name(self):
         return '%s %s' % (self.nombres, self.apellidos)
+
+
+class ColaboradorCostoMesBiable(models.Model):
+    colaborador = models.ForeignKey(ColaboradorBiable, on_delete=models.PROTECT, related_name='mis_costos')
+    lapso = models.DateField()
+    valor = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+
+    class Meta:
+        permissions = [
+            ("list_colaboradorcostomesbiable", "Can see list colaborador costo mes"),
+        ]

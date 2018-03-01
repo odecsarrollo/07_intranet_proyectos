@@ -31,7 +31,7 @@ export function fetchList(url, dispatches = null, callback = null, callback_erro
     console.log(`entro nuevo fetch list para ${url}`);
     const FULL_URL = `${url}/?format=json`;
     const request = axios_instance.get(FULL_URL);
-    createRequest(
+    return createRequest(
         request,
         dispatches,
         callback,
@@ -43,7 +43,7 @@ export function fetchListWithParameter(url, dispatches = null, callback = null, 
     console.log(`entro nuevo fetch list with parameters para ${url}`);
     const FULL_URL = `${url}&format=json`;
     const request = axios_instance.get(FULL_URL);
-    createRequest(
+    return createRequest(
         request,
         dispatches,
         callback,
@@ -55,7 +55,7 @@ export function fetchObject(url, id, dispatches = null, callback = null, callbac
     console.log(`entro nuevo fetch object para ${url} con id ${id}`);
     const FULL_URL = `${url}/${id}/?format=json`;
     const request = axios_instance.get(FULL_URL);
-    createRequest(
+    return createRequest(
         request,
         dispatches,
         callback,
@@ -69,7 +69,7 @@ export function updateObject(url, id, values, dispatches = null, callback = null
     axios_instance.defaults.xsrfCookieName = "csrftoken";
     const FULL_URL = `${url}/${id}/`;
     const request = axios_instance.put(FULL_URL, values);
-    createRequest(
+    return createRequest(
         request,
         dispatches,
         callback,
@@ -83,7 +83,7 @@ export function createObject(url, values, dispatches = null, callback = null, ca
     axios_instance.defaults.xsrfCookieName = "csrftoken";
     const FULL_URL = `${url}/`;
     const request = axios_instance.post(FULL_URL, values);
-    createRequest(
+    return createRequest(
         request,
         dispatches,
         callback,
@@ -97,7 +97,7 @@ export function deleteObject(url, id, dispatches = null, callback = null, callba
     axios_instance.defaults.xsrfCookieName = "csrftoken";
     const FULL_URL = `${url}/${id}/`;
     const request = axios_instance.delete(FULL_URL);
-    createRequest(
+    return createRequest(
         request,
         dispatches,
         callback,
@@ -112,7 +112,7 @@ export function callApiMethod(url, id, method, dispatches = null, callback = nul
     axios_instance.defaults.xsrfCookieName = "csrftoken";
     const FULL_URL = `${url}/${id}/${method}/`;
     const request = axios_instance.post(FULL_URL);
-    createRequest(
+    return createRequest(
         request,
         dispatches,
         callback,
@@ -127,7 +127,7 @@ export function callApiMethodWithParameters(url, id, method, parameters, dispatc
     axios_instance.defaults.xsrfCookieName = "csrftoken";
     const FULL_URL = `${url}/${id}/${method}/`;
     const request = axios_instance.post(FULL_URL, parameters);
-    createRequest(
+    return createRequest(
         request,
         dispatches,
         callback,

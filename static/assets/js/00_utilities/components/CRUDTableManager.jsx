@@ -19,7 +19,7 @@ class CRUDTableManager extends Component {
     }
 
     onCancel() {
-        this.setState({modal_open: false, item_seleccionado: null});
+        this.setState({modal_open: false});
     }
 
     componentDidMount() {

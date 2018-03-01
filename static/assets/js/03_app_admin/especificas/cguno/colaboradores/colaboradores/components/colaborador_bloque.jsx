@@ -1,65 +1,20 @@
-import React, {Component, Fragment} from 'react';
-import {connect} from "react-redux";
-import * as actions from "../../../../../01_actions/01_index";
-import CargarDatos from "../../../../../00_utilities/components/system/cargar_datos";
-import {Titulo} from "../../../../../00_utilities/templates/fragmentos";
-import ListManager from "../../../../../00_utilities/components/CRUDTableManager";
-import {
-    USUARIOS as permisos_view
-} from "../../../../../00_utilities/permisos/types";
-import {permisosAdapter} from "../../../../../00_utilities/common";
-
+import React, {Fragment, Component} from 'react'
 import CreateForm from '../components/forms/colaborador_form';
 import Tabla from '../components/colaboradores_tabla';
+import ListManager from "../../../../../../00_utilities/components/CRUDTableManager";
+import {
+    COLABORADORES as permisos_view
+} from "../../../../../../00_utilities/permisos/types";
+import {permisosAdapter} from "../../../../../../00_utilities/common";
 
-class ColaboradoresList extends Component {
+class BloqueTab extends Component {
     constructor(props) {
         super(props);
-        this.cargarDatos = this.cargarDatos.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
         this.onDelete = this.onDelete.bind(this);
         this.onCreateColaboradorUsuario = this.onCreateColaboradorUsuario.bind(this);
-    }
-
-    componentDidMount() {
-        this.cargarDatos();
-    }
-
-    componentWillUnmount() {
-        this.props.clearColaboradores()
-    }
-
-    cargarDatos() {
-        this.props.cargando();
-        const cargarColaboradores = () => this.props.fetchColaboradores(() => this.props.noCargando(), this.error_callback);
-        const cargarMiCuenta = () => this.props.fetchMiCuenta(cargarColaboradores, this.error_callback);
-        this.props.fetchMisPermisos(cargarMiCuenta, this.error_callback)
-    }
-
-    onSubmit(item, tipo) {
-        const nombre = `${item.nombres} ${item.apellidos}`;
-        const {cargando, noCargando, notificarAction, notificarErrorAjaxAction} = this.props;
-        const success_callback = () => {
-            notificarAction(`Se ha ${item.id ? 'actualizado' : 'creado'} con éxito ${tipo.toLowerCase()} ${nombre}`);
-            noCargando();
-        };
-        cargando();
-        if (item.id) {
-            this.props.updateColaborador(item.id, item, success_callback, notificarErrorAjaxAction);
-        } else {
-            this.props.createColaborador(item, success_callback, notificarErrorAjaxAction);
-        }
-    }
-
-    onDelete(item, tipo) {
-        const nombre = `${item.nombres} ${item.apellidos}`;
-        const {cargando, noCargando, notificarAction, notificarErrorAjaxAction} = this.props;
-        const success_callback = () => {
-            noCargando();
-            notificarAction(`Se ha eliminado con éxito ${tipo.toLowerCase()} ${nombre}`)
-        };
-        cargando();
-        this.props.deleteColaborador(item.id, success_callback, notificarErrorAjaxAction)
+        this.plural_name = 'colaboradores';
+        this.singular_name = 'colaborador';
     }
 
     onCreateColaboradorUsuario(item) {
@@ -75,11 +30,37 @@ class ColaboradoresList extends Component {
         )
     }
 
+    onSubmit(item, tipo) {
+        const nombre = `${item.nombres} ${item.apellidos}`;
+        const {cargando, noCargando, notificarAction, notificarErrorAjaxAction} = this.props;
+        const success_callback = () => {
+            notificarAction(`Se ha ${item.id ? 'actualizado' : 'creado'} con éxito ${tipo.toLowerCase()} ${nombre}`);
+            noCargando();
+        };
+        cargando();
+        if (item.id) {
+            this.props.updateColaborador(item.id, item, success_callback, notificarErrorAjaxAction);
+        } else {
+            return this.props.createColaborador(item, success_callback, notificarErrorAjaxAction)
+        }
+    }
+
+    onDelete(item, tipo) {
+        const nombre = `${item.nombres} ${item.apellidos}`;
+        const {cargando, noCargando, notificarAction, notificarErrorAjaxAction} = this.props;
+        const success_callback = () => {
+            noCargando();
+            notificarAction(`Se ha eliminado con éxito ${tipo.toLowerCase()} ${nombre}`)
+        };
+        cargando();
+        this.props.deleteColaborador(item.id, success_callback, notificarErrorAjaxAction)
+    }
+
     render() {
-        const {object_list, mi_cuenta, mis_permisos} = this.props;
+        const {list, mis_permisos, centros_costos_list} = this.props;
         const permisos = permisosAdapter(mis_permisos, permisos_view);
         return (
-            <ListManager permisos={permisos} singular_name='colaborador' plural_name='colaboradores'>
+            <ListManager permisos={permisos} singular_name={this.singular_name} plural_name={this.plural_name}>
                 {
                     (list_manager_state,
                      onSelectItem,
@@ -88,21 +69,24 @@ class ColaboradoresList extends Component {
                      handleModalClose) => {
                         return (
                             <Fragment>
-                                <CreateForm
-                                    onCancel={onCancel}
-                                    item_seleccionado={list_manager_state.item_seleccionado}
-                                    onSubmit={
-                                        (item) => {
-                                            this.onSubmit(item, list_manager_state.singular_name);
-                                            handleModalClose();
+                                {
+                                    list_manager_state.modal_open &&
+                                    <CreateForm
+                                        centros_costos_list={centros_costos_list}
+                                        onCancel={onCancel}
+                                        item_seleccionado={list_manager_state.item_seleccionado}
+                                        onSubmit={
+                                            (item) => {
+                                                this.onSubmit(item, list_manager_state.singular_name);
+                                                handleModalClose();
+                                            }
                                         }
-                                    }
-                                    modal_open={list_manager_state.modal_open}
-                                    element_type={`${list_manager_state.singular_name}`}
-                                />
-                                <Titulo>Lista de {list_manager_state.plural_name}</Titulo>
+                                        modal_open={list_manager_state.modal_open}
+                                        element_type={`${list_manager_state.singular_name}`}
+                                    />
+                                }
                                 <Tabla
-                                    data={_.map(object_list, e => e)}
+                                    data={_.map(list, e => e)}
                                     permisos={permisos}
                                     element_type={`${list_manager_state.singular_name}`}
                                     onDelete={(item) => {
@@ -123,10 +107,6 @@ class ColaboradoresList extends Component {
                                     updateItem={(item) => this.onSubmit(item, list_manager_state.singular_name)}
                                     onCreateColaboradorUsuario={this.onCreateColaboradorUsuario}
                                 />
-
-                                <CargarDatos
-                                    cargarDatos={this.cargarDatos}
-                                />
                             </Fragment>
                         )
                     }
@@ -136,12 +116,4 @@ class ColaboradoresList extends Component {
     }
 }
 
-function mapPropsToState(state, ownProps) {
-    return {
-        mis_permisos: state.mis_permisos,
-        mi_cuenta: state.mi_cuenta,
-        object_list: state.colaboradores
-    }
-}
-
-export default connect(mapPropsToState, actions)(ColaboradoresList)
+export default BloqueTab;

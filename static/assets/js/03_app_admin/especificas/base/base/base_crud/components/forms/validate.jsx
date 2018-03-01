@@ -1,18 +1,16 @@
-import {REGEX_CORREO_ELECTRONICO} from "../../../../../00_utilities/common";
+import {REGEX_CORREO_ELECTRONICO} from "../../../../../../../00_utilities/common";
 
 const validate = values => {
     const errors = {};
-    const requiredFields = [
-        'username',
-        'first_name',
-        'last_name'
-    ];
-    requiredFields.map(field => {
-        if (!values[field]) {
-            errors[field] = 'Requerido'
-        }
-    });
-
+    if (!values.username) {
+        errors.username = 'Requerido';
+    }
+    if (!values.first_name) {
+        errors.first_name = 'Requerido';
+    }
+    if (!values.last_name) {
+        errors.last_name = 'Requerido';
+    }
     if (!values.email) {
         errors.email = 'Requerido';
     } else {

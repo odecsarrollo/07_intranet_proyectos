@@ -34,3 +34,10 @@ export const UPDATE_COLABORADOR = 'update_colaborador';
 export const FETCH_ITEMS_BIABLE = 'fetch_items_biable';
 export const FETCH_ITEM_BIABLE = 'fetch_item_biable';
 export const CLEAR_ITEMS_BIABLE = 'clear_items_biable';
+
+export const CREATE_CENTRO_COSTO_COLABORADOR='create_centro_costo_colaborador';
+export const DELETE_CENTRO_COSTO_COLABORADOR='delete_centro_costo_colaborador';
+export const FETCH_CENTROS_COSTOS_COLABORADORES='fetch_centros_costos_colaboradores';
+export const FETCH_CENTRO_COSTO_COLABORADOR='fetch_centro_costo_colaborador';
+export const CLEAR_CENTROS_COSTOS_COLABORADORES='clear_centros_costos_colaboradores';
+export const UPDATE_CENTRO_COSTO_COLABORADOR='update_centro_costo_colaborador';

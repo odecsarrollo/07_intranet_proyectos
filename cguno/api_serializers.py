@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from .models import ColaboradorBiable, ItemsLiteralBiable, ItemsBiable
+from .models import ColaboradorBiable, ItemsLiteralBiable, ItemsBiable, ColaboradorCentroCosto, \
+    ColaboradorCostoMesBiable
 
 
 class ColaboradorBiableSerializer(serializers.ModelSerializer):
@@ -8,12 +9,15 @@ class ColaboradorBiableSerializer(serializers.ModelSerializer):
     usuario_activo = serializers.BooleanField(source='usuario.is_active', read_only=True)
     cargo_descripcion = serializers.CharField(source='cargo.descripcion', read_only=True)
     cargo_tipo = serializers.CharField(source='cargo.tipo_cargo', read_only=True)
+    centro_costo_nombre = serializers.CharField(source='centro_costo.nombre', read_only=True)
 
     class Meta:
         model = ColaboradorBiable
         fields = [
             'url',
             'id',
+            'centro_costo_nombre',
+            'centro_costo',
             'cargo',
             'cargo_descripcion',
             'cargo_tipo',
@@ -25,8 +29,18 @@ class ColaboradorBiableSerializer(serializers.ModelSerializer):
             'apellidos',
             'en_proyectos',
             'es_salario_fijo',
+            'nro_horas_mes',
             'es_cguno',
             'autogestion_horas_trabajadas',
+        ]
+
+
+class ColaboradorCentroCostoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ColaboradorCentroCosto
+        fields = [
+            'id',
+            'nombre'
         ]
 
 

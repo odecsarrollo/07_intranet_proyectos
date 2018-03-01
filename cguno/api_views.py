@@ -3,13 +3,25 @@ from rest_framework import viewsets
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 
-from .models import ColaboradorBiable, ItemsLiteralBiable, ItemsBiable
-from .api_serializers import ColaboradorBiableSerializer, ItemsLiteralBiableSerializer, ItemsBiableSerializer
+from .models import ColaboradorBiable, ItemsLiteralBiable, ItemsBiable, ColaboradorCentroCosto
+from .api_serializers import ColaboradorBiableSerializer, ItemsLiteralBiableSerializer, ItemsBiableSerializer, \
+    ColaboradorCentroCostoSerializer
+
+
+class ColaboradorCentroCostoViewSet(viewsets.ModelViewSet):
+    queryset = ColaboradorCentroCosto.objects.all()
+    serializer_class = ColaboradorCentroCostoSerializer
 
 
 class ColaboradorBiableViewSet(viewsets.ModelViewSet):
-    queryset = ColaboradorBiable.objects.select_related('usuario','cargo').all()
+    queryset = ColaboradorBiable.objects.select_related('usuario', 'cargo', 'centro_costo').all()
     serializer_class = ColaboradorBiableSerializer
+
+    def perform_destroy(self, instance):
+        usuario = instance.usuario
+        usuario.is_active = False
+        usuario.save()
+        super().perform_destroy(instance)
 
     @list_route(methods=['get'])
     def mi_colaborador(self, request):

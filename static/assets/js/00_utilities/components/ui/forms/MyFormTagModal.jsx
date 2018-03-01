@@ -11,7 +11,6 @@ export const MyFormTagModal = (props) => {
         initialValues,
         onSubmit,
         onCancel,
-        handleClose,
         modal_open,
         element_type
     } = props;
@@ -20,12 +19,11 @@ export const MyFormTagModal = (props) => {
             element_type={`${initialValues ? 'Editar ' : 'Crear '} ${element_type}`}
             is_open={modal_open}
         >
-            <form className="card p-3" onSubmit={onSubmit}>
+            <form className="card pl-3 pr-5" onSubmit={onSubmit}>
                 <div className="row">
                     {props.children}
                 </div>
                 <BotoneriaModalForm
-                    handleClose={handleClose}
                     onCancel={onCancel}
                     pristine={pristine}
                     reset={reset}

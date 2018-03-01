@@ -13,7 +13,6 @@ import 'react-widgets/dist/css/react-widgets.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'jquery/dist/jquery.js';
 import 'popper.js/dist/popper.js';
-import '../../js/fontawesome-all.min';
 import 'tether/dist/js/tether';
 import 'bootstrap/dist/js/bootstrap';
 import './../../css/custom.css';

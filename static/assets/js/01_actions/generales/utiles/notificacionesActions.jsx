@@ -32,8 +32,6 @@ export function notificarErrorAjaxAction(error, tiempo = 7000) {
         let mensaje_final = '';
         const {type_error} = error;
 
-        console.log(error)
-
         if (error.response) {
             mensaje_final += `Error ${error.response.status} ${error.response.statusText}`
         }

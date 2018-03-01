@@ -27,11 +27,7 @@ const BotoneriaModalForm = (props) => {
             <FlatIconModal
                 text="Cancelar"
                 primary={false}
-                onClick={
-                    () => {
-                        onCancel();
-                    }
-                }
+                onClick={() => onCancel()}
             />
         </div>
     )

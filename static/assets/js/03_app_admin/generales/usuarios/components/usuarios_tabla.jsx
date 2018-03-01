@@ -38,26 +38,20 @@ class Tabla extends React.Component {
                                 },
                                 {
                                     Header: "Nombres",
-                                    accessor: "first_name",
-                                    maxWidth: 200,
+                                    maxWidth: 320,
                                     filterable: true,
                                     filterMethod: (filter, row) => {
-                                        return row[filter.id].includes(filter.value.toUpperCase())
-                                    }
-                                },
-                                {
-                                    Header: "Apellidos",
-                                    id: "last_name",
-                                    accessor: "last_name",
-                                    maxWidth: 200,
-                                    filterable: true,
-                                    filterMethod: (filter, row) => {
-                                        return row[filter.id].includes(filter.value.toUpperCase())
-                                    }
+                                        return (
+                                            row._original.first_name.includes(filter.value.toUpperCase()) ||
+                                            row._original.last_name.includes(filter.value.toUpperCase())
+                                        )
+                                    },
+                                    Cell: row => `${row.original.first_name} ${row.original.last_name}`
                                 },
                                 {
                                     Header: "Correo",
                                     accessor: "email",
+                                    maxWidth: 280,
                                     filterable: true,
                                     filterMethod: (filter, row) => {
                                         return row[filter.id].includes(filter.value.toUpperCase())
@@ -72,7 +66,7 @@ class Tabla extends React.Component {
                                     Header: "Activo",
                                     accessor: "is_active",
                                     show: permisos.make_user_active,
-                                    maxWidth: 60,
+                                    maxWidth: 45,
                                     Cell: row => (
                                         mi_cuenta.id !== row.original.id &&
                                         <Checkbox
@@ -85,7 +79,7 @@ class Tabla extends React.Component {
                                     Header: "Admin",
                                     accessor: "is_superuser",
                                     show: permisos.make_user_superuser,
-                                    maxWidth: 60,
+                                    maxWidth: 45,
                                     Cell: row => (
                                         mi_cuenta.id !== row.original.id &&
                                         <Checkbox
@@ -98,7 +92,7 @@ class Tabla extends React.Component {
                                     Header: "Staff",
                                     accessor: "is_staff",
                                     show: permisos.make_user_staff,
-                                    maxWidth: 60,
+                                    maxWidth: 45,
                                     Cell: row => (
                                         mi_cuenta.id !== row.original.id &&
                                         <Checkbox
@@ -110,7 +104,7 @@ class Tabla extends React.Component {
                                 {
                                     Header: "Elimi.",
                                     show: permisos.delete,
-                                    maxWidth: 60,
+                                    maxWidth: 45,
                                     Cell: row =>
                                         mi_cuenta.id !== row.original.id &&
                                         (
@@ -130,7 +124,7 @@ class Tabla extends React.Component {
                                 {
                                     Header: "Editar",
                                     show: permisos.change,
-                                    maxWidth: 60,
+                                    maxWidth: 45,
                                     Cell: row =>
                                         <IconButtonTableEdit
                                             onClick={() => {
@@ -141,7 +135,7 @@ class Tabla extends React.Component {
                                 {
                                     Header: "Ver",
                                     show: permisos.detail,
-                                    maxWidth: 60,
+                                    maxWidth: 40,
                                     Cell: row =>
                                         <Link to={`/app/admin/usuarios/detail/${row.original.id}`}>
                                             <IconButtonTableSee/>

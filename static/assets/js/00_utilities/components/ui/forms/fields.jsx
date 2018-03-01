@@ -26,18 +26,16 @@ export const MyTextFieldSimple = (props) => {
         normalize = lower
     }
     return (
-        <div className={props.className}>
-            <Field
-                fullWidth={true}
-                name={props.name}
-                {...props}
-                component={TextField}
-                hintText={props.nombre}
-                autoComplete="off"
-                floatingLabelText={props.nombre}
-                normalize={normalize}
-            />
-        </div>
+        <Field
+            fullWidth={true}
+            name={props.name}
+            {...props}
+            component={TextField}
+            hintText={props.nombre}
+            autoComplete="off"
+            floatingLabelText={props.nombre}
+            normalize={normalize}
+        />
     )
 };
 MyTextFieldSimple.propTypes = {
@@ -50,20 +48,18 @@ MyTextFieldSimple.propTypes = {
 export const MyCheckboxSimple = (props) => {
     const {onClick} = props;
     return (
-        <div className={props.className}>
-            <Field
-                onClick={() => {
-                    if (onClick) {
-                        onClick()
-                    }
-                }}
-                {...props}
-                name={props.name}
-                component={Checkbox}
-                label={props.nombre}
-                normalize={v => !!v}
-            />
-        </div>
+        <Field
+            onClick={() => {
+                if (onClick) {
+                    onClick()
+                }
+            }}
+            {...props}
+            name={props.name}
+            component={Checkbox}
+            label={props.nombre}
+            normalize={v => !!v}
+        />
     )
 };
 MyCheckboxSimple.propTypes = {
@@ -147,26 +143,24 @@ MyRadioButtonGroup.propTypes = {
 
 export const MySelectField = (props) => {
     return (
-        <div className={props.className}>
-            <Field
-                {...props}
-                fullWidth={true}
-                name={props.name}
-                component={SelectField}
-                hintText={props.nombre}
-                floatingLabelText={props.nombre}
-            >
-                {props.options.map(o => {
-                    return (
-                        <MenuItem
-                            key={o.value}
-                            value={o.value}
-                            primaryText={o.primaryText}
-                        />
-                    )
-                })}
-            </Field>
-        </div>
+        <Field
+            {...props}
+            fullWidth={true}
+            name={props.name}
+            component={SelectField}
+            hintText={props.nombre}
+            floatingLabelText={props.nombre}
+        >
+            {props.options.map(o => {
+                return (
+                    <MenuItem
+                        key={o.value}
+                        value={o.value}
+                        primaryText={o.primaryText}
+                    />
+                )
+            })}
+        </Field>
     )
 };
 MySelectField.propTypes = {

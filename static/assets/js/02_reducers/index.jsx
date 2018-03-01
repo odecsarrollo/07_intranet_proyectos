@@ -14,6 +14,7 @@ import tercerosReducer from './especificas/tercerosReducer';
 import literalesReducer from "./especificas/cguno/literalesReducer";
 import itemsLiteralesReducer from "./especificas/cguno/itemsliteralesReducer";
 import colaboradoresReducer from "./especificas/cguno/colaboradoresReducer";
+import centrosCostosColaboradoresReducer from "./especificas/cguno/centrosCostosColaboradoresReducer";
 import itemsCgunoReducer from "./especificas/cguno/itemsBiableReducer";
 
 const rootReducer = combineReducers({
@@ -32,6 +33,7 @@ const rootReducer = combineReducers({
     items_literales: itemsLiteralesReducer,
     colaboradores: colaboradoresReducer,
     items_cguno: itemsCgunoReducer,
+    centros_costos_colaboradores: centrosCostosColaboradoresReducer,
 });
 
 export default rootReducer;

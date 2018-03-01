@@ -1,7 +1,7 @@
 import React from "react";
 import Checkbox from 'material-ui/Checkbox';
-import {MyDialogButtonDelete} from '../../../../../00_utilities/components/ui/dialog';
-import {IconButtonTableEdit, IconButtonTableSee} from '../../../../../00_utilities/components/ui/icon/iconos';
+import {MyDialogButtonDelete} from '../../../../../../00_utilities/components/ui/dialog';
+import {IconButtonTableEdit, IconButtonTableSee} from '../../../../../../00_utilities/components/ui/icon/iconos';
 import {Link} from 'react-router-dom'
 
 import ReactTable from "react-table";
@@ -13,6 +13,7 @@ class Tabla extends React.Component {
         const {
             updateItem,
             onDelete,
+            element_type,
             onSelectItemEdit,
             permisos,
             onCreateColaboradorUsuario,
@@ -30,7 +31,7 @@ class Tabla extends React.Component {
                                 {
                                     Header: "Cédula",
                                     accessor: "cedula",
-                                    maxWidth: 150,
+                                    maxWidth: 100,
                                     filterable: true,
                                     filterMethod: (filter, row) => {
                                         return row[filter.id].includes(filter.value.toLowerCase())
@@ -38,21 +39,15 @@ class Tabla extends React.Component {
                                 },
                                 {
                                     Header: "Nombres",
-                                    accessor: "nombres",
-                                    maxWidth: 200,
+                                    maxWidth: 320,
                                     filterable: true,
                                     filterMethod: (filter, row) => {
-                                        return row[filter.id].includes(filter.value.toUpperCase())
-                                    }
-                                },
-                                {
-                                    Header: "Apellidos",
-                                    accessor: "apellidos",
-                                    maxWidth: 200,
-                                    filterable: true,
-                                    filterMethod: (filter, row) => {
-                                        return row[filter.id].includes(filter.value.toUpperCase())
-                                    }
+                                        return (
+                                            row._original.nombres.includes(filter.value.toUpperCase()) ||
+                                            row._original.apellidos.includes(filter.value.toUpperCase())
+                                        )
+                                    },
+                                    Cell: row => `${row.original.nombres} ${row.original.apellidos}`
                                 },
                                 {
                                     Header: "Cargo",
@@ -64,8 +59,8 @@ class Tabla extends React.Component {
                                     }
                                 },
                                 {
-                                    Header: "Tipo Cargo",
-                                    accessor: "cargo_tipo",
+                                    Header: "Centro Costo",
+                                    accessor: "centro_costo_nombre",
                                     maxWidth: 200,
                                     filterable: true,
                                     filterMethod: (filter, row) => {
@@ -73,17 +68,18 @@ class Tabla extends React.Component {
                                     }
                                 },
                                 {
-                                    Header: "De CGUno",
+                                    Header: "CGUno",
                                     accessor: "es_cguno",
-                                    maxWidth: 80,
+                                    maxWidth: 50,
                                     Cell: row => (
-                                        row.value && <i className={'far fa-check-circle'}></i>
+                                        row.value && <div className='text-center' style={{color: 'green'}}><i
+                                            className={'fas fa-check-circle'}></i></div>
                                     )
                                 },
                                 {
                                     Header: "En Proy.",
                                     accessor: "en_proyectos",
-                                    maxWidth: 80,
+                                    maxWidth: 60,
                                     Cell: row => (
                                         permisos.change ?
                                             <Checkbox
@@ -98,9 +94,9 @@ class Tabla extends React.Component {
                                     )
                                 },
                                 {
-                                    Header: "Salario Fijo",
+                                    Header: "Sal. Fijo",
                                     accessor: "es_salario_fijo",
-                                    maxWidth: 80,
+                                    maxWidth: 60,
                                     Cell: row => (
                                         permisos.change ?
                                             <Checkbox
@@ -135,9 +131,9 @@ class Tabla extends React.Component {
                                     )
                                 },
                                 {
-                                    Header: "Ges. Horas",
+                                    Header: "Ges. Hor.",
                                     accessor: "autogestion_horas_trabajadas",
-                                    maxWidth: 80,
+                                    maxWidth: 60,
                                     Cell: row => (
                                         permisos.change ?
                                             <Checkbox
@@ -158,7 +154,7 @@ class Tabla extends React.Component {
                                 {
                                     Header: "Elimi.",
                                     show: permisos.delete,
-                                    maxWidth: 60,
+                                    maxWidth: 45,
                                     Cell: row =>
                                         !row.original.es_cguno &&
                                         <MyDialogButtonDelete
@@ -166,22 +162,31 @@ class Tabla extends React.Component {
                                                 onDelete(row.original)
                                             }}
                                             element_name={`${row.original.nombres} ${row.original.apellidos}`}
-                                            element_type='Colaborador'
+                                            element_type={element_type}
                                         />
 
                                 },
                                 {
                                     Header: "Editar",
                                     show: permisos.change,
-                                    maxWidth: 60,
+                                    maxWidth: 45,
                                     Cell: row =>
-                                        !row.original.es_cguno &&
                                         <IconButtonTableEdit
                                             onClick={() => {
                                                 onSelectItemEdit(row.original);
                                             }}/>
 
                                 },
+                                {
+                                    Header: "Ver",
+                                    show: permisos.detail,
+                                    maxWidth: 40,
+                                    Cell: row =>
+                                        <Link to={`/app/admin/cguno/colaborador/detail/${row.original.id}`}>
+                                            <IconButtonTableSee/>
+                                        </Link>
+
+                                }
                             ]
                         }
                     ]}
