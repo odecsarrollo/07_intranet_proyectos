@@ -68,6 +68,9 @@ class ColaboradorBiable(models.Model):
     es_salario_fijo = models.BooleanField(default=False)
     nro_horas_mes = models.PositiveIntegerField(default=0, null=True, blank=True)
     cargo = models.ForeignKey(CargosBiable, on_delete=models.PROTECT, null=True, blank=True)
+    porcentaje_caja_compensacion = models.DecimalField(max_digits=10, decimal_places=4, default=4.0)
+    porcentaje_pension = models.DecimalField(max_digits=10, decimal_places=4, default=12)
+    porcentaje_arl = models.DecimalField(max_digits=10, decimal_places=4, default=2.436)
     centro_costo = models.ForeignKey(ColaboradorCentroCosto, on_delete=models.PROTECT, related_name='mis_colaboradores',
                                      null=True, blank=True)
 
