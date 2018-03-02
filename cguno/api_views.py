@@ -19,8 +19,9 @@ class ColaboradorBiableViewSet(viewsets.ModelViewSet):
 
     def perform_destroy(self, instance):
         usuario = instance.usuario
-        usuario.is_active = False
-        usuario.save()
+        if usuario:
+            usuario.is_active = False
+            usuario.save()
         super().perform_destroy(instance)
 
     @list_route(methods=['get'])

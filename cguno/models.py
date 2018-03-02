@@ -115,7 +115,7 @@ class ColaboradorBiable(models.Model):
 
 class ColaboradorCostoMesBiable(models.Model):
     colaborador = models.ForeignKey(ColaboradorBiable, on_delete=models.PROTECT, related_name='mis_costos')
-    lapso = models.DateField()
+    lapso = models.DateField(unique=True)
     valor = models.DecimalField(max_digits=12, decimal_places=2, default=0)
 
     class Meta:
