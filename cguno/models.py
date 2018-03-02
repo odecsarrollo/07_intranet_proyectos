@@ -115,10 +115,11 @@ class ColaboradorBiable(models.Model):
 
 class ColaboradorCostoMesBiable(models.Model):
     colaborador = models.ForeignKey(ColaboradorBiable, on_delete=models.PROTECT, related_name='mis_costos')
-    lapso = models.DateField(unique=True)
+    lapso = models.DateField()
     valor = models.DecimalField(max_digits=12, decimal_places=2, default=0)
 
     class Meta:
         permissions = [
             ("list_colaboradorcostomesbiable", "Can see list colaborador costo mes"),
         ]
+        unique_together = [('lapso', 'colaborador')]
