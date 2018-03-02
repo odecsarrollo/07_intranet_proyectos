@@ -112,6 +112,41 @@ class Tabla extends React.Component {
                             ]
                         },
                         {
+                            Header: "Nomina",
+                            columns: [
+                                {
+                                    Header: "Cja. Comp",
+                                    accessor: "porcentaje_caja_compensacion",
+                                    maxWidth: 70,
+                                    Cell: row => {
+                                        return (
+                                            <span>{Number(row.value).toFixed(2)}%</span>
+                                        )
+                                    }
+                                },
+                                {
+                                    Header: "Pension",
+                                    accessor: "porcentaje_pension",
+                                    maxWidth: 70,
+                                    Cell: row => {
+                                        return (
+                                            <span>{Number(row.value).toFixed(2)}%</span>
+                                        )
+                                    }
+                                },
+                                {
+                                    Header: "ARL",
+                                    accessor: "porcentaje_arl",
+                                    maxWidth: 70,
+                                    Cell: row => {
+                                        return (
+                                            <span>{Number(row.value).toFixed(2)}%</span>
+                                        )
+                                    }
+                                },
+                            ]
+                        },
+                        {
                             Header: "Acceso",
                             columns: [
                                 {

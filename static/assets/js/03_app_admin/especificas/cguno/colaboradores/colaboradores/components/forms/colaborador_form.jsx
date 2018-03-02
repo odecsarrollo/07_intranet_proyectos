@@ -1,5 +1,5 @@
 import React, {Component, Fragment} from 'react';
-import {reduxForm, reset} from 'redux-form';
+import {reduxForm} from 'redux-form';
 import {
     MyTextFieldSimple,
     MyCheckboxSimple,
@@ -112,6 +112,24 @@ class Form extends Component {
                         nombre='Nro. Horas Mes'
                         name='nro_horas_mes'/>
                 }
+
+                <MyTextFieldSimple
+                    className="col-12 col-md-6"
+                    nombre='% Caj. Com'
+                    name='porcentaje_caja_compensacion'
+                    case='U'/>
+
+                <MyTextFieldSimple
+                    className="col-12 col-md-6"
+                    nombre='% Caj. Pen'
+                    name='porcentaje_pension'
+                    case='U'/>
+
+                <MyTextFieldSimple
+                    className="col-12 col-md-6"
+                    nombre='% Caj. ARL'
+                    name='porcentaje_arl'
+                    case='U'/>
             </MyFormTagModal>
         )
     }

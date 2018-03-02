@@ -32,6 +32,9 @@ class ColaboradorBiableSerializer(serializers.ModelSerializer):
             'nro_horas_mes',
             'es_cguno',
             'autogestion_horas_trabajadas',
+            'porcentaje_caja_compensacion',
+            'porcentaje_pension',
+            'porcentaje_arl',
         ]
 
 
