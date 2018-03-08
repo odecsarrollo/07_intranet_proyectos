@@ -1,19 +1,18 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
-import * as actions from "../../../../../../01_actions/01_index";
-import CargarDatos from "../../../../../../00_utilities/components/system/cargar_datos";
-import {Titulo} from "../../../../../../00_utilities/templates/fragmentos";
-import ValidarPermisos from "../../../../../../00_utilities/permisos/validar_permisos";
-import {permisosAdapter} from "../../../../../../00_utilities/common";
+import * as actions from "../../../../../01_actions/01_index";
+import CargarDatos from "../../../../../00_utilities/components/system/cargar_datos";
+import {Titulo} from "../../../../../00_utilities/templates/fragmentos";
+import ValidarPermisos from "../../../../../00_utilities/permisos/validar_permisos";
+import {permisosAdapter} from "../../../../../00_utilities/common";
 import {Tabs, Tab} from 'material-ui/Tabs';
 import SwipeableViews from 'react-swipeable-views';
 import {
-    COLABORADORES as bloque_1_permisos,
-    COLABORADORES as bloque_2_permisos,
-} from "../../../../../../00_utilities/permisos/types";
+    PERMISOS_1 as bloque_1_permisos,
+    PERMISOS_2 as bloque_2_permisos,
+} from "../../../../../00_utilities/permisos/types";
 
-import BloqueColaboradores from '../../colaboradores/components/colaboradores_list';
-import BloqueCentrosCostos from '../../centros_costos/components/centros_costos_list';
+import BloqueTabBase from '../../base_crud/components/base_list';
 
 const styles = {
     headline: {
@@ -34,8 +33,8 @@ class ListadoElementos extends Component {
         this.state = {
             slideIndex: 0,
         };
-        this.plural_name = 'Panel Colaboradores';
-        this.singular_name = 'Panel Colaboradores';
+        this.plural_name = 'NOMBREs DASHBOARDs';
+        this.singular_name = 'NOMBRE DASHBOARD';
         this.cargarDatos = this.cargarDatos.bind(this);
 
     }
@@ -54,10 +53,9 @@ class ListadoElementos extends Component {
         let index = value !== null ? value : this.state.slideIndex;
         cargando();
         if (index === 0) {
-            const cargarColaboradores = () => this.props.fetchColaboradores(() => noCargando(), notificarErrorAjaxAction);
-            this.props.fetchCentrosCostosColaboradores(cargarColaboradores, notificarErrorAjaxAction);
-        } else if (index === 1) {
-            this.props.fetchCentrosCostosColaboradores(() => noCargando(), notificarErrorAjaxAction);
+            this.props.fetchAlgos1(() => noCargando(), notificarErrorAjaxAction);
+        } else if (index === 2) {
+            this.props.fetchAlgos2(() => noCargando(), notificarErrorAjaxAction);
         }
     }
 
@@ -92,8 +90,8 @@ class ListadoElementos extends Component {
                     onChange={this.handleChange}
                     value={this.state.slideIndex}
                 >
-                    <Tab label="Colaboradores" value={0}/>
-                    <Tab label="Centros Costos" value={1}/>
+                    <Tab label="Bloques 1" value={0}/>
+                    <Tab label="Bloques 2" value={1}/>
                 </Tabs>
 
                 <SwipeableViews
@@ -101,15 +99,14 @@ class ListadoElementos extends Component {
                     onChangeIndex={this.handleChange}
                 >
                     <div style={styles.slide}>
-                        <BloqueColaboradores
+                        <BloqueTabBase
                             object_list={bloque_1_list}
                             permisos_object={permisos_object_1}
                             {...this.props}
-                            centros_costos_list={bloque_2_list}
                         />
                     </div>
                     <div style={styles.slide}>
-                        <BloqueCentrosCostos
+                        <BloqueTabBase
                             object_list={bloque_2_list}
                             permisos_object={permisos_object_2}
                             {...this.props}
@@ -128,8 +125,8 @@ class ListadoElementos extends Component {
 function mapPropsToState(state, ownProps) {
     return {
         mis_permisos: state.mis_permisos,
-        bloque_1_list: state.colaboradores,
-        bloque_2_list: state.centros_costos_colaboradores,
+        bloque_1_list: state.algos,
+        bloque_2_list: state.algos
     }
 }
 

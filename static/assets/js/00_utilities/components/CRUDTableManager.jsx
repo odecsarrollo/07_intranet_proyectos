@@ -32,8 +32,7 @@ class CRUDTableManager extends Component {
 
     handleModalClose() {
         this.setState({
-            modal_open: false,
-            item_seleccionado: null
+            modal_open: false
         });
     }
 

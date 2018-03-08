@@ -9,11 +9,11 @@ import {Tabs, Tab} from 'material-ui/Tabs';
 import SwipeableViews from 'react-swipeable-views';
 import {
     COLABORADORES as bloque_1_permisos,
-    COLABORADORES as bloque_2_permisos,
+    //PERMISOS_2 as bloque_2_permisos,
 } from "../../../../../../00_utilities/permisos/types";
 
-import BloqueColaboradores from '../../colaboradores/components/colaboradores_list';
-import BloqueCentrosCostos from '../../centros_costos/components/centros_costos_list';
+import BloqueTabColaboradores from '../../colaboradores/components/colaborador_bloque';
+import BloqueTabCentrosCostosColaboradores from '../../centros_costos_colaboradores/components/centros_costos_colaboradores_bloque';
 
 const styles = {
     headline: {
@@ -34,32 +34,17 @@ class ListadoElementos extends Component {
         this.state = {
             slideIndex: 0,
         };
-        this.plural_name = 'Panel Colaboradores';
-        this.singular_name = 'Panel Colaboradores';
+        this.plural_name = 'Gestion Colaboradores';
+        this.singular_name = 'Gestion Colaborador';
         this.cargarDatos = this.cargarDatos.bind(this);
 
     }
 
     handleChange = (value) => {
-        if (value !== this.state.slideIndex) {
-            this.cargarElementos(value);
-        }
         this.setState({
             slideIndex: value,
         });
     };
-
-    cargarElementos(value = null) {
-        const {notificarErrorAjaxAction, cargando, noCargando} = this.props;
-        let index = value !== null ? value : this.state.slideIndex;
-        cargando();
-        if (index === 0) {
-            const cargarColaboradores = () => this.props.fetchColaboradores(() => noCargando(), notificarErrorAjaxAction);
-            this.props.fetchCentrosCostosColaboradores(cargarColaboradores, notificarErrorAjaxAction);
-        } else if (index === 1) {
-            this.props.fetchCentrosCostosColaboradores(() => noCargando(), notificarErrorAjaxAction);
-        }
-    }
 
     componentDidMount() {
         this.cargarDatos();
@@ -67,23 +52,23 @@ class ListadoElementos extends Component {
 
 
     componentWillUnmount() {
-        this.props.clearAlgos();
+        this.props.clearColaboradores();
+        this.props.clearCentrosCostosColaboradores();
     }
 
     cargarDatos() {
-        const {notificarErrorAjaxAction, cargando} = this.props;
+        const {notificarErrorAjaxAction, cargando, noCargando} = this.props;
         cargando();
-        this.props.fetchMisPermisos(() => this.cargarElementos(), notificarErrorAjaxAction)
+        const cargarBloques2 = () => this.props.fetchCentrosCostosColaboradores(() => noCargando(), notificarErrorAjaxAction);
+        const cargarBloques1 = () => this.props.fetchColaboradores(cargarBloques2, notificarErrorAjaxAction);
+        this.props.fetchMisPermisos(cargarBloques1, notificarErrorAjaxAction)
     }
 
     render() {
         const {bloque_1_list, bloque_2_list, mis_permisos} = this.props;
-        const permisos_object_1 = permisosAdapter(mis_permisos, bloque_1_permisos);
-        const permisos_object_2 = permisosAdapter(mis_permisos, bloque_2_permisos);
 
         const can_see =
-            permisos_object_1.list ||
-            permisos_object_2.list;
+            permisosAdapter(mis_permisos, bloque_1_permisos).list;
         return (
             <ValidarPermisos can_see={can_see} nombre={this.plural_name}>
                 <Titulo>{this.singular_name}</Titulo>
@@ -93,7 +78,7 @@ class ListadoElementos extends Component {
                     value={this.state.slideIndex}
                 >
                     <Tab label="Colaboradores" value={0}/>
-                    <Tab label="Centros Costos" value={1}/>
+                    <Tab label="Centros de Costos" value={1}/>
                 </Tabs>
 
                 <SwipeableViews
@@ -101,19 +86,17 @@ class ListadoElementos extends Component {
                     onChangeIndex={this.handleChange}
                 >
                     <div style={styles.slide}>
-                        <BloqueColaboradores
-                            object_list={bloque_1_list}
-                            permisos_object={permisos_object_1}
+                        <h2 style={styles.headline}>Colaboradores</h2>
+                        <BloqueTabColaboradores
                             {...this.props}
+                            list={bloque_1_list} mis_permisos={mis_permisos}
                             centros_costos_list={bloque_2_list}
                         />
                     </div>
                     <div style={styles.slide}>
-                        <BloqueCentrosCostos
-                            object_list={bloque_2_list}
-                            permisos_object={permisos_object_2}
-                            {...this.props}
-                        />
+                        <h2 style={styles.headline}>Centros Costos</h2>
+                        <BloqueTabCentrosCostosColaboradores {...this.props} list={bloque_2_list}
+                                                             mis_permisos={mis_permisos}/>
                     </div>
                 </SwipeableViews>
 

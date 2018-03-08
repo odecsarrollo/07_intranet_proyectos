@@ -1,14 +1,13 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {reduxForm} from 'redux-form';
 import {
     MyTextFieldSimple,
-    MySelectField,
-    MyCheckboxSimple
+    MyCheckboxSimple,
+    MySelectField
 } from '../../../../../../../00_utilities/components/ui/forms/fields';
 import {connect} from "react-redux";
 import {MyFormTagModal} from '../../../../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import validate from './validate';
-
 
 class Form extends Component {
     constructor(props) {
@@ -34,11 +33,12 @@ class Form extends Component {
             onSubmit,
             onCancel,
             handleSubmit,
-            modal_open,
-            singular_name,
             centros_costos_list,
+            modal_open,
+            element_type,
         } = this.props;
         const {salario_fijo} = this.state;
+
         return (
             <MyFormTagModal
                 onCancel={onCancel}
@@ -48,7 +48,7 @@ class Form extends Component {
                 submitting={submitting}
                 modal_open={modal_open}
                 pristine={pristine}
-                element_type={singular_name}
+                element_type={element_type}
             >
                 <div className="col-12">
                     <div className="row">
@@ -142,8 +142,9 @@ function mapPropsToState(state, ownProps) {
     }
 }
 
+
 Form = reduxForm({
-    form: "algoForm",
+    form: "colaboradorForm",
     validate,
     enableReinitialize: true
 })(Form);

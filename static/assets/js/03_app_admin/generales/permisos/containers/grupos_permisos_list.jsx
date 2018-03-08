@@ -104,18 +104,21 @@ class GruposPermisosList extends Component {
                      handleModalClose) => {
                         return (
                             <Fragment>
-                                <CreateForm
-                                    onCancel={onCancel}
-                                    item_seleccionado={list_manager_state.item_seleccionado}
-                                    onSubmit={
-                                        (item) => {
-                                            this.onSubmit(item, list_manager_state.singular_name);
-                                            handleModalClose();
+                                {
+                                    list_manager_state.modal_open &&
+                                    <CreateForm
+                                        onCancel={onCancel}
+                                        item_seleccionado={list_manager_state.item_seleccionado}
+                                        onSubmit={
+                                            (item) => {
+                                                this.onSubmit(item, list_manager_state.singular_name);
+                                                handleModalClose();
+                                            }
                                         }
-                                    }
-                                    modal_open={list_manager_state.modal_open}
-                                    element_type={`${list_manager_state.singular_name}`}
-                                />
+                                        modal_open={list_manager_state.modal_open}
+                                        element_type={`${list_manager_state.singular_name}`}
+                                    />
+                                }
 
 
                                 <Titulo>Lista de {list_manager_state.plural_name}</Titulo>

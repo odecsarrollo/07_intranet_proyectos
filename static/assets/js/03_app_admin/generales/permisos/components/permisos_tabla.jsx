@@ -21,8 +21,9 @@ class ItemTabla extends Component {
                     can_change &&
                     <Fragment>
                         <td>
-                            <i className={`${activo ? 'fas fa-check' : 'fal fa'}-square`}
+                            <i className={`${activo ? 'fas fa-check' : 'fal fa'}-square puntero`}
                                onClick={() => {
+                                   console.log('dio click')
                                    updatePermiso({...item, activo: !activo});
                                    this.setState({cambiar_nombre: false})
                                }}>

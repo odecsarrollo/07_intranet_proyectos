@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import {upper, lower} from "../../../common";
 import {Field} from 'redux-form';
 import PropTypes from "prop-types";
@@ -11,6 +11,8 @@ import {
     SelectField
 } from 'redux-form-material-ui'
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';
+import Combobox from 'react-widgets/lib/Combobox';
+import DropdownList from 'react-widgets/lib/DropdownList';
 
 import momentLocaliser from 'react-widgets-moment';
 import moment from 'moment-timezone';
@@ -44,6 +46,76 @@ MyTextFieldSimple.propTypes = {
     nombre: PropTypes.string
 };
 
+const renderDropdownList = ({input, data, valueField, textField, placeholder, onSelect,dropUp}) => {
+    return (
+        <DropdownList {...input}
+                      data={data}
+                      placeholder={placeholder}
+                      valueField={valueField}
+                      textField={textField}
+                      onChange={input.onChange}
+                      onSelect={onSelect}
+                      dropUp
+        />
+    )
+};
+
+
+export const MyDropdownList = (props) => {
+    const {busy = false, textField = 'name', valuesField = 'id',dropUp} = props;
+    return (
+        <Field
+            {...props}
+            component={renderDropdownList}
+            valueField={valuesField}
+            textField={textField}
+            busy={busy}
+            dropUp
+        />
+    )
+};
+
+const renderCombobox = ({input, data, valueField, textField, placeholder, onSelect}) => {
+    return (
+        <Combobox {...input}
+                  data={data}
+                  placeholder={placeholder}
+                  valueField={valueField}
+                  textField={textField}
+                  onChange={input.onChange}
+                  onSelect={onSelect}
+        />
+    )
+};
+
+
+export const MyCombobox = (props) => {
+    const {busy = false, textField = 'name', valuesField = 'id', autoFocus = false, onSelect} = props;
+    return (
+        <Field
+            {...props}
+            component={renderCombobox}
+            valueField={valuesField}
+            textField={textField}
+            autoFocus={autoFocus}
+            onSelect={onSelect}
+            busy={busy}
+        />
+    )
+};
+
+
+MyCombobox.propTypes = {
+    busy: PropTypes.bool,
+    autoFocus: PropTypes.bool,
+    onSelect: PropTypes.func,
+    onChange: PropTypes.func,
+    textField: PropTypes.string,
+    name: PropTypes.string,
+    valuesField: PropTypes.string,
+    placeholder: PropTypes.string,
+    data: PropTypes.any,
+};
 
 export const MyCheckboxSimple = (props) => {
     const {onClick} = props;
@@ -76,7 +148,7 @@ const renderDateTimePicker = ({input: {onChange, value}, show_edad}) => {
     const edad = `${diferencia} años`;
 
     return (
-        <div>
+        <Fragment>
             <DateTimePicker
                 onChange={onChange}
                 format="YYYY-MM-DD"
@@ -84,7 +156,7 @@ const renderDateTimePicker = ({input: {onChange, value}, show_edad}) => {
                 max={new Date()}
                 value={!value ? null : new Date(value)}
             />{show_edad && edad}
-        </div>
+        </Fragment>
     )
 };
 
@@ -117,6 +189,7 @@ export const MyRadioButtonGroup = (props) => {
             <label>{props.nombre}</label>
             <Field name={props.name}
                    {...props}
+                   className='col-12'
                    component={RadioButtonGroup}
                    fullWidth={true}
             >
@@ -143,24 +216,26 @@ MyRadioButtonGroup.propTypes = {
 
 export const MySelectField = (props) => {
     return (
-        <Field
-            {...props}
-            fullWidth={true}
-            name={props.name}
-            component={SelectField}
-            hintText={props.nombre}
-            floatingLabelText={props.nombre}
-        >
-            {props.options.map(o => {
-                return (
-                    <MenuItem
-                        key={o.value}
-                        value={o.value}
-                        primaryText={o.primaryText}
-                    />
-                )
-            })}
-        </Field>
+        <Fragment>
+            <Field
+                {...props}
+                fullWidth={true}
+                name={props.name}
+                component={SelectField}
+                hintText={props.nombre}
+                floatingLabelText={props.nombre}
+            >
+                {props.options.map(o => {
+                    return (
+                        <MenuItem
+                            key={o.value}
+                            value={o.value}
+                            primaryText={o.primaryText}
+                        />
+                    )
+                })}
+            </Field>
+        </Fragment>
     )
 };
 MySelectField.propTypes = {
