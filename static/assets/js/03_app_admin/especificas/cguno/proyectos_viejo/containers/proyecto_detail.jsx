@@ -5,8 +5,8 @@ import CargarDatos from "../../../../../00_utilities/components/system/cargar_da
 import {Titulo, SinObjeto, AtributoTexto, AtributoBooleano} from "../../../../../00_utilities/templates/fragmentos";
 import ValidarPermisos from "../../../../../00_utilities/permisos/validar_permisos";
 import {tengoPermiso} from "../../../../../00_utilities/common";
-import TablaProyectoLiterales from '../components/proyectos_literales_tabla';
-import ProyectoLiteralDetail from '../components/proyectos_literales_detail';
+import TablaProyectoLiterales from '../../proyectos/proyectos/components/proyectos_literales_tabla';
+import ProyectoLiteralDetail from '../../proyectos/proyectos/components/proyectos_literales_detail';
 import {
     PERMISO_DETAIL_PROYECTO as can_detail_permiso,
     PERMISO_VALOR_PROYECTO as can_valor_proyecto_permiso,

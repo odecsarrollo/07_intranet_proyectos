@@ -67,7 +67,8 @@ class ListadoElementos extends Component {
 
 
     componentWillUnmount() {
-        this.props.clearAlgos();
+        this.props.clearColaboradores();
+        this.props.clearCentrosCostosColaboradores();
     }
 
     cargarDatos() {

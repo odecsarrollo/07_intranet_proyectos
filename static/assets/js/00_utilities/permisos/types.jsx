@@ -34,16 +34,19 @@ export const PERMISO_LIST_TERCERO = 'list_tercero';
 export const PERMISO_DETAIL_TERCERO = 'detail_tercero';
 
 
-export const PERMISO_ADD_PROYECTO = 'add_proyecto';
-export const PERMISO_DELETE_PROYECTO = 'delete_proyecto';
-export const PERMISO_CHANGE_PROYECTO = 'change_proyecto';
-export const PERMISO_LIST_PROYECTO = 'list_proyecto';
-export const PERMISO_DETAIL_PROYECTO = 'detail_proyecto';
-export const PERMISO_VALOR_PROYECTO = 'valor_proyecto';
-export const PERMISO_COSTO_PROYECTO = 'costo_proyecto';
-export const PERMISO_COSTO_PRESUPUESTADO_PROYECTO = 'costo_presupuestado_proyecto';
-export const PERMISO_COSTO_MATERIALES_PROYECTO = 'costo_materiales_proyecto';
-export const PERMISO_COSTO_MANO_OBRA_PROYECTO = 'costo_mano_obra_proyecto';
+export const PROYECTOS = {
+    add: 'add_proyecto',
+    delete: 'delete_proyecto',
+    change: 'change_proyecto',
+    list: 'list_proyecto',
+    detail: 'detail_proyecto',
+    valor: 'valor_proyecto',
+    costo: 'costo_proyecto',
+    costo_presupuestado: 'costo_presupuestado_proyecto',
+    costo_materiales: 'costo_materiales_proyecto',
+    costo_mano_obra: 'costo_mano_obra_proyecto',
+    ultimo_costo_item_biable: 'ultimo_costo_itemsbiable',
+};
 
 
 export const PERMISO_ULTIMO_COSTO_ITEM_BIABLE = 'ultimo_costo_itemsbiable';

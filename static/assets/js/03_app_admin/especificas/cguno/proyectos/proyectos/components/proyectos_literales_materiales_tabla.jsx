@@ -1,6 +1,6 @@
 import React from 'react';
-import {pesosColombianos} from '../../../../../00_utilities/common';
-import {ListaBusqueda} from '../../../../../00_utilities/utiles';
+import {pesosColombianos} from '../../../../../../00_utilities/common';
+import {ListaBusqueda} from '../../../../../../00_utilities/utiles';
 
 const ItemTabla = (props) => {
     const {item, item: {item_biable}, can_see_ultimo_costo_item_biable} = props;

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import * as actions from '../../../../../01_actions/01_index';
 import TablaProyectoLiterales from './../../../components/proyectos/proyectos/proyectos_literales_tabla';
-import ProyectoLiteralDetail from '../../../../../03_app_admin/especificas/cguno/proyectos/components/proyectos_literales_detail';
+import ProyectoLiteralDetail from '../../../../../03_app_admin/especificas/cguno/proyectos/proyectos/components/proyectos_literales_detail';
 import CargarDatos from '../../../../components/cargar_datos';
 import {SinPermisos} from '../../../../components/utiles';
 import {tengoPermiso} from "../../../../../01_actions/00_general_fuctions";

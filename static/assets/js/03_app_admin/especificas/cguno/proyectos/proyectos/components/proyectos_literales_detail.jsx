@@ -1,16 +1,13 @@
 import React, {Component} from 'react';
-import {pesosColombianos} from '../../../../../00_utilities/common';
-import {ListaBusqueda} from '../../../../../00_utilities/utiles';
+import {pesosColombianos} from '../../../../../../00_utilities/common';
+import {ListaBusqueda} from '../../../../../../00_utilities/utiles';
 import TablaProyectoLiteralesMateriales from './proyectos_literales_materiales_tabla';
 
 const ProyectoLiteralDetail = (props) => {
     const {
         literal,
         items_literales,
-        can_see_costo_mano_obra,
-        can_see_costo_materiales,
-        can_see_costo_total,
-        can_see_ultimo_costo_item_biable
+        permisos
     } = props;
     if (!literal || !items_literales) {
         return (<div>Cargando ...</div>)
@@ -26,14 +23,14 @@ const ProyectoLiteralDetail = (props) => {
                         <h5 className='h5-response'>{literal.descripcion}</h5>
                     </div>
                     {
-                        can_see_costo_materiales &&
+                        permisos.costo_materiales &&
                         <div className="col-12">
                             <h6 className='h6-response'>Costo
                                 Materiales: <small>{pesosColombianos(literal.costo_materiales)}</small>
                             </h6>
                         </div>
                     }
-                    {can_see_costo_mano_obra &&
+                    {permisos.costo_mano_obra &&
                     <div className="col-12">
                         <h6 className='h6-response'>Costo
                             Mano
@@ -42,7 +39,7 @@ const ProyectoLiteralDetail = (props) => {
                     </div>
                     }
                     {
-                        can_see_costo_total &&
+                        permisos.costo &&
                         <div className="col-12">
                             <h6 className='h6-response'>Costo
                                 Total: <small>{pesosColombianos(Number(literal.costo_mano_obra) + Number(literal.costo_materiales))}</small>
@@ -52,7 +49,7 @@ const ProyectoLiteralDetail = (props) => {
                     <div className="col-12">
                         <TablaProyectoLiteralesMateriales
                             items_literales={items_literales}
-                            can_see_ultimo_costo_item_biable={can_see_ultimo_costo_item_biable}
+                            can_see_ultimo_costo_item_biable={permisos.ultimo_costo_item_biable}
                         />
                     </div>
                 </div>

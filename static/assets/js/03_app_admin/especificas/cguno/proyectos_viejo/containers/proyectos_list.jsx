@@ -22,7 +22,7 @@ import {
 import CreateForm from '../components/forms/proyecto_form';
 import {ContainerNuevoButton} from '../../../../../00_utilities/components/ui/icon/iconos';
 
-import Tabla from '../components/proyecto_tabla';
+import Tabla from '../../proyectos/proyectos/components/proyecto_tabla';
 
 class ProyectosList extends Component {
     constructor(props) {
