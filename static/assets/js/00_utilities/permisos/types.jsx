@@ -68,3 +68,11 @@ export const COLABORADORES = {
     list: 'list_colaboradorbiable',
     detail: 'detail_colaboradorbiable',
 };
+
+export const COLABORADORES_COSTOS_MESES = {
+    add: 'add_colaboradorcostomesbiable',
+    delete: 'delete_colaboradorcostomesbiable',
+    change: 'change_colaboradorcostomesbiable',
+    list: 'list_colaboradorcostomesbiable',
+    detail: 'detail_colaboradorcostomesbiable',
+};

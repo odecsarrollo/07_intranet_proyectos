@@ -17,6 +17,8 @@ import colaboradoresReducer from "./especificas/cguno/colaboradoresReducer";
 import centrosCostosColaboradoresReducer from "./especificas/cguno/centrosCostosColaboradoresReducer";
 import itemsCgunoReducer from "./especificas/cguno/itemsBiableReducer";
 
+import colaboradoresCostosMesesReducer from "./especificas/cguno/colaboradoresCostosMesesReducer";
+
 const rootReducer = combineReducers({
     mis_permisos: misPermisosReducer,
     permisos: permisosReducer,
@@ -34,6 +36,7 @@ const rootReducer = combineReducers({
     colaboradores: colaboradoresReducer,
     items_cguno: itemsCgunoReducer,
     centros_costos_colaboradores: centrosCostosColaboradoresReducer,
+    colaboradores_costos_nomina: colaboradoresCostosMesesReducer,
 });
 
 export default rootReducer;

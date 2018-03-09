@@ -1,7 +1,12 @@
 from rest_framework import serializers
 
-from .models import ColaboradorBiable, ItemsLiteralBiable, ItemsBiable, ColaboradorCentroCosto, \
+from .models import (
+    ColaboradorBiable,
+    ItemsLiteralBiable,
+    ItemsBiable,
+    ColaboradorCentroCosto,
     ColaboradorCostoMesBiable
+)
 
 
 class ColaboradorBiableSerializer(serializers.ModelSerializer):
@@ -62,6 +67,21 @@ class ItemsBiableSerializer(serializers.ModelSerializer):
             'unidad_medida_inventario',
             'id_procedencia',
             'ultimo_costo'
+        ]
+
+
+class ColaboradorCostoMesBiableSerializer(serializers.ModelSerializer):
+    colaborador_nombres = serializers.CharField(source='colaborador.nombres', read_only=True)
+    colaborador_apellidos = serializers.CharField(source='colaborador.apellidos', read_only=True)
+    class Meta:
+        model = ColaboradorCostoMesBiable
+        fields = [
+            'id',
+            'colaborador',
+            'colaborador_nombres',
+            'colaborador_apellidos',
+            'lapso',
+            'valor',
         ]
 
 

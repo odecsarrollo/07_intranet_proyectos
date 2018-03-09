@@ -9,6 +9,8 @@ import PermisosList from "./generales/permisos/containers/permisos_list";
 import GruposPermisosList from "./generales/permisos/containers/grupos_permisos_list";
 import UsuariosList from "./generales/usuarios/usuarios/containers/usuarios_list_container";
 import ColaboradoresDashBoard from "./especificas/cguno/colaboradores/colaboradores_dashboard/containers/colaboradores_dashboard";
+import ColaboradoresDetail from "./especificas/cguno/colaboradores/colaboradores/containers/base_detail";
+import ColaboradoresCostosNominaList from "./especificas/cguno/colaboradores/costos_nomina/containers/base_list_container";
 import UsuariosDetail from "./generales/usuarios/usuarios/containers/usuarios_detail";
 import ProyectosCGUnoList from "./especificas/cguno/proyectos/proyectos/containers/proyectos_list_container";
 import ProyectosCGUnoDetail from "./especificas/cguno/proyectos/proyectos/containers/base_detail";
@@ -26,6 +28,8 @@ const AdminApp = (props) => {
                         <Route exact path='/app/admin/grupos_permisos/list' component={GruposPermisosList}/>
                         <Route exact path='/app/admin/usuarios/list' component={UsuariosList}/>
                         <Route exact path='/app/admin/colaboradores/dashboard' component={ColaboradoresDashBoard}/>
+                        <Route exact path='/app/admin/colaboradores/costos_nomina/list' component={ColaboradoresCostosNominaList}/>
+                        <Route exact path='/app/admin/cguno/colaborador/detail/:id' component={ColaboradoresDetail}/>
                         <Route exact path='/app/admin/usuarios/detail/:id' component={UsuariosDetail}/>
                         <Route exact path='/app/admin/cguno/proyectos/list' component={ProyectosCGUnoList}/>
                         <Route exact path='/app/admin/cguno/proyectos/detail/:id' component={ProyectosCGUnoDetail}/>

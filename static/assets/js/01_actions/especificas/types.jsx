@@ -41,3 +41,10 @@ export const FETCH_CENTROS_COSTOS_COLABORADORES='fetch_centros_costos_colaborado
 export const FETCH_CENTRO_COSTO_COLABORADOR='fetch_centro_costo_colaborador';
 export const CLEAR_CENTROS_COSTOS_COLABORADORES='clear_centros_costos_colaboradores';
 export const UPDATE_CENTRO_COSTO_COLABORADOR='update_centro_costo_colaborador';
+
+export const CREATE_COLABORADOR_COSTO_MES='create_colaborador_costo_mes';
+export const DELETE_COLABORADOR_COSTO_MES='delete_colaborador_costo_mes';
+export const FETCH_COLABORADORES_COSTOS_MESES='fetch_colaboradores_costos_meses';
+export const FETCH_COLABORADOR_COSTO_MES='fetch_colaborador_costo_mes';
+export const CLEAR_COLABORADORES_COSTOS_MESES='clear_colaboradores_costos_meses';
+export const UPDATE_COLABORADOR_COSTO_MES='update_colaborador_costo_mes';

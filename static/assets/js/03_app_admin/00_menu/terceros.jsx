@@ -16,6 +16,9 @@ const MenuTerceros = (props) => (
 
             <MenuItem primaryText="Colaboradores" containerElement={<Link to='/app/admin/colaboradores/dashboard'/>}
             />
+            <MenuItem primaryText="Costos Nómina"
+                      containerElement={<Link to='/app/admin/colaboradores/costos_nomina/list'/>}
+            />
 
         </div>
     </li>

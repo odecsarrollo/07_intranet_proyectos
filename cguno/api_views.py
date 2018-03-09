@@ -3,9 +3,20 @@ from rest_framework import viewsets
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 
-from .models import ColaboradorBiable, ItemsLiteralBiable, ItemsBiable, ColaboradorCentroCosto
-from .api_serializers import ColaboradorBiableSerializer, ItemsLiteralBiableSerializer, ItemsBiableSerializer, \
-    ColaboradorCentroCostoSerializer
+from .models import (
+    ColaboradorBiable,
+    ItemsLiteralBiable,
+    ItemsBiable,
+    ColaboradorCentroCosto,
+    ColaboradorCostoMesBiable
+)
+from .api_serializers import (
+    ColaboradorBiableSerializer,
+    ItemsLiteralBiableSerializer,
+    ItemsBiableSerializer,
+    ColaboradorCentroCostoSerializer,
+    ColaboradorCostoMesBiableSerializer
+)
 
 
 class ColaboradorCentroCostoViewSet(viewsets.ModelViewSet):
@@ -109,3 +120,8 @@ class ItemBiableViewSet(viewsets.ModelViewSet):
             qs = query_varios_campos(self.queryset, search_fields, parametro)
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
+
+
+class ColaboradorCostoMesBiableViewSet(viewsets.ModelViewSet):
+    queryset = ColaboradorCostoMesBiable.objects.all()
+    serializer_class = ColaboradorCostoMesBiableSerializer

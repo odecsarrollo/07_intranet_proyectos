@@ -5,3 +5,4 @@ export * from './cguno/itemsliteralesAction';
 export * from './cguno/colaboradoresAction';
 export * from './cguno/itemsBiableAction';
 export * from './cguno/centrosCostosColaboradoresActions';
+export * from './cguno/colaboradoresCostosMesesAction';
