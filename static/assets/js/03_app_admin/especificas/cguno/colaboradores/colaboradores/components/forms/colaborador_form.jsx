@@ -105,13 +105,11 @@ class Form extends Component {
                     className="col-12 col-md-6"
                     nombre='Tiene Salario Fijo'
                     name='es_salario_fijo'/>
-                {
-                    salario_fijo &&
-                    <MyTextFieldSimple
-                        className="col-12 col-md-6"
-                        nombre='Nro. Horas Mes'
-                        name='nro_horas_mes'/>
-                }
+
+                <MyTextFieldSimple
+                    className="col-12 col-md-6"
+                    nombre='Nro. Horas Mes'
+                    name='nro_horas_mes'/>
 
                 <MyTextFieldSimple
                     className="col-12 col-md-6"

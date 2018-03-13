@@ -29,15 +29,6 @@ class Tabla extends React.Component {
                         Header: "Caracteristicas",
                         columns: [
                             {
-                                Header: "Lapso",
-                                accessor: "lapso",
-                                maxWidth: 150,
-                                filterable: true,
-                                filterMethod: (filter, row) => {
-                                    return row[filter.id].includes(filter.value.toLowerCase())
-                                }
-                            },
-                            {
                                 Header: "Nombre",
                                 maxWidth: 250,
                                 Cell: row => {
@@ -49,13 +40,24 @@ class Tabla extends React.Component {
                             {
                                 Header: "Lapso",
                                 accessor: "lapso",
-                                maxWidth: 150,
+                                maxWidth: 100,
                                 Cell: row => fechaFormatoUno(row.value)
                             },
                             {
                                 Header: "Costo",
                                 accessor: "costo",
-                                maxWidth: 150,
+                                maxWidth: 90,
+                                Cell: row => pesosColombianos(row.value)
+                            },
+                            {
+                                Header: "Nro. Horas",
+                                accessor: "nro_horas_mes",
+                                maxWidth: 90,
+                            },
+                            {
+                                Header: "Valor Hora",
+                                accessor: "valor_hora",
+                                maxWidth: 90,
                                 Cell: row => pesosColombianos(row.value)
                             },
                         ]
