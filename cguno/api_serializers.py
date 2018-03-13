@@ -73,6 +73,7 @@ class ItemsBiableSerializer(serializers.ModelSerializer):
 class ColaboradorCostoMesBiableSerializer(serializers.ModelSerializer):
     colaborador_nombres = serializers.CharField(source='colaborador.nombres', read_only=True)
     colaborador_apellidos = serializers.CharField(source='colaborador.apellidos', read_only=True)
+
     class Meta:
         model = ColaboradorCostoMesBiable
         fields = [
@@ -80,9 +81,14 @@ class ColaboradorCostoMesBiableSerializer(serializers.ModelSerializer):
             'colaborador',
             'colaborador_nombres',
             'colaborador_apellidos',
+            'es_salario_fijo',
             'lapso',
-            'valor',
+            'costo',
+            'modificado',
+            'nro_horas_mes',
+            'valor_hora'
         ]
+        extra_kwargs = {'valor_hora': {'read_only': True}}
 
 
 class ItemsLiteralBiableSerializer(serializers.ModelSerializer):

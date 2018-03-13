@@ -54,7 +54,7 @@ class Tabla extends React.Component {
                             },
                             {
                                 Header: "Costo",
-                                accessor: "valor",
+                                accessor: "costo",
                                 maxWidth: 150,
                                 Cell: row => pesosColombianos(row.value)
                             },

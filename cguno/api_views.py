@@ -125,3 +125,9 @@ class ItemBiableViewSet(viewsets.ModelViewSet):
 class ColaboradorCostoMesBiableViewSet(viewsets.ModelViewSet):
     queryset = ColaboradorCostoMesBiable.objects.all()
     serializer_class = ColaboradorCostoMesBiableSerializer
+
+    def perform_create(self, serializer):
+        instance = super().perform_create(serializer)
+        colaborador = instance.colaborador
+        instance.nro_horas_mes = colaborador.nro_horas_mes
+        instance.es_salario_fijo = colaborador.es_salario_fijo

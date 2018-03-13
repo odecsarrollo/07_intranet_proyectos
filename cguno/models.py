@@ -119,7 +119,15 @@ class ColaboradorBiable(models.Model):
 class ColaboradorCostoMesBiable(models.Model):
     colaborador = models.ForeignKey(ColaboradorBiable, on_delete=models.PROTECT, related_name='mis_costos')
     lapso = models.DateField()
-    valor = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    costo = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    es_salario_fijo = models.BooleanField(default=False)
+    modificado = models.BooleanField(default=False)
+    nro_horas_mes = models.PositiveIntegerField(default=0, null=True, blank=True)
+
+    @property
+    def valor_hora(self):
+        if self.nro_horas_mes > 0:
+            return self.costo / self.nro_horas_mes
 
     class Meta:
         permissions = [
