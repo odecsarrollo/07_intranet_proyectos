@@ -38,7 +38,6 @@ class Form extends Component {
             singular_name,
             centros_costos_list,
         } = this.props;
-        const {salario_fijo} = this.state;
         return (
             <MyFormTagModal
                 onCancel={onCancel}
