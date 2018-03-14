@@ -76,3 +76,11 @@ export const COLABORADORES_COSTOS_MESES = {
     list: 'list_colaboradorcostomesbiable',
     detail: 'detail_colaboradorcostomesbiable',
 };
+
+export const MANOS_OBRAS_HOJAS_TRABAJOS = {
+    add: 'add_hojatrabajodiario',
+    delete: 'delete_hojatrabajodiario',
+    change: 'change_hojatrabajodiario',
+    list: 'list_hojatrabajodiario',
+    detail: 'detail_hojatrabajodiario',
+};

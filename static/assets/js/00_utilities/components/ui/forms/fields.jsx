@@ -46,7 +46,7 @@ MyTextFieldSimple.propTypes = {
     nombre: PropTypes.string
 };
 
-const renderDropdownList = ({input, data, valueField, textField, placeholder, onSelect,dropUp}) => {
+const renderDropdownList = ({input, data, valueField, textField, placeholder, onSelect, dropUp}) => {
     return (
         <DropdownList {...input}
                       data={data}
@@ -62,7 +62,7 @@ const renderDropdownList = ({input, data, valueField, textField, placeholder, on
 
 
 export const MyDropdownList = (props) => {
-    const {busy = false, textField = 'name', valuesField = 'id',dropUp} = props;
+    const {busy = false, textField = 'name', valuesField = 'id', dropUp} = props;
     return (
         <Field
             {...props}
@@ -75,32 +75,38 @@ export const MyDropdownList = (props) => {
     )
 };
 
-const renderCombobox = ({input, data, valueField, textField, placeholder, onSelect}) => {
+const renderCombobox = ({input, data, valueField, textField, placeholder, onSelect, meta: {touched, error, warning}}) => {
     return (
-        <Combobox {...input}
-                  data={data}
-                  placeholder={placeholder}
-                  valueField={valueField}
-                  textField={textField}
-                  onChange={input.onChange}
-                  onSelect={onSelect}
-        />
+        <Fragment>
+            <Combobox {...input}
+                      data={data}
+                      placeholder={placeholder}
+                      valueField={valueField}
+                      textField={textField}
+                      onChange={input.onChange}
+                      onSelect={onSelect}
+            />
+            {touched && ((error && <span className='form-field-error'>{error}</span>) || (warning &&
+                <span>{warning}</span>))}
+        </Fragment>
     )
 };
 
 
 export const MyCombobox = (props) => {
-    const {busy = false, textField = 'name', valuesField = 'id', autoFocus = false, onSelect} = props;
+    const {busy = false, textField = 'name', valuesField = 'id', autoFocus = false, onSelect, className} = props;
     return (
-        <Field
-            {...props}
-            component={renderCombobox}
-            valueField={valuesField}
-            textField={textField}
-            autoFocus={autoFocus}
-            onSelect={onSelect}
-            busy={busy}
-        />
+        <div className={`${className} mt-4`}>
+            <Field
+                {...props}
+                component={renderCombobox}
+                valueField={valuesField}
+                textField={textField}
+                autoFocus={autoFocus}
+                onSelect={onSelect}
+                busy={busy}
+            />
+        </div>
     )
 };
 
@@ -140,13 +146,12 @@ MyCheckboxSimple.propTypes = {
     nombre: PropTypes.string
 };
 
-const renderDateTimePicker = ({input: {onChange, value}, show_edad}) => {
+const renderDateTimePicker = ({input: {onChange, value}, meta: {touched, error}, show_edad}) => {
     const now = moment();
     const fechaHoy = moment(now, "YYYY MM DD", "es");
     const fecha_nacimiento = moment(value, "YYYY MM DD", "es").tz('America/Bogota');
     const diferencia = fechaHoy.diff(fecha_nacimiento, "years");
     const edad = `${diferencia} años`;
-
     return (
         <Fragment>
             <DateTimePicker
@@ -156,6 +161,7 @@ const renderDateTimePicker = ({input: {onChange, value}, show_edad}) => {
                 max={new Date()}
                 value={!value ? null : new Date(value)}
             />{show_edad && edad}
+            {touched && (error && <span className='form-field-error'>{error}</span>)}
         </Fragment>
     )
 };
@@ -181,7 +187,6 @@ MyDateTimePickerField.propTypes = {
     className: PropTypes.string,
     nombre: PropTypes.string
 };
-
 
 export const MyRadioButtonGroup = (props) => {
     return (

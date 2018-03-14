@@ -48,3 +48,10 @@ export const FETCH_COLABORADORES_COSTOS_MESES='fetch_colaboradores_costos_meses'
 export const FETCH_COLABORADOR_COSTO_MES='fetch_colaborador_costo_mes';
 export const CLEAR_COLABORADORES_COSTOS_MESES='clear_colaboradores_costos_meses';
 export const UPDATE_COLABORADOR_COSTO_MES='update_colaborador_costo_mes';
+
+export const CREATE_MANO_OBRA_HOJA_TRABAJO='create_mano_obra_hoja_trabajo';
+export const DELETE_MANO_OBRA_HOJA_TRABAJO='delete_mano_obra_hoja_trabajo';
+export const FETCH_MANOS_OBRAS_HOJAS_TRABAJOS='fetch_manos_obras_hojas_trabajos';
+export const FETCH_MANO_OBRA_HOJA_TRABAJO='fetch_mano_obra_hoja_trabajo';
+export const CLEAR_MANOS_OBRAS_HOJAS_TRABAJOS='clear_manos_obras_hojas_trabajos';
+export const UPDATE_MANO_OBRA_HOJA_TRABAJO='update_mano_obra_hoja_trabajo';

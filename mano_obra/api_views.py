@@ -1,34 +1,37 @@
+import datetime
 from rest_framework import viewsets, serializers, status
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
 
-from .models import TasaHora, HoraHojaTrabajo, HojaTrabajoDiario
-from .api_serializers import TasaHoraSerializer, HoraHojaTrabajoSerializer, HojaTrabajoDiarioSerializer
+from .models import HoraHojaTrabajo, HojaTrabajoDiario
+from .api_serializers import HoraHojaTrabajoSerializer, HojaTrabajoDiarioSerializer
 from proyectos.models import Literal, Proyecto
 
+from cguno.models import ColaboradorCostoMesBiable
 
-class TasaHoraViewSet(viewsets.ModelViewSet):
-    queryset = TasaHora.objects.select_related('colaborador').all()
-    serializer_class = TasaHoraSerializer
 
-    def perform_update(self, serializer):
-        instance = serializer.save()
-        hojas_trabajos_diarios = instance.mis_dias_trabajados.all()
-        literales = Literal.objects.filter(mis_horas_trabajadas__hoja__tasa=instance).distinct()
-        proyectos = Proyecto.objects.filter(mis_literales__mis_horas_trabajadas__hoja__tasa=instance).distinct()
-
-        [x.actualizar_minutos() for x in hojas_trabajos_diarios.all()]
-        [x.actualizar_costos_mano_obra() for x in literales.all()]
-        [x.actualizar_costos_mano_obra() for x in proyectos.all()]
-
-    def perform_destroy(self, instance):
-        if not instance.mis_dias_trabajados.exists():
-            super().perform_destroy(instance)
-        else:
-            cantidad = instance.mis_dias_trabajados.count()
-            content = {
-                'error': [('No se puede eliminar, hay %s hojas de trabajo relacionadas con esta tasa') % (cantidad)]}
-            raise serializers.ValidationError(content)
+# class TasaHoraViewSet(viewsets.ModelViewSet):
+#     queryset = TasaHora.objects.select_related('colaborador').all()
+#     serializer_class = TasaHoraSerializer
+#
+#     def perform_update(self, serializer):
+#         instance = serializer.save()
+#         hojas_trabajos_diarios = instance.mis_dias_trabajados.all()
+#         literales = Literal.objects.filter(mis_horas_trabajadas__hoja__tasa=instance).distinct()
+#         proyectos = Proyecto.objects.filter(mis_literales__mis_horas_trabajadas__hoja__tasa=instance).distinct()
+#
+#         [x.actualizar_minutos() for x in hojas_trabajos_diarios.all()]
+#         [x.actualizar_costos_mano_obra() for x in literales.all()]
+#         [x.actualizar_costos_mano_obra() for x in proyectos.all()]
+#
+#     def perform_destroy(self, instance):
+#         if not instance.mis_dias_trabajados.exists():
+#             super().perform_destroy(instance)
+#         else:
+#             cantidad = instance.mis_dias_trabajados.count()
+#             content = {
+#                 'error': [('No se puede eliminar, hay %s hojas de trabajo relacionadas con esta tasa') % (cantidad)]}
+#             raise serializers.ValidationError(content)
 
 
 class HojaTrabajoDiarioViewSet(viewsets.ModelViewSet):
@@ -37,9 +40,8 @@ class HojaTrabajoDiarioViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         instance = serializer.save(creado_por=self.request.user)
-        object, created = TasaHora.objects.get_or_create(
-            ano=instance.fecha.year,
-            mes=instance.fecha.month,
+        object, created = ColaboradorCostoMesBiable.objects.get_or_create(
+            lapso=instance.fecha.replace(day=1),
             colaborador=instance.colaborador
         )
         instance.tasa = object

@@ -131,3 +131,16 @@ class ColaboradorCostoMesBiableViewSet(viewsets.ModelViewSet):
         colaborador = instance.colaborador
         instance.nro_horas_mes = colaborador.nro_horas_mes
         instance.es_salario_fijo = colaborador.es_salario_fijo
+
+    @list_route(http_method_names=['get', ])
+    def listar_x_fechas(self, request):
+        fecha_inicial = request.GET.get('fecha_inicial')
+        fecha_final = request.GET.get('fecha_final')
+        qs = None
+        if fecha_final and fecha_final:
+            print(fecha_inicial)
+            print(fecha_final)
+            qs = self.queryset.filter(lapso__gte=fecha_inicial, lapso__lte=fecha_final)
+
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)

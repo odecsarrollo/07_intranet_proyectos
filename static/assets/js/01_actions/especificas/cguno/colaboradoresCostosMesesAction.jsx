@@ -12,7 +12,7 @@ import {
     fetchObject,
     deleteObject,
     createObject,
-    callApiMethodWithParameters
+    fetchListWithParameter
 } from '../../00_general_fuctions'
 
 const current_url_api = 'colaboradores_costo_nomina';
@@ -38,6 +38,14 @@ export const fetchColaboradoresCostosMeses = (callback = null, callback_error = 
             dispatch({type: FETCH_COLABORADORES_COSTOS_MESES, payload: response})
         };
         fetchList(current_url_api, dispatches, callback, callback_error);
+    }
+};
+export const fetchColaboradoresCostosMesesxFechas = (fecha_inicial, fecha_final, callback = null, callback_error = null) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: FETCH_COLABORADORES_COSTOS_MESES, payload: response})
+        };
+        fetchListWithParameter(`${current_url_api}/listar_x_fechas/?fecha_inicial=${fecha_inicial}&fecha_final=${fecha_final}`, dispatches, callback, callback_error);
     }
 };
 export const fetchColaboradorCostoMes = (id, callback = null, callback_error = null) => {

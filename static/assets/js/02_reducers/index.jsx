@@ -10,7 +10,6 @@ import loadingReducer from './generales/loadingReducer';
 import miCuentaReducer from './generales/miCuentaReducer';
 
 import proyectosReducer from '../02_reducers/especificas/cguno/proyectosReducer';
-import tercerosReducer from './especificas/tercerosReducer';
 import literalesReducer from "./especificas/cguno/literalesReducer";
 import itemsLiteralesReducer from "./especificas/cguno/itemsliteralesReducer";
 import colaboradoresReducer from "./especificas/cguno/colaboradoresReducer";
@@ -18,6 +17,7 @@ import centrosCostosColaboradoresReducer from "./especificas/cguno/centrosCostos
 import itemsCgunoReducer from "./especificas/cguno/itemsBiableReducer";
 
 import colaboradoresCostosMesesReducer from "./especificas/cguno/colaboradoresCostosMesesReducer";
+import hojasTrabajosDiariosReducer from "./especificas/mano_obra/hojaTrabajoDiarioReducer";
 
 const rootReducer = combineReducers({
     mis_permisos: misPermisosReducer,
@@ -29,7 +29,6 @@ const rootReducer = combineReducers({
     esta_cargando: loadingReducer,
     notifications: NotifyReducer,
     form: formReducer,
-    terceros: tercerosReducer,
     proyectos: proyectosReducer,
     literales: literalesReducer,
     items_literales: itemsLiteralesReducer,
@@ -37,6 +36,7 @@ const rootReducer = combineReducers({
     items_cguno: itemsCgunoReducer,
     centros_costos_colaboradores: centrosCostosColaboradoresReducer,
     colaboradores_costos_nomina: colaboradoresCostosMesesReducer,
+    hojas_trabajos_diarios: hojasTrabajosDiariosReducer,
 });
 
 export default rootReducer;

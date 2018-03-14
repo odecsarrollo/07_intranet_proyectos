@@ -1,30 +1,18 @@
+from decimal import Decimal
 from rest_framework import serializers
 
-from .models import TasaHora, HojaTrabajoDiario, HoraHojaTrabajo
-
-
-class TasaHoraSerializer(serializers.ModelSerializer):
-    colaborador_nombre = serializers.CharField(source='colaborador.full_name', read_only=True)
-    colaborador_en_proyectos = serializers.BooleanField(source='colaborador.en_proyectos', read_only=True)
-
-    class Meta:
-        model = TasaHora
-        fields = [
-            'url',
-            'id',
-            'mes',
-            'ano',
-            'colaborador',
-            'colaborador_nombre',
-            'colaborador_en_proyectos',
-            'costo_hora',
-        ]
+from .models import HojaTrabajoDiario, HoraHojaTrabajo
 
 
 class HojaTrabajoDiarioSerializer(serializers.ModelSerializer):
     colaborador_nombre = serializers.CharField(source='colaborador.full_name', read_only=True)
-    tasa_valor = serializers.DecimalField(source='tasa.costo_hora', decimal_places=2, max_digits=12, read_only=True)
+    tasa_valor_hora = serializers.DecimalField(source='tasa.valor_hora', decimal_places=2, max_digits=12,
+                                               read_only=True)
     fecha = serializers.DateTimeField(format="%Y-%m-%d", input_formats=['%Y-%m-%d', 'iso-8601'])
+    cantidad_horas = serializers.SerializerMethodField('numero_horas')
+
+    def numero_horas(self, instance):
+        return Decimal(instance.cantidad_minutos / 60)
 
     class Meta:
         model = HojaTrabajoDiario
@@ -33,14 +21,13 @@ class HojaTrabajoDiarioSerializer(serializers.ModelSerializer):
             'id',
             'fecha',
             'tasa',
-            'tasa_valor',
+            'tasa_valor_hora',
             'cantidad_minutos',
+            'cantidad_horas',
             'costo_total',
             'colaborador',
             'colaborador_nombre',
         ]
-
-
 
 
 class HoraHojaTrabajoSerializer(serializers.ModelSerializer):

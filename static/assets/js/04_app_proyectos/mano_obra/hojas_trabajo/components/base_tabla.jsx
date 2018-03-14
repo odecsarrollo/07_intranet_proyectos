@@ -1,9 +1,9 @@
 import React from "react";
 import Checkbox from 'material-ui/Checkbox';
-import {MyDialogButtonDelete} from '../../../../../../00_utilities/components/ui/dialog';
-import {IconButtonTableEdit, IconButtonTableSee} from '../../../../../../00_utilities/components/ui/icon/iconos';
+import {MyDialogButtonDelete} from '../../../../00_utilities/components/ui/dialog';
+import {IconButtonTableSee} from '../../../../00_utilities/components/ui/icon/iconos';
+import {fechaFormatoUno, pesosColombianos} from '../../../../00_utilities/common';
 import {Link} from 'react-router-dom'
-import {fechaFormatoUno, pesosColombianos} from '../../../../../../00_utilities/common';
 
 import ReactTable from "react-table";
 
@@ -29,52 +29,36 @@ class Tabla extends React.Component {
                         Header: "Caracteristicas",
                         columns: [
                             {
-                                Header: "Nombre",
+                                Header: "Colaborador",
+                                accessor: "colaborador_nombre",
                                 maxWidth: 250,
-                                Cell: row => {
-                                    return (
-                                        <span>{row.original.colaborador_nombres} {row.original.colaborador_apellidos}</span>
-                                    )
+                                filterable: true,
+                                filterMethod: (filter, row) => {
+                                    return row[filter.id].includes(filter.value.toUpperCase())
                                 }
                             },
                             {
-                                Header: "Lapso",
-                                accessor: "lapso",
-                                maxWidth: 130,
+                                Header: "Fecha",
+                                accessor: "fecha",
+                                maxWidth: 150,
                                 Cell: row => fechaFormatoUno(row.value)
                             },
                             {
-                                Header: "Costo",
-                                accessor: "costo",
-                                maxWidth: 90,
-                                Cell: row => pesosColombianos(row.value)
-                            },
-                            {
-                                Header: "Nro. Horas",
-                                accessor: "nro_horas_mes",
-                                maxWidth: 90,
-                            },
-                            {
                                 Header: "Valor Hora",
-                                accessor: "valor_hora",
-                                maxWidth: 90,
+                                accessor: "tasa_valor_hora",
+                                maxWidth: 100,
                                 Cell: row => pesosColombianos(row.value)
                             },
                             {
-                                Header: "Sal. Fijo",
-                                accessor: "es_salario_fijo",
-                                maxWidth: 60,
-                                Cell: row => (
-                                    row.value && <i className='far fa-check-circle'></i>
-                                )
+                                Header: "Horas",
+                                accessor: "cantidad_horas",
+                                maxWidth: 100
                             },
                             {
-                                Header: "No Actual.",
-                                accessor: "modificado",
-                                maxWidth: 70,
-                                Cell: row => (
-                                    row.value && <i className='far fa-check-circle'></i>
-                                )
+                                Header: "Costo Total",
+                                accessor: "costo_total",
+                                maxWidth: 100,
+                                Cell: row => pesosColombianos(row.value)
                             },
                         ]
                     },
@@ -102,22 +86,21 @@ class Tabla extends React.Component {
                                         onDelete={() => {
                                             onDelete(row.original)
                                         }}
-                                        element_name={row.original.nombre}
+                                        element_name={`en ${fechaFormatoUno(row.original.fecha)} para ${row.original.colaborador_nombre}`}
                                         element_type={singular_name}
                                     />
 
                             },
                             {
-                                Header: "Editar",
-                                show: permisos_object.change,
+                                Header: "Ver",
+                                show: permisos_object.detail,
                                 maxWidth: 60,
                                 Cell: row =>
-                                    <IconButtonTableEdit
-                                        onClick={() => {
-                                            onSelectItemEdit(row.original);
-                                        }}/>
+                                    <Link to={`/app/admin/algos/detail/${row.original.id}`}>
+                                        <IconButtonTableSee/>
+                                    </Link>
 
-                            },
+                            }
                         ]
                     }
                 ]}
