@@ -5,7 +5,8 @@ import {
 
 import {
     fetchList,
-    fetchObject
+    fetchObject,
+    fetchListWithParameter
 } from '../../00_general_fuctions'
 
 const current_url_api = 'literales';
@@ -16,6 +17,15 @@ export function fetchLiterales(callback = null, callback_error = null) {
             dispatch({type: FETCH_LITERALES, payload: response})
         };
         fetchList(current_url_api, dispatches, callback, callback_error)
+    }
+}
+
+export function fetchLiteralesXProyecto(proyecto_id, callback = null, callback_error = null) {
+    return function (dispatch) {
+        const dispatches = (response) => {
+            dispatch({type: FETCH_LITERALES, payload: response})
+        };
+        fetchListWithParameter(`${current_url_api}/listar_x_proyecto/?proyecto_id=${proyecto_id}`, dispatches, callback, callback_error)
     }
 }
 

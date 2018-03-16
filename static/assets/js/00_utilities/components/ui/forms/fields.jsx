@@ -20,6 +20,17 @@ import moment from 'moment-timezone';
 moment.tz.setDefault("America/Bogota");
 momentLocaliser(moment);
 
+const renderTextField = ({input, label, meta: {touched, error}, ...custom}) => {
+    return (
+        <TextField
+            hintText={label}
+            floatingLabelText={label}
+            errorText={touched && error}
+            {...input}
+            {...custom}
+        />
+    )
+};
 export const MyTextFieldSimple = (props) => {
     let normalize = null;
     if (props.case === 'U') {
@@ -32,7 +43,7 @@ export const MyTextFieldSimple = (props) => {
             fullWidth={true}
             name={props.name}
             {...props}
-            component={TextField}
+            component={renderTextField}
             hintText={props.nombre}
             autoComplete="off"
             floatingLabelText={props.nombre}
@@ -46,7 +57,7 @@ MyTextFieldSimple.propTypes = {
     nombre: PropTypes.string
 };
 
-const renderDropdownList = ({input, data, valueField, textField, placeholder, onSelect, dropUp}) => {
+const renderDropdownList = ({input, data, valueField, textField, placeholder, onSelect}) => {
     return (
         <DropdownList {...input}
                       data={data}
@@ -55,7 +66,6 @@ const renderDropdownList = ({input, data, valueField, textField, placeholder, on
                       textField={textField}
                       onChange={input.onChange}
                       onSelect={onSelect}
-                      dropUp
         />
     )
 };
@@ -83,8 +93,9 @@ const renderCombobox = ({input, data, valueField, textField, placeholder, onSele
                       placeholder={placeholder}
                       valueField={valueField}
                       textField={textField}
-                      onChange={input.onChange}
+                      onChange={e => input.onChange(e[valueField])}
                       onSelect={onSelect}
+                      onBlur={_ => input.onBlur()}
             />
             {touched && ((error && <span className='form-field-error'>{error}</span>) || (warning &&
                 <span>{warning}</span>))}
@@ -103,6 +114,7 @@ export const MyCombobox = (props) => {
                 valueField={valuesField}
                 textField={textField}
                 autoFocus={autoFocus}
+                onChange={v => v[valuesField]}
                 onSelect={onSelect}
                 busy={busy}
             />

@@ -55,3 +55,10 @@ export const FETCH_MANOS_OBRAS_HOJAS_TRABAJOS='fetch_manos_obras_hojas_trabajos'
 export const FETCH_MANO_OBRA_HOJA_TRABAJO='fetch_mano_obra_hoja_trabajo';
 export const CLEAR_MANOS_OBRAS_HOJAS_TRABAJOS='clear_manos_obras_hojas_trabajos';
 export const UPDATE_MANO_OBRA_HOJA_TRABAJO='update_mano_obra_hoja_trabajo';
+
+export const CREATE_MANO_OBRA_HORA_HOJA_TRABAJO='create_mano_obra_hora_hoja_trabajo';
+export const DELETE_MANO_OBRA_HORA_HOJA_TRABAJO='delete_mano_obra_hora_hoja_trabajo';
+export const FETCH_MANOS_OBRAS_HORAS_HOJAS_TRABAJOS='fetch_manos_obras_horas_hojas_trabajos';
+export const FETCH_MANO_OBRA_HORA_HOJA_TRABAJO='fetch_mano_obra_hora_hoja_trabajo';
+export const CLEAR_MANOS_OBRAS_HORAS_HOJAS_TRABAJOS='clear_manos_obras_horas_hojas_trabajos';
+export const UPDATE_MANO_OBRA_HORA_HOJA_TRABAJO='update_mano_obra_hora_hoja_trabajo';

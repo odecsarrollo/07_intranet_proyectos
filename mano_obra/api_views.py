@@ -1,41 +1,31 @@
 import datetime
+
+from django.db.models import Sum, Value as V, F, ExpressionWrapper, DecimalField
+from django.db.models.functions import Coalesce
 from rest_framework import viewsets, serializers, status
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
 
 from .models import HoraHojaTrabajo, HojaTrabajoDiario
 from .api_serializers import HoraHojaTrabajoSerializer, HojaTrabajoDiarioSerializer
-from proyectos.models import Literal, Proyecto
 
 from cguno.models import ColaboradorCostoMesBiable
 
 
-# class TasaHoraViewSet(viewsets.ModelViewSet):
-#     queryset = TasaHora.objects.select_related('colaborador').all()
-#     serializer_class = TasaHoraSerializer
-#
-#     def perform_update(self, serializer):
-#         instance = serializer.save()
-#         hojas_trabajos_diarios = instance.mis_dias_trabajados.all()
-#         literales = Literal.objects.filter(mis_horas_trabajadas__hoja__tasa=instance).distinct()
-#         proyectos = Proyecto.objects.filter(mis_literales__mis_horas_trabajadas__hoja__tasa=instance).distinct()
-#
-#         [x.actualizar_minutos() for x in hojas_trabajos_diarios.all()]
-#         [x.actualizar_costos_mano_obra() for x in literales.all()]
-#         [x.actualizar_costos_mano_obra() for x in proyectos.all()]
-#
-#     def perform_destroy(self, instance):
-#         if not instance.mis_dias_trabajados.exists():
-#             super().perform_destroy(instance)
-#         else:
-#             cantidad = instance.mis_dias_trabajados.count()
-#             content = {
-#                 'error': [('No se puede eliminar, hay %s hojas de trabajo relacionadas con esta tasa') % (cantidad)]}
-#             raise serializers.ValidationError(content)
-
-
 class HojaTrabajoDiarioViewSet(viewsets.ModelViewSet):
-    queryset = HojaTrabajoDiario.objects.select_related('tasa', 'colaborador').all()
+    queryset = HojaTrabajoDiario.objects.select_related(
+        'tasa',
+        'colaborador',
+    ).prefetch_related(
+        'mis_horas_trabajadas',
+        'mis_horas_trabajadas__literal',
+        'mis_horas_trabajadas__literal__proyecto',
+    ).annotate(
+        costo_total=ExpressionWrapper((Coalesce(Sum('mis_horas_trabajadas__cantidad_minutos'), V(0)) / 60) * (
+                F('tasa__costo') / F('tasa__nro_horas_mes')), output_field=DecimalField(max_digits=4)),
+        cantidad_horas=ExpressionWrapper((Coalesce(Sum('mis_horas_trabajadas__cantidad_minutos'), V(0)) / 60),
+                                         output_field=DecimalField(max_digits=4))
+    ).all()
     serializer_class = HojaTrabajoDiarioSerializer
 
     def perform_create(self, serializer):
@@ -71,27 +61,17 @@ class HojaTrabajoDiarioViewSet(viewsets.ModelViewSet):
 
 
 class HoraHojaTrabajoViewSet(viewsets.ModelViewSet):
-    queryset = HoraHojaTrabajo.objects.select_related('literal', 'literal__proyecto').all()
+    queryset = HoraHojaTrabajo.objects.select_related(
+        'literal',
+        'literal__proyecto',
+        'hoja',
+        'hoja__colaborador',
+        'hoja__tasa'
+    ).all()
     serializer_class = HoraHojaTrabajoSerializer
 
     def perform_create(self, serializer):
-        instance = serializer.save(creado_por=self.request.user)
-        instance.hoja.actualizar_minutos()
-        instance.literal.actualizar_costos_mano_obra()
-        instance.literal.proyecto.actualizar_costos_mano_obra()
-
-    def perform_update(self, serializer):
-        instance = serializer.save()
-        instance.hoja.actualizar_minutos()
-        instance.literal.actualizar_costos_mano_obra()
-        instance.literal.proyecto.actualizar_costos_mano_obra()
-
-    def perform_destroy(self, instance):
-        hoja = instance.hoja
-        super().perform_destroy(instance)
-        hoja.actualizar_minutos()
-        instance.literal.actualizar_costos_mano_obra()
-        instance.literal.proyecto.actualizar_costos_mano_obra()
+        serializer.save(creado_por=self.request.user)
 
     @list_route(http_method_names=['get', ])
     def horas_por_hoja_trabajo(self, request):

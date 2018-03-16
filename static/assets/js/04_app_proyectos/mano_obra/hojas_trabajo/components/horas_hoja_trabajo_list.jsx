@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import CreateForm from './forms/base_form';
-import Tabla from './base_tabla';
-import crudHOC from '../../../../../../00_utilities/components/hoc_crud';
+import CreateForm from './forms/hora_hoja_trabajo_form';
+import Tabla from './horas_hojas_trabajos_tabla';
+import crudHOC from '../../../../00_utilities/components/hoc_crud';
+import {fechaFormatoUno} from '../../../../00_utilities/common';
 
 
 const CRUD = crudHOC(CreateForm, Tabla);
@@ -15,12 +16,12 @@ class List extends Component {
             createObjectMethod: this.createObjectMethod.bind(this),
             updateObjectMethod: this.updateObjectMethod.bind(this),
         };
-        this.plural_name = 'Colaboradores Costos Meses';
-        this.singular_name = 'Colaborador Costo Mes';
+        this.plural_name = 'Horas Hojas de Trabajo';
+        this.singular_name = 'Hora Hoja de Trabajo';
     }
 
     successSubmitCallback(item) {
-        const nombre = item.nombre;
+        const nombre = `en ${fechaFormatoUno(item.fecha)} para ${item.colaborador_nombre}`;
         const {noCargando, notificarAction} = this.props;
         notificarAction(`Se ha ${item.id ? 'actualizado' : 'creado'} con éxito ${this.singular_name.toLowerCase()} ${nombre}`);
         noCargando()
@@ -28,7 +29,7 @@ class List extends Component {
 
 
     successDeleteCallback(item) {
-        const nombre = item.nombre;
+        const nombre = `en ${fechaFormatoUno(item.fecha)} para ${item.colaborador_nombre}`;
         const {noCargando, notificarAction} = this.props;
         notificarAction(`Se ha eliminado con éxito ${this.singular_name.toLowerCase()} ${nombre}`);
         noCargando()
@@ -41,7 +42,7 @@ class List extends Component {
             noCargando();
         };
         cargando();
-        this.props.fetchColaboradorCostoMes(item_id, success_method, notificarErrorAjaxAction);
+        this.props.fetchHoraHojaTrabajo(item_id, success_method, notificarErrorAjaxAction);
     }
 
     createObjectMethod(item, successCallback) {
@@ -51,7 +52,8 @@ class List extends Component {
             successCallback();
         };
         cargando();
-        this.props.createColaboradorCostoMes(item, success_method, notificarErrorAjaxAction);
+        const cargarHojaTrabajo = (r) => this.props.fetchHojaTrabajo(r.hoja, success_method, notificarErrorAjaxAction);
+        this.props.createHoraHojaTrabajo(item, cargarHojaTrabajo, notificarErrorAjaxAction);
     }
 
     updateObjectMethod(item, successCallback) {
@@ -61,7 +63,8 @@ class List extends Component {
             successCallback();
         };
         cargando();
-        this.props.updateColaboradorCostoMes(item.id, item, success_method, notificarErrorAjaxAction);
+        const cargarHojaTrabajo = (r) => this.props.fetchHojaTrabajo(r.hoja, success_method, notificarErrorAjaxAction);
+        this.props.updateHoraHojaTrabajo(item.id, item, cargarHojaTrabajo, notificarErrorAjaxAction);
     }
 
     deleteObjectMethod(item, successCallback) {
@@ -71,7 +74,9 @@ class List extends Component {
             successCallback();
         };
         cargando();
-        this.props.deleteColaboradorCostoMes(item.id, success_method, notificarErrorAjaxAction);
+        const hoja = item.hoja;
+        const cargarHojaTrabajo = () => this.props.fetchHojaTrabajo(hoja, success_method, notificarErrorAjaxAction);
+        this.props.deleteHoraHojaTrabajo(item.id, cargarHojaTrabajo, notificarErrorAjaxAction);
     }
 
     render() {

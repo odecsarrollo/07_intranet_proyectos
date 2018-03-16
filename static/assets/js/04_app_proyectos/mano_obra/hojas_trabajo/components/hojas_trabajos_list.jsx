@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import CreateForm from './forms/base_form';
-import Tabla from './base_tabla';
+import CreateForm from './forms/hoja_trabajo_form';
+import Tabla from './hojas_trabajos_tabla';
 import crudHOC from '../../../../00_utilities/components/hoc_crud';
 import {fechaFormatoUno} from '../../../../00_utilities/common';
 

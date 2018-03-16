@@ -1,3 +1,5 @@
+import {REGEX_SOLO_NUMEROS} from "../../../../../00_utilities/common";
+
 const validate = values => {
     const errors = {};
 

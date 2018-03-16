@@ -6,24 +6,9 @@ import {
 } from '../../../../../00_utilities/components/ui/forms/fields';
 import {connect} from "react-redux";
 import {MyFormTagModal} from '../../../../../00_utilities/components/ui/forms/MyFormTagModal';
-import validate from './validate';
+import validate from './validate_hoja';
 
 class Form extends Component {
-    constructor(props) {
-        super(props);
-        this.state = ({
-            colaborador: null
-        });
-    }
-
-    componentDidMount() {
-        const {initialValues} = this.props;
-        if (initialValues) {
-            const {colaborador} = initialValues;
-            this.setState({colaborador});
-        }
-    }
-
     render() {
         const {
             pristine,
@@ -37,11 +22,10 @@ class Form extends Component {
             singular_name,
             colaboradores_list,
         } = this.props;
-        const {colaborador} = this.state;
         return (
             <MyFormTagModal
                 onCancel={onCancel}
-                onSubmit={handleSubmit((v) => onSubmit({...v, colaborador}))}
+                onSubmit={handleSubmit(onSubmit)}
                 reset={reset}
                 initialValues={initialValues}
                 submitting={submitting}
@@ -58,10 +42,10 @@ class Form extends Component {
                             }
                         )
                     })}
+                    className='col-12'
                     valuesField='id'
                     textField='nombre'
                     autoFocus={true}
-                    onSelect={(e) => this.setState({colaborador: e.id})}
                     name='colaborador'
                     placeholder='Colaborador'
                     filters='contains'

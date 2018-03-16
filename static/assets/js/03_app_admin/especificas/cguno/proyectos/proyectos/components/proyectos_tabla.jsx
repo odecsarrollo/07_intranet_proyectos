@@ -53,6 +53,24 @@ class Tabla extends React.Component {
                         ]
                     },
                     {
+                        Header: "Mano Obra",
+                        columns: [
+                            {
+                                Header: "Costo M.O",
+                                accessor: "costo_mano_obra",
+                                maxWidth: 150,
+                                show: permisos_object.costo_mano_obra,
+                                Cell: row => <div className='text-right'>{pesosColombianos(row.value)}</div>
+                            },
+                            {
+                                Header: "Horas M.O",
+                                accessor: "cantidad_horas_mano_obra",
+                                maxWidth: 80,
+                                Cell: row => <div className='text-right'>{row.value}</div>
+                            },
+                        ]
+                    },
+                    {
                         Header: "Costos Reales",
                         columns: [
                             {
@@ -60,13 +78,6 @@ class Tabla extends React.Component {
                                 accessor: "costo_materiales",
                                 maxWidth: 150,
                                 show: permisos_object.costo_materiales,
-                                Cell: row => <div className='text-right'>{pesosColombianos(row.value)}</div>
-                            },
-                            {
-                                Header: "Costo Mano Obra",
-                                accessor: "costo_mano_obra",
-                                maxWidth: 150,
-                                show: permisos_object.costo_mano_obra,
                                 Cell: row => <div className='text-right'>{pesosColombianos(row.value)}</div>
                             },
                             {

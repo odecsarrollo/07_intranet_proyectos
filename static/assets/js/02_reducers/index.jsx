@@ -18,6 +18,7 @@ import itemsCgunoReducer from "./especificas/cguno/itemsBiableReducer";
 
 import colaboradoresCostosMesesReducer from "./especificas/cguno/colaboradoresCostosMesesReducer";
 import hojasTrabajosDiariosReducer from "./especificas/mano_obra/hojaTrabajoDiarioReducer";
+import horasHojasTrabajosDiariosReducer from "./especificas/mano_obra/hojaTrabajoDiarioReducer";
 
 const rootReducer = combineReducers({
     mis_permisos: misPermisosReducer,

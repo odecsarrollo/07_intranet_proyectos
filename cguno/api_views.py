@@ -138,8 +138,6 @@ class ColaboradorCostoMesBiableViewSet(viewsets.ModelViewSet):
         fecha_final = request.GET.get('fecha_final')
         qs = None
         if fecha_final and fecha_final:
-            print(fecha_inicial)
-            print(fecha_final)
             qs = self.queryset.filter(lapso__gte=fecha_inicial, lapso__lte=fecha_final)
 
         serializer = self.get_serializer(qs, many=True)

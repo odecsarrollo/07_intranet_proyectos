@@ -3,12 +3,11 @@ import {connect} from "react-redux";
 import * as actions from "../../../../01_actions/01_index";
 import CargarDatos from "../../../../00_utilities/components/system/cargar_datos";
 import {
-    USUARIOS as permisos_view
+    MANOS_OBRAS_HOJAS_TRABAJOS as permisos_view
 } from "../../../../00_utilities/permisos/types";
 import {permisosAdapter} from "../../../../00_utilities/common";
 
-import ListCrud from '../components/base_list';
-
+import ListCrud from '../components/hojas_trabajos_list';
 
 class List extends Component {
     constructor(props) {
@@ -36,12 +35,12 @@ class List extends Component {
 
     render() {
         const {object_list, colaboradores_list, mis_permisos} = this.props;
-        const bloque_1_list = permisosAdapter(mis_permisos, permisos_view);
+        const permisos = permisosAdapter(mis_permisos, permisos_view);
         return (
             <Fragment>
                 <ListCrud
                     object_list={object_list}
-                    permisos_object={bloque_1_list}
+                    permisos_object={permisos}
                     {...this.props}
                     colaboradores_list={colaboradores_list}
                 />
@@ -57,7 +56,7 @@ function mapPropsToState(state, ownProps) {
     return {
         mis_permisos: state.mis_permisos,
         object_list: state.hojas_trabajos_diarios,
-        colaboradores_list: state.colaboradores
+        colaboradores_list: state.colaboradores,
     }
 }
 

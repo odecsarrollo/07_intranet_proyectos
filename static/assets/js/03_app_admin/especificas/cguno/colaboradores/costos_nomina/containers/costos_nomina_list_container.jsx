@@ -8,7 +8,7 @@ import {
 import {permisosAdapter} from "../../../../../../00_utilities/common";
 import CalendarioRangosFiltro from '../../../../../../00_utilities/calendariosRangosFiltro';
 
-import ListCrud from '../components/base_list';
+import ListCrud from '../components/costos_nomina_list';
 
 
 class List extends Component {

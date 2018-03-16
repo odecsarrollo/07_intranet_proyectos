@@ -83,6 +83,7 @@ class Form extends Component {
                     name='modificado'
                 />
                 <MyCombobox
+                    className="col-12"
                     name='centro_costo'
                     busy={false}
                     autoFocus={false}

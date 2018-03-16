@@ -57,15 +57,16 @@ class Detail extends Component {
         const success_callback = () => {
             noCargando();
         };
-        const cargarProyecto = () => this.props.fetchProyecto(id, success_callback, notificarErrorAjaxAction);
+
+        const cargarLiterales = () => this.props.fetchLiteralesXProyecto(id, success_callback, notificarErrorAjaxAction);
+        const cargarProyecto = () => this.props.fetchProyecto(id, cargarLiterales, notificarErrorAjaxAction);
         this.props.fetchMisPermisos(cargarProyecto, notificarErrorAjaxAction);
 
     }
 
     render() {
-        const {object, mis_permisos, items_literales} = this.props;
+        const {object, mis_permisos, items_literales, literales_list} = this.props;
         const permisos = permisosAdapter(mis_permisos, permisos_view);
-
 
         if (!object) {
             return <SinObjeto/>
@@ -82,7 +83,7 @@ class Detail extends Component {
                     <div className="col-12 col-lg-4">
                         <h5 className='h5-responsive'>Literales</h5>
                         <TablaProyectoLiterales
-                            lista_literales={object.mis_literales}
+                            lista_literales={_.map(literales_list, e => e)}
                             onSelectItem={this.onLiteralSelect}
                             item_seleccionado={item_seleccionado}
                             proyecto={object}
@@ -113,6 +114,7 @@ function mapPropsToState(state, ownProps) {
     return {
         mis_permisos: state.mis_permisos,
         items_literales: state.items_literales,
+        literales_list: state.literales,
         object: state.proyectos[id]
     }
 }

@@ -84,3 +84,11 @@ export const MANOS_OBRAS_HOJAS_TRABAJOS = {
     list: 'list_hojatrabajodiario',
     detail: 'detail_hojatrabajodiario',
 };
+
+export const MANOS_OBRAS_HORAS_HOJAS_TRABAJOS = {
+    add: 'add_horahojatrabajo',
+    delete: 'delete_horahojatrabajo',
+    change: 'change_horahojatrabajo',
+    list: 'list_horahojatrabajo',
+    detail: 'detail_horahojatrabajo',
+};
