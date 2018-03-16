@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Fragment} from "react";
 import Checkbox from 'material-ui/Checkbox';
 import {MyDialogButtonDelete} from '../../../../00_utilities/components/ui/dialog';
 import {IconButtonTableSee} from '../../../../00_utilities/components/ui/icon/iconos';
@@ -81,14 +81,19 @@ class Tabla extends React.Component {
                                 Header: "Elimi.",
                                 show: permisos_object.delete,
                                 maxWidth: 60,
-                                Cell: row =>
-                                    <MyDialogButtonDelete
-                                        onDelete={() => {
-                                            onDelete(row.original)
-                                        }}
-                                        element_name={`en ${fechaFormatoUno(row.original.fecha)} para ${row.original.colaborador_nombre}`}
-                                        element_type={singular_name}
-                                    />
+                                Cell: row => {
+                                    return (
+                                        row.original.costo_total > 0 ?
+                                            <Fragment></Fragment> :
+                                            <MyDialogButtonDelete
+                                                onDelete={() => {
+                                                    onDelete(row.original)
+                                                }}
+                                                element_name={`en ${fechaFormatoUno(row.original.fecha)} para ${row.original.colaborador_nombre}`}
+                                                element_type={singular_name}
+                                            />
+                                    )
+                                }
 
                             },
                             {
@@ -96,7 +101,7 @@ class Tabla extends React.Component {
                                 show: permisos_object.detail,
                                 maxWidth: 60,
                                 Cell: row =>
-                                    <Link to={`/app/admin/algos/detail/${row.original.id}`}>
+                                    <Link to={`/app/proyectos/mano_obra/hojas_trabajo/detail/${row.original.id}`}>
                                         <IconButtonTableSee/>
                                     </Link>
 

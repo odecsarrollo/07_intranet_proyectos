@@ -130,6 +130,7 @@ class ColaboradorCostoMesBiable(models.Model):
     def valor_hora(self):
         if self.nro_horas_mes > 0:
             return self.costo / self.nro_horas_mes
+        return 0
 
     class Meta:
         permissions = [
