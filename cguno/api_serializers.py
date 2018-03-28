@@ -40,7 +40,9 @@ class ColaboradorBiableSerializer(serializers.ModelSerializer):
             'porcentaje_caja_compensacion',
             'porcentaje_pension',
             'porcentaje_arl',
+            'literales_autorizados',
         ]
+        extra_kwargs = {'literales_autorizados': {'read_only': True}}
 
 
 class ColaboradorCentroCostoSerializer(serializers.ModelSerializer):
@@ -74,6 +76,7 @@ class ColaboradorCostoMesBiableSerializer(serializers.ModelSerializer):
     colaborador_nombres = serializers.CharField(source='colaborador.nombres', read_only=True)
     colaborador_apellidos = serializers.CharField(source='colaborador.apellidos', read_only=True)
     colaborador_es_cguno = serializers.BooleanField(source='colaborador.es_cguno', read_only=True)
+    centro_costo_nombre = serializers.CharField(source='centro_costo.nombre', read_only=True)
 
     class Meta:
         model = ColaboradorCostoMesBiable
@@ -85,6 +88,7 @@ class ColaboradorCostoMesBiableSerializer(serializers.ModelSerializer):
             'colaborador_es_cguno',
             'es_salario_fijo',
             'centro_costo',
+            'centro_costo_nombre',
             'lapso',
             'costo',
             'modificado',

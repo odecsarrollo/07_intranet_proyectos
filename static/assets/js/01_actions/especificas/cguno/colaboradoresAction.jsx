@@ -13,10 +13,23 @@ import {
     fetchObject,
     createObject,
     deleteObject,
-    callApiMethodWithParameters, callApiMethod
+    callApiMethodWithParameters,
+    callApiMethod
 } from '../../00_general_fuctions'
 
 const current_url_api = 'colaboradores';
+
+export const modificarAutorizacionLiteralColaborador = (id, literal_id, tipo, callback = null, callback_error = null) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: FETCH_COLABORADOR, payload: response})
+        };
+        let params = new URLSearchParams();
+        params.append('literal_id', literal_id);
+        params.append('tipo', tipo);
+        callApiMethodWithParameters(current_url_api, id, 'modificar_autorizacion_literal', params, dispatches, callback, callback_error);
+    }
+};
 
 export const createColaborador = (values, callback = null, callback_error = null) => {
     return (dispatch) => {
@@ -96,7 +109,7 @@ export function fetchColaboradoresEnProyectos(callback = null, callback_error = 
 
 export function fetchColaboradoresGestionHorasTrabajadas(callback = null, callback_error = null) {
     return function (dispatch) {
-        const FULL_URL = `${current_url_api}/en_proyectos_para_gestion_horas_trabajadas`;
+        const FULL_URL = `${current_url_api}/en_proyectos_autogestion_horas_trabajadas`;
         const dispatches = (response) => {
             dispatch({type: FETCH_COLABORADORES, payload: response})
         };

@@ -10,7 +10,7 @@ import ReactTable from "react-table";
 class Tabla extends React.Component {
     render() {
 
-        const data = this.props.data;
+        const data = _.orderBy(this.props.data, ['fecha'], ['desc']);
         const {
             updateItem,
             singular_name,
@@ -46,19 +46,32 @@ class Tabla extends React.Component {
                             {
                                 Header: "Valor Hora",
                                 accessor: "tasa_valor_hora",
+                                show: permisos_object.costos,
                                 maxWidth: 100,
-                                Cell: row => pesosColombianos(row.value)
+                                Cell: row =>
+                                    <div className='text-right'>
+                                        {pesosColombianos(row.value)}
+                                    </div>
                             },
                             {
                                 Header: "Horas",
                                 accessor: "cantidad_horas",
-                                maxWidth: 100
+                                maxWidth: 100,
+                                Cell: row =>
+                                    <div className='text-right'>
+                                        {row.value}
+                                    </div>
+
                             },
                             {
                                 Header: "Costo Total",
                                 accessor: "costo_total",
                                 maxWidth: 100,
-                                Cell: row => pesosColombianos(row.value)
+                                show: permisos_object.costos,
+                                Cell: row =>
+                                    <div className='text-right'>
+                                        {pesosColombianos(row.value)}
+                                    </div>
                             },
                         ]
                     },

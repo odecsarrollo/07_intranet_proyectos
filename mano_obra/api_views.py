@@ -1,6 +1,6 @@
 import datetime
 
-from django.db.models import Sum, Value as V, F, ExpressionWrapper, DecimalField
+from django.db.models import Sum, Value as V, F, ExpressionWrapper, DecimalField, Count
 from django.db.models.functions import Coalesce
 from rest_framework import viewsets, serializers, status
 from rest_framework.decorators import list_route
@@ -66,16 +66,56 @@ class HoraHojaTrabajoViewSet(viewsets.ModelViewSet):
         'literal__proyecto',
         'hoja',
         'hoja__colaborador',
-        'hoja__tasa'
+        'hoja__tasa',
+        'creado_por'
     ).all()
     serializer_class = HoraHojaTrabajoSerializer
 
+    def perform_destroy(self, instance):
+        if not instance.verificado:
+            super().perform_destroy(instance)
+        else:
+            content = {'error': ['No se puede eliminar, ya se encuentra verificado']}
+            raise serializers.ValidationError(content)
+
+    def ajusta_horas(self, instance):
+        es_salario_fijo = instance.hoja.tasa.es_salario_fijo
+        if es_salario_fijo:
+            nro_horas_contrato = instance.hoja.colaborador.nro_horas_mes
+            horas = HoraHojaTrabajo.objects.filter(
+                hoja__tasa__lapso=instance.hoja.tasa.lapso,
+                hoja__colaborador=instance.hoja.colaborador
+            ).aggregate(horas=ExpressionWrapper(Sum('cantidad_minutos') / 60, output_field=DecimalField(max_digits=4)))[
+                'horas']
+            if horas < nro_horas_contrato:
+                horas = nro_horas_contrato
+            tasa = instance.hoja.tasa
+            tasa.nro_horas_mes = horas
+            tasa.save()
+
     def perform_create(self, serializer):
-        serializer.save(creado_por=self.request.user)
+        instance = serializer.save(creado_por=self.request.user)
+        self.ajusta_horas(instance)
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        self.ajusta_horas(instance)
 
     @list_route(http_method_names=['get', ])
     def horas_por_hoja_trabajo(self, request):
         hoja_id = request.GET.get('hoja_id')
         lista = self.queryset.filter(hoja_id=hoja_id).all()
+        serializer = self.get_serializer(lista, many=True)
+        return Response(serializer.data)
+
+    @list_route(http_method_names=['get', ])
+    def autogestionadas_x_fechas(self, request):
+        fecha_inicial = request.GET.get('fecha_inicial')
+        fecha_final = request.GET.get('fecha_final')
+        lista = self.queryset.filter(autogestionada=True).all()
+        if fecha_inicial and fecha_final:
+            lista = lista.filter(hoja__fecha__gte=fecha_inicial, hoja__fecha__lte=fecha_final)
+        else:
+            lista = lista.filter(verificado=False)
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)

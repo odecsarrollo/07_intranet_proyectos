@@ -96,11 +96,6 @@ class Form extends Component {
 
                 <MyCheckboxSimple
                     className="col-12 col-md-6"
-                    nombre='Autogestiona Horas'
-                    name='autogestion_horas_trabajadas'/>
-
-                <MyCheckboxSimple
-                    className="col-12 col-md-6"
                     nombre='En Proyectos'
                     name='en_proyectos'/>
 

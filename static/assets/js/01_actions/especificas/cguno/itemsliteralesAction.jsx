@@ -1,5 +1,6 @@
 import {
-    FETCH_ITEMS_LITERALES
+    FETCH_ITEMS_LITERALES,
+    CLEAR_ITEMS_LITERALES
 } from '../../00_types';
 
 import {
@@ -7,6 +8,12 @@ import {
 } from '../../00_general_fuctions'
 
 const current_url_api = 'items_literales';
+
+export function clearItemsLiterales() {
+    return function (dispatch) {
+        dispatch({type: CLEAR_ITEMS_LITERALES});
+    }
+}
 
 export function fetchItemsLiterales(id_literal, callback = null, callback_error = null) {
     return function (dispatch) {

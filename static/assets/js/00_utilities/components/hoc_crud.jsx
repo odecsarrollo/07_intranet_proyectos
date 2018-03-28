@@ -50,7 +50,11 @@ function crudHOC(CreateForm, Tabla) {
             const {method_pool} = this.props;
             method_pool.fetchObjectMethod(
                 item.id,
-                () => this.setState({modal_open: true, item_seleccionado: item})
+                (objecto) => {
+                    this.setState({
+                        modal_open: true, item_seleccionado: objecto
+                    })
+                }
             );
         }
 

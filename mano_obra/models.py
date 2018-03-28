@@ -29,11 +29,15 @@ class HoraHojaTrabajo(TimeStampedModel):
     hoja = models.ForeignKey(HojaTrabajoDiario, on_delete=models.PROTECT, related_name='mis_horas_trabajadas')
     literal = models.ForeignKey(Literal, on_delete=models.PROTECT, related_name='mis_horas_trabajadas')
     cantidad_minutos = models.PositiveIntegerField(default=0)
+    verificado = models.BooleanField(default=False)
+    autogestionada = models.BooleanField(default=False)
+    descripcion_tarea = models.TextField(null=True, blank=True)
 
     class Meta:
         unique_together = [('hoja', 'literal')]
         permissions = [
             ("list_horahojatrabajo", "Can see list horas trabajos diario"),
+            ("verificar_horahojatrabajo", "Can verificar horas trabajos diario"),
         ]
 
     @property

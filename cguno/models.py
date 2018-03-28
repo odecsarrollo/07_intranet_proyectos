@@ -73,6 +73,7 @@ class ColaboradorBiable(models.Model):
     porcentaje_arl = models.DecimalField(max_digits=10, decimal_places=4, default=2.436)
     centro_costo = models.ForeignKey(ColaboradorCentroCosto, on_delete=models.PROTECT, related_name='mis_colaboradores',
                                      null=True, blank=True)
+    literales_autorizados = models.ManyToManyField(Literal, related_name='colaboradores_autorizados')
 
     def create_user(self):
         nombre_split = self.nombres.split()
@@ -123,7 +124,8 @@ class ColaboradorCostoMesBiable(models.Model):
     es_salario_fijo = models.BooleanField(default=False)
     modificado = models.BooleanField(default=False)
     nro_horas_mes = models.PositiveIntegerField(default=0, null=True, blank=True)
-    centro_costo = models.ForeignKey(ColaboradorCentroCosto, on_delete=models.PROTECT, related_name='mis_coloaboradores_costos_mensuales',
+    centro_costo = models.ForeignKey(ColaboradorCentroCosto, on_delete=models.PROTECT,
+                                     related_name='mis_coloaboradores_costos_mensuales',
                                      null=True, blank=True)
 
     @property

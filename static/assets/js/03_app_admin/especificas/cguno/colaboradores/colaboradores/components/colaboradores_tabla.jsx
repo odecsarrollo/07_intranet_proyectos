@@ -15,6 +15,7 @@ class Tabla extends React.Component {
             singular_name,
             onDelete,
             onSelectItemEdit,
+            onCreateColaboradorUsuario,
             permisos_object
         } = this.props;
 
@@ -168,6 +169,7 @@ class Tabla extends React.Component {
                                 accessor: "autogestion_horas_trabajadas",
                                 maxWidth: 60,
                                 Cell: row => (
+                                    row.original.usuario_username &&
                                     permisos_object.change ?
                                         <Checkbox
                                             checked={row.value}

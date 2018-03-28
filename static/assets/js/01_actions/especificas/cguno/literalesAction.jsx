@@ -1,6 +1,8 @@
 import {
     FETCH_LITERALES,
-    FETCH_LITERAL
+    FETCH_LITERAL,
+    CLEAR_LITERALES
+
 } from '../../00_types';
 
 import {
@@ -10,6 +12,12 @@ import {
 } from '../../00_general_fuctions'
 
 const current_url_api = 'literales';
+
+export const clearLiterales = () => {
+    return (dispatch) => {
+        dispatch({type: CLEAR_LITERALES})
+    }
+};
 
 export function fetchLiterales(callback = null, callback_error = null) {
     return function (dispatch) {

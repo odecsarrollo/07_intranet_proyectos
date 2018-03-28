@@ -17,6 +17,7 @@ class List extends Component {
         };
         this.plural_name = 'Colaboradores';
         this.singular_name = 'Colaborador';
+        this.onCreateColaboradorUsuario = this.onCreateColaboradorUsuario.bind(this);
     }
 
     successSubmitCallback(item) {
@@ -36,8 +37,8 @@ class List extends Component {
 
     fetchObjectMethod(item_id, successCallback) {
         const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
-        const success_method = () => {
-            successCallback();
+        const success_method = (item) => {
+            successCallback(item);
             noCargando();
         };
         cargando();
@@ -74,10 +75,24 @@ class List extends Component {
         this.props.deleteColaborador(item.id, success_method, notificarErrorAjaxAction);
     }
 
+    onCreateColaboradorUsuario(item) {
+        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
+        cargando();
+        this.props.createColaboradorUsuario(
+            item.id,
+            (response) => {
+                this.props.notificarAction(`Se ha creado el usuario ${response.usuario_username} para ${response.nombres} ${response.apellidos} con exitoso!`)
+                noCargando();
+            },
+            notificarErrorAjaxAction
+        )
+    }
+
     render() {
         const {object_list, permisos_object} = this.props;
         return (
             <CRUD
+                onCreateColaboradorUsuario={this.onCreateColaboradorUsuario}
                 method_pool={this.method_pool}
                 list={object_list}
                 permisos_object={permisos_object}

@@ -44,7 +44,6 @@ const TablaProyectosLiterales = (props) => {
         proyecto,
         permisos
     } = props;
-    console.log(lista_literales)
     return (
         <table className="table table-responsive table-striped tabla-maestra">
             <thead>

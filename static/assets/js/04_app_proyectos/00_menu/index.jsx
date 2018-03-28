@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react';
 import MenuBase from '../../00_utilities/components/ui/menu/menu';
 import Consultas from './consultas';
+import HojasTrabajo from './hojasTrabajos';
 import {Link} from 'react-router-dom'
 import FontIcon from 'material-ui/FontIcon';
 
@@ -15,8 +16,9 @@ const Menu = () => {
                 return (
                     <Fragment>
                         <Consultas/>
-                        <Link to='/app/proyectos/mano_obra/hojas_trabajo/list'>
-                            <FontIcon className="fas fa-alarm-clock" style={iconStyles}/>
+                        <HojasTrabajo/>
+                        <Link to='/app/proyectos/colaboradores/colaboradores/list'>
+                            <FontIcon className="fas fa-user" style={iconStyles}/>
                         </Link>
                     </Fragment>
                 )

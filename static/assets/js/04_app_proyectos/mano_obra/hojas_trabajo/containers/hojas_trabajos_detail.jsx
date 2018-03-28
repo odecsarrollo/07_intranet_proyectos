@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {connect} from "react-redux";
 import * as actions from "../../../../01_actions/01_index";
 import CargarDatos from "../../../../00_utilities/components/system/cargar_datos";
@@ -24,7 +24,7 @@ class Detail extends Component {
 
     componentWillUnmount() {
         this.props.clearPermisos();
-        this.props.clearProyectos();
+        this.props.clearHojasTrabajos();
     }
 
     cargarDatos() {
@@ -33,12 +33,13 @@ class Detail extends Component {
         cargando();
         const cargarProyectos = () => this.props.fetchProyectosAbiertos(() => noCargando(), notificarErrorAjaxAction);
         const cargarHojaTrabajo = () => this.props.fetchHojaTrabajo(id, cargarProyectos, notificarErrorAjaxAction);
-        this.props.fetchMisPermisos(cargarHojaTrabajo, notificarErrorAjaxAction);
+        const cargarMiCuenta = () => this.props.fetchMiCuenta(cargarHojaTrabajo, this.error_callback);
+        this.props.fetchMisPermisos(cargarMiCuenta, notificarErrorAjaxAction);
 
     }
 
     render() {
-        const {object, mis_permisos} = this.props;
+        const {object, mis_permisos, mi_cuenta} = this.props;
         const permisos = permisosAdapter(mis_permisos, permisos_view);
         const permisos_horas = permisosAdapter(mis_permisos, permisos_view_horas);
 
@@ -52,7 +53,7 @@ class Detail extends Component {
             fecha,
             tasa_valor_hora,
             costo_total,
-            mis_horas_trabajadas
+            mis_horas_trabajadas,
         } = object;
 
         return (
@@ -65,16 +66,23 @@ class Detail extends Component {
                     <div className="col-md-6">
                         <strong>Fecha: </strong>{fechaFormatoUno(fecha)}
                     </div>
-                    <div className="col-md-6">
-                        <strong>Valor Hora: </strong>{pesosColombianos(tasa_valor_hora)}
-                    </div>
-                    <div className="col-md-6">
-                        <strong>Costo Total: </strong>{pesosColombianos(costo_total)}
-                    </div>
+                    {
+                        permisos.costos &&
+                        <Fragment>
+                            <div className="col-md-6">
+                                <strong>Valor Hora: </strong>{pesosColombianos(tasa_valor_hora)}
+                            </div>
+                            < div className="col-md-6">
+                                <strong>Costo Total: </strong>{pesosColombianos(costo_total)}
+                            </div>
+                        </Fragment>
+                    }
                 </div>
                 <HorasHojasTrabajoList
                     object_list={mis_horas_trabajadas}
                     permisos_object={permisos_horas}
+                    permisos_hoja={permisos}
+                    hoja_trabajo={object}
                     {...this.props}
                 />
                 <CargarDatos cargarDatos={this.cargarDatos}/>
@@ -88,6 +96,7 @@ function mapPropsToState(state, ownProps) {
     return {
         mis_permisos: state.mis_permisos,
         proyectos_list: state.proyectos,
+        mi_cuenta: state.mi_cuenta,
         object: state.hojas_trabajos_diarios[id]
     }
 }

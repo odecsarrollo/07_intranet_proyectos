@@ -23,7 +23,6 @@ class ItemTabla extends Component {
                         <td>
                             <i className={`${activo ? 'fas fa-check' : 'fal fa'}-square puntero`}
                                onClick={() => {
-                                   console.log('dio click')
                                    updatePermiso({...item, activo: !activo});
                                    this.setState({cambiar_nombre: false})
                                }}>

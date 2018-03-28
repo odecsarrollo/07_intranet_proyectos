@@ -40,8 +40,8 @@ class List extends Component {
 
     fetchObjectMethod(item_id, successCallback) {
         const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
-        const success_method = () => {
-            successCallback();
+        const success_method = (item) => {
+            successCallback(item);
             noCargando();
         };
         cargando();

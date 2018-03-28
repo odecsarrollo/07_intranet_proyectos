@@ -83,6 +83,8 @@ export const MANOS_OBRAS_HOJAS_TRABAJOS = {
     change: 'change_hojatrabajodiario',
     list: 'list_hojatrabajodiario',
     detail: 'detail_hojatrabajodiario',
+    costos: 'costos_hojatrabajodiario',
+    add_para_otros: 'para_otros_hojatrabajodiario',
 };
 
 export const MANOS_OBRAS_HORAS_HOJAS_TRABAJOS = {
@@ -91,4 +93,5 @@ export const MANOS_OBRAS_HORAS_HOJAS_TRABAJOS = {
     change: 'change_horahojatrabajo',
     list: 'list_horahojatrabajo',
     detail: 'detail_horahojatrabajo',
+    verificar: 'verificar_horahojatrabajo',
 };

@@ -34,12 +34,12 @@ class List extends Component {
 
     render() {
         const {object_list, mis_permisos} = this.props;
-        const bloque_1_list = permisosAdapter(mis_permisos, permisos_view);
+        const bloque_1_permisos = permisosAdapter(mis_permisos, permisos_view);
         return (
             <Fragment>
                 <ListCrud
                     object_list={object_list}
-                    permisos_object={bloque_1_list}
+                    permisos_object={bloque_1_permisos}
                     {...this.props}
                 />
                 <CargarDatos

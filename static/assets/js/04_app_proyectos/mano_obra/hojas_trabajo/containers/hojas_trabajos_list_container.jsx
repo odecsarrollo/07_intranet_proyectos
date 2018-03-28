@@ -2,6 +2,7 @@ import React, {Component, Fragment} from 'react';
 import {connect} from "react-redux";
 import * as actions from "../../../../01_actions/01_index";
 import CargarDatos from "../../../../00_utilities/components/system/cargar_datos";
+import RangoFechas from "../../../../00_utilities/calendariosRangosFiltro";
 import {
     MANOS_OBRAS_HOJAS_TRABAJOS as permisos_view
 } from "../../../../00_utilities/permisos/types";
@@ -21,28 +22,46 @@ class List extends Component {
 
     componentWillUnmount() {
         this.props.clearHojasTrabajos();
+        this.props.clearHorasHojasTrabajos();
         this.props.clearColaboradores();
     }
 
     cargarDatos() {
         const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
         cargando();
-        const cargarColaboradores = () => this.props.fetchColaboradoresEnProyectos(() => noCargando(), notificarErrorAjaxAction)
-        const cargarHojasTrabajos = () => this.props.fetchHojasTrabajos(cargarColaboradores, notificarErrorAjaxAction);
-        this.props.fetchMisPermisos(cargarHojasTrabajos, notificarErrorAjaxAction)
+        const cargarMiCuenta = () => this.props.fetchMiCuenta(() => noCargando(), notificarErrorAjaxAction);
+        const cargarColaboradores = () => this.props.fetchColaboradoresEnProyectos(cargarMiCuenta, notificarErrorAjaxAction)
+        this.props.fetchMisPermisos(cargarColaboradores, notificarErrorAjaxAction)
 
     }
 
     render() {
-        const {object_list, colaboradores_list, mis_permisos} = this.props;
+        const {object_list, mis_permisos, mi_cuenta} = this.props;
         const permisos = permisosAdapter(mis_permisos, permisos_view);
         return (
             <Fragment>
+                <RangoFechas metodoBusquedaFechas={(i, f) => {
+                    const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
+                    cargando();
+                    this.props.fetchHojasTrabajosxFechas(i, f, () => noCargando(), notificarErrorAjaxAction);
+                }}/>
                 <ListCrud
                     object_list={object_list}
-                    permisos_object={permisos}
+                    permisos_object={{
+                        ...permisos,
+                        add:
+                            (
+                                permisos.add &&
+                                (
+                                    permisos.add_para_otros ||
+                                    (
+                                        mi_cuenta.colaborador &&
+                                        mi_cuenta.colaborador.autogestion_horas_trabajadas
+                                    )
+                                )
+                            )
+                    }}
                     {...this.props}
-                    colaboradores_list={colaboradores_list}
                 />
                 <CargarDatos
                     cargarDatos={this.cargarDatos}
@@ -57,6 +76,8 @@ function mapPropsToState(state, ownProps) {
         mis_permisos: state.mis_permisos,
         object_list: state.hojas_trabajos_diarios,
         colaboradores_list: state.colaboradores,
+        mi_cuenta: state.mi_cuenta,
+        proyectos_list: state.proyectos,
     }
 }
 

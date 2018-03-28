@@ -84,7 +84,6 @@ export const MyDropdownList = (props) => {
         />
     )
 };
-
 const renderCombobox = ({input, data, valueField, textField, placeholder, onSelect, meta: {touched, error, warning}}) => {
     return (
         <Fragment>
@@ -93,16 +92,17 @@ const renderCombobox = ({input, data, valueField, textField, placeholder, onSele
                       placeholder={placeholder}
                       valueField={valueField}
                       textField={textField}
-                      onChange={e => input.onChange(e[valueField])}
+                      onChange={e => {
+                          input.onChange(typeof(e) === 'string' ? e : e[valueField]);
+                      }}
                       onSelect={onSelect}
-                      onBlur={_ => input.onBlur()}
+                      onBlur={() => input.onBlur()}
             />
             {touched && ((error && <span className='form-field-error'>{error}</span>) || (warning &&
                 <span>{warning}</span>))}
         </Fragment>
     )
 };
-
 
 export const MyCombobox = (props) => {
     const {busy = false, textField = 'name', valuesField = 'id', autoFocus = false, onSelect, className} = props;
@@ -235,7 +235,6 @@ export const MySelectField = (props) => {
     return (
         <Fragment>
             <Field
-                {...props}
                 fullWidth={true}
                 name={props.name}
                 component={SelectField}

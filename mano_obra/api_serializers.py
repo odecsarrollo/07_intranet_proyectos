@@ -1,4 +1,3 @@
-from decimal import Decimal
 from rest_framework import serializers
 
 from .models import HojaTrabajoDiario, HoraHojaTrabajo
@@ -11,7 +10,11 @@ class HoraHojaTrabajoSerializer(serializers.ModelSerializer):
     proyecto = serializers.IntegerField(source='literal.proyecto_id', read_only=True)
     cantidad_horas = serializers.SerializerMethodField('numero_horas')
     horas = serializers.SerializerMethodField('numero_horas')
+    tasa_valor_hora = serializers.DecimalField(source='hoja.tasa.valor_hora', decimal_places=2, max_digits=12,read_only=True)
     minutos = serializers.SerializerMethodField('numero_minutos')
+    colaborador_nombre = serializers.CharField(source='hoja.colaborador.full_name', read_only=True)
+    fecha = serializers.CharField(source='hoja.fecha', read_only=True)
+    creado_por_username = serializers.CharField(source='creado_por.username', read_only=True)
 
     def numero_horas(self, instance):
         return int(instance.cantidad_minutos / 60)
@@ -25,6 +28,7 @@ class HoraHojaTrabajoSerializer(serializers.ModelSerializer):
             'url',
             'id',
             'hoja',
+            'tasa_valor_hora',
             'literal',
             'cantidad_minutos',
             'cantidad_horas',
@@ -33,8 +37,14 @@ class HoraHojaTrabajoSerializer(serializers.ModelSerializer):
             'literal_abierto',
             'literal_descripcion',
             'proyecto',
+            'fecha',
             'horas',
             'minutos',
+            'verificado',
+            'descripcion_tarea',
+            'autogestionada',
+            'colaborador_nombre',
+            'creado_por_username',
         ]
 
 

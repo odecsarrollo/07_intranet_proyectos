@@ -44,6 +44,11 @@ class Tabla extends React.Component {
                                 Cell: row => fechaFormatoUno(row.value)
                             },
                             {
+                                Header: "Centro Costo",
+                                accessor: "centro_costo_nombre",
+                                maxWidth: 130,
+                            },
+                            {
                                 Header: "Costo",
                                 accessor: "costo",
                                 maxWidth: 90,

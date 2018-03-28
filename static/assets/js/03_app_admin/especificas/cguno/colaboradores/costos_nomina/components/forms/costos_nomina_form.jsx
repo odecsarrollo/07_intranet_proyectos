@@ -54,13 +54,13 @@ class Form extends Component {
                     className="col-12 col-md-6"
                     nombre='Nombres'
                     name='colaborador_nombres'
-                    disabled={initialValues.colaborador_es_cguno}
+                    disabled={initialValues && initialValues.colaborador_es_cguno}
                     case='U'/>
                 <MyTextFieldSimple
                     className="col-12 col-md-6"
                     nombre='Apellidos'
                     name='colaborador_apellidos'
-                    disabled={initialValues.colaborador_es_cguno}
+                    disabled={initialValues && initialValues.colaborador_es_cguno}
                     case='U'/>
                 <MyTextFieldSimple
                     className="col-12 col-md-6"
@@ -88,7 +88,6 @@ class Form extends Component {
                     busy={false}
                     autoFocus={false}
                     onSelect={(e) => this.setState({centro_costo: e.id})}
-                    onChange={() => console.log('cambio')}
                     data={_.map(centros_costos_list, e => {
                         return {
                             'name': e.nombre,
@@ -112,7 +111,7 @@ function mapPropsToState(state, ownProps) {
 }
 
 Form = reduxForm({
-    form: "algoForm",
+    form: "costosNominaForm",
     validate,
     enableReinitialize: true
 })(Form);

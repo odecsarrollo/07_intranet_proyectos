@@ -25,7 +25,13 @@ class ColaboradorCentroCostoViewSet(viewsets.ModelViewSet):
 
 
 class ColaboradorBiableViewSet(viewsets.ModelViewSet):
-    queryset = ColaboradorBiable.objects.select_related('usuario', 'cargo', 'centro_costo').all()
+    queryset = ColaboradorBiable.objects.select_related(
+        'usuario',
+        'cargo',
+        'centro_costo'
+    ).prefetch_related(
+        'literales_autorizados'
+    ).all()
     serializer_class = ColaboradorBiableSerializer
 
     def perform_destroy(self, instance):
@@ -66,6 +72,18 @@ class ColaboradorBiableViewSet(viewsets.ModelViewSet):
         colaborador = self.get_object()
         if (not colaborador.usuario):
             colaborador.create_user()
+        serializer = self.get_serializer(colaborador)
+        return Response(serializer.data)
+
+    @detail_route(methods=['post'])
+    def modificar_autorizacion_literal(self, request, pk=None):
+        colaborador = self.get_object()
+        literal_id = request.POST.get('literal_id')
+        tipo = request.POST.get('tipo')
+        if tipo == 'add':
+            colaborador.literales_autorizados.add(literal_id)
+        if tipo == 'delete':
+            colaborador.literales_autorizados.remove(literal_id)
         serializer = self.get_serializer(colaborador)
         return Response(serializer.data)
 
@@ -123,7 +141,7 @@ class ItemBiableViewSet(viewsets.ModelViewSet):
 
 
 class ColaboradorCostoMesBiableViewSet(viewsets.ModelViewSet):
-    queryset = ColaboradorCostoMesBiable.objects.all()
+    queryset = ColaboradorCostoMesBiable.objects.select_related('centro_costo', 'colaborador').all()
     serializer_class = ColaboradorCostoMesBiableSerializer
 
     def perform_create(self, serializer):

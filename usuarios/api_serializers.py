@@ -1,8 +1,12 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
+from cguno.api_serializers import ColaboradorBiableSerializer
+
 
 class UsuarioSerializer(serializers.ModelSerializer):
+    colaborador = ColaboradorBiableSerializer(many=False, read_only=True)
+
     class Meta:
         model = User
         fields = [
@@ -17,7 +21,8 @@ class UsuarioSerializer(serializers.ModelSerializer):
             'last_login',
             'date_joined',
             'is_superuser',
-            'groups'
+            'colaborador',
+            'groups',
         ]
 
     def create(self, validated_data):

@@ -48,7 +48,6 @@ class IndexApp extends Component {
 
     render() {
         const {mi_cuenta: {is_staff, is_superuser}} = this.props;
-        console.log('llego')
         return <Loading>
             <div className="mt-3">
                 <div className="container text-center">

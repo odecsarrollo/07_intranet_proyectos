@@ -21,11 +21,22 @@ class Form extends Component {
             modal_open,
             singular_name,
             colaboradores_list,
+            mi_cuenta,
+            permisos_object,
         } = this.props;
+
         return (
             <MyFormTagModal
                 onCancel={onCancel}
-                onSubmit={handleSubmit(onSubmit)}
+                onSubmit={handleSubmit((v) => {
+                    if (!permisos_object.add_para_otros) {
+                        if (mi_cuenta.colaborador) {
+                            onSubmit({...v, colaborador: mi_cuenta.colaborador.id})
+                        }
+                    } else {
+                        onSubmit(v)
+                    }
+                })}
                 reset={reset}
                 initialValues={initialValues}
                 submitting={submitting}
@@ -33,23 +44,31 @@ class Form extends Component {
                 pristine={pristine}
                 element_type={singular_name}
             >
-                <MyCombobox
-                    data={_.map(colaboradores_list, e => {
-                        return (
-                            {
-                                id: e.id,
-                                nombre: `${e.nombres} ${e.apellidos}`
-                            }
-                        )
-                    })}
-                    className='col-12'
-                    valuesField='id'
-                    textField='nombre'
-                    autoFocus={true}
-                    name='colaborador'
-                    placeholder='Colaborador'
-                    filters='contains'
-                />
+                {
+                    permisos_object.add_para_otros &&
+                    <MyCombobox
+                        data={_.map(_.pickBy(_.orderBy(colaboradores_list,['nombres'],['asc']), a => {
+                            return (
+                                a.autogestion_horas_trabajadas === false ||
+                                a.usuario === mi_cuenta.id
+                            )
+                        }), e => {
+                            return (
+                                {
+                                    id: e.id,
+                                    nombre: `${e.nombres} ${e.apellidos}`
+                                }
+                            )
+                        })}
+                        className='col-12'
+                        valuesField='id'
+                        textField='nombre'
+                        autoFocus={true}
+                        name='colaborador'
+                        placeholder='Colaborador'
+                        filters='contains'
+                    />
+                }
                 <MyDateTimePickerField
                     className='col-12 mb-5'
                     name='fecha'

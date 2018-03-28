@@ -1,7 +1,4 @@
-from decimal import Decimal
 from django.db import models
-from django.db.models import Sum, Value as V
-from django.db.models.functions import Coalesce
 from model_utils.models import TimeStampedModel
 
 
@@ -12,13 +9,6 @@ class Proyecto(models.Model):
     valor_cliente = models.DecimalField(decimal_places=2, max_digits=12, default=0)
     costo_presupuestado = models.DecimalField(decimal_places=2, max_digits=12, default=0)
     costo_materiales = models.DecimalField(decimal_places=2, max_digits=12, default=0)
-
-    # def actualizar_costos_mano_obra(self):
-    #     costo_horas = Decimal(self.mis_literales.aggregate(
-    #         costo_horas=Coalesce(Sum('mis_horas_trabajadas__costo_total'), V(0)),
-    #     )['costo_horas'])
-    #     self.costo_mano_obra = costo_horas
-    #     self.save()
 
     def __str__(self):
         return self.id_proyecto
@@ -42,13 +32,6 @@ class Literal(models.Model):
     proyecto = models.ForeignKey(Proyecto, related_name='mis_literales', on_delete=models.CASCADE)
     descripcion = models.CharField(max_length=300, null=True, blank=True)
     costo_materiales = models.DecimalField(decimal_places=2, max_digits=12, default=0, null=True, blank=True)
-
-    # def actualizar_costos_mano_obra(self):
-    #     costo_horas = Decimal(self.mis_horas_trabajadas.aggregate(
-    #         costo_horas=Coalesce(Sum('costo_total'), V(0)),
-    #     )['costo_horas'])
-    #     self.costo_mano_obra = costo_horas
-    #     self.save()
 
     def __str__(self):
         return self.id_literal
