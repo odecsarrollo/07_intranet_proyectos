@@ -20,6 +20,7 @@
     "react-router-dom": "^4.2.2",
     "react-swipeable-views": "^0.12.12",
     "react-table": "^6.7.6",
+    "react-tabs": "^2.2.1",
     "react-tooltip": "^3.4.0",
     "react-widgets": "^4.2.2",
     "react-widgets-moment": "^4.0.2",

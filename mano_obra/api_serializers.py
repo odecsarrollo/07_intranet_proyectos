@@ -10,11 +10,13 @@ class HoraHojaTrabajoSerializer(serializers.ModelSerializer):
     proyecto = serializers.IntegerField(source='literal.proyecto_id', read_only=True)
     cantidad_horas = serializers.SerializerMethodField('numero_horas')
     horas = serializers.SerializerMethodField('numero_horas')
-    tasa_valor_hora = serializers.DecimalField(source='hoja.tasa.valor_hora', decimal_places=2, max_digits=12,read_only=True)
+    tasa_valor_hora = serializers.DecimalField(source='hoja.tasa.valor_hora', decimal_places=2, max_digits=12,
+                                               read_only=True)
     minutos = serializers.SerializerMethodField('numero_minutos')
     colaborador_nombre = serializers.CharField(source='hoja.colaborador.full_name', read_only=True)
     fecha = serializers.CharField(source='hoja.fecha', read_only=True)
     creado_por_username = serializers.CharField(source='creado_por.username', read_only=True)
+    centro_costo_nombre = serializers.CharField(source='hoja.tasa.centro_costo.nombre', read_only=True)
 
     def numero_horas(self, instance):
         return int(instance.cantidad_minutos / 60)
@@ -33,6 +35,7 @@ class HoraHojaTrabajoSerializer(serializers.ModelSerializer):
             'cantidad_minutos',
             'cantidad_horas',
             'costo_total',
+            'centro_costo_nombre',
             'literal_nombre',
             'literal_abierto',
             'literal_descripcion',

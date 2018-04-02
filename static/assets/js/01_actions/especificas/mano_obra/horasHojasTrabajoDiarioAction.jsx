@@ -33,6 +33,16 @@ export function fetchHorasHojasTrabajosAutogestionadasxFechas(fecha_inicial, fec
     }
 }
 
+export function fetchHorasHojasTrabajosxLiteral(literal_id, callback = null, callback_error = null) {
+    return function (dispatch) {
+        const FULL_URL = `${current_url_api}/horas_por_literal/?literal_id=${literal_id}`;
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch_all, payload: response})
+        };
+        fetchListWithParameter(FULL_URL, dispatches, callback, callback_error);
+    }
+}
+
 export const createHoraHojaTrabajo = (values, callback = null, callback_error = null) => {
     return (dispatch) => {
         const dispatches = (response) => {

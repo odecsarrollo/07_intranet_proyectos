@@ -67,6 +67,7 @@ class HoraHojaTrabajoViewSet(viewsets.ModelViewSet):
         'hoja',
         'hoja__colaborador',
         'hoja__tasa',
+        'hoja__tasa__centro_costo',
         'creado_por'
     ).all()
     serializer_class = HoraHojaTrabajoSerializer
@@ -105,6 +106,13 @@ class HoraHojaTrabajoViewSet(viewsets.ModelViewSet):
     def horas_por_hoja_trabajo(self, request):
         hoja_id = request.GET.get('hoja_id')
         lista = self.queryset.filter(hoja_id=hoja_id).all()
+        serializer = self.get_serializer(lista, many=True)
+        return Response(serializer.data)
+
+    @list_route(http_method_names=['get', ])
+    def horas_por_literal(self, request):
+        literal_id = request.GET.get('literal_id')
+        lista = self.queryset.filter(literal_id=literal_id).all()
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
