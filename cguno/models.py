@@ -49,6 +49,7 @@ class CargosBiable(models.Model):
 
 
 class ColaboradorCentroCosto(models.Model):
+    id = models.PositiveIntegerField(primary_key=True)
     nombre = models.CharField(unique=True, max_length=120)
 
     class Meta:
