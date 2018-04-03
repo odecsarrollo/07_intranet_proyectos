@@ -50,6 +50,7 @@ class CargosBiable(models.Model):
 
 class ColaboradorCentroCosto(models.Model):
     id = models.PositiveIntegerField(primary_key=True)
+    centro_costo_padre = models.ForeignKey('self', null=True, blank=True, on_delete=models.PROTECT)
     nombre = models.CharField(unique=True, max_length=120)
 
     class Meta:
