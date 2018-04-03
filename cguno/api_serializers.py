@@ -15,6 +15,7 @@ class ColaboradorBiableSerializer(serializers.ModelSerializer):
     cargo_descripcion = serializers.CharField(source='cargo.descripcion', read_only=True)
     cargo_tipo = serializers.CharField(source='cargo.tipo_cargo', read_only=True)
     centro_costo_nombre = serializers.CharField(source='centro_costo.nombre', read_only=True)
+    centro_costo_padre_nombre = serializers.CharField(source='centro_costo.centro_costo_padre.nombre', read_only=True)
 
     class Meta:
         model = ColaboradorBiable
@@ -22,6 +23,7 @@ class ColaboradorBiableSerializer(serializers.ModelSerializer):
             'url',
             'id',
             'centro_costo_nombre',
+            'centro_costo_padre_nombre',
             'centro_costo',
             'cargo',
             'cargo_descripcion',
@@ -46,11 +48,15 @@ class ColaboradorBiableSerializer(serializers.ModelSerializer):
 
 
 class ColaboradorCentroCostoSerializer(serializers.ModelSerializer):
+    centro_costo_padre_nombre = serializers.CharField(source='centro_costo_padre.nombre', read_only=True)
+
     class Meta:
         model = ColaboradorCentroCosto
         fields = [
             'id',
-            'nombre'
+            'nombre',
+            'centro_costo_padre',
+            'centro_costo_padre_nombre'
         ]
 
 

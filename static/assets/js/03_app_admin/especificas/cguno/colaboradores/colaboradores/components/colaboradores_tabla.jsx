@@ -58,6 +58,15 @@ class Tabla extends React.Component {
                                 }
                             },
                             {
+                                Header: "Cat. Centro Costo",
+                                accessor: "centro_costo_padre_nombre",
+                                maxWidth: 200,
+                                filterable: true,
+                                filterMethod: (filter, row) => {
+                                    return row[filter.id] ? row[filter.id].includes(filter.value.toUpperCase()) : false
+                                }
+                            },
+                            {
                                 Header: "Centro Costo",
                                 accessor: "centro_costo_nombre",
                                 maxWidth: 200,

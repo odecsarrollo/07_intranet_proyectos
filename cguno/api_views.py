@@ -20,7 +20,9 @@ from .api_serializers import (
 
 
 class ColaboradorCentroCostoViewSet(viewsets.ModelViewSet):
-    queryset = ColaboradorCentroCosto.objects.all()
+    queryset = ColaboradorCentroCosto.objects.select_related(
+        'centro_costo_padre'
+    ).all()
     serializer_class = ColaboradorCentroCostoSerializer
 
 
@@ -28,7 +30,8 @@ class ColaboradorBiableViewSet(viewsets.ModelViewSet):
     queryset = ColaboradorBiable.objects.select_related(
         'usuario',
         'cargo',
-        'centro_costo'
+        'centro_costo',
+        'centro_costo__centro_costo_padre',
     ).prefetch_related(
         'literales_autorizados'
     ).all()
