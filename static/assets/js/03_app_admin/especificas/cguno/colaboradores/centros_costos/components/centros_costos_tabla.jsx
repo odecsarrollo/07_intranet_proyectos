@@ -36,6 +36,11 @@ class Tabla extends React.Component {
                                 accessor: 'nombre',
                                 maxWidth: 280,
                             },
+                            {
+                                Header: "Centro Costos Padre",
+                                accessor: 'centro_costo_padre_nombre',
+                                maxWidth: 280,
+                            },
                         ]
                     },
                     {

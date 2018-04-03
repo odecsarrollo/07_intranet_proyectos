@@ -148,7 +148,7 @@ class Tabla extends React.Component {
                                 maxWidth: 70,
                                 Cell: row => {
                                     return (
-                                        <span>{Number(row.value).toFixed(2)}%</span>
+                                        <span>{Number(row.value).toFixed(4)}%</span>
                                     )
                                 }
                             },

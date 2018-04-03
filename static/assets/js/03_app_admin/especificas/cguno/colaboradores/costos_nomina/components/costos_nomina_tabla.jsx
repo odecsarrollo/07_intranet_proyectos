@@ -1,8 +1,6 @@
 import React from "react";
-import Checkbox from 'material-ui/Checkbox';
 import {MyDialogButtonDelete} from '../../../../../../00_utilities/components/ui/dialog';
-import {IconButtonTableEdit, IconButtonTableSee} from '../../../../../../00_utilities/components/ui/icon/iconos';
-import {Link} from 'react-router-dom'
+import {IconButtonTableEdit} from '../../../../../../00_utilities/components/ui/icon/iconos';
 import {fechaFormatoUno, pesosColombianos} from '../../../../../../00_utilities/common';
 
 import ReactTable from "react-table";
@@ -31,6 +29,13 @@ class Tabla extends React.Component {
                             {
                                 Header: "Nombre",
                                 maxWidth: 250,
+                                filterable: true,
+                                filterMethod: (filter, row) => {
+                                    return (
+                                        row._original.colaborador_nombres.includes(filter.value.toUpperCase()) ||
+                                        row._original.colaborador_apellidos.includes(filter.value.toUpperCase())
+                                    )
+                                },
                                 Cell: row => {
                                     return (
                                         <span>{row.original.colaborador_nombres} {row.original.colaborador_apellidos}</span>

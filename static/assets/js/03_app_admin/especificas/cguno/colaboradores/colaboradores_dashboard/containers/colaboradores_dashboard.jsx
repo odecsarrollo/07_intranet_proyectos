@@ -112,7 +112,7 @@ class ListadoElementos extends Component {
                     <div style={styles.slide}>
                         <BloqueCentrosCostos
                             object_list={bloque_2_list}
-                            permisos_object={permisos_object_2}
+                            permisos_object={{...permisos_object_2, add: false, delete: false, change: false}}
                             {...this.props}
                         />
                     </div>

@@ -78,16 +78,21 @@ class Form extends Component {
                     disabled={initialValues && initialValues.es_cguno}
                     case='U'/>
 
-                <MySelectField
-                    name='centro_costo'
-                    nombre='Centro Costos'
-                    className='col-12'
-                    options={_.map(centros_costos_list, c => {
-                        return (
-                            {value: c.id, primaryText: c.nombre}
-                        )
-                    })}
-                />
+                {
+                    (initialValues && initialValues.es_cguno && initialValues.centro_costo_nombre) ?
+                        <div className='col-12 mt-2 mb-2'><strong>Centro de Costos: </strong>{initialValues.centro_costo_nombre}
+                        </div> :
+                        <MySelectField
+                            name='centro_costo'
+                            nombre='Centro Costos'
+                            className='col-12'
+                            options={_.map(centros_costos_list, c => {
+                                return (
+                                    {value: c.id, primaryText: c.nombre}
+                                )
+                            })}
+                        />
+                }
 
                 <MyCheckboxSimple
                     className="col-12 col-md-6"
@@ -118,13 +123,13 @@ class Form extends Component {
 
                 <MyTextFieldSimple
                     className="col-12 col-md-6"
-                    nombre='% Caj. Pen'
+                    nombre='% Pens.'
                     name='porcentaje_pension'
                     case='U'/>
 
                 <MyTextFieldSimple
                     className="col-12 col-md-6"
-                    nombre='% Caj. ARL'
+                    nombre='% ARL'
                     name='porcentaje_arl'
                     case='U'/>
             </MyFormTagModal>

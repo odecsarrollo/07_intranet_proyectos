@@ -39,7 +39,7 @@ class List extends Component {
             <Fragment>
                 <ListCrud
                     object_list={object_list}
-                    permisos_object={bloque_1_permisos}
+                    permisos_object={{...bloque_1_permisos, add: false, change: false}}
                     {...this.props}
                 />
                 <CargarDatos
