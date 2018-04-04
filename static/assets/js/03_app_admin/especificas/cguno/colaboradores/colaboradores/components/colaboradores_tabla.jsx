@@ -89,16 +89,8 @@ class Tabla extends React.Component {
                                 accessor: "en_proyectos",
                                 maxWidth: 60,
                                 Cell: row => (
-                                    permisos_object.change ?
-                                        <Checkbox
-                                            checked={row.value}
-                                            onCheck={() => updateItem({
-                                                ...row.original,
-                                                en_proyectos: !row.value
-                                            })}
-                                        />
-                                        :
-                                        row.value && <i className='far fa-check-circle'></i>
+                                    row.value && <div className='text-center' style={{color: 'green'}}><i
+                                        className={'fas fa-check-circle'}></i></div>
                                 )
                             },
                             {
@@ -106,15 +98,8 @@ class Tabla extends React.Component {
                                 accessor: "es_salario_fijo",
                                 maxWidth: 60,
                                 Cell: row => (
-                                    permisos_object.change ?
-                                        <Checkbox
-                                            checked={row.value}
-                                            onCheck={() => updateItem({
-                                                ...row.original,
-                                                es_salario_fijo: !row.value
-                                            })}
-                                        /> :
-                                        row.value && <i className='far fa-check-circle'></i>
+                                    row.value && <div className='text-center' style={{color: 'green'}}><i
+                                        className={'fas fa-check-circle'}></i></div>
                                 )
                             },
                         ]
@@ -149,6 +134,16 @@ class Tabla extends React.Component {
                                 Cell: row => {
                                     return (
                                         <span>{Number(row.value).toFixed(4)}%</span>
+                                    )
+                                }
+                            },
+                            {
+                                Header: "Horas Mes",
+                                accessor: "nro_horas_mes",
+                                maxWidth: 70,
+                                Cell: row => {
+                                    return (
+                                        <div className='text-right'>{row.value}</div>
                                     )
                                 }
                             },

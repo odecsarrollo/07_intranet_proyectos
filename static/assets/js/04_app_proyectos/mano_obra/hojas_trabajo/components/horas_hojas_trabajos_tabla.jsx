@@ -120,7 +120,15 @@ class Tabla extends React.Component {
                                     Cell: row => {
                                         return (
                                             row.original.literal_abierto &&
-                                            !row.original.verificado ?
+                                            (
+                                                (
+                                                    row.original.autogestionada &&
+                                                    !row.original.verificado
+                                                ) ||
+                                                (
+                                                    !row.original.autogestionada
+                                                )
+                                            ) ?
                                                 <MyDialogButtonDelete
                                                     onDelete={() => {
                                                         onDelete(row.original)
