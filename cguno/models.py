@@ -73,6 +73,10 @@ class ColaboradorBiable(models.Model):
     porcentaje_caja_compensacion = models.DecimalField(max_digits=10, decimal_places=4, default=4.0)
     porcentaje_pension = models.DecimalField(max_digits=10, decimal_places=4, default=12)
     porcentaje_arl = models.DecimalField(max_digits=10, decimal_places=4, default=2.436)
+    porcentaje_salud = models.DecimalField(max_digits=10, decimal_places=4, default=0)
+    porcentaje_prestaciones_sociales = models.DecimalField(max_digits=10, decimal_places=4, default=0)
+    base_salario = models.DecimalField(max_digits=20, decimal_places=2, default=0)
+    es_aprendiz_sena = models.BooleanField(default=False)
     centro_costo = models.ForeignKey(ColaboradorCentroCosto, on_delete=models.PROTECT, related_name='mis_colaboradores',
                                      null=True, blank=True)
     literales_autorizados = models.ManyToManyField(Literal, related_name='colaboradores_autorizados')
@@ -126,6 +130,12 @@ class ColaboradorCostoMesBiable(models.Model):
     auxilio_transporte = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     costo = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     es_salario_fijo = models.BooleanField(default=False)
+    es_aprendiz_sena = models.BooleanField(default=False)
+    porcentaje_caja_compensacion = models.DecimalField(max_digits=10, decimal_places=4, default=4.0)
+    porcentaje_pension = models.DecimalField(max_digits=10, decimal_places=4, default=12)
+    porcentaje_arl = models.DecimalField(max_digits=10, decimal_places=4, default=2.436)
+    porcentaje_salud = models.DecimalField(max_digits=10, decimal_places=4, default=0)
+    porcentaje_prestaciones_sociales = models.DecimalField(max_digits=10, decimal_places=4, default=0)
     modificado = models.BooleanField(default=False)
     nro_horas_mes = models.PositiveIntegerField(default=0, null=True, blank=True)
     nro_horas_mes_trabajadas = models.PositiveIntegerField(default=0, null=True, blank=True)
@@ -138,6 +148,20 @@ class ColaboradorCostoMesBiable(models.Model):
         if self.nro_horas_mes > 0:
             return self.costo / self.nro_horas_mes
         return 0
+
+    def calcular_costo_total(self):
+        salario_base = self.base_salario
+        if not self.colaborador.es_cguno:
+            salario_base = self.colaborador.base_salario
+        caja_compensacion = salario_base * self.porcentaje_caja_compensacion
+        pension = salario_base * self.porcentaje_pension
+        salud = salario_base * self.porcentaje_salud
+        arl = salario_base * self.porcentaje_arl
+        prestaciones_sociales = (salario_base + self.auxilio_transporte) * self.porcentaje_prestaciones_sociales
+        costo = caja_compensacion + pension + salud + arl
+        if not self.es_aprendiz_sena:
+            costo += prestaciones_sociales
+        return costo
 
     class Meta:
         permissions = [

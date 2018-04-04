@@ -36,12 +36,16 @@ class ColaboradorBiableSerializer(serializers.ModelSerializer):
             'apellidos',
             'en_proyectos',
             'es_salario_fijo',
-            'nro_horas_mes',
+            'es_aprendiz_sena',
             'es_cguno',
+            'nro_horas_mes',
             'autogestion_horas_trabajadas',
             'porcentaje_caja_compensacion',
             'porcentaje_pension',
             'porcentaje_arl',
+            'porcentaje_salud',
+            'porcentaje_prestaciones_sociales',
+            'base_salario',
             'literales_autorizados',
         ]
         extra_kwargs = {'literales_autorizados': {'read_only': True}}
@@ -99,7 +103,13 @@ class ColaboradorCostoMesBiableSerializer(serializers.ModelSerializer):
             'costo',
             'modificado',
             'nro_horas_mes',
-            'valor_hora'
+            'porcentaje_caja_compensacion',
+            'porcentaje_pension',
+            'porcentaje_arl',
+            'porcentaje_salud',
+            'porcentaje_prestaciones_sociales',
+            'base_salario',
+            'valor_hora',
         ]
         extra_kwargs = {'valor_hora': {'read_only': True}}
 
