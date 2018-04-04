@@ -128,6 +128,7 @@ class ColaboradorCostoMesBiable(models.Model):
     es_salario_fijo = models.BooleanField(default=False)
     modificado = models.BooleanField(default=False)
     nro_horas_mes = models.PositiveIntegerField(default=0, null=True, blank=True)
+    nro_horas_mes_trabajadas = models.PositiveIntegerField(default=0, null=True, blank=True)
     centro_costo = models.ForeignKey(ColaboradorCentroCosto, on_delete=models.PROTECT,
                                      related_name='mis_coloaboradores_costos_mensuales',
                                      null=True, blank=True)
