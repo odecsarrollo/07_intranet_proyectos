@@ -11,6 +11,8 @@ const validate = values => {
         'porcentaje_caja_compensacion',
         'porcentaje_pension',
         'porcentaje_arl',
+        'porcentaje_salud',
+        'porcentaje_prestaciones_sociales',
     ];
     requiredFields.map(field => {
         if (!values[field]) {
@@ -22,6 +24,8 @@ const validate = values => {
         'porcentaje_caja_compensacion',
         'porcentaje_pension',
         'porcentaje_arl',
+        'porcentaje_salud',
+        'porcentaje_prestaciones_sociales',
     ];
     soloNumerosFields.map(field => {
         if (values[field] && !REGEX_SOLO_NUMEROS_DINERO.test(values[field])) {

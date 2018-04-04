@@ -85,6 +85,15 @@ class Tabla extends React.Component {
                                 )
                             },
                             {
+                                Header: "Aprendiz",
+                                accessor: "es_aprendiz",
+                                maxWidth: 50,
+                                Cell: row => (
+                                    row.value && <div className='text-center' style={{color: 'green'}}><i
+                                        className={'fas fa-check-circle'}></i></div>
+                                )
+                            },
+                            {
                                 Header: "En Proy.",
                                 accessor: "en_proyectos",
                                 maxWidth: 60,
@@ -108,7 +117,7 @@ class Tabla extends React.Component {
                         Header: "Nomina",
                         columns: [
                             {
-                                Header: "Cja. Comp",
+                                Header: "% Cja. Comp",
                                 accessor: "porcentaje_caja_compensacion",
                                 maxWidth: 70,
                                 Cell: row => {
@@ -118,7 +127,7 @@ class Tabla extends React.Component {
                                 }
                             },
                             {
-                                Header: "Pension",
+                                Header: "% Pension",
                                 accessor: "porcentaje_pension",
                                 maxWidth: 70,
                                 Cell: row => {
@@ -128,12 +137,32 @@ class Tabla extends React.Component {
                                 }
                             },
                             {
-                                Header: "ARL",
+                                Header: "% ARL",
                                 accessor: "porcentaje_arl",
                                 maxWidth: 70,
                                 Cell: row => {
                                     return (
                                         <span>{Number(row.value).toFixed(4)}%</span>
+                                    )
+                                }
+                            },
+                            {
+                                Header: "% Prest. Sociales",
+                                accessor: "porcentaje_prestaciones_sociales",
+                                maxWidth: 70,
+                                Cell: row => {
+                                    return (
+                                        <span>{Number(row.value).toFixed(2)}%</span>
+                                    )
+                                }
+                            },
+                            {
+                                Header: "% Salud",
+                                accessor: "porcentaje_salud",
+                                maxWidth: 70,
+                                Cell: row => {
+                                    return (
+                                        <span>{Number(row.value).toFixed(2)}%</span>
                                     )
                                 }
                             },

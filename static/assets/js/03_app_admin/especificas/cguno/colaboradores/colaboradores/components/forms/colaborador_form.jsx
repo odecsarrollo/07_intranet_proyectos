@@ -80,7 +80,8 @@ class Form extends Component {
 
                 {
                     (initialValues && initialValues.es_cguno && initialValues.centro_costo_nombre) ?
-                        <div className='col-12 mt-2 mb-2'><strong>Centro de Costos: </strong>{initialValues.centro_costo_nombre}
+                        <div className='col-12 mt-2 mb-2'><strong>Centro de
+                            Costos: </strong>{initialValues.centro_costo_nombre}
                         </div> :
                         <MySelectField
                             name='centro_costo'
@@ -110,6 +111,12 @@ class Form extends Component {
                     nombre='Tiene Salario Fijo'
                     name='es_salario_fijo'/>
 
+                <MyCheckboxSimple
+                    onClick={(e) => this.setState({salario_fijo: e.target.checked})}
+                    className="col-12 col-md-6"
+                    nombre='Es Aprendiz'
+                    name='es_aprendiz'/>
+
                 <MyTextFieldSimple
                     className="col-12 col-md-6"
                     nombre='Nro. Horas Mes'
@@ -132,6 +139,18 @@ class Form extends Component {
                     nombre='% ARL'
                     name='porcentaje_arl'
                     case='U'/>
+
+                <MyTextFieldSimple
+                    className="col-12 col-md-6"
+                    nombre='% Salud'
+                    name='porcentaje_salud'
+                />
+
+                <MyTextFieldSimple
+                    className="col-12 col-md-6"
+                    nombre='% Prest. Sociales'
+                    name='porcentaje_prestaciones_sociales'
+                />
             </MyFormTagModal>
         )
     }
