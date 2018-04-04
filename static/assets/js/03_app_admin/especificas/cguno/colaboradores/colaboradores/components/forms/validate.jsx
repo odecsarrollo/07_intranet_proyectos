@@ -13,6 +13,8 @@ const validate = values => {
         'porcentaje_arl',
         'porcentaje_salud',
         'porcentaje_prestaciones_sociales',
+        'base_salario',
+        'auxilio_transporte',
     ];
     requiredFields.map(field => {
         if (!values[field]) {

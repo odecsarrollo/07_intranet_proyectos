@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {reduxForm} from 'redux-form';
 import {
     MyTextFieldSimple,
@@ -151,6 +151,22 @@ class Form extends Component {
                     nombre='% Prest. Sociales'
                     name='porcentaje_prestaciones_sociales'
                 />
+
+                {
+                    !initialValues.es_cguno &&
+                    <Fragment>
+                        <MyTextFieldSimple
+                            className="col-12 col-md-6"
+                            nombre='Base Salario'
+                            name='base_salario'
+                        />
+                        <MyTextFieldSimple
+                            className="col-12 col-md-6"
+                            nombre='Auxilio Transporte'
+                            name='auxilio_transporte'
+                        />
+                    </Fragment>
+                }
             </MyFormTagModal>
         )
     }
@@ -164,7 +180,7 @@ function mapPropsToState(state, ownProps) {
 }
 
 Form = reduxForm({
-    form: "algoForm",
+    form: "colaboradorForm",
     validate,
     enableReinitialize: true
 })(Form);
