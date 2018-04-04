@@ -8,7 +8,7 @@ const ItemTablaCentroCosto = (props) => {
         <tr>
             <td>{item.nombre}</td>
             <td>{pesosColombianos(item.costo_total)}</td>
-            <td>{(item.total_minutos / 60).toFixed(0)} horas y {item.total_minutos % 60} minutos</td>
+            <td>{Math.floor(item.total_minutos / 60)} horas y {item.total_minutos % 60} minutos</td>
         </tr>
     )
 };
