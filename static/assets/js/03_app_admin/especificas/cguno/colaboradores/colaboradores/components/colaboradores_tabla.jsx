@@ -91,7 +91,8 @@ class Tabla extends React.Component {
                                 maxWidth: 50,
                                 Cell: row => (
                                     row.value && <div className='text-center' style={{color: 'green'}}><i
-                                        className={'fas fa-check-circle'}></i></div>
+                                        className={'fas fa-check-circle'}></i>
+                                    </div>
                                 )
                             },
                             {
