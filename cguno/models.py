@@ -122,9 +122,9 @@ class ColaboradorBiable(models.Model):
 class ColaboradorCostoMesBiable(models.Model):
     colaborador = models.ForeignKey(ColaboradorBiable, on_delete=models.PROTECT, related_name='mis_costos')
     lapso = models.DateField()
-    base_salario = models.DecimalField(max_digits=10, decimal_places=4, default=12)
+    base_salario = models.DecimalField(max_digits=20, decimal_places=4, default=12)
     auxilio_transporte = models.DecimalField(max_digits=10, decimal_places=4, default=12)
-    costo = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    costo = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     es_salario_fijo = models.BooleanField(default=False)
     modificado = models.BooleanField(default=False)
     nro_horas_mes = models.PositiveIntegerField(default=0, null=True, blank=True)
