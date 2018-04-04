@@ -83,6 +83,7 @@ class Tabla extends React.Component {
                                     row.value && <div className='text-center' style={{color: 'green'}}><i
                                         className={'fas fa-check-circle'}></i></div>
                                 )
+
                             },
                             {
                                 Header: "Aprendiz",
