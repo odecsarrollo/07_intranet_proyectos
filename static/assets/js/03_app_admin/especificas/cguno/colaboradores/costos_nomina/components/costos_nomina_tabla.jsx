@@ -1,141 +1,185 @@
-import React from "react";
-import {MyDialogButtonDelete} from '../../../../../../00_utilities/components/ui/dialog';
-import {IconButtonTableEdit} from '../../../../../../00_utilities/components/ui/icon/iconos';
-import {fechaFormatoUno, pesosColombianos} from '../../../../../../00_utilities/common';
+import React, {Component} from 'react';
+import {pesosColombianos, fechaFormatoUno} from '../../../../../../00_utilities/common';
 
-import ReactTable from "react-table";
+class RowItem extends Component {
+    constructor(props) {
+        super(props);
+        this.state = ({
+            modificando: false,
+            valor: null
+        })
+    }
 
-class Tabla extends React.Component {
     render() {
-
-        const data = this.props.data;
-        const {
-            updateItem,
-            singular_name,
-            onDelete,
-            onSelectItemEdit,
-            permisos_object
-        } = this.props;
-
-
+        const {modificando, valor} = this.state;
+        const {modificable = false, formato, cambiarItem, item} = this.props;
+        let actual_text = item;
+        if (formato === 'M') {
+            actual_text = pesosColombianos(item);
+        } else if (formato === '%') {
+            actual_text = `${Number(item).toFixed(4)} %`;
+        } else if (formato === 'F') {
+            actual_text = fechaFormatoUno(item);
+        }
         return (
-            <ReactTable
-                data={data}
-                noDataText={`No hay elementos para mostrar tipo ${singular_name}`}
-                columns={[
-                    {
-                        Header: "Caracteristicas",
-                        columns: [
-                            {
-                                Header: "Nombre",
-                                maxWidth: 250,
-                                filterable: true,
-                                filterMethod: (filter, row) => {
-                                    return (
-                                        row._original.colaborador_nombres.includes(filter.value.toUpperCase()) ||
-                                        row._original.colaborador_apellidos.includes(filter.value.toUpperCase())
-                                    )
-                                },
-                                Cell: row => {
-                                    return (
-                                        <span>{row.original.colaborador_nombres} {row.original.colaborador_apellidos}</span>
-                                    )
-                                }
-                            },
-                            {
-                                Header: "Lapso",
-                                accessor: "lapso",
-                                maxWidth: 130,
-                                Cell: row => fechaFormatoUno(row.value)
-                            },
-                            {
-                                Header: "Centro Costo",
-                                accessor: "centro_costo_nombre",
-                                maxWidth: 130,
-                            },
-                            {
-                                Header: "Costo",
-                                accessor: "costo",
-                                maxWidth: 90,
-                                Cell: row => pesosColombianos(row.value)
-                            },
-                            {
-                                Header: "Nro. Horas",
-                                accessor: "nro_horas_mes",
-                                maxWidth: 90,
-                            },
-                            {
-                                Header: "Valor Hora",
-                                accessor: "valor_hora",
-                                maxWidth: 90,
-                                Cell: row => pesosColombianos(row.value)
-                            },
-                            {
-                                Header: "Sal. Fijo",
-                                accessor: "es_salario_fijo",
-                                maxWidth: 60,
-                                Cell: row => (
-                                    row.value && <i className='far fa-check-circle'></i>
-                                )
-                            },
-                            {
-                                Header: "No Actual.",
-                                accessor: "modificado",
-                                maxWidth: 70,
-                                Cell: row => (
-                                    row.value && <i className='far fa-check-circle'></i>
-                                )
-                            },
-                        ]
-                    },
-                    {
-                        Header: "Opciones",
-                        columns: [
-                            // {
-                            //     Header: "Activo",
-                            //     accessor: "is_active",
-                            //     show: permisos_object.make_user_active,
-                            //     maxWidth: 60,
-                            //     Cell: row => (
-                            //         <Checkbox
-                            //             checked={row.value}
-                            //             onCheck={() => updateItem({...row.original, is_active: !row.value})}
-                            //         />
-                            //     )
-                            // },
-                            {
-                                Header: "Elimi.",
-                                show: permisos_object.delete,
-                                maxWidth: 60,
-                                Cell: row =>
-                                    <MyDialogButtonDelete
-                                        onDelete={() => {
-                                            onDelete(row.original)
-                                        }}
-                                        element_name={row.original.nombre}
-                                        element_type={singular_name}
-                                    />
-
-                            },
-                            {
-                                Header: "Editar",
-                                show: permisos_object.change,
-                                maxWidth: 60,
-                                Cell: row =>
-                                    <IconButtonTableEdit
-                                        onClick={() => {
-                                            onSelectItemEdit(row.original);
-                                        }}/>
-
-                            },
-                        ]
+            <td
+                onClick={() => {
+                    if (modificable) {
+                        this.setState({modificando: true, valor: item});
                     }
-                ]}
-                defaultPageSize={10}
-                className="-striped -highlight tabla-maestra"
-            />
-        );
+                }}
+            >
+                {
+                    modificando ?
+                        <input
+                            type='text'
+                            value={valor}
+                            onBlur={e => cambiarItem(e.target.value, () => {
+                                this.setState({modificando: false});
+                            })}
+                            onChange={(e) => this.setState({valor: e.target.value})}
+                        >
+                        </input> :
+                        <span className={modificable ? 'puntero' : ''}>{actual_text}</span>
+                }
+            </td>
+        )
     }
 }
 
-export default Tabla;
+const TablaRow = (props) => {
+    const {fila, updateColaboradorCostoMes} = props;
+    return (
+        <tr>
+            <RowItem
+                item={fila.lapso}
+                modificable={true}
+                formato='F'
+            />
+            <RowItem
+                id={fila.id}
+                item={`${fila.colaborador_nombres} ${fila.colaborador_apellidos}`}
+            />
+            <td className='text-center'>
+                <i
+                    onClick={() => updateColaboradorCostoMes(fila.id, {...fila, es_aprendiz: !fila.es_aprendiz})}
+                    className={`${fila.es_aprendiz ? 'fas fa-check-square' : 'far fa-square'} puntero`}
+                >
+                </i>
+            </td>
+            <RowItem
+                item={fila.base_salario}
+                modificable={true}
+                cambiarItem={(valor, callback = null) => updateColaboradorCostoMes(fila.id,
+                    {...fila, base_salario: valor, modificado: true},
+                    callback
+                )}
+                formato='M'
+            />
+            <RowItem
+                item={fila.auxilio_transporte}
+                modificable={true}
+                cambiarItem={(valor, callback = null) => updateColaboradorCostoMes(fila.id,
+                    {...fila, auxilio_transporte: valor, modificado: true},
+                    callback
+                )}
+                formato='M'
+            />
+            <RowItem
+                item={fila.nro_horas_mes}
+                modificable={true}
+                cambiarItem={(valor, callback = null) => updateColaboradorCostoMes(fila.id,
+                    {...fila, nro_horas_mes: valor, modificado: true},
+                    callback
+                )}
+            />
+            <RowItem
+                item={fila.porcentaje_arl}
+                modificable={true}
+                cambiarItem={(valor, callback = null) => updateColaboradorCostoMes(fila.id,
+                    {...fila, porcentaje_arl: valor, modificado: true},
+                    callback
+                )}
+                formato='%'
+            />
+            <RowItem
+                item={fila.porcentaje_caja_compensacion}
+                modificable={true}
+                cambiarItem={(valor, callback = null) => updateColaboradorCostoMes(fila.id,
+                    {...fila, porcentaje_caja_compensacion: valor, modificado: true},
+                    callback
+                )}
+                formato='%'
+            />
+            <RowItem
+                item={fila.porcentaje_pension}
+                modificable={true}
+                cambiarItem={(valor, callback = null) => updateColaboradorCostoMes(fila.id,
+                    {...fila, porcentaje_pension: valor, modificado: true},
+                    callback
+                )}
+                formato='%'
+            />
+            <RowItem
+                item={fila.porcentaje_prestaciones_sociales}
+                modificable={true}
+                cambiarItem={(valor, callback = null) => updateColaboradorCostoMes(fila.id,
+                    {...fila, porcentaje_prestaciones_sociales: valor, modificado: true},
+                    callback
+                )}
+                formato='%'
+            />
+            <RowItem
+                item={fila.porcentaje_salud}
+                modificable={true}
+                cambiarItem={(valor, callback = null) => updateColaboradorCostoMes(fila.id,
+                    {...fila, porcentaje_salud: valor, modificado: true},
+                    callback
+                )}
+                formato='%'
+            />
+            <td>{pesosColombianos(fila.costo)}</td>
+            <td>{pesosColombianos(fila.valor_hora)}</td>
+            <td className='text-center'>
+                <i
+                    onClick={() => updateColaboradorCostoMes(fila.id, {...fila, modificado: !fila.modificado})}
+                    className={`${fila.modificado ? 'fas fa-check-square' : 'far fa-square'} puntero`}
+                >
+                </i>
+            </td>
+        </tr>
+    )
+};
+
+const TablaCostos = (props) => {
+    const {lista, updateColaboradorCostoMes} = props;
+    return (
+        <table className='table table-striped table-responsive' style={{fontSize: '10px'}}>
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Colaborador</th>
+                <th>Es Aprendíz</th>
+                <th>Base Ingreso</th>
+                <th>Auxilio Transporte</th>
+                <th># Horas Mes</th>
+                <th>% ARL</th>
+                <th>% Cja Compen.</th>
+                <th>% Pensión</th>
+                <th>% Pres. Sociales</th>
+                <th>% Salud</th>
+                <th>Costo</th>
+                <th>Valor Hora</th>
+                <th>Cerrado</th>
+            </tr>
+            </thead>
+            <tbody>
+            {
+                _.map(lista, e => <TablaRow updateColaboradorCostoMes={updateColaboradorCostoMes} key={e.id} fila={e}/>)
+            }
+            </tbody>
+        </table>
+    )
+};
+
+export default TablaCostos;

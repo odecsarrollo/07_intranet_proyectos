@@ -147,6 +147,10 @@ class ColaboradorCostoMesBiableViewSet(viewsets.ModelViewSet):
     queryset = ColaboradorCostoMesBiable.objects.select_related('centro_costo', 'colaborador').all()
     serializer_class = ColaboradorCostoMesBiableSerializer
 
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        instance.calcular_costo_total()
+
     def perform_create(self, serializer):
         instance = super().perform_create(serializer)
         colaborador = instance.colaborador

@@ -152,17 +152,18 @@ class ColaboradorCostoMesBiable(models.Model):
 
     def calcular_costo_total(self):
         salario_base = self.base_salario
-        if not self.colaborador.es_cguno:
-            salario_base = self.colaborador.base_salario
-        caja_compensacion = salario_base * self.porcentaje_caja_compensacion
-        pension = salario_base * self.porcentaje_pension
-        salud = salario_base * self.porcentaje_salud
-        arl = salario_base * self.porcentaje_arl
-        prestaciones_sociales = (salario_base + self.auxilio_transporte) * self.porcentaje_prestaciones_sociales
-        costo = caja_compensacion + pension + salud + arl
+        caja_compensacion = salario_base * (self.porcentaje_caja_compensacion / 100)
+        pension = salario_base * (self.porcentaje_pension / 100)
+        salud = salario_base * (self.porcentaje_salud / 100)
+        arl = salario_base * (self.porcentaje_arl / 100)
+        prestaciones_sociales = (salario_base + self.auxilio_transporte) * (self.porcentaje_prestaciones_sociales / 100)
+        costo = salario_base + self.auxilio_transporte + caja_compensacion + pension + salud + arl
         if not self.es_aprendiz:
             costo += prestaciones_sociales
-        return costo
+        else:
+            self.porcentaje_prestaciones_sociales = 0
+        self.costo = costo
+        self.save()
 
     class Meta:
         permissions = [

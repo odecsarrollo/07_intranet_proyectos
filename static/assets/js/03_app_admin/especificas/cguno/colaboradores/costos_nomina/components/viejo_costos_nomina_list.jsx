@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import CreateForm from './forms/costos_nomina_form';
-import Tabla from './costos_nomina_tabla';
+import Tabla from './viejo_costos_nomina_tabla';
 import crudHOC from '../../../../../../00_utilities/components/hoc_crud';
 
 
