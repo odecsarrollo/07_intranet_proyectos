@@ -104,6 +104,7 @@ class ColaboradorCostoMesBiableSerializer(serializers.ModelSerializer):
             'lapso',
             'costo',
             'modificado',
+            'verificado',
             'nro_horas_mes',
             'porcentaje_caja_compensacion',
             'porcentaje_pension',

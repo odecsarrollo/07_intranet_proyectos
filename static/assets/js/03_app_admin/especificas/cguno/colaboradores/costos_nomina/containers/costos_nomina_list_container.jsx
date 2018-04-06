@@ -10,6 +10,8 @@ import TextField from 'material-ui/TextField';
 import moment from 'moment';
 
 import Tabla from '../components/costos_nomina_tabla';
+import ValidarPermisos from "../../../../../../00_utilities/permisos/validar_permisos";
+import {ListaBusqueda} from '../../../../../../00_utilities/utiles';
 
 class List extends Component {
     constructor(props) {
@@ -67,13 +69,21 @@ class List extends Component {
         )
     }
 
+    buscarBusqueda(lista, busqueda) {
+        return _.pickBy(lista, (permiso) => {
+            return (
+                permiso.colaborador_nombres.toString().toUpperCase().includes(busqueda.toUpperCase()) ||
+                permiso.colaborador_apellidos.toString().toUpperCase().includes(busqueda.toUpperCase())
+            )
+        })
+    }
+
     render() {
         const {object_list, mis_permisos} = this.props;
-        const bloque_1_list = permisosAdapter(mis_permisos, permisos_view);
+        const permisos_object = permisosAdapter(mis_permisos, permisos_view);
         const {ano, mes, ano_error, mes_error} = this.state;
-        console.log(object_list)
         return (
-            <Fragment>
+            <ValidarPermisos can_see={permisos_object.list} nombre='Costos Colaboradores'>
                 <div className="row">
                     <div className="col-12 col-md-4">
                         <TextField
@@ -108,33 +118,43 @@ class List extends Component {
                         />
                     </div>
                     <div className="col-12 col-md-4">
-                        <span
-                            className='btn btn-primary'
-                            onClick={() => {
-                                const fecha_inicial = moment(new Date(ano, mes, 1)).format('YYYY-MM-DD');
-                                const fecha_final = moment(new Date(ano, mes, 2)).format('YYYY-MM-DD');
-                                this.consultarPorFecha(fecha_inicial, fecha_final);
-                            }}
-                        >
+                        {
+                            mes_error === '' && ano_error === '' &&
+                            <span
+                                className='btn btn-primary'
+                                onClick={() => {
+                                    const fecha_inicial = moment(new Date(ano, (Number(mes) - 1), 1)).format('YYYY-MM-DD');
+                                    const fecha_final = moment(new Date(ano, (Number(mes) - 1), 2)).format('YYYY-MM-DD');
+                                    this.consultarPorFecha(fecha_inicial, fecha_final);
+                                }}
+                            >
                             Consultar
                         </span>
+                        }
                     </div>
                 </div>
                 <div className="col-12">
-                    <Tabla
-                        lista={object_list}
-                        updateColaboradorCostoMes={this.updateColaboradorCostoMes}
-                    />
+                    <ListaBusqueda>
+                        {
+                            busqueda => {
+                                const lista_filtrada = this.buscarBusqueda(
+                                    _.orderBy(object_list, ['colaborador_nombres', 'colaborador_apellidos'],['asc','asc']),
+                                    busqueda
+                                );
+                                return (
+                                    <Tabla
+                                        lista={lista_filtrada}
+                                        updateColaboradorCostoMes={this.updateColaboradorCostoMes}
+                                        permisos_object={permisos_object}
+                                    />
+                                )
+                            }}
+                    </ListaBusqueda>
                 </div>
-                {/*<ListCrud*/}
-                {/*object_list={object_list}*/}
-                {/*permisos_object={bloque_1_list}*/}
-                {/*{...this.props}*/}
-                {/*/>*/}
                 <CargarDatos
                     cargarDatos={this.cargarDatos}
                 />
-            </Fragment>
+            </ValidarPermisos>
         )
     }
 }

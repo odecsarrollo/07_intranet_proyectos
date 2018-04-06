@@ -55,7 +55,7 @@ const TablaProyectosLiterales = (props) => {
             </tr>
             </thead>
             <tbody>
-            {_.map(lista_literales, item => {
+            {_.map(_.orderBy(lista_literales, ['id_literal'], ['asc']), item => {
                 return <ItemTabla key={item.id} item={item} {...props}/>
             })}
             </tbody>

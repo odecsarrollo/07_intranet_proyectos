@@ -22,7 +22,7 @@ class HojaTrabajoDiarioViewSet(viewsets.ModelViewSet):
         'mis_horas_trabajadas__literal__proyecto',
     ).annotate(
         costo_total=ExpressionWrapper((Coalesce(Sum('mis_horas_trabajadas__cantidad_minutos'), V(0)) / 60) * (
-                F('tasa__costo') / F('tasa__nro_horas_mes')), output_field=DecimalField(max_digits=4)),
+                F('tasa__costo') / F('tasa__nro_horas_mes_trabajadas')), output_field=DecimalField(max_digits=4)),
         cantidad_horas=ExpressionWrapper((Coalesce(Sum('mis_horas_trabajadas__cantidad_minutos'), V(0)) / 60),
                                          output_field=DecimalField(max_digits=4))
     ).all()
@@ -30,11 +30,21 @@ class HojaTrabajoDiarioViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         instance = serializer.save(creado_por=self.request.user)
+        colaborador = instance.colaborador
         object, created = ColaboradorCostoMesBiable.objects.get_or_create(
             lapso=instance.fecha.replace(day=1),
-            colaborador=instance.colaborador
+            colaborador=colaborador
         )
         instance.tasa = object
+        if created:
+            campos_tasas = colaborador._meta.get_fields()
+            for i in campos_tasas:
+                if hasattr(object, i.name) and i.name not in ['mis_dias_trabajados', 'id', 'colaborador']:
+                    valor = getattr(colaborador, i.name)
+                    setattr(object, i.name, valor)
+            object.save()
+            object.calcular_costo_total()
+
         instance.save()
 
     @list_route(http_method_names=['get', ])
@@ -80,19 +90,20 @@ class HoraHojaTrabajoViewSet(viewsets.ModelViewSet):
             raise serializers.ValidationError(content)
 
     def ajusta_horas(self, instance):
+        tasa = instance.hoja.tasa
         es_salario_fijo = instance.hoja.tasa.es_salario_fijo
+        nro_horas_contrato = instance.hoja.colaborador.nro_horas_mes
+        horas_trabajadas = nro_horas_contrato
         if es_salario_fijo:
-            nro_horas_contrato = instance.hoja.colaborador.nro_horas_mes
             horas = HoraHojaTrabajo.objects.filter(
                 hoja__tasa__lapso=instance.hoja.tasa.lapso,
                 hoja__colaborador=instance.hoja.colaborador
             ).aggregate(horas=ExpressionWrapper(Sum('cantidad_minutos') / 60, output_field=DecimalField(max_digits=4)))[
                 'horas']
-            if horas < nro_horas_contrato:
-                horas = nro_horas_contrato
-            tasa = instance.hoja.tasa
-            tasa.nro_horas_mes = horas
-            tasa.save()
+            if horas > nro_horas_contrato:
+                horas_trabajadas = horas
+        tasa.nro_horas_mes_trabajadas = horas_trabajadas
+        tasa.save()
 
     def perform_create(self, serializer):
         instance = serializer.save(creado_por=self.request.user)

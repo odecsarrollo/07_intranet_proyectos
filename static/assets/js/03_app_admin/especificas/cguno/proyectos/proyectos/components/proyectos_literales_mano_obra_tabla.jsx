@@ -85,7 +85,7 @@ const TablaProyectosLiteralesManoObra = (props) => {
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {_.map(listado_mano_obra, item => {
+                                {_.map(_.orderBy(listado_mano_obra,['fecha','colaborador_nombre'],['desc','asc']), item => {
                                     return <ItemTablaManoObra key={item.id} item={item} {...props}/>
                                 })}
                                 </tbody>
