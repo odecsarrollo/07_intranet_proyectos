@@ -73,7 +73,8 @@ class List extends Component {
         return _.pickBy(lista, (permiso) => {
             return (
                 permiso.colaborador_nombres.toString().toUpperCase().includes(busqueda.toUpperCase()) ||
-                permiso.colaborador_apellidos.toString().toUpperCase().includes(busqueda.toUpperCase())
+                permiso.colaborador_apellidos.toString().toUpperCase().includes(busqueda.toUpperCase()) ||
+                permiso.centro_costo_nombre.toString().toUpperCase().includes(busqueda.toUpperCase())
             )
         })
     }
