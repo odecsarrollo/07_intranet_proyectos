@@ -64,23 +64,23 @@ class ColaboradorBiable(models.Model):
     cedula = models.CharField(max_length=20, unique=True)
     nombres = models.CharField(max_length=200, null=True, blank=True)
     apellidos = models.CharField(max_length=200, null=True, blank=True)
-    en_proyectos = models.BooleanField(default=False)
-    es_cguno = models.BooleanField(default=False)
-    autogestion_horas_trabajadas = models.BooleanField(default=False)
-    es_salario_fijo = models.BooleanField(default=False)
-    nro_horas_mes = models.PositiveIntegerField(default=0, null=True, blank=True)
-    cargo = models.ForeignKey(CargosBiable, on_delete=models.PROTECT, null=True, blank=True)
     porcentaje_caja_compensacion = models.DecimalField(max_digits=10, decimal_places=4, default=0)
     porcentaje_pension = models.DecimalField(max_digits=10, decimal_places=4, default=0)
     porcentaje_arl = models.DecimalField(max_digits=10, decimal_places=4, default=0)
     porcentaje_salud = models.DecimalField(max_digits=10, decimal_places=4, default=0)
     porcentaje_prestaciones_sociales = models.DecimalField(max_digits=10, decimal_places=4, default=0)
-    auxilio_transporte = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     base_salario = models.DecimalField(max_digits=20, decimal_places=2, default=0)
-    es_aprendiz = models.BooleanField(default=False)
+    auxilio_transporte = models.DecimalField(max_digits=20, decimal_places=2, default=0)
+    nro_horas_mes = models.PositiveIntegerField(default=0, null=True, blank=True)
+    cargo = models.ForeignKey(CargosBiable, on_delete=models.PROTECT, null=True, blank=True)
     centro_costo = models.ForeignKey(ColaboradorCentroCosto, on_delete=models.PROTECT, related_name='mis_colaboradores',
                                      null=True, blank=True)
     literales_autorizados = models.ManyToManyField(Literal, related_name='colaboradores_autorizados')
+    es_aprendiz = models.BooleanField(default=False)
+    en_proyectos = models.BooleanField(default=False)
+    es_cguno = models.BooleanField(default=False)
+    autogestion_horas_trabajadas = models.BooleanField(default=False)
+    es_salario_fijo = models.BooleanField(default=False)
 
     def create_user(self):
         nombre_split = self.nombres.split()
@@ -127,23 +127,24 @@ class ColaboradorBiable(models.Model):
 class ColaboradorCostoMesBiable(models.Model):
     colaborador = models.ForeignKey(ColaboradorBiable, on_delete=models.PROTECT, related_name='mis_costos')
     lapso = models.DateField()
-    base_salario = models.DecimalField(max_digits=20, decimal_places=2, default=0)
-    auxilio_transporte = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     costo = models.DecimalField(max_digits=20, decimal_places=2, default=0)
-    es_salario_fijo = models.BooleanField(default=False)
-    es_aprendiz = models.BooleanField(default=False)
     porcentaje_caja_compensacion = models.DecimalField(max_digits=10, decimal_places=4, default=0)
     porcentaje_pension = models.DecimalField(max_digits=10, decimal_places=4, default=0)
     porcentaje_arl = models.DecimalField(max_digits=10, decimal_places=4, default=0)
     porcentaje_salud = models.DecimalField(max_digits=10, decimal_places=4, default=0)
     porcentaje_prestaciones_sociales = models.DecimalField(max_digits=10, decimal_places=4, default=0)
-    modificado = models.BooleanField(default=False)
-    verificado = models.BooleanField(default=False)
     nro_horas_mes = models.PositiveIntegerField(default=0, null=True, blank=True)
     nro_horas_mes_trabajadas = models.PositiveIntegerField(default=0, null=True, blank=True)
+    base_salario = models.DecimalField(max_digits=20, decimal_places=2, default=0)
+    auxilio_transporte = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     centro_costo = models.ForeignKey(ColaboradorCentroCosto, on_delete=models.PROTECT,
                                      related_name='mis_coloaboradores_costos_mensuales',
                                      null=True, blank=True)
+    es_salario_fijo = models.BooleanField(default=False)
+    es_aprendiz = models.BooleanField(default=False)
+    modificado = models.BooleanField(default=False)
+    verificado = models.BooleanField(default=False)
+    autogestion_horas_trabajadas = models.BooleanField(default=False)
 
     @property
     def valor_hora(self):
@@ -159,7 +160,7 @@ class ColaboradorCostoMesBiable(models.Model):
             salud = salario_base * (self.porcentaje_salud / 100)
             arl = salario_base * (self.porcentaje_arl / 100)
             prestaciones_sociales = (salario_base + self.auxilio_transporte) * (
-                        self.porcentaje_prestaciones_sociales / 100)
+                    self.porcentaje_prestaciones_sociales / 100)
             costo = salario_base + self.auxilio_transporte + arl
             if not self.es_aprendiz:
                 costo += prestaciones_sociales
