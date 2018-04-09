@@ -1,4 +1,5 @@
 import datetime
+import math
 
 from django.db.models import Sum, Value as V, F, ExpressionWrapper, DecimalField, Count
 from django.db.models.functions import Coalesce
@@ -83,7 +84,11 @@ class HoraHojaTrabajoViewSet(viewsets.ModelViewSet):
     serializer_class = HoraHojaTrabajoSerializer
 
     def perform_destroy(self, instance):
-        if not instance.verificado:
+        if not instance.verificado or (not instance.autogestionada and instance.verificado):
+            tasa = instance.hoja.tasa
+            tasa.nro_horas_mes_trabajadas -= int(math.ceil(instance.cantidad_minutos / 60))
+            tasa.nro_horas_mes_trabajadas = max(tasa.nro_horas_mes_trabajadas, 0)
+            tasa.save()
             super().perform_destroy(instance)
         else:
             content = {'error': ['No se puede eliminar, ya se encuentra verificado']}

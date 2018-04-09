@@ -70,11 +70,11 @@ class List extends Component {
     }
 
     buscarBusqueda(lista, busqueda) {
-        return _.pickBy(lista, (permiso) => {
+        return _.pickBy(lista, (item) => {
             return (
-                permiso.colaborador_nombres.toString().toUpperCase().includes(busqueda.toUpperCase()) ||
-                permiso.colaborador_apellidos.toString().toUpperCase().includes(busqueda.toUpperCase()) ||
-                permiso.centro_costo_nombre.toString().toUpperCase().includes(busqueda.toUpperCase())
+                (item.colaborador_nombres && item.colaborador_nombres.toString().toUpperCase().includes(busqueda.toUpperCase())) ||
+                (item.colaborador_apellidos && item.colaborador_apellidos.toString().toUpperCase().includes(busqueda.toUpperCase())) ||
+                (item.centro_costo_nombre && item.centro_costo_nombre.toString().toUpperCase().includes(busqueda.toUpperCase()))
             )
         })
     }
@@ -139,7 +139,7 @@ class List extends Component {
                         {
                             busqueda => {
                                 const lista_filtrada = this.buscarBusqueda(
-                                    _.orderBy(object_list, ['colaborador_nombres', 'colaborador_apellidos'],['asc','asc']),
+                                    _.orderBy(object_list, ['colaborador_nombres', 'colaborador_apellidos'], ['asc', 'asc']),
                                     busqueda
                                 );
                                 return (

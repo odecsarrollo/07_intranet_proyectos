@@ -151,12 +151,6 @@ class ColaboradorCostoMesBiableViewSet(viewsets.ModelViewSet):
         instance = serializer.save()
         instance.calcular_costo_total()
 
-    def perform_create(self, serializer):
-        instance = super().perform_create(serializer)
-        colaborador = instance.colaborador
-        instance.nro_horas_mes = colaborador.nro_horas_mes
-        instance.es_salario_fijo = colaborador.es_salario_fijo
-
     @list_route(http_method_names=['get', ])
     def listar_x_fechas(self, request):
         fecha_inicial = request.GET.get('fecha_inicial')

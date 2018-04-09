@@ -106,6 +106,7 @@ class ColaboradorCostoMesBiableSerializer(serializers.ModelSerializer):
             'modificado',
             'verificado',
             'nro_horas_mes',
+            'nro_horas_mes_trabajadas',
             'porcentaje_caja_compensacion',
             'porcentaje_pension',
             'porcentaje_arl',

@@ -109,6 +109,24 @@ const TablaRow = (props) => {
                 }
             </td>
 
+
+            <td className='text-center'>
+                {permisos_object.change && !fila.verificado ?
+                    <i
+                        onClick={() => updateColaboradorCostoMes(fila.id, {
+                            ...fila,
+                            es_salario_fijo: !fila.es_salario_fijo
+                        })}
+                        className={`${fila.es_salario_fijo ? 'fas fa-check-square' : 'far fa-square'} puntero`}
+                    >
+                    </i> :
+                    <i
+                        className={`${fila.es_salario_fijo ? 'fas fa-check-circle' : 'fas fa-times'}`}
+                    >
+                    </i>
+                }
+            </td>
+
             <RowItem
                 item={fila.base_salario}
                 permisos_object={permisos_object}
@@ -138,6 +156,11 @@ const TablaRow = (props) => {
                     callback
                 )}
             />
+            <td>
+                <span>
+                {fila.es_salario_fijo ? fila.nro_horas_mes_trabajadas : 'N.A'}
+                </span>
+            </td>
             <RowItem
                 item={fila.porcentaje_arl}
                 permisos_object={permisos_object}
@@ -199,6 +222,7 @@ const TablaRow = (props) => {
             />
             <td className='text-right'><strong>{pesosColombianos(fila.costo)}</strong></td>
             <td className='text-right'><strong>{pesosColombianos(fila.valor_hora)}</strong></td>
+
             <td className='text-center'>
                 {permisos_object.change && !fila.verificado ?
                     <i
@@ -207,7 +231,7 @@ const TablaRow = (props) => {
                     >
                     </i> :
                     <i
-                        className={`${fila.modificado ? 'fas fa-check-circle' : ''}`}
+                        className={`${fila.modificado ? 'fas fa-check-circle' : 'fas fa-times'}`}
                     >
                     </i>
                 }
@@ -239,9 +263,11 @@ const TablaCostos = (props) => {
                 <th>Colaborador</th>
                 <th>Centro Costo</th>
                 <th>Aprendíz</th>
+                <th>Salario Fijo</th>
                 <th>Base Ingreso</th>
                 <th>A. Transporte</th>
                 <th># H. Mes</th>
+                <th># H. Mes T</th>
                 <th>% ARL</th>
                 <th>% Cja Compen.</th>
                 <th>% Pensión</th>
