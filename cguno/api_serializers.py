@@ -127,6 +127,7 @@ class ItemsLiteralBiableSerializer(serializers.ModelSerializer):
         fields = [
             'url',
             'id',
+            'lapso',
             'literal',
             'item_biable',
             'cantidad',
