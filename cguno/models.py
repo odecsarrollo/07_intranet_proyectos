@@ -28,6 +28,7 @@ class ItemsBiable(models.Model):
 
 
 class ItemsLiteralBiable(models.Model):
+    lapso = models.DateField()
     item_biable = models.ForeignKey(ItemsBiable, on_delete=models.PROTECT)
     literal = models.ForeignKey(Literal, on_delete=models.CASCADE, verbose_name='mis_items_biable')
     cantidad = models.DecimalField(decimal_places=2, max_digits=10)
