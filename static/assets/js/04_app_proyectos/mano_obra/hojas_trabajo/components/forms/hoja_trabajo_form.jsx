@@ -47,7 +47,7 @@ class Form extends Component {
                 {
                     permisos_object.add_para_otros &&
                     <MyCombobox
-                        data={_.map(_.pickBy(_.orderBy(colaboradores_list,['nombres'],['asc']), a => {
+                        data={_.map(_.pickBy(_.orderBy(colaboradores_list, ['nombres'], ['asc']), a => {
                             return (
                                 a.autogestion_horas_trabajadas === false ||
                                 a.usuario === mi_cuenta.id

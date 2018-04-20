@@ -46,10 +46,11 @@ class List extends Component {
     }
 
     createObjectMethod(item, successCallback) {
-        const {cargando, notificarErrorAjaxAction} = this.props;
-        const success_method = () => {
+        const {cargando, notificarErrorAjaxAction, history} = this.props;
+        const success_method = (response) => {
             this.successSubmitCallback(item);
             successCallback();
+            history.push(`/app/proyectos/mano_obra/hojas_trabajo/detail/${response.id}`);
         };
         cargando();
         this.props.createHojaTrabajo(item, success_method, notificarErrorAjaxAction);

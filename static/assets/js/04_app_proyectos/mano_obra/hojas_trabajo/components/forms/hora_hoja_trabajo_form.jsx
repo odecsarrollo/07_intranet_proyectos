@@ -91,9 +91,9 @@ class Form extends Component {
         }
 
         let proyectos_list_array = _.map(proyectos_list, e => e);
-        if (autogestion_horas_trabajadas) {
-            proyectos_list_array = _.map(this.getListaAutorizada(), e => e);
-        }
+        // if (autogestion_horas_trabajadas) {
+        //     proyectos_list_array = _.map(this.getListaAutorizada(), e => e);
+        // }
 
         return (
             <MyFormTagModal
