@@ -20,10 +20,12 @@ from django.conf import settings
 from django.conf.urls.static import static
 from .api_urls import router
 from index.views import IndexView
+from proyectos.views import ReporteCostosProyectoView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
+    path('reports/proyectos/costos/<int:pk>/', ReporteCostosProyectoView.as_view()),
     path('api-auth/', include('rest_framework.urls')),
     url(r'^app/*', IndexView.as_view(), name='index'),
     path('', include('index.urls')),

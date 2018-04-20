@@ -1,5 +1,65 @@
 import React, {Component} from 'react';
 import {pesosColombianos, fechaFormatoUno} from '../../../../../../00_utilities/common';
+import Combobox from 'react-widgets/lib/Combobox';
+
+class RowItemSelect extends Component {
+    constructor(props) {
+        super(props);
+        this.state = ({
+            modificando: false,
+            valor: null,
+            inicial: null,
+        })
+    }
+
+
+    render() {
+        const {centros_costos_list, permisos_object, centro_costo, cambiarItem, item} = this.props;
+        const {modificando, valor, inicial} = this.state;
+        console.log(valor)
+        return (
+            <td>
+                {
+                    modificando ?
+                        <Combobox
+                            value={valor}
+                            style={{width: "170px"}}
+                            valueField='id'
+                            textField='nombre'
+                            data={_.map(centros_costos_list, e => e)}
+                            onChange={e => {
+                                this.setState({valor: e.id});
+                            }}
+                            onBlur={() => {
+                                if (inicial !== valor) {
+                                    cambiarItem(valor, () => {
+                                        this.setState({modificando: false, inicial: null, value: null});
+                                    })
+                                } else {
+                                    this.setState({modificando: false, inicial: null, value: null});
+                                }
+                            }}
+                        /> :
+                        <span
+                            className={permisos_object.change ? 'puntero' : ''}
+                            onClick={() => {
+                                if (permisos_object.change) {
+                                    this.setState({modificando: true, valor: item, inicial: item});
+                                }
+                            }}
+                            style={{color: `${centro_costo ? '' : 'red'}`}}
+                        >
+                            {
+                                centro_costo ? centro_costo :
+                                    'ASIGNAR'
+                            }
+                        </span>
+                }
+            </td>
+        )
+    }
+
+}
 
 class RowItem extends Component {
     constructor(props) {
@@ -76,13 +136,12 @@ class RowItem extends Component {
                             </div>
                     }
                 </td>
-
         )
     }
 }
 
 const TablaRow = (props) => {
-    const {fila, updateColaboradorCostoMes, permisos_object} = props;
+    const {fila, updateColaboradorCostoMes, permisos_object, centros_costos_list} = props
     return (
         <tr>
             <RowItem
@@ -92,7 +151,18 @@ const TablaRow = (props) => {
                 permisos_object={permisos_object}
             />
             <td><span>{fila.colaborador_nombres} {fila.colaborador_apellidos}</span></td>
-            <td><span>{fila.centro_costo_nombre}</span></td>
+            {/*<td><span>{fila.centro_costo_nombre}</span></td>*/}
+            <RowItemSelect
+                modificable={!fila.verificado}
+                item={fila.centro_costo}
+                permisos_object={permisos_object}
+                centros_costos_list={centros_costos_list}
+                centro_costo={fila.centro_costo_nombre}
+                cambiarItem={(valor, callback = null) => updateColaboradorCostoMes(fila.id,
+                    {...fila, centro_costo: valor, modificado: true},
+                    callback
+                )}
+            />
 
 
             <td className='text-center'>
@@ -254,7 +324,7 @@ const TablaRow = (props) => {
 };
 
 const TablaCostos = (props) => {
-    const {lista, updateColaboradorCostoMes, permisos_object} = props;
+    const {lista, updateColaboradorCostoMes, permisos_object, centros_costos_list} = props;
     return (
         <table className='table table-striped table-responsive' style={{fontSize: '9px'}}>
             <thead>
@@ -283,7 +353,9 @@ const TablaCostos = (props) => {
             {
                 _.map(lista, e =>
                     <TablaRow
-                        updateColaboradorCostoMes={updateColaboradorCostoMes} key={e.id}
+                        centros_costos_list={centros_costos_list}
+                        updateColaboradorCostoMes={updateColaboradorCostoMes}
+                        key={e.id}
                         fila={e}
                         permisos_object={permisos_object}
                     />

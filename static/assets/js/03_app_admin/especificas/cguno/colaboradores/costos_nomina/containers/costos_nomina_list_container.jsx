@@ -29,8 +29,10 @@ class List extends Component {
     }
 
     componentDidMount() {
-        const today = moment().format('YYYY-MM-DD');
-        const today_manana = moment().add(1, 'day').format('YYYY-MM-DD');
+        const {ano, mes} = this.state;
+        const date_today = moment(new Date(ano, mes, 1)).add(-1, 'month');
+        const today = date_today.format('YYYY-MM-DD');
+        const today_manana = date_today.add(1, 'day').format('YYYY-MM-DD');
         this.consultarPorFecha(today, today_manana);
         this.cargarDatos();
     }
@@ -80,7 +82,7 @@ class List extends Component {
     }
 
     render() {
-        const {object_list, mis_permisos} = this.props;
+        const {object_list, mis_permisos, centros_costos_list} = this.props;
         const permisos_object = permisosAdapter(mis_permisos, permisos_view);
         const {ano, mes, ano_error, mes_error} = this.state;
         return (
@@ -147,6 +149,7 @@ class List extends Component {
                                         lista={lista_filtrada}
                                         updateColaboradorCostoMes={this.updateColaboradorCostoMes}
                                         permisos_object={permisos_object}
+                                        centros_costos_list={centros_costos_list}
                                     />
                                 )
                             }}

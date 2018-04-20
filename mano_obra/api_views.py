@@ -1,9 +1,8 @@
-import datetime
 import math
 
-from django.db.models import Sum, Value as V, F, ExpressionWrapper, DecimalField, Count
+from django.db.models import Sum, Value as V, F, ExpressionWrapper, DecimalField
 from django.db.models.functions import Coalesce
-from rest_framework import viewsets, serializers, status
+from rest_framework import viewsets, serializers
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
 
