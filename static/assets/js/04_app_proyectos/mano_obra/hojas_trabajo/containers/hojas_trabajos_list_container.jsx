@@ -9,6 +9,7 @@ import {
 import {permisosAdapter} from "../../../../00_utilities/common";
 
 import ListCrud from '../components/hojas_trabajos_list';
+import moment from "moment/moment";
 
 class List extends Component {
     constructor(props) {
@@ -29,8 +30,11 @@ class List extends Component {
     cargarDatos() {
         const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
         cargando();
-        const cargarMiCuenta = () => this.props.fetchMiCuenta(() => noCargando(), notificarErrorAjaxAction);
-        const cargarColaboradores = () => this.props.fetchColaboradoresEnProyectos(cargarMiCuenta, notificarErrorAjaxAction)
+        const date_today = moment(new Date());
+        const today = date_today.format('YYYY-MM-DD');
+        const cargarHojasTrabajoHoy = () => this.props.fetchHojasTrabajosxFechas(today, today, () => noCargando(), notificarErrorAjaxAction);
+        const cargarMiCuenta = () => this.props.fetchMiCuenta(cargarHojasTrabajoHoy, notificarErrorAjaxAction);
+        const cargarColaboradores = () => this.props.fetchColaboradoresEnProyectos(cargarMiCuenta, notificarErrorAjaxAction);
         this.props.fetchMisPermisos(cargarColaboradores, notificarErrorAjaxAction)
 
     }
