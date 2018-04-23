@@ -16,7 +16,10 @@ class RowItemSelect extends Component {
     render() {
         const {centros_costos_list, permisos_object, centro_costo, cambiarItem, item} = this.props;
         const {modificando, valor, inicial} = this.state;
-        console.log(valor)
+        let centros_costos_base = _.map(centros_costos_list, e => {
+            return {id: e.id, nombre: e.nombre}
+        });
+        centros_costos_base = [...centros_costos_base, {id: null, nombre: 'SIN DEFINIR'}];
         return (
             <td>
                 {
@@ -26,8 +29,9 @@ class RowItemSelect extends Component {
                             style={{width: "170px"}}
                             valueField='id'
                             textField='nombre'
-                            data={_.map(centros_costos_list, e => e)}
+                            data={_.map(centros_costos_base, e => e)}
                             onChange={e => {
+                                console.log(e)
                                 this.setState({valor: e.id});
                             }}
                             onBlur={() => {

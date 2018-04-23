@@ -90,10 +90,26 @@ class Form extends Component {
             verificado = initialValues.verificado;
         }
 
-        let proyectos_list_array = _.map(proyectos_list, e => e);
+        let proyectos_list_array = _.map(_.sortBy(proyectos_list, ['id_proyecto'], ['asc']), e => e);
         // if (autogestion_horas_trabajadas) {
         //     proyectos_list_array = _.map(this.getListaAutorizada(), e => e);
         // }
+
+        let proyecto_literales = null;
+        if (proyecto && proyecto.mis_literales) {
+            proyecto_literales =
+                _.map(_.pickBy(proyecto.mis_literales, li => {
+                    return (
+                        !_.map(hoja_trabajo.mis_horas_trabajadas, e => e.literal).includes(li.id)
+                        || (initialValues && li.id === initialValues.literal)
+                    )
+                }), e => {
+                    return ({
+                        id: e.id,
+                        descripcion: `${e.id_literal} - ${e.descripcion}`
+                    })
+                });
+        }
 
         return (
             <MyFormTagModal
@@ -133,48 +149,37 @@ class Form extends Component {
                             {
                                 proyecto &&
                                 proyecto.mis_literales &&
-                                <MyCombobox
-                                    data={_.map(_.pickBy(proyecto.mis_literales, li => {
-                                        return (
-                                            !_.map(hoja_trabajo.mis_horas_trabajadas, e => e.literal).includes(li.id)
-                                            || (initialValues && li.id === initialValues.literal)
-                                        )
-                                    }), e => {
-                                        return ({
-                                            id: e.id,
-                                            descripcion: `${e.id_literal} - ${e.descripcion}`
-                                        })
-                                    })}
-                                    className='col-12'
-                                    valuesField='id'
-                                    textField='descripcion'
-                                    autoFocus={true}
-                                    name='literal'
-                                    placeholder='Literales'
-                                    caseSensitive={false}
-                                    minLength={3}
-                                    filter='contains'
-                                />
-                            }
-                            {
-                                <div className='col-12'>
-                                    <div className="row">
-                                        <MyTextFieldSimple disabled={verificado} name='horas' nombre='Horas'
-                                                           className='col-6'/>
-                                        <MyTextFieldSimple disabled={verificado} name='minutos' nombre='Minutos'
-                                                           className='col-6'/>
+                                <Fragment>
+                                    <MyCombobox
+                                        data={_.orderBy(proyecto_literales, ['descripcion'], ['asc'])}
+                                        className='col-12'
+                                        valuesField='id'
+                                        textField='descripcion'
+                                        autoFocus={true}
+                                        name='literal'
+                                        placeholder='Literales'
+                                        caseSensitive={false}
+                                        minLength={3}
+                                        filter='contains'
+                                    />
+                                    <div className='col-12'>
+                                        <div className="row">
+                                            <MyTextFieldSimple disabled={verificado} name='horas' nombre='Horas'
+                                                               className='col-6'/>
+                                            <MyTextFieldSimple disabled={verificado} name='minutos' nombre='Minutos'
+                                                               className='col-6'/>
+                                        </div>
                                     </div>
-                                </div>
+                                    <MyTextFieldSimple
+                                        name='descripcion_tarea'
+                                        nombre='Descripción'
+                                        rows={5}
+                                        multiLine={true}
+                                        className='col-12'
+                                        disabled={!autogestion_horas_trabajadas || verificado}
+                                    />
+                                </Fragment>
                             }
-
-                            <MyTextFieldSimple
-                                name='descripcion_tarea'
-                                nombre='Descripción'
-                                rows={5}
-                                multiLine={true}
-                                className='col-12'
-                                disabled={!autogestion_horas_trabajadas || verificado}
-                            />
                             <div style={{height: '300px'}}>
 
                             </div>
