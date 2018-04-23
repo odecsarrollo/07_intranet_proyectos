@@ -25,12 +25,9 @@ class Form extends Component {
 
         let proyectos_list_array = proyectos_list;
 
-        console.log(proyectos_list_array)
         if (autogestion_horas_trabajadas) {
             proyectos_list_array = this.getListaAutorizada();
         }
-
-        console.log(proyectos_list_array)
 
         if (initialValues) {
             const {proyecto} = initialValues;
