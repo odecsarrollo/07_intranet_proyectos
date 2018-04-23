@@ -74,9 +74,9 @@ class List extends Component {
     buscarBusqueda(lista, busqueda) {
         return _.pickBy(lista, (item) => {
             return (
-                (item.colaborador_nombres.includes(busqueda.toUpperCase())) ||
-                (item.colaborador_apellidos.includes(busqueda.toUpperCase())) ||
-                (item.centro_costo_nombre.includes(busqueda.toUpperCase()))
+                (item.colaborador_nombres && item.colaborador_nombres.toString().toUpperCase().includes(busqueda.toUpperCase())) ||
+                (item.colaborador_apellidos && item.colaborador_apellidos.toString().toUpperCase().includes(busqueda.toUpperCase())) ||
+                (item.centro_costo && item.centro_costo_nombre.toString().toUpperCase().includes(busqueda.toUpperCase()))
             )
         })
     }

@@ -31,8 +31,8 @@ const ItemTablaManoObra = (props) => {
 const buscarBusqueda = (lista, busqueda) => {
     return _.pickBy(lista, (item) => {
         return (
-            item.colaborador_nombre.toUpperCase().includes(busqueda.toUpperCase()) ||
-            item.centro_costo_nombre.toUpperCase().includes(busqueda.toUpperCase())
+            (item.colaborador_nombre && item.colaborador_nombre.toUpperCase().includes(busqueda.toUpperCase())) ||
+            (item.centro_costo_nombre && item.centro_costo_nombre.toUpperCase().includes(busqueda.toUpperCase()))
         )
     });
 };
@@ -85,7 +85,7 @@ const TablaProyectosLiteralesManoObra = (props) => {
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {_.map(_.orderBy(listado_mano_obra,['fecha','colaborador_nombre'],['desc','asc']), item => {
+                                {_.map(_.orderBy(listado_mano_obra, ['fecha', 'colaborador_nombre'], ['desc', 'asc']), item => {
                                     return <ItemTablaManoObra key={item.id} item={item} {...props}/>
                                 })}
                                 </tbody>

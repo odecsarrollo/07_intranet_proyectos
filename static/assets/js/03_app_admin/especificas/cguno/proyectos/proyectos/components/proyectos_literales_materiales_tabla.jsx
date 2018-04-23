@@ -19,9 +19,11 @@ const ItemTabla = (props) => {
 const buscarBusqueda = (lista, busqueda) => {
     return _.pickBy(lista, (item) => {
         return (
-            item.item_biable.descripcion.toUpperCase().includes(busqueda.toUpperCase()) ||
-            item.item_biable.id_referencia.toUpperCase().includes(busqueda.toUpperCase()) ||
-            item.item_biable.id_item.toString().toUpperCase().includes(busqueda.toUpperCase())
+            item.item_biable && (
+                item.item_biable.descripcion.toUpperCase().includes(busqueda.toUpperCase()) ||
+                item.item_biable.id_referencia.toUpperCase().includes(busqueda.toUpperCase()) ||
+                item.item_biable.id_item.toString().toUpperCase().includes(busqueda.toUpperCase())
+            )
         )
     });
 };
