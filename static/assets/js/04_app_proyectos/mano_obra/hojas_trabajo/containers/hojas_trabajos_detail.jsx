@@ -97,7 +97,8 @@ function mapPropsToState(state, ownProps) {
         mis_permisos: state.mis_permisos,
         proyectos_list: state.proyectos,
         mi_cuenta: state.mi_cuenta,
-        object: state.hojas_trabajos_diarios[id]
+        object: state.hojas_trabajos_diarios[id],
+        literales_list: state.literales,
     }
 }
 

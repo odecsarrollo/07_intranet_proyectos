@@ -68,3 +68,12 @@ export const MANO_OBRA_HORAS_HOJA_TRABAJO_TYPES = {
     clear: 'clear_manos_obras_horas_hojas_trabajos',
     update: 'update_mano_obra_hora_hoja_trabajo',
 };
+
+export const HORA_COLABORADOR_PROYECTO_INICIAL_TYPES = {
+    create: 'create_hora_colaborador_proyecto_inicial',
+    delete: 'delete_hora_colaborador_proyecto_inicial',
+    fetch_all: 'fetch_horas_colaboradores_proyectos_iniciales',
+    fetch: 'fetch_hora_colaborador_proyecto_inicial',
+    clear: 'clear_horas_colaboradores_proyectos_iniciales',
+    update: 'update_hora_colaborador_proyecto_inicial',
+};

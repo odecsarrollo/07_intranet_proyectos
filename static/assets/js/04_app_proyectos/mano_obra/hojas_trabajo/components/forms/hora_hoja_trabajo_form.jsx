@@ -9,13 +9,6 @@ import {MyFormTagModal} from '../../../../../00_utilities/components/ui/forms/My
 import validate from './validate_horas';
 
 class Form extends Component {
-    constructor(props) {
-        super(props);
-        this.state = ({
-            proyecto: null
-        });
-    }
-
     componentDidMount() {
         const {initialValues, proyectos_list, mi_cuenta} = this.props;
         const autogestion_horas_trabajadas = !!(
@@ -25,9 +18,9 @@ class Form extends Component {
 
         let proyectos_list_array = proyectos_list;
 
-        if (autogestion_horas_trabajadas) {
-            proyectos_list_array = this.getListaAutorizada();
-        }
+        // if (autogestion_horas_trabajadas) {
+        //     proyectos_list_array = this.getListaAutorizada();
+        // }
 
         if (initialValues) {
             const {proyecto} = initialValues;
@@ -73,8 +66,8 @@ class Form extends Component {
             object,
             mi_cuenta,
             hoja_trabajo,
+            literales_list,
         } = this.props;
-        const {proyecto} = this.state;
 
         const autogestion_horas_trabajadas = !!(
             mi_cuenta.colaborador &&
@@ -93,9 +86,9 @@ class Form extends Component {
         // }
 
         let proyecto_literales = null;
-        if (proyecto && proyecto.mis_literales) {
+        if (literales_list) {
             proyecto_literales =
-                _.map(_.pickBy(proyecto.mis_literales, li => {
+                _.map(_.pickBy(literales_list, li => {
                     return (
                         !_.map(hoja_trabajo.mis_horas_trabajadas, e => e.literal).includes(li.id)
                         || (initialValues && li.id === initialValues.literal)
@@ -134,7 +127,7 @@ class Form extends Component {
                                 textField='id_proyecto'
                                 autoFocus={true}
                                 onSelect={(e) => {
-                                    this.setState({proyecto: e});
+                                    this.props.fetchLiteralesXProyecto(e.id);
                                 }}
                                 name='proyecto'
                                 onChange={v => v.id}
@@ -144,8 +137,7 @@ class Form extends Component {
                                 filter='contains'
                             />
                             {
-                                proyecto &&
-                                proyecto.mis_literales &&
+                                literales_list &&
                                 <Fragment>
                                     <MyCombobox
                                         data={_.orderBy(proyecto_literales, ['descripcion'], ['asc'])}

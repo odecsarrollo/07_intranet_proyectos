@@ -120,7 +120,7 @@ class Detail extends Component {
                                         <div className="col-12">
                                             <h6 className='h6-response'>Costo
                                                 Mano
-                                                Obra: <small>{pesosColombianos(item_seleccionado.costo_mano_obra)}</small>
+                                                Obra: <small>{pesosColombianos(Number(item_seleccionado.costo_mano_obra)+Number(item_seleccionado.costo_mano_obra_inicial))}</small>
                                             </h6>
                                         </div>
                                         }
@@ -128,7 +128,7 @@ class Detail extends Component {
                                             permisos.costo &&
                                             <div className="col-12">
                                                 <h6 className='h6-response'>Costo
-                                                    Total: <small>{pesosColombianos(Number(item_seleccionado.costo_mano_obra) + Number(item_seleccionado.costo_materiales))}</small>
+                                                    Total: <small>{pesosColombianos(Number(item_seleccionado.costo_mano_obra_inicial) + Number(item_seleccionado.costo_mano_obra) + Number(item_seleccionado.costo_materiales))}</small>
                                                 </h6>
                                             </div>
                                         }

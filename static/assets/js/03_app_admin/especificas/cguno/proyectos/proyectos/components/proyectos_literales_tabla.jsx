@@ -25,12 +25,12 @@ const ItemTabla = (props) => {
             }
             {permisos.costo_mano_obra &&
             <td>
-                {pesosColombianos(item.costo_mano_obra)}
+                {pesosColombianos(Number(item.costo_mano_obra) + Number(item.costo_mano_obra_inicial))}
             </td>
             }
             {permisos.costo &&
             <td>
-                {pesosColombianos(Number(item.costo_mano_obra) + Number(item.costo_materiales))}
+                {pesosColombianos(Number(item.costo_mano_obra) + Number(item.costo_mano_obra_inicial) + Number(item.costo_materiales))}
             </td>
             }
         </tr>

@@ -6,7 +6,9 @@ from .models import Proyecto, Literal
 class LiteralSerializer(serializers.ModelSerializer):
     abierto = serializers.BooleanField(source='proyecto.abierto', read_only=True)
     costo_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    costo_mano_obra_inicial = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     cantidad_horas_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    cantidad_horas_mano_obra_inicial = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
 
     class Meta:
         model = Literal
@@ -18,15 +20,18 @@ class LiteralSerializer(serializers.ModelSerializer):
             'descripcion',
             'costo_materiales',
             'costo_mano_obra',
+            'costo_mano_obra_inicial',
             'cantidad_horas_mano_obra',
+            'cantidad_horas_mano_obra_inicial',
             'proyecto',
         ]
 
 
 class ProyectoSerializer(serializers.ModelSerializer):
-    mis_literales = LiteralSerializer(many=True, read_only=True)
     costo_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     cantidad_horas_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    costo_mano_obra_inicial = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    cantidad_horas_mano_obra_inicial = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
 
     class Meta:
         model = Proyecto
@@ -40,6 +45,7 @@ class ProyectoSerializer(serializers.ModelSerializer):
             'valor_cliente',
             'costo_presupuestado',
             'costo_mano_obra',
+            'costo_mano_obra_inicial',
             'cantidad_horas_mano_obra',
-            'mis_literales',
+            'cantidad_horas_mano_obra_inicial',
         ]

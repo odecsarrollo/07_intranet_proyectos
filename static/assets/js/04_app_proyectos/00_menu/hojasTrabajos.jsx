@@ -11,10 +11,15 @@ const MenuTerceros = (props) => (
             <FontIcon className="fas fa-alarm-clock"/>
         </a>
         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-            <MenuItem primaryText="Hojas de Trabajo" containerElement={<Link to='/app/proyectos/mano_obra/hojas_trabajo/list'/>}
+            <MenuItem primaryText="Iniciales Horas de Trabajo"
+                      containerElement={<Link to='/app/proyectos/mano_obra/horas_colaborador_proyecto_inicial/list'/>}
+            />
+            <MenuItem primaryText="Hojas de Trabajo"
+                      containerElement={<Link to='/app/proyectos/mano_obra/hojas_trabajo/list'/>}
             />
 
-            <MenuItem primaryText="Verifica Horas" containerElement={<Link to='/app/proyectos/mano_obra/verificar_horas/list'/>}
+            <MenuItem primaryText="Verifica Horas"
+                      containerElement={<Link to='/app/proyectos/mano_obra/verificar_horas/list'/>}
             />
 
         </div>

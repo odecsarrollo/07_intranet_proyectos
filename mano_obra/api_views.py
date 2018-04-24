@@ -6,8 +6,16 @@ from rest_framework import viewsets, serializers
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
 
-from .models import HoraHojaTrabajo, HojaTrabajoDiario
-from .api_serializers import HoraHojaTrabajoSerializer, HojaTrabajoDiarioSerializer
+from .models import (
+    HoraHojaTrabajo,
+    HojaTrabajoDiario,
+    HoraTrabajoColaboradorLiteralInicial
+)
+from .api_serializers import (
+    HoraHojaTrabajoSerializer,
+    HojaTrabajoDiarioSerializer,
+    HoraTrabajoColaboradorLiteralInicialSerializer
+)
 
 from cguno.models import ColaboradorCostoMesBiable
 
@@ -142,3 +150,17 @@ class HoraHojaTrabajoViewSet(viewsets.ModelViewSet):
             lista = lista.filter(verificado=False)
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
+
+
+class HoraTrabajoColaboradorLiteralInicialViewSet(viewsets.ModelViewSet):
+    queryset = HoraTrabajoColaboradorLiteralInicial.objects.select_related(
+        'literal',
+        'literal__proyecto',
+        'colaborador',
+        'centro_costo',
+        'creado_por'
+    ).all()
+    serializer_class = HoraTrabajoColaboradorLiteralInicialSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(creado_por=self.request.user)

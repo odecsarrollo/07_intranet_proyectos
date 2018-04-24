@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 from model_utils.models import TimeStampedModel
-from cguno.models import ColaboradorBiable, Literal, ColaboradorCostoMesBiable
+from cguno.models import ColaboradorBiable, Literal, ColaboradorCostoMesBiable, ColaboradorCentroCosto
 
 
 class HojaTrabajoDiario(TimeStampedModel):
@@ -43,3 +43,25 @@ class HoraHojaTrabajo(TimeStampedModel):
     @property
     def costo_total(self):
         return Decimal(self.cantidad_minutos / 60) * self.hoja.tasa.valor_hora
+
+
+class HoraTrabajoColaboradorLiteralInicial(TimeStampedModel):
+    creado_por = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True)
+    colaborador = models.ForeignKey(ColaboradorBiable, on_delete=models.PROTECT,
+                                    related_name='mis_dias_trabajados_iniciales')
+    literal = models.ForeignKey(Literal, on_delete=models.PROTECT, related_name='mis_horas_trabajadas_iniciales')
+    cantidad_minutos = models.PositiveIntegerField(default=0)
+    valor = models.DecimalField(max_digits=20, decimal_places=2, default=0)
+    centro_costo = models.ForeignKey(
+        ColaboradorCentroCosto,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True
+    )
+
+    class Meta:
+        unique_together = [('colaborador', 'literal')]
+        permissions = [
+            ['list_horatrabajocolaboradorliteralinicial', 'Puede listar horas colaboradores proyectos iniciales'],
+            ['detail_horatrabajocolaboradorliteralinicial', 'Puede ver detalle hora colaborador proyecto inicial'],
+        ]

@@ -57,16 +57,16 @@ class Tabla extends React.Component {
                         columns: [
                             {
                                 Header: "Costo M.O",
-                                accessor: "costo_mano_obra",
                                 maxWidth: 150,
                                 show: permisos_object.costo_mano_obra,
-                                Cell: row => <div className='text-right'>{pesosColombianos(row.value)}</div>
+                                Cell: row => <div
+                                    className='text-right'>{pesosColombianos(Number(row.original.costo_mano_obra) + Number(row.original.costo_mano_obra_inicial))}</div>
                             },
                             {
                                 Header: "Horas M.O",
-                                accessor: "cantidad_horas_mano_obra",
                                 maxWidth: 80,
-                                Cell: row => <div className='text-right'>{row.value}</div>
+                                Cell: row => <div
+                                    className='text-right'>{Number(row.original.cantidad_horas_mano_obra) + Number(row.original.cantidad_horas_mano_obra_inicial)}</div>
                             },
                         ]
                     },

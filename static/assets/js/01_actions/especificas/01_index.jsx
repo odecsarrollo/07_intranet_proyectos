@@ -7,3 +7,4 @@ export * from './cguno/centrosCostosColaboradoresActions';
 export * from './cguno/colaboradoresCostosMesesAction';
 export * from './mano_obra/hojaTrabajoDiarioAction';
 export * from './mano_obra/horasHojasTrabajoDiarioAction';
+export * from './mano_obra/HorasColaboradoresProyectosInicialesAction';

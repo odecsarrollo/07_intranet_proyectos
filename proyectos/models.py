@@ -9,6 +9,8 @@ class Proyecto(models.Model):
     valor_cliente = models.DecimalField(decimal_places=2, max_digits=12, default=0)
     costo_presupuestado = models.DecimalField(decimal_places=2, max_digits=12, default=0)
     costo_materiales = models.DecimalField(decimal_places=2, max_digits=12, default=0)
+    orden_compra_fecha = models.DateField(null=True, blank=True)
+    fecha_entrega_pactada = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return self.id_proyecto
@@ -32,6 +34,10 @@ class Literal(models.Model):
     proyecto = models.ForeignKey(Proyecto, related_name='mis_literales', on_delete=models.CASCADE)
     descripcion = models.CharField(max_length=300, null=True, blank=True)
     costo_materiales = models.DecimalField(decimal_places=2, max_digits=12, default=0, null=True, blank=True)
+    valor_cliente = models.DecimalField(decimal_places=2, max_digits=12, default=0)
+    orden_compra_nro = models.CharField(max_length=20, null=True, blank=True)
+    orden_compra_fecha = models.DateField(null=True, blank=True)
+    fecha_entrega_pactada = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return self.id_literal

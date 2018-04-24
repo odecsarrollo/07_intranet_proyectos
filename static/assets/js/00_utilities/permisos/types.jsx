@@ -95,3 +95,11 @@ export const MANOS_OBRAS_HORAS_HOJAS_TRABAJOS = {
     detail: 'detail_horahojatrabajo',
     verificar: 'verificar_horahojatrabajo',
 };
+
+export const HORAS_COLABORADORES_PROYECTOS_INICIALES = {
+    add: 'add_horatrabajocolaboradorliteralinicial',
+    delete: 'delete_horatrabajocolaboradorliteralinicial',
+    change: 'change_horatrabajocolaboradorliteralinicial',
+    list: 'list_horatrabajocolaboradorliteralinicial',
+    detail: 'detail_horatrabajocolaboradorliteralinicial',
+};

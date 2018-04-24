@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import HojaTrabajoDiario, HoraHojaTrabajo
+from .models import HojaTrabajoDiario, HoraHojaTrabajo, HoraTrabajoColaboradorLiteralInicial
 
 
 class HoraHojaTrabajoSerializer(serializers.ModelSerializer):
@@ -73,4 +73,45 @@ class HojaTrabajoDiarioSerializer(serializers.ModelSerializer):
             'colaborador',
             'colaborador_nombre',
             'mis_horas_trabajadas',
+        ]
+
+
+class HoraTrabajoColaboradorLiteralInicialSerializer(serializers.ModelSerializer):
+    literal_nombre = serializers.CharField(source='literal.id_literal', read_only=True)
+    literal_descripcion = serializers.CharField(source='literal.descripcion', read_only=True)
+    literal_abierto = serializers.BooleanField(source='literal.proyecto.abierto', read_only=True)
+    proyecto = serializers.IntegerField(source='literal.proyecto_id', read_only=True)
+    cantidad_horas = serializers.SerializerMethodField('numero_horas')
+    horas = serializers.SerializerMethodField('numero_horas')
+    minutos = serializers.SerializerMethodField('numero_minutos')
+    colaborador_nombre = serializers.CharField(source='colaborador.full_name', read_only=True)
+    creado_por_username = serializers.CharField(source='creado_por.username', read_only=True)
+    centro_costo_nombre = serializers.CharField(source='centro_costo.nombre', read_only=True)
+
+    def numero_horas(self, instance):
+        return int(instance.cantidad_minutos / 60)
+
+    def numero_minutos(self, instance):
+        return instance.cantidad_minutos - (int(instance.cantidad_minutos / 60) * 60)
+
+    class Meta:
+        model = HoraTrabajoColaboradorLiteralInicial
+        fields = [
+            'url',
+            'id',
+            'literal',
+            'cantidad_minutos',
+            'valor',
+            'cantidad_horas',
+            'centro_costo',
+            'centro_costo_nombre',
+            'literal_nombre',
+            'literal_abierto',
+            'literal_descripcion',
+            'proyecto',
+            'horas',
+            'minutos',
+            'colaborador',
+            'colaborador_nombre',
+            'creado_por_username',
         ]

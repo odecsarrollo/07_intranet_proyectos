@@ -1,12 +1,13 @@
 from django.db.models import Sum, Value as V, F, ExpressionWrapper, DecimalField, OuterRef, Subquery
 from django.db.models.expressions import RawSQL
+from django.db.models.functions import Coalesce
 from rest_framework import viewsets
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
 
 from .models import Proyecto, Literal
 from .api_serializers import ProyectoSerializer, LiteralSerializer
-from mano_obra.models import HojaTrabajoDiario, HoraHojaTrabajo
+from mano_obra.models import HoraHojaTrabajo, HoraTrabajoColaboradorLiteralInicial
 
 
 class ProyectoViewSet(viewsets.ModelViewSet):
@@ -19,15 +20,56 @@ class ProyectoViewSet(viewsets.ModelViewSet):
                                              output_field=DecimalField(max_digits=4)),
             costo_total=ExpressionWrapper(
                 Sum((F('cantidad_minutos') / 60) * (
-                            F('hoja__tasa__costo') / F('hoja__tasa__nro_horas_mes_trabajadas'))),
+                        F('hoja__tasa__costo') / F('hoja__tasa__nro_horas_mes_trabajadas'))),
+                output_field=DecimalField(max_digits=4))
+        ).filter(
+            literal__proyecto__id_proyecto=OuterRef('id_proyecto'),
+            verificado=True
+        )
+
+        mano_obra_inicial = HoraTrabajoColaboradorLiteralInicial.objects.values(
+            'literal__proyecto__id_proyecto').annotate(
+            cantidad_horas=
+            ExpressionWrapper(
+                Sum((F('cantidad_minutos') / 60)),
+                output_field=DecimalField(max_digits=4)
+            ),
+            costo_total=
+            ExpressionWrapper(
+                Sum('valor'),
                 output_field=DecimalField(max_digits=4))
         ).filter(
             literal__proyecto__id_proyecto=OuterRef('id_proyecto')
         )
+
         qs = Proyecto.objects.prefetch_related(
             'mis_literales'
-        ).annotate(costo_mano_obra=Subquery(mano_obra.values('costo_total')),
-                   cantidad_horas_mano_obra=Subquery(mano_obra.values('cantidad_horas')))
+        ).annotate(
+            costo_mano_obra=Coalesce(
+                ExpressionWrapper(
+                    Subquery(mano_obra.values('costo_total')),
+                    output_field=DecimalField(max_digits=4)
+                ), 0
+            ),
+            costo_mano_obra_inicial=Coalesce(
+                ExpressionWrapper(
+                    Subquery(mano_obra_inicial.values('costo_total')),
+                    output_field=DecimalField(max_digits=4)
+                ), 0
+            ),
+            cantidad_horas_mano_obra=Coalesce(
+                ExpressionWrapper(
+                    Subquery(mano_obra.values('cantidad_horas')),
+                    output_field=DecimalField(max_digits=4)
+                ), 0
+            ),
+            cantidad_horas_mano_obra_inicial=Coalesce(
+                ExpressionWrapper(
+                    Subquery(mano_obra_inicial.values('cantidad_horas')),
+                    output_field=DecimalField(max_digits=4)
+                ), 0
+            )
+        )
         return qs
 
     @list_route(http_method_names=['get', ])
@@ -49,7 +91,17 @@ class LiteralViewSet(viewsets.ModelViewSet):
                                              output_field=DecimalField(max_digits=4)),
             costo_total=ExpressionWrapper(
                 Sum((F('cantidad_minutos') / 60) * (
-                            F('hoja__tasa__costo') / F('hoja__tasa__nro_horas_mes_trabajadas'))),
+                        F('hoja__tasa__costo') / F('hoja__tasa__nro_horas_mes_trabajadas'))),
+                output_field=DecimalField(max_digits=4))
+        ).filter(
+            literal_id=OuterRef('id'),
+            verificado=True
+        )
+        mano_obra_inicial = HoraTrabajoColaboradorLiteralInicial.objects.values('literal').annotate(
+            cantidad_horas=ExpressionWrapper(Sum((F('cantidad_minutos') / 60)),
+                                             output_field=DecimalField(max_digits=4)),
+            costo_total=ExpressionWrapper(
+                Sum('valor'),
                 output_field=DecimalField(max_digits=4))
         ).filter(
             literal_id=OuterRef('id')
@@ -57,8 +109,40 @@ class LiteralViewSet(viewsets.ModelViewSet):
 
         qs = Literal.objects.select_related(
             'proyecto'
-        ).annotate(costo_mano_obra=Subquery(mano_obra.values('costo_total')),
-                   cantidad_horas_mano_obra=Subquery(mano_obra.values('cantidad_horas')))
+        ).annotate(
+            costo_mano_obra=
+            Coalesce(
+                ExpressionWrapper(
+                    Subquery(mano_obra.values('costo_total')),
+                    output_field=DecimalField(max_digits=4)
+                ),
+                0
+            ),
+            costo_mano_obra_inicial=
+            Coalesce(
+                ExpressionWrapper(
+                    Subquery(mano_obra_inicial.values('costo_total')),
+                    output_field=DecimalField(max_digits=4)
+                ),
+                0
+            ),
+            cantidad_horas_mano_obra=
+            Coalesce(
+                ExpressionWrapper(
+                    Subquery(mano_obra.values('cantidad_horas')),
+                    output_field=DecimalField(max_digits=4)
+                ),
+                0
+            ),
+            cantidad_horas_mano_obra_inicial=
+            Coalesce(
+                ExpressionWrapper(
+                    Subquery(mano_obra_inicial.values('cantidad_horas')),
+                    output_field=DecimalField(max_digits=4)
+                ),
+                0
+            ),
+        )
         return qs
 
     @list_route(http_method_names=['get', ])

@@ -19,6 +19,8 @@ import itemsCgunoReducer from "./especificas/cguno/itemsBiableReducer";
 import colaboradoresCostosMesesReducer from "./especificas/cguno/colaboradoresCostosMesesReducer";
 import hojasTrabajosDiariosReducer from "./especificas/mano_obra/hojaTrabajoDiarioReducer";
 import horasHojasTrabajosDiariosReducer from "./especificas/mano_obra/horasHojaTrabajoDiarioReducer";
+import horasColaboradoresProyectosInicialesReducer
+    from "./especificas/mano_obra/HorasColaboradoresProyectosInicialesReducer";
 
 const rootReducer = combineReducers({
     mis_permisos: misPermisosReducer,
@@ -39,6 +41,7 @@ const rootReducer = combineReducers({
     colaboradores_costos_nomina: colaboradoresCostosMesesReducer,
     hojas_trabajos_diarios: hojasTrabajosDiariosReducer,
     horas_hojas_trabajos: horasHojasTrabajosDiariosReducer,
+    horas_colaboradores_proyectos_iniciales: horasColaboradoresProyectosInicialesReducer,
 });
 
 export default rootReducer;

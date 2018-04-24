@@ -10,6 +10,7 @@ import HojasTrabajoDetail from './mano_obra/hojas_trabajo/containers/hojas_traba
 import VerificarHorasList from './mano_obra/verificar_horas/containers/horas_verificar_list_container';
 import ColaboradoresList from './colaboradores/colaboradores/containers/colaboradores_list_container';
 import ColaboradoresDetail from './colaboradores/colaboradores/containers/colaborador_detail';
+import HorasTrabajoColaboradorInicialesList from './mano_obra/horas_trabajo_iniciales/containers/base_list_container';
 
 const App = (props) => {
     return (
@@ -29,6 +30,8 @@ const App = (props) => {
                                component={ColaboradoresList}/>
                         <Route exact path='/app/proyectos/colaboradores/colaboradores/detail/:id'
                                component={ColaboradoresDetail}/>
+                        <Route exact path='/app/proyectos/mano_obra/horas_colaborador_proyecto_inicial/list'
+                               component={HorasTrabajoColaboradorInicialesList}/>
                     </Switch>
                 </div>
             </Fragment>
