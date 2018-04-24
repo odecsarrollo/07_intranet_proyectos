@@ -66,7 +66,7 @@ class Tabla extends React.Component {
                                 Header: "Horas M.O",
                                 maxWidth: 80,
                                 Cell: row => <div
-                                    className='text-right'>{Number(row.original.cantidad_horas_mano_obra) + Number(row.original.cantidad_horas_mano_obra_inicial)}</div>
+                                    className='text-right'>{(Number(row.original.cantidad_horas_mano_obra) + Number(row.original.cantidad_horas_mano_obra_inicial)).toFixed(2)}</div>
                             },
                         ]
                     },

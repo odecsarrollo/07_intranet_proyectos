@@ -39,7 +39,8 @@ class Detail extends Component {
     onLiteralSelect(item) {
         const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
         cargando();
-        const cargarHorasManoObraLiteral = (literal_id) => this.props.fetchHorasHojasTrabajosxLiteral(literal_id, () => noCargando(), notificarErrorAjaxAction);
+        const cargarHorasManoObraInicialLiteral = (literal_id) => this.props.fetchHorasColaboradoresProyectosInicialesxLiteral(literal_id, () => noCargando(), notificarErrorAjaxAction);
+        const cargarHorasManoObraLiteral = (literal_id) => this.props.fetchHorasHojasTrabajosxLiteral(literal_id, () => cargarHorasManoObraInicialLiteral(literal_id), notificarErrorAjaxAction);
         const cargarItemsLiteral = (literal_id) => this.props.fetchItemsLiterales(literal_id, () => cargarHorasManoObraLiteral(literal_id), notificarErrorAjaxAction);
         this.props.fetchLiteral(
             item.id,
@@ -69,7 +70,14 @@ class Detail extends Component {
     }
 
     render() {
-        const {object, mis_permisos, items_literales, horas_hojas_trabajos_list, literales_list} = this.props;
+        const {
+            object,
+            mis_permisos,
+            items_literales,
+            horas_hojas_trabajos_list,
+            literales_list,
+            horas_colaboradores_proyectos_iniciales_list,
+        } = this.props;
         const permisos = permisosAdapter(mis_permisos, permisos_view);
 
         if (!object) {
@@ -120,7 +128,7 @@ class Detail extends Component {
                                         <div className="col-12">
                                             <h6 className='h6-response'>Costo
                                                 Mano
-                                                Obra: <small>{pesosColombianos(Number(item_seleccionado.costo_mano_obra)+Number(item_seleccionado.costo_mano_obra_inicial))}</small>
+                                                Obra: <small>{pesosColombianos(Number(item_seleccionado.costo_mano_obra) + Number(item_seleccionado.costo_mano_obra_inicial))}</small>
                                             </h6>
                                         </div>
                                         }
@@ -152,6 +160,7 @@ class Detail extends Component {
                                 <TabPanel>
                                     <TablaProyectoLiteralesManoObra
                                         horas_mano_obra_literales={horas_hojas_trabajos_list}
+                                        horas_colaboradores_proyectos_iniciales_list={horas_colaboradores_proyectos_iniciales_list}
                                     />
                                 </TabPanel>
                             </Tabs>
@@ -173,6 +182,7 @@ function mapPropsToState(state, ownProps) {
         items_literales: state.items_literales,
         horas_hojas_trabajos_list: state.horas_hojas_trabajos,
         literales_list: state.literales,
+        horas_colaboradores_proyectos_iniciales_list: state.horas_colaboradores_proyectos_iniciales,
         object: state.proyectos[id]
     }
 }

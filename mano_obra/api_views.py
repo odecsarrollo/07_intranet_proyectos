@@ -164,3 +164,10 @@ class HoraTrabajoColaboradorLiteralInicialViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(creado_por=self.request.user)
+
+    @list_route(http_method_names=['get', ])
+    def horas_por_literal(self, request):
+        literal_id = request.GET.get('literal_id')
+        lista = self.queryset.filter(literal_id=literal_id).all()
+        serializer = self.get_serializer(lista, many=True)
+        return Response(serializer.data)

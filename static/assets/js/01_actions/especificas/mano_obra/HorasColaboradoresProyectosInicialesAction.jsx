@@ -5,7 +5,7 @@ import {
     fetchObject,
     deleteObject,
     createObject,
-    callApiMethodWithParameters
+    callApiMethodWithParameters, fetchListWithParameter
 } from '../../00_general_fuctions'
 
 const current_url_api = 'mano_obra_hoja_trabajo_horas_iniciales';
@@ -33,6 +33,17 @@ export const fetchHorasColaboradoresProyectosIniciales = (callback = null, callb
         fetchList(current_url_api, dispatches, callback, callback_error);
     }
 };
+
+export function fetchHorasColaboradoresProyectosInicialesxLiteral(literal_id, callback = null, callback_error = null) {
+    return function (dispatch) {
+        const FULL_URL = `${current_url_api}/horas_por_literal/?literal_id=${literal_id}`;
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch_all, payload: response})
+        };
+        fetchListWithParameter(FULL_URL, dispatches, callback, callback_error);
+    }
+}
+
 export const fetchHoraColaboradorProyectoInicial = (id, callback = null, callback_error = null) => {
     return (dispatch) => {
         const dispatches = (response) => {
