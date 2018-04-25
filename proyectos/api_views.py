@@ -1,5 +1,5 @@
-from django.db.models import Sum, Value as V, F, ExpressionWrapper, DecimalField, OuterRef, Subquery
-from django.db.models.expressions import RawSQL
+from django.db.models import Sum, Value as V, F, ExpressionWrapper, DecimalField, OuterRef, Subquery, Count
+from django.db.models.expressions import RawSQL, Exists
 from django.db.models.functions import Coalesce
 from rest_framework import viewsets
 from rest_framework.decorators import list_route
@@ -78,6 +78,12 @@ class ProyectoViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
+    @list_route(http_method_names=['get', ])
+    def con_literales_abiertos(self, request):
+        lista = self.get_queryset().filter(abierto=True, mis_literales__abierto=True).all()
+        serializer = self.get_serializer(lista, many=True)
+        return Response(serializer.data)
+
 
 class LiteralViewSet(viewsets.ModelViewSet):
     queryset = Literal.objects.select_related(
@@ -147,7 +153,22 @@ class LiteralViewSet(viewsets.ModelViewSet):
 
     @list_route(http_method_names=['get', ])
     def abiertos(self, request):
-        lista = self.get_queryset().filter(proyecto__abierto=True).all()
+        lista = self.get_queryset().filter(abierto=True).all()
+        serializer = self.get_serializer(lista, many=True)
+        return Response(serializer.data)
+
+    @list_route(http_method_names=['get', ])
+    def proyecto_abierto(self, request):
+        literales_abiertos = Literal.objects.filter(
+            proyecto_id=OuterRef('proyecto_id'),
+            abierto=True
+        )
+        lista = self.get_queryset().annotate(
+            proyecto_con_literales_abierto=Exists(literales_abiertos)
+        ).filter(
+            proyecto__abierto=True,
+            proyecto_con_literales_abierto=True
+        ).all()
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 

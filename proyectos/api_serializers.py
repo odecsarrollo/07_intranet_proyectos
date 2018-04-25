@@ -4,6 +4,7 @@ from .models import Proyecto, Literal
 
 
 class LiteralSerializer(serializers.ModelSerializer):
+    proyecto_abierto = serializers.BooleanField(source='proyecto.abierto', read_only=True)
     costo_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     costo_mano_obra_inicial = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     cantidad_horas_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
@@ -27,6 +28,7 @@ class LiteralSerializer(serializers.ModelSerializer):
             'url',
             'id',
             'id_literal',
+            'proyecto_abierto',
             'abierto',
             'en_cguno',
             'descripcion',

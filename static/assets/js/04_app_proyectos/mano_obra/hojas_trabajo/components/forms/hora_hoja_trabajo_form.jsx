@@ -9,8 +9,14 @@ import {MyFormTagModal} from '../../../../../00_utilities/components/ui/forms/My
 import validate from './validate_horas';
 
 class Form extends Component {
+    componentWillUnmount() {
+        this.props.clearProyectos();
+        this.props.clearLiterales();
+    }
+
     componentDidMount() {
-        const {initialValues, proyectos_list, mi_cuenta} = this.props;
+        const {initialValues, proyectos_list, mi_cuenta, noCargando, notificarErrorAjaxAction} = this.props;
+        this.props.fetchProyectosConLiteralesAbiertos(() => noCargando(), notificarErrorAjaxAction);
         const autogestion_horas_trabajadas = !!(
             mi_cuenta.colaborador &&
             mi_cuenta.colaborador.autogestion_horas_trabajadas
@@ -90,8 +96,11 @@ class Form extends Component {
             proyecto_literales =
                 _.map(_.pickBy(literales_list, li => {
                     return (
-                        !_.map(hoja_trabajo.mis_horas_trabajadas, e => e.literal).includes(li.id)
-                        || (initialValues && li.id === initialValues.literal)
+                        (
+                            !_.map(hoja_trabajo.mis_horas_trabajadas, e => e.literal).includes(li.id)
+                            || (initialValues && li.id === initialValues.literal)
+                        ) &&
+                        li.abierto
                     )
                 }), e => {
                     return ({

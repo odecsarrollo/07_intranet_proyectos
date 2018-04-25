@@ -45,6 +45,16 @@ export function fetchLiteralesAbiertos(callback = null, callback_error = null) {
     }
 }
 
+export function fetchLiteralesProyectoAbierto(callback = null, callback_error = null) {
+    return function (dispatch) {
+        const FULL_URL = `${current_url_api}/proyecto_abierto`;
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch_all, payload: response})
+        };
+        fetchList(FULL_URL, dispatches, callback, callback_error)
+    }
+}
+
 export function fetchLiteral(id, callback = null, callback_error = null) {
     return function (dispatch) {
         const dispatches = (response) => {
