@@ -1,5 +1,4 @@
 import React, {Fragment} from "react";
-import Checkbox from 'material-ui/Checkbox';
 import {MyDialogButtonDelete} from '../../../../00_utilities/components/ui/dialog';
 import {IconButtonTableSee} from '../../../../00_utilities/components/ui/icon/iconos';
 import {fechaFormatoUno, pesosColombianos} from '../../../../00_utilities/common';

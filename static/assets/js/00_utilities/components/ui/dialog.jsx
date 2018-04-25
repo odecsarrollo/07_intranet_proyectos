@@ -20,7 +20,8 @@ export class MyDialogButtonDelete extends Component {
         const {
             onDelete,
             element_type,
-            element_name
+            element_name,
+            tamano_icono = ''
         } = this.props;
         const actions = [
             <FlatIconModalCancel onClick={() => this.setState({is_open: false})}/>,
@@ -37,6 +38,7 @@ export class MyDialogButtonDelete extends Component {
             <Fragment>
                 <IconButtonTableDelete
                     onClick={() => this.setState({is_open: true})}
+                    tamano_icono={tamano_icono}
                 />
                 <Dialog
                     title={`Eliminar ${element_type}`}

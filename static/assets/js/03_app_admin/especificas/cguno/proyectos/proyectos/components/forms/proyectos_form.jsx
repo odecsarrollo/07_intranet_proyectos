@@ -1,6 +1,10 @@
 import React, {Component} from 'react';
 import {reduxForm} from 'redux-form';
-import {MyTextFieldSimple, MyCheckboxSimple} from '../../../../../../../00_utilities/components/ui/forms/fields';
+import {
+    MyTextFieldSimple,
+    MyCheckboxSimple,
+    MyDateTimePickerField
+} from '../../../../../../../00_utilities/components/ui/forms/fields';
 import {connect} from "react-redux";
 import {MyFormTagModal} from '../../../../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import validate from './validate';
@@ -33,7 +37,7 @@ class Form extends Component {
             >
                 <div className="m-2">
                     <div className="row">
-                        {!initialValues || initialValues.mis_literales.length === 0 ?
+                        {!initialValues || !initialValues.en_cguno ?
                             <MyTextFieldSimple
                                 className="col-12"
                                 nombre='OP Proyecto'
@@ -59,6 +63,26 @@ class Form extends Component {
                                 case='U'/>
 
                         }
+                        <MyTextFieldSimple
+                            className="col-12 col-md-6"
+                            nombre='Nro. Orden Compra'
+                            name='orden_compra_nro'
+                            case='U'/>
+
+                        <div className="col-12">
+                            <div className="row">
+                                <MyDateTimePickerField
+                                    name='orden_compra_fecha'
+                                    nombre='Fecha Orden de Compra'
+                                    className='col-12 col-md-6'
+                                />
+                                <MyDateTimePickerField
+                                    name='fecha_entrega_pactada'
+                                    nombre='Fecha Entrega Pactada'
+                                    className='col-12 col-md-6'
+                                />
+                            </div>
+                        </div>
                         <MyCheckboxSimple
                             className="col-12"
                             nombre='Abierto'

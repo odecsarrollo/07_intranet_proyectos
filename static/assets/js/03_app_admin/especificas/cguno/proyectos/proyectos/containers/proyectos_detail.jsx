@@ -5,14 +5,17 @@ import CargarDatos from "../../../../../../00_utilities/components/system/cargar
 import {Titulo, SinObjeto, AtributoTexto, AtributoBooleano} from "../../../../../../00_utilities/templates/fragmentos";
 import ValidarPermisos from "../../../../../../00_utilities/permisos/validar_permisos";
 import {permisosAdapter, pesosColombianos} from "../../../../../../00_utilities/common";
-import TablaProyectoLiterales from '../components/proyectos_literales_tabla';
-import TablaProyectoLiteralesMateriales from '../components/proyectos_literales_materiales_tabla';
-import TablaProyectoLiteralesManoObra from '../components/proyectos_literales_mano_obra_tabla';
+import TablaProyectoLiterales from '../../literales/components/proyectos_literales_tabla';
+import TablaProyectoLiteralesMateriales from '../../literales/components/proyectos_literales_materiales_tabla';
+import TablaProyectoLiteralesManoObra from '../../literales/components/proyectos_literales_mano_obra_tabla';
+import InformacionGeneral from '../../literales/components/proyectos_literales_general';
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import {
-    PROYECTOS as permisos_view
+    PROYECTOS as permisos_view,
+    LITERALES as literales_permisos_view
 } from "../../../../../../00_utilities/permisos/types";
+import LiteralModalCreate from './../../literales/components/literal_nuevo_modal';
 
 class Detail extends Component {
     constructor(props) {
@@ -24,6 +27,9 @@ class Detail extends Component {
         });
         this.cargarDatos = this.cargarDatos.bind(this);
         this.onLiteralSelect = this.onLiteralSelect.bind(this);
+        this.onUpdateLiteral = this.onUpdateLiteral.bind(this);
+        this.onDeleteLiteral = this.onDeleteLiteral.bind(this);
+        this.setCurrentLiteral = this.setCurrentLiteral.bind(this);
     }
 
     componentDidMount() {
@@ -34,6 +40,38 @@ class Detail extends Component {
         this.props.clearProyectos();
         this.props.clearItemsLiterales();
         this.props.clearLiterales();
+    }
+
+    setCurrentLiteral(item_seleccionado) {
+        this.setState({item_seleccionado});
+    }
+
+    onUpdateLiteral(literal) {
+        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
+        cargando();
+        this.props.updateLiteral(
+            literal.id,
+            literal,
+            (response) => {
+                noCargando();
+                this.setState({
+                    item_seleccionado: response
+                });
+            }, notificarErrorAjaxAction);
+    }
+
+    onDeleteLiteral(literal) {
+        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
+        cargando();
+        this.props.deleteLiteral(
+            literal.id,
+            () => {
+                noCargando();
+                this.setState({
+                    item_seleccionado: null
+                });
+            }, notificarErrorAjaxAction
+        );
     }
 
     onLiteralSelect(item) {
@@ -79,6 +117,7 @@ class Detail extends Component {
             horas_colaboradores_proyectos_iniciales_list,
         } = this.props;
         const permisos = permisosAdapter(mis_permisos, permisos_view);
+        const permisos_literales = permisosAdapter(mis_permisos, literales_permisos_view);
 
         if (!object) {
             return <SinObjeto/>
@@ -87,13 +126,17 @@ class Detail extends Component {
         const {item_seleccionado} = this.state;
         return (
             <ValidarPermisos can_see={permisos.detail} nombre='detalles de proyecto'>
-                <Titulo>Detalle {object.id_proyecto}</Titulo>
                 <div className="row">
                     <div className="col-12">
                         <h3 className="h3-responsive">Proyecto: <small>{object.id_proyecto}</small></h3>
                     </div>
                     <div className="col-12 col-lg-4">
                         <h5 className='h5-responsive'>Literales</h5>
+                        <LiteralModalCreate
+                            permisos_object={permisos_literales}
+                            setCurrentLiteral={this.setCurrentLiteral}
+                            {...this.props}
+                        />
                         <TablaProyectoLiterales
                             lista_literales={_.map(literales_list, e => e)}
                             onSelectItem={this.onLiteralSelect}
@@ -146,16 +189,23 @@ class Detail extends Component {
 
                             <Tabs>
                                 <TabList>
+                                    <Tab>General</Tab>
                                     <Tab>Materiales</Tab>
                                     <Tab>Mano Obra</Tab>
                                 </TabList>
                                 <TabPanel>
-                                    <div className="col-12">
-                                        <TablaProyectoLiteralesMateriales
-                                            items_literales={items_literales}
-                                            can_see_ultimo_costo_item_biable={permisos.ultimo_costo_item_biable}
-                                        />
-                                    </div>
+                                    <InformacionGeneral
+                                        proyecto={object}
+                                        literal={item_seleccionado}
+                                        onUpdateLiteral={this.onUpdateLiteral}
+                                        onDeleteLiteral={this.onDeleteLiteral}
+                                    />
+                                </TabPanel>
+                                <TabPanel>
+                                    <TablaProyectoLiteralesMateriales
+                                        items_literales={items_literales}
+                                        can_see_ultimo_costo_item_biable={permisos.ultimo_costo_item_biable}
+                                    />
                                 </TabPanel>
                                 <TabPanel>
                                     <TablaProyectoLiteralesManoObra

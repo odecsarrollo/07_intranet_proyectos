@@ -13,7 +13,7 @@ import ColaboradoresDetail from "./especificas/cguno/colaboradores/colaboradores
 import ColaboradoresCostosNominaList from "./especificas/cguno/colaboradores/costos_nomina/containers/costos_nomina_list_container";
 import UsuariosDetail from "./generales/usuarios/usuarios/containers/usuarios_detail";
 import ProyectosCGUnoList from "./especificas/cguno/proyectos/proyectos/containers/proyectos_list_container";
-import ProyectosCGUnoDetail from "./especificas/cguno/proyectos/proyectos/containers/base_detail";
+import ProyectosCGUnoDetail from "./especificas/cguno/proyectos/proyectos/containers/proyectos_detail";
 
 
 const AdminApp = (props) => {

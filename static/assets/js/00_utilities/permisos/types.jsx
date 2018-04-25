@@ -103,3 +103,11 @@ export const HORAS_COLABORADORES_PROYECTOS_INICIALES = {
     list: 'list_horatrabajocolaboradorliteralinicial',
     detail: 'detail_horatrabajocolaboradorliteralinicial',
 };
+
+export const LITERALES = {
+    add: 'add_horatrabajocolaboradorliteralinicial',
+    delete: 'delete_horatrabajocolaboradorliteralinicial',
+    change: 'change_horatrabajocolaboradorliteralinicial',
+    list: 'list_horatrabajocolaboradorliteralinicial',
+    detail: 'detail_horatrabajocolaboradorliteralinicial',
+};

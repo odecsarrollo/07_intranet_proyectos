@@ -51,7 +51,7 @@ class List extends Component {
             successCallback();
         };
         cargando();
-        this.props.createProyecto(item, success_method, notificarErrorAjaxAction);
+        this.props.createProyecto({...item, en_cguno: false}, success_method, notificarErrorAjaxAction);
     }
 
     updateObjectMethod(item, successCallback) {

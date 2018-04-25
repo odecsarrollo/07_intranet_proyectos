@@ -14,10 +14,14 @@ export const FETCH_PROYECTO = 'fetch_proyecto';
 export const CLEAR_PROYECTOS = 'clear_proyectos';
 export const UPDATE_PROYECTO = 'update_proyecto';
 
-
-export const FETCH_LITERALES = 'fetch_literales';
-export const FETCH_LITERAL = 'fetch_literal';
-export const CLEAR_LITERALES = 'clear_literales';
+export const LITERAL_TYPES = {
+    create: 'create_literal',
+    delete: 'delete_literal',
+    fetch_all: 'fetch_literales',
+    fetch: 'fetch_literal',
+    clear: 'clear_literales',
+    update: 'update_literal',
+};
 
 
 export const FETCH_ITEMS_LITERALES = 'fetch_items_literales';

@@ -26,10 +26,10 @@ export function notificarAction(mensaje, tipo = 'success', tiempo = 5000) {
     }
 }
 
-export function notificarErrorAjaxAction(error, tiempo = 7000) {
+export function notificarErrorAjaxAction(error = '', tiempo = 7000) {
     return function (dispatch) {
         let mensaje = '';
-        let mensaje_final = '';
+        let mensaje_final = error;
         const {type_error} = error;
 
         if (error.response) {

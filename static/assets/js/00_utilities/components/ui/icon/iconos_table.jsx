@@ -24,9 +24,9 @@ IconButtonTableSee.propTypes = {
 };
 
 export const IconButtonTableDelete = (props) => {
-    const {onClick} = props;
+    const {onClick, tamano_icono = ''} = props;
     return (
-        <IconButtonTable onClick={onClick} iconClassName='far fa-trash' {...props}/>
+        <IconButtonTable onClick={onClick} iconClassName={`far fa-trash ${tamano_icono}`} {...props}/>
     )
 };
 IconButtonTableDelete.propTypes = {
