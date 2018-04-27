@@ -2,31 +2,40 @@ import {REGEX_SOLO_NUMEROS_DINERO} from "../../../../../../../00_utilities/commo
 
 const validate = values => {
     const errors = {};
-    if (!values.id_proyecto) {
-        errors.id_proyecto = 'Requerido';
+
+
+    const requiredFields = [
+        'id_proyecto',
+        'valor_cliente',
+        'costo_presupuestado',
+        'nombre',
+    ];
+    requiredFields.map(field => {
+        if (!values[field]) {
+            errors[field] = 'Requerido'
+        }
+    });
+
+    const justMoneyFields = [
+        'valor_cliente',
+        'costo_presupuestado',
+    ];
+    justMoneyFields.map(field => {
+        if (values[field] && !REGEX_SOLO_NUMEROS_DINERO.test(values[field])) {
+            errors[field] = 'Debe ser un número'
+        }
+    });
+
+
+    if (values.valor_cliente && values.valor_cliente < 0) {
+        errors.valor_cliente = 'El precio debe de ser positivo';
     }
 
-    if (!values.costo_presupuestado) {
-        errors.costo_presupuestado = 'Requerido';
-    } else {
-        if (values.costo_presupuestado < 0) {
-            errors.costo_presupuestado = 'El costo presupuestado debe de ser positivo';
-        }
-        if (!REGEX_SOLO_NUMEROS_DINERO.test(values.costo_presupuestado)) {
-            errors.costo_presupuestado = 'Debe ser solamente números';
-        }
+    if (values.costo_presupuestado && values.costo_presupuestado < 0) {
+        errors.costo_presupuestado = 'El costo presupuestado debe de ser positivo';
     }
 
-    if (!values.valor_cliente) {
-        errors.valor_cliente = 'Requerido';
-    } else {
-        if (values.valor_cliente < 0) {
-            errors.valor_cliente = 'El precio debe de ser positivo';
-        }
-        if (!REGEX_SOLO_NUMEROS_DINERO.test(values.valor_cliente)) {
-            errors.valor_cliente = 'Debe ser solamente números';
-        }
-    }
+
     return errors;
 };
 

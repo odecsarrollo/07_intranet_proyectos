@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import CreateForm from './forms/proyectos_form';
+import CreateForm from './forms/proyectos_modal_form';
 import Tabla from './proyectos_tabla';
 import crudHOC from '../../../../../../00_utilities/components/hoc_crud';
 

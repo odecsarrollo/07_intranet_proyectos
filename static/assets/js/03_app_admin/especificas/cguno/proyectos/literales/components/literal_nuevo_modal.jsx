@@ -23,6 +23,10 @@ class LiteralModalCreate extends Component {
         } = this.props;
         cargando();
 
+        this.props.clearHorasColaboradoresProyectosIniciales();
+        this.props.clearHorasHojasTrabajos();
+        this.props.clearItemsLiterales();
+
         const id_literal = `${object.id_proyecto}${item.id_literal_posfix ? `-${item.id_literal_posfix}` : ''}`;
         const existe_literal = _.map(literales_list, e => e.id_literal).includes(id_literal);
         const nuevo_literal = {...item, proyecto: object.id, id_literal, en_cguno: false};

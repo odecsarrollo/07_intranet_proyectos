@@ -10,7 +10,7 @@ import {pesosColombianos} from "../../../../../../00_utilities/common";
 class Tabla extends React.Component {
     render() {
 
-        const data = this.props.data;
+        const data = _.orderBy(this.props.data,['abierto','id_proyecto'],['desc','asc']);
         const {
             updateItem,
             singular_name,
@@ -35,6 +35,26 @@ class Tabla extends React.Component {
                                 filterMethod: (filter, row) => {
                                     return row[filter.id].includes(filter.value.toUpperCase())
                                 }
+                            },
+                            {
+                                Header: "Nombre",
+                                accessor: "nombre",
+                                maxWidth: 300,
+                                filterable: true,
+                                filterMethod: (filter, row) => {
+                                    return row[filter.id] && row[filter.id].includes(filter.value.toUpperCase())
+                                },
+                                Cell: row => <div>{row.value ? row.value : 'SIN DEFINIR'}</div>
+                            },
+                            {
+                                Header: "Cliente",
+                                accessor: "cliente_nombre",
+                                maxWidth: 300,
+                                filterable: true,
+                                filterMethod: (filter, row) => {
+                                    return row[filter.id] && row[filter.id].includes(filter.value.toUpperCase())
+                                },
+                                Cell: row => <div>{row.value ? row.value : 'SIN DEFINIR'}</div>
                             },
                             {
                                 Header: "Costo Presupuestado",

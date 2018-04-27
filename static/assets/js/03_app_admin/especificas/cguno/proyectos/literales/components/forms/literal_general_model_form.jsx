@@ -53,9 +53,9 @@ class ModelForm extends Component {
 }
 
 function mapPropsToState(state, ownProps) {
-    const {object: {orden_compra_nro, orden_compra_fecha, fecha_entrega_pactada}} = ownProps;
+    const {object: {orden_compra_nro, orden_compra_fecha, fecha_entrega_pactada, cotizacion_nro}} = ownProps;
     return {
-        initialValues: {orden_compra_nro, orden_compra_fecha, fecha_entrega_pactada}
+        initialValues: {orden_compra_nro, orden_compra_fecha, fecha_entrega_pactada, cotizacion_nro}
     }
 }
 

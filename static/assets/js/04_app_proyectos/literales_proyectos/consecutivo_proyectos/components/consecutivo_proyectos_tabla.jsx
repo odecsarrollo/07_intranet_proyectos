@@ -38,23 +38,46 @@ class Tabla extends React.Component {
                             {
                                 Header: "Literal",
                                 accessor: "id_literal",
-                                maxWidth: 150,
+                                maxWidth: 100,
                                 filterable: true,
                                 filterMethod: (filter, row) => {
                                     return row[filter.id].includes(filter.value.toUpperCase())
                                 }
                             },
                             {
-                                Header: "Descripción",
+                                Header: "Nombre Literal",
                                 accessor: "descripcion",
                                 maxWidth: 300,
                                 filterable: true,
                                 filterMethod: (filter, row) => {
-                                    return row[filter.id].includes(filter.value.toUpperCase())
+                                    return row[filter.id] && row[filter.id].includes(filter.value.toUpperCase())
                                 }
                             },
                             {
-                                Header: "Número OC",
+                                Header: "Nombre Proyecto",
+                                accessor: "proyecto_nombre",
+                                maxWidth: 300,
+                                filterable: true,
+                                filterMethod: (filter, row) => {
+                                    return row[filter.id] && row[filter.id].includes(filter.value.toUpperCase())
+                                }
+                            },
+                            {
+                                Header: "Cliente",
+                                accessor: "cliente_nombre",
+                                maxWidth: 300,
+                                filterable: true,
+                                filterMethod: (filter, row) => {
+                                    return row[filter.id] && row[filter.id].includes(filter.value.toUpperCase())
+                                }
+                            },
+                            {
+                                Header: "Nro. Cotización",
+                                accessor: "cotizacion_nro",
+                                maxWidth: 100,
+                            },
+                            {
+                                Header: "Nro. OC",
                                 accessor: "orden_compra_nro",
                                 maxWidth: 100,
                             },

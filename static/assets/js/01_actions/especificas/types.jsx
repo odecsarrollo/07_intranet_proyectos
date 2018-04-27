@@ -81,3 +81,12 @@ export const HORA_COLABORADOR_PROYECTO_INICIAL_TYPES = {
     clear: 'clear_horas_colaboradores_proyectos_iniciales',
     update: 'update_hora_colaborador_proyecto_inicial',
 };
+
+export const CLIENTE_TYPES = {
+    create: 'create_cliente',
+    delete: 'delete_cliente',
+    fetch_all: 'fetch_clientes',
+    fetch: 'fetch_cliente',
+    clear: 'clear_clientes',
+    update: 'update_cliente',
+};

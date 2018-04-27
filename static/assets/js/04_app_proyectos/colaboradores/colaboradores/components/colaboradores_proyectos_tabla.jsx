@@ -99,20 +99,20 @@ class Tabla extends React.Component {
                             },
                         ]
                     },
-                    {
-                        Header: "Opciones",
-                        columns: [
-                            {
-                                Header: "Ver",
-                                maxWidth: 60,
-                                Cell: row =>
-                                    <Link to={`/app/proyectos/colaboradores/colaboradores/detail/${row.original.id}`}>
-                                        <IconButtonTableSee/>
-                                    </Link>
-
-                            }
-                        ]
-                    }
+                    // {
+                    //     Header: "Opciones",
+                    //     columns: [
+                    //         {
+                    //             Header: "Ver",
+                    //             maxWidth: 60,
+                    //             Cell: row =>
+                    //                 <Link to={`/app/proyectos/colaboradores/colaboradores/detail/${row.original.id}`}>
+                    //                     <IconButtonTableSee/>
+                    //                 </Link>
+                    //
+                    //         }
+                    //     ]
+                    // }
                 ]}
                 defaultPageSize={10}
                 className="-striped -highlight tabla-maestra"

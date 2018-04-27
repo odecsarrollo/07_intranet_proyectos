@@ -18,6 +18,7 @@ import momentLocaliser from 'react-widgets-moment';
 import moment from 'moment-timezone';
 
 moment.tz.setDefault("America/Bogota");
+moment.locale('es');
 momentLocaliser(moment);
 
 const renderTextField = ({input, label, meta: {touched, error}, ...custom}) => {
@@ -158,8 +159,8 @@ MyCheckboxSimple.propTypes = {
     nombre: PropTypes.string
 };
 
-const renderDateTimePicker = ({input: {onChange, value}, meta: {touched, error}, show_edad}) => {
-    const now = moment();
+const renderDateTimePicker = ({input: {onChange, value}, meta: {touched, error}, show_edad, max = new Date()}) => {
+    const now = moment().tz('America/Bogota');
     const fechaHoy = moment(now, "YYYY MM DD", "es");
     const fecha_nacimiento = moment(value, "YYYY MM DD", "es").tz('America/Bogota');
     const diferencia = fechaHoy.diff(fecha_nacimiento, "years");
@@ -170,8 +171,8 @@ const renderDateTimePicker = ({input: {onChange, value}, meta: {touched, error},
                 onChange={onChange}
                 format="YYYY-MM-DD"
                 time={false}
-                max={new Date()}
-                value={!value ? null : new Date(value)}
+                max={max}
+                value={!value ? null : moment(value).toDate()}
             />{show_edad && edad}
             {touched && (error && <span className='form-field-error'>{error}</span>)}
         </Fragment>

@@ -2,13 +2,11 @@ import React, {Component} from 'react';
 import {connect} from "react-redux";
 import * as actions from "../../../../../../01_actions/01_index";
 import CargarDatos from "../../../../../../00_utilities/components/system/cargar_datos";
-import {Titulo, SinObjeto, AtributoTexto, AtributoBooleano} from "../../../../../../00_utilities/templates/fragmentos";
+import {SinObjeto} from "../../../../../../00_utilities/templates/fragmentos";
 import ValidarPermisos from "../../../../../../00_utilities/permisos/validar_permisos";
-import {permisosAdapter, pesosColombianos} from "../../../../../../00_utilities/common";
+import {permisosAdapter} from "../../../../../../00_utilities/common";
 import TablaProyectoLiterales from '../../literales/components/proyectos_literales_tabla';
-import TablaProyectoLiteralesMateriales from '../../literales/components/proyectos_literales_materiales_tabla';
-import TablaProyectoLiteralesManoObra from '../../literales/components/proyectos_literales_mano_obra_tabla';
-import InformacionGeneral from '../../literales/components/proyectos_literales_general';
+import FormEditProyecto from '../../proyectos/components/proyectos_general';
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import {
@@ -16,6 +14,8 @@ import {
     LITERALES as literales_permisos_view
 } from "../../../../../../00_utilities/permisos/types";
 import LiteralModalCreate from './../../literales/components/literal_nuevo_modal';
+import LiteralDetail from '../../literales/components/literal_detail';
+import ProyectoInfo from '../../proyectos/components/proyecto_datos';
 
 class Detail extends Component {
     constructor(props) {
@@ -27,8 +27,7 @@ class Detail extends Component {
         });
         this.cargarDatos = this.cargarDatos.bind(this);
         this.onLiteralSelect = this.onLiteralSelect.bind(this);
-        this.onUpdateLiteral = this.onUpdateLiteral.bind(this);
-        this.onDeleteLiteral = this.onDeleteLiteral.bind(this);
+        this.onUpdateProyecto = this.onUpdateProyecto.bind(this);
         this.setCurrentLiteral = this.setCurrentLiteral.bind(this);
     }
 
@@ -38,40 +37,20 @@ class Detail extends Component {
 
     componentWillUnmount() {
         this.props.clearProyectos();
-        this.props.clearItemsLiterales();
         this.props.clearLiterales();
+        this.props.clearHorasColaboradoresProyectosIniciales();
+        this.props.clearHorasHojasTrabajos();
+        this.props.clearItemsLiterales();
     }
 
     setCurrentLiteral(item_seleccionado) {
         this.setState({item_seleccionado});
     }
 
-    onUpdateLiteral(literal) {
+    onUpdateProyecto(proyecto) {
         const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
         cargando();
-        this.props.updateLiteral(
-            literal.id,
-            literal,
-            (response) => {
-                noCargando();
-                this.setState({
-                    item_seleccionado: response
-                });
-            }, notificarErrorAjaxAction);
-    }
-
-    onDeleteLiteral(literal) {
-        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
-        cargando();
-        this.props.deleteLiteral(
-            literal.id,
-            () => {
-                noCargando();
-                this.setState({
-                    item_seleccionado: null
-                });
-            }, notificarErrorAjaxAction
-        );
+        this.props.updateProyecto(proyecto.id, proyecto, () => noCargando(), notificarErrorAjaxAction);
     }
 
     onLiteralSelect(item) {
@@ -95,7 +74,7 @@ class Detail extends Component {
 
     cargarDatos() {
         const {id} = this.props.match.params;
-        const {noCargando, cargando, notificarAction, notificarErrorAjaxAction} = this.props;
+        const {noCargando, cargando, notificarErrorAjaxAction} = this.props;
         cargando();
         const success_callback = () => {
             noCargando();
@@ -128,94 +107,57 @@ class Detail extends Component {
             <ValidarPermisos can_see={permisos.detail} nombre='detalles de proyecto'>
                 <div className="row">
                     <div className="col-12">
-                        <h3 className="h3-responsive">Proyecto: <small>{object.id_proyecto}</small></h3>
+                        <ProyectoInfo proyecto={object}/>
                     </div>
-                    <div className="col-12 col-lg-4">
-                        <h5 className='h5-responsive'>Literales</h5>
-                        <LiteralModalCreate
-                            permisos_object={permisos_literales}
-                            setCurrentLiteral={this.setCurrentLiteral}
-                            {...this.props}
-                        />
-                        <TablaProyectoLiterales
-                            lista_literales={_.map(literales_list, e => e)}
-                            onSelectItem={this.onLiteralSelect}
-                            item_seleccionado={item_seleccionado}
-                            proyecto={object}
-                            permisos={permisos}
-                        />
-                    </div>
-                    {
-                        item_seleccionado &&
-                        <div className="col-12 col-lg-8">
-
-                            <div className="row">
-                                <div className="col-12">
-                                    <h4 className="h4-responsive">Literal: <small>{item_seleccionado.id_literal}</small>
-                                    </h4>
-                                </div>
-                                <div className="col-12">
-                                    <div className="row">
-                                        <div className="col-12">
-                                            <h5 className='h5-response'>{item_seleccionado.descripcion}</h5>
-                                        </div>
-                                        {
-                                            permisos.costo_materiales &&
-                                            <div className="col-12">
-                                                <h6 className='h6-response'>Costo
-                                                    Materiales: <small>{pesosColombianos(item_seleccionado.costo_materiales)}</small>
-                                                </h6>
-                                            </div>
-                                        }
-                                        {permisos.costo_mano_obra &&
-                                        <div className="col-12">
-                                            <h6 className='h6-response'>Costo
-                                                Mano
-                                                Obra: <small>{pesosColombianos(Number(item_seleccionado.costo_mano_obra) + Number(item_seleccionado.costo_mano_obra_inicial))}</small>
-                                            </h6>
-                                        </div>
-                                        }
-                                        {
-                                            permisos.costo &&
-                                            <div className="col-12">
-                                                <h6 className='h6-response'>Costo
-                                                    Total: <small>{pesosColombianos(Number(item_seleccionado.costo_mano_obra_inicial) + Number(item_seleccionado.costo_mano_obra) + Number(item_seleccionado.costo_materiales))}</small>
-                                                </h6>
-                                            </div>
-                                        }
+                    <div className="col-12">
+                        <Tabs>
+                            <TabList>
+                                <Tab>Literales</Tab>
+                                <Tab>General</Tab>
+                            </TabList>
+                            <TabPanel>
+                                <div className="row">
+                                    <div className="col-12 col-lg-4">
+                                        <LiteralModalCreate
+                                            permisos_object={permisos_literales}
+                                            setCurrentLiteral={this.setCurrentLiteral}
+                                            {...this.props}
+                                        />
+                                        <TablaProyectoLiterales
+                                            lista_literales={_.map(literales_list, e => e)}
+                                            onSelectItem={this.onLiteralSelect}
+                                            item_seleccionado={item_seleccionado}
+                                            proyecto={object}
+                                            permisos={permisos}
+                                        />
                                     </div>
+                                    {
+                                        item_seleccionado &&
+                                        <div className="col-12 col-lg-8">
+                                            <LiteralDetail
+                                                setCurrentLiteral={this.setCurrentLiteral}
+                                                literal={item_seleccionado}
+                                                items_literales={items_literales}
+                                                horas_hojas_trabajos_list={horas_hojas_trabajos_list}
+                                                horas_colaboradores_proyectos_iniciales_list={horas_colaboradores_proyectos_iniciales_list}
+                                                proyecto={object}
+                                                permisos={permisos}
+                                                {...this.props}
+                                            />
+                                        </div>
+                                    }
                                 </div>
-                            </div>
-
-                            <Tabs>
-                                <TabList>
-                                    <Tab>General</Tab>
-                                    <Tab>Materiales</Tab>
-                                    <Tab>Mano Obra</Tab>
-                                </TabList>
-                                <TabPanel>
-                                    <InformacionGeneral
-                                        proyecto={object}
-                                        literal={item_seleccionado}
-                                        onUpdateLiteral={this.onUpdateLiteral}
-                                        onDeleteLiteral={this.onDeleteLiteral}
-                                    />
-                                </TabPanel>
-                                <TabPanel>
-                                    <TablaProyectoLiteralesMateriales
-                                        items_literales={items_literales}
-                                        can_see_ultimo_costo_item_biable={permisos.ultimo_costo_item_biable}
-                                    />
-                                </TabPanel>
-                                <TabPanel>
-                                    <TablaProyectoLiteralesManoObra
-                                        horas_mano_obra_literales={horas_hojas_trabajos_list}
-                                        horas_colaboradores_proyectos_iniciales_list={horas_colaboradores_proyectos_iniciales_list}
-                                    />
-                                </TabPanel>
-                            </Tabs>
-                        </div>
-                    }
+                            </TabPanel>
+                            <TabPanel>
+                                <FormEditProyecto
+                                    onSubmit={this.onUpdateProyecto}
+                                    proyecto={object}
+                                    permisos_object={permisos}
+                                    {...this.props}
+                                />
+                            </TabPanel>
+                        </Tabs>
+                    </div>
                     <CargarDatos cargarDatos={this.cargarDatos}/>
                 </div>
                 <CargarDatos cargarDatos={this.cargarDatos}/>
@@ -233,7 +175,8 @@ function mapPropsToState(state, ownProps) {
         horas_hojas_trabajos_list: state.horas_hojas_trabajos,
         literales_list: state.literales,
         horas_colaboradores_proyectos_iniciales_list: state.horas_colaboradores_proyectos_iniciales,
-        object: state.proyectos[id]
+        object: state.proyectos[id],
+        clientes_list: state.clientes,
     }
 }
 

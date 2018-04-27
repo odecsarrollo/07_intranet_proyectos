@@ -111,3 +111,11 @@ export const LITERALES = {
     list: 'list_horatrabajocolaboradorliteralinicial',
     detail: 'detail_horatrabajocolaboradorliteralinicial',
 };
+
+export const CLIENTES = {
+    add: 'add_clientebiable',
+    delete: 'delete_clientebiable',
+    change: 'change_clientebiable',
+    list: 'list_clientebiable',
+    detail: 'detail_clientebiable',
+};

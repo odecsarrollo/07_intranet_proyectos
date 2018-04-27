@@ -22,6 +22,8 @@ import horasHojasTrabajosDiariosReducer from "./especificas/mano_obra/horasHojaT
 import horasColaboradoresProyectosInicialesReducer
     from "./especificas/mano_obra/HorasColaboradoresProyectosInicialesReducer";
 
+import clientesReducer from "./especificas/clientes/clientesReducer";
+
 const rootReducer = combineReducers({
     mis_permisos: misPermisosReducer,
     permisos: permisosReducer,
@@ -42,6 +44,7 @@ const rootReducer = combineReducers({
     hojas_trabajos_diarios: hojasTrabajosDiariosReducer,
     horas_hojas_trabajos: horasHojasTrabajosDiariosReducer,
     horas_colaboradores_proyectos_iniciales: horasColaboradoresProyectosInicialesReducer,
+    clientes: clientesReducer,
 });
 
 export default rootReducer;

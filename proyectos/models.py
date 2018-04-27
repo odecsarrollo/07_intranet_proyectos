@@ -1,5 +1,6 @@
 from django.db import models
 from model_utils.models import TimeStampedModel
+from clientes.models import ClienteBiable
 
 
 class Proyecto(models.Model):
@@ -13,6 +14,9 @@ class Proyecto(models.Model):
     orden_compra_fecha = models.DateField(null=True, blank=True)
     fecha_entrega_pactada = models.DateField(null=True, blank=True)
     en_cguno = models.BooleanField(default=True)
+    cotizacion_nro = models.CharField(max_length=20, null=True, blank=True)
+    nombre = models.CharField(max_length=200, null=True, blank=True)
+    cliente = models.ForeignKey(ClienteBiable, on_delete=models.PROTECT, null=True, blank=True)
 
     def __str__(self):
         return self.id_proyecto
@@ -42,10 +46,7 @@ class Literal(models.Model):
     fecha_entrega_pactada = models.DateField(null=True, blank=True)
     en_cguno = models.BooleanField(default=True)
     abierto = models.BooleanField(default=True)
+    cotizacion_nro = models.CharField(max_length=20, null=True, blank=True)
 
     def __str__(self):
         return self.id_literal
-
-    class Meta:
-        verbose_name = 'Literal'
-        verbose_name_plural = 'Literales'

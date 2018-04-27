@@ -29,8 +29,6 @@ const validate = values => {
     if (values.minutos && values.minutos > 59) {
         errors.minutos = 'Los minutos deben ser menores a 60, de ser 60 sería una hora'
     }
-
-
     return errors;
 };
 
