@@ -119,3 +119,11 @@ export const CLIENTES = {
     list: 'list_clientebiable',
     detail: 'detail_clientebiable',
 };
+
+export const COTIZACIONES = {
+    add: 'add_cotizacion',
+    delete: 'delete_cotizacion',
+    change: 'change_cotizacion',
+    list: 'list_cotizacion',
+    detail: 'detail_cotizacion',
+};

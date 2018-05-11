@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User, Permission, Group
+from django.db.models import Q
 from rest_framework import viewsets, serializers
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
@@ -60,3 +61,13 @@ class UsuarioViewSet(viewsets.ModelViewSet):
         if username and qs.filter(username=username).exists():
             validacion_reponse.update({'username': 'Ya exite'})
         return Response(validacion_reponse)
+
+    @list_route(methods=['get'])
+    def listar_x_permiso(self, request):
+        permiso_nombre = request.GET.get('permiso_nombre')
+        qs = self.get_queryset().filter(
+            Q(user_permissions__codename=permiso_nombre) |
+            Q(groups__permissions__codename=permiso_nombre)
+        )
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)

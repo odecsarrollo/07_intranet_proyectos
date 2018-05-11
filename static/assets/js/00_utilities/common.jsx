@@ -12,6 +12,10 @@ export const REGEX_CORREO_ELECTRONICO = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\
 
 export const pesosColombianos = (plata) => formatMoney(Number(plata), "$", 0, ".", ",");
 export const fechaFormatoUno = (fecha) => moment.tz(fecha, "America/Bogota").format('MMMM D [de] YYYY');
+export const fechaHoraFormatoUno = (fecha) => {
+    const dateTime = moment.tz(fecha, "America/Bogota");
+    return `${fechaFormatoUno(fecha)} ${dateTime.hours()}:${dateTime.minutes()}`;
+};
 
 export const upper = value => value && value.toUpperCase();
 export const lower = value => value && value.toLowerCase();

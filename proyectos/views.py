@@ -1,4 +1,5 @@
 from django.db.models import ExpressionWrapper, OuterRef, Subquery, DecimalField, Sum, F
+from django.db.models.functions import Coalesce
 from django.views.generic import DetailView
 
 # from ordenes.mixins import OrdenesPDFMixin
@@ -16,7 +17,7 @@ class ReporteCostosProyectoView(DetailView):
         context = super().get_context_data(**kwargs)
         proyecto = self.object
 
-        fecha = '2018-02-01'
+        fecha = '2017-11-30'
 
         mano_obra = HoraHojaTrabajo.objects.values('literal').annotate(
             costo_total=ExpressionWrapper(
@@ -42,10 +43,13 @@ class ReporteCostosProyectoView(DetailView):
                 Subquery(mano_obra.values('costo_total')),
                 output_field=DecimalField(max_digits=4)
             ),
-            costo_mis_materiales=ExpressionWrapper(
-                Subquery(materiales.values('costo_total')),
-                output_field=DecimalField(max_digits=4)
-            )
+            costo_mis_materiales=
+            Coalesce(
+                ExpressionWrapper(
+                    Subquery(materiales.values('costo_total')),
+                    output_field=DecimalField(max_digits=4)
+                ),
+                0)
         ).distinct()
 
         total_costo_mo = 0

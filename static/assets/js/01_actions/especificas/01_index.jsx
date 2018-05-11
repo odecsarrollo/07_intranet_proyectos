@@ -9,3 +9,5 @@ export * from './mano_obra/hojaTrabajoDiarioAction';
 export * from './mano_obra/horasHojasTrabajoDiarioAction';
 export * from './mano_obra/HorasColaboradoresProyectosInicialesAction';
 export * from './clientes/clientesAction';
+export * from './cotizaciones/cotizacionesAction';
+export * from './cotizaciones/cotizacionesSeguimientoAction';

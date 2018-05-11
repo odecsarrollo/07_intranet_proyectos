@@ -90,3 +90,21 @@ export const CLIENTE_TYPES = {
     clear: 'clear_clientes',
     update: 'update_cliente',
 };
+
+export const COTIZACION_TYPES = {
+    create: 'create_cotizacion',
+    delete: 'delete_cotizacion',
+    fetch_all: 'fetch_cotizaciones',
+    fetch: 'fetch_cotizacion',
+    clear: 'clear_cotizaciones',
+    update: 'update_cotizacion',
+};
+
+export const SEGUIMIENTO_COTIZACION_TYPES = {
+    create: 'create_seguimiento_cotizacion',
+    delete: 'delete_seguimiento_cotizacion',
+    fetch_all: 'fetch_seguimientos_cotizaciones',
+    fetch: 'fetch_seguimiento_cotizacion',
+    clear: 'clear_seguimientos_cotizaciones',
+    update: 'update_seguimiento_cotizacion',
+};

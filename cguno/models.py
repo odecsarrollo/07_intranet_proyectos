@@ -155,7 +155,10 @@ class ColaboradorCostoMesBiable(models.Model):
     @property
     def valor_hora(self):
         if self.nro_horas_mes > 0:
+            print('entro 1')
             if self.nro_horas_mes_trabajadas > 0:
+                print('entro 2')
+                print(self.nro_horas_mes_trabajadas)
                 return self.costo / self.nro_horas_mes_trabajadas
             return self.costo / self.nro_horas_mes
         return 0

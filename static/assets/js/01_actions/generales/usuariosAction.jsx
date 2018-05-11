@@ -14,10 +14,20 @@ import {
     fetchObject,
     createObject,
     deleteObject,
-    callApiMethodWithParameters
+    callApiMethodWithParameters, fetchListWithParameter
 } from '../00_general_fuctions'
 
 const current_url_api = 'usuarios';
+
+export function fetchUsuariosxPermiso(permiso_nombre, callback = null, callback_error = null) {
+    return function (dispatch) {
+        const FULL_URL = `${current_url_api}/listar_x_permiso/?permiso_nombre=${permiso_nombre}`;
+        const dispatches = (response) => {
+            dispatch({type: FETCH_USUARIOS, payload: response})
+        };
+        fetchListWithParameter(FULL_URL, dispatches, callback, callback_error);
+    }
+}
 
 export const addPermisoUsuario = (id, permiso_id, callback = null, callback_error = null) => {
     return (dispatch) => {

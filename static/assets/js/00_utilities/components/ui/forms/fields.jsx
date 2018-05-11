@@ -73,7 +73,7 @@ const renderDropdownList = ({input, data, valueField, textField, placeholder, on
 
 
 export const MyDropdownList = (props) => {
-    const {busy = false, textField = 'name', valuesField = 'id', dropUp} = props;
+    const {busy = false, textField = 'name', valuesField = 'id'} = props;
     return (
         <Field
             {...props}
