@@ -25,6 +25,7 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'responsable',
             'responsable_nombres',
             'responsable_apellidos',
+            'abrir_carpeta',
         ]
 
 

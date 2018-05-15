@@ -4,7 +4,7 @@ import {connect} from "react-redux";
 import validate from './validate';
 import FormBaseCotizacion from '../forms/base_cotizacion_form';
 import BotoneriaModalForm from '../../../../../00_utilities/components/ui/forms/botoneria_modal_form';
-import {MyCombobox} from '../../../../../00_utilities/components/ui/forms/fields';
+import {MyCombobox, MyDropdownList} from '../../../../../00_utilities/components/ui/forms/fields';
 
 class Form extends Component {
     componentDidMount() {
@@ -34,7 +34,7 @@ class Form extends Component {
         return (
             <form className="card" onSubmit={handleSubmit(onSubmit)}>
                 <div className="row pl-3 pr-5">
-                    <FormBaseCotizacion/>
+                    <FormBaseCotizacion item={initialValues}/>
                     <MyCombobox
                         data={_.map(usuarios_list, u => {
                             return (

@@ -113,7 +113,10 @@ class Detail extends Component {
                         <Tabs>
                             <TabList>
                                 <Tab>Literales</Tab>
-                                <Tab>General</Tab>
+                                {
+                                    permisos.change &&
+                                    <Tab>Editar</Tab>
+                                }
                             </TabList>
                             <TabPanel>
                                 <div className="row">
@@ -142,20 +145,24 @@ class Detail extends Component {
                                                 horas_colaboradores_proyectos_iniciales_list={horas_colaboradores_proyectos_iniciales_list}
                                                 proyecto={object}
                                                 permisos={permisos}
+                                                permisos_literales={permisos_literales}
                                                 {...this.props}
                                             />
                                         </div>
                                     }
                                 </div>
                             </TabPanel>
-                            <TabPanel>
-                                <FormEditProyecto
-                                    onSubmit={this.onUpdateProyecto}
-                                    proyecto={object}
-                                    permisos_object={permisos}
-                                    {...this.props}
-                                />
-                            </TabPanel>
+                            {
+                                permisos.change &&
+                                <TabPanel>
+                                    <FormEditProyecto
+                                        onSubmit={this.onUpdateProyecto}
+                                        proyecto={object}
+                                        permisos_object={permisos}
+                                        {...this.props}
+                                    />
+                                </TabPanel>
+                            }
                         </Tabs>
                     </div>
                     <CargarDatos cargarDatos={this.cargarDatos}/>

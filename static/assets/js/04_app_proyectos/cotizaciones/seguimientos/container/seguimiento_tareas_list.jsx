@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import * as actions from "../../../../01_actions/01_index";
 import {connect} from "react-redux";
 import {fechaFormatoUno} from "../../../../00_utilities/common";
@@ -56,13 +56,22 @@ class SeguimientoTareasCotizacionesList extends Component {
     }
 
     render() {
+        const {tareas_list} = this.props;
+        const tiene_tareas = _.size(tareas_list);
         return (
             <div>
-                <h1>Tareas Cotizaciones</h1>
-                <ul className="list-group">
-                    {_.map(_.orderBy(this.props.tareas_list, ['fecha_inicio_tarea'], ['asc']), t => <Tarea key={t.id}
-                                                                                                           tarea={t}/>)}
-                </ul>
+                {
+                    tiene_tareas > 0 &&
+                    <Fragment>
+                        <h1>Tareas Cotizaciones</h1>
+                        <ul className="list-group">
+                            {_.map(_.orderBy(this.props.tareas_list, ['fecha_inicio_tarea'], ['asc']), t => <Tarea
+                                key={t.id}
+                                tarea={t}/>)}
+                        </ul>
+                    </Fragment>
+
+                }
                 <CargarDatos
                     cargarDatos={this.cargarDatos}
                 />

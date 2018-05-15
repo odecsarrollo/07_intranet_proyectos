@@ -1,14 +1,12 @@
-import {REGEX_CORREO_ELECTRONICO} from "../../../../../00_utilities/common";
+import {REGEX_SOLO_NUMEROS_DINERO} from "../../../../../00_utilities/common";
 
 const validate = values => {
     const errors = {};
 
     const requiredFields = [
-        'username',
-        'first_name',
-        'last_name',
-        'email',
-        'password',
+        'cliente',
+        'unidad_negocio',
+        'descripcion_cotizacion'
     ];
     requiredFields.map(field => {
         if (!values[field]) {
@@ -16,21 +14,16 @@ const validate = values => {
         }
     });
 
-    if (values.email && !REGEX_CORREO_ELECTRONICO.test(values.email)) {
-        errors.email = 'Correo Electrónico Inválido';
-    }
-
-    if (values.password) {
-        if (values.password !== values.password2) {
-            errors.password = 'No Coinciden';
-            errors.password2 = 'No Coinciden';
+    const soloDineroFields = [
+        'valor_ofertado',
+        'valor_orden_compra',
+        'costo_presupuestado'
+    ];
+    soloDineroFields.map(field => {
+        if (values[field] && !REGEX_SOLO_NUMEROS_DINERO.test(values[field])) {
+            errors[field] = 'Debe ser valores monetarios.'
         }
-        else {
-            if (values.password.length < 8 || values.password.length > 20) {
-                errors.password = `La contraseña debe tener entre 8 y 20 caracteres. Esta tiene ${values.password.length} caracteres`;
-            }
-        }
-    }
+    });
     return errors;
 };
 

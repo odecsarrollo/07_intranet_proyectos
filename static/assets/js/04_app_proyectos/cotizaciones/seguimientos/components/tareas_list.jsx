@@ -112,7 +112,10 @@ export default class TareasList extends Component {
                 {
                     mostrar_formulario &&
                     <div className="col-12">
-                        <FormTarea onSubmit={guardarTarea}/>
+                        <FormTarea onSubmit={(v) => {
+                            guardarTarea(v);
+                            this.setState({mostrar_formulario: false});
+                        }}/>
                     </div>
                 }
                 {tareas_array.map(tarea => <Tarea key={tarea.id}

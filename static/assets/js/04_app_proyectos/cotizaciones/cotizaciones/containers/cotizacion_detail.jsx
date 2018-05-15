@@ -124,6 +124,31 @@ class Detail extends Component {
                         <Fragment><strong>Encargado: </strong> {object.responsable_nombres} {object.responsable_apellidos}
                             <br/></Fragment>}
                     </div>
+                    <div className="col-12 text-lg-right">
+                        {
+                            object.abrir_carpeta ?
+                                <div className='row'>
+                                    <div className="col-12">
+                                        <span>Carpeta en proceso de apertura...</span>
+                                    </div>
+                                    <div className="col-12">
+                                    <span className='btn btn-primary'
+                                          onClick={() => this.guardarCambiosCotizacion({
+                                              ...object,
+                                              abrir_carpeta: false
+                                          })}>
+                                        Cancelar Apertura Carpeta
+                                    </span>
+                                    </div>
+                                </div> :
+                                object.estado === 'Aprobado' &&
+                                <span className='btn btn-primary'
+                                      onClick={() => this.guardarCambiosCotizacion({...object, abrir_carpeta: true})}>
+                                    Solicitar Apertura Carpeta
+                                </span>
+
+                        }
+                    </div>
                     <div className="col-12 mt-3">
                         <Tabs>
                             <TabList>

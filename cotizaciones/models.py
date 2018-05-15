@@ -9,12 +9,13 @@ class Cotizacion(TimeStampedModel):
     cliente = models.CharField(max_length=200)
     descripcion_cotizacion = models.CharField(max_length=500)
     contacto = models.CharField(max_length=400)
-    estado = models.CharField(max_length=200)
+    estado = models.CharField(max_length=200, null=True, blank=True)
     observacion = models.TextField(null=True, blank=True)
-    valor_ofertado = models.DecimalField(max_digits=20, decimal_places=2)
-    valor_orden_compra = models.DecimalField(max_digits=20, decimal_places=2)
-    costo_presupuestado = models.DecimalField(max_digits=20, decimal_places=2)
+    valor_ofertado = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
+    valor_orden_compra = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
+    costo_presupuestado = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
     responsable = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True)
+    abrir_carpeta = models.BooleanField(default=False)
 
     class Meta:
         permissions = [

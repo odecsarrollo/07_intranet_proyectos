@@ -22,20 +22,15 @@ class Form extends Component {
             })}>
                 <div className="row pl-3 pr-5">
                     <MyTextFieldSimple
-                        className="col-12"
+                        className="col-12 col-md-6"
                         nombre='Nombre'
                         name='nombre_tarea'
                     />
                     <MyDateTimePickerField
                         className='col-12 col-md-6'
                         name='fecha_inicio_tarea'
-                        nombre='Fecha Inicio'
+                        nombre='Fecha'
                         max={new Date(2099, 11, 1)}
-                    />
-                    <MyDateTimePickerField
-                        className='col-12 col-md-6'
-                        name='fecha_fin_tarea'
-                        nombre='Fecha Fin'
                     />
                     <MyTextFieldSimple
                         className="col-12"

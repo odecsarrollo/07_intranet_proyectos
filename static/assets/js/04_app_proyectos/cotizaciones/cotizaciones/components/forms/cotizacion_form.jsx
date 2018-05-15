@@ -29,7 +29,7 @@ class Form extends Component {
                 pristine={pristine}
                 element_type={singular_name}
             >
-                <FormBaseCotizacion/>
+                <FormBaseCotizacion item={initialValues}/>
                 <div style={{height: '300px'}}>
 
                 </div>

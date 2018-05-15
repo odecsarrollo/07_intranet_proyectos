@@ -45,6 +45,7 @@ class LiteralDetail extends Component {
             items_literales,
             horas_hojas_trabajos_list,
             horas_colaboradores_proyectos_iniciales_list,
+            permisos_literales,
         } = this.props;
         return (
             <Fragment>
@@ -88,18 +89,10 @@ class LiteralDetail extends Component {
 
                 <Tabs>
                     <TabList>
-                        <Tab>General</Tab>
                         <Tab>Materiales</Tab>
                         <Tab>Mano Obra</Tab>
+                        {permisos_literales.change && <Tab>Editar</Tab>}
                     </TabList>
-                    <TabPanel>
-                        <InformacionLiteralGeneral
-                            proyecto={proyecto}
-                            literal={literal}
-                            onUpdateLiteral={this.onUpdateLiteral}
-                            onDeleteLiteral={this.onDeleteLiteral}
-                        />
-                    </TabPanel>
                     <TabPanel>
                         <TablaProyectoLiteralesMateriales
                             items_literales={items_literales}
@@ -112,6 +105,16 @@ class LiteralDetail extends Component {
                             horas_colaboradores_proyectos_iniciales_list={horas_colaboradores_proyectos_iniciales_list}
                         />
                     </TabPanel>
+                    {permisos_literales.change &&
+                    <TabPanel>
+                        <InformacionLiteralGeneral
+                            proyecto={proyecto}
+                            literal={literal}
+                            onUpdateLiteral={this.onUpdateLiteral}
+                            onDeleteLiteral={this.onDeleteLiteral}
+                        />
+                    </TabPanel>
+                    }
                 </Tabs>
             </Fragment>
         )

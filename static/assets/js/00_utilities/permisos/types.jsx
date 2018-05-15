@@ -105,11 +105,9 @@ export const HORAS_COLABORADORES_PROYECTOS_INICIALES = {
 };
 
 export const LITERALES = {
-    add: 'add_horatrabajocolaboradorliteralinicial',
-    delete: 'delete_horatrabajocolaboradorliteralinicial',
-    change: 'change_horatrabajocolaboradorliteralinicial',
-    list: 'list_horatrabajocolaboradorliteralinicial',
-    detail: 'detail_horatrabajocolaboradorliteralinicial',
+    add: 'add_literal',
+    delete: 'delete_literal',
+    change: 'change_literal',
 };
 
 export const CLIENTES = {

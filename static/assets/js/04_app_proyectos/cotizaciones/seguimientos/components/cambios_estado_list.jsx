@@ -6,7 +6,7 @@ const Estado = (props) => {
     return (
         <li className="list-group-item">
             <span>{estado.estado} </span>
-            <small>{fechaHoraFormatoUno(estado.created)}</small>
+            <small>{fechaHoraFormatoUno(estado.created)} por {estado.creado_por_username}</small>
         </li>
     )
 };

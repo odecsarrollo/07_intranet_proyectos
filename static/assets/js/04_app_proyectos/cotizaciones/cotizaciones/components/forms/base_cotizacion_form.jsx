@@ -1,7 +1,8 @@
 import React, {Fragment} from 'react';
 import {MyTextFieldSimple, MyDropdownList} from '../../../../../00_utilities/components/ui/forms/fields';
 
-const FormBaseCotizacion = () => {
+const FormBaseCotizacion = (props) => {
+    const {item} = props;
     return (
         <Fragment>
             <MyTextFieldSimple
@@ -46,29 +47,33 @@ const FormBaseCotizacion = () => {
                 nombre='Costo Presupuestado'
                 name='costo_presupuestado'
             />
-            <div className="col-12">
-                <div className="row mb-4">
-                    <div className="col-12">
-                        <label>Estado</label>
+            {
+                item &&
+                <div className="col-12">
+                    <div className="row mb-4">
+                        <div className="col-12">
+                            <label>Estado</label>
+                        </div>
+                        <MyDropdownList
+                            className='col-12'
+                            name='estado'
+                            data={[
+                                'Pendiente',
+                                'En Proceso',
+                                'Enviado',
+                                'Seguimiento - 1. Cliente Interesado',
+                                'Seguimiento - 2. Esperando Aprobación Presupuesto',
+                                'Seguimiento - 3. En Licitación con Presupuesto Aprobado',
+                                'Seguimiento - 4. En Negociación',
+                                'Seguimiento - 5. Esperando Orden Compra',
+                                'Aprobado',
+                                'Aplazado',
+                                'Perdido',
+                            ]}
+                        />
                     </div>
-                    <MyDropdownList
-                        className='col-12'
-                        name='estado'
-                        data={[
-                            'Pendiente',
-                            'Cotizado',
-                            'Seguimiento - 1. Cliente Interesado',
-                            'Seguimiento - 2. Esperando Aprobación Presupuesto',
-                            'Seguimiento - 3. En Licitación con Presupuesto Aprobado',
-                            'Seguimiento - 4. En Negociación',
-                            'Seguimiento - 5. Esperando Orden Compra',
-                            'Aprobado',
-                            'Aplazado',
-                            'Perdido',
-                        ]}
-                    />
                 </div>
-            </div>
+            }
         </Fragment>
     )
 };
