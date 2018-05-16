@@ -1,3 +1,4 @@
+import datetime
 from django.db.models import Max
 from rest_framework import viewsets
 from rest_framework.decorators import list_route
@@ -36,14 +37,17 @@ class CotizacionViewSet(viewsets.ModelViewSet):
 
         if editado.estado not in ['Aplazado', 'Perdido', 'Pendiente']:
             if editado.nro_cotizacion is None:
+                now = datetime.datetime.now()
+                base_nro_cotizacion = (abs(int(now.year)) % 100) * 1000
                 qs = Cotizacion.objects.filter(
-                    nro_cotizacion__isnull=False
+                    nro_cotizacion__isnull=False,
+                    nro_cotizacion__gte=base_nro_cotizacion
                 ).aggregate(
                     ultimo_indice=Max('nro_cotizacion')
                 )
                 ultimo_indice = qs['ultimo_indice']
                 if ultimo_indice is None:
-                    editado.nro_cotizacion = 1
+                    editado.nro_cotizacion = base_nro_cotizacion
                 else:
                     editado.nro_cotizacion = int(ultimo_indice) + 1
                 editado.save()
@@ -56,6 +60,12 @@ class CotizacionViewSet(viewsets.ModelViewSet):
             creado_por=self.request.user,
             estado=editado.estado
         )
+
+    @list_route(http_method_names=['get', ])
+    def listar_cotizacion_abrir_carpeta(self, request):
+        qs = self.get_queryset().filter(abrir_carpeta=True, mi_proyecto__isnull=True)
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)
 
 
 class SeguimientoCotizacionViewSet(viewsets.ModelViewSet):

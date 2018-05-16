@@ -75,7 +75,7 @@ function crudHOC(CreateForm, Tabla) {
             const list_array = _.map(list, e => e);
             return (
                 <ValidarPermisos can_see={permisos_object.list} nombre={plural_name}>
-                    <h2>{plural_name}</h2>
+                    {plural_name && <h2>{plural_name}</h2>}
                     {
                         permisos_object.add &&
                         <ContainerNuevoButton

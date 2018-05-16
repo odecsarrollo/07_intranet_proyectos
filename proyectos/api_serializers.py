@@ -56,6 +56,11 @@ class ProyectoSerializer(serializers.ModelSerializer):
     cantidad_horas_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     costo_mano_obra_inicial = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     cantidad_horas_mano_obra_inicial = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    cotizacion_nro = serializers.SerializerMethodField()
+    costo_presupuestado = serializers.DecimalField(source='cotizacion.costo_presupuestado', read_only=True,
+                                                   max_digits=20, decimal_places=2)
+    valor_cliente = serializers.DecimalField(source='cotizacion.valor_orden_compra', read_only=True,
+                                             max_digits=20, decimal_places=2)
     orden_compra_fecha = serializers.DateTimeField(
         format="%Y-%m-%d",
         input_formats=['%Y-%m-%d', 'iso-8601'],
@@ -68,6 +73,11 @@ class ProyectoSerializer(serializers.ModelSerializer):
         allow_null=True,
         required=False
     )
+
+    def get_cotizacion_nro(self, obj):
+        if obj.cotizacion:
+            return '%s-%s' % (obj.cotizacion.unidad_negocio, obj.cotizacion.nro_cotizacion)
+        return None
 
     class Meta:
         model = Proyecto
@@ -88,6 +98,7 @@ class ProyectoSerializer(serializers.ModelSerializer):
             'orden_compra_nro',
             'orden_compra_fecha',
             'fecha_entrega_pactada',
+            'cotizacion',
             'cotizacion_nro',
             'nombre',
             'cliente',

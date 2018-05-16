@@ -11,7 +11,10 @@ from mano_obra.models import HoraHojaTrabajo, HoraTrabajoColaboradorLiteralInici
 
 
 class ProyectoViewSet(viewsets.ModelViewSet):
-    queryset = Proyecto.objects.select_related('cliente').all()
+    queryset = Proyecto.objects.select_related(
+        'cliente',
+        'cotizacion'
+    ).all()
     serializer_class = ProyectoSerializer
 
     def get_queryset(self):

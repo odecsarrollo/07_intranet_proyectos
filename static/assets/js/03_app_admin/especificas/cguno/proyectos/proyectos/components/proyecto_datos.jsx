@@ -1,12 +1,24 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import {fechaFormatoUno, pesosColombianos} from "../../../../../../00_utilities/common";
+import {Link} from 'react-router-dom'
 
 const InfoProyecto = (props) => {
-    const {proyecto} = props;
+    const {proyecto, cotizaciones_permisos} = props;
     return (
         <div className="row">
             <div className="col-12 col-md-6 col-lg-3">
                 <span><strong>Proyecto: </strong><small>{proyecto.id_proyecto}</small></span>
+            </div>
+            <div className="col-12 col-md-6 col-lg-3">
+                <span><strong>Cotizacion: </strong><small>
+                    {
+                        cotizaciones_permisos.detail ?
+                            <Link to={`/app/proyectos/cotizaciones/cotizaciones/detail/${proyecto.cotizacion}`}>
+                                {proyecto.cotizacion_nro}
+                            </Link> :
+                            <Fragment>{proyecto.cotizacion_nro}</Fragment>
+                    }
+                    </small></span>
             </div>
             <div className="col-12 col-md-6">
                 <span><strong>Nombre: </strong><small>{proyecto.nombre}</small></span>

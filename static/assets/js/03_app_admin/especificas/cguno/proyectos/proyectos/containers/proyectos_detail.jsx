@@ -11,7 +11,8 @@ import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import {
     PROYECTOS as permisos_view,
-    LITERALES as literales_permisos_view
+    LITERALES as literales_permisos_view,
+    COTIZACIONES as cotizaciones_permisos_view,
 } from "../../../../../../00_utilities/permisos/types";
 import LiteralModalCreate from './../../literales/components/literal_nuevo_modal';
 import LiteralDetail from '../../literales/components/literal_detail';
@@ -96,6 +97,7 @@ class Detail extends Component {
             horas_colaboradores_proyectos_iniciales_list,
         } = this.props;
         const permisos = permisosAdapter(mis_permisos, permisos_view);
+        const cotizacion_permisos = permisosAdapter(mis_permisos, cotizaciones_permisos_view);
         const permisos_literales = permisosAdapter(mis_permisos, literales_permisos_view);
 
         if (!object) {
@@ -107,7 +109,7 @@ class Detail extends Component {
             <ValidarPermisos can_see={permisos.detail} nombre='detalles de proyecto'>
                 <div className="row">
                     <div className="col-12">
-                        <ProyectoInfo proyecto={object}/>
+                        <ProyectoInfo proyecto={object} cotizaciones_permisos={cotizacion_permisos}/>
                     </div>
                     <div className="col-12">
                         <Tabs>

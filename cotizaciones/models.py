@@ -4,7 +4,7 @@ from model_utils.models import TimeStampedModel
 
 
 class Cotizacion(TimeStampedModel):
-    nro_cotizacion = models.PositiveIntegerField(null=True, blank=True)
+    nro_cotizacion = models.PositiveIntegerField(null=True, blank=True, unique=True)
     unidad_negocio = models.CharField(max_length=10)
     cliente = models.CharField(max_length=200)
     descripcion_cotizacion = models.CharField(max_length=500)

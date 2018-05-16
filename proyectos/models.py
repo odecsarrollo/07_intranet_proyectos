@@ -1,20 +1,20 @@
 from django.db import models
 from model_utils.models import TimeStampedModel
 from clientes.models import ClienteBiable
+from cotizaciones.models import Cotizacion
 
 
 class Proyecto(models.Model):
+    cotizacion = models.OneToOneField(Cotizacion, on_delete=models.PROTECT, related_name='mi_proyecto', null=True,
+                                   blank=True)
     id_proyecto = models.CharField(max_length=15, unique=True)
     fecha_prometida = models.DateField(null=True, blank=True)
     abierto = models.BooleanField(default=True)
-    valor_cliente = models.DecimalField(decimal_places=2, max_digits=12, default=0)
-    costo_presupuestado = models.DecimalField(decimal_places=2, max_digits=12, default=0)
     costo_materiales = models.DecimalField(decimal_places=2, max_digits=12, default=0)
     orden_compra_nro = models.CharField(max_length=20, null=True, blank=True)
     orden_compra_fecha = models.DateField(null=True, blank=True)
     fecha_entrega_pactada = models.DateField(null=True, blank=True)
     en_cguno = models.BooleanField(default=True)
-    cotizacion_nro = models.CharField(max_length=20, null=True, blank=True)
     nombre = models.CharField(max_length=200, null=True, blank=True)
     cliente = models.ForeignKey(ClienteBiable, on_delete=models.PROTECT, null=True, blank=True)
 

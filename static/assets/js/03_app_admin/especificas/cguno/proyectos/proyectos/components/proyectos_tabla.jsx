@@ -10,13 +10,14 @@ import {pesosColombianos} from "../../../../../../00_utilities/common";
 class Tabla extends React.Component {
     render() {
 
-        const data = _.orderBy(this.props.data,['abierto','id_proyecto'],['desc','asc']);
+        const data = _.orderBy(this.props.data, ['abierto', 'id_proyecto'], ['desc', 'asc']);
         const {
             updateItem,
             singular_name,
             onDelete,
             onSelectItemEdit,
-            permisos_object
+            permisos_object,
+            permisos_cotizaciones
         } = this.props;
 
 
@@ -36,6 +37,26 @@ class Tabla extends React.Component {
                                     return row[filter.id].includes(filter.value.toUpperCase())
                                 }
                             },
+                            {
+                                Header: "Nro. Cotización",
+                                accessor: "cotizacion_nro",
+                                maxWidth: 150,
+                                filterable: true,
+                                filterMethod: (filter, row) => {
+                                    return row[filter.id] && row[filter.id].includes(filter.value.toUpperCase())
+                                },
+                                Cell: row => {
+                                    return (
+                                        permisos_cotizaciones.detail ?
+                                            <Link
+                                                to={`/app/proyectos/cotizaciones/cotizaciones/detail/${row.original.cotizacion}`}>
+                                                <span>{row.value}</span>
+                                            </Link> :
+                                            <span>{row.value}</span>
+                                    )
+                                }
+                            }
+                            ,
                             {
                                 Header: "Nombre",
                                 accessor: "nombre",

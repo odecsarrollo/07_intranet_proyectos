@@ -7,12 +7,14 @@ import ValidarPermisos from "../../../../00_utilities/permisos/validar_permisos"
 import {permisosAdapter, pesosColombianos} from "../../../../00_utilities/common";
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import {
-    COTIZACIONES as permisos_view
+    COTIZACIONES as permisos_view,
+    PROYECTOS as proyecto_permisos_view
 } from "../../../../00_utilities/permisos/types";
 import ComentariosList from '../../seguimientos/components/comentarios_list';
 import TareasList from '../../seguimientos/components/tareas_list';
 import CambioEstadoList from '../../seguimientos/components/cambios_estado_list';
 import CotizacionForm from '../../cotizaciones/components/forms/cotizacion_form_detail';
+import {Link} from 'react-router-dom'
 
 class Detail extends Component {
     constructor(props) {
@@ -86,13 +88,15 @@ class Detail extends Component {
     render() {
         const {object, mis_permisos, seguimiento_list, mi_cuenta} = this.props;
         const permisos = permisosAdapter(mis_permisos, permisos_view);
+        const permisos_proyecto = permisosAdapter(mis_permisos, proyecto_permisos_view);
         if (!object) {
             return <SinObjeto/>
         }
 
         return (
             <ValidarPermisos can_see={permisos.detail} nombre='detalles de cotización'>
-                <Titulo>Detalle de Cotización {object.nro_cotizacion && `Nro. ${object.nro_cotizacion}`}</Titulo>
+                <Titulo>Detalle de
+                    Cotización {object.nro_cotizacion && `Nro. ${object.unidad_negocio}-${object.nro_cotizacion}`}</Titulo>
                 <div className="row">
                     <div className="col-12 col-md-6 col-lg-4">
                         <strong>Unidad Negocio: </strong> {object.unidad_negocio}
@@ -120,18 +124,27 @@ class Detail extends Component {
                         <strong>Descripción: </strong> {object.descripcion_cotizacion}<br/>
                         <strong>Observación: </strong> {object.observacion}<br/>
                         <strong>Estado: </strong> {object.estado} <br/>
+                        <strong>Proyecto: </strong>
+                        {
+                            permisos_proyecto.detail ? <Link
+                                    to={`/app/admin/cguno/proyectos/detail/${object.mi_proyecto}`}>{object.id_proyecto}</Link> :
+                                <span>{object.id_proyecto}</span>
+                        }
+                        <br/>
                         {object.responsable &&
                         <Fragment><strong>Encargado: </strong> {object.responsable_nombres} {object.responsable_apellidos}
                             <br/></Fragment>}
                     </div>
-                    <div className="col-12 text-lg-right">
-                        {
-                            object.abrir_carpeta ?
-                                <div className='row'>
-                                    <div className="col-12">
-                                        <span>Carpeta en proceso de apertura...</span>
-                                    </div>
-                                    <div className="col-12">
+                    {
+                        !object.mi_proyecto &&
+                        <div className="col-12 text-lg-right">
+                            {
+                                object.abrir_carpeta ?
+                                    <div className='row'>
+                                        <div className="col-12">
+                                            <span>Carpeta en proceso de apertura...</span>
+                                        </div>
+                                        <div className="col-12">
                                     <span className='btn btn-primary'
                                           onClick={() => this.guardarCambiosCotizacion({
                                               ...object,
@@ -139,16 +152,20 @@ class Detail extends Component {
                                           })}>
                                         Cancelar Apertura Carpeta
                                     </span>
-                                    </div>
-                                </div> :
-                                object.estado === 'Aprobado' &&
-                                <span className='btn btn-primary'
-                                      onClick={() => this.guardarCambiosCotizacion({...object, abrir_carpeta: true})}>
+                                        </div>
+                                    </div> :
+                                    object.estado === 'Aprobado' &&
+                                    <span className='btn btn-primary'
+                                          onClick={() => this.guardarCambiosCotizacion({
+                                              ...object,
+                                              abrir_carpeta: true
+                                          })}>
                                     Solicitar Apertura Carpeta
                                 </span>
 
-                        }
-                    </div>
+                            }
+                        </div>
+                    }
                     <div className="col-12 mt-3">
                         <Tabs>
                             <TabList>

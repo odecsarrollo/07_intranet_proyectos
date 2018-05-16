@@ -7,7 +7,7 @@ import {
 } from '../../../../../../../00_utilities/components/ui/forms/fields';
 
 
-const BaseFormLiteral = (props) => {
+const BaseFormProyecto = (props) => {
     const {initialValues = null, permisos_object, clientes_list} = props;
     return (
         <div className="row">
@@ -34,32 +34,35 @@ const BaseFormLiteral = (props) => {
                 valuesField='id'
                 placeholder='Cliente'
             />
+            <div className="col-12">
+                <div className="row">
+                    {
+                        permisos_object.costo_presupuestado &&
+                        initialValues &&
+                        <div className="col-12 col-md-6">
+                            <span> <strong>Costo Presupuestado: </strong> {initialValues.costo_presupuestado}</span>
+                        </div>
+                    }
+                    {
+                        permisos_object.valor &&
+                        initialValues &&
+                        <div className="col-12 col-md-6">
+                            <span> <strong>Valor Orden Compra: </strong> {initialValues.valor_cliente}</span>
+                        </div>
+                    }
+                </div>
+            </div>
             {
-                permisos_object.costo_presupuestado &&
-                <MyTextFieldSimple
-                    className="col-12 col-md-6"
-                    nombre='Costo Presupuestado'
-                    name='costo_presupuestado'/>
-            }
-            {
-                permisos_object.valor &&
-                <MyTextFieldSimple
-                    className="col-12 col-md-6"
-                    nombre='Precio'
-                    name='valor_cliente'
-                    case='U'/>
-
+                initialValues &&
+                initialValues.cotizacion_nro &&
+                <div className="col-12 col-md-6">
+                    <span><strong>Nro. Cotización: </strong>{initialValues.cotizacion_nro}</span>
+                </div>
             }
             <MyTextFieldSimple
                 className="col-12"
                 nombre='Nombre Proyecto'
                 name='nombre'
-                case='U'/>
-
-            <MyTextFieldSimple
-                className="col-12 col-md-6"
-                nombre='Nro. Cotización'
-                name='cotizacion_nro'
                 case='U'/>
 
             <MyTextFieldSimple
@@ -92,4 +95,4 @@ const BaseFormLiteral = (props) => {
     )
 };
 
-export default BaseFormLiteral;
+export default BaseFormProyecto;

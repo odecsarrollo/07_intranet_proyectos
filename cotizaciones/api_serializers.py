@@ -6,6 +6,7 @@ from .models import Cotizacion, SeguimientoCotizacion
 class CotizacionSerializer(serializers.ModelSerializer):
     responsable_nombres = serializers.CharField(source='responsable.first_name', read_only=True)
     responsable_apellidos = serializers.CharField(source='responsable.last_name', read_only=True)
+    id_proyecto = serializers.CharField(source='mi_proyecto.id_proyecto', read_only=True)
 
     class Meta:
         model = Cotizacion
@@ -26,7 +27,12 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'responsable_nombres',
             'responsable_apellidos',
             'abrir_carpeta',
+            'mi_proyecto',
+            'id_proyecto',
         ]
+        extra_kwargs = {
+            'mi_proyecto': {'read_only': True},
+        }
 
 
 class SeguimientoCotizacionSerializer(serializers.ModelSerializer):
