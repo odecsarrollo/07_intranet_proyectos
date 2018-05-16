@@ -16,7 +16,8 @@ class Tabla extends React.Component {
             singular_name,
             onDelete,
             onSelectItemEdit,
-            permisos_object
+            permisos_object,
+            proyectos_permisos
         } = this.props;
 
 
@@ -32,6 +33,25 @@ class Tabla extends React.Component {
                                 Header: "Nro. Cotizacion",
                                 accessor: "nro_cotizacion",
                                 maxWidth: 150
+                            },
+                            {
+                                Header: "Nro. Proyecto",
+                                accessor: "id_proyecto",
+                                maxWidth: 150,
+                                filterable: true,
+                                filterMethod: (filter, row) => {
+                                    return row[filter.id] && row[filter.id].includes(filter.value.toUpperCase())
+                                },
+                                Cell: row => {
+                                    return (
+                                        proyectos_permisos.detail ?
+                                            <Link
+                                                to={`/app/proyectos/proyectos/detail/${row.original.mi_proyecto}`}>
+                                                <span>{row.value}</span>
+                                            </Link> :
+                                            <span>{row.value}</span>
+                                    )
+                                }
                             },
                             {
                                 Header: "Uni. Nego",

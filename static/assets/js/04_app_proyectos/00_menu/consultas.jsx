@@ -13,6 +13,7 @@ const MenuConsultas = (props) => (
         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
             <MenuItem primaryText="Items" containerElement={<Link to='/app/proyectos/items/list'/>}/>
             <MenuItem primaryText="Consecutivo Proyectos" containerElement={<Link to='/app/proyectos/consecutivo/list'/>}/>
+            <MenuItem primaryText="Literales no sincronizados" containerElement={<Link to='/app/proyectos/literales_sin_sincronizar/list'/>}/>
         </div>
     </li>
 );

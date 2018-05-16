@@ -91,7 +91,7 @@ class ProyectoViewSet(viewsets.ModelViewSet):
 class LiteralViewSet(viewsets.ModelViewSet):
     queryset = Literal.objects.select_related(
         'proyecto',
-        'proyecto__cliente'
+        'proyecto__cliente',
     ).all()
     serializer_class = LiteralSerializer
 
@@ -184,4 +184,10 @@ class LiteralViewSet(viewsets.ModelViewSet):
             qs = self.get_queryset().filter(proyecto_id=proyecto_id)
 
         serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)
+
+    @list_route(http_method_names=['get', ])
+    def sin_sincronizar(self, request):
+        lista = self.get_queryset().filter(en_cguno=False).all()
+        serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)

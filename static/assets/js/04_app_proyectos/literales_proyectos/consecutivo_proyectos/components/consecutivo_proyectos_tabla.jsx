@@ -109,7 +109,7 @@ class Tabla extends React.Component {
                                 Header: "Ver",
                                 maxWidth: 60,
                                 Cell: row =>
-                                    <Link to={`/app/admin/cguno/proyectos/detail/${row.original.proyecto}`}>
+                                    <Link to={`/app/proyectos/proyectos/detail/${row.original.proyecto}`}>
                                         <IconButtonTableSee/>
                                     </Link>
 

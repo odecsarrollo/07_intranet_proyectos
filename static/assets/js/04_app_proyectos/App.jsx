@@ -16,6 +16,11 @@ import HorasTrabajoColaboradorInicialesList from './mano_obra/horas_trabajo_inic
 import CotizacionesList from './cotizaciones/cotizaciones/containers/cotizaciones_list_container';
 import CotizacionesDetail from './cotizaciones/cotizaciones/containers/cotizacion_detail';
 
+import ProyectosCGUnoList from "./cguno/proyectos/proyectos/containers/proyectos_list_container";
+import ProyectosCGUnoDetail from "./cguno/proyectos/proyectos/containers/proyectos_detail";
+
+import LiteralesSinSincronizar from "./cguno/proyectos/literales_sin_sincronizar/containers/literales_sin_sincronizar_list_container";
+
 const App = (props) => {
     return (
         <Loading>
@@ -41,6 +46,9 @@ const App = (props) => {
                                component={CotizacionesList}/>
                         <Route exact path='/app/proyectos/cotizaciones/cotizaciones/detail/:id'
                                component={CotizacionesDetail}/>
+                        <Route exact path='/app/proyectos/proyectos/list' component={ProyectosCGUnoList}/>
+                        <Route exact path='/app/proyectos/proyectos/detail/:id' component={ProyectosCGUnoDetail}/>
+                        <Route exact path='/app/proyectos/literales_sin_sincronizar/list' component={LiteralesSinSincronizar}/>
                     </Switch>
                 </div>
             </Fragment>

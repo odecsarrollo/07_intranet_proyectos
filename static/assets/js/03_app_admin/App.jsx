@@ -14,9 +14,7 @@ import ColaboradoresDetail from "./especificas/cguno/colaboradores/colaboradores
 import ColaboradoresCostosNominaList
     from "./especificas/cguno/colaboradores/costos_nomina/containers/costos_nomina_list_container";
 import UsuariosDetail from "./generales/usuarios/usuarios/containers/usuarios_detail";
-import ProyectosCGUnoList from "./especificas/cguno/proyectos/proyectos/containers/proyectos_list_container";
 import ClientesList from "./especificas/clientes/clientes/containers/clientes_container";
-import ProyectosCGUnoDetail from "./especificas/cguno/proyectos/proyectos/containers/proyectos_detail";
 
 
 const AdminApp = (props) => {
@@ -35,8 +33,6 @@ const AdminApp = (props) => {
                                component={ColaboradoresCostosNominaList}/>
                         <Route exact path='/app/admin/cguno/colaborador/detail/:id' component={ColaboradoresDetail}/>
                         <Route exact path='/app/admin/usuarios/detail/:id' component={UsuariosDetail}/>
-                        <Route exact path='/app/admin/cguno/proyectos/list' component={ProyectosCGUnoList}/>
-                        <Route exact path='/app/admin/cguno/proyectos/detail/:id' component={ProyectosCGUnoDetail}/>
                         <Route exact path='/app/admin/clientes/clientes/list' component={ClientesList}/>
                     </Switch>
                 </div>

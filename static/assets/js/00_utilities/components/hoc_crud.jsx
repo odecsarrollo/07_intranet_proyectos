@@ -3,7 +3,7 @@ import {ContainerNuevoButton} from './ui/icon/iconos';
 import ValidarPermisos from "../permisos/validar_permisos";
 import PropTypes from "prop-types";
 
-function crudHOC(CreateForm, Tabla) {
+function crudHOC(CreateForm = null, Tabla) {
     class CRUD extends Component {
         constructor(props) {
             super(props);

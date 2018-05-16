@@ -127,7 +127,7 @@ class Detail extends Component {
                         <strong>Proyecto: </strong>
                         {
                             permisos_proyecto.detail ? <Link
-                                    to={`/app/admin/cguno/proyectos/detail/${object.mi_proyecto}`}>{object.id_proyecto}</Link> :
+                                    to={`/app/proyectos/proyectos/detail/${object.mi_proyecto}`}>{object.id_proyecto}</Link> :
                                 <span>{object.id_proyecto}</span>
                         }
                         <br/>
