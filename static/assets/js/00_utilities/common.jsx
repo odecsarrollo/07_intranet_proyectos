@@ -8,6 +8,7 @@ momentLocaliser(moment);
 
 export const REGEX_SOLO_NUMEROS_DINERO = /^-{0,1}\d*\.{0,1}\d+$/;
 export const REGEX_SOLO_NUMEROS = /^-{0,1}\d+$/;
+export const REGEX_SOLO_LETRAS = /^[a-zA-Z]+$/;
 export const REGEX_CORREO_ELECTRONICO = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 export const pesosColombianos = (plata) => formatMoney(Number(plata), "$", 0, ".", ",");

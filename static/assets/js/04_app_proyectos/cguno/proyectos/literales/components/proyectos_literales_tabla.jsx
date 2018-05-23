@@ -63,7 +63,8 @@ const TablaProyectosLiterales = (props) => {
             <tr>
                 <td></td>
                 {permisos.costo_materiales && <td>{pesosColombianos(proyecto.costo_materiales)}</td>}
-                {permisos.costo_mano_obra && <td>{pesosColombianos(proyecto.costo_mano_obra)}</td>}
+                {permisos.costo_mano_obra &&
+                <td>{pesosColombianos(Number(proyecto.costo_mano_obra) + Number(proyecto.costo_mano_obra_inicial))}</td>}
                 {permisos.costo &&
                 <td>{pesosColombianos(Number(proyecto.costo_mano_obra) + Number(proyecto.costo_materiales))}</td>}
             </tr>
