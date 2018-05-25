@@ -19,7 +19,6 @@ import {
 const current_url_api = 'proyectos';
 
 export function printReporteCostoProyecto(id_proyecto, valores, callback = null, callback_error = null) {
-    console.log(valores)
     return function (dispatch) {
         let FULL_URL = `${current_url_api}/print_costos/?id_proyecto=${id_proyecto}`;
         if (valores.lapso) {

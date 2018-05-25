@@ -10,7 +10,8 @@ class ReporteCosto extends Component {
         cargando();
         const success_callback = (response) => {
             const url = window.URL.createObjectURL(new Blob([response], {type: 'application/pdf'}));
-            PrinJs(url);
+            //PrinJs(url);
+            window.open(url, "_blank");
             noCargando();
         };
         this.props.printReporteCostoProyecto(id_proyecto, valores, success_callback, (r) => {
@@ -23,7 +24,6 @@ class ReporteCosto extends Component {
         return (
             <div>
                 <FormReporte onSubmit={(v) => {
-                    console.log(v)
                     this.imprimirCostos(v.id_proyecto, v)
                 }}/>
             </div>
