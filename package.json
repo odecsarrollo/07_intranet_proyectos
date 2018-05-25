@@ -12,6 +12,7 @@
     "moment-timezone": "^0.5.14",
     "npm": "^5.6.0",
     "popper.js": "^1.12.9",
+    "print-js": "^1.0.43",
     "prop-types": "^15.6.0",
     "react-big-calendar": "^0.17.0",
     "react-hot-loader": "^3.1.3",

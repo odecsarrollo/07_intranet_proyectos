@@ -19,7 +19,11 @@ import CotizacionesDetail from './cotizaciones/cotizaciones/containers/cotizacio
 import ProyectosCGUnoList from "./cguno/proyectos/proyectos/containers/proyectos_list_container";
 import ProyectosCGUnoDetail from "./cguno/proyectos/proyectos/containers/proyectos_detail";
 
-import LiteralesSinSincronizar from "./cguno/proyectos/literales_sin_sincronizar/containers/literales_sin_sincronizar_list_container";
+
+import ReporteCosto from "./cguno/proyectos/reportes/containers/reporte_dashboard";
+
+import LiteralesSinSincronizar
+    from "./cguno/proyectos/literales_sin_sincronizar/containers/literales_sin_sincronizar_list_container";
 
 const App = (props) => {
     return (
@@ -48,7 +52,10 @@ const App = (props) => {
                                component={CotizacionesDetail}/>
                         <Route exact path='/app/proyectos/proyectos/list' component={ProyectosCGUnoList}/>
                         <Route exact path='/app/proyectos/proyectos/detail/:id' component={ProyectosCGUnoDetail}/>
-                        <Route exact path='/app/proyectos/literales_sin_sincronizar/list' component={LiteralesSinSincronizar}/>
+                        <Route exact path='/app/proyectos/literales_sin_sincronizar/list'
+                               component={LiteralesSinSincronizar}/>
+
+                        <Route exact path='/app/proyectos/proyectos/reporte_costos' component={ReporteCosto}/>
                     </Switch>
                 </div>
             </Fragment>

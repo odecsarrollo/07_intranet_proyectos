@@ -12,10 +12,22 @@ import {
     fetchObject,
     updateObject,
     createObject,
-    deleteObject
+    deleteObject,
+    fetchObjectWithParameterPDF
 } from '../../00_general_fuctions'
 
 const current_url_api = 'proyectos';
+
+export function printReporteCostoProyecto(id_proyecto, valores, callback = null, callback_error = null) {
+    console.log(valores)
+    return function (dispatch) {
+        let FULL_URL = `${current_url_api}/print_costos/?id_proyecto=${id_proyecto}`;
+        if (valores.lapso) {
+            FULL_URL = `${FULL_URL}&fecha_inicial=${valores.fecha_inicial}&fecha_final=${valores.fecha_final}&con_mo_saldo_inicial=${valores.con_mo_saldo_inicial}`
+        }
+        fetchObjectWithParameterPDF(FULL_URL, null, callback, callback_error)
+    }
+}
 
 export const fetchProyectos = (callback = null, callback_error = null) => {
     return (dispatch) => {

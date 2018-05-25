@@ -1,6 +1,10 @@
-from django.db.models import Sum, Value as V, F, ExpressionWrapper, DecimalField, OuterRef, Subquery, Count
-from django.db.models.expressions import RawSQL, Exists
+from django.utils.dateparse import parse_date
+from io import BytesIO
+
+from django.db.models import Sum, F, ExpressionWrapper, DecimalField, OuterRef, Subquery, Count
+from django.db.models.expressions import Exists
 from django.db.models.functions import Coalesce
+from django.http import HttpResponse
 from rest_framework import viewsets
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
@@ -8,9 +12,10 @@ from rest_framework.response import Response
 from .models import Proyecto, Literal
 from .api_serializers import ProyectoSerializer, LiteralSerializer
 from mano_obra.models import HoraHojaTrabajo, HoraTrabajoColaboradorLiteralInicial
+from .mixins import LiteralesPDFMixin
 
 
-class ProyectoViewSet(viewsets.ModelViewSet):
+class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
     queryset = Proyecto.objects.select_related(
         'cliente',
         'cotizacion'
@@ -86,6 +91,35 @@ class ProyectoViewSet(viewsets.ModelViewSet):
         lista = self.get_queryset().filter(abierto=True, mis_literales__abierto=True).all()
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
+
+    @list_route(methods=['get'])
+    def print_costos(self, request, pk=None):
+        id_proyecto = request.GET.get('id_proyecto', None)
+        fecha_inicial = request.GET.get('fecha_inicial', None)
+        fecha_final = request.GET.get('fecha_final', None)
+        con_mo_saldo_inicial = request.GET.get('con_mo_saldo_inicial', None)
+
+        if not fecha_final or not fecha_inicial:
+            con_mo_saldo_inicial = True
+        elif con_mo_saldo_inicial == 'false':
+            con_mo_saldo_inicial = False
+        elif con_mo_saldo_inicial == 'true':
+            con_mo_saldo_inicial = True
+        else:
+            con_mo_saldo_inicial = False
+
+        proyecto = Proyecto.objects.filter(id_proyecto=id_proyecto).first()
+        main_doc = self.generar_pdf(self.request, fecha_inicial, fecha_final, con_mo_saldo_inicial, proyecto)
+        output = BytesIO()
+        main_doc.write_pdf(
+            target=output
+        )
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
+        response['Content-Transfer-Encoding'] = 'binary'
+        response.write(output.getvalue())
+        output.close()
+        return response
 
 
 class LiteralViewSet(viewsets.ModelViewSet):

@@ -1,134 +1,98 @@
-# from django.db.models import Count, F
-#
-# from django.template.loader import get_template
-# from weasyprint import HTML, CSS
-#
-# from ordenes.models import OrdenExamenFirmas, OrdenExamen
-#
-#
-# def get_page_body(boxes):
-#     for box in boxes:
-#         if box.element_tag == 'body':
-#             return box
-#         return get_page_body(box.all_children())
-#
-#
-# class OrdenesPDFMixin(object):
-#     def generar_resultados(self, orden):
-#         context = {}
-#         multifirma = OrdenExamen.objects.select_related(
-#             'examen',
-#             'examen__subgrupo_cups'
-#         ).prefetch_related(
-#             'mis_firmas',
-#             'mis_firmas__especialista',
-#             'mis_firmas__especialista__especialidad',
-#         ).annotate(
-#             can_firmas=Count("mis_firmas")
-#         ).filter(
-#             orden=orden,
-#             can_firmas__gt=1,
-#             examen__especial=False,
-#             examen_estado__gte=2
-#         )
-#
-#         una_firma = OrdenExamenFirmas.objects.select_related(
-#             'especialista',
-#             'especialista__especialidad',
-#             'orden_examen',
-#             'orden_examen__examen',
-#             'orden_examen__examen__subgrupo_cups',
-#         ).annotate(
-#             especialist=F('especialista'),
-#             can_firmas=Count("orden_examen__mis_firmas")
-#         ).filter(
-#             orden_examen__orden=orden,
-#             orden_examen__examen__especial=False,
-#             can_firmas=1,
-#             orden_examen__examen_estado__gte=2
-#         )
-#         context['multifirma'] = multifirma
-#         context['una_firma'] = una_firma
-#         return context
-#
-#     def generar_resultados_pdf(self, request, orden):
-#         context = self.generar_resultados(orden)
-#         ctx = {
-#             'una_firma': context['una_firma'],
-#             'multifirma': context['multifirma'],
-#             'paciente': orden.paciente,
-#             'orden': orden,
-#             'entidad': orden.entidad,
-#             'medico_remitente': orden.medico_remitente,
-#         }
-#
-#         # https://gist.github.com/pikhovkin/5642563
-#
-#         html_get_template = get_template('email/ordenes/resultados/datos_orden.html').render(ctx)
-#         html = HTML(
-#             string=html_get_template,
-#             base_url=request.build_absolute_uri()
-#         )
-#         header_datos = html.render(
-#             stylesheets=[CSS(string='div {position: fixed; top: 0, margin:0, padding:0}')])
-#
-#         header_datos_page = header_datos.pages[0]
-#         header_datos_body = get_page_body(header_datos_page._page_box.all_children())
-#         header_datos_body = header_datos_body.copy_with_children(header_datos_body.all_children())
-#
-#         html_get_template = get_template('email/ordenes/resultados/resultados.html').render(ctx)
-#
-#         html = HTML(
-#             string=html_get_template,
-#             base_url=request.build_absolute_uri()
-#         )
-#
-#         main_doc = html.render(stylesheets=[CSS('static/css/pdf_ordenes_resultado.min.css')])
-#
-#         ctx = {
-#             'titulo': 'titulo de prueba ctx',
-#         }
-#         html_get_template = get_template('email/ordenes/resultados/cabecera.html').render(ctx)
-#         html = HTML(
-#             string=html_get_template,
-#             base_url=request.build_absolute_uri()
-#         )
-#         header_logo = html.render(
-#             stylesheets=[CSS(string='div {position: fixed; top: 0, margin:0, padding:0}')])
-#
-#         header_logo_page = header_logo.pages[0]
-#         header_logo_body = get_page_body(header_logo_page._page_box.all_children())
-#         header_logo_body = header_logo_body.copy_with_children(header_logo_body.all_children())
-#
-#         html_get_template = get_template('email/ordenes/resultados/pie_pagina.html').render(ctx)
-#         html = HTML(
-#             string=html_get_template,
-#             base_url=request.build_absolute_uri()
-#         )
-#         footer = html.render(stylesheets=[CSS(string='div {position: fixed; bottom: 0.7cm}')])
-#
-#         footer_page = footer.pages[0]
-#         footer_body = get_page_body(footer_page._page_box.all_children())
-#         footer_body = footer_body.copy_with_children(footer_body.all_children())
-#
-#         for i, page in enumerate(main_doc.pages):
-#             page_body = get_page_body(page._page_box.all_children())
-#
-#             page_body.children += header_logo_body.all_children()
-#             page_body.children += header_datos_body.all_children()
-#             page_body.children += footer_body.all_children()
-#         return main_doc
-#
-#     def generar_recibo_pdf(self, request, orden):
-#         ctx = {
-#             'orden': orden,
-#         }
-#         html_get_template = get_template('email/ordenes/recibo/recibo.html').render(ctx)
-#
-#         html = HTML(
-#             string=html_get_template,
-#             base_url=request.build_absolute_uri()
-#         )
-#
-#         main_doc = html.render(stylesheets=[CSS('static/css/pdf_ordenes_recibos.min.css')])
-#         return main_doc
+from django.db.models import ExpressionWrapper, OuterRef, Subquery, DecimalField, Sum, F
+from django.db.models.functions import Coalesce
+
+from django.template.loader import get_template
+from weasyprint import HTML, CSS
+
+from .models import Proyecto, Literal
+from cguno.models import ItemsLiteralBiable
+from mano_obra.models import HoraHojaTrabajo
+
+
+def get_page_body(boxes):
+    for box in boxes:
+        if box.element_tag == 'body':
+            return box
+        return get_page_body(box.all_children())
+
+
+class LiteralesPDFMixin(object):
+    def generar_resultados(self, fecha_inicial, fecha_final, con_mo_saldo_inicial, proyecto):
+        context = {}
+        mano_obra = HoraHojaTrabajo.objects.values('literal').annotate(
+            costo_total=ExpressionWrapper(
+                Sum((F('cantidad_minutos') / 60) * (
+                        F('hoja__tasa__costo') / F('hoja__tasa__nro_horas_mes_trabajadas'))),
+                output_field=DecimalField(max_digits=4))
+        ).filter(
+            literal_id=OuterRef('id')
+        )
+
+        materiales = ItemsLiteralBiable.objects.values('literal').annotate(
+            costo_total=Sum('costo_total')
+        ).filter(
+            literal_id=OuterRef('id')
+        )
+
+        if fecha_inicial and fecha_final:
+            materiales = materiales.filter(
+                lapso__lte=fecha_final,
+                lapso__gte=fecha_inicial
+            )
+            mano_obra = mano_obra.filter(
+                hoja__fecha__lte=fecha_final,
+                hoja__fecha__gte=fecha_inicial
+            )
+
+        qsLiterales = Literal.objects.filter(
+            proyecto=proyecto
+        ).annotate(
+            costo_mano_obra_iniciales=Sum('mis_horas_trabajadas_iniciales__valor'),
+            costo_mano_obra=ExpressionWrapper(
+                Subquery(mano_obra.values('costo_total')),
+                output_field=DecimalField(max_digits=4)
+            ),
+            costo_mis_materiales=
+            Coalesce(
+                ExpressionWrapper(
+                    Subquery(materiales.values('costo_total')),
+                    output_field=DecimalField(max_digits=4)
+                ),
+                0)
+        ).distinct()
+
+        total_costo_mo = 0
+        total_costo_mo_ini = 0
+
+        for literal in qsLiterales:
+            if literal.costo_mano_obra:
+                total_costo_mo += literal.costo_mano_obra
+            if literal.costo_mano_obra_iniciales and con_mo_saldo_inicial:
+                total_costo_mo_ini += literal.costo_mano_obra_iniciales
+
+        total_costo_materiales = qsLiterales.aggregate(Sum('costo_mis_materiales'))['costo_mis_materiales__sum']
+
+        context['tipo_consulta'] = 'Todo'
+        if fecha_inicial and fecha_final:
+            context['tipo_consulta'] = 'por lapso'
+            context['fecha_inicial'] = fecha_inicial
+            context['fecha_final'] = fecha_final
+        context['literales'] = qsLiterales
+        context['proyecto'] = proyecto
+        context['con_mo_saldo_inicial'] = con_mo_saldo_inicial
+        context['total_costo_mo'] = total_costo_mo
+        context['total_costo_mo_ini'] = total_costo_mo_ini
+        context['total_costo_materiales'] = total_costo_materiales
+        context['total_costo'] = total_costo_mo + total_costo_mo_ini + total_costo_materiales
+        return context
+
+    def generar_pdf(self, request, fecha_inicial, fecha_final, con_mo_saldo_inicial, proyecto):
+        context = self.generar_resultados(fecha_inicial, fecha_final, con_mo_saldo_inicial, proyecto)
+        context['user'] = request.user
+        html_get_template = get_template('reportes/proyectos/costos.html').render(context)
+        html = HTML(
+            string=html_get_template,
+            base_url=request.build_absolute_uri()
+        )
+        main_doc = html.render(stylesheets=[CSS('static/css/reportes.css')])
+        return main_doc
