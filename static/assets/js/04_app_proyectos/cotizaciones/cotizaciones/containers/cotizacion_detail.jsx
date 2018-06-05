@@ -14,7 +14,8 @@ import ComentariosList from '../../seguimientos/components/comentarios_list';
 import TareasList from '../../seguimientos/components/tareas_list';
 import CambioEstadoList from '../../seguimientos/components/cambios_estado_list';
 import CotizacionForm from '../../cotizaciones/components/forms/cotizacion_form_detail';
-import {Link} from 'react-router-dom'
+import SolicitarCreacionLiteralForm from '../../cotizaciones/components/forms/cotizacion_solicitar_crear_literal_form';
+import CotizacionInfo from '../components/cotizacion_info';
 
 class Detail extends Component {
     constructor(props) {
@@ -98,53 +99,49 @@ class Detail extends Component {
                 <Titulo>Detalle de
                     Cotización {object.nro_cotizacion && `Nro. ${object.unidad_negocio}-${object.nro_cotizacion}`}</Titulo>
                 <div className="row">
-                    <div className="col-12 col-md-6 col-lg-4">
-                        <strong>Unidad Negocio: </strong> {object.unidad_negocio}
-                    </div>
-                    <div className="col-12 col-md-6 col-lg-4">
-                        <strong>Cliente: </strong> {object.cliente}
-                    </div>
-                    <div className="col-12 col-md-6 col-lg-4">
-                        <strong>Contacto: </strong> {object.contacto}
-                    </div>
+                    <CotizacionInfo object={object} permisos_proyecto={permisos_proyecto}/>
                     <div className="col-12">
                         <div className="row">
-                            <div className="col-12 col-md-4">
-                                <strong>Valor Ofertado: </strong>{pesosColombianos(object.valor_ofertado)}
-                            </div>
-                            <div className="col-12 col-md-4">
-                                <strong>Valor Orden Compra: </strong>{pesosColombianos(object.valor_orden_compra)}
-                            </div>
-                            <div className="col-12 col-md-4">
-                                <strong>Costo Presupuestado: </strong>{pesosColombianos(object.costo_presupuestado)}
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-12 mt-3">
-                        <strong>Descripción: </strong> {object.descripcion_cotizacion}<br/>
-                        <strong>Observación: </strong> {object.observacion}<br/>
-                        <strong>Estado: </strong> {object.estado} <br/>
-                        <strong>Proyecto: </strong>
-                        {
-                            permisos_proyecto.detail ? <Link
-                                    to={`/app/proyectos/proyectos/detail/${object.mi_proyecto}`}>{object.id_proyecto}</Link> :
-                                <span>{object.id_proyecto}</span>
-                        }
-                        <br/>
-                        {object.responsable &&
-                        <Fragment><strong>Encargado: </strong> {object.responsable_nombres} {object.responsable_apellidos}
-                            <br/></Fragment>}
-                    </div>
-                    {
-                        !object.mi_proyecto &&
-                        <div className="col-12 text-lg-right">
                             {
-                                object.abrir_carpeta ?
-                                    <div className='row'>
-                                        <div className="col-12">
-                                            <span>Carpeta en proceso de apertura...</span>
-                                        </div>
-                                        <div className="col-12">
+                                object.estado === 'Aprobado' &&
+                                <Fragment>
+                                    {
+                                        !object.mi_literal &&
+                                        !object.abrir_carpeta &&
+                                        <Fragment>
+                                            {
+                                                !object.crear_literal ?
+                                                    <SolicitarCreacionLiteralForm onSubmit={(v) => {
+                                                        this.guardarCambiosCotizacion({
+                                                            ...object,
+                                                            crear_literal: true,
+                                                            crear_literal_id_proyecto: v.id_proyecto
+                                                        })
+                                                    }}/> :
+                                                    <span className='btn btn-primary'
+                                                          onClick={() => this.guardarCambiosCotizacion({
+                                                              ...object,
+                                                              crear_literal: false,
+                                                              crear_literal_id_proyecto: null
+                                                          })}>
+                                        Cancelar Creación Literal para Poyecto {object.crear_literal_id_proyecto}
+                                    </span>
+                                            }
+                                        </Fragment>
+
+                                    }
+                                    {
+                                        !object.mi_proyecto &&
+                                        !object.crear_literal &&
+                                        <div className="col-12 col-md-3">
+                                            <div className="row card p-1">
+                                                <div className="col-12">
+                                                    <h4>Apertura Proyecto</h4>
+                                                </div>
+                                                {
+                                                    object.abrir_carpeta ?
+                                                        <div className='row'>
+                                                            <div className="col-12">
                                     <span className='btn btn-primary'
                                           onClick={() => this.guardarCambiosCotizacion({
                                               ...object,
@@ -152,20 +149,25 @@ class Detail extends Component {
                                           })}>
                                         Cancelar Apertura Carpeta
                                     </span>
-                                        </div>
-                                    </div> :
-                                    object.estado === 'Aprobado' &&
-                                    <span className='btn btn-primary'
-                                          onClick={() => this.guardarCambiosCotizacion({
-                                              ...object,
-                                              abrir_carpeta: true
-                                          })}>
+                                                            </div>
+                                                        </div> :
+                                                        object.estado === 'Aprobado' &&
+                                                        <span className='btn btn-primary'
+                                                              onClick={() => this.guardarCambiosCotizacion({
+                                                                  ...object,
+                                                                  abrir_carpeta: true
+                                                              })}>
                                     Solicitar Apertura Carpeta
                                 </span>
 
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+                                </Fragment>
                             }
                         </div>
-                    }
+                    </div>
                     <div className="col-12 mt-3">
                         <Tabs>
                             <TabList>

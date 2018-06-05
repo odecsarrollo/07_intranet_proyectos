@@ -1,10 +1,10 @@
 import React from 'react';
 import {
     MyTextFieldSimple,
-    MyDateTimePickerField,
     MyCheckboxSimple,
     MyCombobox
 } from '../../../../../../00_utilities/components/ui/forms/fields';
+import {pesosColombianos, fechaFormatoUno} from '../../../../../../00_utilities/common';
 
 
 const BaseFormProyecto = (props) => {
@@ -40,14 +40,26 @@ const BaseFormProyecto = (props) => {
                         permisos_object.costo_presupuestado &&
                         initialValues &&
                         <div className="col-12 col-md-6">
-                            <span> <strong>Costo Presupuestado: </strong> {initialValues.costo_presupuestado}</span>
+                            <span> <strong>Costo Presupuestado: </strong> {pesosColombianos(initialValues.costo_presupuestado)}</span>
                         </div>
                     }
                     {
                         permisos_object.valor &&
                         initialValues &&
                         <div className="col-12 col-md-6">
-                            <span> <strong>Valor Orden Compra: </strong> {initialValues.valor_cliente}</span>
+                            <span> <strong>Valor Orden Compra: </strong> {pesosColombianos(initialValues.valor_cliente)}</span>
+                        </div>
+                    }
+                    {
+                        initialValues &&
+                        <div className="col-12 col-md-6">
+                            <span> <strong>Fecha Orden Compra: </strong> {fechaFormatoUno(initialValues.orden_compra_fecha)}</span>
+                        </div>
+                    }
+                    {
+                        initialValues &&
+                        <div className="col-12 col-md-6">
+                            <span> <strong>Fecha Entrega Pactada: </strong> {fechaFormatoUno(initialValues.fecha_entrega_pactada)}</span>
                         </div>
                     }
                 </div>
@@ -64,29 +76,6 @@ const BaseFormProyecto = (props) => {
                 nombre='Nombre Proyecto'
                 name='nombre'
                 case='U'/>
-
-            <MyTextFieldSimple
-                className="col-12 col-md-6"
-                nombre='Nro. Orden Compra'
-                name='orden_compra_nro'
-                case='U'/>
-
-            <div className="col-12">
-                <div className="row">
-                    <MyDateTimePickerField
-                        max={new Date(2099, 11, 31)}
-                        name='orden_compra_fecha'
-                        nombre='Fecha Orden de Compra'
-                        className='col-12 col-md-6'
-                    />
-                    <MyDateTimePickerField
-                        max={new Date(2099, 11, 31)}
-                        name='fecha_entrega_pactada'
-                        nombre='Fecha Entrega Pactada'
-                        className='col-12 col-md-6'
-                    />
-                </div>
-            </div>
             <MyCheckboxSimple
                 className="col-12"
                 nombre='Abierto'

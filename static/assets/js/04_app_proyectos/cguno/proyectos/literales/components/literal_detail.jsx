@@ -1,10 +1,11 @@
 import React, {Fragment, Component} from 'react';
-import {pesosColombianos} from "../../../../../00_utilities/common";
+import {fechaFormatoUno, pesosColombianos} from "../../../../../00_utilities/common";
 import TablaProyectoLiteralesMateriales from '../../literales/components/proyectos_literales_materiales_tabla';
 import TablaProyectoLiteralesManoObra from '../../literales/components/proyectos_literales_mano_obra_tabla';
 import InformacionLiteralGeneral from '../../literales/components/proyectos_literales_general';
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
+import {Link} from 'react-router-dom';
 
 class LiteralDetail extends Component {
     constructor(props) {
@@ -60,15 +61,35 @@ class LiteralDetail extends Component {
                                 <h5 className='h5-response'>{literal.descripcion}</h5>
                             </div>
                             {
+                                literal.cotizacion &&
+                                <Fragment>
+                                    <div className="col-12 col-md-6">
+                                        <h6 className='h6-response'>Cotización: <small>
+                                            <Link
+                                                to={`/app/proyectos/cotizaciones/cotizaciones/detail/${literal.cotizacion}`}>
+                                                {literal.cotizacion_nro}
+                                            </Link>
+                                        </small>
+                                        </h6>
+                                    </div>
+                                    <div className="col-12 col-md-6">
+                                        <h6 className='h6-response'>Fecha Entrega: <small>
+                                            {fechaFormatoUno(literal.cotizacion_fecha_entrega)}
+                                        </small>
+                                        </h6>
+                                    </div>
+                                </Fragment>
+                            }
+                            {
                                 permisos.costo_materiales &&
-                                <div className="col-12">
+                                <div className="col-12 col-md-4">
                                     <h6 className='h6-response'>Costo
                                         Materiales: <small>{pesosColombianos(literal.costo_materiales)}</small>
                                     </h6>
                                 </div>
                             }
                             {permisos.costo_mano_obra &&
-                            <div className="col-12">
+                            <div className="col-12 col-md-4">
                                 <h6 className='h6-response'>Costo
                                     Mano
                                     Obra: <small>{pesosColombianos(Number(literal.costo_mano_obra) + Number(literal.costo_mano_obra_inicial))}</small>
@@ -77,7 +98,7 @@ class LiteralDetail extends Component {
                             }
                             {
                                 permisos.costo &&
-                                <div className="col-12">
+                                <div className="col-12 col-md-4">
                                     <h6 className='h6-response'>Costo
                                         Total: <small>{pesosColombianos(Number(literal.costo_mano_obra_inicial) + Number(literal.costo_mano_obra) + Number(literal.costo_materiales))}</small>
                                     </h6>

@@ -43,9 +43,6 @@ class ModelForm extends Component {
                             case='U'/>
                     </div>
                     <BaseFormLiteral proyecto={object}/>
-                    <div style={{height: '300px'}}>
-
-                    </div>
                 </div>
             </MyFormTagModal>
         )
@@ -53,9 +50,18 @@ class ModelForm extends Component {
 }
 
 function mapPropsToState(state, ownProps) {
-    const {object: {orden_compra_nro, orden_compra_fecha, fecha_entrega_pactada, cotizacion_nro}} = ownProps;
+    let initialValues = null;
+    const {item_seleccionado} = ownProps;
+    if (item_seleccionado) {
+        const {descripcion, cotizacion} = item_seleccionado;
+        initialValues = {
+            descripcion,
+            cotizacion
+        }
+    }
+    console.log(item_seleccionado);
     return {
-        initialValues: {orden_compra_nro, orden_compra_fecha, fecha_entrega_pactada, cotizacion_nro}
+        initialValues: initialValues
     }
 }
 

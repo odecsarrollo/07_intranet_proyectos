@@ -43,13 +43,17 @@ class Tabla extends React.Component {
                                     return row[filter.id] && row[filter.id].includes(filter.value.toUpperCase())
                                 },
                                 Cell: row => {
+                                    const id_proyecto = row.original.mi_proyecto;
+                                    const id_literal = row.original.mi_literal;
+                                    const id_proyecto_mostrar = id_proyecto ? row.original.id_proyecto : row.original.mi_literal_id_literal;
+                                    const id_proyecto_url = id_literal ? row.original.mi_literal_proyecto_id : row.original.mi_proyecto;
                                     return (
                                         proyectos_permisos.detail ?
                                             <Link
-                                                to={`/app/proyectos/proyectos/detail/${row.original.mi_proyecto}`}>
-                                                <span>{row.value}</span>
+                                                to={`/app/proyectos/proyectos/detail/${id_proyecto_url}`}>
+                                                <span>{id_proyecto_mostrar}</span>
                                             </Link> :
-                                            <span>{row.value}</span>
+                                            <span>{id_proyecto_mostrar}</span>
                                     )
                                 }
                             },

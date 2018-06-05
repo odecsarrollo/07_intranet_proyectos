@@ -1,5 +1,5 @@
 import datetime
-from django.db.models import Max
+from django.db.models import Max, Q
 from rest_framework import viewsets
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
@@ -63,7 +63,16 @@ class CotizacionViewSet(viewsets.ModelViewSet):
 
     @list_route(http_method_names=['get', ])
     def listar_cotizacion_abrir_carpeta(self, request):
-        qs = self.get_queryset().filter(abrir_carpeta=True, mi_proyecto__isnull=True)
+        qs = self.get_queryset().filter(
+            (
+                    Q(abrir_carpeta=True) &
+                    Q(mi_proyecto__isnull=True)
+            ) |
+            (
+                    Q(crear_literal=True) &
+                    Q(mi_literal__isnull=True)
+            )
+        )
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 

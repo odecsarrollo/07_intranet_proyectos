@@ -13,9 +13,9 @@ IconButtonContainerAdd.propTypes = {
 };
 
 export const ContainerNuevoButton = (props) => {
-    const {onClick} = props;
+    const {onClick, texto = 'Nuevo'} = props;
     return (
-        <FlatIconModal onClick={onClick} primary={true} text='Nuevo' {...props}/>
+        <FlatIconModal onClick={onClick} primary={true} text={texto} {...props}/>
     )
 };
 ContainerNuevoButton.propTypes = {

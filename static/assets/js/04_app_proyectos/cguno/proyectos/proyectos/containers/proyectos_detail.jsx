@@ -80,8 +80,8 @@ class Detail extends Component {
         const success_callback = () => {
             noCargando();
         };
-
-        const cargarLiterales = () => this.props.fetchLiteralesXProyecto(id, success_callback, notificarErrorAjaxAction);
+        const cargarCotizacioneParaCrearLiterales = () => this.props.fetchCotizacionesPidiendoCarpeta(success_callback, notificarErrorAjaxAction);
+        const cargarLiterales = () => this.props.fetchLiteralesXProyecto(id, cargarCotizacioneParaCrearLiterales, notificarErrorAjaxAction);
         const cargarProyecto = () => this.props.fetchProyecto(id, cargarLiterales, notificarErrorAjaxAction);
         this.props.fetchMisPermisos(cargarProyecto, notificarErrorAjaxAction);
 
@@ -94,6 +94,7 @@ class Detail extends Component {
             items_literales,
             horas_hojas_trabajos_list,
             literales_list,
+            contizaciones_list,
             horas_colaboradores_proyectos_iniciales_list,
         } = this.props;
         const permisos = permisosAdapter(mis_permisos, permisos_view);
@@ -105,11 +106,39 @@ class Detail extends Component {
         }
 
         const {item_seleccionado} = this.state;
+        let cotizacion_pendiente_por_literal = null;
+        const cotizacion_pendiente_por_literal_list = _.map(
+            _.pickBy(contizaciones_list, c => c.crear_literal_id_proyecto === object.id_proyecto), e => e
+        );
+        if (cotizacion_pendiente_por_literal_list.length > 0) {
+            cotizacion_pendiente_por_literal = cotizacion_pendiente_por_literal_list[0]
+        }
+
+        let cotizaciones_proyecto_list = _.map(_.pickBy(literales_list, e => e.cotizacion), e => {
+            return (
+                {
+                    tipo: 'L',
+                    cotizacion: e.cotizacion,
+                    cotizacion_nro: e.cotizacion_nro,
+                }
+            )
+        });
+
+        if (object.cotizacion) {
+            cotizaciones_proyecto_list = [...cotizaciones_proyecto_list, {
+                tipo: 'P',
+                cotizacion: object.cotizacion,
+                cotizacion_nro: object.cotizacion_nro
+            }];
+        }
+
         return (
             <ValidarPermisos can_see={permisos.detail} nombre='detalles de proyecto'>
                 <div className="row">
                     <div className="col-12">
-                        <ProyectoInfo proyecto={object} cotizaciones_permisos={cotizacion_permisos}/>
+                        <ProyectoInfo cotizaciones_proyecto_list={cotizaciones_proyecto_list}
+                                      proyecto={object}
+                                      cotizaciones_permisos={cotizacion_permisos}/>
                     </div>
                     <div className="col-12">
                         <Tabs>
@@ -125,9 +154,22 @@ class Detail extends Component {
                                     <div className="col-12 col-lg-4">
                                         <LiteralModalCreate
                                             permisos_object={permisos_literales}
+                                            cotizacion_pendiente_por_literal={null}
                                             setCurrentLiteral={this.setCurrentLiteral}
                                             {...this.props}
                                         />
+                                        {
+                                            cotizacion_pendiente_por_literal &&
+                                            <LiteralModalCreate
+                                                permisos_object={permisos_literales}
+                                                cotizacion_pendiente_por_literal={{
+                                                    cotizacion: cotizacion_pendiente_por_literal.id,
+                                                    descripcion: cotizacion_pendiente_por_literal.descripcion_cotizacion
+                                                }}
+                                                setCurrentLiteral={this.setCurrentLiteral}
+                                                {...this.props}
+                                            />
+                                        }
                                         <TablaProyectoLiterales
                                             lista_literales={_.map(literales_list, e => e)}
                                             onSelectItem={this.onLiteralSelect}
@@ -185,6 +227,7 @@ function mapPropsToState(state, ownProps) {
         literales_list: state.literales,
         horas_colaboradores_proyectos_iniciales_list: state.horas_colaboradores_proyectos_iniciales,
         object: state.proyectos[id],
+        contizaciones_list: state.cotizaciones,
         clientes_list: state.clientes,
     }
 }

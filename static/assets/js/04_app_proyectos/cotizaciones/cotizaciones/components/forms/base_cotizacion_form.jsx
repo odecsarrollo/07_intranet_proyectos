@@ -1,8 +1,12 @@
 import React, {Fragment} from 'react';
-import {MyTextFieldSimple, MyDropdownList} from '../../../../../00_utilities/components/ui/forms/fields';
+import {
+    MyTextFieldSimple,
+    MyDropdownList,
+    MyDateTimePickerField
+} from '../../../../../00_utilities/components/ui/forms/fields';
 
 const FormBaseCotizacion = (props) => {
-    const {item} = props;
+    const {item, en_proceso, esta_aprobado} = props;
     return (
         <Fragment>
             <MyTextFieldSimple
@@ -32,21 +36,6 @@ const FormBaseCotizacion = (props) => {
                 multiLine={true}
                 rows={2}
                 case='U'/>
-            <MyTextFieldSimple
-                className="col-12 col-md-4"
-                nombre='Valor Oferta'
-                name='valor_ofertado'
-            />
-            <MyTextFieldSimple
-                className="col-12 col-md-4"
-                nombre='Valor OC'
-                name='valor_orden_compra'
-            />
-            <MyTextFieldSimple
-                className="col-12 col-md-4"
-                nombre='Costo Presupuestado'
-                name='costo_presupuestado'
-            />
             {
                 item &&
                 <div className="col-12">
@@ -71,6 +60,53 @@ const FormBaseCotizacion = (props) => {
                                 'Perdido',
                             ]}
                         />
+                    </div>
+                </div>
+            }
+            {
+                en_proceso &&
+                <Fragment>
+                    <MyTextFieldSimple
+                        className="col-12 col-md-6 col-lg-4"
+                        nombre='Valor Oferta'
+                        name='valor_ofertado'
+                    />
+                    <MyTextFieldSimple
+                        className="col-12 col-md-6 col-lg-4"
+                        nombre='Costo Presupuestado'
+                        name='costo_presupuestado'
+                    />
+                    <MyDateTimePickerField
+                        max={new Date(2099, 11, 31)}
+                        name='fecha_entrega_pactada'
+                        nombre='Fecha Entrega Pactada'
+                        className='col-12 col-md-6 col-lg-4'
+                    />
+                </Fragment>
+            }
+            {
+                esta_aprobado &&
+                <div className='col-12'>
+                    <div className="row">
+                        <div className='col-12 mt-2'>
+                            <h3>Orden de Compra</h3>
+                        </div>
+                        <MyDateTimePickerField
+                            max={new Date(2099, 11, 31)}
+                            name='orden_compra_fecha'
+                            nombre='Fecha Orden de Compra'
+                            className='col-12 col-md-4'
+                        />
+                        <MyTextFieldSimple
+                            className="col-12 col-md-4"
+                            nombre='Valor OC'
+                            name='valor_orden_compra'
+                        />
+                        <MyTextFieldSimple
+                            className="col-12 col-md-4"
+                            nombre='Nro. Orden Compra'
+                            name='orden_compra_nro'
+                            case='U'/>
                     </div>
                 </div>
             }

@@ -13,9 +13,14 @@ class Cotizacion(TimeStampedModel):
     observacion = models.TextField(null=True, blank=True)
     valor_ofertado = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
     valor_orden_compra = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
+    orden_compra_nro = models.CharField(max_length=20, null=True, blank=True)
+    orden_compra_fecha = models.DateField(null=True, blank=True)
+    fecha_entrega_pactada = models.DateField(null=True, blank=True)
     costo_presupuestado = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
     responsable = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True)
     abrir_carpeta = models.BooleanField(default=False)
+    crear_literal = models.BooleanField(default=False)
+    crear_literal_id_proyecto = models.CharField(max_length=10, null=True, blank=True)
 
     class Meta:
         permissions = [

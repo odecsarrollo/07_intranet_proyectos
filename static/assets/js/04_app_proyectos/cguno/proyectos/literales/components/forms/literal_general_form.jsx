@@ -36,6 +36,11 @@ class Form extends Component {
                     </div>
                 }
                 <BaseFormLiteral initialValues={initialValues}/>
+
+
+
+
+
                 <BotoneriaModalForm
                     onCancel={onCancel}
                     pristine={pristine}

@@ -12,18 +12,18 @@ class LiteralSerializer(serializers.ModelSerializer):
     costo_mano_obra_inicial = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     cantidad_horas_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     cantidad_horas_mano_obra_inicial = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
-    orden_compra_fecha = serializers.DateTimeField(
-        format="%Y-%m-%d",
-        input_formats=['%Y-%m-%d', 'iso-8601'],
-        allow_null=True,
-        required=False
-    )
-    fecha_entrega_pactada = serializers.DateTimeField(
-        format="%Y-%m-%d",
-        input_formats=['%Y-%m-%d', 'iso-8601'],
-        allow_null=True,
-        required=False
-    )
+    orden_compra_nro = serializers.CharField(source='cotizacion.orden_compra_nro', read_only=True)
+    orden_compra_fecha = serializers.DateField(source='cotizacion.orden_compra_fecha', read_only=True)
+    fecha_entrega_pactada = serializers.DateField(source='cotizacion.fecha_entrega_pactada', read_only=True)
+    valor_cliente = serializers.DecimalField(source='cotizacion.valor_orden_compra', read_only=True,
+                                             max_digits=20, decimal_places=2)
+    cotizacion_nro = serializers.SerializerMethodField()
+    cotizacion_fecha_entrega = serializers.DateField(source='cotizacion.fecha_entrega_pactada', read_only=True)
+
+    def get_cotizacion_nro(self, obj):
+        if obj.cotizacion:
+            return '%s-%s' % (obj.cotizacion.unidad_negocio, obj.cotizacion.nro_cotizacion)
+        return None
 
     class Meta:
         model = Literal
@@ -49,12 +49,19 @@ class LiteralSerializer(serializers.ModelSerializer):
             'orden_compra_fecha',
             'fecha_entrega_pactada',
             'valor_cliente',
+            'cotizacion',
             'cotizacion_nro',
+            'cotizacion_fecha_entrega',
         ]
 
 
 class ProyectoSerializer(serializers.ModelSerializer):
     cliente_nombre = serializers.CharField(source='cliente.nombre', read_only=True)
+
+    orden_compra_nro = serializers.CharField(source='cotizacion.orden_compra_nro', read_only=True)
+    orden_compra_fecha = serializers.DateField(source='cotizacion.orden_compra_fecha', read_only=True)
+    fecha_entrega_pactada = serializers.DateField(source='cotizacion.fecha_entrega_pactada', read_only=True)
+
     costo_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     cantidad_horas_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     costo_mano_obra_inicial = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
@@ -64,18 +71,6 @@ class ProyectoSerializer(serializers.ModelSerializer):
                                                    max_digits=20, decimal_places=2)
     valor_cliente = serializers.DecimalField(source='cotizacion.valor_orden_compra', read_only=True,
                                              max_digits=20, decimal_places=2)
-    orden_compra_fecha = serializers.DateTimeField(
-        format="%Y-%m-%d",
-        input_formats=['%Y-%m-%d', 'iso-8601'],
-        allow_null=True,
-        required=False
-    )
-    fecha_entrega_pactada = serializers.DateTimeField(
-        format="%Y-%m-%d",
-        input_formats=['%Y-%m-%d', 'iso-8601'],
-        allow_null=True,
-        required=False
-    )
 
     def get_cotizacion_nro(self, obj):
         if obj.cotizacion:
@@ -88,21 +83,20 @@ class ProyectoSerializer(serializers.ModelSerializer):
             'url',
             'id',
             'id_proyecto',
-            'fecha_prometida',
             'abierto',
             'costo_materiales',
             'en_cguno',
-            'valor_cliente',
             'costo_presupuestado',
             'costo_mano_obra',
             'costo_mano_obra_inicial',
             'cantidad_horas_mano_obra',
             'cantidad_horas_mano_obra_inicial',
+            'cotizacion',
+            'cotizacion_nro',
             'orden_compra_nro',
             'orden_compra_fecha',
             'fecha_entrega_pactada',
-            'cotizacion',
-            'cotizacion_nro',
+            'valor_cliente',
             'nombre',
             'cliente',
             'cliente_nombre',

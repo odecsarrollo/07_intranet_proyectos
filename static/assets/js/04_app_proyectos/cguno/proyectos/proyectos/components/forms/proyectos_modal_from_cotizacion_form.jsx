@@ -56,6 +56,8 @@ function mapPropsToState(state, ownProps) {
     const {item_seleccionado} = ownProps;
     const item = {
         costo_presupuestado: item_seleccionado.costo_presupuestado,
+        orden_compra_fecha: item_seleccionado.orden_compra_fecha,
+        fecha_entrega_pactada: item_seleccionado.fecha_entrega_pactada,
         valor_cliente: item_seleccionado.valor_orden_compra,
         cotizacion: item_seleccionado.id,
         abierto: true,

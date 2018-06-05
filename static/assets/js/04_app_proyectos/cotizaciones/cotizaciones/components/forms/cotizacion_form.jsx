@@ -4,6 +4,9 @@ import {connect} from "react-redux";
 import {MyFormTagModal} from '../../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import validate from './validate';
 import FormBaseCotizacion from '../forms/base_cotizacion_form';
+import {formValueSelector} from 'redux-form';
+
+const selector = formValueSelector('cotizacionForm');
 
 class Form extends Component {
     render() {
@@ -17,7 +20,11 @@ class Form extends Component {
             handleSubmit,
             modal_open,
             singular_name,
+            myValues,
         } = this.props;
+        const {estado} = myValues;
+        const en_proceso = estado !== 'Pendiente' && estado !== 'Aplazado' && estado !== 'Perdido';
+        const esta_aprobado = estado === 'Aprobado';
         return (
             <MyFormTagModal
                 onCancel={onCancel}
@@ -29,7 +36,11 @@ class Form extends Component {
                 pristine={pristine}
                 element_type={singular_name}
             >
-                <FormBaseCotizacion item={initialValues}/>
+                <FormBaseCotizacion
+                    item={initialValues}
+                    en_proceso={en_proceso}
+                    esta_aprobado={esta_aprobado}
+                />
                 <div style={{height: '300px'}}>
 
                 </div>
@@ -41,7 +52,8 @@ class Form extends Component {
 function mapPropsToState(state, ownProps) {
     const {item_seleccionado} = ownProps;
     return {
-        initialValues: item_seleccionado
+        myValues: selector(state, 'estado', 'valor_ofertado'),
+        initialValues: item_seleccionado,
     }
 }
 

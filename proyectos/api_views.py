@@ -126,6 +126,7 @@ class LiteralViewSet(viewsets.ModelViewSet):
     queryset = Literal.objects.select_related(
         'proyecto',
         'proyecto__cliente',
+        'cotizacion',
     ).all()
     serializer_class = LiteralSerializer
 

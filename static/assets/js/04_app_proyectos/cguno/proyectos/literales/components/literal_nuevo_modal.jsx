@@ -19,10 +19,9 @@ class LiteralModalCreate extends Component {
             object,
             literales_list,
             setCurrentLiteral,
-            notificarErrorAjaxAction
+            notificarErrorAjaxAction,
         } = this.props;
         cargando();
-
         this.props.clearHorasColaboradoresProyectosIniciales();
         this.props.clearHorasHojasTrabajos();
         this.props.clearItemsLiterales();
@@ -48,7 +47,8 @@ class LiteralModalCreate extends Component {
 
     render() {
         const {
-            permisos_object
+            permisos_object,
+            cotizacion_pendiente_por_literal = null
         } = this.props;
         const {
             item_seleccionado,
@@ -59,8 +59,9 @@ class LiteralModalCreate extends Component {
                 {
                     permisos_object.add &&
                     <ContainerNuevoButton
+                        texto={cotizacion_pendiente_por_literal ? 'Add. Lit. Cotización' : 'Nuevo'}
                         onClick={() => {
-                            this.setState({item_seleccionado: null, modal_open: true});
+                            this.setState({item_seleccionado: cotizacion_pendiente_por_literal, modal_open: true});
                         }}
                     />
                 }

@@ -7,6 +7,21 @@ class CotizacionSerializer(serializers.ModelSerializer):
     responsable_nombres = serializers.CharField(source='responsable.first_name', read_only=True)
     responsable_apellidos = serializers.CharField(source='responsable.last_name', read_only=True)
     id_proyecto = serializers.CharField(source='mi_proyecto.id_proyecto', read_only=True)
+    mi_literal_id_literal = serializers.CharField(source='mi_literal.id_literal', read_only=True)
+    mi_literal_id_proyecto = serializers.CharField(source='mi_literal.proyecto.id_proyecto', read_only=True)
+    mi_literal_proyecto_id = serializers.CharField(source='mi_literal.proyecto.id', read_only=True)
+    orden_compra_fecha = serializers.DateTimeField(
+        format="%Y-%m-%d",
+        input_formats=['%Y-%m-%d', 'iso-8601'],
+        allow_null=True,
+        required=False
+    )
+    fecha_entrega_pactada = serializers.DateTimeField(
+        format="%Y-%m-%d",
+        input_formats=['%Y-%m-%d', 'iso-8601'],
+        allow_null=True,
+        required=False
+    )
 
     class Meta:
         model = Cotizacion
@@ -22,16 +37,26 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'observacion',
             'valor_ofertado',
             'valor_orden_compra',
+            'orden_compra_nro',
             'costo_presupuestado',
             'responsable',
             'responsable_nombres',
             'responsable_apellidos',
             'abrir_carpeta',
             'mi_proyecto',
+            'mi_literal',
+            'mi_literal_id_literal',
+            'mi_literal_id_proyecto',
+            'mi_literal_proyecto_id',
             'id_proyecto',
+            'orden_compra_fecha',
+            'fecha_entrega_pactada',
+            'crear_literal',
+            'crear_literal_id_proyecto',
         ]
         extra_kwargs = {
             'mi_proyecto': {'read_only': True},
+            'mi_literal': {'read_only': True},
         }
 
 

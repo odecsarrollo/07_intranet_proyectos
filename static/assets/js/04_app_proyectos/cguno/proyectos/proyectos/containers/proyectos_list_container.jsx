@@ -41,10 +41,23 @@ class List extends Component {
         const {object_list, mis_permisos, cotizaciones_list} = this.props;
         const permisos_proyectos = permisosAdapter(mis_permisos, permisos_view);
         const permisos_cotizaciones = permisosAdapter(mis_permisos, cotizaciones_permisos_view);
+
+        const cotizaciones_list_2 = _.map(cotizaciones_list, c => {
+            if (c.crear_literal) {
+                const proyectos = _.map(_.pickBy(object_list, p => {
+                    return p.id_proyecto === c.crear_literal_id_proyecto
+                }), e => e);
+                if (proyectos.length > 0) {
+                    return {...c, mi_proyecto: proyectos[0].id}
+                }
+            }
+            return c
+        });
+
         return (
             <Fragment>
                 <CotizacionAbrirCarpetaLista
-                    lista={cotizaciones_list}
+                    lista={cotizaciones_list_2}
                     {...this.props}
                     permisos_object={{
                         ...permisos_proyectos,
