@@ -4,6 +4,7 @@ from .models import Cotizacion, SeguimientoCotizacion
 
 
 class CotizacionSerializer(serializers.ModelSerializer):
+    cliente_nombre = serializers.CharField(source='cliente.nombre', read_only=True)
     responsable_nombres = serializers.CharField(source='responsable.first_name', read_only=True)
     responsable_apellidos = serializers.CharField(source='responsable.last_name', read_only=True)
     id_proyecto = serializers.CharField(source='mi_proyecto.id_proyecto', read_only=True)
@@ -22,6 +23,12 @@ class CotizacionSerializer(serializers.ModelSerializer):
         allow_null=True,
         required=False
     )
+    fecha_entrega_pactada_cotizacion = serializers.DateTimeField(
+        format="%Y-%m-%d",
+        input_formats=['%Y-%m-%d', 'iso-8601'],
+        allow_null=True,
+        required=False
+    )
 
     class Meta:
         model = Cotizacion
@@ -31,6 +38,7 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'nro_cotizacion',
             'unidad_negocio',
             'cliente',
+            'cliente_nombre',
             'descripcion_cotizacion',
             'contacto',
             'estado',
@@ -51,6 +59,7 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'id_proyecto',
             'orden_compra_fecha',
             'fecha_entrega_pactada',
+            'fecha_entrega_pactada_cotizacion',
             'crear_literal',
             'crear_literal_id_proyecto',
         ]

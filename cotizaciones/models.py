@@ -2,11 +2,13 @@ from django.db import models
 from django.contrib.auth.models import User
 from model_utils.models import TimeStampedModel
 
+from clientes.models import ClienteBiable
+
 
 class Cotizacion(TimeStampedModel):
     nro_cotizacion = models.PositiveIntegerField(null=True, blank=True, unique=True)
     unidad_negocio = models.CharField(max_length=10)
-    cliente = models.CharField(max_length=200)
+    cliente = models.ForeignKey(ClienteBiable, on_delete=models.PROTECT, null=True, blank=True)
     descripcion_cotizacion = models.CharField(max_length=500)
     contacto = models.CharField(max_length=400)
     estado = models.CharField(max_length=200, null=True, blank=True)
@@ -15,6 +17,7 @@ class Cotizacion(TimeStampedModel):
     valor_orden_compra = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
     orden_compra_nro = models.CharField(max_length=20, null=True, blank=True)
     orden_compra_fecha = models.DateField(null=True, blank=True)
+    fecha_entrega_pactada_cotizacion = models.DateField(null=True, blank=True)
     fecha_entrega_pactada = models.DateField(null=True, blank=True)
     costo_presupuestado = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
     responsable = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True)

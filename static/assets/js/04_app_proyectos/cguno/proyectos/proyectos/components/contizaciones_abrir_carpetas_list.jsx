@@ -17,7 +17,7 @@ const Lista = (props) => {
                                        onSelectItemEdit(c);
                                    }}
                                    className="list-group-item">
-                            {`${c.unidad_negocio}-${c.nro_cotizacion} ${c.descripcion_cotizacion} (${c.cliente})`}
+                            {`${c.unidad_negocio}-${c.nro_cotizacion} ${c.descripcion_cotizacion} (${c.cliente_nombre})`}
                         </li>
                     }
                     else {

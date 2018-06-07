@@ -6,14 +6,6 @@ import BaseFormProyecto from './base_form';
 import validate from './validate';
 
 class Form extends Component {
-    componentDidMount() {
-        this.props.fetchClientes();
-    }
-
-    componentWillUnmount() {
-        this.props.clearClientes();
-    }
-
     render() {
         const {
             pristine,

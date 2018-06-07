@@ -68,7 +68,7 @@ class Tabla extends React.Component {
                             },
                             {
                                 Header: "Cliente",
-                                accessor: "cliente",
+                                accessor: "cliente_nombre",
                                 maxWidth: 150,
                                 filterable: true,
                                 filterMethod: (filter, row) => {

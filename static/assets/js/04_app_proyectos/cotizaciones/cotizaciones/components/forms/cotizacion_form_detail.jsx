@@ -10,6 +10,11 @@ import {formValueSelector} from 'redux-form';
 const selector = formValueSelector('cotizacionEditForm');
 
 class Form extends Component {
+    componentWillUnmount() {
+        this.props.clearClientes();
+    }
+
+
     componentDidMount() {
         const {noCargando, cargando, notificarErrorAjaxAction, item_seleccionado} = this.props;
         cargando();
@@ -20,7 +25,8 @@ class Form extends Component {
                 noCargando();
             }
         };
-        this.props.fetchUsuariosxPermiso('gestionar_cotizacion', cargarResponsable, notificarErrorAjaxAction);
+        const cargarClientes = () => this.props.fetchClientes(cargarResponsable, notificarErrorAjaxAction);
+        this.props.fetchUsuariosxPermiso('gestionar_cotizacion', cargarClientes, notificarErrorAjaxAction);
     }
 
     render() {
@@ -33,18 +39,22 @@ class Form extends Component {
             handleSubmit,
             onCancel,
             usuarios_list,
+            clientes_list,
             myValues
         } = this.props;
         const {estado} = myValues;
-        const en_proceso = estado !== 'Pendiente' && estado !== 'Aplazado' && estado !== 'Perdido';
+        const en_proceso = estado && estado !== 'Pendiente' && estado !== 'Aplazado' && estado !== 'Perdido';
         const esta_aprobado = estado === 'Aprobado';
+        const enviado = estado && en_proceso && estado !== 'En Proceso';
         return (
             <form className="card" onSubmit={handleSubmit(onSubmit)}>
                 <div className="row pl-3 pr-5">
                     <FormBaseCotizacion
+                        clientes_list={clientes_list}
                         item={initialValues} myValues={myValues}
                         en_proceso={en_proceso}
                         esta_aprobado={esta_aprobado}
+                        enviado={enviado}
                     />
                     {
                         usuarios_list.length > 0 &&

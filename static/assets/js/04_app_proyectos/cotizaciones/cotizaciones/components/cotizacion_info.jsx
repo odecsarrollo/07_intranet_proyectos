@@ -18,13 +18,18 @@ const CotizacionInfo = (props) => {
             <div className="col-12">
                 <div className="row">
                     <div className="col-12 col-md-4">
+                        <strong>Fecha Entrega
+                            Cotización: </strong>{object.fecha_entrega_pactada_cotizacion ? fechaFormatoUno(object.fecha_entrega_pactada_cotizacion) : 'Sin Definir'}
+                    </div>
+                    <div className="col-12 col-md-4">
                         <strong>Valor Orden Compra: </strong>{pesosColombianos(object.valor_orden_compra)}
                     </div>
                     <div className="col-12 col-md-4">
                         <strong>Nro Orden Compra: </strong>{object.orden_compra_nro}
                     </div>
                     <div className="col-12 col-md-4">
-                        <strong>Fecha Orden Compra: </strong>{fechaFormatoUno(object.orden_compra_fecha)}
+                        <strong>Fecha Orden
+                            Compra: </strong>{object.orden_compra_fecha ? fechaFormatoUno(object.orden_compra_fecha) : 'Sin Definir'}
                     </div>
                     <div className="col-12 col-md-4">
                         <strong>Valor Ofertado: </strong>{pesosColombianos(object.valor_ofertado)}
@@ -33,7 +38,8 @@ const CotizacionInfo = (props) => {
                         <strong>Costo Presupuestado: </strong>{pesosColombianos(object.costo_presupuestado)}
                     </div>
                     <div className="col-12 col-md-4">
-                        <strong>Fecha Entrega Pactada: </strong>{fechaFormatoUno(object.fecha_entrega_pactada)}
+                        <strong>Fecha Entrega
+                            Proyecto: </strong>{object.fecha_entrega_pactada ? fechaFormatoUno(object.fecha_entrega_pactada) : 'Sin Definir'}
                     </div>
                 </div>
             </div>

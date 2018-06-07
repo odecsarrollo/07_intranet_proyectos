@@ -7,7 +7,11 @@ const validate = values => {
         'cliente',
         'unidad_negocio',
         'id_proyecto',
-        'descripcion_cotizacion'
+        'valor_ofertado',
+        'descripcion_cotizacion',
+        'orden_compra_fecha',
+        'fecha_entrega_pactada',
+        'costo_presupuestado',
     ];
     requiredFields.map(field => {
         if (!values[field]) {
@@ -18,6 +22,7 @@ const validate = values => {
     const soloDineroFields = [
         'valor_ofertado',
         'valor_orden_compra',
+        'valor_ofertado',
         'costo_presupuestado'
     ];
     soloDineroFields.map(field => {
@@ -37,6 +42,8 @@ const validate = values => {
             errors.valor_orden_compra = 'Si esta aprobado, debe colocar el valor de la orden de compra';
         }
     }
+
+    //valor_ofertado
 
     if (values.id_proyecto) {
         const letras = values.id_proyecto.substring(0, 2);

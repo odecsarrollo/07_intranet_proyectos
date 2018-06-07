@@ -68,7 +68,7 @@ class List extends Component {
                     }}
                 />
                 <ListCrud
-                    object_list={object_list}
+                    object_list={_.orderBy(object_list,['id_proyecto'],['desc'])}
                     permisos_cotizaciones={permisos_cotizaciones}
                     permisos_object={permisos_proyectos}
                     {...this.props}
@@ -85,7 +85,6 @@ function mapPropsToState(state, ownProps) {
     return {
         mis_permisos: state.mis_permisos,
         object_list: state.proyectos,
-        clientes_list: state.clientes,
         cotizaciones_list: state.cotizaciones
     }
 }

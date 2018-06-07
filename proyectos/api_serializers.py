@@ -4,7 +4,7 @@ from .models import Proyecto, Literal
 
 
 class LiteralSerializer(serializers.ModelSerializer):
-    cliente_nombre = serializers.CharField(source='proyecto.cliente.nombre', read_only=True)
+    cliente_nombre = serializers.CharField(source='proyecto.cotizacion.cliente.nombre', read_only=True)
     proyecto_abierto = serializers.BooleanField(source='proyecto.abierto', read_only=True)
     id_proyecto = serializers.CharField(source='proyecto.id_proyecto', read_only=True)
     proyecto_nombre = serializers.CharField(source='proyecto.nombre', read_only=True)
@@ -56,7 +56,7 @@ class LiteralSerializer(serializers.ModelSerializer):
 
 
 class ProyectoSerializer(serializers.ModelSerializer):
-    cliente_nombre = serializers.CharField(source='cliente.nombre', read_only=True)
+    cliente_nombre = serializers.CharField(source='cotizacion.cliente.nombre', read_only=True)
 
     orden_compra_nro = serializers.CharField(source='cotizacion.orden_compra_nro', read_only=True)
     orden_compra_fecha = serializers.DateField(source='cotizacion.orden_compra_fecha', read_only=True)
@@ -98,7 +98,5 @@ class ProyectoSerializer(serializers.ModelSerializer):
             'fecha_entrega_pactada',
             'valor_cliente',
             'nombre',
-            'cliente',
             'cliente_nombre',
         ]
-        extra_kwargs = {'cliente': {'allow_null': True}}

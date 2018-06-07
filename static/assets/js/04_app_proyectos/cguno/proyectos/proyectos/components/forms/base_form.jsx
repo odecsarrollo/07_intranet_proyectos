@@ -1,14 +1,13 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import {
     MyTextFieldSimple,
-    MyCheckboxSimple,
-    MyCombobox
+    MyCheckboxSimple
 } from '../../../../../../00_utilities/components/ui/forms/fields';
 import {pesosColombianos, fechaFormatoUno} from '../../../../../../00_utilities/common';
 
 
 const BaseFormProyecto = (props) => {
-    const {initialValues = null, permisos_object, clientes_list} = props;
+    const {initialValues = null, permisos_object} = props;
     return (
         <div className="row">
             {!initialValues || !initialValues.en_cguno ?
@@ -21,19 +20,6 @@ const BaseFormProyecto = (props) => {
                     <span>{initialValues.id_proyecto}</span>
                 </div>
             }
-            <MyCombobox
-                className="col-12"
-                name='cliente'
-                data={_.map(clientes_list, e => {
-                    return {
-                        'name': e.nombre,
-                        'id': e.id
-                    }
-                })}
-                textField='name'
-                valuesField='id'
-                placeholder='Cliente'
-            />
             <div className="col-12">
                 <div className="row">
                     {
@@ -58,9 +44,14 @@ const BaseFormProyecto = (props) => {
                     }
                     {
                         initialValues &&
-                        <div className="col-12 col-md-6">
-                            <span> <strong>Fecha Entrega Pactada: </strong> {fechaFormatoUno(initialValues.fecha_entrega_pactada)}</span>
-                        </div>
+                        <Fragment>
+                            <div className="col-12 col-md-6">
+                                <span> <strong>Fecha Entrega Pactada: </strong> {fechaFormatoUno(initialValues.fecha_entrega_pactada)}</span>
+                            </div>
+                            <div className="col-12 col-md-6">
+                                <span> <strong>Cliente: </strong> {initialValues.cliente_nombre}</span>
+                            </div>
+                        </Fragment>
                     }
                 </div>
             </div>

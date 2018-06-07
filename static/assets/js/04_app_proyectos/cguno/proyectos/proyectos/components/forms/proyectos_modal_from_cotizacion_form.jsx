@@ -7,14 +7,6 @@ import BaseForm from './base_form';
 
 
 class Form extends Component {
-    componentDidMount() {
-        this.props.fetchClientes();
-    }
-
-    componentWillUnmount() {
-        this.props.clearClientes();
-    }
-
     render() {
         const {
             pristine,
@@ -64,7 +56,7 @@ function mapPropsToState(state, ownProps) {
         cotizacion_nro:`${item_seleccionado.unidad_negocio}-${item_seleccionado.nro_cotizacion}`,
         en_cguno: 0,
         nombre: item_seleccionado.descripcion_cotizacion,
-        cliente: null,
+        cliente_nombre: item_seleccionado.cliente_nombre,
     };
     return {
         initialValues: item

@@ -7,14 +7,6 @@ import BaseForm from './base_form';
 
 
 class Form extends Component {
-    componentDidMount() {
-        this.props.fetchClientes();
-    }
-
-    componentWillUnmount() {
-        this.props.clearClientes();
-    }
-
     render() {
         const {
             pristine,

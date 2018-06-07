@@ -18,7 +18,8 @@ from .mixins import LiteralesPDFMixin
 class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
     queryset = Proyecto.objects.select_related(
         'cliente',
-        'cotizacion'
+        'cotizacion',
+        'cotizacion__cliente',
     ).all()
     serializer_class = ProyectoSerializer
 
@@ -125,7 +126,7 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
 class LiteralViewSet(viewsets.ModelViewSet):
     queryset = Literal.objects.select_related(
         'proyecto',
-        'proyecto__cliente',
+        'proyecto__cotizacion__cliente',
         'cotizacion',
     ).all()
     serializer_class = LiteralSerializer

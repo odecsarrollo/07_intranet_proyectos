@@ -5,7 +5,7 @@ from cotizaciones.models import Cotizacion
 
 
 class Proyecto(models.Model):
-    cotizacion = models.OneToOneField(Cotizacion, on_delete=models.PROTECT, related_name='mi_proyecto', null=True,
+    cotizacion = models.OneToOneField(Cotizacion, on_delete=models.SET_NULL, related_name='mi_proyecto', null=True,
                                       blank=True)
     id_proyecto = models.CharField(max_length=15, unique=True)
     fecha_prometida = models.DateField(null=True, blank=True)
@@ -34,7 +34,7 @@ class Proyecto(models.Model):
 
 class Literal(models.Model):
     id_literal = models.CharField(max_length=15, unique=True)
-    cotizacion = models.OneToOneField(Cotizacion, on_delete=models.PROTECT, related_name='mi_literal', null=True,
+    cotizacion = models.OneToOneField(Cotizacion, on_delete=models.SET_NULL, related_name='mi_literal', null=True,
                                       blank=True)
     proyecto = models.ForeignKey(Proyecto, related_name='mis_literales', on_delete=models.CASCADE)
     descripcion = models.CharField(max_length=300, null=True, blank=True)

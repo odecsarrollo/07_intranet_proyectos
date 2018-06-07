@@ -9,6 +9,14 @@ import {formValueSelector} from 'redux-form';
 const selector = formValueSelector('cotizacionForm');
 
 class Form extends Component {
+    componentDidMount() {
+        this.props.fetchClientes();
+    }
+
+    componentWillUnmount() {
+        this.props.clearClientes();
+    }
+
     render() {
         const {
             pristine,
@@ -20,11 +28,13 @@ class Form extends Component {
             handleSubmit,
             modal_open,
             singular_name,
+            clientes_list,
             myValues,
         } = this.props;
         const {estado} = myValues;
-        const en_proceso = estado !== 'Pendiente' && estado !== 'Aplazado' && estado !== 'Perdido';
+        const en_proceso = estado && estado !== 'Pendiente' && estado !== 'Aplazado' && estado !== 'Perdido';
         const esta_aprobado = estado === 'Aprobado';
+        const enviado = estado && en_proceso && estado !== 'En Proceso';
         return (
             <MyFormTagModal
                 onCancel={onCancel}
@@ -40,6 +50,8 @@ class Form extends Component {
                     item={initialValues}
                     en_proceso={en_proceso}
                     esta_aprobado={esta_aprobado}
+                    enviado={enviado}
+                    clientes_list={clientes_list}
                 />
                 <div style={{height: '300px'}}>
 
