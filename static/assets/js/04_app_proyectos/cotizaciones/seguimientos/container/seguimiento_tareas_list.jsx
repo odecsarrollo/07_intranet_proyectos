@@ -13,9 +13,9 @@ momentLocaliser(moment);
 import {Link} from 'react-router-dom'
 
 const Tarea = (props) => {
-    const {tarea} = props;
+    const {fecha, nombre, link_to} = props;
     const ahora = moment(new Date());
-    const fecha_tarea = moment(tarea.fecha_inicio_tarea);
+    const fecha_tarea = moment(fecha);
     const diferencia = fecha_tarea.diff(ahora, "days");
     let diferencia_texto = 'Hoy';
     let style = {color: 'black'};
@@ -27,9 +27,9 @@ const Tarea = (props) => {
         diferencia_texto = `Hace ${diferencia * -1} días`;
     }
     return (
-        <Link to={`/app/proyectos/cotizaciones/cotizaciones/detail/${tarea.cotizacion}`}>
+        <Link to={link_to}>
             <li className="list-group-item" style={style}>
-                {fechaFormatoUno(tarea.fecha_inicio_tarea)} - <strong>{tarea.nombre_tarea} </strong> ({diferencia_texto})
+                {fechaFormatoUno(fecha)} - <strong>{nombre} </strong> ({diferencia_texto})
             </li>
         </Link>
     )
@@ -43,12 +43,14 @@ class SeguimientoTareasCotizacionesList extends Component {
 
     componentWillUnmount() {
         this.props.clearSeguimientosCotizaciones();
+        this.props.clearCotizaciones();
     }
 
     cargarDatos() {
         const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
         cargando();
-        this.props.fetchSeguimientosCotizacionesTareasPendientes(() => noCargando(), notificarErrorAjaxAction);
+        const cargarCotizacionesAgendadas = () => this.props.fetchCotizacionesAgendadas(() => noCargando(), notificarErrorAjaxAction);
+        this.props.fetchSeguimientosCotizacionesTareasPendientes(cargarCotizacionesAgendadas, notificarErrorAjaxAction);
     }
 
     componentDidMount() {
@@ -56,18 +58,42 @@ class SeguimientoTareasCotizacionesList extends Component {
     }
 
     render() {
-        const {tareas_list} = this.props;
-        const tiene_tareas = _.size(tareas_list);
+        const {tareas_list, cotizaciones_agendas_list} = this.props;
+        const listado_tareas = _.map(tareas_list, t => {
+            return {
+                fecha: t.fecha_inicio_tarea,
+                nombre: t.nombre_tarea,
+                cotizacion: t.cotizacion,
+                key: `t-${t.cotizacion}-${t.id}`
+            }
+        });
+
+        const listado_cotizaciones_agendadas = _.map(cotizaciones_agendas_list, c => {
+            return {
+                fecha: c.fecha_entrega_pactada_cotizacion,
+                nombre: c.descripcion_cotizacion,
+                cotizacion: c.id,
+                key: `c-${c.id}`
+            }
+        });
+        const listado_completo = _.orderBy([...listado_tareas, ...listado_cotizaciones_agendadas], ['fecha'], ['asc']);
         return (
             <div>
                 {
-                    tiene_tareas > 0 &&
+                    listado_completo.length > 0 &&
                     <Fragment>
                         <h1>Tareas Cotizaciones</h1>
                         <ul className="list-group">
-                            {_.map(_.orderBy(this.props.tareas_list, ['fecha_inicio_tarea'], ['asc']), t => <Tarea
-                                key={t.id}
-                                tarea={t}/>)}
+                            {listado_completo.map(t => {
+                                return (
+                                    <Tarea
+                                        key={t.key}
+                                        fecha={t.fecha}
+                                        nombre={t.nombre}
+                                        link_to={`/app/proyectos/cotizaciones/cotizaciones/detail/${t.cotizacion}`}
+                                    />
+                                )
+                            })}
                         </ul>
                     </Fragment>
 
@@ -85,6 +111,7 @@ function mapPropsToState(state, ownProps) {
     return {
         mis_permisos: state.mis_permisos,
         tareas_list: state.cotizaciones_seguimientos,
+        cotizaciones_agendas_list: state.cotizaciones,
     }
 }
 

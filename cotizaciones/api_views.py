@@ -76,6 +76,13 @@ class CotizacionViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
+    @list_route(http_method_names=['get', ])
+    def listar_cotizaciones_agendadas(self, request):
+        qs = self.get_queryset().filter(fecha_entrega_pactada_cotizacion__isnull=False,
+                                        estado__in=['Pendiente', 'En Proceso'])
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)
+
 
 class SeguimientoCotizacionViewSet(viewsets.ModelViewSet):
     queryset = SeguimientoCotizacion.objects.select_related('creado_por').all()
