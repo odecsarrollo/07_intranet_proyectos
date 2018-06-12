@@ -29,7 +29,8 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
                                              output_field=DecimalField(max_digits=4)),
             costo_total=ExpressionWrapper(
                 Sum((F('cantidad_minutos') / 60) * (
-                        F('hoja__tasa__costo') / F('hoja__tasa__nro_horas_mes_trabajadas'))),
+                        (F('hoja__tasa__costo') + F('hoja__tasa__otro_costo')) / F(
+                    'hoja__tasa__nro_horas_mes_trabajadas'))),
                 output_field=DecimalField(max_digits=4))
         ).filter(
             literal__proyecto__id_proyecto=OuterRef('id_proyecto'),
@@ -137,7 +138,8 @@ class LiteralViewSet(viewsets.ModelViewSet):
                                              output_field=DecimalField(max_digits=4)),
             costo_total=ExpressionWrapper(
                 Sum((F('cantidad_minutos') / 60) * (
-                        F('hoja__tasa__costo') / F('hoja__tasa__nro_horas_mes_trabajadas'))),
+                        (F('hoja__tasa__costo') + F('hoja__tasa__otro_costo')) / F(
+                    'hoja__tasa__nro_horas_mes_trabajadas'))),
                 output_field=DecimalField(max_digits=4))
         ).filter(
             literal_id=OuterRef('id'),

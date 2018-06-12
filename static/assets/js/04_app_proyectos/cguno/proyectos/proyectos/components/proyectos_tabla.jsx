@@ -126,7 +126,7 @@ class Tabla extends React.Component {
                                 maxWidth: 150,
                                 show: permisos_object.costo,
                                 Cell: row => <div
-                                    className='text-right'>{pesosColombianos(Number(row.original.costo_materiales) + Number(row.original.costo_mano_obra))}</div>
+                                    className='text-right'>{pesosColombianos(Number(row.original.costo_materiales) + Number(row.original.costo_mano_obra) + Number(row.original.costo_mano_obra_inicial))}</div>
                             },
                         ]
                     },

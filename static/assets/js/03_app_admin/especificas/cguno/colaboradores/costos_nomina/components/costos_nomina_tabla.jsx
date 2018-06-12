@@ -295,6 +295,16 @@ const TablaRow = (props) => {
                 cant_decimales={2}
             />
             <td className='text-right'><strong>{pesosColombianos(fila.costo)}</strong></td>
+            <RowItem
+                item={fila.otro_costo}
+                permisos_object={permisos_object}
+                modificable={!fila.verificado}
+                cambiarItem={(valor, callback = null) => updateColaboradorCostoMes(fila.id,
+                    {...fila, otro_costo: valor, modificado: true},
+                    callback
+                )}
+                formato='M'
+            />
             <td className='text-right'><strong>{pesosColombianos(fila.valor_hora)}</strong></td>
 
             <td className='text-center'>
@@ -348,6 +358,7 @@ const TablaCostos = (props) => {
                 <th>% Pres. Sociales</th>
                 <th>% Salud</th>
                 <th>Costo</th>
+                <th>Costo Adicional</th>
                 <th>Valor Hora</th>
                 <th>Modificado</th>
                 <th>Verificado</th>

@@ -146,6 +146,7 @@ class ColaboradorCostoMesBiable(models.Model):
     centro_costo = models.ForeignKey(ColaboradorCentroCosto, on_delete=models.PROTECT,
                                      related_name='mis_coloaboradores_costos_mensuales',
                                      null=True, blank=True)
+    otro_costo = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     es_salario_fijo = models.BooleanField(default=False)
     es_aprendiz = models.BooleanField(default=False)
     modificado = models.BooleanField(default=False)
@@ -159,8 +160,8 @@ class ColaboradorCostoMesBiable(models.Model):
             if self.nro_horas_mes_trabajadas > 0:
                 print('entro 2')
                 print(self.nro_horas_mes_trabajadas)
-                return self.costo / self.nro_horas_mes_trabajadas
-            return self.costo / self.nro_horas_mes
+                return (self.costo + self.otro_costo) / self.nro_horas_mes_trabajadas
+            return (self.costo + self.otro_costo) / self.nro_horas_mes
         return 0
 
     def calcular_costo_total(self):
