@@ -8,7 +8,7 @@ import {
     MyDateTimePickerField,
     MyCheckboxSimple,
     MyCombobox
-} from '../../../../../../00_utilities/components/ui/forms/fields';
+} from '../../../../../../../00_utilities/components/ui/forms/fields';
 import moment from 'moment-timezone';
 
 const selector = formValueSelector('proyectoReporteCostosForm');

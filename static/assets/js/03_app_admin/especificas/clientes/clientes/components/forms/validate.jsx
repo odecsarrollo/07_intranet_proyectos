@@ -2,7 +2,6 @@ const validate = values => {
     const errors = {};
 
     const requiredFields = [
-        'nit',
         'nombre',
     ];
     requiredFields.map(field => {

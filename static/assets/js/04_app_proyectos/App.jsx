@@ -20,7 +20,8 @@ import ProyectosCGUnoList from "./cguno/proyectos/proyectos/containers/proyectos
 import ProyectosCGUnoDetail from "./cguno/proyectos/proyectos/containers/proyectos_detail";
 
 
-import ReporteCosto from "./cguno/proyectos/reportes/containers/reporte_dashboard";
+import ReporteCosto from "./cguno/proyectos/reportes/reporte_1/containers/reporte_1";
+import ReporteDos from "./cguno/proyectos/reportes/reporte_2/containers/reporte_2";
 
 import LiteralesSinSincronizar
     from "./cguno/proyectos/literales_sin_sincronizar/containers/literales_sin_sincronizar_list_container";
@@ -58,6 +59,7 @@ const App = (props) => {
                                component={LiteralesSinSincronizar}/>
 
                         <Route exact path='/app/proyectos/proyectos/reporte_costos' component={ReporteCosto}/>
+                        <Route exact path='/app/proyectos/proyectos/reporte_dos' component={ReporteDos}/>
                     </Switch>
                 </div>
             </Fragment>

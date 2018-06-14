@@ -10,7 +10,7 @@ import {pesosColombianos} from "../../../../00_utilities/common";
 class Tabla extends React.Component {
     render() {
 
-        const data = this.props.data;
+        const data = _.orderBy(this.props.data, ['nro_cotizacion'], ['desc']);
         const {
             updateItem,
             singular_name,
@@ -30,14 +30,14 @@ class Tabla extends React.Component {
                         Header: "Caracteristicas",
                         columns: [
                             {
-                                Header: "Nro. Cotizacion",
+                                Header: "Nro. Coti",
                                 accessor: "nro_cotizacion",
-                                maxWidth: 150
+                                maxWidth: 70
                             },
                             {
-                                Header: "Nro. Proyecto",
+                                Header: "Nro. OP",
                                 accessor: "id_proyecto",
-                                maxWidth: 150,
+                                maxWidth: 80,
                                 filterable: true,
                                 filterMethod: (filter, row) => {
                                     return row[filter.id] && row[filter.id].includes(filter.value.toUpperCase())
@@ -60,7 +60,7 @@ class Tabla extends React.Component {
                             {
                                 Header: "Uni. Nego",
                                 accessor: "unidad_negocio",
-                                maxWidth: 100,
+                                maxWidth: 80,
                                 filterable: true,
                                 filterMethod: (filter, row) => {
                                     return row[filter.id].includes(filter.value.toUpperCase())
@@ -80,7 +80,7 @@ class Tabla extends React.Component {
                                 maxWidth: 250,
                                 filterable: true,
                                 filterMethod: (filter, row) => {
-                                    const {_original: {responsable}} = row;
+                                    const {_original: {responsable, created_by_nombre}} = row;
                                     if (responsable) {
                                         const {_original: {responsable_nombres, responsable_apellidos}} = row;
                                         return (
@@ -92,7 +92,12 @@ class Tabla extends React.Component {
                                     }
                                 },
                                 Cell: row => {
-                                    return <span>{row.original.responsable && `${row.original.responsable_nombres} ${row.original.responsable_apellidos}`}</span>
+                                    return <span>
+                                        {
+                                            row.original.responsable ? `${row.original.responsable_nombres} ${row.original.responsable_apellidos}` :
+                                                (row.original.created_by_nombre ? `${row.original.created_by_nombre}` : '')
+                                        }
+                                            </span>
                                 }
                             },
                             {

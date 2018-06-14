@@ -18,18 +18,24 @@ def get_page_body(boxes):
 
 class LiteralesPDFMixin(object):
     def generar_resultados(self, fecha_inicial, fecha_final, con_mo_saldo_inicial, proyecto):
+        proyecto = 17
         context = {}
         mano_obra = HoraHojaTrabajo.objects.values('literal').annotate(
+            horas_trabajadas=ExpressionWrapper(
+                Coalesce(Sum('hoja__tasa__nro_horas_mes_trabajadas'), 0),
+                output_field=DecimalField(max_digits=4)),
             costo_total=ExpressionWrapper(
-                Sum((F('cantidad_minutos') / 60) * (
-                        F('hoja__tasa__costo') / F('hoja__tasa__nro_horas_mes_trabajadas'))),
+                Coalesce(
+                    Sum((F('cantidad_minutos') / 60) * (
+                            F('hoja__tasa__costo') / F('hoja__tasa__nro_horas_mes_trabajadas')
+                    )), 0),
                 output_field=DecimalField(max_digits=4))
         ).filter(
             literal_id=OuterRef('id')
         )
 
         materiales = ItemsLiteralBiable.objects.values('literal').annotate(
-            costo_total=Sum('costo_total')
+            costo_total=Coalesce(Sum('costo_total'), 0)
         ).filter(
             literal_id=OuterRef('id')
         )
@@ -44,10 +50,22 @@ class LiteralesPDFMixin(object):
                 hoja__fecha__gte=fecha_inicial
             )
 
-        qsLiterales = Literal.objects.filter(
-            proyecto=proyecto
-        ).annotate(
-            costo_mano_obra_iniciales=Sum('mis_horas_trabajadas_iniciales__valor'),
+        qsLiterales = Literal.objects
+        if proyecto:
+            qsLiterales = qsLiterales.filter(
+                proyecto=proyecto
+            )
+
+        qsLiterales = qsLiterales.annotate(
+            costo_mano_obra_iniciales=Coalesce(Sum('mis_horas_trabajadas_iniciales__valor'), 0),
+            cantidad_mano_obra_iniciales=ExpressionWrapper(
+                Coalesce(Sum('mis_horas_trabajadas_iniciales__cantidad_minutos'), 0) / 60,
+                output_field=DecimalField(max_digits=4)
+            ),
+            cantidad_horas_trabajadas=ExpressionWrapper(
+                Subquery(mano_obra.values('horas_trabajadas')) / 60,
+                output_field=DecimalField(max_digits=4)
+            ),
             costo_mano_obra=ExpressionWrapper(
                 Subquery(mano_obra.values('costo_total')),
                 output_field=DecimalField(max_digits=4)
@@ -90,6 +108,17 @@ class LiteralesPDFMixin(object):
         context = self.generar_resultados(fecha_inicial, fecha_final, con_mo_saldo_inicial, proyecto)
         context['user'] = request.user
         html_get_template = get_template('reportes/proyectos/costos.html').render(context)
+        html = HTML(
+            string=html_get_template,
+            base_url=request.build_absolute_uri()
+        )
+        main_doc = html.render(stylesheets=[CSS('static/css/reportes.css')])
+        return main_doc
+
+    def generar_pdf_costos_dos(self, request, fecha_inicial, fecha_final, con_mo_saldo_inicial):
+        context = self.generar_resultados(fecha_inicial, fecha_final, con_mo_saldo_inicial, None)
+        context['user'] = request.user
+        html_get_template = get_template('reportes/proyectos/costos_dos.html').render(context)
         html = HTML(
             string=html_get_template,
             base_url=request.build_absolute_uri()

@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import PrinJs from 'print-js';
 import {connect} from "react-redux";
-import * as actions from "../../../../../01_actions/01_index";
-import FormReporte from '../components/forms/reporte_costos_form'
+import * as actions from "../../../../../../01_actions/01_index";
+import FormReporte from '../components/forms/reporte_1_form'
 
 class ReporteCosto extends Component {
     imprimirCostos(id_proyecto, valores) {

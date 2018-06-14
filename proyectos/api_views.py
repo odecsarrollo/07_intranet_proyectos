@@ -123,6 +123,33 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
         output.close()
         return response
 
+    @list_route(methods=['get'])
+    def print_costos_dos(self, request, pk=None):
+        fecha_inicial = request.GET.get('fecha_inicial', None)
+        fecha_final = request.GET.get('fecha_final', None)
+        con_mo_saldo_inicial = request.GET.get('con_mo_saldo_inicial', None)
+
+        if not fecha_final or not fecha_inicial:
+            con_mo_saldo_inicial = True
+        elif con_mo_saldo_inicial == 'false':
+            con_mo_saldo_inicial = False
+        elif con_mo_saldo_inicial == 'true':
+            con_mo_saldo_inicial = True
+        else:
+            con_mo_saldo_inicial = False
+
+        main_doc = self.generar_pdf_costos_dos(self.request, fecha_inicial, fecha_final, con_mo_saldo_inicial)
+        output = BytesIO()
+        main_doc.write_pdf(
+            target=output
+        )
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
+        response['Content-Transfer-Encoding'] = 'binary'
+        response.write(output.getvalue())
+        output.close()
+        return response
+
 
 class LiteralViewSet(viewsets.ModelViewSet):
     queryset = Literal.objects.select_related(

@@ -14,6 +14,8 @@ const MenuConsultas = (props) => (
             <MenuItem primaryText="Items" containerElement={<Link to='/app/proyectos/items/list'/>}/>
             <MenuItem primaryText="Consecutivo Proyectos" containerElement={<Link to='/app/proyectos/consecutivo/list'/>}/>
             <MenuItem primaryText="Literales no sincronizados" containerElement={<Link to='/app/proyectos/literales_sin_sincronizar/list'/>}/>
+            <MenuItem primaryText="Reporte Costos Proyecto 1" containerElement={<Link to='/app/proyectos/proyectos/reporte_costos'/>}/>
+            <MenuItem primaryText="Reporte Costos Proyecto 2" containerElement={<Link to='/app/proyectos/proyectos/reporte_dos'/>}/>
         </div>
     </li>
 );

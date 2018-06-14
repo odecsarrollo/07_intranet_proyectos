@@ -1,0 +1,117 @@
+{% load static l10n humanize %}
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>{% block title %}{% endblock %}</title>
+    {% block css-libraries %}
+        <link rel="stylesheet" href="{% static 'css/custom.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    {% endblock %}
+</head>
+<div>
+    {% localize on %}
+        <span style="font-weight: bold">Generado por: </span>{{ user }}<br/>
+
+        <table style="width: 100%">
+            <tr>
+                <td style="width: 50%">
+                    <span style="font-weight: bold">Id: </span>{{ proyecto.id_proyecto }}<br/>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    {% if proyecto.nombre %}<span style="font-weight: bold">Nombre: </span>{{ proyecto.nombre }}
+                        <br/>{% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="width: 50%">
+                    <span style="font-weight: bold">Tipo de consulta: </span>{{ tipo_consulta }}
+                    {% if con_mo_saldo_inicial %}
+                        con saldos iniciales de MO hasta el 30 de abril 2018
+                    {% else %}
+                        sin saldos iniciales de MO hasta el 30 de abril 2018
+                    {% endif %}
+                </td>
+            </tr>
+            {% if tipo_consulta != 'Todo' %}
+                <tr>
+                    <td style="width: 50%">
+                        <span style="font-weight: bold">Lapso: </span> de {{ fecha_inicial }} hasta {{ fecha_final }}
+                    </td>
+                </tr>
+            {% endif %}
+            <tr>
+                <td style="width: 50%">
+                    <span style="font-weight: bold">Fecha Generación: </span>{% now "j \d\e F Y" %}<br/>
+                </td>
+                <td style="width: 50%">
+                    <span style="font-weight: bold">Hora Generación: </span>{% now "H:i" %}<br/>
+                </td>
+            </tr>
+        </table>
+
+        <span style="font-size: 1.5rem">Listado de Costos Asignados</span><br/>
+        <table class="table table-striped tabla">
+            <thead>
+            <tr>
+                <th>Literal</th>
+                {% if con_mo_saldo_inicial %}
+                    <th style="text-align: right">MO Horas (Hasta Abril 2018)</th>
+                {% endif %}
+                <th>Horas</th>
+                {% if con_mo_saldo_inicial %}
+                    <th style="text-align: right">Total MO Horas</th>
+                {% endif %}
+                {% if con_mo_saldo_inicial %}
+                    <th style="text-align: right">MO (Hasta Abril 2018)</th>
+                {% endif %}
+                <th style="text-align: right">MO</th>
+                {% if con_mo_saldo_inicial %}
+                    <th style="text-align: right">Total MO</th>
+                {% endif %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for literal in literales.all|dictsort:"id_literal" %}
+                {% with mo_inicial=literal.costo_mano_obra_iniciales|default_if_none:0 mo_acumulado=literal.costo_mano_obra|default_if_none:0 mo_inicial_horas=literal.cantidad_mano_obra_iniciales|default_if_none:0 mo_horas=literal.cantidad_horas_trabajadas|default_if_none:0 %}
+                    {% if mo_inicial != 0 or mo_acumulado != 0 or materiales != 0 %}
+                        <tr>
+                            <td>{{ literal.id_literal }}</td>
+                            {% if con_mo_saldo_inicial %}
+                                <td style="text-align: right">{{ mo_inicial_horas }}</td>
+                            {% endif %}
+                            <td style="text-align: right">{{ mo_horas }}</td>
+                            <td style="text-align: right">{{ literal.cantidad_horas_trabajadas|default_if_none:0|add:literal.cantidad_mano_obra_iniciales|default_if_none:0 }}</td>
+                            {% if con_mo_saldo_inicial %}
+                                <td style="text-align: right">{{ mo_inicial|floatformat:0|intcomma }}</td>
+                            {% endif %}
+                            <td style="text-align: right">{{ mo_acumulado|floatformat:0|intcomma }}</td>
+                            {% if con_mo_saldo_inicial %}
+                                <td style="text-align: right; font-weight: bold; background-color: lightgray !important;">{{ mo_inicial|add:mo_acumulado|floatformat:0|intcomma|default_if_none:0 }}</td>
+                            {% endif %}
+                            <td style="text-align: right; font-weight: bold; background-color: lightgray !important;">{{ materiales|floatformat:0|intcomma }}</td>
+                        </tr>
+                    {% endif %}
+                {% endwith %}
+            {% endfor %}
+            </tbody>
+            <tfoot>
+            <tr>
+                <td></td>
+                {% if con_mo_saldo_inicial %}
+                    <td style="text-align: right">{{ total_costo_mo_ini|floatformat:0|intcomma }}</td>
+                {% endif %}
+                <td style="text-align: right">{{ total_costo_mo|floatformat:0|intcomma }}</td>
+                {% if con_mo_saldo_inicial %}
+                    <td style="text-align: right; font-weight: bold; background-color: lightgray !important;">{{ total_costo_mo|add:total_costo_mo_ini|floatformat:0|intcomma }}</td>
+                {% endif %}
+                <td style="text-align: right; font-weight: bold; background-color: lightgray !important;">{{ total_costo_materiales|floatformat:0|intcomma }}</td>
+                <td style="text-align: right; font-weight: bold; background-color: black !important; color: white">{{ total_costo|floatformat:0|intcomma }}</td>
+            </tr>
+            </tfoot>
+        </table>
+    {% endlocalize %}
+</div>

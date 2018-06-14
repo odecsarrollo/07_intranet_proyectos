@@ -9,7 +9,13 @@ from .api_serializers import CotizacionSerializer, SeguimientoCotizacionSerializ
 
 
 class CotizacionViewSet(viewsets.ModelViewSet):
-    queryset = Cotizacion.objects.select_related('responsable').all()
+    queryset = Cotizacion.objects.select_related(
+        'responsable',
+        'created_by',
+        'cliente',
+        'mi_proyecto',
+        'mi_literal'
+    ).all()
     serializer_class = CotizacionSerializer
 
     def perform_update(self, serializer):
@@ -53,7 +59,7 @@ class CotizacionViewSet(viewsets.ModelViewSet):
                 editado.save()
 
     def perform_create(self, serializer):
-        editado = serializer.save(estado='Pendiente')
+        editado = serializer.save(estado='Pendiente', created_by=self.request.user)
         SeguimientoCotizacion.objects.create(
             cotizacion=editado,
             tipo_seguimiento=1,

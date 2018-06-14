@@ -6,6 +6,7 @@ from clientes.models import ClienteBiable
 
 
 class Cotizacion(TimeStampedModel):
+    created_by = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True, related_name='cotizaciones_creadas')
     nro_cotizacion = models.PositiveIntegerField(null=True, blank=True, unique=True)
     unidad_negocio = models.CharField(max_length=10)
     cliente = models.ForeignKey(ClienteBiable, on_delete=models.PROTECT, null=True, blank=True)
