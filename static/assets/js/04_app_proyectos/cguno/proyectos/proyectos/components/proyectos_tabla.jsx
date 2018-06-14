@@ -137,6 +137,7 @@ class Tabla extends React.Component {
                                 Header: "Abierto",
                                 accessor: "abierto",
                                 maxWidth: 60,
+                                show: permisos_object.change,
                                 Cell: row => (
                                     <Checkbox
                                         checked={row.value}

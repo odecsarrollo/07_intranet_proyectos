@@ -18,12 +18,11 @@ def get_page_body(boxes):
 
 class LiteralesPDFMixin(object):
     def generar_resultados(self, fecha_inicial, fecha_final, con_mo_saldo_inicial, proyecto):
-        proyecto = 17
         context = {}
         mano_obra = HoraHojaTrabajo.objects.values('literal').annotate(
             horas_trabajadas=ExpressionWrapper(
-                Coalesce(Sum('hoja__tasa__nro_horas_mes_trabajadas'), 0),
-                output_field=DecimalField(max_digits=4)),
+                Coalesce(Sum('cantidad_minutos') / 60, 0),
+                output_field=DecimalField(max_digits=2)),
             costo_total=ExpressionWrapper(
                 Coalesce(
                     Sum((F('cantidad_minutos') / 60) * (
@@ -31,7 +30,8 @@ class LiteralesPDFMixin(object):
                     )), 0),
                 output_field=DecimalField(max_digits=4))
         ).filter(
-            literal_id=OuterRef('id')
+            literal_id=OuterRef('id'),
+            verificado=True
         )
 
         materiales = ItemsLiteralBiable.objects.values('literal').annotate(
@@ -63,7 +63,7 @@ class LiteralesPDFMixin(object):
                 output_field=DecimalField(max_digits=4)
             ),
             cantidad_horas_trabajadas=ExpressionWrapper(
-                Subquery(mano_obra.values('horas_trabajadas')) / 60,
+                Subquery(mano_obra.values('horas_trabajadas')),
                 output_field=DecimalField(max_digits=4)
             ),
             costo_mano_obra=ExpressionWrapper(
@@ -81,8 +81,16 @@ class LiteralesPDFMixin(object):
 
         total_costo_mo = 0
         total_costo_mo_ini = 0
+        total_horas_mo_ini = 0
+        total_horas_mo = 0
 
         for literal in qsLiterales:
+
+            if literal.cantidad_horas_trabajadas:
+                total_horas_mo += literal.cantidad_horas_trabajadas
+            if literal.cantidad_mano_obra_iniciales and con_mo_saldo_inicial:
+                total_horas_mo_ini += literal.cantidad_mano_obra_iniciales
+
             if literal.costo_mano_obra:
                 total_costo_mo += literal.costo_mano_obra
             if literal.costo_mano_obra_iniciales and con_mo_saldo_inicial:
@@ -102,6 +110,10 @@ class LiteralesPDFMixin(object):
         context['total_costo_mo_ini'] = total_costo_mo_ini
         context['total_costo_materiales'] = total_costo_materiales
         context['total_costo'] = total_costo_mo + total_costo_mo_ini + total_costo_materiales
+
+        context['total_horas_mo'] = total_horas_mo
+        context['total_horas_mo_ini'] = total_horas_mo_ini
+
         return context
 
     def generar_pdf(self, request, fecha_inicial, fecha_final, con_mo_saldo_inicial, proyecto):

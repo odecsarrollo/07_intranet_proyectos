@@ -58,16 +58,22 @@
             <thead>
             <tr>
                 <th>Literal</th>
+                <th>Descripción</th>
+
                 {% if con_mo_saldo_inicial %}
                     <th style="text-align: right">MO Horas (Hasta Abril 2018)</th>
                 {% endif %}
-                <th>Horas</th>
+
+                <th style="text-align: right">Horas</th>
+
                 {% if con_mo_saldo_inicial %}
                     <th style="text-align: right">Total MO Horas</th>
                 {% endif %}
+
                 {% if con_mo_saldo_inicial %}
                     <th style="text-align: right">MO (Hasta Abril 2018)</th>
                 {% endif %}
+
                 <th style="text-align: right">MO</th>
                 {% if con_mo_saldo_inicial %}
                     <th style="text-align: right">Total MO</th>
@@ -77,22 +83,31 @@
             <tbody>
             {% for literal in literales.all|dictsort:"id_literal" %}
                 {% with mo_inicial=literal.costo_mano_obra_iniciales|default_if_none:0 mo_acumulado=literal.costo_mano_obra|default_if_none:0 mo_inicial_horas=literal.cantidad_mano_obra_iniciales|default_if_none:0 mo_horas=literal.cantidad_horas_trabajadas|default_if_none:0 %}
-                    {% if mo_inicial != 0 or mo_acumulado != 0 or materiales != 0 %}
+                    {% if mo_acumulado != 0 or mo_horas != 0 %}
                         <tr>
+
                             <td>{{ literal.id_literal }}</td>
+                            <td>{{ literal.descripcion }}</td>
+
                             {% if con_mo_saldo_inicial %}
-                                <td style="text-align: right">{{ mo_inicial_horas }}</td>
+                                <td style="text-align: right">{{ mo_inicial_horas|floatformat:2 }}</td>
                             {% endif %}
-                            <td style="text-align: right">{{ mo_horas }}</td>
-                            <td style="text-align: right">{{ literal.cantidad_horas_trabajadas|default_if_none:0|add:literal.cantidad_mano_obra_iniciales|default_if_none:0 }}</td>
+
+                            <td style="text-align: right">{{ mo_horas|floatformat:2 }}</td>
+
                             {% if con_mo_saldo_inicial %}
-                                <td style="text-align: right">{{ mo_inicial|floatformat:0|intcomma }}</td>
+                                <td style="text-align: right; font-weight: bold; background-color: lightgray !important;">{{ mo_horas|default_if_none:0|add:mo_inicial_horas|default_if_none:0 }}</td>
                             {% endif %}
+
+                            {% if con_mo_saldo_inicial %}
+                                <td style="text-align: right;">{{ mo_inicial|floatformat:0|intcomma }}</td>
+                            {% endif %}
+
                             <td style="text-align: right">{{ mo_acumulado|floatformat:0|intcomma }}</td>
+
                             {% if con_mo_saldo_inicial %}
-                                <td style="text-align: right; font-weight: bold; background-color: lightgray !important;">{{ mo_inicial|add:mo_acumulado|floatformat:0|intcomma|default_if_none:0 }}</td>
+                                <td style="text-align: right; font-weight: bold; background-color: lightgray !important;">{{ mo_inicial|add:mo_acumulado|default_if_none:0 }}</td>
                             {% endif %}
-                            <td style="text-align: right; font-weight: bold; background-color: lightgray !important;">{{ materiales|floatformat:0|intcomma }}</td>
                         </tr>
                     {% endif %}
                 {% endwith %}
@@ -101,15 +116,26 @@
             <tfoot>
             <tr>
                 <td></td>
+                <td></td>
                 {% if con_mo_saldo_inicial %}
-                    <td style="text-align: right">{{ total_costo_mo_ini|floatformat:0|intcomma }}</td>
+                    <td style="text-align: right">{{ total_horas_mo_ini|floatformat:2|intcomma }}</td>
                 {% endif %}
-                <td style="text-align: right">{{ total_costo_mo|floatformat:0|intcomma }}</td>
+
+                <td style="text-align: right">{{ total_horas_mo|floatformat:2|intcomma }}</td>
+
+                {% if con_mo_saldo_inicial %}
+                    <td style="text-align: right; font-weight: bold; background-color: lightgray !important;">{{ total_horas_mo|add:total_horas_mo_ini|floatformat:0|intcomma }}</td>
+                {% endif %}
+
                 {% if con_mo_saldo_inicial %}
                     <td style="text-align: right; font-weight: bold; background-color: lightgray !important;">{{ total_costo_mo|add:total_costo_mo_ini|floatformat:0|intcomma }}</td>
                 {% endif %}
+
                 <td style="text-align: right; font-weight: bold; background-color: lightgray !important;">{{ total_costo_materiales|floatformat:0|intcomma }}</td>
-                <td style="text-align: right; font-weight: bold; background-color: black !important; color: white">{{ total_costo|floatformat:0|intcomma }}</td>
+
+                {% if con_mo_saldo_inicial %}
+                    <td style="text-align: right; font-weight: bold; background-color: black !important; color: white">{{ total_costo|floatformat:0|intcomma }}</td>
+                {% endif %}
             </tr>
             </tfoot>
         </table>
