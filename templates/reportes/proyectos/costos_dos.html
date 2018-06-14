@@ -113,31 +113,31 @@
                 {% endwith %}
             {% endfor %}
             </tbody>
-            <tfoot>
-            <tr>
-                <td></td>
-                <td></td>
-                {% if con_mo_saldo_inicial %}
-                    <td style="text-align: right">{{ total_horas_mo_ini|floatformat:2|intcomma }}</td>
-                {% endif %}
-
-                <td style="text-align: right">{{ total_horas_mo|floatformat:2|intcomma }}</td>
-
-                {% if con_mo_saldo_inicial %}
-                    <td style="text-align: right; font-weight: bold; background-color: lightgray !important;">{{ total_horas_mo|add:total_horas_mo_ini|floatformat:0|intcomma }}</td>
-                {% endif %}
-
-                {% if con_mo_saldo_inicial %}
-                    <td style="text-align: right; font-weight: bold; background-color: lightgray !important;">{{ total_costo_mo|add:total_costo_mo_ini|floatformat:0|intcomma }}</td>
-                {% endif %}
-
-                <td style="text-align: right; font-weight: bold; background-color: lightgray !important;">{{ total_costo_materiales|floatformat:0|intcomma }}</td>
-
-                {% if con_mo_saldo_inicial %}
-                    <td style="text-align: right; font-weight: bold; background-color: black !important; color: white">{{ total_costo|floatformat:0|intcomma }}</td>
-                {% endif %}
-            </tr>
-            </tfoot>
+{#            <tfoot>#}
+{#            <tr>#}
+{#                <td></td>#}
+{#                <td></td>#}
+{#                {% if con_mo_saldo_inicial %}#}
+{#                    <td style="text-align: right">{{ total_horas_mo_ini|floatformat:2|intcomma }}</td>#}
+{#                {% endif %}#}
+{##}
+{#                <td style="text-align: right">{{ total_horas_mo|floatformat:2|intcomma }}</td>#}
+{##}
+{#                {% if con_mo_saldo_inicial %}#}
+{#                    <td style="text-align: right; font-weight: bold; background-color: lightgray !important;">{{ total_horas_mo|add:total_horas_mo_ini|floatformat:0|intcomma }}</td>#}
+{#                {% endif %}#}
+{##}
+{#                {% if con_mo_saldo_inicial %}#}
+{#                    <td style="text-align: right; font-weight: bold; background-color: lightgray !important;">{{ total_costo_mo_ini|floatformat:0|intcomma }}</td>#}
+{#                {% endif %}#}
+{##}
+{#                <td style="text-align: right; font-weight: bold; background-color: lightgray !important;">{{ total_costo_mo|floatformat:0|intcomma }}</td>#}
+{##}
+{#                {% if con_mo_saldo_inicial %}#}
+{#                    <td style="text-align: right; font-weight: bold; background-color: lightgray !important;">{{ total_costo_mo_ini|add:total_costo_mo|floatformat:0|intcomma }}</td>#}
+{#                {% endif %}#}
+{#            </tr>#}
+{#            </tfoot>#}
         </table>
     {% endlocalize %}
 </div>
