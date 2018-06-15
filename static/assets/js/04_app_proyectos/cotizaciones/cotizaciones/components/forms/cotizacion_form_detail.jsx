@@ -46,6 +46,7 @@ class Form extends Component {
         const en_proceso = estado && estado !== 'Pendiente' && estado !== 'Aplazado' && estado !== 'Perdido';
         const esta_aprobado = estado === 'Aprobado';
         const enviado = estado && en_proceso && estado !== 'En Proceso';
+        console.log(usuarios_list)
         return (
             <form className="card" onSubmit={handleSubmit(onSubmit)}>
                 <div className="row pl-3 pr-5">
@@ -57,7 +58,7 @@ class Form extends Component {
                         enviado={enviado}
                     />
                     {
-                        usuarios_list.length > 0 &&
+                        _.size(usuarios_list) > 0 &&
                         <MyCombobox
                             data={_.map(usuarios_list, u => {
                                 return (
@@ -71,6 +72,7 @@ class Form extends Component {
                             textField='name'
                             valuesField='id'
                             className='col-12'
+                            placeholder='Responsable'
                         />
                     }
                 </div>
