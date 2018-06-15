@@ -5,9 +5,6 @@ from .models import Cotizacion, SeguimientoCotizacion
 
 class CotizacionSerializer(serializers.ModelSerializer):
     cliente_nombre = serializers.CharField(source='cliente.nombre', read_only=True)
-    created_by_nombre = serializers.CharField(source='created_by.username', read_only=True)
-    responsable_nombres = serializers.CharField(source='responsable.first_name', read_only=True)
-    responsable_apellidos = serializers.CharField(source='responsable.last_name', read_only=True)
     id_proyecto = serializers.CharField(source='mi_proyecto.id_proyecto', read_only=True)
     mi_literal_id_literal = serializers.CharField(source='mi_literal.id_literal', read_only=True)
     mi_literal_id_proyecto = serializers.CharField(source='mi_literal.proyecto.id_proyecto', read_only=True)
@@ -36,8 +33,7 @@ class CotizacionSerializer(serializers.ModelSerializer):
         fields = [
             'url',
             'id',
-            'created_by',
-            'created_by_nombre',
+            'responsable_actual',
             'nro_cotizacion',
             'unidad_negocio',
             'cliente',
@@ -50,9 +46,6 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'valor_orden_compra',
             'orden_compra_nro',
             'costo_presupuestado',
-            'responsable',
-            'responsable_nombres',
-            'responsable_apellidos',
             'abrir_carpeta',
             'mi_proyecto',
             'mi_literal',
@@ -69,6 +62,7 @@ class CotizacionSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'mi_proyecto': {'read_only': True},
             'mi_literal': {'read_only': True},
+            'responsable_actual': {'read_only': True},
         }
 
 

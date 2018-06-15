@@ -6,7 +6,8 @@ from clientes.models import ClienteBiable
 
 
 class Cotizacion(TimeStampedModel):
-    created_by = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True, related_name='cotizaciones_creadas')
+    created_by = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True,
+                                   related_name='cotizaciones_creadas')
     nro_cotizacion = models.PositiveIntegerField(null=True, blank=True, unique=True)
     unidad_negocio = models.CharField(max_length=10)
     cliente = models.ForeignKey(ClienteBiable, on_delete=models.PROTECT, null=True, blank=True)
@@ -25,6 +26,15 @@ class Cotizacion(TimeStampedModel):
     abrir_carpeta = models.BooleanField(default=False)
     crear_literal = models.BooleanField(default=False)
     crear_literal_id_proyecto = models.CharField(max_length=10, null=True, blank=True)
+
+    @property
+    def responsable_actual(self):
+        if self.responsable:
+            return self.responsable.username
+        elif self.created_by:
+            return self.created_by.username
+        else:
+            return None
 
     class Meta:
         permissions = [

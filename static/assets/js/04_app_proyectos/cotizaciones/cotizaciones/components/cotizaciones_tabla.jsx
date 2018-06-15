@@ -77,15 +77,13 @@ class Tabla extends React.Component {
                             },
                             {
                                 Header: "Responsable",
-                                maxWidth: 250,
+                                maxWidth: 90,
                                 filterable: true,
                                 filterMethod: (filter, row) => {
-                                    const {_original: {responsable, created_by_nombre}} = row;
-                                    if (responsable) {
-                                        const {_original: {responsable_nombres, responsable_apellidos}} = row;
+                                    const {_original: {responsable_actual}} = row;
+                                    if (responsable_actual) {
                                         return (
-                                            responsable_apellidos.toUpperCase().includes(filter.value.toUpperCase()) ||
-                                            responsable_nombres.toUpperCase().includes(filter.value.toUpperCase())
+                                            responsable_actual.toUpperCase().includes(filter.value.toUpperCase())
                                         )
                                     } else {
                                         return false
@@ -93,10 +91,7 @@ class Tabla extends React.Component {
                                 },
                                 Cell: row => {
                                     return <span>
-                                        {
-                                            row.original.responsable ? `${row.original.responsable_nombres} ${row.original.responsable_apellidos}` :
-                                                (row.original.created_by_nombre ? `${row.original.created_by_nombre}` : '')
-                                        }
+                                        {row.original.responsable_actual ? row.original.responsable_actual : ''}
                                             </span>
                                 }
                             },
@@ -196,7 +191,7 @@ class Tabla extends React.Component {
                         ]
                     }
                 ]}
-                defaultPageSize={10}
+                defaultPageSize={30}
                 className="-striped -highlight tabla-maestra"
             />
         );
