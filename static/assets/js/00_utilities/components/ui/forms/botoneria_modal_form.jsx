@@ -14,7 +14,7 @@ const BotoneriaModalForm = (props) => {
     return (
         <div>
             <FlatIconModal
-                text={initialValues ? 'Editar ' : 'Crear '}
+                text={initialValues ? 'Guardar ' : 'Crear '}
                 primary={true}
                 disabled={submitting || pristine}
                 type='submit'

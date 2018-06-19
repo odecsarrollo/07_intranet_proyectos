@@ -61,10 +61,13 @@ class HojaTrabajoDiarioViewSet(viewsets.ModelViewSet):
         fecha_final = request.GET.get('fecha_final')
         qs = None
 
-        gestiona_otros = request.user.has_perm('HojaTrabajoDiario.para_otros_hojatrabajodiario')
+        gestiona_otros = request.user.has_perm('mano_obra.para_otros_hojatrabajodiario')
+        listar_autogestionados = request.user.has_perm('mano_obra.list_hojatrabajodiario_solo_autogestionados')
 
         if gestiona_otros:
             qs = self.queryset
+        elif listar_autogestionados:
+            qs = self.queryset.filter(colaborador__autogestion_horas_trabajadas=True)
         else:
             if hasattr(request.user, 'colaborador') and not gestiona_otros:
                 colaborador = request.user.colaborador

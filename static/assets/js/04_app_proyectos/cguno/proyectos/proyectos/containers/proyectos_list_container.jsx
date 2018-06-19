@@ -42,6 +42,18 @@ class List extends Component {
         const permisos_proyectos = permisosAdapter(mis_permisos, permisos_view);
         const permisos_cotizaciones = permisosAdapter(mis_permisos, cotizaciones_permisos_view);
 
+        //
+        //
+        //
+        // const tipos_proyectos =_.map(object_list,p=>p.id_proyecto.substring(0,2)).filter((v,i,self)=> self.indexOf(v)===i);
+        //
+        // const maximos_por_tipo_proyectos = tipos_proyectos.map(t=>{
+        //     return {
+        //         tipo:t
+        //     }
+        // });
+        // console.log(maximos_por_tipo_proyectos)
+
         const cotizaciones_list_2 = _.map(cotizaciones_list, c => {
             if (c.crear_literal) {
                 const proyectos = _.map(_.pickBy(object_list, p => {

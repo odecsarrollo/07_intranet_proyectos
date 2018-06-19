@@ -18,6 +18,7 @@ class HojaTrabajoDiario(TimeStampedModel):
         unique_together = [('fecha', 'colaborador')]
         permissions = [
             ("list_hojatrabajodiario", "Can see list hoja trabajo diario"),
+            ("list_hojatrabajodiario_solo_autogestionados", "Can see list hoja trabajo diario autogestionados"),
             ("para_otros_hojatrabajodiario", "Can add hoja trabajo diario para otros"),
             ("costos_hojatrabajodiario", "Can see costos hoja trabajo diario"),
             ("detail_hojatrabajodiario", "Can see detail hoja trabajo diario"),

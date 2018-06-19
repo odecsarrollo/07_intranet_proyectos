@@ -85,6 +85,7 @@ export const MANOS_OBRAS_HOJAS_TRABAJOS = {
     detail: 'detail_hojatrabajodiario',
     costos: 'costos_hojatrabajodiario',
     add_para_otros: 'para_otros_hojatrabajodiario',
+    list_solo_autogestionados: 'list_hojatrabajodiario_solo_autogestionados',
 };
 
 export const MANOS_OBRAS_HORAS_HOJAS_TRABAJOS = {
@@ -124,4 +125,5 @@ export const COTIZACIONES = {
     change: 'change_cotizacion',
     list: 'list_cotizacion',
     detail: 'detail_cotizacion',
+    gestionar_cotizacion: 'gestionar_cotizacion',
 };

@@ -6,6 +6,11 @@ import CargarDatos from "../../../../00_utilities/components/system/cargar_datos
 import moment from 'moment-timezone';
 import momentLocaliser from "react-widgets-moment";
 
+import {
+    COTIZACIONES as permisos_cotizaciones_view
+} from "../../../../00_utilities/permisos/types";
+import {permisosAdapter} from "../../../../00_utilities/common";
+
 moment.tz.setDefault("America/Bogota");
 moment.locale('es');
 momentLocaliser(moment);
@@ -50,7 +55,8 @@ class SeguimientoTareasCotizacionesList extends Component {
         const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
         cargando();
         const cargarCotizacionesAgendadas = () => this.props.fetchCotizacionesAgendadas(() => noCargando(), notificarErrorAjaxAction);
-        this.props.fetchSeguimientosCotizacionesTareasPendientes(cargarCotizacionesAgendadas, notificarErrorAjaxAction);
+        const cargarSeguimientos = () => this.props.fetchSeguimientosCotizacionesTareasPendientes(cargarCotizacionesAgendadas, notificarErrorAjaxAction);
+        this.props.fetchMisPermisos(cargarSeguimientos, notificarErrorAjaxAction)
     }
 
     componentDidMount() {
@@ -58,7 +64,9 @@ class SeguimientoTareasCotizacionesList extends Component {
     }
 
     render() {
-        const {tareas_list, cotizaciones_agendas_list} = this.props;
+        const {tareas_list, cotizaciones_agendas_list, mis_permisos} = this.props;
+        const permisos_cotizaciones = permisosAdapter(mis_permisos, permisos_cotizaciones_view);
+
         const listado_tareas = _.map(tareas_list, t => {
             return {
                 fecha: t.fecha_inicio_tarea,
@@ -81,6 +89,7 @@ class SeguimientoTareasCotizacionesList extends Component {
             <div>
                 {
                     listado_completo.length > 0 &&
+                    permisos_cotizaciones.gestionar_cotizacion &&
                     <Fragment>
                         <h1>Tareas Cotizaciones</h1>
                         <ul className="list-group">
