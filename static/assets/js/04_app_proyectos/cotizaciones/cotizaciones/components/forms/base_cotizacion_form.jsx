@@ -21,7 +21,7 @@ const FormBaseCotizacion = (props) => {
             <MyCombobox
                 className="col-12 col-md-6"
                 name='cliente'
-                data={_.map(clientes_list, e => {
+                data={_.map(_.orderBy(clientes_list, ['nombre'], ['asc']), e => {
                     return {
                         'name': e.nombre,
                         'id': e.id
@@ -37,7 +37,7 @@ const FormBaseCotizacion = (props) => {
                 <MyCombobox
                     className="col-12 col-md-6"
                     name='contacto_cliente'
-                    data={_.map(contactos_list, e => {
+                    data={_.map(_.orderBy(contactos_list, ['full_nombre'], ['asc']), e => {
                         return {
                             'name': e.full_nombre,
                             'id': e.id
