@@ -6,7 +6,8 @@ import {Titulo, SinObjeto, AtributoTexto, AtributoBooleano} from "../../../../..
 import ValidarPermisos from "../../../../../00_utilities/permisos/validar_permisos";
 import {permisosAdapter} from "../../../../../00_utilities/common";
 import {
-    CLIENTES as permisos_view
+    CLIENTES as permisos_view,
+    CONTACTOS_CLIENTES as contactos_permisos_view,
 } from "../../../../../00_utilities/permisos/types";
 
 import ListCrud from '../../contactos/components/contactos_list';
@@ -42,6 +43,7 @@ class Detail extends Component {
     render() {
         const {object, contactos, mis_permisos} = this.props;
         const permisos = permisosAdapter(mis_permisos, permisos_view);
+        const permisos_contactos = permisosAdapter(mis_permisos, contactos_permisos_view);
 
         if (!object) {
             return <SinObjeto/>
@@ -52,7 +54,7 @@ class Detail extends Component {
                 <Titulo>Detalle {object.nombre}</Titulo>
                 <ListCrud
                     object_list={contactos}
-                    permisos_object={permisos}
+                    permisos_object={permisos_contactos}
                     {...this.props}
                 />
                 <CargarDatos cargarDatos={this.cargarDatos}/>
