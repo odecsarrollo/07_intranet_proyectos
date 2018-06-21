@@ -26,6 +26,7 @@ import ReporteDos from "./cguno/proyectos/reportes/reporte_2/containers/reporte_
 import LiteralesSinSincronizar
     from "./cguno/proyectos/literales_sin_sincronizar/containers/literales_sin_sincronizar_list_container";
 import ClientesList from "../03_app_admin/especificas/clientes/clientes/containers/clientes_container";
+import ClienteDetail from "../03_app_admin/especificas/clientes/clientes/containers/cliente_detail";
 
 const App = (props) => {
     return (
@@ -35,7 +36,10 @@ const App = (props) => {
                 <div className="p-3">
                     <Switch>
                         <Route exact path='/app/proyectos/' component={AppIndex}/>
+
                         <Route exact path='/app/proyectos/clientes/clientes/list' component={ClientesList}/>
+                        <Route exact path='/app/proyectos/clientes/clientes/detail/:id' component={ClienteDetail}/>
+
                         <Route exact path='/app/proyectos/items/list' component={ItemsCGunoList}/>
                         <Route exact path='/app/proyectos/consecutivo/list' component={ConcecutivoProyectosList}/>
                         <Route exact path='/app/proyectos/mano_obra/hojas_trabajo/list' component={HojasTrabajoList}/>

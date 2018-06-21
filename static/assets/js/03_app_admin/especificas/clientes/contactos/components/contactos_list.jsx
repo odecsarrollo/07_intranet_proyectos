@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import CreateForm from './forms/clientes_form';
-import Tabla from './clientes_tabla';
+import CreateForm from '../components/forms/contacto_form';
+import Tabla from '../components/contactos_tabla';
 import crudHOC from '../../../../../00_utilities/components/hoc_crud';
 
 
@@ -15,12 +15,12 @@ class List extends Component {
             createObjectMethod: this.createObjectMethod.bind(this),
             updateObjectMethod: this.updateObjectMethod.bind(this),
         };
-        this.plural_name = 'Clientes';
-        this.singular_name = 'Cliente';
+        this.plural_name = 'Contactos';
+        this.singular_name = 'Contacto';
     }
 
     successSubmitCallback(item) {
-        const nombre = item.nombre;
+        const nombre = `${item.nombres} ${item.apellidos}`;
         const {noCargando, notificarAction} = this.props;
         notificarAction(`Se ha ${item.id ? 'actualizado' : 'creado'} con éxito ${this.singular_name.toLowerCase()} ${nombre}`);
         noCargando()
@@ -28,7 +28,7 @@ class List extends Component {
 
 
     successDeleteCallback(item) {
-        const nombre = item.nombre;
+        const nombre = `${item.nombres} ${item.apellidos}`;
         const {noCargando, notificarAction} = this.props;
         notificarAction(`Se ha eliminado con éxito ${this.singular_name.toLowerCase()} ${nombre}`);
         noCargando()
@@ -41,7 +41,7 @@ class List extends Component {
             noCargando();
         };
         cargando();
-        this.props.fetchCliente(item_id, success_method, notificarErrorAjaxAction);
+        this.props.fetchContactoCliente(item_id, success_method, notificarErrorAjaxAction);
     }
 
     createObjectMethod(item, successCallback) {
@@ -51,7 +51,7 @@ class List extends Component {
             successCallback();
         };
         cargando();
-        this.props.createCliente(item, success_method, notificarErrorAjaxAction);
+        this.props.createContactoCliente(item, success_method, notificarErrorAjaxAction);
     }
 
     updateObjectMethod(item, successCallback) {
@@ -61,7 +61,7 @@ class List extends Component {
             successCallback();
         };
         cargando();
-        this.props.updateCliente(item.id, item, success_method, notificarErrorAjaxAction);
+        this.props.updateContactoCliente(item.id, item, success_method, notificarErrorAjaxAction);
     }
 
     deleteObjectMethod(item, successCallback) {
@@ -71,14 +71,11 @@ class List extends Component {
             successCallback();
         };
         cargando();
-        this.props.deleteCliente(item.id, success_method, notificarErrorAjaxAction);
+        this.props.deleteContactoCliente(item.id, success_method, notificarErrorAjaxAction);
     }
 
     render() {
-        const {
-            object_list,
-            permisos_object
-        } = this.props;
+        const {object_list, permisos_object} = this.props;
         return (
             <CRUD
                 method_pool={this.method_pool}

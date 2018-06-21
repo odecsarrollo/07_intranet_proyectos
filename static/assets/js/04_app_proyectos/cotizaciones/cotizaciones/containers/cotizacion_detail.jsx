@@ -228,6 +228,7 @@ function mapPropsToState(state, ownProps) {
         object: state.cotizaciones[id],
         mi_cuenta: state.mi_cuenta,
         usuarios_list: state.usuarios,
+        contactos_list: state.clientes_contactos,
         clientes_list: state.clientes,
     }
 }

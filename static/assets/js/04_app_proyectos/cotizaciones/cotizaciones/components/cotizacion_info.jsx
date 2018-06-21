@@ -47,6 +47,15 @@ const CotizacionInfo = (props) => {
                 <strong>Descripción: </strong> {object.descripcion_cotizacion}<br/>
                 <strong>Observación: </strong> {object.observacion}<br/>
                 <strong>Estado: </strong> {object.estado} <br/>
+                <strong>Contacto: </strong>
+                {
+                    object.contacto_cliente &&
+                    <Fragment>
+                        <Link
+                            to={`/app/proyectos/clientes/clientes/detail/${object.cliente}`}>{object.contacto_cliente_nombre}
+                        </Link><br/>
+                    </Fragment>
+                }
                 <strong>Proyecto: </strong>
                 {
                     permisos_proyecto.detail ?

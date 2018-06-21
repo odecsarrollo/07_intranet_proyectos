@@ -31,7 +31,6 @@ class RowItemSelect extends Component {
                             textField='nombre'
                             data={_.map(centros_costos_base, e => e)}
                             onChange={e => {
-                                console.log(e)
                                 this.setState({valor: e.id});
                             }}
                             onBlur={() => {

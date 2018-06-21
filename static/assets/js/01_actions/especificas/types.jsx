@@ -108,3 +108,12 @@ export const SEGUIMIENTO_COTIZACION_TYPES = {
     clear: 'clear_seguimientos_cotizaciones',
     update: 'update_seguimiento_cotizacion',
 };
+
+export const CONTACTO_CLIENTE_TYPES = {
+    create: 'create_contacto_cliente',
+    delete: 'delete_contacto_cliente',
+    fetch_all: 'fetch_contactos_clientes',
+    fetch: 'fetch_contacto_cliente',
+    clear: 'clear_contactos_clientes',
+    update: 'update_contacto_cliente',
+};

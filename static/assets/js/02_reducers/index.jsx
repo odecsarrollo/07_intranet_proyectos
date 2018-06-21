@@ -23,6 +23,7 @@ import horasColaboradoresProyectosInicialesReducer
     from "./especificas/mano_obra/HorasColaboradoresProyectosInicialesReducer";
 
 import clientesReducer from "./especificas/clientes/clientesReducer";
+import clientesContactosReducer from "./especificas/clientes/clientesContactosReducer";
 
 import cotizacionesReducer from "./especificas/cotizaciones/cotizacionesReducer";
 import cotizacionesSeguimientosReducer from "./especificas/cotizaciones/cotizacionesSeguimientosReducer";
@@ -48,6 +49,7 @@ const rootReducer = combineReducers({
     horas_hojas_trabajos: horasHojasTrabajosDiariosReducer,
     horas_colaboradores_proyectos_iniciales: horasColaboradoresProyectosInicialesReducer,
     clientes: clientesReducer,
+    clientes_contactos: clientesContactosReducer,
     cotizaciones: cotizacionesReducer,
     cotizaciones_seguimientos: cotizacionesSeguimientosReducer,
 });

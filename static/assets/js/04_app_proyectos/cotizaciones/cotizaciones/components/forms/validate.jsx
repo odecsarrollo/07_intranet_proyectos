@@ -12,6 +12,7 @@ const validate = values => {
         'orden_compra_fecha',
         'fecha_entrega_pactada',
         'costo_presupuestado',
+        'contacto_cliente',
     ];
     requiredFields.map(field => {
         if (!values[field]) {

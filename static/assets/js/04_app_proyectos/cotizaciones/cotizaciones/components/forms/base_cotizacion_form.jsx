@@ -7,11 +7,19 @@ import {
 } from '../../../../../00_utilities/components/ui/forms/fields';
 
 const FormBaseCotizacion = (props) => {
-    const {item, en_proceso, esta_aprobado, enviado, clientes_list} = props;
+    const {
+        item,
+        en_proceso,
+        esta_aprobado,
+        enviado,
+        clientes_list,
+        cargarContactosCliente,
+        contactos_list
+    } = props;
     return (
         <Fragment>
             <MyCombobox
-                className="col-12"
+                className="col-12 col-md-6"
                 name='cliente'
                 data={_.map(clientes_list, e => {
                     return {
@@ -22,22 +30,43 @@ const FormBaseCotizacion = (props) => {
                 textField='name'
                 valuesField='id'
                 placeholder='Cliente'
+                onSelect={(v) => cargarContactosCliente(v.id)}
             />
+            {
+                _.size(contactos_list) > 0 &&
+                <MyCombobox
+                    className="col-12 col-md-6"
+                    name='contacto_cliente'
+                    data={_.map(contactos_list, e => {
+                        return {
+                            'name': e.full_nombre,
+                            'id': e.id
+                        }
+                    })}
+                    textField='name'
+                    valuesField='id'
+                    placeholder='Contacto'
+                />
+            }
             <MyTextFieldSimple
-                className="col-12 col-md-5 col-lg-2"
+                className="col-12 col-md-2"
                 nombre='Uni. Negocio'
                 name='unidad_negocio'
                 case='U'/>
             <MyTextFieldSimple
-                className="col-12 col-md-12 col-lg-5"
-                nombre='Contacto'
-                name='contacto'
-                case='U'/>
-            <MyTextFieldSimple
-                className="col-12"
+                className="col-12 col-md-10"
                 nombre='Descripción'
                 name='descripcion_cotizacion'
                 case='U'/>
+            {
+                item && !item.contacto_cliente &&
+                <MyTextFieldSimple
+                    className="col-12 col-md-12 col-lg-5"
+                    nombre='Contacto'
+                    name='contacto'
+                    case='U'/>
+            }
+
             <MyTextFieldSimple
                 className="col-12"
                 nombre='Observación'

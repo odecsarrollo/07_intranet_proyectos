@@ -9,12 +9,52 @@ import {formValueSelector} from 'redux-form';
 const selector = formValueSelector('cotizacionForm');
 
 class Form extends Component {
+
+    constructor(props) {
+        super(props);
+        this.cargarContactosCliente = this.cargarContactosCliente.bind(this);
+    }
+
     componentDidMount() {
-        this.props.fetchClientes();
+        const {
+            noCargando,
+            cargando,
+            notificarErrorAjaxAction,
+            fetchClientes,
+            initialValues,
+            fetchContactosClientes_por_cliente,
+        } = this.props;
+        cargando();
+        let cargarContactos = () => noCargando();
+        if (initialValues) {
+            const {cliente} = initialValues;
+            cargarContactos = () => fetchContactosClientes_por_cliente(
+                cliente,
+                () => noCargando(),
+                notificarErrorAjaxAction
+            );
+        }
+        fetchClientes(cargarContactos, notificarErrorAjaxAction);
     }
 
     componentWillUnmount() {
         this.props.clearClientes();
+        this.props.clearContactosClientes();
+    }
+
+    cargarContactosCliente(cliente_id) {
+        const {
+            noCargando,
+            cargando,
+            notificarErrorAjaxAction,
+            fetchContactosClientes_por_cliente,
+        } = this.props;
+        cargando();
+        fetchContactosClientes_por_cliente(
+            cliente_id,
+            () => noCargando(),
+            notificarErrorAjaxAction
+        );
     }
 
     render() {
@@ -29,6 +69,7 @@ class Form extends Component {
             modal_open,
             singular_name,
             clientes_list,
+            contactos_list,
             myValues,
         } = this.props;
         const {estado} = myValues;
@@ -47,10 +88,12 @@ class Form extends Component {
                 element_type={singular_name}
             >
                 <FormBaseCotizacion
+                    cargarContactosCliente={this.cargarContactosCliente}
                     item={initialValues}
                     en_proceso={en_proceso}
                     esta_aprobado={esta_aprobado}
                     enviado={enviado}
+                    contactos_list={contactos_list}
                     clientes_list={clientes_list}
                 />
                 <div style={{height: '300px'}}>

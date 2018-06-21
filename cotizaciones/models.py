@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from model_utils.models import TimeStampedModel
 
-from clientes.models import ClienteBiable
+from clientes.models import ClienteBiable, ContactoCliente
 
 
 class Cotizacion(TimeStampedModel):
@@ -12,6 +12,8 @@ class Cotizacion(TimeStampedModel):
     unidad_negocio = models.CharField(max_length=10)
     cliente = models.ForeignKey(ClienteBiable, on_delete=models.PROTECT, null=True, blank=True)
     descripcion_cotizacion = models.CharField(max_length=500)
+    contacto_cliente = models.ForeignKey(ContactoCliente, null=True, blank=True, related_name='mis_contizaciones',
+                                         on_delete=models.PROTECT)
     contacto = models.CharField(max_length=400)
     estado = models.CharField(max_length=200, null=True, blank=True)
     observacion = models.TextField(null=True, blank=True)

@@ -127,3 +127,11 @@ export const COTIZACIONES = {
     detail: 'detail_cotizacion',
     gestionar_cotizacion: 'gestionar_cotizacion',
 };
+
+export const CONTACTOS_CLIENTES = {
+    add: 'add_contactocliente',
+    delete: 'delete_contactocliente',
+    change: 'change_contactocliente',
+    list: 'list_contactocliente',
+    detail: 'detail_contactocliente',
+};

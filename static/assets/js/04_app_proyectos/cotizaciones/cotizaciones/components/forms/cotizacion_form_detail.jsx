@@ -10,14 +10,42 @@ import {formValueSelector} from 'redux-form';
 const selector = formValueSelector('cotizacionEditForm');
 
 class Form extends Component {
-    componentWillUnmount() {
-        this.props.clearClientes();
+    constructor(props) {
+        super(props);
+        this.cargarContactosCliente = this.cargarContactosCliente.bind(this);
     }
 
+    componentWillUnmount() {
+        this.props.clearClientes();
+        this.props.clearContactosClientes();
+    }
+
+    cargarContactosCliente(cliente_id) {
+        const {
+            noCargando,
+            cargando,
+            notificarErrorAjaxAction,
+            fetchContactosClientes_por_cliente,
+        } = this.props;
+        cargando();
+        fetchContactosClientes_por_cliente(
+            cliente_id,
+            () => noCargando(),
+            notificarErrorAjaxAction
+        );
+    }
 
     componentDidMount() {
-        const {noCargando, cargando, notificarErrorAjaxAction, item_seleccionado} = this.props;
+        const {
+            noCargando,
+            cargando,
+            notificarErrorAjaxAction,
+            item_seleccionado,
+            initialValues,
+            fetchContactosClientes_por_cliente,
+        } = this.props;
         cargando();
+
         const cargarResponsable = () => {
             if (item_seleccionado.responsable) {
                 this.props.fetchUsuario(item_seleccionado.responsable, () => noCargando(), notificarErrorAjaxAction)
@@ -25,7 +53,17 @@ class Form extends Component {
                 noCargando();
             }
         };
-        const cargarClientes = () => this.props.fetchClientes(cargarResponsable, notificarErrorAjaxAction);
+
+        let cargarContactos = cargarResponsable;
+        if (initialValues) {
+            const {cliente} = initialValues;
+            cargarContactos = () => fetchContactosClientes_por_cliente(
+                cliente,
+                cargarResponsable,
+                notificarErrorAjaxAction
+            );
+        }
+        const cargarClientes = () => this.props.fetchClientes(cargarContactos, notificarErrorAjaxAction);
         this.props.fetchUsuariosxPermiso('gestionar_cotizacion', cargarClientes, notificarErrorAjaxAction);
     }
 
@@ -40,19 +78,23 @@ class Form extends Component {
             onCancel,
             usuarios_list,
             clientes_list,
+            contactos_list,
             myValues
         } = this.props;
         const {estado} = myValues;
         const en_proceso = estado && estado !== 'Pendiente' && estado !== 'Aplazado' && estado !== 'Perdido';
         const esta_aprobado = estado === 'Aprobado';
         const enviado = estado && en_proceso && estado !== 'En Proceso';
-        console.log(usuarios_list)
+        console.log(contactos_list)
         return (
             <form className="card" onSubmit={handleSubmit(onSubmit)}>
                 <div className="row pl-3 pr-5">
                     <FormBaseCotizacion
+                        contactos_list={contactos_list}
+                        cargarContactosCliente={this.cargarContactosCliente}
                         clientes_list={clientes_list}
-                        item={initialValues} myValues={myValues}
+                        item={initialValues}
+                        myValues={myValues}
                         en_proceso={en_proceso}
                         esta_aprobado={esta_aprobado}
                         enviado={enviado}

@@ -28,8 +28,8 @@ class Tabla extends React.Component {
                         Header: "Caracteristicas",
                         columns: [
                             {
-                                Header: "Nit",
-                                accessor: "nit",
+                                Header: "Nombre",
+                                accessor: "nombres",
                                 maxWidth: 150,
                                 filterable: true,
                                 filterMethod: (filter, row) => {
@@ -37,13 +37,47 @@ class Tabla extends React.Component {
                                 }
                             },
                             {
-                                Header: "Nombre",
-                                accessor: "nombre",
-                                maxWidth: 400,
+                                Header: "Apellido",
+                                accessor: "apellidos",
+                                maxWidth: 150,
                                 filterable: true,
                                 filterMethod: (filter, row) => {
                                     return row[filter.id].includes(filter.value.toUpperCase())
                                 }
+                            },
+                            {
+                                Header: "Cargo",
+                                accessor: "cargo",
+                                maxWidth: 150,
+                                filterable: true,
+                                filterMethod: (filter, row) => {
+                                    return row[filter.id].includes(filter.value.toUpperCase())
+                                }
+                            },
+                            {
+                                Header: "Telefono",
+                                accessor: "telefono",
+                                maxWidth: 100,
+                            },
+                            {
+                                Header: "Telefono 2",
+                                accessor: "telefono_2",
+                                maxWidth: 100,
+                            },
+                            {
+                                Header: "Correo",
+                                accessor: "correo_electronico",
+                                maxWidth: 200,
+                            },
+                            {
+                                Header: "Correo 2",
+                                accessor: "correo_electronico_2",
+                                maxWidth: 200,
+                            },
+                            {
+                                Header: "Creado por",
+                                accessor: "creado_por_username",
+                                maxWidth: 100,
                             },
                         ]
                     },
@@ -87,16 +121,6 @@ class Tabla extends React.Component {
                                         }}/>
 
                             },
-                            {
-                                Header: "Ver",
-                                show: permisos_object.detail,
-                                maxWidth: 60,
-                                Cell: row =>
-                                    <Link to={`/app/proyectos/clientes/clientes/detail/${row.original.id}`}>
-                                        <IconButtonTableSee/>
-                                    </Link>
-
-                            }
                         ]
                     }
                 ]}

@@ -57,6 +57,7 @@ function mapPropsToState(state, ownProps) {
     return {
         mis_permisos: state.mis_permisos,
         object_list: state.cotizaciones,
+        contactos_list: state.clientes_contactos,
         clientes_list: state.clientes,
     }
 }

@@ -5,6 +5,7 @@ from .models import Cotizacion, SeguimientoCotizacion
 
 class CotizacionSerializer(serializers.ModelSerializer):
     cliente_nombre = serializers.CharField(source='cliente.nombre', read_only=True)
+    contacto_cliente_nombre = serializers.CharField(source='contacto_cliente.full_nombre', read_only=True)
     id_proyecto = serializers.CharField(source='mi_proyecto.id_proyecto', read_only=True)
     mi_literal_id_literal = serializers.CharField(source='mi_literal.id_literal', read_only=True)
     mi_literal_id_proyecto = serializers.CharField(source='mi_literal.proyecto.id_proyecto', read_only=True)
@@ -39,6 +40,8 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'cliente',
             'cliente_nombre',
             'descripcion_cotizacion',
+            'contacto_cliente',
+            'contacto_cliente_nombre',
             'contacto',
             'estado',
             'observacion',
