@@ -85,7 +85,6 @@ class Form extends Component {
         const en_proceso = estado && estado !== 'Pendiente' && estado !== 'Aplazado' && estado !== 'Perdido';
         const esta_aprobado = estado === 'Aprobado';
         const enviado = estado && en_proceso && estado !== 'En Proceso';
-        console.log(contactos_list)
         return (
             <form className="card" onSubmit={handleSubmit(onSubmit)}>
                 <div className="row pl-3 pr-5">
@@ -133,7 +132,7 @@ class Form extends Component {
 function mapPropsToState(state, ownProps) {
     const {item_seleccionado} = ownProps;
     return {
-        myValues: selector(state, 'estado', 'valor_ofertado'),
+        myValues: selector(state, 'estado', 'valor_ofertado', 'cliente'),
         initialValues: item_seleccionado
     }
 }

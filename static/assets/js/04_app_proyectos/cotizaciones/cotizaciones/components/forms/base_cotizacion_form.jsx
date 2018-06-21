@@ -14,7 +14,8 @@ const FormBaseCotizacion = (props) => {
         enviado,
         clientes_list,
         cargarContactosCliente,
-        contactos_list
+        contactos_list,
+        myValues
     } = props;
     return (
         <Fragment>
@@ -33,7 +34,7 @@ const FormBaseCotizacion = (props) => {
                 onSelect={(v) => cargarContactosCliente(v.id)}
             />
             {
-                _.size(contactos_list) > 0 &&
+                myValues && myValues.cliente &&
                 <MyCombobox
                     className="col-12 col-md-6"
                     name='contacto_cliente'

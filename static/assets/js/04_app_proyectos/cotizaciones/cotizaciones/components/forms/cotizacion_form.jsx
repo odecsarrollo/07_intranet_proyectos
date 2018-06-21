@@ -90,6 +90,7 @@ class Form extends Component {
                 <FormBaseCotizacion
                     cargarContactosCliente={this.cargarContactosCliente}
                     item={initialValues}
+                    myValues={myValues}
                     en_proceso={en_proceso}
                     esta_aprobado={esta_aprobado}
                     enviado={enviado}
@@ -107,7 +108,7 @@ class Form extends Component {
 function mapPropsToState(state, ownProps) {
     const {item_seleccionado} = ownProps;
     return {
-        myValues: selector(state, 'estado', 'valor_ofertado'),
+        myValues: selector(state, 'estado', 'valor_ofertado', 'cliente'),
         initialValues: item_seleccionado,
     }
 }

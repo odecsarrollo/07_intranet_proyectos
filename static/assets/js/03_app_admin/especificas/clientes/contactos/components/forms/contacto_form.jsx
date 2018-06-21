@@ -42,12 +42,12 @@ class Form extends Component {
                     name='apellidos'
                     case='U'/>
                 <MyTextFieldSimple
-                    className="col-12 col-md-12"
+                    className="col-12 col-md-6"
                     nombre='Telefono'
                     name='telefono'
                     case='U'/>
                 <MyTextFieldSimple
-                    className="col-12 col-md-12"
+                    className="col-12 col-md-6"
                     nombre='Telefono 2'
                     name='telefono_2'
                     case='U'/>
