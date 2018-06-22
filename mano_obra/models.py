@@ -66,3 +66,11 @@ class HoraTrabajoColaboradorLiteralInicial(TimeStampedModel):
             ['list_horatrabajocolaboradorliteralinicial', 'Puede listar horas colaboradores proyectos iniciales'],
             ['detail_horatrabajocolaboradorliteralinicial', 'Puede ver detalle hora colaborador proyecto inicial'],
         ]
+
+
+class CierreCostosManoObra(TimeStampedModel):
+    efectuado_por = models.ForeignKey(User, on_delete=models.PROTECT, related_name='cierres_de_costos_creados')
+    modificado_por = models.ForeignKey(User, on_delete=models.PROTECT, related_name='cierres_de_costos_modificados',
+                                       null=True)
+    ano = models.PositiveIntegerField()
+    mes = models.PositiveIntegerField()

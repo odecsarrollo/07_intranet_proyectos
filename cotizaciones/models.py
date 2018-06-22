@@ -14,7 +14,7 @@ class Cotizacion(TimeStampedModel):
     descripcion_cotizacion = models.CharField(max_length=500)
     contacto_cliente = models.ForeignKey(ContactoCliente, null=True, blank=True, related_name='mis_contizaciones',
                                          on_delete=models.PROTECT)
-    contacto = models.CharField(max_length=400)
+    contacto = models.CharField(max_length=400, null=True, blank=True)
     estado = models.CharField(max_length=200, null=True, blank=True)
     observacion = models.TextField(null=True, blank=True)
     valor_ofertado = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)

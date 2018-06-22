@@ -66,6 +66,7 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'mi_proyecto': {'read_only': True},
             'mi_literal': {'read_only': True},
             'responsable_actual': {'read_only': True},
+            'contacto': {'allow_null': True},
         }
 
 
