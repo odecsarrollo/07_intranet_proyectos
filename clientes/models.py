@@ -22,11 +22,11 @@ class ContactoCliente(TimeStampedModel):
     pais = models.CharField(max_length=200, null=True)
     ciudad = models.CharField(max_length=200, null=True)
     apellidos = models.CharField(max_length=200)
-    correo_electronico = models.EmailField(null=True)
-    correo_electronico_2 = models.EmailField(null=True)
-    telefono = models.CharField(max_length=120)
-    telefono_2 = models.CharField(max_length=120)
-    cargo = models.CharField(max_length=200)
+    correo_electronico = models.EmailField(null=True, blank=True)
+    correo_electronico_2 = models.EmailField(null=True, blank=True)
+    telefono = models.CharField(max_length=120, null=True, blank=True)
+    telefono_2 = models.CharField(max_length=120, null=True, blank=True)
+    cargo = models.CharField(max_length=200, null=True, blank=True)
 
     @property
     def full_nombre(self):
