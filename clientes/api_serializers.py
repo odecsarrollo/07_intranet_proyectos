@@ -37,8 +37,8 @@ class ContactoClienteSerializer(serializers.ModelSerializer):
         ]
         extra_kwargs = {
             'full_nombre': {'read_only': True},
-            'correo_electronico_2': {'read_only': True},
-            'telefono': {'read_only': True},
-            'telefono_2': {'read_only': True},
-            'cargo': {'read_only': True},
+            'correo_electronico_2': {'allow_null': True},
+            'telefono': {'allow_null': True},
+            'telefono_2': {'allow_null': True},
+            'cargo': {'allow_null': True},
         }

@@ -60,13 +60,13 @@ class Form extends Component {
                     <div className="row">
                         <MyTextFieldSimple
                             className="col-12 col-md-6"
-                            nombre='Ciudad'
-                            name='ciudad'
+                            nombre='Pais'
+                            name='pais'
                             case='U'/>
                         <MyTextFieldSimple
                             className="col-12 col-md-6"
-                            nombre='Pais'
-                            name='pais'
+                            nombre='Ciudad'
+                            name='ciudad'
                             case='U'/>
                     </div>
                 </div>
