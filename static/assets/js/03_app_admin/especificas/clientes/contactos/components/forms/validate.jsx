@@ -6,6 +6,8 @@ const validate = values => {
     const requiredFields = [
         'nombres',
         'apellidos',
+        'ciudad',
+        'pais',
         'correo_electronico',
     ];
     requiredFields.map(field => {

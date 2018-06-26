@@ -25,6 +25,8 @@ class ContactoClienteSerializer(serializers.ModelSerializer):
             'cliente',
             'nombres',
             'apellidos',
+            'pais',
+            'ciudad',
             'creado_por_username',
             'correo_electronico',
             'correo_electronico_2',

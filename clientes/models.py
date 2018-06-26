@@ -19,6 +19,8 @@ class ContactoCliente(TimeStampedModel):
     cliente = models.ForeignKey(ClienteBiable, on_delete=models.CASCADE, related_name='contactos')
     creado_por = models.ForeignKey(User, on_delete=models.PROTECT, related_name='contactos_creados')
     nombres = models.CharField(max_length=200)
+    pais = models.CharField(max_length=200, null=True)
+    ciudad = models.CharField(max_length=200, null=True)
     apellidos = models.CharField(max_length=200)
     correo_electronico = models.EmailField(null=True)
     correo_electronico_2 = models.EmailField(null=True)

@@ -56,6 +56,20 @@ class Form extends Component {
                     nombre='Correo'
                     name='correo_electronico'
                     case='U'/>
+                <div className="col-12">
+                    <div className="row">
+                        <MyTextFieldSimple
+                            className="col-12 col-md-6"
+                            nombre='Ciudad'
+                            name='ciudad'
+                            case='U'/>
+                        <MyTextFieldSimple
+                            className="col-12 col-md-6"
+                            nombre='Pais'
+                            name='pais'
+                            case='U'/>
+                    </div>
+                </div>
                 <MyTextFieldSimple
                     className="col-12 col-md-6"
                     nombre='Correo 2'
