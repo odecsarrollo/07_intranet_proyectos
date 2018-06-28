@@ -6,6 +6,7 @@ from mano_obra.api_urls import router as mano_obra_router
 from usuarios.api_urls import router as usuarios_router
 from clientes.api_urls import router as clientes_router
 from cotizaciones.api_urls import router as cotizaciones_router
+from configuraciones.api_urls import router as configuracion_costos_router
 
 router = DefaultRouter()
 router.extend(proyectos_router)
@@ -15,3 +16,4 @@ router.extend(mano_obra_router)
 router.extend(usuarios_router)
 router.extend(clientes_router)
 router.extend(cotizaciones_router)
+router.extend(configuracion_costos_router)

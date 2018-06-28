@@ -28,6 +28,8 @@ import clientesContactosReducer from "./especificas/clientes/clientesContactosRe
 import cotizacionesReducer from "./especificas/cotizaciones/cotizacionesReducer";
 import cotizacionesSeguimientosReducer from "./especificas/cotizaciones/cotizacionesSeguimientosReducer";
 
+import configuracionCostos from './especificas/configuraciones/configuracionCostosReducer';
+
 const rootReducer = combineReducers({
     mis_permisos: misPermisosReducer,
     permisos: permisosReducer,
@@ -52,6 +54,7 @@ const rootReducer = combineReducers({
     clientes_contactos: clientesContactosReducer,
     cotizaciones: cotizacionesReducer,
     cotizaciones_seguimientos: cotizacionesSeguimientosReducer,
+    configuracion_costos: configuracionCostos,
 });
 
 export default rootReducer;

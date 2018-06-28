@@ -17,6 +17,9 @@ import UsuariosDetail from "./generales/usuarios/usuarios/containers/usuarios_de
 import ClientesList from "./especificas/clientes/clientes/containers/clientes_container";
 
 
+import ConfiguracionCostosDashboard from "./especificas/configuraciones/containers/costos_dashboard";
+
+
 const AdminApp = (props) => {
     return (
         <Loading>
@@ -34,6 +37,8 @@ const AdminApp = (props) => {
                         <Route exact path='/app/admin/cguno/colaborador/detail/:id' component={ColaboradoresDetail}/>
                         <Route exact path='/app/admin/usuarios/detail/:id' component={UsuariosDetail}/>
                         <Route exact path='/app/admin/clientes/clientes/list' component={ClientesList}/>
+                        <Route exact path='/app/admin/configuraciones/costos/dashboard'
+                               component={ConfiguracionCostosDashboard}/>
                     </Switch>
                 </div>
             </Fragment>

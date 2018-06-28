@@ -12,3 +12,4 @@ export * from './clientes/clientesAction';
 export * from './clientes/clientesContactosAction';
 export * from './cotizaciones/cotizacionesAction';
 export * from './cotizaciones/cotizacionesSeguimientoAction';
+export * from './configuraciones/configuracionCostosAction';

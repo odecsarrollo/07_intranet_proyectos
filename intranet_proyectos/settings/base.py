@@ -59,6 +59,7 @@ MY_APPS = [
     'mano_obra.apps.ManoObraConfig',
     'clientes.apps.ClientesConfig',
     'cotizaciones.apps.CotizacionesConfig',
+    'configuraciones.apps.ConfiguracionesConfig',
 ]
 
 THIRD_PART_APPS = [

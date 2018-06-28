@@ -135,3 +135,11 @@ export const CONTACTOS_CLIENTES = {
     list: 'list_contactocliente',
     detail: 'detail_contactocliente',
 };
+
+export const CONFIGURACIONES_COSTOS = {
+    add: 'add_configuracioncosto',
+    delete: 'delete_configuracioncosto',
+    change: 'change_configuracioncosto',
+    list: 'list_configuracioncosto',
+    detail: 'detail_configuracioncosto',
+};

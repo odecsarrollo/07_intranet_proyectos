@@ -34,6 +34,7 @@ class CotizacionSerializer(serializers.ModelSerializer):
         fields = [
             'url',
             'id',
+            'responsable',
             'responsable_actual',
             'nro_cotizacion',
             'unidad_negocio',

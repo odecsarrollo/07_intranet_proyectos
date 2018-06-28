@@ -117,3 +117,12 @@ export const CONTACTO_CLIENTE_TYPES = {
     clear: 'clear_contactos_clientes',
     update: 'update_contacto_cliente',
 };
+
+export const CONFIGURACION_COSTO_TYPES = {
+    create: 'create_configuracion_costo',
+    delete: 'delete_configuracion_costo',
+    fetch_all: 'fetch_configuraciones_costos',
+    fetch: 'fetch_configuracion_costo',
+    clear: 'clear_configuraciones_costos',
+    update: 'update_configuracion_costo',
+};
