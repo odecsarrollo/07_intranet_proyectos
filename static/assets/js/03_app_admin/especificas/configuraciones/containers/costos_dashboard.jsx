@@ -11,20 +11,31 @@ class ConfiguracionCostosDashboard extends Component {
     }
 
     componentDidMount() {
-        const {fetchConfiguracionesCostos} = this.props;
-        fetchConfiguracionesCostos()
+        const {
+            fetchConfiguracionesCostos,
+            noCargando,
+            cargando,
+            notificarErrorAjaxAction
+        } = this.props;
+        cargando();
+        fetchConfiguracionesCostos(() => noCargando(), notificarErrorAjaxAction)
     }
 
     onSubmit(values) {
         const {
             updateConfiguracionCosto,
+            createConfiguracionCosto,
             configuracion_costos,
             noCargando,
             cargando,
             notificarErrorAjaxAction
         } = this.props;
         cargando();
-        updateConfiguracionCosto(configuracion_costos.id, values, () => noCargando(), notificarErrorAjaxAction)
+        if (configuracion_costos) {
+            updateConfiguracionCosto(configuracion_costos.id, values, () => noCargando(), notificarErrorAjaxAction)
+        } else {
+            createConfiguracionCosto(values, () => noCargando(), notificarErrorAjaxAction)
+        }
     }
 
     render() {
@@ -40,11 +51,10 @@ class ConfiguracionCostosDashboard extends Component {
 
 
 function mapPropsToState(state, ownProps) {
-    console.log(state.configuracion_costos)
     return {
         mis_permisos: state.mis_permisos,
         contactos: state.clientes_contactos,
-        configuracion_costos: state.configuracion_costos[1]
+        configuracion_costos: _.map(state.configuracion_costos, c => c)[0]
     }
 }
 

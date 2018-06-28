@@ -9,6 +9,17 @@ import {MyFormTagModal} from '../../../../../00_utilities/components/ui/forms/My
 import validate from './validate_hoja';
 
 class Form extends Component {
+    componentDidMount() {
+        const {
+            fetchConfiguracionesCostos,
+            noCargando,
+            cargando,
+            notificarErrorAjaxAction
+        } = this.props;
+        cargando();
+        fetchConfiguracionesCostos(() => noCargando(), notificarErrorAjaxAction)
+    }
+
     render() {
         const {
             pristine,
@@ -23,7 +34,13 @@ class Form extends Component {
             colaboradores_list,
             mi_cuenta,
             permisos_object,
+            configuracion_costos,
         } = this.props;
+        let fecha_cierre_costos = new Date(1900, 0, 1);
+
+        if (configuracion_costos) {
+            fecha_cierre_costos = new Date(configuracion_costos.fecha_cierre)
+        }
 
         return (
             <MyFormTagModal
@@ -70,6 +87,7 @@ class Form extends Component {
                     />
                 }
                 <MyDateTimePickerField
+                    min={fecha_cierre_costos}
                     className='col-12 mb-5'
                     name='fecha'
                     nombre='Fecha'
@@ -86,7 +104,8 @@ class Form extends Component {
 function mapPropsToState(state, ownProps) {
     const {item_seleccionado} = ownProps;
     return {
-        initialValues: item_seleccionado
+        initialValues: item_seleccionado,
+        configuracion_costos: _.map(state.configuracion_costos, c => c)[0]
     }
 }
 

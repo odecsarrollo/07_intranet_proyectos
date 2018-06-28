@@ -3,9 +3,19 @@ import {
     fetchList,
     updateObject,
     fetchObject,
+    createObject,
 } from '../../00_general_fuctions'
 
 const current_url_api = 'configuracion_costos';
+export const createConfiguracionCosto = (values, callback = null, callback_error = null) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.create, payload: response})
+        };
+        createObject(current_url_api, values, dispatches, callback, callback_error)
+    }
+};
+
 export const fetchConfiguracionesCostos = (callback = null, callback_error = null) => {
     return (dispatch) => {
         const dispatches = (response) => {

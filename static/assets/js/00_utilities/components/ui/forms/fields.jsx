@@ -159,7 +159,7 @@ MyCheckboxSimple.propTypes = {
     nombre: PropTypes.string
 };
 
-const renderDateTimePicker = ({input: {onChange, value}, meta: {touched, error}, show_edad, max = new Date()}) => {
+const renderDateTimePicker = ({input: {onChange, value}, meta: {touched, error}, show_edad, max = new Date(), min = new Date(1900, 0, 1)}) => {
     const now = moment().tz('America/Bogota');
     const fechaHoy = moment(now, "YYYY MM DD", "es");
     const fecha_nacimiento = moment(value, "YYYY MM DD", "es").tz('America/Bogota');
@@ -171,7 +171,8 @@ const renderDateTimePicker = ({input: {onChange, value}, meta: {touched, error},
                 onChange={onChange}
                 format="YYYY-MM-DD"
                 time={false}
-                max={max}
+                max={moment(max).toDate()}
+                min={moment(min).toDate()}
                 value={!value ? null : moment(value).toDate()}
             />{show_edad && edad}
             {touched && (error && <span className='form-field-error'>{error}</span>)}
