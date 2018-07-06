@@ -22,6 +22,7 @@ import ProyectosCGUnoDetail from "./cguno/proyectos/proyectos/containers/proyect
 
 import ReporteCosto from "./cguno/proyectos/reportes/reporte_1/containers/reporte_1";
 import ReporteDos from "./cguno/proyectos/reportes/reporte_2/containers/reporte_2";
+import ReporteTres from "./cguno/proyectos/reportes/reporte_3/containers/reporte_3";
 
 import LiteralesSinSincronizar
     from "./cguno/proyectos/literales_sin_sincronizar/containers/literales_sin_sincronizar_list_container";
@@ -64,6 +65,7 @@ const App = (props) => {
 
                         <Route exact path='/app/proyectos/proyectos/reporte_costos' component={ReporteCosto}/>
                         <Route exact path='/app/proyectos/proyectos/reporte_dos' component={ReporteDos}/>
+                        <Route exact path='/app/proyectos/proyectos/reporte_tres' component={ReporteTres}/>
                     </Switch>
                 </div>
             </Fragment>

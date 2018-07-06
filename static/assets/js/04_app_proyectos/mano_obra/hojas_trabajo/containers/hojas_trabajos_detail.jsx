@@ -33,14 +33,19 @@ class Detail extends Component {
         cargando();
         const cargarHojaTrabajo = () => this.props.fetchHojaTrabajo(id, () => noCargando(), notificarErrorAjaxAction);
         const cargarMiCuenta = () => this.props.fetchMiCuenta(cargarHojaTrabajo, this.error_callback);
-        this.props.fetchMisPermisos(cargarMiCuenta, notificarErrorAjaxAction);
+        const cargarConfigCostos = () => this.props.fetchConfiguracionesCostos(cargarMiCuenta, notificarErrorAjaxAction);
+        this.props.fetchMisPermisos(cargarConfigCostos, notificarErrorAjaxAction);
 
     }
 
     render() {
-        const {object, mis_permisos, mi_cuenta} = this.props;
+        const {object, mis_permisos, configuracion_costos} = this.props;
         const permisos = permisosAdapter(mis_permisos, permisos_view);
         const permisos_horas = permisosAdapter(mis_permisos, permisos_view_horas);
+
+        const fecha_cierre = configuracion_costos ? configuracion_costos.fecha_cierre : null;
+        const fecha_registro = object ? object.fecha : null;
+        const puede_modificar = fecha_cierre && fecha_registro ? object.fecha > fecha_cierre : true;
 
 
         if (!object) {
@@ -79,7 +84,11 @@ class Detail extends Component {
                 </div>
                 <HorasHojasTrabajoList
                     object_list={mis_horas_trabajadas}
-                    permisos_object={permisos_horas}
+                    permisos_object={{
+                        ...permisos_horas,
+                        add: permisos_horas.add && puede_modificar,
+                        delete: permisos_horas.delete && puede_modificar
+                    }}
                     permisos_hoja={permisos}
                     hoja_trabajo={object}
                     {...this.props}
@@ -98,6 +107,7 @@ function mapPropsToState(state, ownProps) {
         mi_cuenta: state.mi_cuenta,
         object: state.hojas_trabajos_diarios[id],
         literales_list: state.literales,
+        configuracion_costos: _.map(state.configuracion_costos, c => c)[0],
     }
 }
 

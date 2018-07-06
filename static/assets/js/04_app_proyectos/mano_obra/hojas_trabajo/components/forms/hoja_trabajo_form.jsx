@@ -7,6 +7,7 @@ import {
 import {connect} from "react-redux";
 import {MyFormTagModal} from '../../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import validate from './validate_hoja';
+import moment from "moment-timezone";
 
 class Form extends Component {
     componentDidMount() {
@@ -39,7 +40,8 @@ class Form extends Component {
         let fecha_cierre_costos = new Date(1900, 0, 1);
 
         if (configuracion_costos) {
-            fecha_cierre_costos = new Date(configuracion_costos.fecha_cierre)
+            const cierre_costos = moment(configuracion_costos.fecha_cierre).tz('America/Bogota').toDate();
+            fecha_cierre_costos = new Date(cierre_costos.getFullYear(), cierre_costos.getMonth(), cierre_costos.getDate())
         }
 
         return (

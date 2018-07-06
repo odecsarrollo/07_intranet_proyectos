@@ -15,9 +15,11 @@ class Tabla extends React.Component {
             singular_name,
             onDelete,
             onSelectItemEdit,
-            permisos_object
+            permisos_object,
+            configuracion_costos
         } = this.props;
 
+        const fecha_cierre = configuracion_costos ? configuracion_costos.fecha_cierre : null;
 
         return (
             <ReactTable
@@ -94,16 +96,16 @@ class Tabla extends React.Component {
                                 show: permisos_object.delete,
                                 maxWidth: 60,
                                 Cell: row => {
+                                    const puede_eliminar = row.original.fecha > fecha_cierre;
                                     return (
-                                        row.original.costo_total > 0 ?
-                                            <Fragment></Fragment> :
+                                         parseInt(row.original.cantidad_horas) === 0 && puede_eliminar ?
                                             <MyDialogButtonDelete
                                                 onDelete={() => {
                                                     onDelete(row.original)
                                                 }}
                                                 element_name={`en ${fechaFormatoUno(row.original.fecha)} para ${row.original.colaborador_nombre}`}
                                                 element_type={singular_name}
-                                            />
+                                            /> : <Fragment></Fragment>
                                     )
                                 }
 

@@ -34,13 +34,19 @@ class List extends Component {
         const today = date_today.format('YYYY-MM-DD');
         const cargarHojasTrabajoHoy = () => this.props.fetchHojasTrabajosxFechas(today, today, () => noCargando(), notificarErrorAjaxAction);
         const cargarMiCuenta = () => this.props.fetchMiCuenta(cargarHojasTrabajoHoy, notificarErrorAjaxAction);
-        const cargarColaboradores = () => this.props.fetchColaboradoresEnProyectos(cargarMiCuenta, notificarErrorAjaxAction);
+        const cargarConfigCostos = () => this.props.fetchConfiguracionesCostos(cargarMiCuenta, notificarErrorAjaxAction)
+        const cargarColaboradores = () => this.props.fetchColaboradoresEnProyectos(cargarConfigCostos, notificarErrorAjaxAction);
         this.props.fetchMisPermisos(cargarColaboradores, notificarErrorAjaxAction)
 
     }
 
     render() {
-        const {object_list, mis_permisos, mi_cuenta} = this.props;
+        const {
+            object_list,
+            mis_permisos,
+            mi_cuenta,
+        } = this.props;
+
         const permisos = permisosAdapter(mis_permisos, permisos_view);
         return (
             <Fragment>
@@ -82,6 +88,7 @@ function mapPropsToState(state, ownProps) {
         colaboradores_list: state.colaboradores,
         mi_cuenta: state.mi_cuenta,
         proyectos_list: state.proyectos,
+        configuracion_costos: _.map(state.configuracion_costos, c => c)[0],
     }
 }
 

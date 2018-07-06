@@ -171,8 +171,8 @@ const renderDateTimePicker = ({input: {onChange, value}, meta: {touched, error},
                 onChange={onChange}
                 format="YYYY-MM-DD"
                 time={false}
-                max={moment(max).toDate()}
-                min={moment(min).toDate()}
+                max={max}
+                min={min}
                 value={!value ? null : moment(value).toDate()}
             />{show_edad && edad}
             {touched && (error && <span className='form-field-error'>{error}</span>)}

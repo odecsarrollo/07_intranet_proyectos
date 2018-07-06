@@ -35,11 +35,14 @@ class Tabla extends React.Component {
             onSelectItemEdit,
             permisos_hoja,
             permisos_object,
+            configuracion_costos
         } = this.props;
 
         const {
             item_modal
         } = this.state;
+
+        const fecha_cierre = configuracion_costos ? configuracion_costos.fecha_cierre : null;
 
         const actions = [
             <FlatButton
@@ -167,15 +170,18 @@ class Tabla extends React.Component {
                                     maxWidth: 70,
                                     Cell: row =>
                                         <div className='text-center'>
-                                            <i
-                                                className='fas fa-edit puntero'
-                                                style={{color: 'green'}}
-                                                onClick={() => {
-                                                    this.setState({item_modal: row.original});
-                                                    this.handleOpen();
-                                                }}
-                                            >
-                                            </i>
+                                            {
+                                                row.original.fecha > fecha_cierre &&
+                                                <i
+                                                    className='fas fa-edit puntero'
+                                                    style={{color: 'green'}}
+                                                    onClick={() => {
+                                                        this.setState({item_modal: row.original});
+                                                        this.handleOpen();
+                                                    }}
+                                                >
+                                                </i>
+                                            }
                                         </div>
                                 },
                                 {
@@ -211,7 +217,7 @@ class Tabla extends React.Component {
                                     maxWidth: 60,
                                     Cell: row => {
                                         return (
-                                            row.original.literal_abierto ?
+                                            row.original.literal_abierto && row.original.fecha > fecha_cierre ?
                                                 <MyDialogButtonDelete
                                                     onDelete={() => {
                                                         onDelete(row.original)

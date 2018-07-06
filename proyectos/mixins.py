@@ -137,3 +137,14 @@ class LiteralesPDFMixin(object):
         )
         main_doc = html.render(stylesheets=[CSS('static/css/reportes.css')])
         return main_doc
+
+    def generar_pdf_costos_tres(self, request, fecha_inicial, fecha_final, con_mo_saldo_inicial):
+        context = self.generar_resultados(fecha_inicial, fecha_final, con_mo_saldo_inicial, None)
+        context['user'] = request.user
+        html_get_template = get_template('reportes/proyectos/costos_tres.html').render(context)
+        html = HTML(
+            string=html_get_template,
+            base_url=request.build_absolute_uri()
+        )
+        main_doc = html.render(stylesheets=[CSS('static/css/reportes.css')])
+        return main_doc

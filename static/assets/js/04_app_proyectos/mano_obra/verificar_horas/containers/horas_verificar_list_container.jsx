@@ -31,7 +31,8 @@ class List extends Component {
         cargando();
         const cargarProyectos = () => this.props.fetchProyectosAbiertos(() => noCargando(), notificarErrorAjaxAction);
         const cargarHorasHojasTrabajo = () => this.props.fetchHorasHojasTrabajosAutogestionadas(cargarProyectos, notificarErrorAjaxAction);
-        this.props.fetchMisPermisos(cargarHorasHojasTrabajo, notificarErrorAjaxAction)
+        const cargarConfigCostos = () => this.props.fetchConfiguracionesCostos(cargarHorasHojasTrabajo, notificarErrorAjaxAction);
+        this.props.fetchMisPermisos(cargarConfigCostos, notificarErrorAjaxAction)
 
     }
 
@@ -67,6 +68,7 @@ function mapPropsToState(state, ownProps) {
         colaboradores_list: state.colaboradores,
         proyectos_list: state.proyectos,
         mi_cuenta: state.mi_cuenta,
+        configuracion_costos: _.map(state.configuracion_costos, c => c)[0],
     }
 }
 

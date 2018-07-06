@@ -1,7 +1,9 @@
 import math
+from io import BytesIO
 
 from django.db.models import Sum, Value as V, F, ExpressionWrapper, DecimalField
 from django.db.models.functions import Coalesce
+from django.http import HttpResponse
 from rest_framework import viewsets, serializers
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
@@ -18,6 +20,8 @@ from .api_serializers import (
 )
 
 from cguno.models import ColaboradorCostoMesBiable
+
+from .mixins import HoraHojaTrabajoPDFMixin
 
 
 class HojaTrabajoDiarioViewSet(viewsets.ModelViewSet):
@@ -81,7 +85,7 @@ class HojaTrabajoDiarioViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-class HoraHojaTrabajoViewSet(viewsets.ModelViewSet):
+class HoraHojaTrabajoViewSet(HoraHojaTrabajoPDFMixin, viewsets.ModelViewSet):
     queryset = HoraHojaTrabajo.objects.select_related(
         'literal',
         'literal__proyecto',
@@ -153,6 +157,33 @@ class HoraHojaTrabajoViewSet(viewsets.ModelViewSet):
             lista = lista.filter(verificado=False)
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
+
+    @list_route(methods=['get'])
+    def print_costos_tres(self, request, pk=None):
+        fecha_inicial = request.GET.get('fecha_inicial', None)
+        fecha_final = request.GET.get('fecha_final', None)
+        con_mo_saldo_inicial = request.GET.get('con_mo_saldo_inicial', None)
+
+        if not fecha_final or not fecha_inicial:
+            con_mo_saldo_inicial = True
+        elif con_mo_saldo_inicial == 'false':
+            con_mo_saldo_inicial = False
+        elif con_mo_saldo_inicial == 'true':
+            con_mo_saldo_inicial = True
+        else:
+            con_mo_saldo_inicial = False
+
+        main_doc = self.generar_pdf_costos_tres(self.request, fecha_inicial, fecha_final, con_mo_saldo_inicial)
+        output = BytesIO()
+        main_doc.write_pdf(
+            target=output
+        )
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
+        response['Content-Transfer-Encoding'] = 'binary'
+        response.write(output.getvalue())
+        output.close()
+        return response
 
 
 class HoraTrabajoColaboradorLiteralInicialViewSet(viewsets.ModelViewSet):

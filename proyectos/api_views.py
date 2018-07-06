@@ -1,7 +1,6 @@
-from django.utils.dateparse import parse_date
 from io import BytesIO
 
-from django.db.models import Sum, F, ExpressionWrapper, DecimalField, OuterRef, Subquery, Count
+from django.db.models import Sum, F, ExpressionWrapper, DecimalField, OuterRef, Subquery
 from django.db.models.expressions import Exists
 from django.db.models.functions import Coalesce
 from django.http import HttpResponse
