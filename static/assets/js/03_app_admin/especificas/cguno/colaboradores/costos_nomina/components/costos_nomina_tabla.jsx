@@ -144,19 +144,28 @@ class RowItem extends Component {
 }
 
 const TablaRow = (props) => {
-    const {fila, updateColaboradorCostoMes, permisos_object, centros_costos_list} = props
+    const {
+        fila,
+        updateColaboradorCostoMes,
+        permisos_object,
+        centros_costos_list,
+        fecha_cierre
+    } = props;
+    const lapso = fila ? fila.lapso : null;
+    const puede_cambiar = lapso && fecha_cierre ? lapso >= fecha_cierre : true;
+    const es_modificable = !fila.verificado && puede_cambiar;
     return (
         <tr>
             <RowItem
                 item={fila.lapso}
-                modificable={true}
+                modificable={false}
                 formato='F'
                 permisos_object={permisos_object}
             />
             <td><span>{fila.colaborador_nombres} {fila.colaborador_apellidos}</span></td>
             {/*<td><span>{fila.centro_costo_nombre}</span></td>*/}
             <RowItemSelect
-                modificable={!fila.verificado}
+                modificable={es_modificable}
                 item={fila.centro_costo}
                 permisos_object={permisos_object}
                 centros_costos_list={centros_costos_list}
@@ -169,7 +178,7 @@ const TablaRow = (props) => {
 
 
             <td className='text-center'>
-                {permisos_object.change && !fila.verificado ?
+                {permisos_object.change && es_modificable ?
                     <i
                         onClick={() => updateColaboradorCostoMes(fila.id, {...fila, es_aprendiz: !fila.es_aprendiz})}
                         className={`${fila.es_aprendiz ? 'fas fa-check-square' : 'far fa-square'} puntero`}
@@ -184,7 +193,7 @@ const TablaRow = (props) => {
 
 
             <td className='text-center'>
-                {permisos_object.change && !fila.verificado ?
+                {permisos_object.change && es_modificable ?
                     <i
                         onClick={() => updateColaboradorCostoMes(fila.id, {
                             ...fila,
@@ -203,7 +212,7 @@ const TablaRow = (props) => {
             <RowItem
                 item={fila.base_salario}
                 permisos_object={permisos_object}
-                modificable={!fila.verificado}
+                modificable={es_modificable}
                 cambiarItem={(valor, callback = null) => updateColaboradorCostoMes(fila.id,
                     {...fila, base_salario: valor, modificado: true},
                     callback
@@ -213,7 +222,7 @@ const TablaRow = (props) => {
             <RowItem
                 item={fila.auxilio_transporte}
                 permisos_object={permisos_object}
-                modificable={!fila.verificado}
+                modificable={es_modificable}
                 cambiarItem={(valor, callback = null) => updateColaboradorCostoMes(fila.id,
                     {...fila, auxilio_transporte: valor, modificado: true},
                     callback
@@ -223,7 +232,7 @@ const TablaRow = (props) => {
             <RowItem
                 item={fila.nro_horas_mes}
                 permisos_object={permisos_object}
-                modificable={!fila.verificado}
+                modificable={es_modificable}
                 cambiarItem={(valor, callback = null) => updateColaboradorCostoMes(fila.id,
                     {...fila, nro_horas_mes: valor, modificado: true},
                     callback
@@ -237,7 +246,7 @@ const TablaRow = (props) => {
             <RowItem
                 item={fila.porcentaje_arl}
                 permisos_object={permisos_object}
-                modificable={!fila.verificado}
+                modificable={es_modificable}
                 cambiarItem={(valor, callback = null) => updateColaboradorCostoMes(fila.id,
                     {...fila, porcentaje_arl: valor, modificado: true},
                     callback
@@ -248,7 +257,7 @@ const TablaRow = (props) => {
                 es_n_a={fila.es_aprendiz}
                 item={fila.porcentaje_caja_compensacion}
                 permisos_object={permisos_object}
-                modificable={!fila.verificado}
+                modificable={es_modificable}
                 cambiarItem={(valor, callback = null) => updateColaboradorCostoMes(fila.id,
                     {...fila, porcentaje_caja_compensacion: valor, modificado: true},
                     callback
@@ -261,7 +270,7 @@ const TablaRow = (props) => {
                 es_n_a={fila.es_aprendiz}
                 item={fila.porcentaje_pension}
                 permisos_object={permisos_object}
-                modificable={!fila.verificado}
+                modificable={es_modificable}
                 cambiarItem={(valor, callback = null) => updateColaboradorCostoMes(fila.id,
                     {...fila, porcentaje_pension: valor, modificado: true},
                     callback
@@ -273,7 +282,7 @@ const TablaRow = (props) => {
                 es_n_a={fila.es_aprendiz}
                 item={fila.porcentaje_prestaciones_sociales}
                 permisos_object={permisos_object}
-                modificable={!fila.verificado}
+                modificable={es_modificable}
                 cambiarItem={(valor, callback = null) => updateColaboradorCostoMes(fila.id,
                     {...fila, porcentaje_prestaciones_sociales: valor, modificado: true},
                     callback
@@ -285,7 +294,7 @@ const TablaRow = (props) => {
                 es_n_a={!fila.es_aprendiz}
                 item={fila.porcentaje_salud}
                 permisos_object={permisos_object}
-                modificable={!fila.verificado}
+                modificable={es_modificable}
                 cambiarItem={(valor, callback = null) => updateColaboradorCostoMes(fila.id,
                     {...fila, porcentaje_salud: valor, modificado: true},
                     callback
@@ -297,7 +306,7 @@ const TablaRow = (props) => {
             <RowItem
                 item={fila.otro_costo}
                 permisos_object={permisos_object}
-                modificable={!fila.verificado}
+                modificable={es_modificable}
                 cambiarItem={(valor, callback = null) => updateColaboradorCostoMes(fila.id,
                     {...fila, otro_costo: valor, modificado: true},
                     callback
@@ -337,7 +346,14 @@ const TablaRow = (props) => {
 };
 
 const TablaCostos = (props) => {
-    const {lista, updateColaboradorCostoMes, permisos_object, centros_costos_list} = props;
+    const {
+        lista,
+        updateColaboradorCostoMes,
+        permisos_object,
+        centros_costos_list,
+        configuracion_costos,
+    } = props;
+    const fecha_cierre = configuracion_costos ? configuracion_costos.fecha_cierre : null;
     return (
         <table className='table table-striped table-responsive' style={{fontSize: '9px'}}>
             <thead>
@@ -367,6 +383,7 @@ const TablaCostos = (props) => {
             {
                 _.map(lista, e =>
                     <TablaRow
+                        fecha_cierre={fecha_cierre}
                         centros_costos_list={centros_costos_list}
                         updateColaboradorCostoMes={updateColaboradorCostoMes}
                         key={e.id}

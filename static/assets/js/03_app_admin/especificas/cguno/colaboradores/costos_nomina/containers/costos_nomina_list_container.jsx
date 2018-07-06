@@ -51,7 +51,8 @@ class List extends Component {
         const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
         cargando();
         const cargarCentrosCostos = () => this.props.fetchCentrosCostosColaboradores(() => noCargando(), notificarErrorAjaxAction);
-        this.props.fetchMisPermisos(cargarCentrosCostos, notificarErrorAjaxAction)
+        const cargarConfigCostos = () => this.props.fetchConfiguracionesCostos(cargarCentrosCostos, notificarErrorAjaxAction)
+        this.props.fetchMisPermisos(cargarConfigCostos, notificarErrorAjaxAction)
     }
 
     updateColaboradorCostoMes(id, item, callback = null) {
@@ -82,7 +83,12 @@ class List extends Component {
     }
 
     render() {
-        const {object_list, mis_permisos, centros_costos_list} = this.props;
+        const {
+            object_list,
+            mis_permisos,
+            centros_costos_list,
+            configuracion_costos
+        } = this.props;
         const permisos_object = permisosAdapter(mis_permisos, permisos_view);
         const {ano, mes, ano_error, mes_error} = this.state;
         return (
@@ -146,6 +152,7 @@ class List extends Component {
                                 );
                                 return (
                                     <Tabla
+                                        configuracion_costos={configuracion_costos}
                                         lista={lista_filtrada}
                                         updateColaboradorCostoMes={this.updateColaboradorCostoMes}
                                         permisos_object={permisos_object}
@@ -168,6 +175,8 @@ function mapPropsToState(state, ownProps) {
         mis_permisos: state.mis_permisos,
         object_list: state.colaboradores_costos_nomina,
         centros_costos_list: state.centros_costos_colaboradores,
+        configuracion_costos: _.map(state.configuracion_costos, c => c)[0],
+
     }
 }
 
