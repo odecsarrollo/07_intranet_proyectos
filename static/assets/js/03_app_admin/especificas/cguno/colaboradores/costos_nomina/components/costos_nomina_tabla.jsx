@@ -316,7 +316,7 @@ const TablaRow = (props) => {
             <td className='text-right'><strong>{pesosColombianos(fila.valor_hora)}</strong></td>
 
             <td className='text-center'>
-                {permisos_object.change && !fila.verificado ?
+                {permisos_object.change && es_modificable ?
                     <i
                         onClick={() => updateColaboradorCostoMes(fila.id, {...fila, modificado: !fila.modificado})}
                         className={`${fila.modificado ? 'fas fa-check-square' : 'far fa-square'} puntero`}
@@ -329,7 +329,7 @@ const TablaRow = (props) => {
                 }
             </td>
             <td className='text-center'>
-                {permisos_object.change ?
+                {permisos_object.change && puede_cambiar ?
                     <i
                         onClick={() => updateColaboradorCostoMes(fila.id, {...fila, verificado: !fila.verificado})}
                         className={`${fila.verificado ? 'fas fa-check-square' : 'far fa-square'} puntero`}
