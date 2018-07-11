@@ -52,14 +52,14 @@ class Tabla extends React.Component {
                     </div>
                 }
                 {
-                    nro_cotizaciones_ok &&
+                    nro_cotizaciones_ok > 0 &&
                     <div className='puntero'
                          onClick={() => this.setState({tipo_filtro_revision: estado_revisar_ok})}>
                         Aprobada Revisión: {nro_cotizaciones_ok}
                     </div>
                 }
                 {
-                    nro_cotizaciones_rechaza &&
+                    nro_cotizaciones_rechaza > 0 &&
                     <div className='puntero'
                          onClick={() => this.setState({tipo_filtro_revision: estado_revisar_rechaza})}>
                         Rechazada Revisión: {nro_cotizaciones_rechaza}
