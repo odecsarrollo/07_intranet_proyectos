@@ -164,6 +164,8 @@ class HoraHojaTrabajoViewSet(HoraHojaTrabajoPDFMixin, viewsets.ModelViewSet):
         fecha_final = request.GET.get('fecha_final', None)
         con_mo_saldo_inicial = request.GET.get('con_mo_saldo_inicial', None)
 
+        print('entro a tres')
+
         if not fecha_final or not fecha_inicial:
             con_mo_saldo_inicial = True
         elif con_mo_saldo_inicial == 'false':

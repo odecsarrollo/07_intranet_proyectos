@@ -91,7 +91,7 @@ class CotizacionViewSet(viewsets.ModelViewSet):
 
 
 class SeguimientoCotizacionViewSet(viewsets.ModelViewSet):
-    queryset = SeguimientoCotizacion.objects.select_related('creado_por').all()
+    queryset = SeguimientoCotizacion.objects.select_related('creado_por','cotizacion__cliente').all()
     serializer_class = SeguimientoCotizacionSerializer
 
     def perform_create(self, serializer):

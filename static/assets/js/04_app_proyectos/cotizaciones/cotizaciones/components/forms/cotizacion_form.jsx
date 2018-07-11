@@ -73,9 +73,10 @@ class Form extends Component {
             myValues,
         } = this.props;
         const {estado} = myValues;
-        const en_proceso = estado && estado !== 'Pendiente' && estado !== 'Aplazado' && estado !== 'Perdido';
+        const en_proceso = estado && estado !== 'Pendiente' && estado !== 'Aplazado' && estado !== 'Perdido' && estado !== 'Cancelado';
         const esta_aprobado = estado === 'Aprobado';
-        const enviado = estado && en_proceso && estado !== 'En Proceso';
+        const en_revision = estado === 'Para Revisar' || estado === 'Revisado - OK' || estado === 'Revisado - No Aprobado';
+        const enviado = estado && en_proceso && !en_revision && estado !== 'En Proceso';
         return (
             <MyFormTagModal
                 onCancel={onCancel}

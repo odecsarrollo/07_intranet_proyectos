@@ -72,6 +72,8 @@ class CotizacionSerializer(serializers.ModelSerializer):
 
 
 class SeguimientoCotizacionSerializer(serializers.ModelSerializer):
+    cliente_nombre = serializers.CharField(source='cotizacion.cliente.nombre', read_only=True)
+    cliente = serializers.CharField(source='cotizacion.cliente.id', read_only=True)
     creado_por_username = serializers.CharField(source='creado_por.username', read_only=True)
     fecha_inicio_tarea = serializers.DateTimeField(
         format="%Y-%m-%d",
@@ -103,6 +105,8 @@ class SeguimientoCotizacionSerializer(serializers.ModelSerializer):
             'modified',
             'creado_por_username',
             'creado_por',
+            'cliente',
+            'cliente_nombre',
         ]
         extra_kwargs = {
             'created': {'read_only': True},

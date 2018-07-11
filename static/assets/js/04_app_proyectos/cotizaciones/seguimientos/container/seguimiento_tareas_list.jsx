@@ -18,7 +18,7 @@ momentLocaliser(moment);
 import {Link} from 'react-router-dom'
 
 const Tarea = (props) => {
-    const {fecha, nombre, link_to} = props;
+    const {fecha, nombre, link_to, cliente_nombre, icono} = props;
     const ahora = moment(new Date());
     const fecha_tarea = moment(fecha);
     const diferencia = fecha_tarea.diff(ahora, "days");
@@ -31,10 +31,22 @@ const Tarea = (props) => {
     } else {
         diferencia_texto = `Hace ${diferencia * -1} días`;
     }
+    style = {...style, padding: '1rem', margin: 0, fontSize: '0.8rem'};
     return (
         <Link to={link_to}>
             <li className="list-group-item" style={style}>
-                {fechaFormatoUno(fecha)} - <strong>{nombre} </strong> ({diferencia_texto})
+                <i className={icono}></i> <strong>{nombre}</strong><br/>
+                <div className="row">
+                    <div className="col-12 col-md-6">
+                        <small>Fecha: <strong>{fechaFormatoUno(fecha)} ({diferencia_texto})</strong></small>
+                    </div>
+                    {
+                        cliente_nombre &&
+                        <div className="col-12 col-md-6">
+                            <small>Cliente: <strong>{cliente_nombre}</strong></small>
+                        </div>
+                    }
+                </div>
             </li>
         </Link>
     )
@@ -72,6 +84,8 @@ class SeguimientoTareasCotizacionesList extends Component {
                 fecha: t.fecha_inicio_tarea,
                 nombre: t.nombre_tarea,
                 cotizacion: t.cotizacion,
+                cliente_nombre: t.cliente_nombre,
+                icono: 'fas fa-tasks',
                 key: `t-${t.cotizacion}-${t.id}`
             }
         });
@@ -81,6 +95,8 @@ class SeguimientoTareasCotizacionesList extends Component {
                 fecha: c.fecha_entrega_pactada_cotizacion,
                 nombre: c.descripcion_cotizacion,
                 cotizacion: c.id,
+                cliente_nombre: c.cliente_nombre,
+                icono: 'fas fa-money-bill-alt',
                 key: `c-${c.id}`
             }
         });
@@ -99,6 +115,8 @@ class SeguimientoTareasCotizacionesList extends Component {
                                         key={t.key}
                                         fecha={t.fecha}
                                         nombre={t.nombre}
+                                        icono={t.icono}
+                                        cliente_nombre={t.cliente_nombre}
                                         link_to={`/app/proyectos/cotizaciones/cotizaciones/detail/${t.cotizacion}`}
                                     />
                                 )

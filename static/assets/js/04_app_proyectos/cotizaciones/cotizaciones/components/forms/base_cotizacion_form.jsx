@@ -95,6 +95,9 @@ const FormBaseCotizacion = (props) => {
                             data={[
                                 'Pendiente',
                                 'En Proceso',
+                                'Para Revisar',
+                                'Revisado - OK',
+                                'Revisado - No Aprobado',
                                 'Enviado',
                                 'Seguimiento - 1. Cliente Interesado',
                                 'Seguimiento - 2. Esperando Aprobación Presupuesto',
@@ -103,6 +106,7 @@ const FormBaseCotizacion = (props) => {
                                 'Seguimiento - 5. Esperando Orden Compra',
                                 'Aprobado',
                                 'Aplazado',
+                                'Cancelado',
                                 'Perdido',
                             ]}
                         />
