@@ -118,6 +118,7 @@ class Form extends Component {
                     }
                 </div>
                 <BotoneriaModalForm
+                    conCerrar={false}
                     onCancel={onCancel}
                     pristine={pristine}
                     reset={reset}

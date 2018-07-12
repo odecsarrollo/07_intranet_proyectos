@@ -116,6 +116,14 @@ class Tabla extends React.Component {
                                     filterable: true,
                                     filterMethod: (filter, row) => {
                                         return row[filter.id].includes(filter.value.toUpperCase())
+                                    },
+                                    Cell: row => {
+                                        return (
+                                            <div style={{
+                                                fontSize: '0.6rem',
+                                                whiteSpace: 'normal'
+                                            }}>{row.value}</div>
+                                        )
                                     }
                                 },
                                 {
@@ -141,7 +149,7 @@ class Tabla extends React.Component {
                                 {
                                     Header: "Descripción",
                                     accessor: "descripcion_cotizacion",
-                                    minWidth: 400,
+                                    maxWidth: 350,
                                     filterable: true,
                                     filterMethod: (filter, row) => {
                                         return row[filter.id].includes(filter.value.toUpperCase())
@@ -162,7 +170,10 @@ class Tabla extends React.Component {
                                             style = {color: 'green'};
                                         }
                                         return (
-                                            <div style={{fontSize: '0.6rem'}}>
+                                            <div style={{
+                                                fontSize: '0.6rem',
+                                                whiteSpace: 'normal'
+                                            }}>
                                                 {
                                                     icono ?
                                                         <Fragment>
@@ -177,7 +188,7 @@ class Tabla extends React.Component {
                                 {
                                     Header: "Estado",
                                     accessor: "estado",
-                                    maxWidth: 350,
+                                    maxWidth: 200,
                                     filterable: true,
                                     filterMethod: (filter, row) => {
                                         return row[filter.id].toUpperCase().includes(filter.value.toUpperCase())
@@ -208,7 +219,11 @@ class Tabla extends React.Component {
                                             backgroundColor = 'red';
                                         }
                                         return (
-                                            <div style={{backgroundColor, color}} className='pl-2'>{row.value}</div>
+                                            <div style={{
+                                                backgroundColor, color,
+                                                fontSize: '0.6rem',
+                                                whiteSpace: 'normal'
+                                            }} className='pl-2'>{row.value}</div>
                                         )
                                     }
                                 },
@@ -237,17 +252,17 @@ class Tabla extends React.Component {
                                         />
 
                                 },
-                                {
-                                    Header: "Editar",
-                                    show: permisos_object.change,
-                                    maxWidth: 60,
-                                    Cell: row =>
-                                        <IconButtonTableEdit
-                                            onClick={() => {
-                                                onSelectItemEdit(row.original);
-                                            }}/>
-
-                                },
+                                // {
+                                //     Header: "Editar",
+                                //     show: permisos_object.change,
+                                //     maxWidth: 60,
+                                //     Cell: row =>
+                                //         <IconButtonTableEdit
+                                //             onClick={() => {
+                                //                 onSelectItemEdit(row.original);
+                                //             }}/>
+                                //
+                                // },
                                 {
                                     Header: "Ver",
                                     show: permisos_object.detail,

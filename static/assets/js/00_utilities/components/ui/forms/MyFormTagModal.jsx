@@ -12,6 +12,7 @@ export const MyFormTagModal = (props) => {
         onSubmit,
         onCancel,
         modal_open,
+        conCerrar = true,
         element_type,
         modelStyle
     } = props;
@@ -26,6 +27,7 @@ export const MyFormTagModal = (props) => {
                     {props.children}
                 </div>
                 <BotoneriaModalForm
+                    conCerrar={conCerrar}
                     onCancel={onCancel}
                     pristine={pristine}
                     reset={reset}
