@@ -134,6 +134,20 @@ export function callApiMethodWithParameters(url, id, method, parameters, dispatc
     );
 }
 
+export function listRoutePostWithParameters(url, method, parameters, dispatches = null, callback = null, callback_error = null) {
+    console.log(`%cLIST ROUTE POST ${method.toUpperCase()} CON PARMAETROS - %c${url.toUpperCase()}`, 'color:red', 'color:blue');
+    axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+    axios_instance.defaults.xsrfCookieName = "csrftoken";
+    const FULL_URL = `${url}/${method}/`;
+    const request = axios_instance.post(FULL_URL, parameters);
+    createRequest(
+        request,
+        dispatches,
+        callback,
+        callback_error
+    );
+}
+
 export function callApiMethodWithParametersPDF(url, id, method, parameters, dispatches = null, callback = null, callback_error = null) {
     console.log(`%cAPI METODO ${method.toUpperCase()} CON PARMAETROS - %c${url.toUpperCase()} - %cID ${id} PARA PDF`, 'color:red', 'color:blue', 'color:green');
     axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";

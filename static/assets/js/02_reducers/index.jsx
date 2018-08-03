@@ -9,12 +9,13 @@ import usuariosReducer from './generales/usuariosReducer';
 import loadingReducer from './generales/loadingReducer';
 import miCuentaReducer from './generales/miCuentaReducer';
 
-import proyectosReducer from '../02_reducers/especificas/cguno/proyectosReducer';
-import literalesReducer from "./especificas/cguno/literalesReducer";
-import itemsLiteralesReducer from "./especificas/cguno/itemsliteralesReducer";
+import proyectosReducer from './especificas/proyectos/proyectosReducer';
+import itemsListadosMaterialesReducer from './especificas/proyectos/itemsListadosMateriales';
+import literalesReducer from "./especificas/proyectos/literalesReducer";
+import itemsLiteralesReducer from "./especificas/proyectos/itemsliteralesReducer";
 import colaboradoresReducer from "./especificas/cguno/colaboradoresReducer";
 import centrosCostosColaboradoresReducer from "./especificas/cguno/centrosCostosColaboradoresReducer";
-import itemsCgunoReducer from "./especificas/cguno/itemsBiableReducer";
+import itemsCgunoReducer from "./especificas/proyectos/itemsBiableReducer";
 
 import colaboradoresCostosMesesReducer from "./especificas/cguno/colaboradoresCostosMesesReducer";
 import hojasTrabajosDiariosReducer from "./especificas/mano_obra/hojaTrabajoDiarioReducer";
@@ -55,6 +56,7 @@ const rootReducer = combineReducers({
     cotizaciones: cotizacionesReducer,
     cotizaciones_seguimientos: cotizacionesSeguimientosReducer,
     configuracion_costos: configuracionCostos,
+    items_listados_materiales: itemsListadosMaterialesReducer,
 });
 
 export default rootReducer;

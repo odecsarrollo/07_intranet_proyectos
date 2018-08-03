@@ -27,6 +27,16 @@ export function fetchItemsBiablexParametro(tipo_consulta, parametro, callback = 
     }
 }
 
+export function fetchItemsBiablexCodigos(codigos, callback = null, callback_error = null) {
+    return function (dispatch) {
+        const FULL_URL = `${current_url_api}/consultar_arreglo_codigos/?codigos=${codigos}`;
+        const dispatches = (response) => {
+            dispatch({type: FETCH_ITEMS_BIABLE, payload: response})
+        };
+        fetchListWithParameter(FULL_URL, dispatches, callback, callback_error);
+    }
+}
+
 export function fetchItemBiable(id, callback = null, callback_error = null) {
     return function (dispatch) {
         const dispatches = (response) => {

@@ -126,3 +126,12 @@ export const CONFIGURACION_COSTO_TYPES = {
     clear: 'clear_configuraciones_costos',
     update: 'update_configuracion_costo',
 };
+
+export const ITEM_LISTADO_MATERIAL_TYPES = {
+    create: 'create_item_listado_material',
+    delete: 'delete_item_listado_material',
+    fetch_all: 'fetch_items_listados_materiales',
+    fetch: 'fetch_item_listado_material',
+    clear: 'clear_items_listados_materiales',
+    update: 'update_item_listado_material',
+};

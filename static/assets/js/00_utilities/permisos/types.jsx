@@ -143,3 +143,11 @@ export const CONFIGURACIONES_COSTOS = {
     list: 'list_configuracioncosto',
     detail: 'detail_configuracioncosto',
 };
+
+export const ITEMS_LISTADOS_MATERIALES = {
+    add: 'add_itemliteraldiseno',
+    delete: 'delete_itemliteraldiseno',
+    change: 'change_itemliteraldiseno',
+    list: 'list_itemliteraldiseno',
+    detail: 'detail_itemliteraldiseno',
+};

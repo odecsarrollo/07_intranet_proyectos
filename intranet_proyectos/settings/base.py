@@ -60,6 +60,7 @@ MY_APPS = [
     'clientes.apps.ClientesConfig',
     'cotizaciones.apps.CotizacionesConfig',
     'configuraciones.apps.ConfiguracionesConfig',
+    'listados_materiales.apps.ListadosMaterialesConfig',
 ]
 
 THIRD_PART_APPS = [

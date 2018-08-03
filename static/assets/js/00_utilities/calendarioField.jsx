@@ -14,7 +14,7 @@ const CalendarField = (props) => {
     const {className, nombre, onChange, value, max, min} = props;
     return (
         <div className={className}>
-            <label>{nombre}</label>
+            {nombre && <label>{nombre}</label>}
             <DateTimePicker
                 onChange={onChange}
                 format="YYYY-MM-DD"
@@ -28,8 +28,6 @@ const CalendarField = (props) => {
 };
 
 CalendarField.propTypes = {
-    nombre: PropTypes.string,
-    className: PropTypes.string,
     onChange: PropTypes.func
 };
 

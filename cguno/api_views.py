@@ -1,3 +1,5 @@
+import json
+
 from intranet_proyectos.utils_queryset import query_varios_campos
 from rest_framework import viewsets
 from rest_framework.decorators import list_route, detail_route
@@ -139,6 +141,13 @@ class ItemBiableViewSet(viewsets.ModelViewSet):
 
         if search_fields:
             qs = query_varios_campos(self.queryset, search_fields, parametro)
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)
+
+    @list_route(http_method_names=['get', ])
+    def consultar_arreglo_codigos(self, request):
+        codigos = request.GET.get('codigos')
+        qs = self.queryset.filter(id_item__in=json.loads(codigos))
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 

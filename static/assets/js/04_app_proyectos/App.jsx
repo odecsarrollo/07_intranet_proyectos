@@ -16,18 +16,25 @@ import HorasTrabajoColaboradorInicialesList from './mano_obra/horas_trabajo_inic
 import CotizacionesList from './cotizaciones/cotizaciones/containers/cotizaciones_list_container';
 import CotizacionesDetail from './cotizaciones/cotizaciones/containers/cotizacion_detail';
 
-import ProyectosCGUnoList from "./cguno/proyectos/proyectos/containers/proyectos_list_container";
-import ProyectosCGUnoDetail from "./cguno/proyectos/proyectos/containers/proyectos_detail";
+import ProyectosCGUnoList from "./proyectos/proyectos/containers/proyectos_list_container";
+import ProyectosCGUnoDetail from "./proyectos/proyectos/containers/proyectos_detail";
 
 
-import ReporteCosto from "./cguno/proyectos/reportes/reporte_1/containers/reporte_1";
-import ReporteDos from "./cguno/proyectos/reportes/reporte_2/containers/reporte_2";
-import ReporteTres from "./cguno/proyectos/reportes/reporte_3/containers/reporte_3";
+import ReporteCosto from "./proyectos/reportes/reporte_1/containers/reporte_1";
+import ReporteDos from "./proyectos/reportes/reporte_2/containers/reporte_2";
+import ReporteTres from "./proyectos/reportes/reporte_3/containers/reporte_3";
+
+
+//import CargueMateriales from "./proyectos/listado_materiales/containers/cargue_materiales";
 
 import LiteralesSinSincronizar
-    from "./cguno/proyectos/literales_sin_sincronizar/containers/literales_sin_sincronizar_list_container";
+    from "./proyectos/literales_sin_sincronizar/containers/literales_sin_sincronizar_list_container";
 import ClientesList from "../03_app_admin/especificas/clientes/clientes/containers/clientes_container";
 import ClienteDetail from "../03_app_admin/especificas/clientes/clientes/containers/cliente_detail";
+
+
+import PlaneadorMateriaPrima
+    from "../04_app_proyectos/proyectos/listado_materiales/containers/planeador_listado_materiales";
 
 const App = (props) => {
     return (
@@ -66,6 +73,10 @@ const App = (props) => {
                         <Route exact path='/app/proyectos/proyectos/reporte_costos' component={ReporteCosto}/>
                         <Route exact path='/app/proyectos/proyectos/reporte_dos' component={ReporteDos}/>
                         <Route exact path='/app/proyectos/proyectos/reporte_tres' component={ReporteTres}/>
+
+
+                        <Route path='/app/proyectos/listado_materiales/planeador_materiales/:id'
+                               component={PlaneadorMateriaPrima}/>
                     </Switch>
                 </div>
             </Fragment>
