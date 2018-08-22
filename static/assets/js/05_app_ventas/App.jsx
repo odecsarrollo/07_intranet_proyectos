@@ -6,6 +6,7 @@ import Menu from './00_menu/index';
 import AppIndex from './index';
 import CotizacionesList from './cotizaciones/cotizaciones/containers/cotizaciones_list_container';
 import CotizacionesDetail from './cotizaciones/tuberia_ventas/containers/cotizacion_detail';
+import InformeTunelVentas from './informes/cuadro_tuberia_ventas';
 
 const App = (props) => {
     return (
@@ -19,6 +20,8 @@ const App = (props) => {
                                component={CotizacionesList}/>
                         <Route exact path='/app/ventas/cotizaciones/cotizaciones/detail/:id'
                                component={CotizacionesDetail}/>
+                        <Route exact path='/app/ventas/informes/cuadro_tuberia_ventas'
+                               component={InformeTunelVentas}/>
                     </Switch>
                 </div>
             </Fragment>

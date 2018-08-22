@@ -19,6 +19,9 @@ const Menu = () => {
                         <Link to='/app/ventas/cotizaciones/cotizaciones/list'>
                             <FontIcon className="fas fa-book" style={iconStyles}/>
                         </Link>
+                        <Link to='/app/ventas/informes/cuadro_tuberia_ventas'>
+                            <FontIcon className="fas fa-file" style={iconStyles}/>
+                        </Link>
                     </Fragment>
                 )
             }}
