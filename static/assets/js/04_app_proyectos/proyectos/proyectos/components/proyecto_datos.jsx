@@ -61,7 +61,7 @@ const InfoProyecto = (props) => {
                                         <Fragment key={e.cotizacion}>
                                             {cotizaciones_permisos.detail ?
                                                 <span>[<Link
-                                                    to={`/app/proyectos/cotizaciones/cotizaciones/detail/${e.cotizacion}`}>
+                                                    to={`/app/ventas/cotizaciones/cotizaciones/detail/${e.cotizacion}`}>
                                                 {e.cotizacion_nro}
                                             </Link>({e.tipo})] </span> :
                                                 <span>[{e.cotizacion_nro}({e.tipo})] </span>

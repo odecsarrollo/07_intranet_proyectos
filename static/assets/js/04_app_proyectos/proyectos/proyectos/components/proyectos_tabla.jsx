@@ -84,7 +84,7 @@ class Tabla extends React.Component {
                                         return (
                                             permisos_cotizaciones.detail ?
                                                 <Link
-                                                    to={`/app/proyectos/cotizaciones/cotizaciones/detail/${row.original.cotizacion}`}>
+                                                    to={`/app/ventas/cotizaciones/cotizaciones/detail/${row.original.cotizacion}`}>
                                                     <span>{row.value}</span>
                                                 </Link> :
                                                 <span>{row.value}</span>

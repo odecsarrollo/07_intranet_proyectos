@@ -123,7 +123,7 @@ class LiteralDetail extends Component {
                                     <div className="col-12 col-md-6">
                                         <h6 className='h6-response'>Cotización: <small>
                                             <Link
-                                                to={`/app/proyectos/cotizaciones/cotizaciones/detail/${literal.cotizacion}`}>
+                                                to={`/app/ventas/cotizaciones/cotizaciones/detail/${literal.cotizacion}`}>
                                                 {literal.cotizacion_nro}
                                             </Link>
                                         </small>
