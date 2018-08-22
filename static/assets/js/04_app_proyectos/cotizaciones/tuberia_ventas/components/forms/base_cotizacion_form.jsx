@@ -9,7 +9,6 @@ import {
 const FormBaseCotizacion = (props) => {
     const {
         item,
-        esta_aprobado,
         clientes_list,
         cargarContactosCliente,
         contactos_list,
@@ -23,6 +22,7 @@ const FormBaseCotizacion = (props) => {
         || estado === 'Aplazado'
         || estado === 'Cancelado'
     );
+    const esta_aprobado = estado === 'Cierre (Aprobado)';
     const en_proceso = estado && estado !== 'Cita/Generación Interés' && estado !== 'Aplazado' && estado !== 'Perdido' && estado !== 'Cancelado';
     const enviado = en_proceso && estado !== 'Configurando Propuesta';
     const pedir_dias_espera_cambio_estado = (
@@ -33,36 +33,40 @@ const FormBaseCotizacion = (props) => {
     );
     return (
         <Fragment>
-            <MyCombobox
-                className="col-12 col-md-6"
-                name='cliente'
-                data={_.map(_.orderBy(clientes_list, ['nombre'], ['asc']), e => {
-                    return {
-                        'name': e.nombre,
-                        'id': e.id
+            <div className="col-12">
+                <div className="row">
+                    <MyCombobox
+                        className="col-12 col-md-6"
+                        name='cliente'
+                        data={_.map(_.orderBy(clientes_list, ['nombre'], ['asc']), e => {
+                            return {
+                                'name': e.nombre,
+                                'id': e.id
+                            }
+                        })}
+                        textField='name'
+                        valuesField='id'
+                        placeholder='Cliente'
+                        onSelect={(v) => cargarContactosCliente(v.id)}
+                    />
+                    {
+                        myValues && myValues.cliente &&
+                        <MyCombobox
+                            className="col-12 col-md-6"
+                            name='contacto_cliente'
+                            data={_.map(_.orderBy(contactos_list, ['full_nombre'], ['asc']), e => {
+                                return {
+                                    'name': e.full_nombre,
+                                    'id': e.id
+                                }
+                            })}
+                            textField='name'
+                            valuesField='id'
+                            placeholder='Contacto'
+                        />
                     }
-                })}
-                textField='name'
-                valuesField='id'
-                placeholder='Cliente'
-                onSelect={(v) => cargarContactosCliente(v.id)}
-            />
-            {
-                myValues && myValues.cliente &&
-                <MyCombobox
-                    className="col-12 col-md-6"
-                    name='contacto_cliente'
-                    data={_.map(_.orderBy(contactos_list, ['full_nombre'], ['asc']), e => {
-                        return {
-                            'name': e.full_nombre,
-                            'id': e.id
-                        }
-                    })}
-                    textField='name'
-                    valuesField='id'
-                    placeholder='Contacto'
-                />
-            }
+                </div>
+            </div>
             <MyTextFieldSimple
                 className="col-12 col-md-2"
                 nombre='Uni. Negocio'
@@ -81,7 +85,18 @@ const FormBaseCotizacion = (props) => {
                     name='contacto'
                     case='U'/>
             }
-
+            <MyDropdownList
+                className='col-12 col-md-8'
+                name='origen_cotizacion'
+                label='Origen Cotización'
+                data={[
+                    'Comercial',
+                    'Mercadeo',
+                    'Gerencia',
+                    'Componentes',
+                    'Técnico',
+                ]}
+            />
             <MyTextFieldSimple
                 className="col-12"
                 nombre='Observación'
@@ -109,12 +124,10 @@ const FormBaseCotizacion = (props) => {
                 <Fragment>
                     <div className="col-12">
                         <div className="row mb-4">
-                            <div className="col-12">
-                                <label>Estado</label>
-                            </div>
                             <MyDropdownList
                                 className='col-12 col-md-8'
                                 name='estado'
+                                label='Estado'
                                 data={[
                                     'Cita/Generación Interés',
                                     'Configurando Propuesta',

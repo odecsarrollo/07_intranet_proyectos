@@ -1,3 +1,5 @@
+from django.utils import timezone
+
 from rest_framework import serializers
 
 from .models import Cotizacion, SeguimientoCotizacion
@@ -28,6 +30,35 @@ class CotizacionSerializer(serializers.ModelSerializer):
         allow_null=True,
         required=False
     )
+    color_tuberia_ventas = serializers.SerializerMethodField()
+    porcentaje_tuberia_ventas = serializers.SerializerMethodField()
+
+    def get_porcentaje_tuberia_ventas(self, obj):
+        fecha_ini = obj.fecha_cambio_estado
+        if fecha_ini and obj.dias_espera_cambio_estado:
+            fecha_act = timezone.datetime.now().date()
+            delta = (fecha_act - fecha_ini).days
+            porcentaje = delta / obj.dias_espera_cambio_estado
+            return round(porcentaje, 2) * 100
+        else:
+            return 0
+
+    def get_color_tuberia_ventas(self, obj):
+        fecha_ini = obj.fecha_cambio_estado
+        fecha_act = timezone.datetime.now().date()
+        if fecha_ini and obj.dias_espera_cambio_estado:
+            delta = (fecha_act - fecha_ini).days
+            porcentaje = delta / obj.dias_espera_cambio_estado
+            if porcentaje >= 0.9:
+                return 'tomato'
+            elif porcentaje > 0.66:
+                return 'yellow'
+            elif porcentaje > 0.33:
+                return 'lightgreen'
+            else:
+                return 'lightblue'
+        if not obj.fecha_cambio_estado:
+            return None
 
     class Meta:
         model = Cotizacion
@@ -35,6 +66,7 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'url',
             'id',
             'responsable',
+            'origen_cotizacion',
             'responsable_actual',
             'nro_cotizacion',
             'unidad_negocio',
@@ -45,6 +77,8 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'contacto_cliente_nombre',
             'contacto',
             'estado',
+            'estado_observacion_adicional',
+            'dias_espera_cambio_estado',
             'observacion',
             'valor_ofertado',
             'valor_orden_compra',
@@ -62,12 +96,17 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'fecha_entrega_pactada_cotizacion',
             'crear_literal',
             'crear_literal_id_proyecto',
+            'color_tuberia_ventas',
+            'porcentaje_tuberia_ventas',
         ]
         extra_kwargs = {
             'mi_proyecto': {'read_only': True},
             'mi_literal': {'read_only': True},
             'responsable_actual': {'read_only': True},
             'contacto': {'allow_null': True},
+            'origen_cotizacion': {'allow_null': True},
+            'estado_observacion_adicional': {'allow_null': True},
+            'dias_espera_cambio_estado': {'allow_null': True},
         }
 
 

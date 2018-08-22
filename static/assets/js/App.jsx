@@ -38,6 +38,7 @@ function configureStore() {
 import AppIndex from './IndexApp';
 import AppAdmin from './03_app_admin/App';
 import AppProyectos from './04_app_proyectos/App';
+import AppVentas from './05_app_ventas/App';
 
 const App = () => {
     return (
@@ -51,6 +52,7 @@ const App = () => {
                             <Route exact path='/app' component={AppIndex}/>
                             <Route path='/app/admin' component={AppAdmin}/>
                             <Route path='/app/proyectos' component={AppProyectos}/>
+                            <Route path='/app/ventas' component={AppVentas}/>
                         </Switch>
                     </Fragment>
                 </BrowserRouter>

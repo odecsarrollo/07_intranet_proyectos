@@ -15,7 +15,6 @@ class Cotizacion(TimeStampedModel):
     contacto_cliente = models.ForeignKey(ContactoCliente, null=True, blank=True, related_name='mis_contizaciones',
                                          on_delete=models.PROTECT)
     contacto = models.CharField(max_length=400, null=True, blank=True)
-    estado = models.CharField(max_length=200, null=True, blank=True)
     observacion = models.TextField(null=True, blank=True)
     valor_ofertado = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
     valor_orden_compra = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
@@ -28,6 +27,12 @@ class Cotizacion(TimeStampedModel):
     abrir_carpeta = models.BooleanField(default=False)
     crear_literal = models.BooleanField(default=False)
     crear_literal_id_proyecto = models.CharField(max_length=10, null=True, blank=True)
+
+    estado = models.CharField(max_length=200, null=True, blank=True)
+    origen_cotizacion = models.CharField(max_length=100, null=True, blank=True)
+    estado_observacion_adicional = models.CharField(max_length=400, null=True, blank=True)
+    fecha_cambio_estado = models.DateField(null=True, blank=True)
+    dias_espera_cambio_estado = models.PositiveIntegerField(null=True, blank=True)
 
     @property
     def responsable_actual(self):

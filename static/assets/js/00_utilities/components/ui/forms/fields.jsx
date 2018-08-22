@@ -73,16 +73,22 @@ const renderDropdownList = ({input, data, valueField, textField, placeholder, on
 
 
 export const MyDropdownList = (props) => {
-    const {busy = false, textField = 'name', valuesField = 'id'} = props;
+    const {busy = false, textField = 'name', valuesField = 'id', className, label = null} = props;
     return (
-        <Field
-            {...props}
-            component={renderDropdownList}
-            valueField={valuesField}
-            textField={textField}
-            busy={busy}
-            dropUp
-        />
+        <div className={`${className}`}>
+            {
+                label &&
+                <label>{label}</label>
+            }
+            <Field
+                {...props}
+                component={renderDropdownList}
+                valueField={valuesField}
+                textField={textField}
+                busy={busy}
+                dropUp
+            />
+        </div>
     )
 };
 const renderCombobox = ({input, data, valueField, textField, placeholder, onSelect, meta: {touched, error, warning}}) => {

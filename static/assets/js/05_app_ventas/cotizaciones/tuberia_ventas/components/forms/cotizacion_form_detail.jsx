@@ -81,11 +81,6 @@ class Form extends Component {
             contactos_list,
             myValues
         } = this.props;
-        const {estado} = myValues;
-        const en_proceso = estado && estado !== 'Cita/Generación Interés' && estado !== 'Aplazado' && estado !== 'Perdido' && estado !== 'Cancelado';
-        const esta_aprobado = estado === 'Cierre (Aprobado)';
-        //const en_revision = estado === 'Para Revisar' || estado === 'Revisado - OK' || estado === 'Revisado - No Aprobado';
-        const enviado = 'Cotización Enviada';
         return (
             <form className="card" onSubmit={handleSubmit(onSubmit)}>
                 <div className="row pl-3 pr-5">
@@ -95,9 +90,6 @@ class Form extends Component {
                         clientes_list={clientes_list}
                         item={initialValues}
                         myValues={myValues}
-                        en_proceso={en_proceso}
-                        esta_aprobado={esta_aprobado}
-                        enviado={enviado}
                     />
                     {
                         _.size(usuarios_list) > 0 &&

@@ -21,6 +21,11 @@ class CotizacionViewSet(viewsets.ModelViewSet):
     def perform_update(self, serializer):
         old_obj = self.get_object()
         editado = serializer.save()
+        guardar_nuevamente = False
+        if old_obj.estado != editado.estado:
+            editado.fecha_cambio_estado = datetime.datetime.now().date()
+            guardar_nuevamente = True
+
         if editado.estado != old_obj.estado:
             SeguimientoCotizacion.objects.create(
                 cotizacion=editado,
@@ -28,6 +33,7 @@ class CotizacionViewSet(viewsets.ModelViewSet):
                 creado_por=self.request.user,
                 estado=editado.estado
             )
+
         if editado.abrir_carpeta != old_obj.abrir_carpeta:
             if editado.abrir_carpeta == True:
                 estado = 'Solicitó Abrir Carpeta'
@@ -39,9 +45,9 @@ class CotizacionViewSet(viewsets.ModelViewSet):
                 creado_por=self.request.user,
                 estado=estado
             )
-            editado.save()
+            guardar_nuevamente = True
 
-        if editado.estado not in ['Aplazado', 'Perdido', 'Pendiente']:
+        if editado.estado not in ['Aplazado', 'Cancelado', 'Cita/Generación Interés']:
             if editado.nro_cotizacion is None:
                 now = datetime.datetime.now()
                 base_nro_cotizacion = (abs(int(now.year)) % 100) * 1000
@@ -56,10 +62,16 @@ class CotizacionViewSet(viewsets.ModelViewSet):
                     editado.nro_cotizacion = base_nro_cotizacion
                 else:
                     editado.nro_cotizacion = int(ultimo_indice) + 1
-                editado.save()
+                guardar_nuevamente = True
+        if guardar_nuevamente:
+            editado.save()
 
     def perform_create(self, serializer):
-        editado = serializer.save(estado='Pendiente', created_by=self.request.user)
+        editado = serializer.save(
+            estado='Cita/Generación Interés',
+            created_by=self.request.user,
+            fecha_cambio_estado=datetime.datetime.now().date(),
+        )
         SeguimientoCotizacion.objects.create(
             cotizacion=editado,
             tipo_seguimiento=1,
@@ -85,13 +97,28 @@ class CotizacionViewSet(viewsets.ModelViewSet):
     @list_route(http_method_names=['get', ])
     def listar_cotizaciones_agendadas(self, request):
         qs = self.get_queryset().filter(fecha_entrega_pactada_cotizacion__isnull=False,
-                                        estado__in=['Pendiente', 'En Proceso'])
+                                        estado__in=['Cita/Generación Interés', 'Configurando Propuesta'])
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)
+
+    @list_route(http_method_names=['get', ])
+    def listar_cotizaciones_tuberia_ventas(self, request):
+        qs = self.get_queryset().filter(
+            estado__in=[
+                'Cita/Generación Interés',
+                'Configurando Propuesta',
+                'Cotización Enviada',
+                'Evaluación Técnica y Económica',
+                'Aceptación de Terminos y Condiciones',
+                'Cierre (Aprobado)',
+            ]
+        )
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
 
 class SeguimientoCotizacionViewSet(viewsets.ModelViewSet):
-    queryset = SeguimientoCotizacion.objects.select_related('creado_por','cotizacion__cliente').all()
+    queryset = SeguimientoCotizacion.objects.select_related('creado_por', 'cotizacion__cliente').all()
     serializer_class = SeguimientoCotizacionSerializer
 
     def perform_create(self, serializer):

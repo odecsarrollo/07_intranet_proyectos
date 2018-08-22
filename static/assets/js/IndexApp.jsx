@@ -66,6 +66,11 @@ class IndexApp extends Component {
                         <Boton
                             nombre='Proyectos'
                             link='/app/proyectos/'
+                            icono='fa-wrench'
+                        />
+                        <Boton
+                            nombre='Ventas'
+                            link='/app/ventas/'
                             icono='fa-shopping-cart'
                         />
                         <div className="col-4"></div>
