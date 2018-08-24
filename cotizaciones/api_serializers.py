@@ -39,7 +39,7 @@ class CotizacionSerializer(serializers.ModelSerializer):
             fecha_act = timezone.datetime.now().date()
             delta = (fecha_act - fecha_ini).days
             porcentaje = delta / obj.dias_espera_cambio_estado
-            return round(porcentaje, 2) * 100
+            return round(porcentaje * 100, 2)
         else:
             return 0
 
