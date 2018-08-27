@@ -112,11 +112,11 @@ const FormBaseCotizacion = (props) => {
             />
             {
                 !item &&
-                <MyTextFieldSimple
+                <MyDateTimePickerField
+                    max={new Date(2099, 11, 31)}
+                    name='fecha_limite_segumiento_estado'
+                    nombre='Verificar el...'
                     className="col-12 col-md-4"
-                    nombre='Verificar en...'
-                    name='dias_espera_cambio_estado'
-                    type='number'
                 />
             }
             {
@@ -159,11 +159,11 @@ const FormBaseCotizacion = (props) => {
                             />
                             {
                                 pedir_dias_espera_cambio_estado &&
-                                <MyTextFieldSimple
+                                <MyDateTimePickerField
+                                    max={new Date(2099, 11, 31)}
+                                    name='fecha_limite_segumiento_estado'
+                                    nombre='Verificar el...'
                                     className="col-12 col-md-4"
-                                    nombre='Verificar en...'
-                                    name='dias_espera_cambio_estado'
-                                    type='number'
                                 />
                             }
                         </div>

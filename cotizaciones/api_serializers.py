@@ -30,29 +30,39 @@ class CotizacionSerializer(serializers.ModelSerializer):
         allow_null=True,
         required=False
     )
+    fecha_limite_segumiento_estado = serializers.DateTimeField(
+        format="%Y-%m-%d",
+        input_formats=['%Y-%m-%d', 'iso-8601'],
+        allow_null=True,
+        required=False
+    )
     color_tuberia_ventas = serializers.SerializerMethodField()
     porcentaje_tuberia_ventas = serializers.SerializerMethodField()
 
     def get_porcentaje_tuberia_ventas(self, obj):
         fecha_ini = obj.fecha_cambio_estado
+        fecha_seg = obj.fecha_limite_segumiento_estado
         if obj.estado in ['Cierre (Aprobado)', 'Cancelado', 'Aplazado']:
             return None
-        if fecha_ini and obj.dias_espera_cambio_estado:
+        if fecha_ini and fecha_seg:
             fecha_act = timezone.datetime.now().date()
             delta = (fecha_act - fecha_ini).days
-            porcentaje = delta / obj.dias_espera_cambio_estado
+            dias = (fecha_seg - fecha_ini).days
+            porcentaje = delta / dias
             return round(porcentaje * 100, 2)
         else:
             return None
 
     def get_color_tuberia_ventas(self, obj):
         fecha_ini = obj.fecha_cambio_estado
+        fecha_seg = obj.fecha_limite_segumiento_estado
         fecha_act = timezone.datetime.now().date()
         if obj.estado in ['Cierre (Aprobado)', 'Cancelado', 'Aplazado']:
             return None
-        if fecha_ini and obj.dias_espera_cambio_estado:
+        if fecha_ini and fecha_seg:
             delta = (fecha_act - fecha_ini).days
-            porcentaje = delta / obj.dias_espera_cambio_estado
+            dias = (fecha_seg - fecha_ini).days
+            porcentaje = delta / dias
             if porcentaje >= 0.9:
                 return 'tomato'
             elif porcentaje > 0.66:
@@ -80,7 +90,6 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'contacto',
             'estado',
             'estado_observacion_adicional',
-            'dias_espera_cambio_estado',
             'observacion',
             'valor_ofertado',
             'valor_orden_compra',
@@ -96,6 +105,7 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'orden_compra_fecha',
             'fecha_entrega_pactada',
             'fecha_entrega_pactada_cotizacion',
+            'fecha_limite_segumiento_estado',
             'crear_literal',
             'crear_literal_id_proyecto',
             'color_tuberia_ventas',
@@ -108,7 +118,7 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'contacto': {'allow_null': True},
             'origen_cotizacion': {'allow_null': True},
             'estado_observacion_adicional': {'allow_null': True},
-            'dias_espera_cambio_estado': {'allow_null': True},
+            'fecha_limite_segumiento_estado': {'allow_null': True},
         }
 
 

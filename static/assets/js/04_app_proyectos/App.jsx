@@ -27,8 +27,6 @@ import ReporteTres from "./proyectos/reportes/reporte_3/containers/reporte_3";
 
 import LiteralesSinSincronizar
     from "./proyectos/literales_sin_sincronizar/containers/literales_sin_sincronizar_list_container";
-import ClientesList from "../03_app_admin/especificas/clientes/clientes/containers/clientes_container";
-import ClienteDetail from "../03_app_admin/especificas/clientes/clientes/containers/cliente_detail";
 
 
 import PlaneadorMateriaPrima
@@ -42,9 +40,6 @@ const App = (props) => {
                 <div className="p-3">
                     <Switch>
                         <Route exact path='/app/proyectos/' component={AppIndex}/>
-
-                        <Route exact path='/app/proyectos/clientes/clientes/list' component={ClientesList}/>
-                        <Route exact path='/app/proyectos/clientes/clientes/detail/:id' component={ClienteDetail}/>
 
                         <Route exact path='/app/proyectos/items/list' component={ItemsCGunoList}/>
                         <Route exact path='/app/proyectos/consecutivo/list' component={ConcecutivoProyectosList}/>

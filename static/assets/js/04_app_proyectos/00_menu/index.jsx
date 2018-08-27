@@ -23,9 +23,6 @@ const Menu = () => {
                         {/*<Link to='/app/proyectos/colaboradores/colaboradores/list'>*/}
                         {/*<FontIcon className="fas fa-user" style={iconStyles}/>*/}
                         {/*</Link>*/}
-                        <Link to='/app/proyectos/clientes/clientes/list'>
-                            <FontIcon className="fas fa-user" style={iconStyles}/>
-                        </Link>
                         <Link to='/app/proyectos/proyectos/list'>
                             <FontIcon className="fas fa-wrench" style={iconStyles}/>
                         </Link>

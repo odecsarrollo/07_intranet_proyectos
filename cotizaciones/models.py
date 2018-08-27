@@ -32,7 +32,7 @@ class Cotizacion(TimeStampedModel):
     origen_cotizacion = models.CharField(max_length=100, null=True, blank=True)
     estado_observacion_adicional = models.CharField(max_length=400, null=True, blank=True)
     fecha_cambio_estado = models.DateField(null=True, blank=True)
-    dias_espera_cambio_estado = models.PositiveIntegerField(null=True, blank=True)
+    fecha_limite_segumiento_estado = models.DateField(null=True, blank=True)
 
     @property
     def responsable_actual(self):

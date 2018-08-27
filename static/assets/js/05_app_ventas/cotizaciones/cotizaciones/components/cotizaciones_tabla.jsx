@@ -7,7 +7,7 @@ import {pesosColombianos} from "../../../../00_utilities/common";
 
 class Tabla extends React.Component {
     render() {
-        let data = _.orderBy(this.props.data, ['nro_cotizacion'], ['desc']);
+        let data = _.orderBy(_.pickBy(this.props.data, e => e.estado !== "Cita/Generación Interés"), ['nro_cotizacion'], ['desc']);
         const {
             updateItem,
             singular_name,

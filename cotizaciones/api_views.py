@@ -22,6 +22,7 @@ class CotizacionViewSet(viewsets.ModelViewSet):
         old_obj = self.get_object()
         editado = serializer.save()
         guardar_nuevamente = False
+        editado.fecha_limite_segumiento_estado = editado.fecha_limite_segumiento_estado.date()
         if old_obj.estado != editado.estado:
             editado.fecha_cambio_estado = datetime.datetime.now().date()
             guardar_nuevamente = True
@@ -73,6 +74,7 @@ class CotizacionViewSet(viewsets.ModelViewSet):
             fecha_cambio_estado=datetime.datetime.now().date(),
             responsable=self.request.user,
         )
+        editado.fecha_limite_segumiento_estado = editado.fecha_limite_segumiento_estado.date()
         SeguimientoCotizacion.objects.create(
             cotizacion=editado,
             tipo_seguimiento=1,
