@@ -59,6 +59,15 @@ export const fetchCotizacionesTuberiaVentas = (callback = null, callback_error =
         fetchList(FULL_URL, dispatches, callback, callback_error);
     }
 };
+export const fetchCotizacionesTuberiaVentasResumen = (callback = null, callback_error = null) => {
+    return function (dispatch) {
+        const FULL_URL = `${current_url_api}/cotizaciones_resumen_tuberia_ventas`;
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch_all, payload: response})
+        };
+        fetchList(FULL_URL, dispatches, callback, callback_error);
+    }
+};
 export const fetchCotizacion = (id, callback = null, callback_error = null) => {
     return (dispatch) => {
         const dispatches = (response) => {

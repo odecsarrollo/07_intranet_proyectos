@@ -71,6 +71,7 @@ class CotizacionViewSet(viewsets.ModelViewSet):
             estado='Cita/Generación Interés',
             created_by=self.request.user,
             fecha_cambio_estado=datetime.datetime.now().date(),
+            responsable=self.request.user,
         )
         SeguimientoCotizacion.objects.create(
             cotizacion=editado,
@@ -103,6 +104,22 @@ class CotizacionViewSet(viewsets.ModelViewSet):
 
     @list_route(http_method_names=['get', ])
     def listar_cotizaciones_tuberia_ventas(self, request):
+        qs = self.get_queryset().filter(
+            estado__in=[
+                'Cita/Generación Interés',
+                'Configurando Propuesta',
+                'Cotización Enviada',
+                'Evaluación Técnica y Económica',
+                'Aceptación de Terminos y Condiciones',
+                'Cierre (Aprobado)',
+            ]
+        )
+        qs = qs.filter(responsable=self.request.user)
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)
+
+    @list_route(http_method_names=['get', ])
+    def cotizaciones_resumen_tuberia_ventas(self, request):
         qs = self.get_queryset().filter(
             estado__in=[
                 'Cita/Generación Interés',

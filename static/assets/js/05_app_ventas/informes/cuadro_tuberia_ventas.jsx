@@ -21,7 +21,7 @@ class InformeTunelVentas extends Component {
     cargarDatos() {
         const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
         cargando();
-        const cargarCotizaciones = () => this.props.fetchCotizacionesTuberiaVentas(() => noCargando(), notificarErrorAjaxAction);
+        const cargarCotizaciones = () => this.props.fetchCotizacionesTuberiaVentasResumen(() => noCargando(), notificarErrorAjaxAction);
         this.props.fetchMisPermisos(cargarCotizaciones, notificarErrorAjaxAction)
 
     }
@@ -36,20 +36,13 @@ class InformeTunelVentas extends Component {
             'Cierre (Aprobado)': {id: 6, nombre: 'Cierre (Aprobado)'},
         };
         const cotizaciones = _.map(this.props.object_list, e => {
-            return {...e, orden: orden_estados[e.estado].id}
+            return {...e, orden: orden_estados[e.estado] ? orden_estados[e.estado].id : 0}
         });
         const responsables = _.uniq(_.map(this.props.object_list, e => e.responsable_actual));
         const cotizaciones_por_responsable = _.map(responsables, e => {
             const por_responsable = _.pickBy(cotizaciones, s => s.responsable_actual === e);
             return {responsable: e, cotizaciones: _.countBy(por_responsable, 'orden')}
         });
-        // console.log(_.map(this.props.object_list, e => {
-        //     return {
-        //         responsable_actual: e.responsable_actual,
-        //         estado: e.estado,
-        //         cuenta: 1
-        //     }
-        // }));
         return (
             <Fragment>
                 <div>Informe</div>
@@ -69,6 +62,7 @@ class InformeTunelVentas extends Component {
                             <td>{c.cotizaciones[3]}</td>
                             <td>{c.cotizaciones[4]}</td>
                             <td>{c.cotizaciones[5]}</td>
+                            <td>{c.cotizaciones[6]}</td>
                         </tr>
                     })}
                     </tbody>
