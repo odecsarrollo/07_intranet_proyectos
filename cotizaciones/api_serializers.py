@@ -35,17 +35,21 @@ class CotizacionSerializer(serializers.ModelSerializer):
 
     def get_porcentaje_tuberia_ventas(self, obj):
         fecha_ini = obj.fecha_cambio_estado
+        if obj.estado in ['Cierre (Aprobado)', 'Cancelado', 'Aplazado']:
+            return None
         if fecha_ini and obj.dias_espera_cambio_estado:
             fecha_act = timezone.datetime.now().date()
             delta = (fecha_act - fecha_ini).days
             porcentaje = delta / obj.dias_espera_cambio_estado
             return round(porcentaje * 100, 2)
         else:
-            return 0
+            return None
 
     def get_color_tuberia_ventas(self, obj):
         fecha_ini = obj.fecha_cambio_estado
         fecha_act = timezone.datetime.now().date()
+        if obj.estado in ['Cierre (Aprobado)', 'Cancelado', 'Aplazado']:
+            return None
         if fecha_ini and obj.dias_espera_cambio_estado:
             delta = (fecha_act - fecha_ini).days
             porcentaje = delta / obj.dias_espera_cambio_estado
@@ -53,10 +57,8 @@ class CotizacionSerializer(serializers.ModelSerializer):
                 return 'tomato'
             elif porcentaje > 0.66:
                 return 'yellow'
-            elif porcentaje > 0.33:
-                return 'lightgreen'
             else:
-                return 'lightblue'
+                return 'lightgreen'
         if not obj.fecha_cambio_estado:
             return None
 

@@ -122,9 +122,12 @@ class Tabla extends React.Component {
                                                 }}
                                             >
                                                 {row.value}
-                                                <div className='text-right'>
-                                                    {row.original.porcentaje_tuberia_ventas}%
-                                                </div>
+                                                {
+                                                    row.original.porcentaje_tuberia_ventas &&
+                                                    <div className='text-right'>
+                                                        {row.original.porcentaje_tuberia_ventas}%
+                                                    </div>
+                                                }
                                             </div>
                                         </div>
                                     )
