@@ -1,8 +1,11 @@
-import {REGEX_SOLO_LETRAS, REGEX_SOLO_NUMEROS, REGEX_SOLO_NUMEROS_DINERO} from "../../../../../00_utilities/common";
+import {
+    REGEX_SOLO_LETRAS,
+    REGEX_SOLO_NUMEROS,
+    REGEX_SOLO_NUMEROS_DINERO
+} from "../../../../../00_utilities/common";
 
 const validate = values => {
     const errors = {};
-
     const requiredFields = [
         'cliente',
         'unidad_negocio',
@@ -45,8 +48,6 @@ const validate = values => {
             errors.valor_orden_compra = 'Si esta aprobado, debe colocar el valor de la orden de compra';
         }
     }
-
-    //valor_ofertado
 
     if (values.id_proyecto) {
         const letras = values.id_proyecto.substring(0, 2);

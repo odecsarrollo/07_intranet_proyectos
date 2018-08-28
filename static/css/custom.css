@@ -117,3 +117,6 @@ form .btn {
 .texto-cita.right {
   right: 0px;
 }
+.form-field-error {
+  color: #f00;
+}
