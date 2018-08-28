@@ -13,7 +13,7 @@ const validate = values => {
         'fecha_entrega_pactada',
         'costo_presupuestado',
         'contacto_cliente',
-        'dias_espera_cambio_estado',
+        'fecha_limite_segumiento_estado',
         'estado_observacion_adicional',
     ];
     requiredFields.map(field => {
