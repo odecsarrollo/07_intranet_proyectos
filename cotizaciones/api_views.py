@@ -118,7 +118,8 @@ class CotizacionViewSet(viewsets.ModelViewSet):
                 'Cierre (Aprobado)',
             ]
         )
-        qs = qs.filter(responsable=self.request.user)
+        if not self.request.user.has_perm('cotizaciones.list_all_cotizaciones_activas'):
+            qs = qs.filter(responsable=self.request.user)
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 

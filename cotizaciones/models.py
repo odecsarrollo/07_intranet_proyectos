@@ -49,6 +49,7 @@ class Cotizacion(TimeStampedModel):
             ['detail_cotizacion', 'Puede ver detalle cotizacion'],
             ['gestionar_cotizacion', 'Puede gestionar cotizacion'],
             ['list_all_cotizacion', 'Puede listar todas las cotizaciones'],
+            ['list_all_cotizaciones_activas', 'Puede listar todas las cotizaciones activas'],
         ]
 
 
