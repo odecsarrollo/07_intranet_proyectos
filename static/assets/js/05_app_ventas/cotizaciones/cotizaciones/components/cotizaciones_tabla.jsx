@@ -159,7 +159,13 @@ class Tabla extends React.Component {
                                     Header: "$ Oferta",
                                     accessor: "valor_ofertado",
                                     maxWidth: 100,
-                                    Cell: row => <div className='text-right'>{pesosColombianos(row.value)}</div>
+                                    Cell: row => <div className='text-right'>
+                                        {
+                                            row.original.valor_orden_compra ?
+                                                pesosColombianos(row.original.valor_orden_compra) :
+                                                pesosColombianos(row.value)
+                                        }
+                                    </div>
                                 },
                             ]
                         },

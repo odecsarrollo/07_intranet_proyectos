@@ -34,15 +34,6 @@ class Cotizacion(TimeStampedModel):
     fecha_cambio_estado = models.DateField(null=True, blank=True)
     fecha_limite_segumiento_estado = models.DateField(null=True, blank=True)
 
-    @property
-    def responsable_actual(self):
-        if self.responsable:
-            return self.responsable.username
-        elif self.created_by:
-            return self.created_by.username
-        else:
-            return None
-
     class Meta:
         permissions = [
             ['list_cotizacion', 'Puede listar cotizaciones'],

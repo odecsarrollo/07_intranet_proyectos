@@ -36,21 +36,32 @@ class InformeTunelVentas extends Component {
             'Aceptación de Terminos y Condiciones': {id: 5, nombre: 'Aceptación de Terminos y Condiciones'},
             'Cierre (Aprobado)': {id: 6, nombre: 'Cierre (Aprobado)'},
         };
-        //console.log(this.props.object_list)
         const cotizaciones = _.map(this.props.object_list, e => {
             return {...e, orden: orden_estados[e.estado] ? orden_estados[e.estado].id : 0}
         });
-        const responsables = _.uniq(_.map(this.props.object_list, e => e.responsable_actual));
-        // const cotizaciones_por_responsable = _.map(responsables, e => {
-        //     const por_responsable = _.pickBy(cotizaciones, s => s.responsable_actual === e);
-        //     return {responsable: e, cotizaciones: _.countBy(por_responsable, 'orden')}
-        // });
-
-
+        let cuenta_por_colores = [];
+        _.mapKeys(_.countBy(cotizaciones, 'color_tuberia_ventas'), (v, k) => {
+                cuenta_por_colores = [...cuenta_por_colores, {color: k, cantidad: v}]
+            }
+        );
+        const responsables = _.uniq(_.map(this.props.object_list, e => e.responsable_actual_nombre));
         return (
             <Fragment>
-                <div>Informe</div>
-                <table className='table table-responsive'>
+                <div>Informe de Tuberias de Ventas</div>
+                <div className='p-4'>
+                    <div className='row'>
+                    {
+                        cuenta_por_colores.map(e =>
+                            <div style={{backgroundColor: e.color}}
+                                 className="col-3"
+                                 key={e.color}>
+                                {e.cantidad}
+                            </div>
+                        )
+                    }
+                </div>
+                </div>
+                <table style={{fontSize: '12px'}} className='table table-responsive table-striped'>
                     <thead>
                     <tr>
                         <th>Responsable</th>
@@ -59,9 +70,12 @@ class InformeTunelVentas extends Component {
                     </thead>
                     <tbody>
                     {_.map(responsables, r => {
-                        const cotizaciones_x_responsable = _.pickBy(cotizaciones, c => c.responsable_actual === r);
+                        const cotizaciones_x_responsable = _.pickBy(cotizaciones, c => c.responsable_actual_nombre === r);
                         const orden_tres = _.map(_.pickBy(cotizaciones_x_responsable, e => (e.orden === 3 && e.valor_ofertado > 0)), t => parseFloat(t.valor_ofertado)).reduce((uno, dos) => uno + dos, 0);
-                        return <tr key={r}>
+                        const orden_cuatro = _.map(_.pickBy(cotizaciones_x_responsable, e => (e.orden === 4 && e.valor_ofertado > 0)), t => parseFloat(t.valor_ofertado)).reduce((uno, dos) => uno + dos, 0);
+                        const orden_cinco = _.map(_.pickBy(cotizaciones_x_responsable, e => (e.orden === 5 && e.valor_ofertado > 0)), t => parseFloat(t.valor_ofertado)).reduce((uno, dos) => uno + dos, 0);
+                        const orden_seis = _.map(_.pickBy(cotizaciones_x_responsable, e => (e.orden === 6 && e.valor_orden_compra > 0)), t => parseFloat(t.valor_orden_compra)).reduce((uno, dos) => uno + dos, 0);
+                        return <tr key={r ? r : 'Sin Nombre'}>
                             <td className='text-center'>{r}</td>
                             <td className='text-center'>
                                 <div>
@@ -84,9 +98,31 @@ class InformeTunelVentas extends Component {
                                     {pesosColombianos(orden_tres)}
                                 </div>
                             </td>
-                            <td className='text-center'>{_.size(_.pickBy(cotizaciones_x_responsable, e => e.orden === 4))}</td>
-                            <td className='text-center'>{_.size(_.pickBy(cotizaciones_x_responsable, e => e.orden === 5))}</td>
-                            <td className='text-center'>{_.size(_.pickBy(cotizaciones_x_responsable, e => e.orden === 6))}</td>
+                            <td className='text-center'>
+                                <div>
+                                    {_.size(_.pickBy(cotizaciones_x_responsable, e => e.orden === 4))}
+                                </div>
+                                <div>
+                                    {pesosColombianos(orden_cuatro)}
+                                </div>
+                            </td>
+                            <td className='text-center'>
+                                <div>
+                                    {_.size(_.pickBy(cotizaciones_x_responsable, e => e.orden === 5))}
+                                </div>
+                                <div>
+                                    {pesosColombianos(orden_cinco)}
+                                </div>
+
+                            </td>
+                            <td className='text-center'>
+                                <div>
+                                    {_.size(_.pickBy(cotizaciones_x_responsable, e => e.orden === 6))}
+                                </div>
+                                <div>
+                                    {pesosColombianos(orden_seis)}
+                                </div>
+                            </td>
                         </tr>
                     })}
                     </tbody>

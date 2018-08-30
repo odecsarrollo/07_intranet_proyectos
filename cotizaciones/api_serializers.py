@@ -7,6 +7,8 @@ from .models import Cotizacion, SeguimientoCotizacion
 
 class CotizacionSerializer(serializers.ModelSerializer):
     cliente_nombre = serializers.CharField(source='cliente.nombre', read_only=True)
+    responsable_actual = serializers.CharField(source='responsable.username', read_only=True)
+    responsable_actual_nombre = serializers.CharField(source='responsable.get_full_name', read_only=True)
     contacto_cliente_nombre = serializers.CharField(source='contacto_cliente.full_nombre', read_only=True)
     id_proyecto = serializers.CharField(source='mi_proyecto.id_proyecto', read_only=True)
     mi_literal_id_literal = serializers.CharField(source='mi_literal.id_literal', read_only=True)
@@ -86,6 +88,7 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'responsable',
             'origen_cotizacion',
             'responsable_actual',
+            'responsable_actual_nombre',
             'nro_cotizacion',
             'unidad_negocio',
             'cliente',
