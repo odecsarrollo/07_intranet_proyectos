@@ -2,6 +2,7 @@ import React, {Component, Fragment} from 'react';
 import * as actions from "../../01_actions/01_index";
 import {connect} from "react-redux";
 import CargarDatos from "../../00_utilities/components/system/cargar_datos";
+import {pesosColombianos} from "../../00_utilities/common";
 
 class InformeTunelVentas extends Component {
     constructor(props) {
@@ -35,14 +36,17 @@ class InformeTunelVentas extends Component {
             'Aceptación de Terminos y Condiciones': {id: 5, nombre: 'Aceptación de Terminos y Condiciones'},
             'Cierre (Aprobado)': {id: 6, nombre: 'Cierre (Aprobado)'},
         };
+        //console.log(this.props.object_list)
         const cotizaciones = _.map(this.props.object_list, e => {
             return {...e, orden: orden_estados[e.estado] ? orden_estados[e.estado].id : 0}
         });
         const responsables = _.uniq(_.map(this.props.object_list, e => e.responsable_actual));
-        const cotizaciones_por_responsable = _.map(responsables, e => {
-            const por_responsable = _.pickBy(cotizaciones, s => s.responsable_actual === e);
-            return {responsable: e, cotizaciones: _.countBy(por_responsable, 'orden')}
-        });
+        // const cotizaciones_por_responsable = _.map(responsables, e => {
+        //     const por_responsable = _.pickBy(cotizaciones, s => s.responsable_actual === e);
+        //     return {responsable: e, cotizaciones: _.countBy(por_responsable, 'orden')}
+        // });
+
+
         return (
             <Fragment>
                 <div>Informe</div>
@@ -54,15 +58,35 @@ class InformeTunelVentas extends Component {
                     </tr>
                     </thead>
                     <tbody>
-                    {_.map(cotizaciones_por_responsable, c => {
-                        return <tr key={c.responsable}>
-                            <td>{c.responsable}</td>
-                            <td>{c.cotizaciones[1]}</td>
-                            <td>{c.cotizaciones[2]}</td>
-                            <td>{c.cotizaciones[3]}</td>
-                            <td>{c.cotizaciones[4]}</td>
-                            <td>{c.cotizaciones[5]}</td>
-                            <td>{c.cotizaciones[6]}</td>
+                    {_.map(responsables, r => {
+                        const cotizaciones_x_responsable = _.pickBy(cotizaciones, c => c.responsable_actual === r);
+                        const orden_tres = _.map(_.pickBy(cotizaciones_x_responsable, e => (e.orden === 3 && e.valor_ofertado > 0)), t => parseFloat(t.valor_ofertado)).reduce((uno, dos) => uno + dos, 0);
+                        return <tr key={r}>
+                            <td className='text-center'>{r}</td>
+                            <td className='text-center'>
+                                <div>
+                                    {_.size(_.pickBy(cotizaciones_x_responsable, e => e.orden === 1))}
+                                </div>
+                            </td>
+                            <td className='text-center'>
+                                <div>
+                                    {_.size(_.pickBy(cotizaciones_x_responsable, e => e.orden === 2))}
+                                </div>
+                                <div>
+
+                                </div>
+                            </td>
+                            <td className='text-center'>
+                                <div>
+                                    {_.size(_.pickBy(cotizaciones_x_responsable, e => e.orden === 3))}
+                                </div>
+                                <div>
+                                    {pesosColombianos(orden_tres)}
+                                </div>
+                            </td>
+                            <td className='text-center'>{_.size(_.pickBy(cotizaciones_x_responsable, e => e.orden === 4))}</td>
+                            <td className='text-center'>{_.size(_.pickBy(cotizaciones_x_responsable, e => e.orden === 5))}</td>
+                            <td className='text-center'>{_.size(_.pickBy(cotizaciones_x_responsable, e => e.orden === 6))}</td>
                         </tr>
                     })}
                     </tbody>

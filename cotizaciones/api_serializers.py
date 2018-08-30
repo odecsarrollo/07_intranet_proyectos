@@ -48,7 +48,10 @@ class CotizacionSerializer(serializers.ModelSerializer):
             fecha_act = timezone.datetime.now().date()
             delta = (fecha_act - fecha_ini).days
             dias = (fecha_seg - fecha_ini).days
-            porcentaje = delta / dias
+            if dias == 0:
+                porcentaje = 1
+            else:
+                porcentaje = delta / dias
             return round(porcentaje * 100, 2)
         else:
             return None
@@ -62,7 +65,10 @@ class CotizacionSerializer(serializers.ModelSerializer):
         if fecha_ini and fecha_seg:
             delta = (fecha_act - fecha_ini).days
             dias = (fecha_seg - fecha_ini).days
-            porcentaje = delta / dias
+            if dias == 0:
+                porcentaje = 1
+            else:
+                porcentaje = delta / dias
             if porcentaje >= 0.9:
                 return 'tomato'
             elif porcentaje > 0.66:

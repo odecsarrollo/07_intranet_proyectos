@@ -14,7 +14,8 @@ class CotizacionViewSet(viewsets.ModelViewSet):
         'created_by',
         'cliente',
         'mi_proyecto',
-        'mi_literal'
+        'mi_literal',
+        'contacto_cliente'
     ).all()
     serializer_class = CotizacionSerializer
 
