@@ -3,7 +3,8 @@ import {
     MyTextFieldSimple,
     MyDropdownList,
     MyDateTimePickerField,
-    MyCombobox
+    MyCombobox,
+    MyCheckboxSimple
 } from '../../../../../00_utilities/components/ui/forms/fields';
 
 const FormBaseCotizacion = (props) => {
@@ -14,7 +15,7 @@ const FormBaseCotizacion = (props) => {
         contactos_list,
         myValues
     } = props;
-    const {estado} = myValues;
+    const {estado, subir_anterior} = myValues;
     const comentario_estado = estado && (
         estado === 'Evaluación Técnica y Económinca'
         || estado === 'Aceptación de Terminos y Condiciones'
@@ -31,10 +32,51 @@ const FormBaseCotizacion = (props) => {
         estado !== 'Perdido' &&
         estado !== 'Cancelado'
     );
+    let estados_lista = [
+        'Cita/Generación Interés',
+        'Configurando Propuesta',
+        'Cotización Enviada',
+        'Evaluación Técnica y Económica',
+        'Aceptación de Terminos y Condiciones',
+        'Cierre (Aprobado)',
+        'Aplazado',
+        'Cancelado',
+        //'Perdido',
+    ];
+    if (subir_anterior) {
+        estados_lista = [
+            'Cita/Generación Interés',
+            'Configurando Propuesta',
+            'Cotización Enviada',
+            'Evaluación Técnica y Económica',
+            'Aceptación de Terminos y Condiciones'
+        ];
+    }
     return (
         <Fragment>
             <div className="col-12">
                 <div className="row">
+                    <div className="col-12">
+                        <div className="row">
+                            {
+                                !item &&
+                                <MyCheckboxSimple
+                                    className="col-6 pt-4"
+                                    name='subir_anterior'
+                                    nombre='subir anterior'
+                                />
+                            }
+                            {
+                                subir_anterior &&
+                                <MyTextFieldSimple
+                                    className="col-6"
+                                    nombre='Nro. Cotización'
+                                    name='nro_cotizacion'
+                                    type='number'
+                                />
+                            }
+                        </div>
+                    </div>
                     <MyCombobox
                         className="col-12 col-md-6"
                         name='cliente'
@@ -111,7 +153,7 @@ const FormBaseCotizacion = (props) => {
                 className='col-12 col-md-6 col-lg-4'
             />
             {
-                !item &&
+                !item && !subir_anterior &&
                 <MyDateTimePickerField
                     max={new Date(2099, 11, 31)}
                     name='fecha_limite_segumiento_estado'
@@ -120,7 +162,7 @@ const FormBaseCotizacion = (props) => {
                 />
             }
             {
-                item &&
+                (item || subir_anterior) &&
                 <Fragment>
                     <div className="col-12">
                         <div className="row mb-4">
@@ -128,34 +170,7 @@ const FormBaseCotizacion = (props) => {
                                 className='col-12 col-md-8'
                                 name='estado'
                                 label='Estado'
-                                data={[
-                                    'Cita/Generación Interés',
-                                    'Configurando Propuesta',
-                                    'Cotización Enviada',
-                                    'Evaluación Técnica y Económica',
-                                    'Aceptación de Terminos y Condiciones',
-                                    'Cierre (Aprobado)',
-                                    'Aplazado',
-                                    'Cancelado',
-                                    //'Perdido',
-                                ]}
-                                // data={[
-                                //     'Pendiente',
-                                //     'En Proceso',
-                                //     'Para Revisar',
-                                //     'Revisado - OK',
-                                //     'Revisado - No Aprobado',
-                                //     'Enviado',
-                                //     'Seguimiento - 1. Cliente Interesado',
-                                //     'Seguimiento - 2. Esperando Aprobación Presupuesto',
-                                //     'Seguimiento - 3. En Licitación con Presupuesto Aprobado',
-                                //     'Seguimiento - 4. En Negociación',
-                                //     'Seguimiento - 5. Esperando Orden Compra',
-                                //     'Aprobado',
-                                //     'Aplazado',
-                                //     'Cancelado',
-                                //     'Perdido',
-                                // ]}
+                                data={estados_lista}
                             />
                             {
                                 pedir_dias_espera_cambio_estado &&
