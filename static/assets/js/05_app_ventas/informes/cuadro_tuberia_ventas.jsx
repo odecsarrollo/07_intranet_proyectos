@@ -56,6 +56,16 @@ class InformeTunelVentas extends Component {
         const valores_5 = valorTotal(cotizaciones_x_orden[5]);
         const valores_6 = valorTotal(cotizaciones_x_orden[6]);
 
+        const valores_totales = _.map(this.props.object_list, e => e).reduce((suma, elemento) => {
+            const valor = elemento.orden === 6 ? elemento.valor_orden_compra : elemento.valor_ofertado;
+            return parseFloat(suma) + (valor ? parseFloat(valor) : 0)
+        }, 0);
+
+        const cantidades_totales = _.size(this.props.object_list);
+
+        console.log(valores_totales)
+        console.log(cantidades_totales)
+
         let cuenta_por_colores = [];
         _.mapKeys(_.countBy(cotizaciones, 'color_tuberia_ventas'), (v, k) => {
                 cuenta_por_colores = [...cuenta_por_colores, {color: k, cantidad: v}]
@@ -193,6 +203,12 @@ class InformeTunelVentas extends Component {
                             <div>
                                 {valores_6.cantidad}<br/>
                                 {pesosColombianos(valores_6.total)}
+                            </div>
+                        </td>
+                        <td className='text-center'>
+                            <div>
+                                {cantidades_totales}<br/>
+                                {pesosColombianos(valores_totales)}
                             </div>
                         </td>
                     </tr>
