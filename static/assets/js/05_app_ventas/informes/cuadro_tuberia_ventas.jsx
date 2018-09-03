@@ -39,6 +39,23 @@ class InformeTunelVentas extends Component {
         const cotizaciones = _.map(this.props.object_list, e => {
             return {...e, orden: orden_estados[e.estado] ? orden_estados[e.estado].id : 0}
         });
+
+        const cotizaciones_x_orden = _.groupBy(cotizaciones, 'orden');
+        const valorTotal = (indice) => {
+            const total_valor = _.map(indice, e => e).reduce((suma, elemento) => {
+                const valor = indice === 6 ? elemento.valor_orden_compra : elemento.valor_ofertado;
+                return parseFloat(suma) + (valor ? parseFloat(valor) : 0)
+            }, 0);
+            return {total: total_valor, cantidad: _.size(indice)}
+        };
+
+        const valores_1 = valorTotal(cotizaciones_x_orden[1]);
+        const valores_2 = valorTotal(cotizaciones_x_orden[2]);
+        const valores_3 = valorTotal(cotizaciones_x_orden[3]);
+        const valores_4 = valorTotal(cotizaciones_x_orden[4]);
+        const valores_5 = valorTotal(cotizaciones_x_orden[5]);
+        const valores_6 = valorTotal(cotizaciones_x_orden[6]);
+
         let cuenta_por_colores = [];
         _.mapKeys(_.countBy(cotizaciones, 'color_tuberia_ventas'), (v, k) => {
                 cuenta_por_colores = [...cuenta_por_colores, {color: k, cantidad: v}]
@@ -50,16 +67,16 @@ class InformeTunelVentas extends Component {
                 <div>Informe de Tuberias de Ventas</div>
                 <div className='p-4'>
                     <div className='row'>
-                    {
-                        cuenta_por_colores.map(e =>
-                            <div style={{backgroundColor: e.color}}
-                                 className="col-3"
-                                 key={e.color}>
-                                {e.cantidad}
-                            </div>
-                        )
-                    }
-                </div>
+                        {
+                            cuenta_por_colores.map(e =>
+                                <div style={{backgroundColor: e.color}}
+                                     className="col-3"
+                                     key={e.color}>
+                                    {e.cantidad}
+                                </div>
+                            )
+                        }
+                    </div>
                 </div>
                 <table style={{fontSize: '12px'}} className='table table-responsive table-striped'>
                     <thead>
@@ -127,7 +144,48 @@ class InformeTunelVentas extends Component {
                     })}
                     </tbody>
                     <tfoot>
-
+                    <tr style={{fontWeight: 'bold'}}>
+                        <td className='text-right'>
+                            <div>
+                                Cantidad: <br/>
+                                Valor:
+                            </div>
+                        </td>
+                        <td className='text-center'>
+                            <div>
+                                {valores_1.cantidad}<br/>
+                            </div>
+                        </td>
+                        <td className='text-center'>
+                            <div>
+                                {valores_2.cantidad}<br/>
+                            </div>
+                        </td>
+                        <td className='text-center'>
+                            <div>
+                                {valores_3.cantidad}<br/>
+                                {pesosColombianos(valores_3.total)}
+                            </div>
+                        </td>
+                        <td className='text-center'>
+                            <div>
+                                {valores_4.cantidad}<br/>
+                                {pesosColombianos(valores_4.total)}
+                            </div>
+                        </td>
+                        <td className='text-center'>
+                            <div>
+                                {valores_5.cantidad}<br/>
+                                {pesosColombianos(valores_5.total)}
+                            </div>
+                        </td>
+                        <td className='text-center'>
+                            <div>
+                                {valores_6.cantidad}<br/>
+                                {pesosColombianos(valores_6.total)}
+                            </div>
+                        </td>
+                    </tr>
                     </tfoot>
                 </table>
                 <CargarDatos

@@ -109,15 +109,21 @@ class CotizacionViewSet(viewsets.ModelViewSet):
 
     @list_route(http_method_names=['get', ])
     def listar_cotizaciones_tuberia_ventas(self, request):
+        month = datetime.datetime.now().month
+        year = datetime.datetime.now().year
         qs = self.get_queryset().filter(
-            estado__in=[
+            Q(estado__in=[
                 'Cita/Generación Interés',
                 'Configurando Propuesta',
                 'Cotización Enviada',
                 'Evaluación Técnica y Económica',
                 'Aceptación de Terminos y Condiciones',
-                'Cierre (Aprobado)',
-            ]
+            ]) |
+            (
+                    Q(estado='Cierre (Aprobado)') &
+                    Q(fecha_cambio_estado__year=year) &
+                    Q(fecha_cambio_estado__month=month)
+            )
         )
         if not self.request.user.has_perm('cotizaciones.list_all_cotizaciones_activas'):
             qs = qs.filter(responsable=self.request.user)
@@ -126,15 +132,21 @@ class CotizacionViewSet(viewsets.ModelViewSet):
 
     @list_route(http_method_names=['get', ])
     def cotizaciones_resumen_tuberia_ventas(self, request):
+        month = datetime.datetime.now().month
+        year = datetime.datetime.now().year
         qs = self.get_queryset().filter(
-            estado__in=[
+            Q(estado__in=[
                 'Cita/Generación Interés',
                 'Configurando Propuesta',
                 'Cotización Enviada',
                 'Evaluación Técnica y Económica',
                 'Aceptación de Terminos y Condiciones',
-                'Cierre (Aprobado)',
-            ]
+            ]) |
+            (
+                    Q(estado='Cierre (Aprobado)') &
+                    Q(fecha_cambio_estado__year=year) &
+                    Q(fecha_cambio_estado__month=month)
+            )
         )
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
