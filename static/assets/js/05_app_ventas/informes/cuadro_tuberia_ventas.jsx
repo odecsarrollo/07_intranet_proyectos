@@ -83,6 +83,7 @@ class InformeTunelVentas extends Component {
                     <tr>
                         <th>Responsable</th>
                         {_.map(orden_estados, e => <th key={e.id}>{e.nombre}</th>)}
+                        <th>Total</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -92,6 +93,7 @@ class InformeTunelVentas extends Component {
                         const orden_cuatro = _.map(_.pickBy(cotizaciones_x_responsable, e => (e.orden === 4 && e.valor_ofertado > 0)), t => parseFloat(t.valor_ofertado)).reduce((uno, dos) => uno + dos, 0);
                         const orden_cinco = _.map(_.pickBy(cotizaciones_x_responsable, e => (e.orden === 5 && e.valor_ofertado > 0)), t => parseFloat(t.valor_ofertado)).reduce((uno, dos) => uno + dos, 0);
                         const orden_seis = _.map(_.pickBy(cotizaciones_x_responsable, e => (e.orden === 6 && e.valor_orden_compra > 0)), t => parseFloat(t.valor_orden_compra)).reduce((uno, dos) => uno + dos, 0);
+                        const total_valor = orden_tres + orden_cuatro + orden_cinco + orden_seis;
                         return <tr key={r ? r : 'Sin Nombre'}>
                             <td className='text-center'>{r}</td>
                             <td className='text-center'>
@@ -138,6 +140,14 @@ class InformeTunelVentas extends Component {
                                 </div>
                                 <div>
                                     {pesosColombianos(orden_seis)}
+                                </div>
+                            </td>
+                            <td className='text-center' style={{fontWeight: 'bold'}}>
+                                <div>
+                                    {_.size(cotizaciones_x_responsable)}
+                                </div>
+                                <div>
+                                    {pesosColombianos(total_valor)}
                                 </div>
                             </td>
                         </tr>
