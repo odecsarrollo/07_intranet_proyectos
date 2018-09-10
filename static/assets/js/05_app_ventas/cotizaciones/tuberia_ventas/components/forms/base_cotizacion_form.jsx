@@ -28,7 +28,6 @@ const FormBaseCotizacion = (props) => {
     const enviado = en_proceso && estado !== 'Configurando Propuesta';
     const pedir_dias_espera_cambio_estado = (
         estado !== 'Cierre (Aprobado)' &&
-        estado !== 'Aplazado' &&
         estado !== 'Perdido' &&
         estado !== 'Cancelado'
     );

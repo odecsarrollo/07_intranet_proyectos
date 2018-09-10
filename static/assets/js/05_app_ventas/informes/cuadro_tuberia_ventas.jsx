@@ -62,10 +62,6 @@ class InformeTunelVentas extends Component {
         }, 0);
 
         const cantidades_totales = _.size(this.props.object_list);
-
-        console.log(valores_totales)
-        console.log(cantidades_totales)
-
         let cuenta_por_colores = [];
         _.mapKeys(_.countBy(cotizaciones, 'color_tuberia_ventas'), (v, k) => {
                 cuenta_por_colores = [...cuenta_por_colores, {color: k, cantidad: v}]
