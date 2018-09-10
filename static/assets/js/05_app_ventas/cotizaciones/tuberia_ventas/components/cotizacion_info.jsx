@@ -10,7 +10,7 @@ const CotizacionInfo = (props) => {
                 <strong>Unidad Negocio: </strong> {object.unidad_negocio}
             </div>
             <div className="col-12 col-md-6 col-lg-4">
-                <strong>Cliente: </strong> {object.cliente}
+                <strong>Cliente: </strong> {object.cliente_nombre}
             </div>
             <div className="col-12 col-md-6 col-lg-4">
                 <strong>Contacto: </strong> {object.contacto}

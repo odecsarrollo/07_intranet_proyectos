@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
-import CreateForm from './forms/cotizacion_form';
 import Tabla from './cotizaciones_tabla';
 import crudHOC from '../../../../00_utilities/components/hoc_crud';
 
 
-const CRUD = crudHOC(CreateForm, Tabla);
+const CRUD = crudHOC(null, Tabla);
 
 class List extends Component {
     constructor(props) {
