@@ -2,6 +2,7 @@ export * from './proyectos/proyectosAction';
 export * from './proyectos/itemsListadosMaterialesAction';
 export * from './proyectos/literalesAction';
 export * from './proyectos/itemsliteralesAction';
+export * from './proyectos/fasesAction';
 export * from './cguno/colaboradoresAction';
 export * from './cguno/itemsBiableAction';
 export * from './cguno/centrosCostosColaboradoresActions';

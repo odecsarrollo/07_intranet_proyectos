@@ -10,6 +10,7 @@ import loadingReducer from './generales/loadingReducer';
 import miCuentaReducer from './generales/miCuentaReducer';
 
 import proyectosReducer from './especificas/proyectos/proyectosReducer';
+import fasesReducer from './especificas/proyectos/fasesReducer';
 import itemsListadosMaterialesReducer from './especificas/proyectos/itemsListadosMateriales';
 import literalesReducer from "./especificas/proyectos/literalesReducer";
 import itemsLiteralesReducer from "./especificas/proyectos/itemsliteralesReducer";
@@ -42,6 +43,7 @@ const rootReducer = combineReducers({
     notifications: NotifyReducer,
     form: formReducer,
     proyectos: proyectosReducer,
+    fases: fasesReducer,
     literales: literalesReducer,
     items_literales: itemsLiteralesReducer,
     colaboradores: colaboradoresReducer,

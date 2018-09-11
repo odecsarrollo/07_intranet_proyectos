@@ -17,6 +17,7 @@ import HorasTrabajoColaboradorInicialesList from './mano_obra/horas_trabajo_inic
 import ProyectosCGUnoList from "./proyectos/proyectos/containers/proyectos_list_container";
 import ProyectosCGUnoDetail from "./proyectos/proyectos/containers/proyectos_detail";
 
+import FasesProyectosList from "./proyectos/fases/containers/fases_list_container";
 
 import ReporteCosto from "./proyectos/reportes/reporte_1/containers/reporte_1";
 import ReporteDos from "./proyectos/reportes/reporte_2/containers/reporte_2";
@@ -40,6 +41,8 @@ const App = (props) => {
                 <div className="p-3">
                     <Switch>
                         <Route exact path='/app/proyectos/' component={AppIndex}/>
+                        
+                        <Route exact path='/app/proyectos/fases/list' component={FasesProyectosList}/>
 
                         <Route exact path='/app/proyectos/items/list' component={ItemsCGunoList}/>
                         <Route exact path='/app/proyectos/consecutivo/list' component={ConcecutivoProyectosList}/>

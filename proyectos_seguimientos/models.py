@@ -6,6 +6,12 @@ class Fase(models.Model):
     nombre = models.CharField(max_length=120)
     literales = models.ManyToManyField(Literal, through='FaseLiteral')
 
+    class Meta:
+        permissions = [
+            ("list_fase", "Can see list fases"),
+        ]
+
+
 
 class FaseLiteral(models.Model):
     fase = models.ForeignKey(Fase, on_delete=models.PROTECT)

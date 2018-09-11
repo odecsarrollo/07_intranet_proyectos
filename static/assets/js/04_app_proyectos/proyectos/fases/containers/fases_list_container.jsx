@@ -3,12 +3,12 @@ import {connect} from "react-redux";
 import * as actions from "../../../../01_actions/01_index";
 import CargarDatos from "../../../../00_utilities/components/system/cargar_datos";
 import {
-    COTIZACIONES as permisos_view,
-    PROYECTOS as proyectos_permisos_view,
+    FASES as permisos_view
 } from "../../../../00_utilities/permisos/types";
 import {permisosAdapter} from "../../../../00_utilities/common";
 
-import ListCrud from '../components/tuberia_ventas_list';
+import ListCrud from '../components/fases_list';
+
 
 class List extends Component {
     constructor(props) {
@@ -21,27 +21,25 @@ class List extends Component {
     }
 
     componentWillUnmount() {
-        this.props.clearCotizaciones();
+        this.props.clearFases();
     }
 
     cargarDatos() {
         const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
         cargando();
-        const cargarCotizaciones = () => this.props.fetchCotizacionesTuberiaVentas(() => noCargando(), notificarErrorAjaxAction);
-        this.props.fetchMisPermisos(cargarCotizaciones, notificarErrorAjaxAction)
+        const cargarFases = () => this.props.fetchFases(() => noCargando(), notificarErrorAjaxAction);
+        this.props.fetchMisPermisos(cargarFases, notificarErrorAjaxAction)
 
     }
 
     render() {
         const {object_list, mis_permisos} = this.props;
-        const cotizaciones_permisos = permisosAdapter(mis_permisos, permisos_view);
-        const proyectos_permisos = permisosAdapter(mis_permisos, proyectos_permisos_view);
+        const bloque_1_permisos = permisosAdapter(mis_permisos, permisos_view);
         return (
             <Fragment>
                 <ListCrud
                     object_list={object_list}
-                    permisos_object={cotizaciones_permisos}
-                    proyectos_permisos={proyectos_permisos}
+                    permisos_object={bloque_1_permisos}
                     {...this.props}
                 />
                 <CargarDatos
@@ -55,9 +53,7 @@ class List extends Component {
 function mapPropsToState(state, ownProps) {
     return {
         mis_permisos: state.mis_permisos,
-        object_list: state.cotizaciones,
-        contactos_list: state.clientes_contactos,
-        clientes_list: state.clientes,
+        object_list: state.fases
     }
 }
 

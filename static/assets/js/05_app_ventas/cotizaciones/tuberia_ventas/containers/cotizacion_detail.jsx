@@ -53,9 +53,14 @@ class Detail extends Component {
 
     guardarCambiosCotizacion(cotizacion) {
         const {id} = this.props.match.params;
+        const {history} = this.props;
         const {noCargando, cargando, notificarErrorAjaxAction} = this.props;
         cargando();
-        this.props.updateCotizacion(id, cotizacion, () => noCargando(), notificarErrorAjaxAction)
+        const successful_callback = () => {
+            noCargando();
+            history.push('/app/ventas')
+        };
+        this.props.updateCotizacion(id, cotizacion, successful_callback, notificarErrorAjaxAction)
     }
 
     guardarComentario(comentario) {
@@ -171,14 +176,24 @@ class Detail extends Component {
                     <div className="col-12 mt-3">
                         <Tabs>
                             <TabList>
-                                <Tab>Comentarios</Tab>
-                                <Tab>Cambios de Estado</Tab>
-                                <Tab>Tareas</Tab>
                                 {
                                     permisos.change &&
                                     <Tab>Editar</Tab>
                                 }
+                                <Tab>Comentarios</Tab>
+                                <Tab>Cambios de Estado</Tab>
+                                <Tab>Tareas</Tab>
                             </TabList>
+                            {
+                                permisos.change &&
+                                <TabPanel>
+                                    <CotizacionForm
+                                        item_seleccionado={object}
+                                        onSubmit={this.guardarCambiosCotizacion}
+                                        {...this.props}
+                                    />
+                                </TabPanel>
+                            }
                             <TabPanel>
                                 <ComentariosList
                                     mi_cuenta={mi_cuenta}
@@ -200,16 +215,6 @@ class Detail extends Component {
                                     cotizacion={object}
                                 />
                             </TabPanel>
-                            {
-                                permisos.change &&
-                                <TabPanel>
-                                    <CotizacionForm
-                                        item_seleccionado={object}
-                                        onSubmit={this.guardarCambiosCotizacion}
-                                        {...this.props}
-                                    />
-                                </TabPanel>
-                            }
                         </Tabs>
                     </div>
                 </div>

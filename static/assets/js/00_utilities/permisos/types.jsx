@@ -151,3 +151,11 @@ export const ITEMS_LISTADOS_MATERIALES = {
     list: 'list_itemliteraldiseno',
     detail: 'detail_itemliteraldiseno',
 };
+
+export const FASES = {
+    add: 'add_fase',
+    delete: 'delete_fase',
+    change: 'change_fase',
+    list: 'list_fase',
+    detail: 'detail_fase',
+};

@@ -135,3 +135,12 @@ export const ITEM_LISTADO_MATERIAL_TYPES = {
     clear: 'clear_items_listados_materiales',
     update: 'update_item_listado_material',
 };
+
+export const FASE_TYPES = {
+    create: 'create_fase',
+    delete: 'delete_fase',
+    fetch_all: 'fetch_fases',
+    fetch: 'fetch_fase',
+    clear: 'clear_fases',
+    update: 'update_fase',
+};

@@ -26,6 +26,9 @@ const Menu = () => {
                         <Link to='/app/proyectos/proyectos/list'>
                             <FontIcon className="fas fa-wrench" style={iconStyles}/>
                         </Link>
+                        <Link to='/app/proyectos/fases/list'>
+                            <FontIcon className="fas fa-project-diagram" style={iconStyles}/>
+                        </Link>
                     </Fragment>
                 )
             }}

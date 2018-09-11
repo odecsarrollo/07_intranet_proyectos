@@ -31,30 +31,31 @@ class Tabla extends React.Component {
             <div className='row'>
                 <div className="col-12">
                     <div className="row">
-                        <div className="col-12 col-md-4">
-                            <div className="row">
+                        <div className="col-12 text-right pb-1">
+                            Estados
                                 {colores.map(c => {
                                     return (
-                                        <div
+                                        <span
                                             key={c}
-                                            className="col-3 puntero"
-                                            style={{backgroundColor: c, height: '20px'}}
+                                            className="btn puntero"
+                                            style={{backgroundColor: c, height: '40px', border:'1px solid black'}}
                                             onClick={() => {
                                                 this.setState({color: c})
                                             }}
                                         >
 
-                                        </div>
+                                        </span>
                                     )
                                 })}
-                                <div className="col-3 puntero"
-                                     onClick={() => {
-                                         this.setState({color: null})
-                                     }}
+                                <span className="btn puntero"
+                                      style={{backgroundColor: 'white', border:'1px solid black', height:'40px'}}
+                                      onClick={() => {
+                                          this.setState({color: null})
+                                      }}
                                 >
-                                    Todo
-                                </div>
-                            </div>
+                                    Todas
+                                </span>
+
                         </div>
                     </div>
                 </div>
