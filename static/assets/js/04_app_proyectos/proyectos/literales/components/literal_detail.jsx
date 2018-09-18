@@ -3,6 +3,7 @@ import {fechaFormatoUno, pesosColombianos} from "../../../../00_utilities/common
 import TablaProyectoLiteralesMateriales from '../../literales/components/proyectos_literales_materiales_tabla';
 import TablaProyectoLiteralesManoObra from '../../literales/components/proyectos_literales_mano_obra_tabla';
 import InformacionLiteralGeneral from '../../literales/components/proyectos_literales_general';
+import SeguimientoLiteral from '../../seguimientos_proyectos/components/seguimiento_literal';
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import {Link} from 'react-router-dom';
@@ -26,19 +27,10 @@ class LiteralDetail extends Component {
         this.props.clearHorasColaboradoresProyectosIniciales();
         this.props.clearHorasHojasTrabajos();
         this.props.clearItemsLiterales();
-        this.props.clearItemsListadosMateriales();
     }
 
     componentDidMount() {
-        const {
-            notificarErrorAjaxAction,
-            cargando,
-            noCargando,
-            literal,
-            fetchItemsLiterales
-        } = this.props;
-        cargando();
-        fetchItemsLiterales(literal.id, () => noCargando(), notificarErrorAjaxAction);
+        this.onTabClick(2);
     }
 
     onTabClick(tab_index) {
@@ -65,8 +57,10 @@ class LiteralDetail extends Component {
                 fetchHorasHojasTrabajosxLiteral(literal.id, () => cargarHorasManoObraInicialLiteral(), notificarErrorAjaxAction);
                 break;
             case 2:
-                const {fetchItemsListadosMateriales_por_literal} = this.props;
-                fetchItemsListadosMateriales_por_literal(literal.id, () => noCargando(), notificarErrorAjaxAction);
+                const {fetchFases, fetchFasesLiterales_x_literal} = this.props;
+                fetchFases(() => noCargando(), notificarErrorAjaxAction);
+                fetchFasesLiterales_x_literal(literal.id, () => noCargando(), notificarErrorAjaxAction);
+                console.log('aqui va el seguimiento');
                 break;
         }
     }
@@ -167,10 +161,14 @@ class LiteralDetail extends Component {
 
                 <Tabs>
                     <TabList>
+                        <Tab onClick={() => this.onTabClick(2)}>Seguimiento</Tab>
                         <Tab onClick={() => this.onTabClick(0)}>Materiales</Tab>
                         <Tab onClick={() => this.onTabClick(1)}>Mano Obra</Tab>
                         {permisos_literales.change && <Tab>Editar</Tab>}
                     </TabList>
+                    <TabPanel>
+                        <SeguimientoLiteral {...this.props} onTabClick={this.onTabClick}/>
+                    </TabPanel>
                     <TabPanel>
                         <TablaProyectoLiteralesMateriales
                             onTabClick={this.onTabClick}

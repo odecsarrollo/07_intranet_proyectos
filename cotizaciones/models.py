@@ -41,6 +41,8 @@ class Cotizacion(TimeStampedModel):
             ['gestionar_cotizacion', 'Puede gestionar cotizacion'],
             ['list_all_cotizacion', 'Puede listar todas las cotizaciones'],
             ['list_all_cotizaciones_activas', 'Puede listar todas las cotizaciones activas'],
+            ['list_tuberia_ventas', 'Puede ver la tuberia de bentas'],
+            ['list_tuberia_informe_uno', 'Puede Ver informe de tuberia de ventas'],
         ]
 
 

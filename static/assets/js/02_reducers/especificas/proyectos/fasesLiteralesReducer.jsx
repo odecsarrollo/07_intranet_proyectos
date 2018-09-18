@@ -1,4 +1,4 @@
-import {ITEM_LISTADO_MATERIAL_TYPES as TYPES} from '../../../01_actions/00_types';
+import {FASE_LITERAL_TYPES as TYPES} from '../../../01_actions/00_types';
 import baseReducer from '../../baseReducer'
 
 export default function (state = [], action) {

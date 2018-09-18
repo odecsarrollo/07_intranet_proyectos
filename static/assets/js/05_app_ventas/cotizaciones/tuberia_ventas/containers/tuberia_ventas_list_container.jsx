@@ -40,7 +40,7 @@ class List extends Component {
             <Fragment>
                 <ListCrud
                     object_list={object_list}
-                    permisos_object={cotizaciones_permisos}
+                    permisos_object={{...cotizaciones_permisos,list:cotizaciones_permisos.list_tuberia_ventas}}
                     proyectos_permisos={proyectos_permisos}
                     {...this.props}
                 />

@@ -12,10 +12,9 @@ class Fase(models.Model):
         ]
 
 
-
 class FaseLiteral(models.Model):
-    fase = models.ForeignKey(Fase, on_delete=models.PROTECT)
-    literal = models.ForeignKey(Literal, on_delete=models.PROTECT)
+    fase = models.ForeignKey(Fase, on_delete=models.PROTECT, related_name='mis_literales')
+    literal = models.ForeignKey(Literal, on_delete=models.PROTECT, related_name='mis_fases')
 
 
 class TareaFase(models.Model):

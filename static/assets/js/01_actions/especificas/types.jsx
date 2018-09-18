@@ -144,3 +144,21 @@ export const FASE_TYPES = {
     clear: 'clear_fases',
     update: 'update_fase',
 };
+
+export const FASE_LITERAL_TYPES = {
+    create: 'create_fase_literal',
+    delete: 'delete_fase_literal',
+    fetch_all: 'fetch_fases_literales',
+    fetch: 'fetch_fase_literal',
+    clear: 'clear_fases_literales',
+    update: 'update_fase_literal',
+};
+
+export const TAREA_FASE_TYPES = {
+    create: 'create_tarea_fase',
+    delete: 'delete_tarea_fase',
+    fetch_all: 'fetch_tareas_fases',
+    fetch: 'fetch_tarea_fase',
+    clear: 'clear_tareas_fases',
+    update: 'update_tarea_fase',
+};

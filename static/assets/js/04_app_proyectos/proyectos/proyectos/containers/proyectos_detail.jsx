@@ -234,8 +234,10 @@ function mapPropsToState(state, ownProps) {
         object: state.proyectos[id],
         contizaciones_list: state.cotizaciones,
         clientes_list: state.clientes,
+        fases_list: state.fases,
+        fases_literales_list: state.fases_literales,
         items_cguno: state.items_cguno,
-        items_listados_materiales: state.items_listados_materiales,
+        fases_tareas: state.fases_tareas,
     }
 }
 

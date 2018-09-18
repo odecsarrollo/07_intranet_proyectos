@@ -11,7 +11,8 @@ import miCuentaReducer from './generales/miCuentaReducer';
 
 import proyectosReducer from './especificas/proyectos/proyectosReducer';
 import fasesReducer from './especificas/proyectos/fasesReducer';
-import itemsListadosMaterialesReducer from './especificas/proyectos/itemsListadosMateriales';
+import fasesLiteralesReducer from './especificas/proyectos/fasesLiteralesReducer';
+import tareasFasesReducer from './especificas/proyectos/tareasFasesReducer';
 import literalesReducer from "./especificas/proyectos/literalesReducer";
 import itemsLiteralesReducer from "./especificas/proyectos/itemsliteralesReducer";
 import colaboradoresReducer from "./especificas/cguno/colaboradoresReducer";
@@ -44,6 +45,8 @@ const rootReducer = combineReducers({
     form: formReducer,
     proyectos: proyectosReducer,
     fases: fasesReducer,
+    fases_literales: fasesLiteralesReducer,
+    fases_tareas: tareasFasesReducer,
     literales: literalesReducer,
     items_literales: itemsLiteralesReducer,
     colaboradores: colaboradoresReducer,
@@ -58,7 +61,6 @@ const rootReducer = combineReducers({
     cotizaciones: cotizacionesReducer,
     cotizaciones_seguimientos: cotizacionesSeguimientosReducer,
     configuracion_costos: configuracionCostos,
-    items_listados_materiales: itemsListadosMaterialesReducer,
 });
 
 export default rootReducer;

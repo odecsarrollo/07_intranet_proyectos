@@ -5,10 +5,11 @@ from django.db.models.expressions import Exists
 from django.db.models.functions import Coalesce
 from django.http import HttpResponse
 from rest_framework import viewsets
-from rest_framework.decorators import list_route
+from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 
 from .models import Proyecto, Literal
+from proyectos_seguimientos.models import Fase, FaseLiteral
 from .api_serializers import ProyectoSerializer, LiteralSerializer
 from mano_obra.models import HoraHojaTrabajo, HoraTrabajoColaboradorLiteralInicial
 from .mixins import LiteralesPDFMixin
@@ -218,6 +219,21 @@ class LiteralViewSet(viewsets.ModelViewSet):
             ),
         )
         return qs
+
+    @detail_route(methods=['post'])
+    def adicionar_quitar_fase(self, request, pk=None):
+        literal = self.get_object()
+        id_fase = int(request.POST.get('id_fase'))
+        tiene_fase = literal.mis_fases.filter(fase_id=id_fase)
+        fase = Fase.objects.get(id=id_fase)
+        # tiene_fase = literal.mis_fases.filter(id=fase).exists()
+        # print(tiene_fase)
+        if not tiene_fase:
+            FaseLiteral.objects.create(fase=fase, literal=literal)
+        else:
+            FaseLiteral.objects.filter(fase=fase, literal=literal).delete()
+        serializer = self.get_serializer(literal)
+        return Response(serializer.data)
 
     @list_route(http_method_names=['get', ])
     def abiertos(self, request):

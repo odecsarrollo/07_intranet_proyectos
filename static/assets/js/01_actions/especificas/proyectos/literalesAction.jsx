@@ -6,7 +6,7 @@ import {
     fetchObject,
     deleteObject,
     createObject,
-    fetchListWithParameter
+    fetchListWithParameter, callApiMethodWithParameters
 } from '../../00_general_fuctions'
 
 const current_url_api = 'literales';
@@ -16,6 +16,15 @@ export const clearLiterales = () => {
         dispatch({type: TYPES.clear})
     }
 };
+
+export function adicionarQuitarFaseLiteral(id, id_fase, callback = null, callback_error = null) {
+    console.log('llegoooo')
+    return function (dispatch) {
+        let params = new URLSearchParams();
+        params.append('id_fase', id_fase);
+        callApiMethodWithParameters(current_url_api, id, 'adicionar_quitar_fase', params, null, callback, callback_error)
+    }
+}
 
 export function fetchLiterales(callback = null, callback_error = null) {
     return function (dispatch) {

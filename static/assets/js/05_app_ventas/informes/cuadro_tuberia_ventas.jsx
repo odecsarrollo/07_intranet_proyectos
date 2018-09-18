@@ -2,7 +2,10 @@ import React, {Component, Fragment} from 'react';
 import * as actions from "../../01_actions/01_index";
 import {connect} from "react-redux";
 import CargarDatos from "../../00_utilities/components/system/cargar_datos";
-import {pesosColombianos} from "../../00_utilities/common";
+import {permisosAdapter, pesosColombianos} from "../../00_utilities/common";
+import {
+    COTIZACIONES as permisos_view
+} from "../../00_utilities/permisos/types";
 
 class InformeTunelVentas extends Component {
     constructor(props) {
@@ -28,6 +31,14 @@ class InformeTunelVentas extends Component {
     }
 
     render() {
+        const {mis_permisos} = this.props;
+        const cotizaciones_permisos = permisosAdapter(mis_permisos, permisos_view);
+        if (!cotizaciones_permisos.informe_uno) {
+            return (
+                <div>No tiene permisos suficientes para ver este informe</div>
+            )
+        }
+
         const orden_estados = {
             'Cita/Generación Interés': {id: 1, nombre: 'Cita/Generación Interés'},
             'Configurando Propuesta': {id: 2, nombre: 'Configurando Propuesta'},

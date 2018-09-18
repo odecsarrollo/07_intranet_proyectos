@@ -126,6 +126,8 @@ export const COTIZACIONES = {
     list: 'list_cotizacion',
     detail: 'detail_cotizacion',
     gestionar_cotizacion: 'gestionar_cotizacion',
+    list_tuberia_ventas: 'list_tuberia_ventas',
+    informe_uno: 'list_tuberia_informe_uno',
 };
 
 export const CONTACTOS_CLIENTES = {
@@ -158,4 +160,20 @@ export const FASES = {
     change: 'change_fase',
     list: 'list_fase',
     detail: 'detail_fase',
+};
+
+export const FASES_LITERALES = {
+    add: 'add_faseliteral',
+    delete: 'delete_faseliteral',
+    change: 'change_faseliteral',
+    list: 'list_faseliteral',
+    detail: 'detail_faseliteral',
+};
+
+export const TAREAS_FASES_LITERALES = {
+    add: 'add_tareafase',
+    delete: 'delete_tareafase',
+    change: 'change_tareafase',
+    list: 'list_tareafase',
+    detail: 'detail_tareafase',
 };

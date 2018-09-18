@@ -11,11 +11,9 @@ class PlaneadorMateriaPrima extends Component {
             cargando,
             notificarErrorAjaxAction,
             fetchLiteral,
-            fetchItemsListadosMateriales_por_literal,
         } = this.props;
         cargando();
-        const cargarListadoMateriales = () => fetchItemsListadosMateriales_por_literal(id, () => noCargando(), notificarErrorAjaxAction);
-        fetchLiteral(id, cargarListadoMateriales, notificarErrorAjaxAction)
+        fetchLiteral(id, () => noCargando(), notificarErrorAjaxAction)
     }
 
     render() {
