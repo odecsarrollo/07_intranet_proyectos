@@ -18,7 +18,6 @@ class LiteralModalCreate extends Component {
             noCargando,
             object,
             literales_list,
-            setCurrentLiteral,
             notificarErrorAjaxAction,
         } = this.props;
         cargando();
@@ -31,9 +30,8 @@ class LiteralModalCreate extends Component {
         const nuevo_literal = {...item, proyecto: object.id, id_literal, en_cguno: false};
         const crearLiteral = () => this.props.createLiteral(
             nuevo_literal,
-            (response) => {
+            () => {
                 this.setState({modal_open: false});
-                setCurrentLiteral(response);
                 noCargando()
             },
             notificarErrorAjaxAction

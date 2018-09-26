@@ -1,5 +1,5 @@
 import React, {Fragment, Component} from 'react';
-import {fechaFormatoUno, pesosColombianos} from "../../../../00_utilities/common";
+import {fechaFormatoUno, permisosAdapter, pesosColombianos} from "../../../../00_utilities/common";
 import TablaProyectoLiteralesMateriales from '../../literales/components/proyectos_literales_materiales_tabla';
 import TablaProyectoLiteralesManoObra from '../../literales/components/proyectos_literales_mano_obra_tabla';
 import InformacionLiteralGeneral from '../../literales/components/proyectos_literales_general';
@@ -7,6 +7,12 @@ import SeguimientoLiteral from '../../seguimientos_proyectos/components/seguimie
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import {Link} from 'react-router-dom';
+import {connect} from "react-redux";
+import * as actions from "../../../../01_actions/01_index";
+import {
+    LITERALES as literales_permisos_view,
+    PROYECTOS as permisos_view
+} from "../../../../00_utilities/permisos/types";
 
 class LiteralDetail extends Component {
     constructor(props) {
@@ -19,86 +25,74 @@ class LiteralDetail extends Component {
         this.onTabClick = this.onTabClick.bind(this);
     }
 
-    componentWillUnmount() {
-        this.limpiarInformacionLiteral();
-    }
-
-    limpiarInformacionLiteral() {
-        this.props.clearHorasColaboradoresProyectosIniciales();
-        this.props.clearHorasHojasTrabajos();
-        this.props.clearItemsLiterales();
+    onTabClick(tab_index) {
+        this.setState({tab_index});
     }
 
     componentDidMount() {
-        this.onTabClick(2);
+        this.cargarDatos();
     }
 
-    onTabClick(tab_index) {
+    componentWillUnmount() {
+        this.props.clearLiterales();
+    }
+
+    cargarDatos() {
         const {
-            notificarErrorAjaxAction,
+            id_literal,
+            fetchLiteral,
             cargando,
             noCargando,
-            literal,
+            notificarErrorAjaxAction
         } = this.props;
-        this.setState({tab_index});
         cargando();
-        this.limpiarInformacionLiteral();
-        switch (tab_index) {
-            case 0:
-                const {fetchItemsLiterales} = this.props;
-                fetchItemsLiterales(literal.id, () => noCargando(), notificarErrorAjaxAction);
-                break;
-            case 1:
-                const {
-                    fetchHorasColaboradoresProyectosInicialesxLiteral,
-                    fetchHorasHojasTrabajosxLiteral
-                } = this.props;
-                const cargarHorasManoObraInicialLiteral = () => fetchHorasColaboradoresProyectosInicialesxLiteral(literal.id, () => noCargando(), notificarErrorAjaxAction);
-                fetchHorasHojasTrabajosxLiteral(literal.id, () => cargarHorasManoObraInicialLiteral(), notificarErrorAjaxAction);
-                break;
-            case 2:
-                const {fetchFases, fetchFasesLiterales_x_literal} = this.props;
-                fetchFases(() => noCargando(), notificarErrorAjaxAction);
-                fetchFasesLiterales_x_literal(literal.id, () => noCargando(), notificarErrorAjaxAction);
-                console.log('aqui va el seguimiento');
-                break;
-        }
+        fetchLiteral(id_literal, () => noCargando(), notificarErrorAjaxAction);
+        this.setState({tab_index: 2});
     }
 
     onUpdateLiteral(literal) {
-        const {cargando, noCargando, notificarErrorAjaxAction, setCurrentLiteral} = this.props;
+        const {
+            clearCurrentLiteral,
+            cargando,
+            noCargando,
+            notificarErrorAjaxAction
+        } = this.props;
         cargando();
+        clearCurrentLiteral();
         this.props.updateLiteral(
             literal.id,
             literal,
-            (response) => {
+            () => {
                 noCargando();
-                setCurrentLiteral(response);
-            }, notificarErrorAjaxAction);
+            },
+            notificarErrorAjaxAction
+        );
     }
 
     onDeleteLiteral(literal) {
-        const {cargando, noCargando, notificarErrorAjaxAction, setCurrentLiteral} = this.props;
+        const {cargando, noCargando, notificarErrorAjaxAction, clearCurrentLiteral = null} = this.props;
         cargando();
         this.props.deleteLiteral(
             literal.id,
             () => {
                 noCargando();
-                setCurrentLiteral(null);
-            }, notificarErrorAjaxAction
+                if (clearCurrentLiteral) {
+                    clearCurrentLiteral(null);
+                }
+            },
+            notificarErrorAjaxAction
         );
     }
 
     render() {
         const {
             literal,
-            permisos,
             proyecto,
-            items_literales,
-            horas_hojas_trabajos_list,
-            horas_colaboradores_proyectos_iniciales_list,
-            permisos_literales,
+            mis_permisos,
+            id_literal
         } = this.props;
+        const permisos = permisosAdapter(mis_permisos, permisos_view);
+        const permisos_literales = permisosAdapter(mis_permisos, literales_permisos_view);
         return (
             <Fragment>
                 <div className="row">
@@ -167,21 +161,13 @@ class LiteralDetail extends Component {
                         {permisos_literales.change && <Tab>Editar</Tab>}
                     </TabList>
                     <TabPanel>
-                        <SeguimientoLiteral {...this.props} onTabClick={this.onTabClick}/>
+                        <SeguimientoLiteral id_literal={id_literal}/>
                     </TabPanel>
                     <TabPanel>
-                        <TablaProyectoLiteralesMateriales
-                            onTabClick={this.onTabClick}
-                            items_literales={items_literales}
-                            can_see_ultimo_costo_item_biable={permisos.ultimo_costo_item_biable}
-                            {...this.props}
-                        />
+                        <TablaProyectoLiteralesMateriales id_literal={id_literal}/>
                     </TabPanel>
                     <TabPanel>
-                        <TablaProyectoLiteralesManoObra
-                            horas_mano_obra_literales={horas_hojas_trabajos_list}
-                            horas_colaboradores_proyectos_iniciales_list={horas_colaboradores_proyectos_iniciales_list}
-                        />
+                        <TablaProyectoLiteralesManoObra id_literal={id_literal}/>
                     </TabPanel>
                     {permisos_literales.change &&
                     <TabPanel>
@@ -199,4 +185,12 @@ class LiteralDetail extends Component {
     }
 };
 
-export default LiteralDetail;
+function mapPropsToState(state, ownProps) {
+    const {id_literal} = ownProps;
+    return {
+        mis_permisos: state.mis_permisos,
+        literal: _.size(state.literales) > 0 ? state.literales[id_literal] : null
+    }
+}
+
+export default connect(mapPropsToState, actions)(LiteralDetail);

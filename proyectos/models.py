@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from model_utils.models import TimeStampedModel
 from clientes.models import ClienteBiable
@@ -41,6 +42,18 @@ class Literal(models.Model):
     costo_materiales = models.DecimalField(decimal_places=2, max_digits=12, default=0, null=True, blank=True)
     en_cguno = models.BooleanField(default=True)
     abierto = models.BooleanField(default=True)
+    miembros = models.ManyToManyField(User, through='MiembroLiteral', related_name='literales')
 
     def __str__(self):
         return self.id_literal
+
+
+class MiembroLiteral(models.Model):
+    literal = models.ForeignKey(Literal, on_delete=models.PROTECT, related_name='mis_miembros')
+    usuario = models.ForeignKey(User, on_delete=models.PROTECT, related_name='mis_literales')
+    puede_ver = models.BooleanField(default=False)
+    puede_editar_tareas = models.BooleanField(default=False)
+    puede_eliminar_tareas = models.BooleanField(default=False)
+    puede_adicionar_tareas = models.BooleanField(default=False)
+    puede_administrar_fases = models.BooleanField(default=False)
+    puede_administrar_miembros = models.BooleanField(default=False)

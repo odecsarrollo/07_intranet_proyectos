@@ -1,6 +1,11 @@
-import React, {Fragment} from 'react';
-import {pesosColombianos} from '../../../../00_utilities/common';
+import React, {Component} from 'react';
+import {permisosAdapter, pesosColombianos} from '../../../../00_utilities/common';
 import {ListaBusqueda} from '../../../../00_utilities/utiles';
+import {connect} from "react-redux";
+import * as actions from "../../../../01_actions/01_index";
+import {
+    PROYECTOS as permisos_view
+} from "../../../../00_utilities/permisos/types";
 
 const ItemTabla = (props) => {
     const {item, item: {item_biable}, can_see_ultimo_costo_item_biable} = props;
@@ -28,42 +33,81 @@ const buscarBusqueda = (lista, busqueda) => {
     });
 };
 
-const TablaProyectosLiteralesMateriales = (props) => {
-    const {
-        items_literales,
-        can_see_ultimo_costo_item_biable,
-    } = props;
-    return (
-        <ListaBusqueda>
-            {
-                busqueda => {
-                    const listado_materiales = buscarBusqueda(items_literales, busqueda);
-                    return (
-                        <table className="table table-responsive table-striped tabla-maestra">
-                            <thead>
-                            <tr>
-                                <th>Id CGUNO</th>
-                                <th>Referencia</th>
-                                <th>Nombre</th>
-                                <th>Cantidad</th>
-                                <th>Unidad</th>
-                                {can_see_ultimo_costo_item_biable && <th>Costo Total</th>}
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {_.map(listado_materiales, item => {
-                                return <ItemTabla key={item.id} item={item} {...props}/>
-                            })}
-                            </tbody>
-                            <tfoot>
+class TablaProyectosLiteralesMateriales extends Component {
+    constructor(props) {
+        super(props);
+    }
 
-                            </tfoot>
-                        </table>
-                    )
+    componentWillUnmount() {
+        this.props.clearItemsLiterales();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props.id_literal !== nextProps.id_literal) {
+            this.cargarDatos(nextProps.id_literal);
+        }
+    }
+
+    componentDidMount() {
+        const {id_literal} = this.props;
+        this.cargarDatos(id_literal);
+    }
+
+    cargarDatos(id_literal) {
+        const {
+            notificarErrorAjaxAction,
+            noCargando,
+            fetchItemsLiterales,
+        } = this.props;
+        fetchItemsLiterales(id_literal, () => noCargando(), notificarErrorAjaxAction);
+    }
+
+    render() {
+        const {
+            mis_permisos,
+            items_literales
+        } = this.props;
+        const permisos = permisosAdapter(mis_permisos, permisos_view);
+        return (
+            <ListaBusqueda>
+                {
+                    busqueda => {
+                        const listado_materiales = buscarBusqueda(items_literales, busqueda);
+                        return (
+                            <table className="table table-responsive table-striped tabla-maestra">
+                                <thead>
+                                <tr>
+                                    <th>Id CGUNO</th>
+                                    <th>Referencia</th>
+                                    <th>Nombre</th>
+                                    <th>Cantidad</th>
+                                    <th>Unidad</th>
+                                    {permisos.ultimo_costo_item_biable && <th>Costo Total</th>}
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {_.map(listado_materiales, item => {
+                                    return <ItemTabla key={item.id} item={item} {...this.props}/>
+                                })}
+                                </tbody>
+                                <tfoot>
+
+                                </tfoot>
+                            </table>
+                        )
+                    }
                 }
-            }
-        </ListaBusqueda>
-    )
-};
+            </ListaBusqueda>
+        );
+    }
 
-export default TablaProyectosLiteralesMateriales;
+}
+
+function mapPropsToState(state, ownProps) {
+    return {
+        mis_permisos: state.mis_permisos,
+        items_literales: state.items_literales,
+    }
+}
+
+export default connect(mapPropsToState, actions)(TablaProyectosLiteralesMateriales)

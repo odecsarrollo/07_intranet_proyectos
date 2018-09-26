@@ -5,10 +5,23 @@ import {
     fetchObject,
     deleteObject,
     createObject,
-    fetchListWithParameter
+    fetchListWithParameter,
+    callApiMethodWithParameters
 } from '../../00_general_fuctions'
 
 const current_url_api = 'fases_literales';
+
+export const cargarTareasFaseLiteral = (id, listado, callback = null, callback_error = null) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch, payload: response})
+        };
+        let params = new URLSearchParams();
+        params.append('listado', JSON.stringify(listado));
+        callApiMethodWithParameters(current_url_api, id, 'cargar_tareas', params, dispatches, callback, callback_error)
+    }
+};
+
 export const createFaseLiteral = (values, callback = null, callback_error = null) => {
     return (dispatch) => {
         const dispatches = (response) => {

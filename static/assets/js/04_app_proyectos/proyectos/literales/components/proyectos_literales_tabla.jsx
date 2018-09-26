@@ -41,16 +41,16 @@ const style = {
 
 const ItemTabla = (props) => {
     const {
-        item_seleccionado,
+        select_literal_id,
         onSelectItem,
         item,
         permisos
     } = props;
     return (
-        <tr className={item_seleccionado && item_seleccionado.id === item.id ? 'tr-seleccionado' : ''}
+        <tr className={select_literal_id === item.id ? 'tr-seleccionado' : ''}
             style={{cursor: "pointer"}}
             onClick={() => {
-                onSelectItem(item)
+                onSelectItem(item.id);
             }}
         >
             <td style={style.tabla.tr.td}>

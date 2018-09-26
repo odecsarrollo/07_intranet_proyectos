@@ -18,7 +18,6 @@ export const clearLiterales = () => {
 };
 
 export function adicionarQuitarFaseLiteral(id, id_fase, callback = null, callback_error = null) {
-    console.log('llegoooo')
     return function (dispatch) {
         let params = new URLSearchParams();
         params.append('id_fase', id_fase);

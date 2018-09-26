@@ -59,7 +59,6 @@ function mapPropsToState(state, ownProps) {
             cotizacion
         }
     }
-    console.log(item_seleccionado);
     return {
         initialValues: initialValues
     }

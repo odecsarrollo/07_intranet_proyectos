@@ -23,13 +23,13 @@ class Detail extends Component {
         super(props);
         this.state = ({
             busqueda: "",
-            item_id: null,
+            select_literal_id: null,
             mostrar_literal_info: false
         });
         this.cargarDatos = this.cargarDatos.bind(this);
         this.onLiteralSelect = this.onLiteralSelect.bind(this);
         this.onUpdateProyecto = this.onUpdateProyecto.bind(this);
-        this.setCurrentLiteral = this.setCurrentLiteral.bind(this);
+        this.clearCurrentLiteral = this.clearCurrentLiteral.bind(this);
     }
 
     componentDidMount() {
@@ -38,14 +38,10 @@ class Detail extends Component {
 
     componentWillUnmount() {
         this.props.clearProyectos();
-        this.props.clearLiterales();
-        this.props.clearHorasColaboradoresProyectosIniciales();
-        this.props.clearHorasHojasTrabajos();
-        this.props.clearItemsLiterales();
     }
 
-    setCurrentLiteral(item_seleccionado) {
-        this.setState({item_id: item_seleccionado.id});
+    clearCurrentLiteral() {
+        this.setState({select_literal_id: null, mostrar_literal_info: true});
     }
 
     onUpdateProyecto(proyecto) {
@@ -54,29 +50,23 @@ class Detail extends Component {
         this.props.updateProyecto(proyecto.id, proyecto, () => noCargando(), notificarErrorAjaxAction);
     }
 
-    onLiteralSelect(item) {
-        const {
-            fetchLiteral,
-            cargando,
-            noCargando,
-            notificarErrorAjaxAction
-        } = this.props;
+    onLiteralSelect(select_literal_id) {
         this.setState({
-            item_id: item,
+            select_literal_id,
             mostrar_literal_info: true
         });
-        cargando();
-        fetchLiteral(
-            item.id,
-            () => {
-                this.setState({
-                    item_id: item.id
-                });
-                noCargando();
-            },
-            notificarErrorAjaxAction
-        );
     }
+
+    onTabClick(tab_index) {
+        const {id} = this.props.match.params;
+        const {noCargando, cargando, notificarErrorAjaxAction} = this.props;
+        cargando();
+        if (tab_index === 1) {
+            const cargarCotizacioneParaCrearLiterales = () => this.props.fetchCotizacionesPidiendoCarpeta(() => noCargando(), notificarErrorAjaxAction);
+            this.props.fetchLiteralesXProyecto(id, cargarCotizacioneParaCrearLiterales, notificarErrorAjaxAction);
+        }
+    }
+
 
     cargarDatos() {
         const {id} = this.props.match.params;
@@ -96,22 +86,19 @@ class Detail extends Component {
         const {
             object,
             mis_permisos,
-            items_literales,
-            horas_hojas_trabajos_list,
             literales_list,
             contizaciones_list,
-            horas_colaboradores_proyectos_iniciales_list,
         } = this.props;
         const permisos = permisosAdapter(mis_permisos, permisos_view);
-        const cotizacion_permisos = permisosAdapter(mis_permisos, cotizaciones_permisos_view);
         const permisos_literales = permisosAdapter(mis_permisos, literales_permisos_view);
+        const cotizacion_permisos = permisosAdapter(mis_permisos, cotizaciones_permisos_view);
 
         if (!object) {
             return <SinObjeto/>
         }
 
-        const {item_id} = this.state;
-        const item_seleccionado = item_id ? literales_list[item_id] : null;
+        const {select_literal_id} = this.state;
+        const item_seleccionado = select_literal_id ? literales_list[select_literal_id] : null;
 
         let cotizacion_pendiente_por_literal = null;
         const cotizacion_pendiente_por_literal_list = _.map(
@@ -150,7 +137,9 @@ class Detail extends Component {
                     <div className="col-12">
                         <Tabs>
                             <TabList>
-                                <Tab>Literales</Tab>
+                                <Tab onClick={() => {
+                                    this.onTabClick(1);
+                                }}>Literales</Tab>
                                 {
                                     permisos.change &&
                                     <Tab>Editar</Tab>
@@ -162,7 +151,6 @@ class Detail extends Component {
                                         <LiteralModalCreate
                                             permisos_object={permisos_literales}
                                             cotizacion_pendiente_por_literal={null}
-                                            setCurrentLiteral={this.setCurrentLiteral}
                                             {...this.props}
                                         />
                                         {
@@ -173,14 +161,13 @@ class Detail extends Component {
                                                     cotizacion: cotizacion_pendiente_por_literal.id,
                                                     descripcion: cotizacion_pendiente_por_literal.descripcion_cotizacion
                                                 }}
-                                                setCurrentLiteral={this.setCurrentLiteral}
                                                 {...this.props}
                                             />
                                         }
                                         <TablaProyectoLiterales
                                             lista_literales={_.map(literales_list, e => e)}
                                             onSelectItem={this.onLiteralSelect}
-                                            item_seleccionado={item_seleccionado}
+                                            select_literal_id={select_literal_id}
                                             proyecto={object}
                                             permisos={permisos}
                                         />
@@ -189,15 +176,9 @@ class Detail extends Component {
                                         item_seleccionado &&
                                         <div className="col-12 col-lg-9">
                                             <LiteralDetail
-                                                setCurrentLiteral={this.setCurrentLiteral}
-                                                literal={item_seleccionado}
-                                                items_literales={items_literales}
-                                                horas_hojas_trabajos_list={horas_hojas_trabajos_list}
-                                                horas_colaboradores_proyectos_iniciales_list={horas_colaboradores_proyectos_iniciales_list}
+                                                clearCurrentLiteral={this.clearCurrentLiteral}
+                                                id_literal={select_literal_id}
                                                 proyecto={object}
-                                                permisos={permisos}
-                                                permisos_literales={permisos_literales}
-                                                {...this.props}
                                             />
                                         </div>
                                     }
@@ -227,17 +208,10 @@ function mapPropsToState(state, ownProps) {
     const {id} = ownProps.match.params;
     return {
         mis_permisos: state.mis_permisos,
-        items_literales: state.items_literales,
-        horas_hojas_trabajos_list: state.horas_hojas_trabajos,
         literales_list: state.literales,
-        horas_colaboradores_proyectos_iniciales_list: state.horas_colaboradores_proyectos_iniciales,
         object: state.proyectos[id],
         contizaciones_list: state.cotizaciones,
         clientes_list: state.clientes,
-        fases_list: state.fases,
-        fases_literales_list: state.fases_literales,
-        items_cguno: state.items_cguno,
-        fases_tareas: state.fases_tareas,
     }
 }
 
