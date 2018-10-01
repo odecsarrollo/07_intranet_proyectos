@@ -10,6 +10,7 @@ import loadingReducer from './generales/loadingReducer';
 import miCuentaReducer from './generales/miCuentaReducer';
 
 import proyectosReducer from './especificas/proyectos/proyectosReducer';
+import miembrosLiteralesReducer from './especificas/proyectos/miembrosLiteralesReducer';
 import fasesReducer from './especificas/proyectos/fasesReducer';
 import fasesLiteralesReducer from './especificas/proyectos/fasesLiteralesReducer';
 import tareasFasesReducer from './especificas/proyectos/tareasFasesReducer';
@@ -44,6 +45,7 @@ const rootReducer = combineReducers({
     notifications: NotifyReducer,
     form: formReducer,
     proyectos: proyectosReducer,
+    miembros_literales: miembrosLiteralesReducer,
     fases: fasesReducer,
     fases_literales: fasesLiteralesReducer,
     fases_tareas: tareasFasesReducer,

@@ -162,3 +162,12 @@ export const TAREA_FASE_TYPES = {
     clear: 'clear_tareas_fases',
     update: 'update_tarea_fase',
 };
+
+export const MIEMBRO_LITERAL_TYPES = {
+    create: 'create_miembro_literal',
+    delete: 'delete_miembro_literal',
+    fetch_all: 'fetch_miembros_literales',
+    fetch: 'fetch_miembro_literal',
+    clear: 'clear_miembros_literales',
+    update: 'update_miembro_literal',
+};

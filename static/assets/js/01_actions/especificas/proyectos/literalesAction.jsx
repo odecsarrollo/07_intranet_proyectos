@@ -25,6 +25,22 @@ export function adicionarQuitarFaseLiteral(id, id_fase, callback = null, callbac
     }
 }
 
+export function adicionarMiembroLiteral(id, id_usuario, callback = null, callback_error = null) {
+    return function (dispatch) {
+        let params = new URLSearchParams();
+        params.append('id_usuario', id_usuario);
+        callApiMethodWithParameters(current_url_api, id, 'adicionar_miembro', params, null, callback, callback_error)
+    }
+}
+
+export function quitarMiembroLiteral(id, id_usuario, callback = null, callback_error = null) {
+    return function (dispatch) {
+        let params = new URLSearchParams();
+        params.append('id_usuario', id_usuario);
+        callApiMethodWithParameters(current_url_api, id, 'quitar_miembro', params, null, callback, callback_error)
+    }
+}
+
 export function fetchLiterales(callback = null, callback_error = null) {
     return function (dispatch) {
         const dispatches = (response) => {

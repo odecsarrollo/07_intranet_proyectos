@@ -8,11 +8,28 @@ from rest_framework import viewsets
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 
-from .models import Proyecto, Literal
+from .models import Proyecto, Literal, MiembroLiteral
 from proyectos_seguimientos.models import Fase, FaseLiteral
-from .api_serializers import ProyectoSerializer, LiteralSerializer
+from .api_serializers import ProyectoSerializer, LiteralSerializer, MiembroLiteralSerializer
 from mano_obra.models import HoraHojaTrabajo, HoraTrabajoColaboradorLiteralInicial
 from .mixins import LiteralesPDFMixin
+
+
+class MiembroLiteralViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
+    queryset = MiembroLiteral.objects.select_related(
+        'usuario',
+        'usuario__colaborador',
+    ).all()
+    serializer_class = MiembroLiteralSerializer
+
+    @list_route(http_method_names=['get', ])
+    def por_literal(self, request):
+        literal_id = request.GET.get('literal_id')
+        qs = None
+        if literal_id:
+            qs = self.get_queryset().filter(literal_id=literal_id)
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)
 
 
 class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
@@ -232,6 +249,26 @@ class LiteralViewSet(viewsets.ModelViewSet):
             FaseLiteral.objects.create(fase=fase, literal=literal)
         else:
             FaseLiteral.objects.filter(fase=fase, literal=literal).delete()
+        serializer = self.get_serializer(literal)
+        return Response(serializer.data)
+
+    @detail_route(methods=['post'])
+    def adicionar_miembro(self, request, pk=None):
+        literal = self.get_object()
+        id_usuario = int(request.POST.get('id_usuario'))
+        miembro_usuario = literal.mis_miembros.filter(usuario_id=id_usuario)
+        if not miembro_usuario.exists():
+            MiembroLiteral.objects.create(usuario_id=id_usuario, literal=literal)
+        serializer = self.get_serializer(literal)
+        return Response(serializer.data)
+
+    @detail_route(methods=['post'])
+    def quitar_miembro(self, request, pk=None):
+        literal = self.get_object()
+        id_usuario = int(request.POST.get('id_usuario'))
+        miembro_usuario = literal.mis_miembros.filter(usuario_id=id_usuario)
+        if miembro_usuario.exists():
+            miembro_usuario.delete()
         serializer = self.get_serializer(literal)
         return Response(serializer.data)
 

@@ -30,7 +30,9 @@ class TareaFaseViewSet(viewsets.ModelViewSet):
 
 class FaseLiteralViewSet(viewsets.ModelViewSet):
     queryset = FaseLiteral.objects.select_related(
-        'fase'
+        'fase',
+        'responsable',
+        'responsable__colaborador',
     ).all()
     serializer_class = FaseLiteralSerializer
 
@@ -53,8 +55,11 @@ class FaseLiteralViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def get_queryset(self):
-        tareas_terminadas = TareaFase.objects.values(
-            'fase_literal'
+        tareas_terminadas = TareaFase.objects.select_related(
+            'asignado_a',
+            'asignado_a__colaborador'
+        ).values(
+            'fase_literal',
         ).annotate(
             nro_tareas_terminadas=Count('id')
         ).filter(

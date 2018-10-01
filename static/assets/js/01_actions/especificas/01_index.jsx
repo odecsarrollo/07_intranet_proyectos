@@ -1,5 +1,6 @@
 export * from './proyectos/proyectosAction';
 export * from './proyectos/literalesAction';
+export * from './proyectos/miembrosLiteralesAction';
 export * from './proyectos/itemsliteralesAction';
 export * from './proyectos/fasesAction';
 export * from './proyectos/fasesLiteralesAction';

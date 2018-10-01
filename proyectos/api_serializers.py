@@ -1,6 +1,32 @@
 from rest_framework import serializers
 
-from .models import Proyecto, Literal
+from .models import Proyecto, Literal, MiembroLiteral
+
+
+class MiembroLiteralSerializer(serializers.ModelSerializer):
+    usuario_username = serializers.CharField(source='usuario.username', read_only=True)
+    colaborador = serializers.CharField(source='usuario.colaborador', read_only=True)
+    usuario_nombres = serializers.CharField(source='usuario.first_name', read_only=True)
+    usuario_apellidos = serializers.CharField(source='usuario.last_name', read_only=True)
+
+    class Meta:
+        model = MiembroLiteral
+        fields = [
+            'url',
+            'id',
+            'literal',
+            'usuario',
+            'usuario_username',
+            'colaborador',
+            'usuario_nombres',
+            'usuario_apellidos',
+            'puede_ver',
+            'puede_editar_tareas',
+            'puede_eliminar_tareas',
+            'puede_adicionar_tareas',
+            'puede_administrar_fases',
+            'puede_administrar_miembros',
+        ]
 
 
 class LiteralSerializer(serializers.ModelSerializer):

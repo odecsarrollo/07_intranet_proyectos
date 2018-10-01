@@ -3,24 +3,7 @@ import FormAddTarea from './forms/add_tarea_form';
 import {fechaFormatoDos, fechaFormatoUno} from "../../../../00_utilities/common";
 import {MyDialogButtonDelete} from '../../../../00_utilities/components/ui/dialog';
 import CargueTareas from './cargue_tareas';
-
-const table_style = {
-    th: {
-        padding: 0,
-        margin: 0,
-        paddingLeft: '4px',
-        paddingRight: '4px',
-    },
-    td: {
-        padding: 0,
-        margin: 0,
-        paddingLeft: '4px',
-        paddingRight: '4px',
-    },
-    table: {
-        fontSize: '12px'
-    }
-};
+import ResponsableFaseLiteral from './adicionar_responsable';
 
 class FaseLiteral extends Component {
     constructor(props) {
@@ -32,6 +15,7 @@ class FaseLiteral extends Component {
         this.addTarea = this.addTarea.bind(this);
         this.deleteTarea = this.deleteTarea.bind(this);
         this.cargarTareasFase = this.cargarTareasFase.bind(this);
+        this.cambiarResponsable = this.cambiarResponsable.bind(this);
     }
 
     addTarea(tarea) {
@@ -64,14 +48,38 @@ class FaseLiteral extends Component {
         );
     }
 
+    cambiarResponsable(responsable, callback) {
+        const {
+            fase,
+            cargando,
+            noCargando,
+            fetchFaseLiteral,
+            updateFaseLiteral,
+            notificarErrorAjaxAction
+        } = this.props;
+        cargando();
+        const actualizarFaseLiteral = () => updateFaseLiteral(
+            fase.id,
+            {...fase, responsable},
+            () => {
+                callback();
+                noCargando();
+            },
+            notificarErrorAjaxAction
+        );
+        fetchFaseLiteral(fase.id, actualizarFaseLiteral, notificarErrorAjaxAction);
+    }
+
     render() {
         const {
             fase,
             onSeleccionarFase,
             fase_seleccionada_id,
+            miembros_literales_list,
             fases_tareas,
             total_dias,
-            dias_fase
+            dias_fase,
+            table_style
         } = this.props;
         const {mostrar_add_tareas} = this.state;
         const mostrar_tareas = fase_seleccionada_id === fase.id;
@@ -162,6 +170,11 @@ class FaseLiteral extends Component {
                 {
                     mostrar_tareas &&
                     <div className='m-3'>
+                        <ResponsableFaseLiteral
+                            cambiarResponsable={this.cambiarResponsable}
+                            miembros_literales_list={miembros_literales_list}
+                            fase={fase}
+                        />
                         <i
                             className={`fa fa-${mostrar_add_tareas ? 'minus' : 'plus'} puntero`}
                             onClick={onClickAddTarea}>
@@ -181,39 +194,43 @@ class FaseLiteral extends Component {
                             </thead>
                             <tbody>
                             {
-                                _.map(_.orderBy(fases_tareas, ['fecha_limite', ['desc']]), e => {
-                                    return (
-                                        <tr key={e.id} style={{color: `${e.vencido ? 'red' : ''}`}}>
-                                            <td style={table_style.td}>{e.descripcion}</td>
-                                            <td style={table_style.td}>{fechaFormatoUno(e.fecha_limite)}</td>
-                                            <td style={table_style.td} className='text-center'>
-                                                {
-                                                    e.terminado &&
-                                                    <i className='fas fa-check-circle'
-                                                       style={{color: 'green'}}></i>
-                                                }
-                                            </td>
-                                            <td style={table_style.td}>
-                                                <MyDialogButtonDelete
-                                                    onDelete={() => {
-                                                        this.deleteTarea(e.id)
-                                                    }}
-                                                    element_name={e.descripcion}
-                                                    element_type='tarea'
-                                                />
-                                            </td>
-                                            <td style={table_style.td}>
-                                                <i
-                                                    className='fas fa-edit puntero'
-                                                    onClick={() => {
-                                                        this.setState({tarea_seleccionada: e, mostrar_add_tareas: true})
-                                                    }}
-                                                >
-                                                </i>
-                                            </td>
-                                        </tr>
-                                    )
-                                })
+                                _.map(
+                                    _.orderBy(fases_tareas, ['fecha_limite', ['desc']]), e => {
+                                        return (
+                                            <tr key={e.id} style={{color: `${e.vencido ? 'red' : ''}`}}>
+                                                <td style={table_style.td}>{e.descripcion}</td>
+                                                <td style={table_style.td}>{fechaFormatoUno(e.fecha_limite)}</td>
+                                                <td style={table_style.td} className='text-center'>
+                                                    {
+                                                        e.terminado &&
+                                                        <i className='fas fa-check-circle'
+                                                           style={{color: 'green'}}></i>
+                                                    }
+                                                </td>
+                                                <td style={table_style.td}>
+                                                    <MyDialogButtonDelete
+                                                        onDelete={() => {
+                                                            this.deleteTarea(e.id)
+                                                        }}
+                                                        element_name={e.descripcion}
+                                                        element_type='tarea'
+                                                    />
+                                                </td>
+                                                <td style={table_style.td}>
+                                                    <i
+                                                        className='fas fa-edit puntero'
+                                                        onClick={() => {
+                                                            this.setState({
+                                                                tarea_seleccionada: e,
+                                                                mostrar_add_tareas: true
+                                                            })
+                                                        }}
+                                                    >
+                                                    </i>
+                                                </td>
+                                            </tr>
+                                        )
+                                    })
                             }
                             </tbody>
                         </table>

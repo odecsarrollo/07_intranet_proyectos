@@ -17,6 +17,7 @@ class FaseSerializer(serializers.ModelSerializer):
 
 class FaseLiteralSerializer(serializers.ModelSerializer):
     fase_nombre = serializers.CharField(source='fase.nombre', read_only=True)
+    responsable_nombre = serializers.CharField(source='responsable.colaborador.full_name', read_only=True)
     nro_tareas = serializers.IntegerField(read_only=True)
     nro_tareas_terminadas = serializers.IntegerField(read_only=True)
     nro_tareas_vencidas = serializers.IntegerField(read_only=True)
@@ -28,6 +29,8 @@ class FaseLiteralSerializer(serializers.ModelSerializer):
             'url',
             'id',
             'fase',
+            'responsable_nombre',
+            'responsable',
             'literal',
             'fase_nombre',
             'nro_tareas',
