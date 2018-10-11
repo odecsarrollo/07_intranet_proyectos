@@ -20,9 +20,18 @@ class FaseLiteral extends Component {
     }
 
     addTarea(tarea) {
-        const {fase, notificarErrorAjaxAction} = this.props;
-        const nueva_tarea = {...tarea, fase_literal: fase.id};
-        this.props.createTareaFase(nueva_tarea, () => this.cargarTareasFase(), notificarErrorAjaxAction);
+        const {
+            fase,
+            notificarErrorAjaxAction,
+            updateTareaFase,
+            createTareaFase
+        } = this.props;
+        if (tarea.id) {
+            updateTareaFase(tarea.id, tarea, () => this.cargarTareasFase(), notificarErrorAjaxAction);
+        } else {
+            const nueva_tarea = {...tarea, fase_literal: fase.id};
+            createTareaFase(nueva_tarea, () => this.cargarTareasFase(), notificarErrorAjaxAction);
+        }
     }
 
     cargarTareasFase() {

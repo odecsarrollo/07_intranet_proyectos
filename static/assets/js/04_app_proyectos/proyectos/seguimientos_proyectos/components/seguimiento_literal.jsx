@@ -52,6 +52,10 @@ class SeguimientoLiteral extends Component {
     }
 
     componentWillUnmount() {
+        this.limpiarDatos();
+    }
+
+    limpiarDatos() {
         this.props.clearFases();
         this.props.clearFasesLiterales();
         this.props.clearMiembrosLiterales();
@@ -64,6 +68,7 @@ class SeguimientoLiteral extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (this.props.id_literal !== nextProps.id_literal) {
+            this.limpiarDatos();
             this.cargarDatos(nextProps.id_literal);
         }
     }
@@ -76,8 +81,10 @@ class SeguimientoLiteral extends Component {
             fetchFasesLiterales_x_literal,
             fetchMiembrosLiterales_x_literal,
             noCargando,
+            cargando,
             fetchUsuarios,
         } = this.props;
+        cargando();
         const cargarMiCuenta = () => fetchMiCuenta(() => noCargando(), notificarErrorAjaxAction);
         const cargarUsuarios = () => fetchUsuarios(cargarMiCuenta, notificarErrorAjaxAction);
         const cargarMiembros = () => fetchMiembrosLiterales_x_literal(id_literal, cargarUsuarios, notificarErrorAjaxAction);
