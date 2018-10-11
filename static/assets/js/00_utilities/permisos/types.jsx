@@ -46,6 +46,8 @@ export const PROYECTOS = {
     costo_materiales: 'costo_materiales_proyecto',
     costo_mano_obra: 'costo_mano_obra_proyecto',
     ultimo_costo_item_biable: 'ultimo_costo_itemsbiable',
+    admin_proyect_manager: 'admon_proyecto_project_manager',
+    detail_proyect_manager: 'detail_proyecto_project_manager',
 };
 
 

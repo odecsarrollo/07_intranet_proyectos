@@ -3,8 +3,13 @@ import Checkbox from 'material-ui/Checkbox';
 
 
 const BaseFormProyecto = (props) => {
-    const {fases_en_literal} = props;
+    const {fases_en_literal, puede_administrar} = props;
     const fases_en_proyecto_array = _.map(fases_en_literal, e => e.fase);
+    if (!puede_administrar) {
+        return (
+            <div>No Tienes permisos para administrar fases del proyecto</div>
+        )
+    }
     return (
         <div className="row">
             {

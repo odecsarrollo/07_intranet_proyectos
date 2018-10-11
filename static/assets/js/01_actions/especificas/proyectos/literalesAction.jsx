@@ -68,6 +68,15 @@ export function fetchLiteralesAbiertos(callback = null, callback_error = null) {
         fetchList(FULL_URL, dispatches, callback, callback_error)
     }
 }
+export function fetchLiteralesConSeguimiento(callback = null, callback_error = null) {
+    return function (dispatch) {
+        const FULL_URL = `${current_url_api}/con_seguimiento`;
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch_all, payload: response})
+        };
+        fetchList(FULL_URL, dispatches, callback, callback_error)
+    }
+}
 
 export function fetchLiteralesSinSincronizar(callback = null, callback_error = null) {
     return function (dispatch) {

@@ -1,9 +1,9 @@
 import React, {Component, Fragment} from 'react';
 import FormAddTarea from './forms/add_tarea_form';
-import {fechaFormatoDos, fechaFormatoUno} from "../../../../00_utilities/common";
-import {MyDialogButtonDelete} from '../../../../00_utilities/components/ui/dialog';
+import {fechaFormatoDos} from "../../../../00_utilities/common";
 import CargueTareas from './cargue_tareas';
 import ResponsableFaseLiteral from './adicionar_responsable';
+import TareasFase from './tareas_fase_table';
 
 class FaseLiteral extends Component {
     constructor(props) {
@@ -16,6 +16,7 @@ class FaseLiteral extends Component {
         this.deleteTarea = this.deleteTarea.bind(this);
         this.cargarTareasFase = this.cargarTareasFase.bind(this);
         this.cambiarResponsable = this.cambiarResponsable.bind(this);
+        this.cambiarAsignadoTarea = this.cambiarAsignadoTarea.bind(this);
     }
 
     addTarea(tarea) {
@@ -70,6 +71,27 @@ class FaseLiteral extends Component {
         fetchFaseLiteral(fase.id, actualizarFaseLiteral, notificarErrorAjaxAction);
     }
 
+    cambiarAsignadoTarea(tarea, asignado_a, callback = null) {
+        const {
+            cargando,
+            noCargando,
+            fetchTareaFase,
+            updateTareaFase,
+            notificarErrorAjaxAction
+        } = this.props;
+        cargando();
+        const actualizarTareaFase = (response) => updateTareaFase(
+            tarea.id,
+            {...response, asignado_a},
+            () => {
+                callback();
+                noCargando();
+            },
+            notificarErrorAjaxAction
+        );
+        fetchTareaFase(tarea.id, actualizarTareaFase, notificarErrorAjaxAction);
+    }
+
     render() {
         const {
             fase,
@@ -79,7 +101,14 @@ class FaseLiteral extends Component {
             fases_tareas,
             total_dias,
             dias_fase,
-            table_style
+            table_style,
+            puede_adicionar_tareas,
+            administra_proyectos,
+            puede_editar_tareas,
+            puede_eliminar_tareas,
+            soy_responsable,
+            mi_id_usuario,
+            actualizarTarea
         } = this.props;
         const {mostrar_add_tareas} = this.state;
         const mostrar_tareas = fase_seleccionada_id === fase.id;
@@ -92,7 +121,7 @@ class FaseLiteral extends Component {
             })
         };
 
-        const porcentaje_completado = (fase.nro_tareas_terminadas / fase.nro_tareas).toFixed(2) * 100;
+        const porcentaje_completado = fase.nro_tareas > 0 ? (fase.nro_tareas_terminadas / fase.nro_tareas).toFixed(2) * 100 : 0;
         const tiene_vencidas = fase.nro_tareas_vencidas > 0;
         const porcentaje = ((dias_fase / total_dias) * 100).toFixed(0);
 
@@ -155,6 +184,10 @@ class FaseLiteral extends Component {
                 {
                     mostrar_add_tareas &&
                     mostrar_tareas &&
+                    (
+                        puede_adicionar_tareas ||
+                        puede_editar_tareas
+                    ) &&
                     <Fragment>
                         <CargueTareas
                             {...this.props}
@@ -174,66 +207,29 @@ class FaseLiteral extends Component {
                             cambiarResponsable={this.cambiarResponsable}
                             miembros_literales_list={miembros_literales_list}
                             fase={fase}
+                            administra_proyectos={administra_proyectos}
                         />
-                        <i
-                            className={`fa fa-${mostrar_add_tareas ? 'minus' : 'plus'} puntero`}
-                            onClick={onClickAddTarea}>
-                        </i>
-                        <table
-                            className='table table-striped table-responsive'
-                            style={table_style.table}
-                        >
-                            <thead>
-                            <tr>
-                                <th style={table_style.th}>Descripción</th>
-                                <th style={table_style.th}>Fecha Entrega</th>
-                                <th style={table_style.th}>Terminada</th>
-                                <th style={table_style.th}>Eliminar</th>
-                                <th style={table_style.th}>Editar</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {
-                                _.map(
-                                    _.orderBy(fases_tareas, ['fecha_limite', ['desc']]), e => {
-                                        return (
-                                            <tr key={e.id} style={{color: `${e.vencido ? 'red' : ''}`}}>
-                                                <td style={table_style.td}>{e.descripcion}</td>
-                                                <td style={table_style.td}>{fechaFormatoUno(e.fecha_limite)}</td>
-                                                <td style={table_style.td} className='text-center'>
-                                                    {
-                                                        e.terminado &&
-                                                        <i className='fas fa-check-circle'
-                                                           style={{color: 'green'}}></i>
-                                                    }
-                                                </td>
-                                                <td style={table_style.td}>
-                                                    <MyDialogButtonDelete
-                                                        onDelete={() => {
-                                                            this.deleteTarea(e.id)
-                                                        }}
-                                                        element_name={e.descripcion}
-                                                        element_type='tarea'
-                                                    />
-                                                </td>
-                                                <td style={table_style.td}>
-                                                    <i
-                                                        className='fas fa-edit puntero'
-                                                        onClick={() => {
-                                                            this.setState({
-                                                                tarea_seleccionada: e,
-                                                                mostrar_add_tareas: true
-                                                            })
-                                                        }}
-                                                    >
-                                                    </i>
-                                                </td>
-                                            </tr>
-                                        )
-                                    })
-                            }
-                            </tbody>
-                        </table>
+                        {
+                            puede_adicionar_tareas &&
+                            <i
+                                className={`fa fa-${mostrar_add_tareas ? 'minus' : 'plus'} puntero`}
+                                onClick={onClickAddTarea}>
+                            </i>
+                        }
+                        <TareasFase
+                            actualizarTarea={actualizarTarea}
+                            miembros_literales_list={miembros_literales_list}
+                            cambiarAsignadoTarea={this.cambiarAsignadoTarea}
+                            table_style={table_style}
+                            fases_tareas={fases_tareas}
+                            deleteTarea={this.deleteTarea}
+                            setState={this.setState.bind(this)}
+                            puede_editar_tarea={puede_editar_tareas}
+                            puede_eliminar_tarea={puede_eliminar_tareas}
+                            soy_responsable={soy_responsable}
+                            administra_proyectos={administra_proyectos}
+                            mi_id_usuario={mi_id_usuario}
+                        />
                     </div>
                 }
             </div>

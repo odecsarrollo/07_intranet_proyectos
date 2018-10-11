@@ -11,6 +11,7 @@ export default class ResponsableFaseLiteral extends Component {
         const {
             miembros_literales_list,
             cambiarResponsable,
+            administra_proyectos,
             fase,
         } = this.props;
         const {adicionar_responsable} = this.state;
@@ -28,8 +29,12 @@ export default class ResponsableFaseLiteral extends Component {
             <div>
                 <strong>Responsable: </strong>
                 <span
-                    className='puntero'
-                    onClick={() => this.setState({adicionar_responsable: true})}
+                    className={administra_proyectos ? 'puntero' : ''}
+                    onClick={() => {
+                        if (administra_proyectos) {
+                            this.setState({adicionar_responsable: true})
+                        }
+                    }}
                 >
                 {
                     !fase.responsable ?

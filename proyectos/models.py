@@ -30,6 +30,8 @@ class Proyecto(models.Model):
             ("costo_mano_obra_proyecto", "Ver costo MO proyecto"),
             ("costo_materiales_proyecto", "Ver costo materiales proyecto"),
             ("costo_presupuestado_proyecto", "Ver costo presupuestado proyecto"),
+            ("admon_proyecto_project_manager", "Administrador Project Manager"),
+            ("detail_proyecto_project_manager", "Ver Project Manager"),
         ]
 
 
@@ -51,7 +53,6 @@ class Literal(models.Model):
 class MiembroLiteral(models.Model):
     literal = models.ForeignKey(Literal, on_delete=models.PROTECT, related_name='mis_miembros')
     usuario = models.ForeignKey(User, on_delete=models.PROTECT, related_name='mis_literales')
-    puede_ver = models.BooleanField(default=False)
     puede_editar_tareas = models.BooleanField(default=False)
     puede_eliminar_tareas = models.BooleanField(default=False)
     puede_adicionar_tareas = models.BooleanField(default=False)

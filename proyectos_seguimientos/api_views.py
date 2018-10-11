@@ -1,7 +1,8 @@
 import json
 
 from django.utils.timezone import datetime
-from django.db.models import Count, Max, OuterRef, Subquery, ExpressionWrapper, IntegerField
+from django.db.models import Count, Max, OuterRef, Subquery, ExpressionWrapper, IntegerField, Q, Case, When, \
+    BooleanField
 from django.db.models.functions import Coalesce
 from rest_framework.response import Response
 from rest_framework import viewsets
@@ -17,13 +18,61 @@ class FaseViewSet(viewsets.ModelViewSet):
 
 
 class TareaFaseViewSet(viewsets.ModelViewSet):
-    queryset = TareaFase.objects.all()
+    queryset = TareaFase.objects.select_related(
+        'fase_literal',
+        'fase_literal__literal'
+    ).all()
     serializer_class = TareaFaseSerializer
 
     @list_route(http_method_names=['get', ])
     def por_fase_literal(self, request):
         id_fase_literal = self.request.GET.get('id_fase_literal')
         lista = self.get_queryset().filter(fase_literal_id=id_fase_literal).all()
+        serializer = self.get_serializer(lista, many=True)
+        return Response(serializer.data)
+
+    @list_route(http_method_names=['get', ])
+    def pendientes(self, request):
+        usuario = self.request.user
+        lista = self.get_queryset().annotate(
+            soy_asignado=Case(
+                When(asignado_a=usuario, then=True),
+                default=False,
+                output_field=BooleanField()
+            ),
+            soy_responsable=Case(
+                When(fase_literal__responsable=usuario, then=True),
+                default=False,
+                output_field=BooleanField()
+            ),
+        ).filter(
+            Q(asignado_a=usuario) |
+            Q(fase_literal__responsable=usuario)
+        ).exclude(estado=4)
+        serializer = self.get_serializer(lista, many=True)
+        return Response(serializer.data)
+
+    @list_route(http_method_names=['get', ])
+    def terminadas(self, request):
+        usuario = self.request.user
+        lista = self.get_queryset().annotate(
+            soy_asignado=Case(
+                When(asignado_a=usuario, then=True),
+                default=False,
+                output_field=BooleanField()
+            ),
+            soy_responsable=Case(
+                When(fase_literal__responsable=usuario, then=True),
+                default=False,
+                output_field=BooleanField()
+            ),
+        ).filter(
+            (
+                    Q(asignado_a=usuario) |
+                    Q(fase_literal__responsable=usuario)
+            ) &
+            Q(estado=4)
+        )
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
@@ -64,7 +113,7 @@ class FaseLiteralViewSet(viewsets.ModelViewSet):
             nro_tareas_terminadas=Count('id')
         ).filter(
             fase_literal=OuterRef('id'),
-            terminado=True
+            estado=4
         )
         tareas_vencidas = TareaFase.objects.values(
             'fase_literal'
@@ -72,8 +121,9 @@ class FaseLiteralViewSet(viewsets.ModelViewSet):
             nro_tareas_vencidas=Count('id')
         ).filter(
             fase_literal=OuterRef('id'),
-            terminado=False,
             fecha_limite__lte=datetime.now()
+        ).exclude(
+            estado=4
         )
         qs = super().get_queryset().annotate(
             nro_tareas=Count('tareas'),

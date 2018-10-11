@@ -5,7 +5,8 @@ import {
     fetchObject,
     deleteObject,
     createObject,
-    callApiMethodWithParameters, fetchListWithParameter
+    callApiMethodWithParameters,
+    fetchListWithParameter
 } from '../../00_general_fuctions'
 
 const current_url_api = 'fases_tareas';
@@ -31,6 +32,14 @@ export const fetchTareasFases = (callback = null, callback_error = null) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
         fetchList(current_url_api, dispatches, callback, callback_error);
+    }
+};
+export const fetchPendientesTareasFases = (callback = null, callback_error = null) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch_all, payload: response})
+        };
+        fetchList(`${current_url_api}/pendientes`, dispatches, callback, callback_error);
     }
 };
 

@@ -5,7 +5,7 @@ class CargueTareas extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            cabecera: ['descripcion', 'ano', 'mes', 'dia'],
+            cabecera: ['descripcion', 'campo_uno', 'campo_dos', 'campo_tres', 'ano', 'mes', 'dia', 'asignado_a_id'],
             error_columnas: null,
             archivo: null
         };
@@ -34,7 +34,6 @@ class CargueTareas extends Component {
                     });
                     return objeto
                 });
-                console.log(resultado)
                 scope.onCargarListado(resultado)
             }
         };
@@ -55,9 +54,13 @@ class CargueTareas extends Component {
             return (
                 {
                     descripcion: e.descripcion,
+                    campo_uno: e.campo_uno,
+                    campo_dos: e.campo_dos,
+                    campo_tres: e.campo_tres,
                     ano: e.ano,
                     mes: e.mes,
                     dia: e.dia,
+                    asignado_a_id: e.asignado_a_id,
                 }
             )
         });

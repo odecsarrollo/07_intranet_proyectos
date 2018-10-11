@@ -1,6 +1,7 @@
 from io import BytesIO
 
-from django.db.models import Sum, F, ExpressionWrapper, DecimalField, OuterRef, Subquery
+from django.db.models import Sum, F, ExpressionWrapper, DecimalField, IntegerField, OuterRef, Subquery, Count
+from django.utils.timezone import datetime
 from django.db.models.expressions import Exists
 from django.db.models.functions import Coalesce
 from django.http import HttpResponse
@@ -9,7 +10,7 @@ from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 
 from .models import Proyecto, Literal, MiembroLiteral
-from proyectos_seguimientos.models import Fase, FaseLiteral
+from proyectos_seguimientos.models import Fase, FaseLiteral, TareaFase
 from .api_serializers import ProyectoSerializer, LiteralSerializer, MiembroLiteralSerializer
 from mano_obra.models import HoraHojaTrabajo, HoraTrabajoColaboradorLiteralInicial
 from .mixins import LiteralesPDFMixin
@@ -275,6 +276,122 @@ class LiteralViewSet(viewsets.ModelViewSet):
     @list_route(http_method_names=['get', ])
     def abiertos(self, request):
         lista = self.get_queryset().filter(abierto=True).all()
+        serializer = self.get_serializer(lista, many=True)
+        return Response(serializer.data)
+
+    @list_route(http_method_names=['get', ])
+    def con_seguimiento(self, request):
+        tareas_vencidas = TareaFase.objects.values('fase_literal__literal_id').annotate(
+            cantidad=ExpressionWrapper(
+                Count('id'),
+                output_field=IntegerField()
+            ),
+        ).filter(
+            fecha_limite__lte=datetime.now(),
+            fase_literal__literal_id=OuterRef('id')
+        ).exclude(
+            estado=4
+        ).distinct()
+
+        tareas_totales = TareaFase.objects.values('fase_literal__literal_id').annotate(
+            cantidad=ExpressionWrapper(
+                Count('id'),
+                output_field=IntegerField()
+            ),
+        ).filter(
+            fase_literal__literal_id=OuterRef('id')
+        ).distinct()
+
+        tareas_nueva = TareaFase.objects.values('fase_literal__literal_id').annotate(
+            cantidad=ExpressionWrapper(
+                Count('id'),
+                output_field=IntegerField()
+            ),
+        ).filter(
+            fase_literal__literal_id=OuterRef('id'),
+            estado=1
+        ).distinct()
+
+        tareas_pendientes = TareaFase.objects.values('fase_literal__literal_id').annotate(
+            cantidad=ExpressionWrapper(
+                Count('id'),
+                output_field=IntegerField()
+            ),
+        ).filter(
+            fase_literal__literal_id=OuterRef('id'),
+            estado=2
+        ).distinct()
+
+        tareas_en_proceso = TareaFase.objects.values('fase_literal__literal_id').annotate(
+            cantidad=ExpressionWrapper(
+                Count('id'),
+                output_field=IntegerField()
+            ),
+        ).filter(
+            fase_literal__literal_id=OuterRef('id'),
+            estado=3
+        ).distinct()
+
+        tareas_terminadas = TareaFase.objects.values('fase_literal__literal_id').annotate(
+            cantidad=ExpressionWrapper(
+                Count('id'),
+                output_field=IntegerField()
+            ),
+        ).filter(
+            estado=4,
+            fase_literal__literal_id=OuterRef('id')
+        ).distinct()
+
+        lista = self.get_queryset().annotate(
+            cantidad_tareas_vencidas=
+            Coalesce(
+                ExpressionWrapper(
+                    Subquery(tareas_vencidas.values('cantidad')),
+                    output_field=IntegerField()
+                ),
+                0
+            ),
+            cantidad_tareas_totales=
+            Coalesce(
+                ExpressionWrapper(
+                    Subquery(tareas_totales.values('cantidad')),
+                    output_field=IntegerField()
+                ),
+                0
+            ),
+            cantidad_tareas_nuevas=
+            Coalesce(
+                ExpressionWrapper(
+                    Subquery(tareas_nueva.values('cantidad')),
+                    output_field=IntegerField()
+                ),
+                0
+            ),
+            cantidad_tareas_pendientes=
+            Coalesce(
+                ExpressionWrapper(
+                    Subquery(tareas_pendientes.values('cantidad')),
+                    output_field=IntegerField()
+                ),
+                0
+            ),
+            cantidad_tareas_en_proceso=
+            Coalesce(
+                ExpressionWrapper(
+                    Subquery(tareas_en_proceso.values('cantidad')),
+                    output_field=IntegerField()
+                ),
+                0
+            ),
+            cantidad_tareas_terminadas=
+            Coalesce(
+                ExpressionWrapper(
+                    Subquery(tareas_terminadas.values('cantidad')),
+                    output_field=IntegerField()
+                ),
+                0
+            ),
+        ).filter(fase__mis_literales__isnull=False).distinct().all()
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 

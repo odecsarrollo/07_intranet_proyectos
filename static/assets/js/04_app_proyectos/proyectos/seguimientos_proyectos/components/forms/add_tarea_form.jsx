@@ -28,6 +28,21 @@ class Form extends Component {
                             nombre='Descripción'
                             name='descripcion'
                         />
+                        <MyTextFieldSimple
+                            className='col-11'
+                            nombre='Opcional 1'
+                            name='campo_uno'
+                        />
+                        <MyTextFieldSimple
+                            className='col-11'
+                            nombre='Opcional 2'
+                            name='campo_dos'
+                        />
+                        <MyTextFieldSimple
+                            className='col-11'
+                            nombre='Opcional 3'
+                            name='campo_tres'
+                        />
                         <MyDateTimePickerField
                             className='col-12'
                             nombre='Fecha Límite'

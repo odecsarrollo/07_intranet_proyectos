@@ -20,7 +20,6 @@ class MiembroLiteralSerializer(serializers.ModelSerializer):
             'colaborador',
             'usuario_nombres',
             'usuario_apellidos',
-            'puede_ver',
             'puede_editar_tareas',
             'puede_eliminar_tareas',
             'puede_adicionar_tareas',
@@ -36,6 +35,12 @@ class LiteralSerializer(serializers.ModelSerializer):
     proyecto_nombre = serializers.CharField(source='proyecto.nombre', read_only=True)
     costo_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     costo_mano_obra_inicial = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    cantidad_tareas_vencidas = serializers.IntegerField(read_only=True)
+    cantidad_tareas_totales = serializers.IntegerField(read_only=True)
+    cantidad_tareas_terminadas = serializers.IntegerField(read_only=True)
+    cantidad_tareas_nuevas = serializers.IntegerField(read_only=True)
+    cantidad_tareas_pendientes = serializers.IntegerField(read_only=True)
+    cantidad_tareas_en_proceso = serializers.IntegerField(read_only=True)
     cantidad_horas_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     cantidad_horas_mano_obra_inicial = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     orden_compra_nro = serializers.CharField(source='cotizacion.orden_compra_nro', read_only=True)
@@ -57,6 +62,12 @@ class LiteralSerializer(serializers.ModelSerializer):
             'url',
             'id',
             'id_literal',
+            'cantidad_tareas_vencidas',
+            'cantidad_tareas_totales',
+            'cantidad_tareas_nuevas',
+            'cantidad_tareas_pendientes',
+            'cantidad_tareas_en_proceso',
+            'cantidad_tareas_terminadas',
             'proyecto_abierto',
             'proyecto_nombre',
             'id_proyecto',
