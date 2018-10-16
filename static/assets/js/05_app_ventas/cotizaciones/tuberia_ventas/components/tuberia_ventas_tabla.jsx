@@ -33,26 +33,26 @@ class Tabla extends React.Component {
                     <div className="row">
                         <div className="col-12 text-right pb-1">
                             Estados
-                                {colores.map(c => {
-                                    return (
-                                        <span
-                                            key={c}
-                                            className="btn puntero"
-                                            style={{backgroundColor: c, height: '40px', border:'1px solid black'}}
-                                            onClick={() => {
-                                                this.setState({color: c})
-                                            }}
-                                        >
+                            {colores.map(c => {
+                                return (
+                                    <span
+                                        key={c}
+                                        className="btn puntero"
+                                        style={{backgroundColor: c, height: '40px', border: '1px solid black'}}
+                                        onClick={() => {
+                                            this.setState({color: c})
+                                        }}
+                                    >
 
                                         </span>
-                                    )
-                                })}
-                                <span className="btn puntero"
-                                      style={{backgroundColor: 'white', border:'1px solid black', height:'40px'}}
-                                      onClick={() => {
-                                          this.setState({color: null})
-                                      }}
-                                >
+                                )
+                            })}
+                            <span className="btn puntero"
+                                  style={{backgroundColor: 'white', border: '1px solid black', height: '40px'}}
+                                  onClick={() => {
+                                      this.setState({color: null})
+                                  }}
+                            >
                                     Todas
                                 </span>
 
@@ -199,14 +199,21 @@ class Tabla extends React.Component {
                                         Header: "Elimi.",
                                         show: permisos_object.delete,
                                         maxWidth: 60,
-                                        Cell: row =>
-                                            <MyDialogButtonDelete
-                                                onDelete={() => {
-                                                    onDelete(row.original)
-                                                }}
-                                                element_name={row.original.descripcion_cotizacion}
-                                                element_type={singular_name}
-                                            />
+                                        Cell: row => {
+                                            if (!row.original.nro_cotizacion) {
+                                                return (
+                                                    <MyDialogButtonDelete
+                                                        onDelete={() => {
+                                                            onDelete(row.original)
+                                                        }}
+                                                        element_name={row.original.nombre}
+                                                        element_type={singular_name}
+                                                    />
+                                                )
+                                            } else {
+                                                return <div></div>
+                                            }
+                                        }
 
                                     },
                                     {
