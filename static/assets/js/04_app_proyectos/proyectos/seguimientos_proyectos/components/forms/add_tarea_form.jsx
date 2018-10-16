@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {reduxForm} from 'redux-form';
 import BotoneriaModalForm from '../../../../../00_utilities/components/ui/forms/botoneria_modal_form';
 import {
@@ -8,6 +8,11 @@ import {
 import {connect} from "react-redux";
 
 class Form extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {mostrar_mas: false}
+    }
+
     render() {
         const {
             pristine,
@@ -18,6 +23,7 @@ class Form extends Component {
             onCancel,
             handleSubmit
         } = this.props;
+        const {mostrar_mas} = this.state;
         return (
             <form className="card" onSubmit={handleSubmit(onSubmit)}>
                 <div className="m-2">
@@ -28,21 +34,34 @@ class Form extends Component {
                             nombre='Descripción'
                             name='descripcion'
                         />
-                        <MyTextFieldSimple
-                            className='col-11'
-                            nombre='Opcional 1'
-                            name='campo_uno'
-                        />
-                        <MyTextFieldSimple
-                            className='col-11'
-                            nombre='Opcional 2'
-                            name='campo_dos'
-                        />
-                        <MyTextFieldSimple
-                            className='col-11'
-                            nombre='Opcional 3'
-                            name='campo_tres'
-                        />
+                        <i
+                            className={!mostrar_mas ? 'fas fa-plus puntero' : 'fas fa-minus puntero'}
+                            style={{position: 'absolute', right: 10, top: 100}}
+                            onClick={() => this.setState(s => {
+                                return {mostrar_mas: !s.mostrar_mas}
+                            })}
+                        >
+                        </i>
+                        {
+                            mostrar_mas &&
+                            <Fragment>
+                                <MyTextFieldSimple
+                                    className='col-11'
+                                    nombre='Opcional 1'
+                                    name='campo_uno'
+                                />
+                                <MyTextFieldSimple
+                                    className='col-11'
+                                    nombre='Opcional 2'
+                                    name='campo_dos'
+                                />
+                                <MyTextFieldSimple
+                                    className='col-11'
+                                    nombre='Opcional 3'
+                                    name='campo_tres'
+                                />
+                            </Fragment>
+                        }
                         <MyDateTimePickerField
                             className='col-12'
                             nombre='Fecha Límite'
