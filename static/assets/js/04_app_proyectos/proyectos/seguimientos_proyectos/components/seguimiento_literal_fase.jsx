@@ -11,12 +11,35 @@ class FaseLiteral extends Component {
         this.state = {
             mostrar_add_tareas: false,
             tarea_seleccionada: null,
+            tareas_seleccionadas: [],
         };
         this.addTarea = this.addTarea.bind(this);
         this.deleteTarea = this.deleteTarea.bind(this);
         this.cargarTareasFase = this.cargarTareasFase.bind(this);
+        this.adicionarQuitarTareasSeleccionadas = this.adicionarQuitarTareasSeleccionadas.bind(this);
         this.cambiarResponsable = this.cambiarResponsable.bind(this);
         this.cambiarAsignadoTarea = this.cambiarAsignadoTarea.bind(this);
+    }
+
+    adicionarQuitarTareasSeleccionadas(tarea_id) {
+        let tareas_seleccionadas = this.state.tareas_seleccionadas;
+        if (this.state.tareas_seleccionadas.includes(tarea_id)) {
+            tareas_seleccionadas = tareas_seleccionadas.filter(e => e !== tarea_id);
+        } else {
+            tareas_seleccionadas = [...tareas_seleccionadas, tarea_id];
+        }
+        this.setState({tareas_seleccionadas});
+    }
+
+    seleccionarTodas(tarea_id) {
+        const {fases_tareas} = this.props;
+        let tareas_seleccionadas = this.state.tareas_seleccionadas;
+        if (this.state.tareas_seleccionadas.includes(tarea_id)) {
+            tareas_seleccionadas = tareas_seleccionadas.filter(e => e !== tarea_id);
+        } else {
+            tareas_seleccionadas = [...tareas_seleccionadas, tarea_id];
+        }
+        this.setState({tareas_seleccionadas});
     }
 
     addTarea(tarea) {
@@ -226,6 +249,8 @@ class FaseLiteral extends Component {
                             </i>
                         }
                         <TareasFase
+                            adicionarQuitarTareasSeleccionadas={this.adicionarQuitarTareasSeleccionadas}
+                            tareas_seleccionadas={this.state.tareas_seleccionadas}
                             actualizarTarea={actualizarTarea}
                             miembros_literales_list={miembros_literales_list}
                             cambiarAsignadoTarea={this.cambiarAsignadoTarea}

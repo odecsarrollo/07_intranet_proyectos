@@ -1,5 +1,6 @@
-import React, {Fragment} from "react";
-import {IconButtonTableEdit, IconButtonTableSee} from '../../../../00_utilities/components/ui/icon/iconos';
+import React from "react";
+import {MyDialogButtonDelete} from '../../../../00_utilities/components/ui/dialog';
+import {IconButtonTableSee} from '../../../../00_utilities/components/ui/icon/iconos';
 import {Link} from 'react-router-dom'
 
 import ReactTable from "react-table";
@@ -181,7 +182,28 @@ class Tabla extends React.Component {
                                             <IconButtonTableSee/>
                                         </Link>
 
-                                }
+                                },
+                                {
+                                    Header: "Elimi.",
+                                    show: permisos_object.delete,
+                                    maxWidth: 60,
+                                    Cell: row => {
+                                        if (!row.original.nro_cotizacion) {
+                                            return (
+                                                <MyDialogButtonDelete
+                                                    onDelete={() => {
+                                                        onDelete(row.original)
+                                                    }}
+                                                    element_name={row.original.nombre}
+                                                    element_type={singular_name}
+                                                />
+                                            )
+                                        } else {
+                                            return <div></div>
+                                        }
+                                    }
+
+                                },
                             ]
                         }
                     ]}

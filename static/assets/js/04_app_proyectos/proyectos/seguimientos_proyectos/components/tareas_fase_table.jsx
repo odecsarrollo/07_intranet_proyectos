@@ -18,7 +18,9 @@ export default class TareasFase extends Component {
             soy_responsable,
             administra_proyectos,
             mi_id_usuario,
-            actualizarTarea
+            actualizarTarea,
+            adicionarQuitarTareasSeleccionadas,
+            tareas_seleccionadas
         } = this.props;
         return (
             <table
@@ -43,6 +45,7 @@ export default class TareasFase extends Component {
                         puede_editar_tarea &&
                         <th style={table_style.th}>Editar</th>
                     }
+                    <th style={table_style.th}>Seleccionar</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -50,6 +53,7 @@ export default class TareasFase extends Component {
                     _.map(
                         _.orderBy(fases_tareas, ['fecha_limite', ['desc']]), e => {
                             const puede_cambiar_estado = administra_proyectos || (mi_id_usuario === e.asignado_a) || soy_responsable;
+                            const esta_seleccionada = tareas_seleccionadas.includes(e.id);
                             return (
                                 <tr key={e.id} style={{color: `${e.vencido ? 'red' : ''}`}}>
                                     <td style={table_style.td}>{e.descripcion}</td>
@@ -106,6 +110,13 @@ export default class TareasFase extends Component {
                                             </i>
                                         </td>
                                     }
+                                    <td style={table_style.td} className='text-center'>
+                                        <i
+                                            className={`far ${esta_seleccionada ? 'fa-check-square' : 'fa-square' } puntero`}
+                                            onClick={() => adicionarQuitarTareasSeleccionadas(e.id)}
+                                        >
+                                        </i>
+                                    </td>
                                 </tr>
                             )
                         })
