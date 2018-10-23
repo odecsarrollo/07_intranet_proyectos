@@ -226,6 +226,7 @@ class FaseLiteral extends Component {
                             cargarTareasFase={this.cargarTareasFase}
                         />
                         <FormAddTarea
+                            miembros_literales_list={miembros_literales_list}
                             onSubmit={this.addTarea}
                             item_seleccionado={this.state.tarea_seleccionada}
                             onCancel={() => this.setState({tarea_seleccionada: null, mostrar_add_tareas: false})}

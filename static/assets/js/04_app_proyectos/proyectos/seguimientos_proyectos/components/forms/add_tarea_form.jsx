@@ -1,9 +1,11 @@
 import React, {Component, Fragment} from 'react';
 import {reduxForm} from 'redux-form';
+import Combobox from 'react-widgets/lib/Combobox';
 import BotoneriaModalForm from '../../../../../00_utilities/components/ui/forms/botoneria_modal_form';
 import {
     MyTextFieldSimple,
-    MyDateTimePickerField
+    MyDateTimePickerField,
+    MyCombobox
 } from '../../../../../00_utilities/components/ui/forms/fields';
 import {connect} from "react-redux";
 
@@ -21,8 +23,17 @@ class Form extends Component {
             initialValues,
             onSubmit,
             onCancel,
-            handleSubmit
+            handleSubmit,
+            miembros_literales_list
         } = this.props;
+        const miembros = _.map(miembros_literales_list, e => {
+            return (
+                {
+                    id: e.usuario,
+                    nombre: `${e.colaborador}`
+                }
+            )
+        });
         const {mostrar_mas} = this.state;
         return (
             <form className="card" onSubmit={handleSubmit(onSubmit)}>
@@ -67,6 +78,14 @@ class Form extends Component {
                             nombre='Fecha Límite'
                             name='fecha_limite'
                             max={new Date(2999, 12, 31)}
+                        />
+                        <MyCombobox
+                            className='col-12'
+                            name='asignado_a'
+                            data={[{id: null, nombre: 'SIN DEFINIR'}, ...miembros]}
+                            placeholder='Seleccionar Asignado'
+                            valueField='id'
+                            textField='nombre'
                         />
                     </div>
                 </div>
