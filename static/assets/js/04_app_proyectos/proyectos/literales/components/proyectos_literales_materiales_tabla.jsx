@@ -8,7 +8,7 @@ import {
 } from "../../../../00_utilities/permisos/types";
 
 const ItemTabla = (props) => {
-    const {item, item: {item_biable}, can_see_ultimo_costo_item_biable} = props;
+    const {item, item: {item_biable}, ultimo_costo_item_biable} = props;
     return (
         <tr>
             <td>{item_biable.id_item}</td>
@@ -16,7 +16,7 @@ const ItemTabla = (props) => {
             <td>{item_biable.descripcion}</td>
             <td>{item.cantidad}</td>
             <td>{item_biable.unidad_medida_inventario}</td>
-            {can_see_ultimo_costo_item_biable && <td>{pesosColombianos(item.costo_total)}</td>}
+            {ultimo_costo_item_biable && <td>{pesosColombianos(item.costo_total)}</td>}
         </tr>
     )
 };
@@ -87,7 +87,12 @@ class TablaProyectosLiteralesMateriales extends Component {
                                 </thead>
                                 <tbody>
                                 {_.map(listado_materiales, item => {
-                                    return <ItemTabla key={item.id} item={item} {...this.props}/>
+                                    return <ItemTabla
+                                        key={item.id}
+                                        item={item}
+                                        ultimo_costo_item_biable={permisos.ultimo_costo_item_biable}
+                                        {...this.props}
+                                    />
                                 })}
                                 </tbody>
                                 <tfoot>
