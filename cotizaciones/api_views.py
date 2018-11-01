@@ -134,6 +134,8 @@ class CotizacionViewSet(viewsets.ModelViewSet):
     def cotizaciones_resumen_tuberia_ventas(self, request):
         month = datetime.datetime.now().month
         year = datetime.datetime.now().year
+        current_date = datetime.datetime.now()
+        current_quarter = round((current_date.month - 1) / 3 + 1)
         qs = self.get_queryset().filter(
             Q(estado__in=[
                 'Cita/Generación Interés',
@@ -145,9 +147,10 @@ class CotizacionViewSet(viewsets.ModelViewSet):
             (
                     Q(estado='Cierre (Aprobado)') &
                     Q(fecha_cambio_estado__year=year) &
-                    Q(fecha_cambio_estado__month=month)
+                    Q(fecha_cambio_estado__quarter=current_quarter)
             )
         )
+
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
