@@ -1,4 +1,5 @@
 import datetime
+from math import ceil
 from django.db.models import Max, Q
 from rest_framework import viewsets
 from rest_framework.decorators import list_route
@@ -135,7 +136,7 @@ class CotizacionViewSet(viewsets.ModelViewSet):
         month = datetime.datetime.now().month
         year = datetime.datetime.now().year
         current_date = datetime.datetime.now()
-        current_quarter = round((current_date.month - 1) / 3 + 1)
+        current_quarter = ceil(current_date.month/3)
         qs = self.get_queryset().filter(
             Q(estado__in=[
                 'Cita/Generación Interés',
