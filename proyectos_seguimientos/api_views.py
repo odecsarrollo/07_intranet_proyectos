@@ -1,8 +1,18 @@
 import json
 
 from django.utils.timezone import datetime
-from django.db.models import Count, Max, OuterRef, Subquery, ExpressionWrapper, IntegerField, Q, Case, When, \
+from django.db.models import (
+    Count,
+    Max,
+    OuterRef,
+    Subquery,
+    ExpressionWrapper,
+    IntegerField,
+    Q,
+    Case,
+    When,
     BooleanField
+)
 from django.db.models.functions import Coalesce
 from rest_framework.response import Response
 from rest_framework import viewsets
@@ -84,6 +94,14 @@ class FaseLiteralViewSet(viewsets.ModelViewSet):
         'responsable__colaborador',
     ).all()
     serializer_class = FaseLiteralSerializer
+
+    @detail_route(methods=['post'])
+    def eliminar_tareas(self, request, pk=None):
+        listado_tareas = json.loads(request.POST.get('listado'))
+        fase_literal = self.get_object()
+        fase_literal.tareas.filter(id__in=listado_tareas).delete()
+        serializer = self.get_serializer(fase_literal)
+        return Response(serializer.data)
 
     @detail_route(methods=['post'])
     def cargar_tareas(self, request, pk=None):

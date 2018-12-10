@@ -54,6 +54,16 @@ export const fetchFasesLiterales_x_literal = (id_literal, callback = null, callb
         fetchListWithParameter(`${current_url_api}/por_literal/?id_literal=${id_literal}`, dispatches, callback, callback_error);
     }
 };
+export const deleteListaTareasFaseLitera = (id, listado, callback = null, callback_error = null) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch, payload: response})
+        };
+        let params = new URLSearchParams();
+        params.append('listado', JSON.stringify(listado));
+        callApiMethodWithParameters(current_url_api, id, 'eliminar_tareas', params, dispatches, callback, callback_error);
+    }
+};
 export const fetchFaseLiteral = (id, callback = null, callback_error = null) => {
     return (dispatch) => {
         const dispatches = (response) => {

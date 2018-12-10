@@ -20,7 +20,9 @@ export default class TareasFase extends Component {
             mi_id_usuario,
             actualizarTarea,
             adicionarQuitarTareasSeleccionadas,
-            tareas_seleccionadas
+            tareas_seleccionadas,
+            selecciono_todas,
+            seleccionarTodasTareas
         } = this.props;
         return (
             <table
@@ -45,7 +47,14 @@ export default class TareasFase extends Component {
                         puede_editar_tarea &&
                         <th style={table_style.th}>Editar</th>
                     }
-                    <th style={table_style.th}>Seleccionar</th>
+                    <th style={table_style.th}>
+                        Selec.
+                        <i
+                            className={`far ${selecciono_todas ? 'fa-check-square' : 'fa-square' } puntero`}
+                            onClick={() => seleccionarTodasTareas()}
+                        >
+                        </i>
+                    </th>
                 </tr>
                 </thead>
                 <tbody>

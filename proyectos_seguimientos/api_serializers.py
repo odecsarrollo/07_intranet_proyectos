@@ -85,3 +85,8 @@ class TareaFaseSerializer(serializers.ModelSerializer):
             'estado_display',
             'vencido',
         ]
+        extra_kwargs = {
+            'campo_uno': {'required': False, 'allow_null': False, 'allow_blank': True},
+            'campo_dos': {'required': False, 'allow_null': False, 'allow_blank': True},
+            'campo_tres': {'required': False, 'allow_null': False, 'allow_blank': True},
+        }

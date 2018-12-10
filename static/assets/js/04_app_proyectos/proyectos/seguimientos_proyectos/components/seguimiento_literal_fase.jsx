@@ -11,14 +11,44 @@ class FaseLiteral extends Component {
         this.state = {
             mostrar_add_tareas: false,
             tarea_seleccionada: null,
+            selecciono_todas: false,
             tareas_seleccionadas: [],
         };
         this.addTarea = this.addTarea.bind(this);
         this.deleteTarea = this.deleteTarea.bind(this);
         this.cargarTareasFase = this.cargarTareasFase.bind(this);
+        this.seleccionarTodasTareas = this.seleccionarTodasTareas.bind(this);
         this.adicionarQuitarTareasSeleccionadas = this.adicionarQuitarTareasSeleccionadas.bind(this);
         this.cambiarResponsable = this.cambiarResponsable.bind(this);
         this.cambiarAsignadoTarea = this.cambiarAsignadoTarea.bind(this);
+        this.eliminarTareasSelecionadas = this.eliminarTareasSelecionadas.bind(this);
+    }
+
+    eliminarTareasSelecionadas() {
+        const {deleteListaTareasFaseLitera, fase, notificarErrorAjaxAction} = this.props;
+        deleteListaTareasFaseLitera(
+            fase.id,
+            this.state.tareas_seleccionadas,
+            () => {
+                this.cargarTareasFase();
+                this.setState({selecciono_todas: false, tareas_seleccionadas: []})
+            },
+            notificarErrorAjaxAction
+        );
+    }
+
+    seleccionarTodasTareas() {
+        const {fases_tareas} = this.props;
+        let tareas_seleccionadas = [];
+        this.setState({tareas_seleccionadas});
+        this.setState(s => {
+            if (!s.selecciono_todas) {
+                _.map(fases_tareas, e => {
+                    tareas_seleccionadas = [...tareas_seleccionadas, e.id];
+                })
+            }
+            return {selecciono_todas: !s.selecciono_todas, tareas_seleccionadas}
+        });
     }
 
     adicionarQuitarTareasSeleccionadas(tarea_id) {
@@ -28,11 +58,10 @@ class FaseLiteral extends Component {
         } else {
             tareas_seleccionadas = [...tareas_seleccionadas, tarea_id];
         }
-        this.setState({tareas_seleccionadas});
+        this.setState({tareas_seleccionadas, selecciono_todas: false});
     }
 
     seleccionarTodas(tarea_id) {
-        const {fases_tareas} = this.props;
         let tareas_seleccionadas = this.state.tareas_seleccionadas;
         if (this.state.tareas_seleccionadas.includes(tarea_id)) {
             tareas_seleccionadas = tareas_seleccionadas.filter(e => e !== tarea_id);
@@ -157,6 +186,8 @@ class FaseLiteral extends Component {
         const tiene_vencidas = fase.nro_tareas_vencidas > 0;
         const porcentaje = ((dias_fase / total_dias) * 100).toFixed(0);
 
+        const tiene_tareas_seleccionadas = _.size(this.state.tareas_seleccionadas) > 0;
+
         return (
             <div
                 className='col-12 m-2 pr-5'
@@ -250,6 +281,8 @@ class FaseLiteral extends Component {
                             </i>
                         }
                         <TareasFase
+                            seleccionarTodasTareas={this.seleccionarTodasTareas}
+                            selecciono_todas={this.state.selecciono_todas}
                             adicionarQuitarTareasSeleccionadas={this.adicionarQuitarTareasSeleccionadas}
                             tareas_seleccionadas={this.state.tareas_seleccionadas}
                             actualizarTarea={actualizarTarea}
@@ -265,6 +298,17 @@ class FaseLiteral extends Component {
                             administra_proyectos={administra_proyectos}
                             mi_id_usuario={mi_id_usuario}
                         />
+                    </div>
+                }
+                {
+                    tiene_tareas_seleccionadas &&
+                    mostrar_tareas &&
+                    <div className='text-right'>
+                        <i
+                            className='fas fa-trash puntero'
+                            onClick={() => this.eliminarTareasSelecionadas()}
+                        >
+                        </i>
                     </div>
                 }
             </div>

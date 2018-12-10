@@ -26,6 +26,7 @@ export const deleteTareaFase = (id, callback = null, callback_error = null) => {
         deleteObject(current_url_api, id, dispatches, callback, callback_error)
     }
 };
+
 export const fetchTareasFases = (callback = null, callback_error = null) => {
     return (dispatch) => {
         const dispatches = (response) => {

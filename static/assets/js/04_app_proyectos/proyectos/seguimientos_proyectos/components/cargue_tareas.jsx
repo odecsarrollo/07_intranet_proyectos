@@ -21,12 +21,10 @@ class CargueTareas extends Component {
             const separado_lineas = reader.result.split('\n');
             const cabecera_archivo = _.split(separado_lineas[0], ';').map(e => _.trim(e));
             const columnas_iguales = _.isEqual(cabecera_archivo, cabecera);
-
             scope.setState({error_columnas: columnas_iguales ? null : true});
-
             if (columnas_iguales) {
                 let resultado = _.map(separado_lineas, e => {
-                    const lineas = _.split(e, ';');
+                    const lineas = _.split(_.deburr(e), ';');
                     let objeto = {};
                     cabecera.map(c => {
                         const index = _.indexOf(cabecera, c);
