@@ -61,6 +61,7 @@ MY_APPS = [
     'cotizaciones.apps.CotizacionesConfig',
     'configuraciones.apps.ConfiguracionesConfig',
     'proyectos_seguimientos.apps.ProyectosSeguimientosConfig',
+    'bandas_eurobelt.apps.BandasEurobeltConfig',
 ]
 
 THIRD_PART_APPS = [

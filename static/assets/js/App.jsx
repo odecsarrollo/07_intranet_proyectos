@@ -39,6 +39,7 @@ import AppIndex from './IndexApp';
 import AppAdmin from './03_app_admin/App';
 import AppProyectos from './04_app_proyectos/App';
 import AppVentas from './05_app_ventas/App';
+import AppBandas from './06_app_bandas/App';
 
 const App = () => {
     return (
@@ -53,6 +54,7 @@ const App = () => {
                             <Route path='/app/admin' component={AppAdmin}/>
                             <Route path='/app/proyectos' component={AppProyectos}/>
                             <Route path='/app/ventas' component={AppVentas}/>
+                            <Route path='/app/bandas' component={AppBandas}/>
                         </Switch>
                     </Fragment>
                 </BrowserRouter>

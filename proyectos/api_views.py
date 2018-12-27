@@ -108,7 +108,8 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
 
     @list_route(http_method_names=['get', ])
     def con_literales_abiertos(self, request):
-        lista = self.get_queryset().filter(abierto=True, mis_literales__abierto=True).all()
+        self.queryset = self.queryset.filter(abierto=True, mis_literales__abierto=True)
+        lista = self.get_queryset()
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 

@@ -73,6 +73,11 @@ class IndexApp extends Component {
                             link='/app/ventas/'
                             icono='fa-shopping-cart'
                         />
+                        <Boton
+                            nombre='Bandas'
+                            link='/app/bandas/'
+                            icono='fa-puzzle-piece'
+                        />
                         <div className="col-4"></div>
                         <div className="col-4 boton-index mt-4">
                             <a href="/accounts/logout/?next=/">
