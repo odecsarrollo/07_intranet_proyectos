@@ -1,6 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import TareasPendientesList from '../tareas_fases/tareas_pendientes';
 import LiteralesSeguimiento from '../literales_seguimiento/literales_seguimiento';
+import MatrixProyectos from '../matrix_proyectos/matrix_proyectos';
 import {connect} from "react-redux";
 import * as actions from "../../../01_actions/01_index";
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
@@ -44,6 +45,10 @@ class Dashboard extends Component {
                         <Tab>
                             Seguimiento Literales
                         </Tab>
+
+                        <Tab>
+                            Prueba
+                        </Tab>
                     </TabList>
 
                     <TabPanel>
@@ -68,6 +73,14 @@ class Dashboard extends Component {
                     <TabPanel>
                         <div className="row">
                             <LiteralesSeguimiento
+                                table_style={table_style}
+                            />
+                        </div>
+                    </TabPanel>
+
+                    <TabPanel>
+                        <div className="row">
+                            <MatrixProyectos
                                 table_style={table_style}
                             />
                         </div>

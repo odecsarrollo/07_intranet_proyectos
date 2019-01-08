@@ -30,6 +30,7 @@ class TareaFase(TimeStampedModel):
         (4, 'TERMINADO'),
     )
     fase_literal = models.ForeignKey(FaseLiteral, on_delete=models.PROTECT, related_name='tareas')
+    fecha_inicial = models.DateField()
     fecha_limite = models.DateField()
     descripcion = models.CharField(max_length=500)
     campo_uno = models.CharField(max_length=200, null=True)

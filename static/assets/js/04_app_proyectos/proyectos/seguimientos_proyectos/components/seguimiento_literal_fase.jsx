@@ -4,6 +4,7 @@ import {fechaFormatoDos} from "../../../../00_utilities/common";
 import CargueTareas from './cargue_tareas';
 import ResponsableFaseLiteral from './adicionar_responsable';
 import TareasFase from './tareas_fase_table';
+import moment from "moment-timezone";
 
 class FaseLiteral extends Component {
     constructor(props) {
@@ -13,6 +14,7 @@ class FaseLiteral extends Component {
             tarea_seleccionada: null,
             selecciono_todas: false,
             tareas_seleccionadas: [],
+            distancia_separadores: 10,
         };
         this.addTarea = this.addTarea.bind(this);
         this.deleteTarea = this.deleteTarea.bind(this);
@@ -169,7 +171,8 @@ class FaseLiteral extends Component {
             puede_eliminar_tareas,
             soy_responsable,
             mi_id_usuario,
-            actualizarTarea
+            actualizarTarea,
+            fecha_minima
         } = this.props;
         const {mostrar_add_tareas} = this.state;
         const mostrar_tareas = fase_seleccionada_id === fase.id;
@@ -185,13 +188,13 @@ class FaseLiteral extends Component {
         const porcentaje_completado = fase.nro_tareas > 0 ? (fase.nro_tareas_terminadas / fase.nro_tareas).toFixed(2) * 100 : 0;
         const tiene_vencidas = fase.nro_tareas_vencidas > 0;
         const porcentaje = ((dias_fase / total_dias) * 100).toFixed(0);
-
+        const fecha_inicial_fase = moment(fase.fecha_inicial);
+        const dias_a_correr = parseInt(fecha_inicial_fase.diff(fecha_minima, "days"));
+        const porcentaje_a_correr = ((dias_a_correr / total_dias) * 100).toFixed(0);
         const tiene_tareas_seleccionadas = _.size(this.state.tareas_seleccionadas) > 0;
 
         return (
-            <div
-                className='col-12 m-2 pr-5'
-            >
+            <div className='mt-1 mb-1'>
                 <div
                     style={{
                         width: `${porcentaje}%`,
@@ -199,6 +202,7 @@ class FaseLiteral extends Component {
                         position: 'relative',
                         backgroundColor: 'lightgray',
                         borderRadius: '2px',
+                        marginLeft: `${porcentaje_a_correr}%`
                     }}
                     className='puntero'
                     onClick={onClick}>
@@ -207,9 +211,9 @@ class FaseLiteral extends Component {
                             background: `linear-gradient(to right, ${tiene_vencidas ? 'red' : 'green'} ${porcentaje_completado}%,lightgray ${1 - porcentaje}%)`,
                             borderRadius: '2px',
                             transition: 'all .2s ease-out',
-                            border: `${tiene_vencidas ? '1px solid red' : ''}`
+                            border: `${tiene_vencidas ? '1px solid red' : ''}`,
+                            padding:'10px'
                         }}
-                        className='p-3'
                     >
                         {/*<span>{fase.fase_nombre} ({fase.nro_tareas}) {fechaFormatoUno(fase.fecha_limite)} {fase.nro_tareas_terminadas} {porcentaje_completado}%*/}
                         {/*</span>*/}
@@ -220,12 +224,12 @@ class FaseLiteral extends Component {
                             top: 0,
                         }}
                     >
-                        <div className='pl-2' style={{whiteSpace: 'nowrap'}}>
+                        <div className='pl-2' style={{whiteSpace: 'nowrap', fontSize:'12px'}}>
                             <strong>{fase.fase_nombre}</strong>
                             <span
                                 className='pl-2'
                                 style={{
-                                    fontSize: '11px'
+                                    fontSize: '10px'
                                 }}
                             >
                             {porcentaje_completado.toFixed(0)}% <small>({fase.nro_tareas_terminadas}/{fase.nro_tareas})</small>
@@ -237,80 +241,82 @@ class FaseLiteral extends Component {
                         style={{
                             position: 'absolute',
                             bottom: '-5px',
-                            right: '-65px',
-                            fontSize: '11px'
+                            right: '-15px',
+                            fontSize: '9px'
                         }}
                     >
                         {fase.fecha_limite && fechaFormatoDos(fase.fecha_limite)}
                     </div>
                 </div>
-                {
-                    mostrar_add_tareas &&
-                    mostrar_tareas &&
-                    (
-                        puede_adicionar_tareas ||
-                        puede_editar_tareas
-                    ) &&
-                    <Fragment>
-                        <CargueTareas
-                            {...this.props}
-                            cargarTareasFase={this.cargarTareasFase}
-                        />
-                        <FormAddTarea
-                            miembros_literales_list={miembros_literales_list}
-                            onSubmit={this.addTarea}
-                            item_seleccionado={this.state.tarea_seleccionada}
-                            onCancel={() => this.setState({tarea_seleccionada: null, mostrar_add_tareas: false})}
-                        />
-                    </Fragment>
-                }
-                {
-                    mostrar_tareas &&
-                    <div className='m-3'>
-                        <ResponsableFaseLiteral
-                            cambiarResponsable={this.cambiarResponsable}
-                            miembros_literales_list={miembros_literales_list}
-                            fase={fase}
-                            administra_proyectos={administra_proyectos}
-                        />
-                        {
-                            puede_adicionar_tareas &&
+                <div style={{marginLeft: `${porcentaje_a_correr}%`}}>
+                    {
+                        mostrar_add_tareas &&
+                        mostrar_tareas &&
+                        (
+                            puede_adicionar_tareas ||
+                            puede_editar_tareas
+                        ) &&
+                        <div className='pl-2 pt-1' style={{width: '600px'}}>
+                            <CargueTareas
+                                {...this.props}
+                                cargarTareasFase={this.cargarTareasFase}
+                            />
+                            <FormAddTarea
+                                miembros_literales_list={miembros_literales_list}
+                                onSubmit={this.addTarea}
+                                item_seleccionado={this.state.tarea_seleccionada}
+                                onCancel={() => this.setState({tarea_seleccionada: null, mostrar_add_tareas: false})}
+                            />
+                        </div>
+                    }
+                    {
+                        mostrar_tareas &&
+                        <div className='m-3'>
+                            <ResponsableFaseLiteral
+                                cambiarResponsable={this.cambiarResponsable}
+                                miembros_literales_list={miembros_literales_list}
+                                fase={fase}
+                                administra_proyectos={administra_proyectos}
+                            />
+                            {
+                                puede_adicionar_tareas &&
+                                <i
+                                    className={`fa fa-${mostrar_add_tareas ? 'minus' : 'plus'} puntero`}
+                                    onClick={onClickAddTarea}>
+                                </i>
+                            }
+                            <TareasFase
+                                seleccionarTodasTareas={this.seleccionarTodasTareas}
+                                selecciono_todas={this.state.selecciono_todas}
+                                adicionarQuitarTareasSeleccionadas={this.adicionarQuitarTareasSeleccionadas}
+                                tareas_seleccionadas={this.state.tareas_seleccionadas}
+                                actualizarTarea={actualizarTarea}
+                                miembros_literales_list={miembros_literales_list}
+                                cambiarAsignadoTarea={this.cambiarAsignadoTarea}
+                                table_style={table_style}
+                                fases_tareas={fases_tareas}
+                                deleteTarea={this.deleteTarea}
+                                setState={this.setState.bind(this)}
+                                puede_editar_tarea={puede_editar_tareas}
+                                puede_eliminar_tarea={puede_eliminar_tareas}
+                                soy_responsable={soy_responsable}
+                                administra_proyectos={administra_proyectos}
+                                mi_id_usuario={mi_id_usuario}
+                            />
+                        </div>
+                    }
+                    {
+                        tiene_tareas_seleccionadas &&
+                        mostrar_tareas &&
+                        <div className='text-right'>
                             <i
-                                className={`fa fa-${mostrar_add_tareas ? 'minus' : 'plus'} puntero`}
-                                onClick={onClickAddTarea}>
+                                className='fas fa-trash puntero'
+                                onClick={() => this.eliminarTareasSelecionadas()}
+                            >
                             </i>
-                        }
-                        <TareasFase
-                            seleccionarTodasTareas={this.seleccionarTodasTareas}
-                            selecciono_todas={this.state.selecciono_todas}
-                            adicionarQuitarTareasSeleccionadas={this.adicionarQuitarTareasSeleccionadas}
-                            tareas_seleccionadas={this.state.tareas_seleccionadas}
-                            actualizarTarea={actualizarTarea}
-                            miembros_literales_list={miembros_literales_list}
-                            cambiarAsignadoTarea={this.cambiarAsignadoTarea}
-                            table_style={table_style}
-                            fases_tareas={fases_tareas}
-                            deleteTarea={this.deleteTarea}
-                            setState={this.setState.bind(this)}
-                            puede_editar_tarea={puede_editar_tareas}
-                            puede_eliminar_tarea={puede_eliminar_tareas}
-                            soy_responsable={soy_responsable}
-                            administra_proyectos={administra_proyectos}
-                            mi_id_usuario={mi_id_usuario}
-                        />
-                    </div>
-                }
-                {
-                    tiene_tareas_seleccionadas &&
-                    mostrar_tareas &&
-                    <div className='text-right'>
-                        <i
-                            className='fas fa-trash puntero'
-                            onClick={() => this.eliminarTareasSelecionadas()}
-                        >
-                        </i>
-                    </div>
-                }
+                        </div>
+                    }
+                </div>
             </div>
         )
     }

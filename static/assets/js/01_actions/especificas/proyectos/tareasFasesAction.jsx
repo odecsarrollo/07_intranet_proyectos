@@ -35,6 +35,14 @@ export const fetchTareasFases = (callback = null, callback_error = null) => {
         fetchList(current_url_api, dispatches, callback, callback_error);
     }
 };
+export const fetchMisPendientesTareasFases = (callback = null, callback_error = null) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch_all, payload: response})
+        };
+        fetchList(`${current_url_api}/mis_pendientes`, dispatches, callback, callback_error);
+    }
+};
 export const fetchPendientesTareasFases = (callback = null, callback_error = null) => {
     return (dispatch) => {
         const dispatches = (response) => {

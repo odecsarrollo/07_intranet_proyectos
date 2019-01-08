@@ -11,8 +11,8 @@ from django.db.models import (
     Q,
     Case,
     When,
-    BooleanField
-)
+    BooleanField,
+    Min)
 from django.db.models.functions import Coalesce
 from rest_framework.response import Response
 from rest_framework import viewsets
@@ -30,6 +30,7 @@ class FaseViewSet(viewsets.ModelViewSet):
 class TareaFaseViewSet(viewsets.ModelViewSet):
     queryset = TareaFase.objects.select_related(
         'fase_literal',
+        'fase_literal__fase',
         'fase_literal__literal'
     ).all()
     serializer_class = TareaFaseSerializer
@@ -38,6 +39,27 @@ class TareaFaseViewSet(viewsets.ModelViewSet):
     def por_fase_literal(self, request):
         id_fase_literal = self.request.GET.get('id_fase_literal')
         lista = self.get_queryset().filter(fase_literal_id=id_fase_literal).all()
+        serializer = self.get_serializer(lista, many=True)
+        return Response(serializer.data)
+
+    @list_route(http_method_names=['get', ])
+    def mis_pendientes(self, request):
+        usuario = self.request.user
+        lista = self.get_queryset().annotate(
+            soy_asignado=Case(
+                When(asignado_a=usuario, then=True),
+                default=False,
+                output_field=BooleanField()
+            ),
+            soy_responsable=Case(
+                When(fase_literal__responsable=usuario, then=True),
+                default=False,
+                output_field=BooleanField()
+            ),
+        ).filter(
+            Q(asignado_a=usuario) |
+            Q(fase_literal__responsable=usuario)
+        ).exclude(estado=4)
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
@@ -55,9 +77,6 @@ class TareaFaseViewSet(viewsets.ModelViewSet):
                 default=False,
                 output_field=BooleanField()
             ),
-        ).filter(
-            Q(asignado_a=usuario) |
-            Q(fase_literal__responsable=usuario)
         ).exclude(estado=4)
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
@@ -158,6 +177,7 @@ class FaseLiteralViewSet(viewsets.ModelViewSet):
                 ), 0
             ),
             fecha_limite=Max('tareas__fecha_limite'),
+            fecha_inicial=Min('tareas__fecha_inicial'),
         )
         return qs
 

@@ -35,7 +35,8 @@ export default class TareasFase extends Component {
                     <th style={table_style.th}>Opt1</th>
                     <th style={table_style.th}>Opt2</th>
                     <th style={table_style.th}>Opt3</th>
-                    <th style={table_style.th}>F. Entrega</th>
+                    <th style={table_style.th}>F. Ini.</th>
+                    <th style={table_style.th}>F. Ent.</th>
                     <th style={table_style.th}>Estado</th>
                     <th style={table_style.th}>Terminada</th>
                     <th style={table_style.th}>Asignado</th>
@@ -69,6 +70,7 @@ export default class TareasFase extends Component {
                                     <td style={table_style.td}>{e.campo_uno}</td>
                                     <td style={table_style.td}>{e.campo_dos}</td>
                                     <td style={table_style.td}>{e.campo_tres}</td>
+                                    <td style={table_style.td}>{fechaFormatoDos(e.fecha_inicial)}</td>
                                     <td style={table_style.td}>{fechaFormatoDos(e.fecha_limite)}</td>
                                     <TdCambiarEstadoTarea
                                         fila={e}
