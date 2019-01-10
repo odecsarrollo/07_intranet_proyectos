@@ -30,7 +30,7 @@ class FaseViewSet(viewsets.ModelViewSet):
 class TareaFaseViewSet(viewsets.ModelViewSet):
     queryset = TareaFase.objects.select_related(
         'fase_literal',
-        'fase_literal__fase',
+        'fase_literal__literal__proyecto',
         'fase_literal__literal'
     ).all()
     serializer_class = TareaFaseSerializer

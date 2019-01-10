@@ -271,7 +271,7 @@ class FaseLiteral extends Component {
                     }
                     {
                         mostrar_tareas &&
-                        <div className='m-3'>
+                        <div className='m-3' style={{width:'1000px'}}>
                             <ResponsableFaseLiteral
                                 cambiarResponsable={this.cambiarResponsable}
                                 miembros_literales_list={miembros_literales_list}

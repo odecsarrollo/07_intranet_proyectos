@@ -33,9 +33,9 @@ class TareaFase(TimeStampedModel):
     fecha_inicial = models.DateField()
     fecha_limite = models.DateField()
     descripcion = models.CharField(max_length=500)
-    campo_uno = models.CharField(max_length=200, null=True)
-    campo_dos = models.CharField(max_length=200, null=True)
-    campo_tres = models.CharField(max_length=200, null=True)
+    campo_uno = models.CharField(max_length=200, default='')
+    campo_dos = models.CharField(max_length=200, default='')
+    campo_tres = models.CharField(max_length=200, default='')
     asignado_a = models.ForeignKey(User, on_delete=models.PROTECT, related_name='tareas_seguimiento_asignadas',
                                    null=True)
     estado = models.PositiveIntegerField(choices=ESTADO_CHOICES, default=1)

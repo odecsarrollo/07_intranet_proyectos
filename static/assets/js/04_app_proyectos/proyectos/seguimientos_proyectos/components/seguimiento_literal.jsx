@@ -376,6 +376,7 @@ class SeguimientoLiteral extends Component {
                                             <FaseLiteral
                                                 {...this.props}
                                                 fecha_minima={fecha_minima}
+                                                distancia_separadores={distancia_separadores}
                                                 actualizarTarea={this.actualizarTarea}
                                                 miembros_literales_list={miembros_literales_list}
                                                 table_style={table_style}
