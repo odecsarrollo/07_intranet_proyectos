@@ -7,6 +7,8 @@ from model_utils.models import TimeStampedModel
 
 class Fase(models.Model):
     nombre = models.CharField(max_length=120)
+    color = models.CharField(max_length=10, default='black')
+    letra_color = models.CharField(max_length=10, default='white')
     literales = models.ManyToManyField(Literal, through='FaseLiteral')
 
     class Meta:

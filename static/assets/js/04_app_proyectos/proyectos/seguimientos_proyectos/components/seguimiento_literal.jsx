@@ -14,6 +14,7 @@ import MiembroLiteral from './adicionar_miembro';
 import {noCargando} from "../../../../01_actions/generales/utiles/loadingAction";
 
 import moment from 'moment-timezone';
+
 moment.tz.setDefault("America/Bogota");
 moment.locale('es');
 

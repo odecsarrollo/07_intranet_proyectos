@@ -11,12 +11,16 @@ class FaseSerializer(serializers.ModelSerializer):
         fields = [
             'url',
             'id',
-            'nombre'
+            'nombre',
+            'color',
+            'letra_color',
         ]
 
 
 class FaseLiteralSerializer(serializers.ModelSerializer):
     fase_nombre = serializers.CharField(source='fase.nombre', read_only=True)
+    fase_color = serializers.CharField(source='fase.color', read_only=True)
+    fase_color_letra = serializers.CharField(source='fase.letra_color', read_only=True)
     responsable_nombre = serializers.CharField(source='responsable.colaborador.full_name', read_only=True)
     nro_tareas = serializers.IntegerField(read_only=True)
     nro_tareas_terminadas = serializers.IntegerField(read_only=True)
@@ -30,6 +34,8 @@ class FaseLiteralSerializer(serializers.ModelSerializer):
             'url',
             'id',
             'fase',
+            'fase_color',
+            'fase_color_letra',
             'responsable_nombre',
             'responsable',
             'literal',
@@ -50,6 +56,8 @@ class TareaFaseSerializer(serializers.ModelSerializer):
     proyecto = serializers.IntegerField(source='fase_literal.literal.proyecto.id', read_only=True)
     literal_id_literal = serializers.CharField(source='fase_literal.literal.id_literal', read_only=True)
     fase_literal_nombre = serializers.CharField(source='fase_literal.fase.nombre', read_only=True)
+    fase_literal_color = serializers.CharField(source='fase_literal.fase.color', read_only=True)
+    fase_literal_color_letra = serializers.CharField(source='fase_literal.fase.letra_color', read_only=True)
     terminado = serializers.SerializerMethodField()
     estado_display = serializers.SerializerMethodField()
     asignado_a_nombre = serializers.CharField(source='asignado_a.colaborador.full_name', read_only=True)
@@ -79,6 +87,8 @@ class TareaFaseSerializer(serializers.ModelSerializer):
             'soy_responsable',
             'fase_literal',
             'fase_literal_nombre',
+            'fase_literal_color_letra',
+            'fase_literal_color',
             'fecha_inicial',
             'fecha_limite',
             'campo_uno',

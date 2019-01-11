@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react';
+import React, {Component} from 'react';
 import FormAddTarea from './forms/add_tarea_form';
 import {fechaFormatoDos} from "../../../../00_utilities/common";
 import CargueTareas from './cargue_tareas';
@@ -193,26 +193,30 @@ class FaseLiteral extends Component {
         const porcentaje_a_correr = ((dias_a_correr / total_dias) * 100).toFixed(0);
         const tiene_tareas_seleccionadas = _.size(this.state.tareas_seleccionadas) > 0;
 
+        const color = fase.fase_color;
+        const color_letra = fase.fase_color_letra;
+        const color_letra_borde = color_letra === 'black' ? 'white' : 'black';
+
+
         return (
-            <div className='mt-1 mb-1'>
+            <div className='mt-1 mb-1' style={{borderRadius: '2px'}}>
                 <div
                     style={{
                         width: `${porcentaje}%`,
                         height: '100%',
                         position: 'relative',
-                        backgroundColor: 'lightgray',
+                        backgroundColor: color,
                         borderRadius: '2px',
-                        marginLeft: `${porcentaje_a_correr}%`
+                        marginLeft: `${porcentaje_a_correr}%`,
                     }}
                     className='puntero'
                     onClick={onClick}>
                     <div
                         style={{
-                            background: `linear-gradient(to right, ${tiene_vencidas ? 'red' : 'green'} ${porcentaje_completado}%,lightgray ${1 - porcentaje}%)`,
+                            background: color,
                             borderRadius: '2px',
                             transition: 'all .2s ease-out',
-                            border: `${tiene_vencidas ? '1px solid red' : ''}`,
-                            padding:'10px'
+                            padding: '10px'
                         }}
                     >
                         {/*<span>{fase.fase_nombre} ({fase.nro_tareas}) {fechaFormatoUno(fase.fecha_limite)} {fase.nro_tareas_terminadas} {porcentaje_completado}%*/}
@@ -224,7 +228,12 @@ class FaseLiteral extends Component {
                             top: 0,
                         }}
                     >
-                        <div className='pl-2' style={{whiteSpace: 'nowrap', fontSize:'12px'}}>
+                        <div className='pl-2' style={{
+                            whiteSpace: 'nowrap',
+                            fontSize: '12px',
+                            color: color_letra,
+                            textShadow: `-1px 0 ${color_letra_borde}, 0 1px ${color_letra_borde}, 1px 0 ${color_letra_borde}, 0 -1px ${color_letra_borde}`
+                        }}>
                             <strong>{fase.fase_nombre}</strong>
                             <span
                                 className='pl-2'
@@ -236,13 +245,35 @@ class FaseLiteral extends Component {
                         </span>
                         </div>
                     </div>
+                </div>
+                <div
+                    style={{
+                        width: `${porcentaje}%`,
+                        height: '3px',
+                        position: 'relative',
+                        backgroundColor: 'lightgray',
+                        marginLeft: `${porcentaje_a_correr}%`
+                    }}
+                >
+                    <div
+                        style={{
+                            background: `linear-gradient(to right, ${tiene_vencidas ? 'red' : 'green'} ${porcentaje_completado}%,lightgray ${1 - porcentaje}%)`,
+                            borderRadius: '2px',
+                            transition: 'all .2s ease-out',
+                            border: `${tiene_vencidas ? '1px solid red' : ''}`,
+                            height: '100%'
+                        }}
+                    >
+                        {/*<span>{fase.fase_nombre} ({fase.nro_tareas}) {fechaFormatoUno(fase.fecha_limite)} {fase.nro_tareas_terminadas} {porcentaje_completado}%*/}
+                        {/*</span>*/}
+                    </div>
                     <div
                         className='pl-2'
                         style={{
                             position: 'absolute',
-                            bottom: '-5px',
-                            right: '-15px',
-                            fontSize: '9px'
+                            bottom: '0px',
+                            right: '-53px',
+                            fontSize: '9px',
                         }}
                     >
                         {fase.fecha_limite && fechaFormatoDos(fase.fecha_limite)}
@@ -271,7 +302,7 @@ class FaseLiteral extends Component {
                     }
                     {
                         mostrar_tareas &&
-                        <div className='m-3' style={{width:'1000px'}}>
+                        <div className='m-3' style={{width: '1000px'}}>
                             <ResponsableFaseLiteral
                                 cambiarResponsable={this.cambiarResponsable}
                                 miembros_literales_list={miembros_literales_list}

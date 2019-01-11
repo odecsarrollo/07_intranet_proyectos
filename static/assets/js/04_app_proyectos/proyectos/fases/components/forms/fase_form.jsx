@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {reduxForm} from 'redux-form';
-import {MyTextFieldSimple} from '../../../../../00_utilities/components/ui/forms/fields';
+import {MyTextFieldSimple, MySelectField} from '../../../../../00_utilities/components/ui/forms/fields';
 import {connect} from "react-redux";
 import {MyFormTagModal} from '../../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import validate from './validate';
@@ -35,6 +35,22 @@ class Form extends Component {
                     nombre='Nombre'
                     name='nombre'
                     case='U'/>
+                <MyTextFieldSimple
+                    className="col-12"
+                    nombre='Color'
+                    name='color'
+                />
+                <MySelectField
+                    name='letra_color'
+                    nombre='Color Letra'
+                    className='col-12'
+                    options={
+                        [
+                            {value: 'black', primaryText: 'Black'},
+                            {value: 'white', primaryText: 'White'},
+                        ]
+                    }
+                />
             </MyFormTagModal>
         )
     }

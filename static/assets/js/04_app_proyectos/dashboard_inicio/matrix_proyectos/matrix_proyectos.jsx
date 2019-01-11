@@ -14,7 +14,7 @@ class LiteralesSeguimiento extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            distancia_separadores: 2,
+            distancia_separadores: 10,
             filtro_miembro: null,
             filtro_fase: null,
         };
@@ -49,16 +49,13 @@ class LiteralesSeguimiento extends Component {
             if (s.distancia_separadores === 2) {
                 nueva_distancia_separadores = 4;
             }
-            if (s.distancia_separadores === 1) {
-                nueva_distancia_separadores = 2;
-            }
             return {distancia_separadores: nueva_distancia_separadores}
         })
     }
 
     onClickMinusZoom() {
         this.setState(s => {
-            let nueva_distancia_separadores = 1;
+            let nueva_distancia_separadores = 2;
             if (s.distancia_separadores === 15) {
                 nueva_distancia_separadores = 10;
             }
@@ -67,9 +64,6 @@ class LiteralesSeguimiento extends Component {
             }
             if (s.distancia_separadores === 4) {
                 nueva_distancia_separadores = 2;
-            }
-            if (s.distancia_separadores === 2) {
-                nueva_distancia_separadores = 1;
             }
             return {distancia_separadores: nueva_distancia_separadores}
         })
@@ -82,18 +76,15 @@ class LiteralesSeguimiento extends Component {
         const {distancia_separadores, filtro_miembro, filtro_fase} = this.state;
         let literales = [];
 
-        let colores = [
-            {color: '#8892c6', letra: 'black'},
-            {color: '#ffff00', letra: 'black'},
-            {color: '#e63244', letra: 'white'},
-            {color: '#00ff00', letra: 'black'},
-            {color: '#6d6552', letra: 'white'},
-            {color: '#9b5e4f', letra: 'white'},
-            {color: '#64a1b0', letra: 'black'},
-            {color: '#ff00ff', letra: 'white'},
-            {color: '#7f7679', letra: 'white'},
-            {color: '#0000ff', letra: 'white'},
-        ];
+        let colores_x_fase = _.map(fases_tareas, f => {
+            return {
+                fase: f.fase_literal_nombre,
+                color: f.fase_literal_color,
+                letra: f.fase_literal_color_letra,
+            }
+        });
+
+        colores_x_fase = _.mapKeys(colores_x_fase, 'fase');
 
         let miembros_proyectos = _.uniq(_.map(_.orderBy(fases_tareas, 'asignado_a_nombre'), e => e.asignado_a_nombre));
         miembros_proyectos = ['TODOS', ...miembros_proyectos];
@@ -133,13 +124,6 @@ class LiteralesSeguimiento extends Component {
             fases = _.mapKeys(fases, 'fase');
             literales[l.literal] = {...l, fases};
         });
-
-        let fases_list = _.map(_.uniq(_.map(data, e => e.fase_literal_nombre)), c => {
-            const color = colores[0];
-            colores = colores.slice(1);
-            return ({fase: c, color})
-        });
-        fases_list = _.mapKeys(fases_list, 'fase');
 
         const fecha_ini = moment(_.min(_.map(data, f => f.fecha_inicial)));
         const fecha_fin = moment(_.max(_.map(data, f => f.fecha_limite)));
@@ -252,7 +236,9 @@ class LiteralesSeguimiento extends Component {
                                                     <div style={{
                                                         borderRight: '1px solid black',
                                                         borderBottom: '1px solid black'
-                                                    }}><strong>{f.ano}</strong></div>
+                                                    }}>
+                                                        <strong>{f.nro_dias_ano > 5 ? f.ano : f.ano.toString().substring(2, 4)}</strong>
+                                                    </div>
                                                     <div className='text-center'>
                                                         {
                                                             f.meses.map(m =>
@@ -313,7 +299,7 @@ class LiteralesSeguimiento extends Component {
                                                 const tamano = f.total_dias * distancia_separadores;
                                                 const dias_a_correr = f.fecha_ini.diff(fecha_ini, "days") + 1;
                                                 const tamano_a_correr = dias_a_correr * distancia_separadores;
-                                                const color_letra = fases_list[f.fase].color.letra;
+                                                const color_letra = colores_x_fase[f.fase].letra;
                                                 const color_letra_borde = color_letra === 'black' ? 'white' : 'black';
                                                 return (
                                                     <div
@@ -328,7 +314,7 @@ class LiteralesSeguimiento extends Component {
                                                         <div
                                                             style={{
                                                                 height: '14px',
-                                                                backgroundColor: `${fases_list[f.fase].color.color}`,
+                                                                backgroundColor: `${colores_x_fase[f.fase].color}`,
                                                                 borderRadius: '2px',
                                                                 color: `${color_letra}`,
                                                                 textShadow: `-1px 0 ${color_letra_borde}, 0 1px ${color_letra_borde}, 1px 0 ${color_letra_borde}, 0 -1px ${color_letra_borde}`

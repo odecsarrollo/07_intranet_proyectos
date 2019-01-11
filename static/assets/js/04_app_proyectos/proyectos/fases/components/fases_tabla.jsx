@@ -1,8 +1,6 @@
 import React from "react";
-import Checkbox from 'material-ui/Checkbox';
 import {MyDialogButtonDelete} from '../../../../00_utilities/components/ui/dialog';
 import {IconButtonTableEdit, IconButtonTableSee} from '../../../../00_utilities/components/ui/icon/iconos';
-import {Link} from 'react-router-dom'
 
 import ReactTable from "react-table";
 
@@ -31,10 +29,28 @@ class Tabla extends React.Component {
                                 Header: "Nombre",
                                 accessor: "nombre",
                                 maxWidth: 400,
-                                filterable: true,
-                                filterMethod: (filter, row) => {
-                                    return row[filter.id].includes(filter.value.toLowerCase())
+                            },
+                            {
+                                Header: "Color",
+                                accessor: "color",
+                                maxWidth: 200,
+                                Cell: row => {
+                                    const color_letra = row.original.letra_color;
+                                    const color_letra_borde = color_letra === 'black' ? 'white' : 'black';
+                                    return <div style={{
+                                        backgroundColor: `${row.value}`,
+                                        color: `${row.original.letra_color}`,
+                                        paddingLeft: '10px',
+                                        textShadow: `-1px 0 ${color_letra_borde}, 0 1px ${color_letra_borde}, 1px 0 ${color_letra_borde}, 0 -1px ${color_letra_borde}`
+                                    }}
+                                    >{row.value}</div>
                                 }
+                            },
+                            {
+                                Header: "Color Letra",
+                                accessor: "letra_color",
+                                maxWidth: 80,
+                                Cell: row => <div style={{backgroundColor: `${row.value}`}}>{row.value}</div>
                             },
                         ]
                     },
