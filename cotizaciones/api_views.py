@@ -52,6 +52,12 @@ class CotizacionViewSet(viewsets.ModelViewSet):
             guardar_nuevamente = True
 
         if editado.estado not in ['Aplazado', 'Cancelado', 'Cita/Generación Interés']:
+            if editado.estado == 'Cierre (Aprobado)':
+                if not editado.fecha_cambio_estado_cerrado:
+                    editado.fecha_cambio_estado_cerrado = datetime.datetime.now()
+            else:
+                editado.fecha_cambio_estado_cerrado = None
+
             if editado.nro_cotizacion is None:
                 now = datetime.datetime.now()
                 base_nro_cotizacion = (abs(int(now.year)) % 100) * 1000
@@ -147,8 +153,8 @@ class CotizacionViewSet(viewsets.ModelViewSet):
         )
         qs = qs | self.get_queryset().filter(
             estado='Cierre (Aprobado)',
-            fecha_cambio_estado__year=year,
-            fecha_cambio_estado__quarter=current_quarter
+            fecha_cambio_estado_cerrado__year=year,
+            fecha_cambio_estado_cerrado__quarter=current_quarter
         )
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)

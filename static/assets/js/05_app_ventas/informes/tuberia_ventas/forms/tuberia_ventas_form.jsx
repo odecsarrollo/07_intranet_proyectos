@@ -18,8 +18,7 @@ class Form extends Component {
             submitting,
             reset,
             handleSubmit,
-            onSubmit,
-            valores
+            onSubmit
         } = this.props;
         return (
             <form className='p-4' onSubmit={handleSubmit(v => onSubmit(v))}>
