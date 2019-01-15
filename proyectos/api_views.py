@@ -144,6 +144,7 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
 
     @list_route(methods=['get'])
     def print_costos_dos(self, request, pk=None):
+        print('llego')
         fecha_inicial = request.GET.get('fecha_inicial', None)
         fecha_final = request.GET.get('fecha_final', None)
         con_mo_saldo_inicial = request.GET.get('con_mo_saldo_inicial', None)

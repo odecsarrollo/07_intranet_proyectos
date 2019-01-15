@@ -368,9 +368,9 @@ class SeguimientoLiteral extends Component {
                             </div>
                             <div
                                 style={{width: `${ancho_total}px`, border: '1px solid transparent', clear: 'both'}}
-                                className='mb-5'
+                                className='mb-3'
                             >
-                                {_.map(fases_literales_list, e => {
+                                {_.map(_.pickBy(fases_literales_list, e => e.nro_tareas > 0), e => {
                                     const dias_fase = moment(e.fecha_limite).diff(e.fecha_inicial, 'days');
                                     return (
                                         <div key={e.id}>
@@ -397,6 +397,38 @@ class SeguimientoLiteral extends Component {
                                     )
                                 })}
                             </div>
+                            {
+                                _.size(_.pickBy(fases_literales_list, e => e.nro_tareas === 0)) > 0 &&
+                                <h4>Sin tareas</h4>
+                            }
+                            {
+                                _.map(_.pickBy(fases_literales_list, e => e.nro_tareas === 0), e => {
+                                    const dias_fase = moment(e.fecha_limite).diff(e.fecha_inicial, 'days');
+                                    return (
+                                        <div key={e.id}>
+                                            <FaseLiteral
+                                                {...this.props}
+                                                fecha_minima={fecha_minima}
+                                                distancia_separadores={distancia_separadores}
+                                                actualizarTarea={this.actualizarTarea}
+                                                miembros_literales_list={miembros_literales_list}
+                                                table_style={table_style}
+                                                total_dias={total_dias}
+                                                dias_fase={dias_fase}
+                                                fase_seleccionada_id={fase_seleccionada_id}
+                                                onSeleccionarFase={this.onSeleccionarFase}
+                                                fase={e}
+                                                puede_adicionar_tareas={puede_adicionar_tareas}
+                                                puede_editar_tareas={puede_editar_tareas}
+                                                puede_eliminar_tareas={puede_eliminar_tareas}
+                                                administra_proyectos={proyecto_permisos.admin_proyect_manager}
+                                                soy_responsable={mi_cuenta.id === e.responsable}
+                                                mi_id_usuario={mi_cuenta.id}
+                                            />
+                                        </div>
+                                    )
+                                })
+                            }
                         </div>
                     </TabPanel>
                     <TabPanel>

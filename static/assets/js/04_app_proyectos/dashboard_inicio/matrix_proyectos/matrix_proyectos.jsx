@@ -125,10 +125,14 @@ class LiteralesSeguimiento extends Component {
             literales[l.literal] = {...l, fases};
         });
 
+        const fecha_hoy = moment(new Date())
         const fecha_ini = moment(_.min(_.map(data, f => f.fecha_inicial)));
         const fecha_fin = moment(_.max(_.map(data, f => f.fecha_limite)));
 
         const total_dias = parseInt(fecha_fin.diff(fecha_ini, "days"));
+        let total_dias_hoy = parseInt(fecha_hoy.diff(fecha_ini, "days")) + 1;
+        total_dias_hoy = (total_dias_hoy < 1 || total_dias < total_dias_hoy) ? -15 : total_dias_hoy;
+
         const ancho_total = distancia_separadores * total_dias > 0 ? distancia_separadores * total_dias : 700;
 
         const getRangeOfDates = (start, end, key, arr = [start.startOf(key)]) => {
@@ -164,6 +168,7 @@ class LiteralesSeguimiento extends Component {
                 nro_dias_ano
             }
         });
+        const numero_fases = _.reduce(_.map(literales, l => _.size(l.fases)), (sum, n) => sum + n);
         return (
             <Fragment>
                 <div className="col-12" style={{fontSize: '11px'}}>
@@ -285,6 +290,17 @@ class LiteralesSeguimiento extends Component {
                                             )
                                         }
                                     </div>
+                                </div>
+                                <div
+                                    style={{
+                                        borderLeft: '1px red dotted',
+                                        height: `${numero_fases * 20}px`,
+                                        position: 'relative',
+                                        left: `${total_dias_hoy * distancia_separadores}px`,
+                                        float: 'left',
+                                        color: 'transparent'
+                                    }}>
+                                    H
                                 </div>
                                 {_.map(literales, l =>
                                     <div key={`der-${l.literal}`}

@@ -19,18 +19,17 @@ def get_page_body(boxes):
 class LiteralesPDFMixin(object):
     def generar_resultados(self, fecha_inicial, fecha_final, con_mo_saldo_inicial, proyecto):
         context = {}
+
         mano_obra = HoraHojaTrabajo.objects.values('literal').annotate(
             horas_trabajadas=ExpressionWrapper(
                 Coalesce(Sum('cantidad_minutos') / 60, 0),
                 output_field=DecimalField(max_digits=2)),
             costo_total=ExpressionWrapper(
-                Coalesce(
-                    Sum((F('cantidad_minutos') / 60) * (
-                            F('hoja__tasa__costo') / F('hoja__tasa__nro_horas_mes_trabajadas')
-                    )), 0),
+                Sum(Coalesce(F('cantidad_minutos') / 60, 0) * (
+                        F('hoja__tasa__costo') / F('hoja__tasa__nro_horas_mes_trabajadas')
+                )),
                 output_field=DecimalField(max_digits=4))
         ).filter(
-            literal_id=OuterRef('id'),
             verificado=True
         )
 
@@ -57,7 +56,10 @@ class LiteralesPDFMixin(object):
             )
 
         qsLiterales = qsLiterales.annotate(
-            costo_mano_obra_iniciales=Coalesce(Sum('mis_horas_trabajadas_iniciales__valor'), 0),
+            costo_mano_obra_iniciales=ExpressionWrapper(
+                Coalesce(Sum('mis_horas_trabajadas_iniciales__valor'), 0),
+                output_field=DecimalField(max_digits=4)
+            ),
             cantidad_mano_obra_iniciales=ExpressionWrapper(
                 Coalesce(Sum('mis_horas_trabajadas_iniciales__cantidad_minutos'), 0) / 60,
                 output_field=DecimalField(max_digits=4)
@@ -70,13 +72,10 @@ class LiteralesPDFMixin(object):
                 Subquery(mano_obra.values('costo_total')),
                 output_field=DecimalField(max_digits=4)
             ),
-            costo_mis_materiales=
-            Coalesce(
-                ExpressionWrapper(
-                    Subquery(materiales.values('costo_total')),
-                    output_field=DecimalField(max_digits=4)
-                ),
-                0)
+            costo_mis_materiales=ExpressionWrapper(
+                Coalesce(Subquery(materiales.values('costo_total')), 0),
+                output_field=DecimalField(max_digits=4)
+            )
         ).distinct()
 
         total_costo_mo = 0
@@ -85,7 +84,6 @@ class LiteralesPDFMixin(object):
         total_horas_mo = 0
 
         for literal in qsLiterales:
-
             if literal.cantidad_horas_trabajadas:
                 total_horas_mo += literal.cantidad_horas_trabajadas
             if literal.cantidad_mano_obra_iniciales and con_mo_saldo_inicial:
