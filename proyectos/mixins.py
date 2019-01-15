@@ -30,7 +30,8 @@ class LiteralesPDFMixin(object):
                 )),
                 output_field=DecimalField(max_digits=4))
         ).filter(
-            verificado=True
+            verificado=True,
+            literal_id=OuterRef('id'),
         )
 
         materiales = ItemsLiteralBiable.objects.values('literal').annotate(
