@@ -1,11 +1,13 @@
 import React, {Component, Fragment} from 'react';
-import * as actions from "../../01_actions/01_index";
+import * as actions from "../../../01_actions/01_index";
 import {connect} from "react-redux";
-import CargarDatos from "../../00_utilities/components/system/cargar_datos";
-import {permisosAdapter, pesosColombianos} from "../../00_utilities/common";
+import CargarDatos from "../../../00_utilities/components/system/cargar_datos";
+import {permisosAdapter, pesosColombianos} from "../../../00_utilities/common";
 import {
     COTIZACIONES as permisos_view
-} from "../../00_utilities/permisos/types";
+} from "../../../00_utilities/permisos/types";
+
+import FormTuberiaVentas from './forms/tuberia_ventas_form'
 
 class InformeTunelVentas extends Component {
     constructor(props) {
@@ -21,11 +23,10 @@ class InformeTunelVentas extends Component {
         this.props.clearCotizaciones();
     }
 
-
-    cargarDatos() {
+    cargarDatos(ano = null, trimestre = null) {
         const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
         cargando();
-        const cargarCotizaciones = () => this.props.fetchCotizacionesTuberiaVentasResumen(() => noCargando(), notificarErrorAjaxAction);
+        const cargarCotizaciones = () => this.props.fetchCotizacionesTuberiaVentasResumen(ano, trimestre, () => noCargando(), notificarErrorAjaxAction);
         this.props.fetchMisPermisos(cargarCotizaciones, notificarErrorAjaxAction)
 
     }
@@ -50,6 +51,7 @@ class InformeTunelVentas extends Component {
         const cotizaciones = _.map(this.props.object_list, e => {
             return {...e, orden: orden_estados[e.estado] ? orden_estados[e.estado].id : 0}
         });
+
 
         const cotizaciones_x_orden = _.groupBy(cotizaciones, 'orden');
         const valorTotal = (indice) => {
@@ -82,6 +84,9 @@ class InformeTunelVentas extends Component {
         return (
             <Fragment>
                 <div>Informe de Tuberias de Ventas</div>
+                <FormTuberiaVentas onSubmit={(v) => {
+                    this.cargarDatos(v.ano, v.trimestre)
+                }}/>
                 <div className='p-4'>
                     <div className='row'>
                         {

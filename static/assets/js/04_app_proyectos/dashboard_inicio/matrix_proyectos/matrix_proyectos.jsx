@@ -6,6 +6,7 @@ import Combobox from 'react-widgets/lib/Combobox';
 import {Link} from 'react-router-dom'
 
 import moment from 'moment-timezone';
+import {fechaFormatoDos} from "../../../00_utilities/common";
 
 moment.tz.setDefault("America/Bogota");
 moment.locale('es');
@@ -125,7 +126,7 @@ class LiteralesSeguimiento extends Component {
             literales[l.literal] = {...l, fases};
         });
 
-        const fecha_hoy = moment(new Date())
+        const fecha_hoy = moment(new Date());
         const fecha_ini = moment(_.min(_.map(data, f => f.fecha_inicial)));
         const fecha_fin = moment(_.max(_.map(data, f => f.fecha_limite)));
 
@@ -207,9 +208,9 @@ class LiteralesSeguimiento extends Component {
                                     return (
                                         <div key={`iz-${l.literal}`}
                                              style={{
-                                                 height: `${_.size(l.fases) * 20}px`,
+                                                 height: `${_.size(l.fases) * 30}px`,
                                                  borderTop: '1px red dashed',
-                                                 paddingTop: `${((_.size(l.fases) * 20) / 2) - 14}px`,
+                                                 paddingTop: `${((_.size(l.fases) * 30) / 2) - 14}px`,
                                                  fontSize: '14px'
                                              }}>
                                             <Link
@@ -291,23 +292,12 @@ class LiteralesSeguimiento extends Component {
                                         }
                                     </div>
                                 </div>
-                                <div
-                                    style={{
-                                        borderLeft: '1px red dotted',
-                                        height: `${numero_fases * 20}px`,
-                                        position: 'relative',
-                                        left: `${total_dias_hoy * distancia_separadores}px`,
-                                        float: 'left',
-                                        color: 'transparent'
-                                    }}>
-                                    H
-                                </div>
                                 {_.map(literales, l =>
                                     <div key={`der-${l.literal}`}
                                          style={{
-                                             height: `${_.size(l.fases) * 20}px`,
+                                             height: `${_.size(l.fases) * 30}px`,
                                              borderTop: '1px red dashed',
-                                             fontSize: '9px'
+                                             fontSize: '9px',
                                          }}
                                     >
                                         {
@@ -322,7 +312,7 @@ class LiteralesSeguimiento extends Component {
                                                         key={`${l.literal}-${f.fase}`}
                                                         style={{
                                                             width: `${tamano}px`,
-                                                            height: `20px`,
+                                                            height: `30px`,
                                                             position: 'relative',
                                                             marginLeft: `${tamano_a_correr}px`
                                                         }}
@@ -338,6 +328,25 @@ class LiteralesSeguimiento extends Component {
                                                         >
                                                             <span className='pl-1'>{f.fase}</span>
                                                         </div>
+                                                        <div
+                                                            style={{
+                                                                width: `${tamano}px`,
+                                                                height: '3px',
+                                                                position: 'relative',
+                                                            }}
+                                                        >
+                                                            <div
+                                                                className='pl-2'
+                                                                style={{
+                                                                    position: 'absolute',
+                                                                    bottom: '0px',
+                                                                    right: '-53px',
+                                                                    fontSize: '9px',
+                                                                }}
+                                                            >
+                                                                {f.fecha_fin && fechaFormatoDos(f.fecha_fin)}
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 )
                                             })
@@ -345,10 +354,22 @@ class LiteralesSeguimiento extends Component {
                                     </div>
                                 )}
                             </div>
+                            <div
+                                style={{
+                                    borderLeft: '1px blue dotted',
+                                    height: `${numero_fases * 30}px`,
+                                    position: 'relative',
+                                    left: `${total_dias_hoy * distancia_separadores}px`,
+                                    top: `${-(numero_fases * 30) - 20}px`,
+                                    float: 'left',
+                                    color: 'transparent',
+                                    zIndex: 1000
+                                }}>
+                                .
+                            </div>
                         </div>
                     </div>
                 </div>
-
                 <CargarDatos
                     cargarDatos={this.cargarLiteralesConSeguimiento}
                 />

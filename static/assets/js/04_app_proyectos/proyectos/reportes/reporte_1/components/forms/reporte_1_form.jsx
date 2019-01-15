@@ -7,7 +7,6 @@ import {
     MyTextFieldSimple,
     MyDateTimePickerField,
     MyCheckboxSimple,
-    MyCombobox
 } from '../../../../../../00_utilities/components/ui/forms/fields';
 import moment from 'moment-timezone';
 
@@ -26,7 +25,7 @@ class Form extends Component {
         return (
             <form className='p-4' onSubmit={handleSubmit(v => {
                 onSubmit({
-                        ...v,
+                    ...v,
                     fecha_inicial: moment(v.fecha_inicial).format('YYYY-MM-DD'),
                     fecha_final: moment(v.fecha_final).format('YYYY-MM-DD')
                 });

@@ -133,25 +133,23 @@ class CotizacionViewSet(viewsets.ModelViewSet):
 
     @list_route(http_method_names=['get', ])
     def cotizaciones_resumen_tuberia_ventas(self, request):
-        month = datetime.datetime.now().month
-        year = datetime.datetime.now().year
+        year = request.GET.get('ano', datetime.datetime.now().year)
         current_date = datetime.datetime.now()
-        current_quarter = ceil(current_date.month/3)
+        current_quarter = request.GET.get('trimestre', ceil(current_date.month / 3))
         qs = self.get_queryset().filter(
-            Q(estado__in=[
+            estado__in=[
                 'Cita/Generación Interés',
                 'Configurando Propuesta',
                 'Cotización Enviada',
                 'Evaluación Técnica y Económica',
                 'Aceptación de Terminos y Condiciones',
-            ]) |
-            (
-                    Q(estado='Cierre (Aprobado)') &
-                    Q(fecha_cambio_estado__year=year) &
-                    Q(fecha_cambio_estado__quarter=current_quarter)
-            )
+            ]
         )
-
+        qs = qs | self.get_queryset().filter(
+            estado='Cierre (Aprobado)',
+            fecha_cambio_estado__year=year,
+            fecha_cambio_estado__quarter=current_quarter
+        )
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 

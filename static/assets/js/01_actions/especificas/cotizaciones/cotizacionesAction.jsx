@@ -5,7 +5,7 @@ import {
     fetchObject,
     deleteObject,
     createObject,
-    callApiMethodWithParameters
+    callApiMethodWithParameters, fetchListWithParameter
 } from '../../00_general_fuctions'
 
 const current_url_api = 'cotizaciones';
@@ -59,13 +59,18 @@ export const fetchCotizacionesTuberiaVentas = (callback = null, callback_error =
         fetchList(FULL_URL, dispatches, callback, callback_error);
     }
 };
-export const fetchCotizacionesTuberiaVentasResumen = (callback = null, callback_error = null) => {
+export const fetchCotizacionesTuberiaVentasResumen = (ano = null, trimestre = null, callback = null, callback_error = null) => {
     return function (dispatch) {
-        const FULL_URL = `${current_url_api}/cotizaciones_resumen_tuberia_ventas`;
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchList(FULL_URL, dispatches, callback, callback_error);
+        if (ano && trimestre) {
+            const FULL_URL = `${current_url_api}/cotizaciones_resumen_tuberia_ventas/?ano=${ano}&trimestre=${trimestre}`;
+            fetchListWithParameter(FULL_URL, dispatches, callback, callback_error);
+        } else {
+            const FULL_URL = `${current_url_api}/cotizaciones_resumen_tuberia_ventas`;
+            fetchList(FULL_URL, dispatches, callback, callback_error);
+        }
     }
 };
 export const fetchCotizacion = (id, callback = null, callback_error = null) => {
