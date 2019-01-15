@@ -23,11 +23,11 @@ const validate = values => {
         }
     });
 
-    if (values.trimestre < 1 || values.trimestre > 4) {
+    if (values.trimestre && values.trimestre < 1 || values.trimestre > 4) {
         errors['trimestre'] = 'Debe ser un número del 1 al 4'
     }
 
-    if (values.ano.length !== 4) {
+    if (values.ano && values.ano.length !== 4) {
         errors['ano'] = 'Debe ser un número de 4 dígitos'
     }
 
