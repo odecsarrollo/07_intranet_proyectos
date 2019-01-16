@@ -69,6 +69,17 @@ class InformeTunelVentas extends Component {
         const valores_5 = valorTotal(cotizaciones_x_orden[5]);
         const valores_6 = valorTotal(cotizaciones_x_orden[6]);
 
+        const total_valor_mes_actual = () => {
+            const arreglo = _.pickBy(cotizaciones, c => c.valor_orden_compra_mes > 0);
+            const total_valor = _.map(arreglo, e => e).reduce((suma, elemento) => {
+                const valor = elemento.valor_orden_compra_mes;
+                return parseFloat(suma) + (valor ? parseFloat(valor) : 0)
+            }, 0);
+            return {total: total_valor, cantidad: _.size(arreglo)}
+        };
+        const valores_mes = total_valor_mes_actual();
+
+
         const valores_totales = _.map(this.props.object_list, e => e).reduce((suma, elemento) => {
             const valor = elemento.orden === 6 ? elemento.valor_orden_compra : elemento.valor_ofertado;
             return parseFloat(suma) + (valor ? parseFloat(valor) : 0)
@@ -81,6 +92,7 @@ class InformeTunelVentas extends Component {
             }
         );
         const responsables = _.uniq(_.map(this.props.object_list, e => e.responsable_actual_nombre));
+
         return (
             <Fragment>
                 <div>Informe de Tuberias de Ventas</div>
@@ -106,6 +118,7 @@ class InformeTunelVentas extends Component {
                         <th>Responsable</th>
                         {_.map(orden_estados, e => <th key={e.id}>{e.nombre}</th>)}
                         <th>Total</th>
+                        <th>Cierre (Aprobado) Mes Actual</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -115,6 +128,7 @@ class InformeTunelVentas extends Component {
                         const orden_cuatro = _.map(_.pickBy(cotizaciones_x_responsable, e => (e.orden === 4 && e.valor_ofertado > 0)), t => parseFloat(t.valor_ofertado)).reduce((uno, dos) => uno + dos, 0);
                         const orden_cinco = _.map(_.pickBy(cotizaciones_x_responsable, e => (e.orden === 5 && e.valor_ofertado > 0)), t => parseFloat(t.valor_ofertado)).reduce((uno, dos) => uno + dos, 0);
                         const orden_seis = _.map(_.pickBy(cotizaciones_x_responsable, e => (e.orden === 6 && e.valor_orden_compra > 0)), t => parseFloat(t.valor_orden_compra)).reduce((uno, dos) => uno + dos, 0);
+                        const orden_seis_mes = _.map(_.pickBy(cotizaciones_x_responsable, e => (e.orden === 6 && e.valor_orden_compra_mes > 0)), t => parseFloat(t.valor_orden_compra_mes)).reduce((uno, dos) => uno + dos, 0);
                         const total_valor = orden_tres + orden_cuatro + orden_cinco + orden_seis;
                         return <tr key={r ? r : 'Sin Nombre'}>
                             <td className='text-center'>{r}</td>
@@ -172,6 +186,15 @@ class InformeTunelVentas extends Component {
                                     {pesosColombianos(total_valor)}
                                 </div>
                             </td>
+                            <td className='text-center'
+                                style={{backgroundColor: 'gray', color: 'white', fontWeight: 'bold'}}>
+                                <div>
+                                    {_.size(_.pickBy(cotizaciones_x_responsable, e => e.orden === 6))}
+                                </div>
+                                <div>
+                                    {pesosColombianos(orden_seis_mes)}
+                                </div>
+                            </td>
                         </tr>
                     })}
                     </tbody>
@@ -221,6 +244,12 @@ class InformeTunelVentas extends Component {
                             <div>
                                 {cantidades_totales}<br/>
                                 {pesosColombianos(valores_totales)}
+                            </div>
+                        </td>
+                        <td className='text-center' style={{backgroundColor: 'gray', color: 'white', fontWeight: 'bold'}}>
+                            <div>
+                                {valores_mes.cantidad}<br/>
+                                {pesosColombianos(valores_mes.total)}
                             </div>
                         </td>
                     </tr>

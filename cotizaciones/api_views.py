@@ -1,6 +1,6 @@
 import datetime
 from math import ceil
-from django.db.models import Max, Q
+from django.db.models import Max, Q, When, Case, DecimalField, Value, F
 from rest_framework import viewsets
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
@@ -142,20 +142,33 @@ class CotizacionViewSet(viewsets.ModelViewSet):
         year = request.GET.get('ano', datetime.datetime.now().year)
         current_date = datetime.datetime.now()
         current_quarter = request.GET.get('trimestre', ceil(current_date.month / 3))
-        qs = self.get_queryset().filter(
-            estado__in=[
-                'Cita/Generación Interés',
-                'Configurando Propuesta',
-                'Cotización Enviada',
-                'Evaluación Técnica y Económica',
-                'Aceptación de Terminos y Condiciones',
-            ]
+        qs = self.get_queryset().annotate(
+            valor_orden_compra_mes=Case(
+                When(
+                    Q(fecha_cambio_estado_cerrado__year=current_date.year) |
+                    Q(fecha_cambio_estado_cerrado__quarter=ceil(current_date.month / 3)),
+                    then=F('valor_orden_compra')
+                ),
+                default=Value(0),
+                output_field=DecimalField(max_digits=10, decimal_places=2)
+            ),
         )
-        qs = qs | self.get_queryset().filter(
+        qs = qs.filter(
             estado='Cierre (Aprobado)',
             fecha_cambio_estado_cerrado__year=year,
             fecha_cambio_estado_cerrado__quarter=current_quarter
         )
+
+        if current_date.year == year and ceil(current_date.month / 3) == current_quarter:
+            qs = qs | qs.filter(
+                estado__in=[
+                    'Cita/Generación Interés',
+                    'Configurando Propuesta',
+                    'Cotización Enviada',
+                    'Evaluación Técnica y Económica',
+                    'Aceptación de Terminos y Condiciones',
+                ]
+            )
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
