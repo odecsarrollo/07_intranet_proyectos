@@ -7,7 +7,7 @@ from .models import Cotizacion, SeguimientoCotizacion
 
 class CotizacionSerializer(serializers.ModelSerializer):
     cliente_nombre = serializers.CharField(source='cliente.nombre', read_only=True)
-    valor_orden_compra_mes = serializers.DecimalField(decimal_places=2, max_digits=10, read_only=True)
+    valor_orden_compra_mes = serializers.DecimalField(decimal_places=2, max_digits=20, read_only=True)
     responsable_actual = serializers.CharField(source='responsable.username', read_only=True)
     responsable_actual_nombre = serializers.CharField(source='responsable.get_full_name', read_only=True)
     contacto_cliente_nombre = serializers.CharField(source='contacto_cliente.full_nombre', read_only=True)

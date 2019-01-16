@@ -189,7 +189,7 @@ class InformeTunelVentas extends Component {
                             <td className='text-center'
                                 style={{backgroundColor: 'gray', color: 'white', fontWeight: 'bold'}}>
                                 <div>
-                                    {_.size(_.pickBy(cotizaciones_x_responsable, e => e.orden === 6))}
+                                    {_.size(_.pickBy(cotizaciones_x_responsable, e => e.valor_orden_compra_mes > 0))}
                                 </div>
                                 <div>
                                     {pesosColombianos(orden_seis_mes)}

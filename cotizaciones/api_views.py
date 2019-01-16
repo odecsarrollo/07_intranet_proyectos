@@ -1,6 +1,7 @@
 import datetime
 from math import ceil
 from django.db.models import Max, Q, When, Case, DecimalField, Value, F
+from django.db.models.functions import Coalesce
 from rest_framework import viewsets
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
@@ -147,10 +148,10 @@ class CotizacionViewSet(viewsets.ModelViewSet):
                 When(
                     Q(fecha_cambio_estado_cerrado__year=current_date.year) |
                     Q(fecha_cambio_estado_cerrado__quarter=ceil(current_date.month / 3)),
-                    then=F('valor_orden_compra')
+                    then=Coalesce(F('valor_orden_compra'), 0)
                 ),
                 default=Value(0),
-                output_field=DecimalField(max_digits=10, decimal_places=2)
+                output_field=DecimalField(max_digits=20, decimal_places=2)
             ),
         )
         qs = qs.filter(
@@ -169,6 +170,9 @@ class CotizacionViewSet(viewsets.ModelViewSet):
                     'Aceptación de Terminos y Condiciones',
                 ]
             )
+        # from pprint import pprint
+        # [print(a.valor_orden_compra_mes) for a in qs.all()]
+        # [pprint(vars(a)) for a in qs.all()]
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
