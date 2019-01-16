@@ -140,10 +140,10 @@ class CotizacionViewSet(viewsets.ModelViewSet):
 
     @list_route(http_method_names=['get', ])
     def cotizaciones_resumen_tuberia_ventas(self, request):
-        year = request.GET.get('ano', datetime.datetime.now().year)
+        year = int(request.GET.get('ano', datetime.datetime.now().year))
         current_date = datetime.datetime.now()
-        current_quarter = request.GET.get('trimestre', ceil(current_date.month / 3))
-        qs = self.get_queryset().annotate(
+        current_quarter = int(request.GET.get('trimestre', ceil(current_date.month / 3)))
+        qsBase = self.get_queryset().annotate(
             valor_orden_compra_mes=Case(
                 When(
                     Q(fecha_cambio_estado_cerrado__year=current_date.year) |
@@ -154,14 +154,16 @@ class CotizacionViewSet(viewsets.ModelViewSet):
                 output_field=DecimalField(max_digits=20, decimal_places=2)
             ),
         )
-        qs = qs.filter(
+        qs2 = qsBase.filter(
             estado='Cierre (Aprobado)',
             fecha_cambio_estado_cerrado__year=year,
             fecha_cambio_estado_cerrado__quarter=current_quarter
         )
 
+        qs3 = None
+
         if current_date.year == year and ceil(current_date.month / 3) == current_quarter:
-            qs = qs | qs.filter(
+            qs3 = qsBase.filter(
                 estado__in=[
                     'Cita/Generación Interés',
                     'Configurando Propuesta',
@@ -170,10 +172,14 @@ class CotizacionViewSet(viewsets.ModelViewSet):
                     'Aceptación de Terminos y Condiciones',
                 ]
             )
+        qsFinal = None
+        if qs2:
+            qsFinal = qs2
+        if qs3:
+            qsFinal = qsFinal | qs3
         # from pprint import pprint
-        # [print(a.valor_orden_compra_mes) for a in qs.all()]
         # [pprint(vars(a)) for a in qs.all()]
-        serializer = self.get_serializer(qs, many=True)
+        serializer = self.get_serializer(qsFinal, many=True)
         return Response(serializer.data)
 
 

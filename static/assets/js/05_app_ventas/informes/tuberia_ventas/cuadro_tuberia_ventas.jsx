@@ -55,22 +55,23 @@ class InformeTunelVentas extends Component {
 
         const cotizaciones_x_orden = _.groupBy(cotizaciones, 'orden');
         const valorTotal = (indice) => {
-            const total_valor = _.map(indice, e => e).reduce((suma, elemento) => {
+            const arreglo = cotizaciones_x_orden[indice];
+            const total_valor = _.map(arreglo, e => e).reduce((suma, elemento) => {
                 const valor = indice === 6 ? elemento.valor_orden_compra : elemento.valor_ofertado;
                 return parseFloat(suma) + (valor ? parseFloat(valor) : 0)
             }, 0);
-            return {total: total_valor, cantidad: _.size(indice)}
+            return {total: total_valor, cantidad: _.size(arreglo)}
         };
 
-        const valores_1 = valorTotal(cotizaciones_x_orden[1]);
-        const valores_2 = valorTotal(cotizaciones_x_orden[2]);
-        const valores_3 = valorTotal(cotizaciones_x_orden[3]);
-        const valores_4 = valorTotal(cotizaciones_x_orden[4]);
-        const valores_5 = valorTotal(cotizaciones_x_orden[5]);
-        const valores_6 = valorTotal(cotizaciones_x_orden[6]);
+        const valores_1 = valorTotal(1);
+        const valores_2 = valorTotal(2);
+        const valores_3 = valorTotal(3);
+        const valores_4 = valorTotal(4);
+        const valores_5 = valorTotal(5);
+        const valores_6 = valorTotal(6);
 
         const total_valor_mes_actual = () => {
-            const arreglo = _.pickBy(cotizaciones, c => c.valor_orden_compra_mes > 0);
+            const arreglo = _.pickBy(cotizaciones, c => (c.valor_orden_compra_mes > 0) && (c.estado === 'Cierre (Aprobado)'));
             const total_valor = _.map(arreglo, e => e).reduce((suma, elemento) => {
                 const valor = elemento.valor_orden_compra_mes;
                 return parseFloat(suma) + (valor ? parseFloat(valor) : 0)
@@ -80,8 +81,8 @@ class InformeTunelVentas extends Component {
         const valores_mes = total_valor_mes_actual();
 
 
-        const valores_totales = _.map(this.props.object_list, e => e).reduce((suma, elemento) => {
-            const valor = elemento.orden === 6 ? elemento.valor_orden_compra : elemento.valor_ofertado;
+        const valores_totales = _.map(cotizaciones, e => e).reduce((suma, elemento) => {
+            const valor = elemento.orden === 6 ? elemento.valor_orden_compra : ([3, 4, 5].includes(elemento.orden) ? elemento.valor_ofertado : 0);
             return parseFloat(suma) + (valor ? parseFloat(valor) : 0)
         }, 0);
 
@@ -124,11 +125,14 @@ class InformeTunelVentas extends Component {
                     <tbody>
                     {_.map(responsables, r => {
                         const cotizaciones_x_responsable = _.pickBy(cotizaciones, c => c.responsable_actual_nombre === r);
-                        const orden_tres = _.map(_.pickBy(cotizaciones_x_responsable, e => (e.orden === 3 && e.valor_ofertado > 0)), t => parseFloat(t.valor_ofertado)).reduce((uno, dos) => uno + dos, 0);
-                        const orden_cuatro = _.map(_.pickBy(cotizaciones_x_responsable, e => (e.orden === 4 && e.valor_ofertado > 0)), t => parseFloat(t.valor_ofertado)).reduce((uno, dos) => uno + dos, 0);
-                        const orden_cinco = _.map(_.pickBy(cotizaciones_x_responsable, e => (e.orden === 5 && e.valor_ofertado > 0)), t => parseFloat(t.valor_ofertado)).reduce((uno, dos) => uno + dos, 0);
-                        const orden_seis = _.map(_.pickBy(cotizaciones_x_responsable, e => (e.orden === 6 && e.valor_orden_compra > 0)), t => parseFloat(t.valor_orden_compra)).reduce((uno, dos) => uno + dos, 0);
-                        const orden_seis_mes = _.map(_.pickBy(cotizaciones_x_responsable, e => (e.orden === 6 && e.valor_orden_compra_mes > 0)), t => parseFloat(t.valor_orden_compra_mes)).reduce((uno, dos) => uno + dos, 0);
+                        const totalValorOfertado = (index) => _.map(_.pickBy(cotizaciones_x_responsable, e => (e.orden === index && e.valor_ofertado > 0)), t => parseFloat(t.valor_ofertado)).reduce((uno, dos) => uno + dos, 0);
+                        const totalValorOrdenCompra = (index) => _.map(_.pickBy(cotizaciones_x_responsable, e => (e.orden === index && e.valor_orden_compra > 0)), t => parseFloat(t.valor_orden_compra)).reduce((uno, dos) => uno + dos, 0);
+                        const totalValorOrdenCompraMes = (index) => _.map(_.pickBy(cotizaciones_x_responsable, e => (e.orden === index && e.valor_orden_compra_mes > 0)), t => parseFloat(t.valor_orden_compra_mes)).reduce((uno, dos) => uno + dos, 0);
+                        const orden_tres = totalValorOfertado(3);
+                        const orden_cuatro = totalValorOfertado(4);
+                        const orden_cinco = totalValorOfertado(5);
+                        const orden_seis = totalValorOrdenCompra(6);
+                        const orden_seis_mes = totalValorOrdenCompraMes(6);
                         const total_valor = orden_tres + orden_cuatro + orden_cinco + orden_seis;
                         return <tr key={r ? r : 'Sin Nombre'}>
                             <td className='text-center'>{r}</td>
@@ -246,7 +250,8 @@ class InformeTunelVentas extends Component {
                                 {pesosColombianos(valores_totales)}
                             </div>
                         </td>
-                        <td className='text-center' style={{backgroundColor: 'gray', color: 'white', fontWeight: 'bold'}}>
+                        <td className='text-center'
+                            style={{backgroundColor: 'gray', color: 'white', fontWeight: 'bold'}}>
                             <div>
                                 {valores_mes.cantidad}<br/>
                                 {pesosColombianos(valores_mes.total)}
