@@ -46,7 +46,7 @@ class InformeTunelVentas extends Component {
             'Cotización Enviada': {id: 3, nombre: 'Cotización Enviada'},
             'Evaluación Técnica y Económica': {id: 4, nombre: 'Evaluación Técnica y Económica'},
             'Aceptación de Terminos y Condiciones': {id: 5, nombre: 'Aceptación de Terminos y Condiciones'},
-            'Cierre (Aprobado)': {id: 6, nombre: 'Cierre (Aprobado)'},
+            'Cierre (Aprobado)': {id: 6, nombre: 'Cierre Trimestre (Aprobado)'},
         };
         const cotizaciones = _.map(this.props.object_list, e => {
             return {...e, orden: orden_estados[e.estado] ? orden_estados[e.estado].id : 0}
@@ -118,7 +118,7 @@ class InformeTunelVentas extends Component {
                     <tr>
                         <th>Responsable</th>
                         {_.map(orden_estados, e => <th key={e.id}>{e.nombre}</th>)}
-                        <th>Total</th>
+                        <th>Total Trimestre</th>
                         <th>Cierre (Aprobado) Mes Actual</th>
                     </tr>
                     </thead>

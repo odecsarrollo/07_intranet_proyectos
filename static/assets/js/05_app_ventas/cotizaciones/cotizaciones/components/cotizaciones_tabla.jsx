@@ -6,6 +6,14 @@ import {Link} from 'react-router-dom'
 import ReactTable from "react-table";
 import {pesosColombianos} from "../../../../00_utilities/common";
 
+import moment from 'moment-timezone';
+import momentLocaliser from "react-widgets-moment";
+
+moment.tz.setDefault("America/Bogota");
+moment.locale('es');
+momentLocaliser(moment);
+
+
 class Tabla extends React.Component {
     render() {
         let data = _.orderBy(_.pickBy(this.props.data, e => e.estado !== "Cita/Generación Interés"), ['nro_cotizacion'], ['desc']);
@@ -30,6 +38,7 @@ class Tabla extends React.Component {
                                 {
                                     Header: "Nro. Coti",
                                     accessor: "nro_cotizacion",
+                                    filterable: true,
                                     maxWidth: 70
                                 },
                                 {
@@ -165,6 +174,43 @@ class Tabla extends React.Component {
                                             row.original.valor_orden_compra ?
                                                 pesosColombianos(row.original.valor_orden_compra) :
                                                 pesosColombianos(row.value)
+                                        }
+                                    </div>
+                                },
+                                {
+                                    Header: "Fecha OC",
+                                    accessor: "orden_compra_fecha",
+                                    maxWidth: 100,
+                                    Cell: row => <div className='text-right'>
+                                        {
+                                            row.value &&
+                                            row.value
+                                        }
+                                    </div>
+                                },
+                                {
+                                    Header: "Trim. OC",
+                                    accessor: "orden_compra_fecha",
+                                    maxWidth: 80,
+                                    Cell: row => {
+                                        return (
+                                            <div className='text-right'>
+                                                {
+                                                    row.value &&
+                                                    Math.ceil((new Date(row.value).getMonth() + 1) / 3)
+                                                }
+                                            </div>
+                                        )
+                                    }
+                                },
+                                {
+                                    Header: "Año OC",
+                                    accessor: "orden_compra_fecha",
+                                    maxWidth: 80,
+                                    Cell: row => <div className='text-right'>
+                                        {
+                                            row.value &&
+                                            new Date(row.value).getFullYear()
                                         }
                                     </div>
                                 },

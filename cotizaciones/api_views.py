@@ -129,8 +129,8 @@ class CotizacionViewSet(viewsets.ModelViewSet):
             ]) |
             (
                     Q(estado='Cierre (Aprobado)') &
-                    Q(fecha_cambio_estado__year=year) &
-                    Q(fecha_cambio_estado__month=month)
+                    Q(orden_compra_fecha__year=year) &
+                    Q(orden_compra_fecha__month=month)
             )
         )
         if not self.request.user.has_perm('cotizaciones.list_all_cotizaciones_activas'):
@@ -146,8 +146,8 @@ class CotizacionViewSet(viewsets.ModelViewSet):
         qsBase = self.get_queryset().annotate(
             valor_orden_compra_mes=Case(
                 When(
-                    Q(fecha_cambio_estado_cerrado__year=current_date.year) |
-                    Q(fecha_cambio_estado_cerrado__quarter=ceil(current_date.month / 3)),
+                    Q(orden_compra_fecha__year=current_date.year) |
+                    Q(orden_compra_fecha__quarter=ceil(current_date.month / 3)),
                     then=Coalesce(F('valor_orden_compra'), 0)
                 ),
                 default=Value(0),
@@ -156,8 +156,8 @@ class CotizacionViewSet(viewsets.ModelViewSet):
         )
         qs2 = qsBase.filter(
             estado='Cierre (Aprobado)',
-            fecha_cambio_estado_cerrado__year=year,
-            fecha_cambio_estado_cerrado__quarter=current_quarter
+            orden_compra_fecha__year=year,
+            orden_compra_fecha__quarter=current_quarter
         )
 
         qs3 = None
