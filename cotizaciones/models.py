@@ -62,3 +62,8 @@ class SeguimientoCotizacion(TimeStampedModel):
     fecha_inicio_tarea = models.DateField(null=True, blank=True)
     fecha_fin_tarea = models.DateField(null=True, blank=True)
     tarea_terminada = models.BooleanField(default=0)
+
+
+class ArchivoCotizacion(TimeStampedModel):
+    nombre_archivo = models.CharField(max_length=300)
+    archivo = models.FileField()

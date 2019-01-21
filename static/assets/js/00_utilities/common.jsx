@@ -1,4 +1,4 @@
-import {formatMoney} from 'accounting';
+import {formatMoney, formatNumber} from 'accounting';
 import moment from 'moment-timezone';
 import momentLocaliser from "react-widgets-moment";
 
@@ -12,6 +12,7 @@ export const REGEX_SOLO_LETRAS = /^[a-zA-Z]+$/;
 export const REGEX_CORREO_ELECTRONICO = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 export const pesosColombianos = (plata) => formatMoney(Number(plata), "$", 0, ".", ",");
+export const numeroFormato = (valor, decimales = 4) => formatNumber(Number(valor), decimales, ".", ",");
 export const fechaFormatoUno = (fecha) => moment.tz(fecha, "America/Bogota").format('MMMM D [de] YYYY');
 export const fechaFormatoDos = (fecha) => moment.tz(fecha, "America/Bogota").format('DD/MM/YYYY');
 export const fechaHoraFormatoUno = (fecha) => {

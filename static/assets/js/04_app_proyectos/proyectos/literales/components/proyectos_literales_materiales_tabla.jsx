@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {fechaFormatoDos, permisosAdapter, pesosColombianos} from '../../../../00_utilities/common';
+import {fechaFormatoDos, permisosAdapter, pesosColombianos, numeroFormato} from '../../../../00_utilities/common';
 import {ListaBusqueda} from '../../../../00_utilities/utiles';
 import {connect} from "react-redux";
 import * as actions from "../../../../01_actions/01_index";
@@ -15,7 +15,7 @@ const ItemTabla = (props) => {
             <td>{item_biable.id_item}</td>
             <td>{item_biable.id_referencia}</td>
             <td>{item_biable.descripcion}</td>
-            <td>{item.cantidad}</td>
+            <td>{numeroFormato(item.cantidad)}</td>
             <td>{item_biable.unidad_medida_inventario}</td>
             {ultimo_costo_item_biable && <td>{pesosColombianos(item.costo_total)}</td>}
         </tr>
@@ -74,7 +74,7 @@ class TablaProyectosLiteralesMateriales extends Component {
             <ListaBusqueda>
                 {
                     busqueda => {
-                        const listado_materiales = buscarBusqueda(_.orderBy(items_literales,['lapso'],['desc']), busqueda);
+                        const listado_materiales = buscarBusqueda(_.orderBy(items_literales, ['lapso'], ['desc']), busqueda);
                         return (
                             <table className="table table-responsive table-striped tabla-maestra">
                                 <thead>
