@@ -283,7 +283,6 @@ class SeguimientoLiteral extends Component {
         const {distancia_separadores} = this.state;
 
         const ancho_total = distancia_separadores * total_dias > 0 ? distancia_separadores * total_dias : 700;
-
         return (
             <div>
                 <Tabs>

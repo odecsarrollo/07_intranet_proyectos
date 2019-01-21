@@ -185,6 +185,7 @@ class FaseLiteral extends Component {
             })
         };
 
+
         const porcentaje_completado = fase.nro_tareas > 0 ? (fase.nro_tareas_terminadas / fase.nro_tareas).toFixed(2) * 100 : 0;
         const tiene_vencidas = fase.nro_tareas_vencidas > 0;
         const porcentaje = ((dias_fase / total_dias) * 100).toFixed(0);
