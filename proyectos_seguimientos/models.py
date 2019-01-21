@@ -6,6 +6,7 @@ from model_utils.models import TimeStampedModel
 
 
 class Fase(models.Model):
+    orden = models.IntegerField(default=0)
     nombre = models.CharField(max_length=120)
     color = models.CharField(max_length=10, default='black')
     letra_color = models.CharField(max_length=10, default='white')

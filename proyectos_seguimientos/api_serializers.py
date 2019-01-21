@@ -12,12 +12,14 @@ class FaseSerializer(serializers.ModelSerializer):
             'url',
             'id',
             'nombre',
+            'orden',
             'color',
             'letra_color',
         ]
 
 
 class FaseLiteralSerializer(serializers.ModelSerializer):
+    fase_orden = serializers.IntegerField(source='fase.orden', read_only=True)
     fase_nombre = serializers.CharField(source='fase.nombre', read_only=True)
     fase_color = serializers.CharField(source='fase.color', read_only=True)
     fase_color_letra = serializers.CharField(source='fase.letra_color', read_only=True)
@@ -34,6 +36,7 @@ class FaseLiteralSerializer(serializers.ModelSerializer):
             'url',
             'id',
             'fase',
+            'fase_orden',
             'fase_color',
             'fase_color_letra',
             'responsable_nombre',
@@ -55,6 +58,7 @@ class TareaFaseSerializer(serializers.ModelSerializer):
     literal = serializers.IntegerField(source='fase_literal.literal.id', read_only=True)
     proyecto = serializers.IntegerField(source='fase_literal.literal.proyecto.id', read_only=True)
     literal_id_literal = serializers.CharField(source='fase_literal.literal.id_literal', read_only=True)
+    fase_literal_orden = serializers.IntegerField(source='fase_literal.fase.orden', read_only=True)
     fase_literal_nombre = serializers.CharField(source='fase_literal.fase.nombre', read_only=True)
     fase_literal_color = serializers.CharField(source='fase_literal.fase.color', read_only=True)
     fase_literal_color_letra = serializers.CharField(source='fase_literal.fase.letra_color', read_only=True)
@@ -86,6 +90,7 @@ class TareaFaseSerializer(serializers.ModelSerializer):
             'soy_asignado',
             'soy_responsable',
             'fase_literal',
+            'fase_literal_orden',
             'fase_literal_nombre',
             'fase_literal_color_letra',
             'fase_literal_color',

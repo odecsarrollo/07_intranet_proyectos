@@ -31,7 +31,12 @@ class Form extends Component {
                 element_type={singular_name}
             >
                 <MyTextFieldSimple
-                    className="col-12"
+                    className="col-2 col-md-1"
+                    nombre='Orden'
+                    name='orden'
+                />
+                <MyTextFieldSimple
+                    className="col-10 col-md-11"
                     nombre='Nombre'
                     name='nombre'
                     case='U'/>

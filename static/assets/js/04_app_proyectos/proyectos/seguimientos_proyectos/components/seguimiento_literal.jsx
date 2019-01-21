@@ -370,7 +370,7 @@ class SeguimientoLiteral extends Component {
                                 style={{width: `${ancho_total}px`, border: '1px solid transparent', clear: 'both'}}
                                 className='mb-3'
                             >
-                                {_.map(_.pickBy(fases_literales_list, e => e.nro_tareas > 0), e => {
+                                {_.map(_.pickBy(_.orderBy(fases_literales_list, ['fase_orden'], ['asc']), e => e.nro_tareas > 0), e => {
                                     const dias_fase = moment(e.fecha_limite).diff(e.fecha_inicial, 'days');
                                     return (
                                         <div key={e.id}>

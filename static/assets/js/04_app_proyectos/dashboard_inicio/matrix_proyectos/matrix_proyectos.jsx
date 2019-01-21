@@ -106,11 +106,13 @@ class LiteralesSeguimiento extends Component {
             return {literal: e.literal_id_literal, proyecto: e.proyecto}
         }), 'literal');
 
+
         _.map(literales, l => {
             let fases = [];
             _.mapKeys(_.groupBy(l.tareas, 'fase_literal_nombre'), (v, k) => {
                 const fecha_ini = moment(_.min(_.map(v, f => f.fecha_inicial)));
                 const fecha_fin = moment(_.max(_.map(v, f => f.fecha_limite)));
+                const orden = _.max(_.map(v, f => f.fase_literal_orden));
                 fases = [
                     ...fases,
                     {
@@ -118,7 +120,8 @@ class LiteralesSeguimiento extends Component {
                         tareas: v,
                         total_dias: parseInt(fecha_fin.diff(fecha_ini, "days")),
                         fecha_ini,
-                        fecha_fin
+                        fecha_fin,
+                        orden
                     }
                 ]
             });
@@ -301,7 +304,7 @@ class LiteralesSeguimiento extends Component {
                                          }}
                                     >
                                         {
-                                            _.map(l.fases, f => {
+                                            _.map(_.orderBy(l.fases, ['orden'], ['asc']), f => {
                                                 const tamano = f.total_dias * distancia_separadores;
                                                 const dias_a_correr = f.fecha_ini.diff(fecha_ini, "days") + 1;
                                                 const tamano_a_correr = dias_a_correr * distancia_separadores;
