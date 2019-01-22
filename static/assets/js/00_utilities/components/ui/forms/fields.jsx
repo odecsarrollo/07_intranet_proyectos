@@ -21,6 +21,25 @@ moment.tz.setDefault("America/Bogota");
 moment.locale('es');
 momentLocaliser(moment);
 
+const renderInputField = (field) => {
+    return (
+        <div>
+            <input {...field.input} type="file" value={null}/>
+            {field.meta.touched && field.meta.error &&
+            <span className="error">{field.meta.error}</span>}
+        </div>
+    )
+};
+
+export const MyFieldFileInput = (props) => {
+    return (
+        <Field
+            name={props.name}
+            component={renderInputField}
+        />
+    )
+};
+
 const renderTextField = ({input, label, meta: {touched, error}, ...custom}) => {
     return (
         <TextField

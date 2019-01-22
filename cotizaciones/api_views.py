@@ -3,11 +3,11 @@ from math import ceil
 from django.db.models import Max, Q, When, Case, DecimalField, Value, F
 from django.db.models.functions import Coalesce
 from rest_framework import viewsets
-from rest_framework.decorators import list_route
+from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 
-from .models import Cotizacion, SeguimientoCotizacion
-from .api_serializers import CotizacionSerializer, SeguimientoCotizacionSerializer
+from .models import Cotizacion, SeguimientoCotizacion, ArchivoCotizacion
+from .api_serializers import CotizacionSerializer, SeguimientoCotizacionSerializer, ArchivoCotizacionSerializer
 
 
 class CotizacionViewSet(viewsets.ModelViewSet):
@@ -182,6 +182,19 @@ class CotizacionViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(qsFinal, many=True)
         return Response(serializer.data)
 
+    @detail_route(methods=['post'])
+    def upload_archivo(self, request, pk=None):
+        nombre_archivo = self.request.POST.get('nombre')
+        cotizacion = self.get_object()
+        archivo = self.request.FILES['archivo']
+        archivo_cotizacion = ArchivoCotizacion()
+        archivo_cotizacion.archivo = archivo
+        archivo_cotizacion.cotizacion = cotizacion
+        archivo_cotizacion.nombre_archivo = nombre_archivo
+        archivo_cotizacion.save()
+        serializer = self.get_serializer(cotizacion)
+        return Response(serializer.data)
+
 
 class SeguimientoCotizacionViewSet(viewsets.ModelViewSet):
     queryset = SeguimientoCotizacion.objects.select_related('creado_por', 'cotizacion__cliente').all()
@@ -206,5 +219,20 @@ class SeguimientoCotizacionViewSet(viewsets.ModelViewSet):
         listar_todas = self.request.user.has_perm('cotizaciones.list_all_cotizacion')
         if not listar_todas:
             qs = qs.filter(cotizacion__responsable=self.request.user)
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)
+
+
+class ArchivoCotizacionViewSet(viewsets.ModelViewSet):
+    queryset = ArchivoCotizacion.objects.select_related('cotizacion', 'creado_por').all()
+    serializer_class = ArchivoCotizacionSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(creado_por=self.request.user)
+
+    @list_route(http_method_names=['get', ])
+    def listar_x_cotizacion(self, request):
+        cotizacion_id = request.GET.get('cotizacion_id')
+        qs = self.get_queryset().filter(cotizacion_id=cotizacion_id)
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)

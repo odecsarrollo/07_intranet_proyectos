@@ -13,19 +13,30 @@ import {
 import ComentariosList from '../../seguimientos/components/comentarios_list';
 import TareasList from '../../seguimientos/components/tareas_list';
 import CambioEstadoList from '../../seguimientos/components/cambios_estado_list';
-import CotizacionForm from '../components/forms/cotizacion_form_detail';
-import SolicitarCreacionLiteralForm from '../components/forms/cotizacion_solicitar_crear_literal_form';
-import CotizacionInfo from '../components/cotizacion_info';
+import CotizacionForm from '../../tuberia_ventas/components/forms/cotizacion_form_detail';
+import SolicitarCreacionLiteralForm
+    from '../../tuberia_ventas/components/forms/cotizacion_solicitar_crear_literal_form';
+import CotizacionInfo from '../../tuberia_ventas/components/cotizacion_info';
+import UploadDocumentoForm from '../components/forms/upload_documento_form';
+import ArchivosCotizacionList from '../components/cotizacion_archivos_list';
 
 class Detail extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            adicionar_documento: false,
+            item_seleccionado: null,
+        };
         this.cargarDatos = this.cargarDatos.bind(this);
         this.guardarComentario = this.guardarComentario.bind(this);
         this.guardarTarea = this.guardarTarea.bind(this);
         this.eliminarSeguimiento = this.eliminarSeguimiento.bind(this);
         this.actualizarSeguimiento = this.actualizarSeguimiento.bind(this);
         this.guardarCambiosCotizacion = this.guardarCambiosCotizacion.bind(this);
+        this.onUploadArchivo = this.onUploadArchivo.bind(this);
+        this.onSubmitUploadArchivo = this.onSubmitUploadArchivo.bind(this);
+        this.onDeleteArchivo = this.onDeleteArchivo.bind(this);
+        this.onSelectArchivo = this.onSelectArchivo.bind(this);
     }
 
     componentDidMount() {
@@ -39,12 +50,13 @@ class Detail extends Component {
 
     cargarDatos() {
         const {id} = this.props.match.params;
-        const {noCargando, cargando, notificarAction, notificarErrorAjaxAction} = this.props;
+        const {noCargando, cargando, notificarErrorAjaxAction} = this.props;
         cargando();
         const success_callback = () => {
             noCargando();
         };
-        const cargarMiCuenta = () => this.props.fetchMiCuenta(success_callback, notificarErrorAjaxAction);
+        const cargarArchivos = () => this.props.fetchArchivosCotizaciones_x_cotizacion(id, success_callback, notificarErrorAjaxAction);
+        const cargarMiCuenta = () => this.props.fetchMiCuenta(cargarArchivos, notificarErrorAjaxAction);
         const cargarSeguimientos = () => this.props.fetchSeguimientosCotizacionesxCotizacion(id, cargarMiCuenta, notificarErrorAjaxAction);
         const cargarCotizacion = () => this.props.fetchCotizacion(id, cargarSeguimientos, notificarErrorAjaxAction);
         this.props.fetchMisPermisos(cargarCotizacion, notificarErrorAjaxAction);
@@ -91,8 +103,83 @@ class Detail extends Component {
         this.props.updateSeguimientoCotizacion(seguimiento.id, seguimiento, () => noCargando(), notificarErrorAjaxAction)
     }
 
+    onSubmitUploadArchivo(valores) {
+        const {noCargando, cargando, notificarErrorAjaxAction, updateArchivoCotizacion} = this.props;
+        const {id} = valores;
+        cargando();
+        if (id) {
+            delete valores.archivo;
+            updateArchivoCotizacion(
+                id,
+                valores,
+                () => {
+                    this.setState({adicionar_documento: false});
+                    noCargando();
+                },
+                notificarErrorAjaxAction
+            )
+        } else {
+            this.onUploadArchivo(
+                valores,
+                () => {
+                    this.setState({adicionar_documento: false});
+                    noCargando();
+                }
+            );
+        }
+    }
+
+    onSelectArchivo(item_seleccionado) {
+        this.setState({item_seleccionado, adicionar_documento: true})
+    }
+
+    onDeleteArchivo(archivo_id) {
+        const {
+            notificarErrorAjaxAction,
+            deleteArchivoCotizacion,
+            cargando,
+            noCargando,
+            object,
+            fetchArchivosCotizaciones_x_cotizacion
+        } = this.props;
+        cargando();
+        const success = () => {
+            fetchArchivosCotizaciones_x_cotizacion(object.id, () => noCargando(), notificarErrorAjaxAction);
+        };
+        deleteArchivoCotizacion(archivo_id, success, notificarErrorAjaxAction)
+    }
+
+    onUploadArchivo(e, callback = null) {
+        const {notificarAction, notificarErrorAjaxAction, object, cargando, noCargando} = this.props;
+        cargando();
+        const file = e.archivo[0];
+        if (file) {
+            let formData = new FormData();
+            formData.append('archivo', file);
+            formData.append('nombre', e.nombre_archivo);
+            this.props.uploadArchivoCotizacion(
+                object.id,
+                formData,
+                () => {
+                    this.props.fetchArchivosCotizaciones_x_cotizacion(
+                        object.id,
+                        res => {
+                            if (callback) {
+                                callback(res);
+                            }
+                            notificarAction(`La ha subido el archivo para la cotizacion ${object.nro_cotizacion ? object.nro_cotizacion : object.id}`);
+                            noCargando();
+                        }
+                    )
+                },
+                notificarErrorAjaxAction
+            )
+        }
+    }
+
     render() {
-        const {object, mis_permisos, seguimiento_list, mi_cuenta} = this.props;
+        const {object, mis_permisos, seguimiento_list, mi_cuenta, archivos_list} = this.props;
+        const {adicionar_documento, item_seleccionado} = this.state;
         const permisos = permisosAdapter(mis_permisos, permisos_view);
         const permisos_proyecto = permisosAdapter(mis_permisos, proyecto_permisos_view);
         if (!object) {
@@ -180,6 +267,7 @@ class Detail extends Component {
                                     permisos.change &&
                                     <Tab>Editar</Tab>
                                 }
+                                <Tab onClick={() => this.setState({adicionar_documento: false})}>Documentos</Tab>
                                 <Tab>Comentarios</Tab>
                                 <Tab>Cambios de Estado</Tab>
                                 <Tab>Tareas</Tab>
@@ -194,6 +282,26 @@ class Detail extends Component {
                                     />
                                 </TabPanel>
                             }
+                            <TabPanel>
+                                <i className={`fas fa-${adicionar_documento ? 'minus' : 'plus'}-circle puntero`}
+                                   onClick={() => this.setState((s) => ({
+                                       adicionar_documento: !s.adicionar_documento,
+                                       item_seleccionado: null
+                                   }))}>
+                                </i>
+                                {
+                                    adicionar_documento &&
+                                    <UploadDocumentoForm
+                                        onSubmit={this.onSubmitUploadArchivo}
+                                        item_seleccionado={item_seleccionado}
+                                    />
+                                }
+                                <ArchivosCotizacionList
+                                    lista={archivos_list}
+                                    onDeleteArchivo={this.onDeleteArchivo}
+                                    onSelectElemento={this.onSelectArchivo}
+                                />
+                            </TabPanel>
                             <TabPanel>
                                 <ComentariosList
                                     mi_cuenta={mi_cuenta}
@@ -235,6 +343,7 @@ function mapPropsToState(state, ownProps) {
         usuarios_list: state.usuarios,
         contactos_list: state.clientes_contactos,
         clientes_list: state.clientes,
+        archivos_list: state.archivos_cotizaciones,
     }
 }
 

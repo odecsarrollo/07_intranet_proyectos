@@ -2,7 +2,7 @@ from django.utils import timezone
 
 from rest_framework import serializers
 
-from .models import Cotizacion, SeguimientoCotizacion
+from .models import Cotizacion, SeguimientoCotizacion, ArchivoCotizacion
 
 
 class CotizacionSerializer(serializers.ModelSerializer):
@@ -176,4 +176,33 @@ class SeguimientoCotizacionSerializer(serializers.ModelSerializer):
             'created': {'read_only': True},
             'modified': {'read_only': True},
             'creado_por': {'read_only': True},
+        }
+
+
+class ArchivoCotizacionSerializer(serializers.ModelSerializer):
+    archivo_url = serializers.SerializerMethodField()
+    creado_por_username = serializers.CharField(source='creado_por.username', read_only=True)
+
+    def get_archivo_url(self, obj):
+        if obj.archivo:
+            return obj.archivo.url
+        return None
+
+    class Meta:
+        model = ArchivoCotizacion
+        fields = [
+            'url',
+            'id',
+            'cotizacion',
+            'created',
+            'nombre_archivo',
+            'creado_por_username',
+            'archivo',
+            'archivo_url',
+            'creado_por',
+        ]
+        extra_kwargs = {
+            'created': {'read_only': True},
+            'creado_por': {'read_only': True},
+            'nombre_archivo': {'required': False},
         }

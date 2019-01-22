@@ -5,7 +5,7 @@ import Loading from '../00_utilities/components/system/loading_overlay';
 import Menu from './00_menu/index';
 import AppIndex from './index';
 import CotizacionesList from './cotizaciones/cotizaciones/containers/cotizaciones_list_container';
-import CotizacionesDetail from './cotizaciones/tuberia_ventas/containers/cotizacion_detail';
+import CotizacionesDetail from './cotizaciones/cotizaciones/containers/cotizacion_detail';
 import InformeTunelVentas from './informes/tuberia_ventas/cuadro_tuberia_ventas';
 import ClientesList from "../03_app_admin/especificas/clientes/clientes/containers/clientes_container";
 import ClienteDetail from "../03_app_admin/especificas/clientes/clientes/containers/cliente_detail";

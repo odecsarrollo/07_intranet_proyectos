@@ -6,7 +6,9 @@ import {
     fetchObject,
     deleteObject,
     createObject,
-    fetchListWithParameter, callApiMethodWithParameters
+    fetchListWithParameter,
+    callApiMethodWithParameters,
+    callApiMethodWithParametersPDF
 } from '../../00_general_fuctions'
 
 const current_url_api = 'literales';
@@ -68,6 +70,7 @@ export function fetchLiteralesAbiertos(callback = null, callback_error = null) {
         fetchList(FULL_URL, dispatches, callback, callback_error)
     }
 }
+
 export function fetchLiteralesConSeguimiento(callback = null, callback_error = null) {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/con_seguimiento`;
@@ -131,5 +134,14 @@ export const updateLiteral = (id, values, callback = null, callback_error = null
             dispatch({type: TYPES.update, payload: response})
         };
         updateObject(current_url_api, id, values, dispatches, callback, callback_error)
+    }
+};
+
+export const uploadArchivoLiteral = (id, values, callback = null, callback_error = null) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.upload, payload: response})
+        };
+        callApiMethodWithParametersPDF(current_url_api, id, 'upload_archivo', values, dispatches, callback, callback_error)
     }
 };

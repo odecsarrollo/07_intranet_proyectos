@@ -13,6 +13,7 @@ import {
     LITERALES as literales_permisos_view,
     PROYECTOS as permisos_view
 } from "../../../../00_utilities/permisos/types";
+import PanelArchivosLiteral from '../../archivos/literales/panel_archivos_literales';
 
 class LiteralDetail extends Component {
     constructor(props) {
@@ -159,6 +160,7 @@ class LiteralDetail extends Component {
                         <Tab onClick={() => this.onTabClick(0)}>Materiales</Tab>
                         <Tab onClick={() => this.onTabClick(1)}>Mano Obra</Tab>
                         {permisos_literales.change && <Tab>Editar</Tab>}
+                        <Tab onClick={() => this.onTabClick(3)}>Documentos</Tab>
                     </TabList>
                     <TabPanel>
                         <SeguimientoLiteral id_literal={id_literal}/>
@@ -179,6 +181,9 @@ class LiteralDetail extends Component {
                         />
                     </TabPanel>
                     }
+                    <TabPanel>
+                        <PanelArchivosLiteral id_literal={id_literal}/>
+                    </TabPanel>
                 </Tabs>
             </Fragment>
         )

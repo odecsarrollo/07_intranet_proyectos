@@ -4,7 +4,8 @@ import {
     FETCH_PROYECTO,
     UPDATE_PROYECTO,
     DELETE_PROYECTO,
-    CLEAR_PROYECTOS
+    CLEAR_PROYECTOS,
+    UPLOAD_ARCHIVO_PROYECTO,
 } from '../../00_types';
 
 import {
@@ -13,7 +14,8 @@ import {
     updateObject,
     createObject,
     deleteObject,
-    fetchObjectWithParameterPDF
+    fetchObjectWithParameterPDF,
+    callApiMethodWithParametersPDF
 } from '../../00_general_fuctions'
 
 const current_url_api = 'proyectos';
@@ -107,5 +109,14 @@ export const createProyecto = (values, callback = null, callback_error = null) =
             dispatch({type: CREATE_PROYECTO, payload: response})
         };
         createObject(current_url_api, values, dispatches, callback, callback_error)
+    }
+};
+
+export const uploadArchivoProyecto = (id, values, callback = null, callback_error = null) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: UPLOAD_ARCHIVO_PROYECTO, payload: response})
+        };
+        callApiMethodWithParametersPDF(current_url_api, id, 'upload_archivo', values, dispatches, callback, callback_error)
     }
 };

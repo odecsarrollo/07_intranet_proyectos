@@ -5,7 +5,8 @@ import {
     fetchObject,
     deleteObject,
     createObject,
-    callApiMethodWithParameters, fetchListWithParameter
+    callApiMethodWithParametersPDF,
+    fetchListWithParameter
 } from '../../00_general_fuctions'
 
 const current_url_api = 'cotizaciones';
@@ -93,5 +94,13 @@ export const updateCotizacion = (id, values, callback = null, callback_error = n
             dispatch({type: TYPES.update, payload: response})
         };
         updateObject(current_url_api, id, values, dispatches, callback, callback_error)
+    }
+};
+export const uploadArchivoCotizacion = (id, values, callback = null, callback_error = null) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.upload, payload: response})
+        };
+        callApiMethodWithParametersPDF(current_url_api, id, 'upload_archivo', values, dispatches, callback, callback_error)
     }
 };

@@ -13,6 +13,7 @@ export const FETCH_PROYECTOS = 'fetch_proyectos';
 export const FETCH_PROYECTO = 'fetch_proyecto';
 export const CLEAR_PROYECTOS = 'clear_proyectos';
 export const UPDATE_PROYECTO = 'update_proyecto';
+export const UPLOAD_ARCHIVO_PROYECTO = 'upload_archivo_proyecto';
 
 export const LITERAL_TYPES = {
     create: 'create_literal',
@@ -21,6 +22,7 @@ export const LITERAL_TYPES = {
     fetch: 'fetch_literal',
     clear: 'clear_literales',
     update: 'update_literal',
+    upload: 'upload_archivo_literal',
 };
 
 
@@ -98,6 +100,7 @@ export const COTIZACION_TYPES = {
     fetch: 'fetch_cotizacion',
     clear: 'clear_cotizaciones',
     update: 'update_cotizacion',
+    upload: 'upload_archivo_cotizacion',
 };
 
 export const SEGUIMIENTO_COTIZACION_TYPES = {
@@ -170,4 +173,32 @@ export const MIEMBRO_LITERAL_TYPES = {
     fetch: 'fetch_miembro_literal',
     clear: 'clear_miembros_literales',
     update: 'update_miembro_literal',
+};
+
+
+export const ARCHIVO_COTIZACION_TYPES = {
+    create: 'create_archivo_cotizacion',
+    delete: 'delete_archivo_cotizacion',
+    fetch_all: 'fetch_archivos_cotizaciones',
+    fetch: 'fetch_archivo_cotizacion',
+    clear: 'clear_archivos_cotizaciones',
+    update: 'update_archivo_cotizacion',
+};
+
+export const ARCHIVO_LITERAL_TYPES = {
+    create: 'create_archivo_literal',
+    delete: 'delete_archivo_literal',
+    fetch_all: 'fetch_archivos_literales',
+    fetch: 'fetch_archivo_literal',
+    clear: 'clear_archivos_literales',
+    update: 'update_archivo_literal',
+};
+
+export const ARCHIVO_PROYECTO_TYPES = {
+    create: 'create_archivo_proyecto',
+    delete: 'delete_archivo_proyecto',
+    fetch_all: 'fetch_archivos_proyectos',
+    fetch: 'fetch_archivo_proyecto',
+    clear: 'clear_archivos_proyectos',
+    update: 'update_archivo_proyecto',
 };

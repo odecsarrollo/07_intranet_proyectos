@@ -65,5 +65,11 @@ class SeguimientoCotizacion(TimeStampedModel):
 
 
 class ArchivoCotizacion(TimeStampedModel):
+    def archivo_upload_to(instance, filename):
+        nro_cotizacion = instance.cotizacion.id
+        return "documentos/cotizaciones/%s/%s" % (nro_cotizacion, filename)
+
     nombre_archivo = models.CharField(max_length=300)
-    archivo = models.FileField()
+    archivo = models.FileField(null=True, upload_to=archivo_upload_to)
+    cotizacion = models.ForeignKey(Cotizacion, related_name='mis_documentos', on_delete=models.PROTECT)
+    creado_por = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True)

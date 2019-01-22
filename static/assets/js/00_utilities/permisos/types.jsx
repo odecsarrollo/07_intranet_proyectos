@@ -179,3 +179,27 @@ export const TAREAS_FASES_LITERALES = {
     list: 'list_tareafase',
     detail: 'detail_tareafase',
 };
+
+export const ARCHIVOS_COTIZACIONES = {
+    add: 'add_operacioncaja',
+    delete: 'delete_operacioncaja',
+    change: 'change_operacioncaja',
+    list: 'list_operacioncaja',
+    detail: 'detail_operacioncaja',
+};
+
+export const ARCHIVOS_LITERALES = {
+    add: 'add_archivoliteral',
+    delete: 'delete_archivoliteral',
+    change: 'change_archivoliteral',
+    list: 'list_archivoliteral',
+    detail: 'detail_archivoliteral',
+};
+
+export const ARCHIVOS_PROYECTOS = {
+    add: 'add_archivoproyecto',
+    delete: 'delete_archivoproyecto',
+    change: 'change_archivoproyecto',
+    list: 'list_archivoproyecto',
+    detail: 'detail_archivoproyecto',
+};

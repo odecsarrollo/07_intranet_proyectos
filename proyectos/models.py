@@ -58,3 +58,25 @@ class MiembroLiteral(models.Model):
     puede_adicionar_tareas = models.BooleanField(default=False)
     puede_administrar_fases = models.BooleanField(default=False)
     puede_administrar_miembros = models.BooleanField(default=False)
+
+
+class ArchivoProyecto(TimeStampedModel):
+    def archivo_upload_to(instance, filename):
+        nro_proyecto = instance.proyecto.id_proyecto
+        return "documentos/proyectos/%s/%s" % (nro_proyecto, filename)
+
+    nombre_archivo = models.CharField(max_length=300)
+    archivo = models.FileField(null=True, upload_to=archivo_upload_to)
+    proyecto = models.ForeignKey(Proyecto, related_name='mis_documentos', on_delete=models.PROTECT)
+    creado_por = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True)
+
+
+class ArchivoLiteral(TimeStampedModel):
+    def archivo_upload_to(instance, filename):
+        nro_literal = instance.literal.id_literal
+        return "documentos/literal/%s/%s" % (nro_literal, filename)
+
+    nombre_archivo = models.CharField(max_length=300)
+    archivo = models.FileField(null=True, upload_to=archivo_upload_to)
+    literal = models.ForeignKey(Literal, related_name='mis_documentos', on_delete=models.PROTECT)
+    creado_por = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True)

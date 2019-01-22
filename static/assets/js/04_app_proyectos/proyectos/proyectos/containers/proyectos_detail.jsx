@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
 import * as actions from "../../../../01_actions/01_index";
-import CargarDatos from "../../../../00_utilities/components/system/cargar_datos";
 import {SinObjeto} from "../../../../00_utilities/templates/fragmentos";
 import ValidarPermisos from "../../../../00_utilities/permisos/validar_permisos";
 import {permisosAdapter} from "../../../../00_utilities/common";
@@ -17,6 +16,7 @@ import {
 import LiteralModalCreate from './../../literales/components/literal_nuevo_modal';
 import LiteralDetail from '../../literales/components/literal_detail';
 import ProyectoInfo from '../../proyectos/components/proyecto_datos';
+import PanelArchivosProyecto from '../../archivos/proyectos/panel_archivos_proyectos';
 
 class Detail extends Component {
     constructor(props) {
@@ -144,6 +144,7 @@ class Detail extends Component {
                                     permisos.change &&
                                     <Tab>Editar</Tab>
                                 }
+                                <Tab>Documentos</Tab>
                             </TabList>
                             <TabPanel>
                                 <div className="row">
@@ -195,6 +196,9 @@ class Detail extends Component {
                                     />
                                 </TabPanel>
                             }
+                            <TabPanel>
+                                <PanelArchivosProyecto proyecto={object}/>
+                            </TabPanel>
                         </Tabs>
                     </div>
                 </div>

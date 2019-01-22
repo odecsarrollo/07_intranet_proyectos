@@ -9,11 +9,57 @@ from rest_framework import viewsets
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 
-from .models import Proyecto, Literal, MiembroLiteral
-from proyectos_seguimientos.models import Fase, FaseLiteral, TareaFase
-from .api_serializers import ProyectoSerializer, LiteralSerializer, MiembroLiteralSerializer
+from .models import (
+    Proyecto,
+    Literal,
+    MiembroLiteral,
+    ArchivoLiteral,
+    ArchivoProyecto
+)
+from proyectos_seguimientos.models import (
+    Fase,
+    FaseLiteral,
+    TareaFase
+)
+from .api_serializers import (
+    ProyectoSerializer,
+    LiteralSerializer,
+    MiembroLiteralSerializer,
+    ArchivoLiteralSerializer,
+    ArchivoProyectoSerializer
+)
 from mano_obra.models import HoraHojaTrabajo, HoraTrabajoColaboradorLiteralInicial
 from .mixins import LiteralesPDFMixin
+
+
+class ArchivoLiteralViewSet(viewsets.ModelViewSet):
+    queryset = ArchivoLiteral.objects.select_related('literal', 'creado_por').all()
+    serializer_class = ArchivoLiteralSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(creado_por=self.request.user)
+
+    @list_route(http_method_names=['get', ])
+    def listar_x_literal(self, request):
+        literal_id = request.GET.get('literal_id')
+        qs = self.get_queryset().filter(literal_id=literal_id)
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)
+
+
+class ArchivoProyectosViewSet(viewsets.ModelViewSet):
+    queryset = ArchivoProyecto.objects.select_related('proyecto', 'creado_por').all()
+    serializer_class = ArchivoProyectoSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(creado_por=self.request.user)
+
+    @list_route(http_method_names=['get', ])
+    def listar_x_proyecto(self, request):
+        proyecto_id = request.GET.get('proyecto_id')
+        qs = self.get_queryset().filter(proyecto_id=proyecto_id)
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)
 
 
 class MiembroLiteralViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
@@ -99,6 +145,19 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
             )
         )
         return qs
+
+    @detail_route(methods=['post'])
+    def upload_archivo(self, request, pk=None):
+        nombre_archivo = self.request.POST.get('nombre')
+        proyecto = self.get_object()
+        archivo = self.request.FILES['archivo']
+        archivo_proyecto = ArchivoProyecto()
+        archivo_proyecto.archivo = archivo
+        archivo_proyecto.proyecto = proyecto
+        archivo_proyecto.nombre_archivo = nombre_archivo
+        archivo_proyecto.save()
+        serializer = self.get_serializer(proyecto)
+        return Response(serializer.data)
 
     @list_route(http_method_names=['get', ])
     def abiertos(self, request):
@@ -238,6 +297,19 @@ class LiteralViewSet(viewsets.ModelViewSet):
             ),
         )
         return qs
+
+    @detail_route(methods=['post'])
+    def upload_archivo(self, request, pk=None):
+        nombre_archivo = self.request.POST.get('nombre')
+        literal = self.get_object()
+        archivo = self.request.FILES['archivo']
+        archivo_literal = ArchivoLiteral()
+        archivo_literal.archivo = archivo
+        archivo_literal.literal = literal
+        archivo_literal.nombre_archivo = nombre_archivo
+        archivo_literal.save()
+        serializer = self.get_serializer(literal)
+        return Response(serializer.data)
 
     @detail_route(methods=['post'])
     def adicionar_quitar_fase(self, request, pk=None):

@@ -10,6 +10,8 @@ import loadingReducer from './generales/loadingReducer';
 import miCuentaReducer from './generales/miCuentaReducer';
 
 import proyectosReducer from './especificas/proyectos/proyectosReducer';
+import proyectosArchivosReducer from "./especificas/proyectos/archivosProyectosReducer";
+import literalesArchivosReducer from "./especificas/proyectos/archivosLiteralesReducer";
 import miembrosLiteralesReducer from './especificas/proyectos/miembrosLiteralesReducer';
 import fasesReducer from './especificas/proyectos/fasesReducer';
 import fasesLiteralesReducer from './especificas/proyectos/fasesLiteralesReducer';
@@ -31,6 +33,7 @@ import clientesContactosReducer from "./especificas/clientes/clientesContactosRe
 
 import cotizacionesReducer from "./especificas/cotizaciones/cotizacionesReducer";
 import cotizacionesSeguimientosReducer from "./especificas/cotizaciones/cotizacionesSeguimientosReducer";
+import cotizacionesArchivosReducer from "./especificas/cotizaciones/archivosCotizacionesReducer";
 
 import configuracionCostos from './especificas/configuraciones/configuracionCostosReducer';
 
@@ -63,6 +66,9 @@ const rootReducer = combineReducers({
     cotizaciones: cotizacionesReducer,
     cotizaciones_seguimientos: cotizacionesSeguimientosReducer,
     configuracion_costos: configuracionCostos,
+    archivos_cotizaciones: cotizacionesArchivosReducer,
+    archivos_literales: literalesArchivosReducer,
+    archivos_proyecto: proyectosArchivosReducer,
 });
 
 export default rootReducer;

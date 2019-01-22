@@ -1,6 +1,64 @@
 from rest_framework import serializers
 
-from .models import Proyecto, Literal, MiembroLiteral
+from .models import Proyecto, Literal, MiembroLiteral, ArchivoLiteral, ArchivoProyecto
+
+
+class ArchivoLiteralSerializer(serializers.ModelSerializer):
+    archivo_url = serializers.SerializerMethodField()
+    creado_por_username = serializers.CharField(source='creado_por.username', read_only=True)
+
+    def get_archivo_url(self, obj):
+        if obj.archivo:
+            return obj.archivo.url
+        return None
+
+    class Meta:
+        model = ArchivoLiteral
+        fields = [
+            'url',
+            'id',
+            'literal',
+            'created',
+            'nombre_archivo',
+            'creado_por_username',
+            'archivo',
+            'archivo_url',
+            'creado_por',
+        ]
+        extra_kwargs = {
+            'created': {'read_only': True},
+            'creado_por': {'read_only': True},
+            'nombre_archivo': {'required': False},
+        }
+
+
+class ArchivoProyectoSerializer(serializers.ModelSerializer):
+    archivo_url = serializers.SerializerMethodField()
+    creado_por_username = serializers.CharField(source='creado_por.username', read_only=True)
+
+    def get_archivo_url(self, obj):
+        if obj.archivo:
+            return obj.archivo.url
+        return None
+
+    class Meta:
+        model = ArchivoProyecto
+        fields = [
+            'url',
+            'id',
+            'proyecto',
+            'created',
+            'nombre_archivo',
+            'creado_por_username',
+            'archivo',
+            'archivo_url',
+            'creado_por',
+        ]
+        extra_kwargs = {
+            'created': {'read_only': True},
+            'creado_por': {'read_only': True},
+            'nombre_archivo': {'required': False},
+        }
 
 
 class MiembroLiteralSerializer(serializers.ModelSerializer):
