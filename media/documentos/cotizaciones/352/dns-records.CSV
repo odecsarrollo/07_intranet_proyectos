@@ -1,6 +1,0 @@
-
-"DKIM record set:"
-"Record name","Record type","Record Value"
-"wd6ogvezsejsbibesjuamxpcmsdv6ipo._domainkey.odecopack.com","CNAME","wd6ogvezsejsbibesjuamxpcmsdv6ipo.dkim.amazonses.com"
-"a6srfv4cgec3boucgzh3dsduyqc3xx5r._domainkey.odecopack.com","CNAME","a6srfv4cgec3boucgzh3dsduyqc3xx5r.dkim.amazonses.com"
-"cjjdrwgl7odsmwuzzx223racv55xbu2p._domainkey.odecopack.com","CNAME","cjjdrwgl7odsmwuzzx223racv55xbu2p.dkim.amazonses.com"

@@ -24,7 +24,11 @@ momentLocaliser(moment);
 const renderInputField = (field) => {
     return (
         <Fragment>
-            <input {...field.input} type="file" value={null}/>
+            <input
+                {...field.input}
+                type="file"
+                value={null}
+            />
             {field.meta.touched && field.meta.error &&
             <span className='form-field-error'>{field.meta.error}</span>}
         </Fragment>
@@ -35,7 +39,7 @@ export const MyFieldFileInput = (props) => {
     return (
         <div className={props.className}>
             <Field
-                name={props.name}
+                {...props}
                 component={renderInputField}
             />
         </div>
