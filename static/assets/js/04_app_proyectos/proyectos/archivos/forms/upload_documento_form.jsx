@@ -18,13 +18,13 @@ class Form extends Component {
             <form onSubmit={handleSubmit((v) => onSubmit(v))}>
                 <div className="row">
                     <MyTextFieldSimple
-                        className="col-12 col-md-6"
+                        className="col-11"
                         nombre='Nombre'
                         name='nombre_archivo'
                         case='U'/>
                     {
                         !initialValues &&
-                        <MyFieldFileInput name="archivo"/>
+                        <MyFieldFileInput name="archivo" className='col-12'/>
                     }
                 </div>
                 <FlatIconModal

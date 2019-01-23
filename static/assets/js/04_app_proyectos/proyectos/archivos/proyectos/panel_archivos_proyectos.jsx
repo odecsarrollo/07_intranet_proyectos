@@ -76,7 +76,7 @@ class PanelArchivosProyectos extends Component {
                             if (callback) {
                                 callback(res);
                             }
-                            notificarAction(`La ha subido el archivo para la prueba arreglar texto `);
+                            notificarAction(`La ha subido el archivo para el proyecto `);
                             noCargando();
                         }
                     )
