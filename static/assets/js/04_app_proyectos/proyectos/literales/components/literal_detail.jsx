@@ -11,7 +11,8 @@ import {connect} from "react-redux";
 import * as actions from "../../../../01_actions/01_index";
 import {
     LITERALES as literales_permisos_view,
-    PROYECTOS as permisos_view
+    PROYECTOS as permisos_view,
+    ARCHIVOS_LITERALES as archivos_literal_permisos_view,
 } from "../../../../00_utilities/permisos/types";
 import PanelArchivosLiteral from '../../archivos/literales/panel_archivos_literales';
 
@@ -94,6 +95,7 @@ class LiteralDetail extends Component {
         } = this.props;
         const permisos = permisosAdapter(mis_permisos, permisos_view);
         const permisos_literales = permisosAdapter(mis_permisos, literales_permisos_view);
+        const permisos_archivos_literal = permisosAdapter(mis_permisos, archivos_literal_permisos_view);
         return (
             <Fragment>
                 <div className="row">
@@ -160,7 +162,7 @@ class LiteralDetail extends Component {
                         <Tab onClick={() => this.onTabClick(0)}>Materiales</Tab>
                         <Tab onClick={() => this.onTabClick(1)}>Mano Obra</Tab>
                         {permisos_literales.change && <Tab>Editar</Tab>}
-                        <Tab onClick={() => this.onTabClick(3)}>Documentos</Tab>
+                        {permisos_archivos_literal.list && <Tab onClick={() => this.onTabClick(3)}>Documentos</Tab>}
                     </TabList>
                     <TabPanel>
                         <SeguimientoLiteral id_literal={id_literal}/>
@@ -181,9 +183,12 @@ class LiteralDetail extends Component {
                         />
                     </TabPanel>
                     }
-                    <TabPanel>
-                        <PanelArchivosLiteral id_literal={id_literal}/>
-                    </TabPanel>
+                    {
+                        permisos_archivos_literal.list &&
+                        <TabPanel>
+                            <PanelArchivosLiteral id_literal={id_literal} permisos={permisos_archivos_literal}/>
+                        </TabPanel>
+                    }
                 </Tabs>
             </Fragment>
         )

@@ -5,11 +5,24 @@ from .models import Proyecto, Literal, MiembroLiteral, ArchivoLiteral, ArchivoPr
 
 class ArchivoLiteralSerializer(serializers.ModelSerializer):
     archivo_url = serializers.SerializerMethodField()
+    size = serializers.SerializerMethodField()
+    extension = serializers.SerializerMethodField()
     creado_por_username = serializers.CharField(source='creado_por.username', read_only=True)
+
+    def get_size(self, obj):
+        if obj.archivo:
+            return obj.archivo.size
+        return None
 
     def get_archivo_url(self, obj):
         if obj.archivo:
             return obj.archivo.url
+        return None
+
+    def get_extension(self, obj):
+        extension = obj.archivo.url.split('.')[-1]
+        if obj.archivo:
+            return extension.title()
         return None
 
     class Meta:
@@ -20,6 +33,8 @@ class ArchivoLiteralSerializer(serializers.ModelSerializer):
             'literal',
             'created',
             'nombre_archivo',
+            'extension',
+            'size',
             'creado_por_username',
             'archivo',
             'archivo_url',
@@ -34,11 +49,24 @@ class ArchivoLiteralSerializer(serializers.ModelSerializer):
 
 class ArchivoProyectoSerializer(serializers.ModelSerializer):
     archivo_url = serializers.SerializerMethodField()
+    extension = serializers.SerializerMethodField()
+    size = serializers.SerializerMethodField()
     creado_por_username = serializers.CharField(source='creado_por.username', read_only=True)
+
+    def get_size(self, obj):
+        if obj.archivo:
+            return obj.archivo.size
+        return None
 
     def get_archivo_url(self, obj):
         if obj.archivo:
             return obj.archivo.url
+        return None
+
+    def get_extension(self, obj):
+        extension = obj.archivo.url.split('.')[-1]
+        if obj.archivo:
+            return extension.title()
         return None
 
     class Meta:
@@ -49,6 +77,8 @@ class ArchivoProyectoSerializer(serializers.ModelSerializer):
             'proyecto',
             'created',
             'nombre_archivo',
+            'extension',
+            'size',
             'creado_por_username',
             'archivo',
             'archivo_url',

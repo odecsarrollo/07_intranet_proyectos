@@ -8,7 +8,8 @@ import {permisosAdapter, pesosColombianos} from "../../../../00_utilities/common
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import {
     COTIZACIONES as permisos_view,
-    PROYECTOS as proyecto_permisos_view
+    PROYECTOS as proyecto_permisos_view,
+    ARCHIVOS_COTIZACIONES as archivo_cotizacion_permisos_view
 } from "../../../../00_utilities/permisos/types";
 import ComentariosList from '../../seguimientos/components/comentarios_list';
 import TareasList from '../../seguimientos/components/tareas_list';
@@ -17,8 +18,8 @@ import CotizacionForm from '../../tuberia_ventas/components/forms/cotizacion_for
 import SolicitarCreacionLiteralForm
     from '../../tuberia_ventas/components/forms/cotizacion_solicitar_crear_literal_form';
 import CotizacionInfo from '../../tuberia_ventas/components/cotizacion_info';
-import UploadDocumentoForm from '../components/forms/upload_documento_form';
-import ArchivosCotizacionList from '../components/cotizacion_archivos_list';
+import UploadDocumentoForm from '../../../../04_app_proyectos/proyectos/archivos/forms/upload_documento_form';
+import ArchivosCotizacionList from '../../../../04_app_proyectos/proyectos/archivos/components/archivos_list';
 
 class Detail extends Component {
     constructor(props) {
@@ -182,6 +183,7 @@ class Detail extends Component {
         const {adicionar_documento, item_seleccionado} = this.state;
         const permisos = permisosAdapter(mis_permisos, permisos_view);
         const permisos_proyecto = permisosAdapter(mis_permisos, proyecto_permisos_view);
+        const permisos_archivos_cotizacion = permisosAdapter(mis_permisos, archivo_cotizacion_permisos_view);
         if (!object) {
             return <SinObjeto/>
         }
@@ -267,7 +269,10 @@ class Detail extends Component {
                                     permisos.change &&
                                     <Tab>Editar</Tab>
                                 }
-                                <Tab onClick={() => this.setState({adicionar_documento: false})}>Documentos</Tab>
+                                {
+                                    permisos_archivos_cotizacion.list &&
+                                    <Tab onClick={() => this.setState({adicionar_documento: false})}>Documentos</Tab>
+                                }
                                 <Tab>Comentarios</Tab>
                                 <Tab>Cambios de Estado</Tab>
                                 <Tab>Tareas</Tab>
@@ -282,26 +287,33 @@ class Detail extends Component {
                                     />
                                 </TabPanel>
                             }
-                            <TabPanel>
-                                <i className={`fas fa-${adicionar_documento ? 'minus' : 'plus'}-circle puntero`}
-                                   onClick={() => this.setState((s) => ({
-                                       adicionar_documento: !s.adicionar_documento,
-                                       item_seleccionado: null
-                                   }))}>
-                                </i>
-                                {
-                                    adicionar_documento &&
-                                    <UploadDocumentoForm
-                                        onSubmit={this.onSubmitUploadArchivo}
-                                        item_seleccionado={item_seleccionado}
+                            {
+                                permisos_archivos_cotizacion.list &&
+                                <TabPanel>
+                                    {
+                                        permisos_archivos_cotizacion.add &&
+                                        <i className={`fas fa-${adicionar_documento ? 'minus' : 'plus'}-circle puntero`}
+                                           onClick={() => this.setState((s) => ({
+                                               adicionar_documento: !s.adicionar_documento,
+                                               item_seleccionado: null
+                                           }))}>
+                                        </i>
+                                    }
+                                    {
+                                        adicionar_documento &&
+                                        <UploadDocumentoForm
+                                            onSubmit={this.onSubmitUploadArchivo}
+                                            item_seleccionado={item_seleccionado}
+                                        />
+                                    }
+                                    <ArchivosCotizacionList
+                                        lista={archivos_list}
+                                        permisos={permisos_archivos_cotizacion}
+                                        onDeleteArchivo={this.onDeleteArchivo}
+                                        onSelectElemento={this.onSelectArchivo}
                                     />
-                                }
-                                <ArchivosCotizacionList
-                                    lista={archivos_list}
-                                    onDeleteArchivo={this.onDeleteArchivo}
-                                    onSelectElemento={this.onSelectArchivo}
-                                />
-                            </TabPanel>
+                                </TabPanel>
+                            }
                             <TabPanel>
                                 <ComentariosList
                                     mi_cuenta={mi_cuenta}

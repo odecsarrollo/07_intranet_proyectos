@@ -26,7 +26,7 @@ const renderInputField = (field) => {
         <div>
             <input {...field.input} type="file" value={null}/>
             {field.meta.touched && field.meta.error &&
-            <span className="error">{field.meta.error}</span>}
+            <span className='form-field-error'>{field.meta.error}</span>}
         </div>
     )
 };

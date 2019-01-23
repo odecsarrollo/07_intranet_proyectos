@@ -191,6 +191,7 @@ class CotizacionViewSet(viewsets.ModelViewSet):
         archivo_cotizacion.archivo = archivo
         archivo_cotizacion.cotizacion = cotizacion
         archivo_cotizacion.nombre_archivo = nombre_archivo
+        archivo_cotizacion.creado_por = self.request.user
         archivo_cotizacion.save()
         serializer = self.get_serializer(cotizacion)
         return Response(serializer.data)

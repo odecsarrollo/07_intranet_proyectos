@@ -70,6 +70,11 @@ class ArchivoProyecto(TimeStampedModel):
     proyecto = models.ForeignKey(Proyecto, related_name='mis_documentos', on_delete=models.PROTECT)
     creado_por = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True)
 
+    class Meta:
+        permissions = [
+            ("list_archivoproyecto", "Can see list archivos proyectos"),
+        ]
+
 
 class ArchivoLiteral(TimeStampedModel):
     def archivo_upload_to(instance, filename):
@@ -80,3 +85,8 @@ class ArchivoLiteral(TimeStampedModel):
     archivo = models.FileField(null=True, upload_to=archivo_upload_to)
     literal = models.ForeignKey(Literal, related_name='mis_documentos', on_delete=models.PROTECT)
     creado_por = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True)
+
+    class Meta:
+        permissions = [
+            ("list_archivoliteral", "Can see list archivos literales"),
+        ]

@@ -12,6 +12,7 @@ import {
     PROYECTOS as permisos_view,
     LITERALES as literales_permisos_view,
     COTIZACIONES as cotizaciones_permisos_view,
+    ARCHIVOS_PROYECTOS as archivos_proyecto_permisos_view,
 } from "../../../../00_utilities/permisos/types";
 import LiteralModalCreate from './../../literales/components/literal_nuevo_modal';
 import LiteralDetail from '../../literales/components/literal_detail';
@@ -92,6 +93,7 @@ class Detail extends Component {
         const permisos = permisosAdapter(mis_permisos, permisos_view);
         const permisos_literales = permisosAdapter(mis_permisos, literales_permisos_view);
         const cotizacion_permisos = permisosAdapter(mis_permisos, cotizaciones_permisos_view);
+        const archivos_proyecto_permisos = permisosAdapter(mis_permisos, archivos_proyecto_permisos_view);
 
         if (!object) {
             return <SinObjeto/>
@@ -127,7 +129,7 @@ class Detail extends Component {
         }
 
         return (
-            <ValidarPermisos can_see={permisos.detail} nombre='detalles de proyecto'>
+            <ValidarPermisos can_see={permisos.list} nombre='detalles de proyecto'>
                 <div className="row">
                     <div className="col-12">
                         <ProyectoInfo cotizaciones_proyecto_list={cotizaciones_proyecto_list}
@@ -144,7 +146,10 @@ class Detail extends Component {
                                     permisos.change &&
                                     <Tab>Editar</Tab>
                                 }
-                                <Tab>Documentos</Tab>
+                                {
+                                    archivos_proyecto_permisos.list &&
+                                    <Tab>Documentos</Tab>
+                                }
                             </TabList>
                             <TabPanel>
                                 <div className="row">
@@ -196,9 +201,12 @@ class Detail extends Component {
                                     />
                                 </TabPanel>
                             }
-                            <TabPanel>
-                                <PanelArchivosProyecto proyecto={object}/>
-                            </TabPanel>
+                            {
+                                archivos_proyecto_permisos.list &&
+                                <TabPanel>
+                                    <PanelArchivosProyecto proyecto={object}/>
+                                </TabPanel>
+                            }
                         </Tabs>
                     </div>
                 </div>

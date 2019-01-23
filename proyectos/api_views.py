@@ -155,6 +155,7 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
         archivo_proyecto.archivo = archivo
         archivo_proyecto.proyecto = proyecto
         archivo_proyecto.nombre_archivo = nombre_archivo
+        archivo_proyecto.creado_por = self.request.user
         archivo_proyecto.save()
         serializer = self.get_serializer(proyecto)
         return Response(serializer.data)
@@ -307,6 +308,7 @@ class LiteralViewSet(viewsets.ModelViewSet):
         archivo_literal.archivo = archivo
         archivo_literal.literal = literal
         archivo_literal.nombre_archivo = nombre_archivo
+        archivo_literal.creado_por = self.request.user
         archivo_literal.save()
         serializer = self.get_serializer(literal)
         return Response(serializer.data)

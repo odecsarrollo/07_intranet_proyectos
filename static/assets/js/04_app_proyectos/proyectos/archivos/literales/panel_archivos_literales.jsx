@@ -22,7 +22,12 @@ class PanelArchivosLiterales extends Component {
     }
 
     cargarDatos(id_literal) {
-        const {noCargando, cargando, notificarErrorAjaxAction, fetchArchivosLiterales_x_literal} = this.props;
+        const {
+            noCargando,
+            cargando,
+            notificarErrorAjaxAction,
+            fetchArchivosLiterales_x_literal,
+        } = this.props;
         cargando();
         fetchArchivosLiterales_x_literal(id_literal, () => noCargando(), notificarErrorAjaxAction)
     }
@@ -108,16 +113,19 @@ class PanelArchivosLiterales extends Component {
     }
 
     render() {
-        const {archivos_literal} = this.props;
+        const {archivos_literal, permisos} = this.props;
         const {adicionar_documento, item_seleccionado} = this.state;
         return (
             <div>
-                <i className={`fas fa-${adicionar_documento ? 'minus' : 'plus'}-circle puntero`}
-                   onClick={() => this.setState((s) => ({
-                       adicionar_documento: !s.adicionar_documento,
-                       item_seleccionado: null
-                   }))}>
-                </i>
+                {
+                    permisos.add &&
+                    <i className={`fas fa-${adicionar_documento ? 'minus' : 'plus'}-circle puntero`}
+                       onClick={() => this.setState((s) => ({
+                           adicionar_documento: !s.adicionar_documento,
+                           item_seleccionado: null
+                       }))}>
+                    </i>
+                }
                 {
                     adicionar_documento &&
                     <UploadDocumentoForm
@@ -127,6 +135,7 @@ class PanelArchivosLiterales extends Component {
                 }
                 <ArchivosList
                     lista={archivos_literal}
+                    permisos={permisos}
                     onDeleteArchivo={this.onDeleteArchivo}
                     onSelectElemento={this.onSelectArchivo}
                 />
@@ -137,7 +146,6 @@ class PanelArchivosLiterales extends Component {
 
 function mapPropsToState(state) {
     return {
-        mis_permisos: state.mis_permisos,
         archivos_literal: state.archivos_literales
     }
 }

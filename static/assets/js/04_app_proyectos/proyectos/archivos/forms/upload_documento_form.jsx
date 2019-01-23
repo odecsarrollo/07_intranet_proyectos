@@ -3,7 +3,7 @@ import {reduxForm} from 'redux-form';
 import {MyTextFieldSimple, MyFieldFileInput} from '../../../../00_utilities/components/ui/forms/fields';
 import {connect} from "react-redux";
 import {FlatIconModal} from '../../../../00_utilities/components/ui/icon/iconos_base';
-
+import validate from './validate';
 
 class Form extends Component {
     render() {
@@ -47,6 +47,7 @@ function mapPropsToState(state, ownProps) {
 
 Form = reduxForm({
     form: "uploadArchivoForm",
+    validate,
     enableReinitialize: true
 })(Form);
 

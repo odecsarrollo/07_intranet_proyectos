@@ -181,11 +181,11 @@ export const TAREAS_FASES_LITERALES = {
 };
 
 export const ARCHIVOS_COTIZACIONES = {
-    add: 'add_operacioncaja',
-    delete: 'delete_operacioncaja',
-    change: 'change_operacioncaja',
-    list: 'list_operacioncaja',
-    detail: 'detail_operacioncaja',
+    add: 'add_archivocotizacion',
+    delete: 'delete_archivocotizacion',
+    change: 'change_archivocotizacion',
+    list: 'list_archivocotizacion',
+    detail: 'detail_archivocotizacion',
 };
 
 export const ARCHIVOS_LITERALES = {

@@ -73,3 +73,8 @@ class ArchivoCotizacion(TimeStampedModel):
     archivo = models.FileField(null=True, upload_to=archivo_upload_to)
     cotizacion = models.ForeignKey(Cotizacion, related_name='mis_documentos', on_delete=models.PROTECT)
     creado_por = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True)
+
+    class Meta:
+        permissions = [
+            ("list_archivocotizacion", "Can see list archivos cotizaciones"),
+        ]
