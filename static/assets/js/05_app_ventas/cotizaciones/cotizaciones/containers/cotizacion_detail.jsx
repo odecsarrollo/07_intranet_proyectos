@@ -4,7 +4,7 @@ import * as actions from "../../../../01_actions/01_index";
 import CargarDatos from "../../../../00_utilities/components/system/cargar_datos";
 import {Titulo, SinObjeto} from "../../../../00_utilities/templates/fragmentos";
 import ValidarPermisos from "../../../../00_utilities/permisos/validar_permisos";
-import {permisosAdapter, pesosColombianos} from "../../../../00_utilities/common";
+import {permisosAdapter} from "../../../../00_utilities/common";
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import {
     COTIZACIONES as permisos_view,
@@ -193,7 +193,7 @@ class Detail extends Component {
                 <Titulo>Detalle de
                     Cotización {object.nro_cotizacion && `Nro. ${object.unidad_negocio}-${object.nro_cotizacion}`}</Titulo>
                 <div className="row">
-                    <CotizacionInfo object={object} permisos_proyecto={permisos_proyecto}/>
+                    <CotizacionInfo object={object} permisos_proyecto={permisos_proyecto} permisos_cotizacion={permisos} {...this.props}/>
                     <div className="col-12">
                         <div className="row">
                             {
@@ -350,6 +350,8 @@ function mapPropsToState(state, ownProps) {
     return {
         mis_permisos: state.mis_permisos,
         seguimiento_list: state.cotizaciones_seguimientos,
+        proyectos_list: state.proyectos,
+        literales_list: state.literales,
         object: state.cotizaciones[id],
         mi_cuenta: state.mi_cuenta,
         usuarios_list: state.usuarios,

@@ -9,6 +9,7 @@ from rest_framework import viewsets
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 
+from intranet_proyectos.utils_queryset import query_varios_campos
 from .models import (
     Proyecto,
     Literal,
@@ -86,6 +87,17 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
         'cotizacion__cliente',
     ).all()
     serializer_class = ProyectoSerializer
+
+    @list_route(http_method_names=['get', ])
+    def listar_proyectos_x_parametro(self, request):
+        parametro = request.GET.get('parametro')
+        qs = None
+        search_fields = ['id_proyecto', 'nombre']
+        if search_fields:
+            qs = query_varios_campos(self.queryset, search_fields, parametro)
+        qs = qs.filter(cotizacion__isnull=True)
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)
 
     def get_queryset(self):
         mano_obra = HoraHojaTrabajo.objects.values('literal__proyecto__id_proyecto').annotate(
@@ -237,6 +249,17 @@ class LiteralViewSet(viewsets.ModelViewSet):
         'cotizacion',
     ).all()
     serializer_class = LiteralSerializer
+
+    @list_route(http_method_names=['get', ])
+    def listar_literales_x_parametro(self, request):
+        parametro = request.GET.get('parametro')
+        qs = None
+        search_fields = ['id_literal', 'descripcion']
+        if search_fields:
+            qs = query_varios_campos(self.queryset, search_fields, parametro)
+        qs = qs.filter(cotizacion__isnull=True)
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)
 
     def get_queryset(self):
         mano_obra = HoraHojaTrabajo.objects.values('literal').annotate(

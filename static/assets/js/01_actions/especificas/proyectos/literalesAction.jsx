@@ -1,4 +1,4 @@
-import {LITERAL_TYPES as TYPES} from '../../00_types';
+import {FETCH_PROYECTOS, LITERAL_TYPES as TYPES} from '../../00_types';
 
 import {
     fetchList,
@@ -18,6 +18,16 @@ export const clearLiterales = () => {
         dispatch({type: TYPES.clear})
     }
 };
+
+export function fetchLiteralesxParametro(parametro, callback = null, callback_error = null) {
+    return function (dispatch) {
+        const FULL_URL = `${current_url_api}/listar_literales_x_parametro/?parametro=${parametro}`;
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch_all, payload: response})
+        };
+        fetchListWithParameter(FULL_URL, dispatches, callback, callback_error);
+    }
+}
 
 export function adicionarQuitarFaseLiteral(id, id_fase, callback = null, callback_error = null) {
     return function (dispatch) {
