@@ -19,6 +19,7 @@ class LiteralModalCreate extends Component {
             object,
             literales_list,
             notificarErrorAjaxAction,
+            callback = null
         } = this.props;
         cargando();
         this.props.clearHorasColaboradoresProyectosIniciales();
@@ -32,6 +33,9 @@ class LiteralModalCreate extends Component {
             nuevo_literal,
             () => {
                 this.setState({modal_open: false});
+                if (callback) {
+                    callback()
+                }
                 noCargando()
             },
             notificarErrorAjaxAction

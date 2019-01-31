@@ -104,7 +104,7 @@ class Detail extends Component {
 
         let cotizacion_pendiente_por_literal = null;
         const cotizacion_pendiente_por_literal_list = _.map(
-            _.pickBy(contizaciones_list, c => c.crear_literal_id_proyecto === object.id_proyecto), e => e
+            _.pickBy(contizaciones_list, c => parseInt(c.crear_literal_id_proyecto) === object.id), e => e
         );
         if (cotizacion_pendiente_por_literal_list.length > 0) {
             cotizacion_pendiente_por_literal = cotizacion_pendiente_por_literal_list[0]
@@ -162,6 +162,7 @@ class Detail extends Component {
                                         {
                                             cotizacion_pendiente_por_literal &&
                                             <LiteralModalCreate
+                                                callback={() => this.cargarDatos()}
                                                 permisos_object={permisos_literales}
                                                 cotizacion_pendiente_por_literal={{
                                                     cotizacion: cotizacion_pendiente_por_literal.id,
@@ -182,6 +183,7 @@ class Detail extends Component {
                                         item_seleccionado &&
                                         <div className="col-12 col-lg-9">
                                             <LiteralDetail
+                                                callbackCargarDatosProyecto={() => this.cargarDatos()}
                                                 clearCurrentLiteral={this.clearCurrentLiteral}
                                                 id_literal={select_literal_id}
                                                 proyecto={object}

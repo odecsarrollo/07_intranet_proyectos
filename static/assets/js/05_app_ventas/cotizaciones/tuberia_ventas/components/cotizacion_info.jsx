@@ -11,6 +11,56 @@ import {
     MyDialogButtonDelete
 } from '../../../../00_utilities/components/ui/dialog';
 
+class ItemProyecto extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {seleccionado: false}
+    }
+
+    render() {
+        const {
+            proyecto,
+            onActualizarProyecto,
+            solicitarCrearLiteral,
+            tipo
+        } = this.props;
+        const {seleccionado} = this.state;
+        return (
+            <div className='col-3 text-center' style={{border: seleccionado ? '1px solid red' : ''}}>
+                <span className='puntero'
+                      onClick={() => {
+                          tipo === 'proyectos' ? this.setState(s => ({seleccionado: !s.seleccionado})) : onActualizarProyecto(proyecto.id)
+                      }}
+                >
+                    {proyecto.id_mostrar}
+                </span>
+                {
+                    seleccionado &&
+                    <Fragment>
+                        <div style={{color: 'orange'}}>
+                            <div>
+                                <span
+                                    onClick={() => onActualizarProyecto(proyecto.id)}
+                                    className='btn btn-primary mb-2'>
+                                    Relacionar
+                                </span>
+                            </div>
+                            <div>
+                                <span
+                                    className='btn btn-primary mb-2'
+                                    onClick={() => solicitarCrearLiteral(true, proyecto.id)}
+                                >
+                                    Apertura Literal
+                                </span>
+                            </div>
+                        </div>
+                    </Fragment>
+                }
+            </div>
+        )
+    }
+};
+
 class PanelRelacion extends Component {
     constructor(props) {
         super(props);
@@ -18,33 +68,52 @@ class PanelRelacion extends Component {
     }
 
     render() {
-        const {listado, buscarMetodo, onActualizarProyecto} = this.props;
+        const {
+            listado,
+            buscarMetodo,
+            onActualizarProyecto,
+            placeHolder = '',
+            cotizacion,
+            solicitarCrearLiteral = null,
+            tipo
+        } = this.props;
         const {campo_busqueda} = this.state;
         return (
             <Fragment>
-                <TextField
-                    id="text-field-controlled"
-                    value={campo_busqueda}
-                    onChange={(v) => this.setState({campo_busqueda: v.target.value})}
-                />
                 {
-                    campo_busqueda.length > 5 &&
-                    <button type="button"
-                            onClick={() => buscarMetodo(campo_busqueda)}>
-                        Buscar
-                    </button>
+                    !cotizacion.abrir_carpeta &&
+                    !cotizacion.crear_literal &&
+                    <TextField
+                        id="text-field-controlled"
+                        placeholder={placeHolder}
+                        value={campo_busqueda}
+                        onChange={(v) => this.setState({campo_busqueda: v.target.value})}
+                    />
                 }
-                <div className="row">
-                    {listado.map(e => {
-                        return (
-                            <div key={e.id} className='col-3 text-center'>
-                                <span className='puntero' onClick={() => onActualizarProyecto(e.id)}>
-                                {e.id_mostrar}
-                                </span>
-                            </div>
-                        )
-                    })}
-                </div>
+                {
+                    !cotizacion.abrir_carpeta &&
+                    !cotizacion.crear_literal &&
+                    campo_busqueda.length > 5 &&
+                    <Fragment>
+                        <button type="button"
+                                onClick={() => buscarMetodo(campo_busqueda)}>
+                            Buscar
+                        </button>
+                        <div className="row">
+                            {listado.map(e => {
+                                return (
+                                    <ItemProyecto
+                                        tipo={tipo}
+                                        cotizacion={cotizacion}
+                                        key={e.id} proyecto={e}
+                                        onActualizarProyecto={onActualizarProyecto}
+                                        solicitarCrearLiteral={solicitarCrearLiteral}
+                                    />
+                                )
+                            })}
+                        </div>
+                    </Fragment>
+                }
             </Fragment>
         )
     }
@@ -56,6 +125,8 @@ class DialogRelacionarProyecto extends Component {
         this.state = {campo_busqueda: ''};
         this.buscarProyecto = this.buscarProyecto.bind(this);
         this.buscarLiteral = this.buscarLiteral.bind(this);
+        this.solicitarAbrirCarpeta = this.solicitarAbrirCarpeta.bind(this);
+        this.solicitarCrearLiteral = this.solicitarCrearLiteral.bind(this);
     }
 
     componentWillUnmount() {
@@ -90,6 +161,54 @@ class DialogRelacionarProyecto extends Component {
         fetchLiteralesxParametro(busqueda, () => noCargando(), notificarErrorAjaxAction)
     }
 
+    solicitarAbrirCarpeta(abrir_carpeta) {
+        const {
+            noCargando,
+            cargando,
+            notificarErrorAjaxAction,
+            updateCotizacion,
+            fetchCotizacion,
+            object
+        } = this.props;
+        cargando();
+        fetchCotizacion(
+            object.id,
+            cotizacion => {
+                updateCotizacion(
+                    cotizacion.id,
+                    {...cotizacion, abrir_carpeta},
+                    () => noCargando(),
+                    notificarErrorAjaxAction
+                )
+            },
+            notificarErrorAjaxAction
+        )
+    }
+
+    solicitarCrearLiteral(crear_literal, crear_literal_id_proyecto) {
+        const {
+            noCargando,
+            cargando,
+            notificarErrorAjaxAction,
+            updateCotizacion,
+            fetchCotizacion,
+            object
+        } = this.props;
+        cargando();
+        fetchCotizacion(
+            object.id,
+            cotizacion => {
+                updateCotizacion(
+                    cotizacion.id,
+                    {...cotizacion, crear_literal, crear_literal_id_proyecto},
+                    () => noCargando(),
+                    notificarErrorAjaxAction
+                )
+            },
+            notificarErrorAjaxAction
+        )
+    }
+
     render() {
         const {
             open,
@@ -97,7 +216,8 @@ class DialogRelacionarProyecto extends Component {
             proyectos_list,
             literales_list,
             onActualizarProyecto,
-            onActualizarLiteral
+            onActualizarLiteral,
+            object
         } = this.props;
         const proyecto_listado_nuevo = _.map(_.orderBy(proyectos_list, ['id_proyecto'], ['asc']), e => ({
             id: e.id,
@@ -121,19 +241,44 @@ class DialogRelacionarProyecto extends Component {
                     </TabList>
                     <TabPanel>
                         <PanelRelacion
+                            tipo='proyectos'
+                            placeHolder='Digite el proyecto a buscar'
                             listado={proyecto_listado_nuevo}
                             buscarMetodo={this.buscarProyecto}
                             onActualizarProyecto={onActualizarProyecto}
+                            cotizacion={object}
+                            solicitarCrearLiteral={this.solicitarCrearLiteral}
                         />
                     </TabPanel>
                     <TabPanel>
                         <PanelRelacion
+                            tipo='literales'
+                            placeHolder='Digite el literal a buscar'
                             listado={literales_listado_nuevo}
                             buscarMetodo={this.buscarLiteral}
                             onActualizarProyecto={onActualizarLiteral}
+                            cotizacion={object}
                         />
                     </TabPanel>
                 </Tabs>
+                {
+                    !object.crear_literal &&
+                    <span className='btn btn-primary mt-4'
+                          onClick={
+                              () => this.solicitarAbrirCarpeta(!object.abrir_carpeta)
+                          }>
+                            {object.abrir_carpeta ? 'Cancelar Apertura de Carpeta' : 'Solicitar Apertura Carpeta'}
+                        </span>
+                }
+                {
+                    object.crear_literal &&
+                    <span className='btn btn-primary mt-4'
+                          onClick={
+                              () => this.solicitarCrearLiteral(!object.crear_literal, null)
+                          }>
+                            Cancelar Creacion Literal
+                            </span>
+                }
             </Dialog>
         )
     }
@@ -333,44 +478,54 @@ class CotizacionInfo extends Component {
                             </Link><br/>
                         </Fragment>
                     }
-                    <strong>Proyecto: </strong>
                     {
-                        permisos_proyecto.detail &&
-                        (object.mi_proyecto || object.mi_literal_id_literal) ?
-                            <Fragment>
-                                <Link
-                                    to={`/app/proyectos/proyectos/detail/${object.mi_proyecto}`}>{object.id_proyecto}
-                                </Link>
-                                <Link
-                                    to={`/app/proyectos/proyectos/detail/${object.mi_literal_proyecto_id}`}>{object.mi_literal_id_literal}
-                                </Link>
-                            </Fragment> :
-                            <Fragment>
-                                {object.id_proyecto}
-                                {object.mi_literal_id_literal}
-                            </Fragment>
-                    }
-                    {
-                        (object.mi_proyecto || object.mi_literal_id_literal) &&
-                        permisos_cotizacion.change &&
-                        <MyDialogButtonDelete
-                            element_name={''}
-                            element_type={`la relación de la cotizacion con el ${object.mi_proyecto ? 'proyecto' : 'literal'} ${object.mi_proyecto ? object.id_proyecto : object.mi_literal_id_literal}`}
-                            onDelete={() => {
-                                object.mi_proyecto ? this.onEliminarProyectoCotizacion(object.mi_proyecto) : this.onEliminarLiteralCotizacion(object.mi_literal)
-                            }}
-                        />
-                    }
-                    {
-                        (!object.mi_proyecto && !object.mi_literal_id_literal) &&
-                        permisos_cotizacion.change &&
-                        !relacionar_proyecto &&
-                        <span>{object.id_proyecto ? object.id_proyecto :
-                            <span className='puntero'
-                                  onClick={() => this.setState({relacionar_proyecto: true})}>Relacionar</span>}</span>
-                    }
+                        object.estado === 'Cierre (Aprobado)' &&
+                        <Fragment>
+                            <strong>Proyecto: </strong>
+                            {
+                                permisos_proyecto.detail &&
+                                (object.mi_proyecto || object.mi_literal_id_literal) ?
+                                    <Fragment>
+                                        <Link
+                                            to={`/app/proyectos/proyectos/detail/${object.mi_proyecto}`}>{object.id_proyecto}
+                                        </Link>
+                                        <Link
+                                            to={`/app/proyectos/proyectos/detail/${object.mi_literal_proyecto_id}`}>{object.mi_literal_id_literal}
+                                        </Link>
+                                    </Fragment> :
+                                    <Fragment>
+                                        {object.id_proyecto}
+                                        {object.mi_literal_id_literal}
+                                    </Fragment>
+                            }
+                            {
+                                (object.mi_proyecto || object.mi_literal_id_literal) &&
+                                permisos_cotizacion.change &&
+                                <MyDialogButtonDelete
+                                    element_name={''}
+                                    element_type={`la relación de la cotizacion con el ${object.mi_proyecto ? 'proyecto' : 'literal'} ${object.mi_proyecto ? object.id_proyecto : object.mi_literal_id_literal}`}
+                                    onDelete={() => {
+                                        object.mi_proyecto ? this.onEliminarProyectoCotizacion(object.mi_proyecto) : this.onEliminarLiteralCotizacion(object.mi_literal)
+                                    }}
+                                />
+                            }
+                            {
+                                (!object.mi_proyecto && !object.mi_literal_id_literal) &&
+                                permisos_cotizacion.change &&
+                                !relacionar_proyecto &&
+                                <span>{object.id_proyecto ? object.id_proyecto :
+                                    <span className='puntero'
+                                          style={{color: 'red'}}
+                                          onClick={() => this.setState({relacionar_proyecto: true})}
+                                    >
+                                {(object.crear_literal || object.abrir_carpeta) ? 'Solicitud pendiente...' : 'Relacionar'}
+                            </span>
+                                }</span>
+                            }
 
-                    <br/>
+                            <br/>
+                        </Fragment>
+                    }
                     {object.responsable &&
                     <Fragment><strong>Encargado: </strong> {object.responsable_nombres} {object.responsable_apellidos}
                         <br/></Fragment>}

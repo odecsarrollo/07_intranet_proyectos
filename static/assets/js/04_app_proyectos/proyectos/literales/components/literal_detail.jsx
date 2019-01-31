@@ -57,7 +57,8 @@ class LiteralDetail extends Component {
             clearCurrentLiteral,
             cargando,
             noCargando,
-            notificarErrorAjaxAction
+            notificarErrorAjaxAction,
+            callbackCargarDatosProyecto = null
         } = this.props;
         cargando();
         clearCurrentLiteral();
@@ -66,13 +67,22 @@ class LiteralDetail extends Component {
             literal,
             () => {
                 noCargando();
+                if (callbackCargarDatosProyecto) {
+                    callbackCargarDatosProyecto();
+                }
             },
             notificarErrorAjaxAction
         );
     }
 
     onDeleteLiteral(literal) {
-        const {cargando, noCargando, notificarErrorAjaxAction, clearCurrentLiteral = null} = this.props;
+        const {
+            cargando,
+            noCargando,
+            notificarErrorAjaxAction,
+            clearCurrentLiteral = null,
+            callbackCargarDatosProyecto = null
+        } = this.props;
         cargando();
         this.props.deleteLiteral(
             literal.id,
@@ -80,6 +90,9 @@ class LiteralDetail extends Component {
                 noCargando();
                 if (clearCurrentLiteral) {
                     clearCurrentLiteral(null);
+                }
+                if (callbackCargarDatosProyecto) {
+                    callbackCargarDatosProyecto();
                 }
             },
             notificarErrorAjaxAction

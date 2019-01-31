@@ -25,7 +25,8 @@ const Lista = (props) => {
                             return <li key={c.id} className="list-group-item">
                                 <Link to={`/app/proyectos/proyectos/detail/${c.mi_proyecto}`}>
                                     <div>
-                                        CREAR LITERAL PARA PROYECTO {c.crear_literal_id_proyecto}
+                                        Crear LITERAL en PROYECTO ({c.mi_proyecto_id_proyecto}) para COTIZACION
+                                        nro. ({c.unidad_negocio}-{c.nro_cotizacion})
                                     </div>
                                 </Link>
                             </li>

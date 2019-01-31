@@ -44,10 +44,10 @@ class List extends Component {
         const cotizaciones_list_2 = _.map(cotizaciones_list, c => {
             if (c.crear_literal) {
                 const proyectos = _.map(_.pickBy(object_list, p => {
-                    return p.id_proyecto === c.crear_literal_id_proyecto
+                    return p.id === parseInt(c.crear_literal_id_proyecto)
                 }), e => e);
                 if (proyectos.length > 0) {
-                    return {...c, mi_proyecto: proyectos[0].id}
+                    return {...c, mi_proyecto: proyectos[0].id, mi_proyecto_id_proyecto: proyectos[0].id_proyecto}
                 }
             }
             return c
@@ -67,7 +67,7 @@ class List extends Component {
                     }}
                 />
                 <ListCrud
-                    object_list={_.orderBy(object_list,['id_proyecto'],['desc'])}
+                    object_list={_.orderBy(object_list, ['id_proyecto'], ['desc'])}
                     permisos_cotizaciones={permisos_cotizaciones}
                     permisos_object={permisos_proyectos}
                     {...this.props}
