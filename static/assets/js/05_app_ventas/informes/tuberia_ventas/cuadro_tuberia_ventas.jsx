@@ -118,7 +118,7 @@ class InformeTunelVentas extends Component {
                     <tr>
                         <th>Responsable</th>
                         {_.map(orden_estados, e => <th key={e.id}>{e.nombre}</th>)}
-                        <th>Total Trimestre</th>
+                        <th>Total de la Tubería</th>
                         <th>Cierre (Aprobado) Mes Actual</th>
                     </tr>
                     </thead>
