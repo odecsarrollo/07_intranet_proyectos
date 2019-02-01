@@ -146,8 +146,8 @@ class CotizacionViewSet(viewsets.ModelViewSet):
         qsBase = self.get_queryset().annotate(
             valor_orden_compra_mes=Case(
                 When(
-                    Q(orden_compra_fecha__year=current_date.year) |
-                    Q(orden_compra_fecha__quarter=ceil(current_date.month / 3)),
+                    Q(orden_compra_fecha__year=current_date.year) &
+                    Q(orden_compra_fecha__month=current_date.month),
                     then=Coalesce(F('valor_orden_compra'), 0)
                 ),
                 default=Value(0),
