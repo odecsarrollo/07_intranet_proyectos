@@ -81,18 +81,40 @@ class Tabla extends React.Component {
                                     Header: "Nombre Literal",
                                     accessor: "descripcion",
                                     maxWidth: 300,
+                                    minWidth: 200,
                                     filterable: true,
                                     filterMethod: (filter, row) => {
                                         return row[filter.id] && row[filter.id].includes(filter.value.toUpperCase())
+                                    },
+                                    Cell: row => {
+                                        return (
+                                            <div style={{
+                                                fontSize: '0.6rem',
+                                                whiteSpace: 'normal'
+                                            }}>
+                                                {row.value}
+                                            </div>
+                                        )
                                     }
                                 },
                                 {
                                     Header: "Nombre Proyecto",
                                     accessor: "proyecto_nombre",
                                     maxWidth: 300,
+                                    minWidth: 200,
                                     filterable: true,
                                     filterMethod: (filter, row) => {
                                         return row[filter.id] && row[filter.id].includes(filter.value.toUpperCase())
+                                    },
+                                    Cell: row => {
+                                        return (
+                                            <div style={{
+                                                fontSize: '0.6rem',
+                                                whiteSpace: 'normal'
+                                            }}>
+                                                {row.value}
+                                            </div>
+                                        )
                                     }
                                 },
                                 {

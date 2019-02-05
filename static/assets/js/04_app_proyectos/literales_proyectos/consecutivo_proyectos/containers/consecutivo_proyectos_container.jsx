@@ -26,7 +26,7 @@ class List extends Component {
     cargarDatos() {
         const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
         cargando();
-        const cargarLiterales = () => this.props.fetchLiteralesProyectoAbierto(() => noCargando(), notificarErrorAjaxAction);
+        const cargarLiterales = () => this.props.fetchLiterales(() => noCargando(), notificarErrorAjaxAction);
         this.props.fetchMisPermisos(cargarLiterales, notificarErrorAjaxAction)
 
     }
