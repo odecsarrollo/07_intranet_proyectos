@@ -72,7 +72,6 @@ class List extends Component {
 
     render() {
         const {object_list, permisos_object} = this.props;
-        console.log(permisos_object)
         return (
             <CRUD
                 method_pool={this.method_pool}

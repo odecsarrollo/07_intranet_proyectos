@@ -1,6 +1,6 @@
 from io import BytesIO
 
-from django.db.models import Sum, F, ExpressionWrapper, DecimalField, IntegerField, OuterRef, Subquery, Count
+from django.db.models import Sum, F, ExpressionWrapper, DecimalField, IntegerField, OuterRef, Subquery, Count, Q
 from django.utils.timezone import datetime
 from django.db.models.expressions import Exists
 from django.db.models.functions import Coalesce
@@ -180,8 +180,10 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
 
     @list_route(http_method_names=['get', ])
     def con_literales_abiertos(self, request):
-        self.queryset = self.queryset.filter(abierto=True, mis_literales__abierto=True)
-        lista = self.get_queryset()
+        lista = self.queryset.filter(
+            Q(abierto=True) &
+            Q(mis_literales__abierto=True)
+        )
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
