@@ -17,7 +17,15 @@ config.plugins = config.plugins.concat([
         }
     }),
     new webpack.optimize.OccurrenceOrderPlugin(),
-    new UglifyJsPlugin({uglifyOptions: {compress: true}}),
+    new UglifyJsPlugin({
+        uglifyOptions: {
+            comments: false,
+            compress: {
+                drop_console: true,
+                warnings: false
+            }
+        }
+    }),
     new ExtractTextPlugin('webpack-style-[hash].css')
 
 ]);
