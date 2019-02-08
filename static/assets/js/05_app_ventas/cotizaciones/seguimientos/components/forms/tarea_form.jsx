@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {reduxForm} from 'redux-form';
 import {MyTextFieldSimple, MyDateTimePickerField} from '../../../../../00_utilities/components/ui/forms/fields';
-import FlatButton from 'material-ui/FlatButton';
+import Button from '@material-ui/core/Button';
 import {connect} from "react-redux";
 import validate from './validate';
 
@@ -36,15 +36,17 @@ class Form extends Component {
                         className="col-12"
                         nombre='Descripción'
                         name='observacion'
-                        multiLine={true}
+                        multiline={true}
                         rows={2}
                     />
-                    <FlatButton
-                        label='Guardar'
-                        primary={true}
+                    <Button
+                        color="primary"
+                        variant="contained"
                         type='submit'
                         disabled={submitting || pristine}
-                    />
+                    >
+                        Guardar
+                    </Button>
                 </div>
             </form>
         )

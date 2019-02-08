@@ -1,8 +1,10 @@
 import React from "react";
-import Checkbox from 'material-ui/Checkbox';
-import {MyDialogButtonDelete} from '../../../../../../00_utilities/components/ui/dialog';
-import {IconButtonTableEdit, IconButtonTableSee} from '../../../../../../00_utilities/components/ui/icon/iconos';
+import Checkbox from '@material-ui/core/Checkbox';
+import MyDialogButtonDelete from '../../../../../../00_utilities/components/ui/dialog/delete_dialog';
+import IconButtonTableSee from '../../../../../../00_utilities/components/ui/icon/table_icon_button_detail';
+import IconButtonTableEdit from '../../../../../../00_utilities/components/ui/icon/table_icon_button_edit';
 import {Link} from 'react-router-dom'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 import ReactTable from "react-table";
 
@@ -80,8 +82,11 @@ class Tabla extends React.Component {
                                 accessor: "es_cguno",
                                 maxWidth: 50,
                                 Cell: row => (
-                                    row.value && <div className='text-center' style={{color: 'green'}}><i
-                                        className={'fas fa-check-circle'}></i></div>
+                                    row.value && <div className='text-center' style={{color: 'green'}}>
+                                        <FontAwesomeIcon
+                                            icon={['fas', 'check-circle']}
+                                        />
+                                    </div>
                                 )
 
                             },
@@ -90,8 +95,10 @@ class Tabla extends React.Component {
                                 accessor: "es_aprendiz",
                                 maxWidth: 50,
                                 Cell: row => (
-                                    row.value && <div className='text-center' style={{color: 'green'}}><i
-                                        className={'fas fa-check-circle'}></i>
+                                    row.value && <div className='text-center' style={{color: 'green'}}>
+                                        <FontAwesomeIcon
+                                            icon={['fas', 'check-circle']}
+                                        />
                                     </div>
                                 )
                             },
@@ -100,8 +107,12 @@ class Tabla extends React.Component {
                                 accessor: "en_proyectos",
                                 maxWidth: 60,
                                 Cell: row => (
-                                    row.value && <div className='text-center' style={{color: 'green'}}><i
-                                        className={'fas fa-check-circle'}></i></div>
+                                    row.value &&
+                                    <div className='text-center' style={{color: 'green'}}>
+                                        <FontAwesomeIcon
+                                            icon={['fas', 'check-circle']}
+                                        />
+                                    </div>
                                 )
                             },
                             {
@@ -109,8 +120,11 @@ class Tabla extends React.Component {
                                 accessor: "es_salario_fijo",
                                 maxWidth: 60,
                                 Cell: row => (
-                                    row.value && <div className='text-center' style={{color: 'green'}}><i
-                                        className={'fas fa-check-circle'}></i></div>
+                                    row.value && <div className='text-center' style={{color: 'green'}}>
+                                        <FontAwesomeIcon
+                                            icon={['fas', 'check-circle']}
+                                        />
+                                    </div>
                                 )
                             },
                         ]
@@ -193,9 +207,13 @@ class Tabla extends React.Component {
                                 },
                                 Cell: row => (
                                     !row.value ? permisos_object.change &&
-                                        <span>Crear Usuario <i
-                                            onClick={() => onCreateColaboradorUsuario(row.original)}
-                                            className='far fa-plus puntero'></i></span> :
+                                        <span>Crear Usuario
+                                            <FontAwesomeIcon
+                                                className='puntero'
+                                                icon={['fas', 'plus']}
+                                                onClick={() => onCreateColaboradorUsuario(row.original)}
+                                            />
+                                        </span> :
                                         row.value
                                 )
                             },
@@ -207,13 +225,17 @@ class Tabla extends React.Component {
                                     row.original.usuario_username &&
                                     permisos_object.change ?
                                         <Checkbox
+                                            style={{margin: 0, padding: 0}}
+                                            color='primary'
                                             checked={row.value}
-                                            onCheck={() => updateItem({
+                                            onChange={() => updateItem({
                                                 ...row.original,
                                                 autogestion_horas_trabajadas: !row.value
                                             })}
                                         /> :
-                                        row.value && <i className='far fa-check-circle'></i>
+                                        row.value && <FontAwesomeIcon
+                                            icon={['fas', 'check-circle']}
+                                        />
                                 )
                             },
                         ]

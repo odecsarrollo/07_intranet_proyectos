@@ -1,15 +1,14 @@
 import React, {Fragment, Component} from 'react';
 import {pesosColombianos, fechaFormatoUno} from "../../../../00_utilities/common";
 import {Link} from 'react-router-dom'
-import Dialog from 'material-ui/Dialog';
-import TextField from 'material-ui/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import TextField from '@material-ui/core/TextField';
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
-import {
-    FlatIconModalCancel
-} from '../../../../00_utilities/components/ui/icon/iconos';
-import {
-    MyDialogButtonDelete
-} from '../../../../00_utilities/components/ui/dialog';
+import MyDialogButtonDelete from '../../../../00_utilities/components/ui/dialog/delete_dialog';
+import Button from '@material-ui/core/Button';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogActions from '@material-ui/core/DialogActions';
 
 class ItemProyecto extends Component {
     constructor(props) {
@@ -39,19 +38,25 @@ class ItemProyecto extends Component {
                     <Fragment>
                         <div style={{color: 'orange'}}>
                             <div>
-                                <span
+                                <Button
+                                    className='mb-2'
+                                    color="primary"
+                                    variant="contained"
                                     onClick={() => onActualizarProyecto(proyecto.id)}
-                                    className='btn btn-primary mb-2'>
+                                >
                                     Relacionar
-                                </span>
+                                </Button>
+
                             </div>
                             <div>
-                                <span
-                                    className='btn btn-primary mb-2'
+                                <Button
+                                    className='mb-2'
+                                    color="primary"
+                                    variant="contained"
                                     onClick={() => solicitarCrearLiteral(true, proyecto.id)}
                                 >
                                     Apertura Literal
-                                </span>
+                                </Button>
                             </div>
                         </div>
                     </Fragment>
@@ -212,10 +217,10 @@ class DialogRelacionarProyecto extends Component {
     render() {
         const {
             open,
-            actions,
             proyectos_list,
             literales_list,
             onActualizarProyecto,
+            cancelarRelacionar,
             onActualizarLiteral,
             object
         } = this.props;
@@ -229,56 +234,71 @@ class DialogRelacionarProyecto extends Component {
         }));
         return (
             <Dialog
-                title='Relacionar Proyecto'
-                actions={actions}
-                modal={true}
                 open={open}
             >
-                <Tabs>
-                    <TabList>
-                        <Tab>Proyectos</Tab>
-                        <Tab>Literales</Tab>
-                    </TabList>
-                    <TabPanel>
-                        <PanelRelacion
-                            tipo='proyectos'
-                            placeHolder='Digite el proyecto a buscar'
-                            listado={proyecto_listado_nuevo}
-                            buscarMetodo={this.buscarProyecto}
-                            onActualizarProyecto={onActualizarProyecto}
-                            cotizacion={object}
-                            solicitarCrearLiteral={this.solicitarCrearLiteral}
-                        />
-                    </TabPanel>
-                    <TabPanel>
-                        <PanelRelacion
-                            tipo='literales'
-                            placeHolder='Digite el literal a buscar'
-                            listado={literales_listado_nuevo}
-                            buscarMetodo={this.buscarLiteral}
-                            onActualizarProyecto={onActualizarLiteral}
-                            cotizacion={object}
-                        />
-                    </TabPanel>
-                </Tabs>
-                {
-                    !object.crear_literal &&
-                    <span className='btn btn-primary mt-4'
-                          onClick={
-                              () => this.solicitarAbrirCarpeta(!object.abrir_carpeta)
-                          }>
+                <DialogTitle id="responsive-dialog-title">
+                    Relacionar Proyecto
+                </DialogTitle>
+                <DialogContent>
+                    <Tabs>
+                        <TabList>
+                            <Tab>Proyectos</Tab>
+                            <Tab>Literales</Tab>
+                        </TabList>
+                        <TabPanel>
+                            <PanelRelacion
+                                tipo='proyectos'
+                                placeHolder='Digite el proyecto a buscar'
+                                listado={proyecto_listado_nuevo}
+                                buscarMetodo={this.buscarProyecto}
+                                onActualizarProyecto={onActualizarProyecto}
+                                cotizacion={object}
+                                solicitarCrearLiteral={this.solicitarCrearLiteral}
+                            />
+                        </TabPanel>
+                        <TabPanel>
+                            <PanelRelacion
+                                tipo='literales'
+                                placeHolder='Digite el literal a buscar'
+                                listado={literales_listado_nuevo}
+                                buscarMetodo={this.buscarLiteral}
+                                onActualizarProyecto={onActualizarLiteral}
+                                cotizacion={object}
+                            />
+                        </TabPanel>
+                    </Tabs>
+                    {
+                        !object.crear_literal &&
+                        <Button
+                            color={object.abrir_carpeta ? 'secondary' : 'primary'}
+                            variant="contained"
+                            onClick={
+                                () => this.solicitarAbrirCarpeta(!object.abrir_carpeta)
+                            }>
                             {object.abrir_carpeta ? 'Cancelar Apertura de Carpeta' : 'Solicitar Apertura Carpeta'}
-                        </span>
-                }
-                {
-                    object.crear_literal &&
-                    <span className='btn btn-primary mt-4'
-                          onClick={
-                              () => this.solicitarCrearLiteral(!object.crear_literal, null)
-                          }>
+                        </Button>
+                    }
+                    {
+                        object.crear_literal &&
+                        <Button
+                            color="secondary"
+                            variant="contained"
+                            onClick={
+                                () => this.solicitarCrearLiteral(!object.crear_literal, null)
+                            }>
                             Cancelar Creacion Literal
-                            </span>
-                }
+                        </Button>
+                    }
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        color="secondary"
+                        variant="contained"
+                        onClick={() => cancelarRelacionar()}
+                    >
+                        Cancelar
+                    </Button>
+                </DialogActions>
             </Dialog>
         )
     }
@@ -423,9 +443,6 @@ class CotizacionInfo extends Component {
     render() {
         const {object, permisos_proyecto, permisos_cotizacion} = this.props;
         const {relacionar_proyecto} = this.state;
-        const actions = [
-            <FlatIconModalCancel onClick={() => this.setState({relacionar_proyecto: false})}/>,
-        ];
         return (
             <div className="row">
                 <div className="col-12 col-md-6 col-lg-4">
@@ -502,6 +519,7 @@ class CotizacionInfo extends Component {
                                 (object.mi_proyecto || object.mi_literal_id_literal) &&
                                 permisos_cotizacion.change &&
                                 <MyDialogButtonDelete
+                                    className=''
                                     element_name={''}
                                     element_type={`la relación de la cotizacion con el ${object.mi_proyecto ? 'proyecto' : 'literal'} ${object.mi_proyecto ? object.id_proyecto : object.mi_literal_id_literal}`}
                                     onDelete={() => {
@@ -533,9 +551,9 @@ class CotizacionInfo extends Component {
                 {
                     relacionar_proyecto &&
                     <DialogRelacionarProyecto
+                        cancelarRelacionar={() => this.setState({relacionar_proyecto: false})}
                         onActualizarProyecto={this.onActualizarProyecto}
                         onActualizarLiteral={this.onActualizarLiteral}
-                        actions={actions}
                         open={relacionar_proyecto}
                         {...this.props}
                     />

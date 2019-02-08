@@ -1,21 +1,17 @@
 import React from 'react';
-import MenuItem from 'material-ui/MenuItem';
-import FontIcon from 'material-ui/FontIcon';
-import {Link} from 'react-router-dom'
+import DrawerListItem from './../../00_utilities/components/ui/drawer/drawer_list_item';
+import ListCollapse from './../../00_utilities/components/ui/drawer/drawer_list_collapse';
 
-
-const MenuTerceros = (props) => (
-    <li className="nav-item dropdown">
-        <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-           aria-haspopup="true" aria-expanded="false">
-            <FontIcon className="fas fa-cogs"/>
-        </a>
-        <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-            <MenuItem primaryText="Costos" containerElement={<Link to='/app/admin/configuraciones/costos/dashboard'/>}
-            />
-        </div>
-    </li>
+const MenuConfiguraciones = () => (
+    <ListCollapse icono='cogs' texto='Configuraciones'>
+        <DrawerListItem
+            size='1x'
+            link='/app/admin/configuraciones/costos/dashboard'
+            texto='Cerrar Costos'
+            icono='lock'
+            type='nested'
+        />
+    </ListCollapse>
 );
 
-
-export default MenuTerceros;
+export default MenuConfiguraciones;

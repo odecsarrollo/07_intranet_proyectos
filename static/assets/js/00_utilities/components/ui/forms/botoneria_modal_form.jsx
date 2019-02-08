@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from "prop-types";
-import {FlatIconModal} from '../icon/iconos_base';
+import Button from '@material-ui/core/Button';
 
 const BotoneriaModalForm = (props) => {
     const {
@@ -9,33 +9,46 @@ const BotoneriaModalForm = (props) => {
         reset,
         initialValues = null,
         onCancel,
-        conCerrar = true
+        mostrar_submit = true,
+        mostrar_limpiar = true,
+        mostrar_cancelar = true,
     } = props;
     return (
         <div>
-            <FlatIconModal
-                text={initialValues ? 'Guardar ' : 'Crear '}
-                primary={true}
-                disabled={submitting || pristine}
-                type='submit'
-            />
-            <FlatIconModal
-                text="Limpiar"
-                primary={false}
-                disabled={submitting || pristine}
-                onClick={reset}
-            />
             {
-                conCerrar &&
-                <FlatIconModal
-                    text={submitting || pristine ? 'Cerrar' : 'Cancelar'}
-                    primary={false}
-                    onClick={
-                        () => {
-                            onCancel();
-                        }
-                    }
-                />
+                mostrar_submit &&
+                <Button
+                    color="primary"
+                    variant="contained"
+                    type='submit'
+                    className='ml-3'
+                    disabled={submitting || pristine}
+                >
+                    {initialValues ? 'Editar ' : 'Crear '}
+                </Button>
+            }
+            {
+                mostrar_limpiar &&
+                <Button
+                    color="secondary"
+                    variant="contained"
+                    className='ml-3'
+                    onClick={reset}
+                    disabled={submitting || pristine}
+                >
+                    Limpiar
+                </Button>
+            }
+            {
+                mostrar_cancelar &&
+                <Button
+                    color="secondary"
+                    variant="contained"
+                    className='ml-3'
+                    onClick={() => onCancel()}
+                >
+                    {submitting || pristine ? 'Cerrar' : 'Cancelar'}
+                </Button>
             }
         </div>
     )

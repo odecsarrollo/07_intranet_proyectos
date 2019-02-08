@@ -5,8 +5,8 @@ import CargarDatos from "../../../../../../00_utilities/components/system/cargar
 import {Titulo} from "../../../../../../00_utilities/templates/fragmentos";
 import ValidarPermisos from "../../../../../../00_utilities/permisos/validar_permisos";
 import {permisosAdapter} from "../../../../../../00_utilities/common";
-import {Tabs, Tab} from 'material-ui/Tabs';
-import SwipeableViews from 'react-swipeable-views';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import {
     COLABORADORES as bloque_1_permisos,
     COLABORADORES as bloque_2_permisos,
@@ -14,18 +14,6 @@ import {
 
 import BloqueColaboradores from '../../colaboradores/components/colaboradores_list';
 import BloqueCentrosCostos from '../../centros_costos/components/centros_costos_list';
-
-const styles = {
-    headline: {
-        fontSize: 24,
-        paddingTop: 16,
-        marginBottom: 12,
-        fontWeight: 400,
-    },
-    slide: {
-        padding: 10,
-    },
-};
 
 
 class ListadoElementos extends Component {
@@ -40,7 +28,7 @@ class ListadoElementos extends Component {
 
     }
 
-    handleChange = (value) => {
+    handleChange = (event, value) => {
         if (value !== this.state.slideIndex) {
             this.cargarElementos(value);
         }
@@ -79,6 +67,7 @@ class ListadoElementos extends Component {
 
     render() {
         const {bloque_1_list, bloque_2_list, mis_permisos} = this.props;
+        const {slideIndex} = this.state;
         const permisos_object_1 = permisosAdapter(mis_permisos, bloque_1_permisos);
         const permisos_object_2 = permisosAdapter(mis_permisos, bloque_2_permisos);
 
@@ -90,33 +79,32 @@ class ListadoElementos extends Component {
                 <Titulo>{this.singular_name}</Titulo>
 
                 <Tabs
+                    indicatorColor="primary"
+                    textColor="primary"
                     onChange={this.handleChange}
-                    value={this.state.slideIndex}
+                    value={slideIndex}
                 >
-                    <Tab label="Colaboradores" value={0}/>
-                    <Tab label="Centros Costos" value={1}/>
+                    <Tab label="Colaboradores"/>
+                    <Tab label="Centros Costos"/>
                 </Tabs>
 
-                <SwipeableViews
-                    index={this.state.slideIndex}
-                    onChangeIndex={this.handleChange}
-                >
-                    <div style={styles.slide}>
-                        <BloqueColaboradores
-                            object_list={bloque_1_list}
-                            permisos_object={permisos_object_1}
-                            {...this.props}
-                            centros_costos_list={bloque_2_list}
-                        />
-                    </div>
-                    <div style={styles.slide}>
-                        <BloqueCentrosCostos
-                            object_list={bloque_2_list}
-                            permisos_object={{...permisos_object_2, add: false, delete: false, change: false}}
-                            {...this.props}
-                        />
-                    </div>
-                </SwipeableViews>
+                {
+                    slideIndex === 0 &&
+                    <BloqueColaboradores
+                        object_list={bloque_1_list}
+                        permisos_object={permisos_object_1}
+                        {...this.props}
+                        centros_costos_list={bloque_2_list}
+                    />
+                }
+                {
+                    slideIndex === 1 &&
+                    <BloqueCentrosCostos
+                        object_list={bloque_2_list}
+                        permisos_object={{...permisos_object_2, add: false, delete: false, change: false}}
+                        {...this.props}
+                    />
+                }
 
                 <CargarDatos
                     cargarDatos={this.cargarDatos}

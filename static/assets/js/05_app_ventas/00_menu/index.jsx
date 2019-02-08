@@ -1,35 +1,31 @@
 import React, {Fragment} from 'react';
-import MenuBase from '../../00_utilities/components/ui/menu/menu';
-import {Link} from 'react-router-dom'
-import FontIcon from 'material-ui/FontIcon';
+import DrawerListItem from '../../00_utilities/components/ui/drawer/drawer_list_item';
 
-const iconStyles = {
-    padding: 8,
-};
-
-const Menu = () => {
-    return (
-        <MenuBase>
-            {mis_permisos => {
-                return (
-                    <Fragment>
-                        <Link to='/app/ventas'>
-                            <FontIcon className="fas fa-home" style={iconStyles}/>
-                        </Link>
-                        <Link to='/app/ventas/clientes/clientes/list'>
-                            <FontIcon className="fas fa-user" style={iconStyles}/>
-                        </Link>
-                        <Link to='/app/ventas/cotizaciones/cotizaciones/list'>
-                            <FontIcon className="fas fa-book" style={iconStyles}/>
-                        </Link>
-                        <Link to='/app/ventas/informes/cuadro_tuberia_ventas'>
-                            <FontIcon className="fas fa-file" style={iconStyles}/>
-                        </Link>
-                    </Fragment>
-                )
-            }}
-        </MenuBase>
-    )
-};
+const Menu = () => <Fragment>
+    <DrawerListItem
+        size='lg'
+        link='/app/ventas'
+        texto='Principal'
+        icono='home'
+    />
+    <DrawerListItem
+        size='lg'
+        link='/app/ventas/clientes/clientes/list'
+        texto='Clientes'
+        icono='user'
+    />
+    <DrawerListItem
+        size='lg'
+        link='/app/ventas/cotizaciones/cotizaciones/list'
+        texto='Cotizaciones'
+        icono='book'
+    />
+    <DrawerListItem
+        size='lg'
+        link='/app/ventas/informes/cuadro_tuberia_ventas'
+        texto='Tubería de Ventas'
+        icono='file'
+    />
+</Fragment>;
 
 export default Menu;

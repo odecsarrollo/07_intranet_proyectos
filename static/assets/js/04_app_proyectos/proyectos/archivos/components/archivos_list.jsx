@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {MyDialogButtonDelete} from '../../../../00_utilities/components/ui/dialog';
+import MyDialogButtonDelete from '../../../../00_utilities/components/ui/dialog/delete_dialog';
 import {fechaFormatoUno, formatBytes} from "../../../../00_utilities/common";
 
 const ListaArchivoItem = (props) => <tr>
@@ -18,6 +18,7 @@ const ListaArchivoItem = (props) => <tr>
         </td>
 
     }
+
     {
         props.permisos.delete &&
         <td style={{padding: '2px'}} className='text-center'>

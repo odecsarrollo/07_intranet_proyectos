@@ -5,8 +5,8 @@ import CargarDatos from "../../../../../00_utilities/components/system/cargar_da
 import {Titulo} from "../../../../../00_utilities/templates/fragmentos";
 import ValidarPermisos from "../../../../../00_utilities/permisos/validar_permisos";
 import {permisosAdapter} from "../../../../../00_utilities/common";
-import {Tabs, Tab} from 'material-ui/Tabs';
-import SwipeableViews from 'react-swipeable-views';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import {
     PERMISOS_1 as bloque_1_permisos,
     PERMISOS_2 as bloque_2_permisos,
@@ -39,7 +39,7 @@ class ListadoElementos extends Component {
 
     }
 
-    handleChange = (value) => {
+    handleChange = (event, value) => {
         if (value !== this.state.slideIndex) {
             this.cargarElementos(value);
         }
@@ -78,6 +78,7 @@ class ListadoElementos extends Component {
         const {bloque_1_list, bloque_2_list, mis_permisos} = this.props;
         const permisos_object_1 = permisosAdapter(mis_permisos, bloque_1_permisos);
         const permisos_object_2 = permisosAdapter(mis_permisos, bloque_2_permisos);
+        const {slideIndex} = this.state;
 
         const can_see =
             permisos_object_1.list ||
@@ -88,23 +89,23 @@ class ListadoElementos extends Component {
 
                 <Tabs
                     onChange={this.handleChange}
-                    value={this.state.slideIndex}
+                    value={slideIndex}
                 >
-                    <Tab label="Bloques 1" value={0}/>
-                    <Tab label="Bloques 2" value={1}/>
+                    <Tab label="Bloques 1"/>
+                    <Tab label="Bloques 2"/>
                 </Tabs>
 
-                <SwipeableViews
-                    index={this.state.slideIndex}
-                    onChangeIndex={this.handleChange}
-                >
-                    <div style={styles.slide}>
-                        <BloqueTabBase
-                            object_list={bloque_1_list}
-                            permisos_object={permisos_object_1}
-                            {...this.props}
-                        />
-                    </div>
+
+                {
+                    slideIndex === 0 &&
+                    <BloqueTabBase
+                        object_list={bloque_1_list}
+                        permisos_object={permisos_object_1}
+                        {...this.props}
+                    />
+                }
+                {
+                    slideIndex === 1 &&
                     <div style={styles.slide}>
                         <BloqueTabBase
                             object_list={bloque_2_list}
@@ -112,7 +113,7 @@ class ListadoElementos extends Component {
                             {...this.props}
                         />
                     </div>
-                </SwipeableViews>
+                }
 
                 <CargarDatos
                     cargarDatos={this.cargarDatos}

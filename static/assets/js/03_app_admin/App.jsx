@@ -1,6 +1,7 @@
-import React, {Fragment} from 'react';
+import React, {Component} from 'react';
 import {Route, Switch} from 'react-router-dom';
 import Loading from '../00_utilities/components/system/loading_overlay';
+import DrawerMenu from '../00_utilities/components/ui/drawer/drawer_menu';
 
 import Menu from './00_menu/index';
 
@@ -20,12 +21,11 @@ import ClientesList from "./especificas/clientes/clientes/containers/clientes_co
 import ConfiguracionCostosDashboard from "./especificas/configuraciones/containers/costos_dashboard";
 
 
-const AdminApp = (props) => {
-    return (
-        <Loading>
-            <Fragment>
-                <Menu/>
-                <div className="p-3">
+class AdminApp extends Component {
+    render() {
+        return (
+            <Loading>
+                <DrawerMenu lista_menu={<Menu/>} titulo='Admin'>
                     <Switch>
                         <Route exact path='/app/admin/' component={App1}/>
                         <Route exact path='/app/admin/permisos/list' component={PermisosList}/>
@@ -40,10 +40,10 @@ const AdminApp = (props) => {
                         <Route exact path='/app/admin/configuraciones/costos/dashboard'
                                component={ConfiguracionCostosDashboard}/>
                     </Switch>
-                </div>
-            </Fragment>
-        </Loading>
-    )
-};
+                </DrawerMenu>
+            </Loading>
+        )
+    }
+}
 
 export default AdminApp;

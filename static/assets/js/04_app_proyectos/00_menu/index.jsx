@@ -1,39 +1,27 @@
 import React, {Fragment} from 'react';
-import MenuBase from '../../00_utilities/components/ui/menu/menu';
 import Consultas from './consultas';
 import HojasTrabajo from './hojasTrabajos';
-import {Link} from 'react-router-dom'
-import FontIcon from 'material-ui/FontIcon';
+import DrawerListItem from '../../00_utilities/components/ui/drawer/drawer_list_item';
 
-const iconStyles = {
-    padding: 8,
-};
-
-const Menu = () => {
-    return (
-        <MenuBase>
-            {mis_permisos => {
-                return (
-                    <Fragment>
-                        <Link to='/app/proyectos'>
-                            <FontIcon className="fas fa-home" style={iconStyles}/>
-                        </Link>
-                        <Consultas/>
-                        <HojasTrabajo/>
-                        {/*<Link to='/app/proyectos/colaboradores/colaboradores/list'>*/}
-                        {/*<FontIcon className="fas fa-user" style={iconStyles}/>*/}
-                        {/*</Link>*/}
-                        <Link to='/app/proyectos/proyectos/list'>
-                            <FontIcon className="fas fa-wrench" style={iconStyles}/>
-                        </Link>
-                        <Link to='/app/proyectos/fases/list'>
-                            <FontIcon className="fas fa-project-diagram" style={iconStyles}/>
-                        </Link>
-                    </Fragment>
-                )
-            }}
-        </MenuBase>
-    )
-};
+const Menu = () => <Fragment>
+    <DrawerListItem
+        size='lg'
+        link='/app/proyectos'
+        texto='Principal'
+        icono='home'
+    />
+    <DrawerListItem
+        size='lg'
+        link='/app/proyectos/proyectos/list'
+        texto='Proyectos'
+        icono='wrench'
+    />
+    <DrawerListItem
+        size='lg'
+        link='/app/proyectos/fases/list'
+        texto='Fases Proyecto'
+        icono='project-diagram'
+    />
+</Fragment>;
 
 export default Menu;

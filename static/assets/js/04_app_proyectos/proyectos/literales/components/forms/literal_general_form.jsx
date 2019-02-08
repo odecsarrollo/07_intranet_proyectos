@@ -5,7 +5,7 @@ import BotoneriaModalForm from '../../../../../00_utilities/components/ui/forms/
 import BaseFormLiteral from './base_form';
 import validate from './validate';
 import {pesosColombianos, fechaFormatoUno} from "../../../../../00_utilities/common";
-import {MyDialogButtonDelete} from '../../../../../00_utilities/components/ui/dialog';
+import MyDialogButtonDelete from '../../../../../00_utilities/components/ui/dialog/delete_dialog';
 import {
     MyTextFieldSimple
 } from '../../../../../00_utilities/components/ui/forms/fields';

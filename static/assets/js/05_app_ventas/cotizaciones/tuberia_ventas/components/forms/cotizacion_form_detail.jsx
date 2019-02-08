@@ -4,7 +4,7 @@ import {connect} from "react-redux";
 import validate from './validate';
 import FormBaseCotizacion from '../forms/base_cotizacion_form';
 import BotoneriaModalForm from '../../../../../00_utilities/components/ui/forms/botoneria_modal_form';
-import {MyCombobox, MyDropdownList} from '../../../../../00_utilities/components/ui/forms/fields';
+import {MyCombobox} from '../../../../../00_utilities/components/ui/forms/fields';
 import {formValueSelector} from 'redux-form';
 
 const selector = formValueSelector('cotizacionEditForm');

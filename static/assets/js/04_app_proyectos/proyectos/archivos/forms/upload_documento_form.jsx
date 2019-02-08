@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {reduxForm, formValueSelector} from 'redux-form';
 import {MyTextFieldSimple, MyFieldFileInput} from '../../../../00_utilities/components/ui/forms/fields';
 import {connect} from "react-redux";
-import {FlatIconModal} from '../../../../00_utilities/components/ui/icon/iconos_base';
+import Button from '@material-ui/core/Button';
 import validate from './validate';
 
 const selector = formValueSelector('uploadArchivoForm');
@@ -44,12 +44,14 @@ class Form extends Component {
                         />
                     }
                 </div>
-                <FlatIconModal
-                    text='Guardar'
-                    primary={true}
-                    disabled={submitting || pristine}
+                <Button
+                    color="primary"
+                    variant="contained"
                     type='submit'
-                />
+                    disabled={submitting || pristine}
+                >
+                    Guardar
+                </Button>
             </form>
         )
     }

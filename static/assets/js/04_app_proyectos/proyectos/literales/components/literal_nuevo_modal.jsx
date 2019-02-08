@@ -1,5 +1,5 @@
 import React, {Component, Fragment} from 'react'
-import {ContainerNuevoButton} from '../../../../00_utilities/components/ui/icon/iconos';
+import Button from '@material-ui/core/Button';
 import CreateForm from '../../literales/components/forms/literal_general_model_form';
 
 class LiteralModalCreate extends Component {
@@ -60,12 +60,15 @@ class LiteralModalCreate extends Component {
             <Fragment>
                 {
                     permisos_object.add &&
-                    <ContainerNuevoButton
-                        texto={cotizacion_pendiente_por_literal ? 'Add. Lit. Cotización' : 'Nuevo'}
+                    <Button
+                        color="primary"
+                        variant="contained"
                         onClick={() => {
                             this.setState({item_seleccionado: cotizacion_pendiente_por_literal, modal_open: true});
                         }}
-                    />
+                    >
+                        {cotizacion_pendiente_por_literal ? 'Add. Lit. Cotización' : 'Nuevo'}
+                    </Button>
                 }
                 {
                     modal_open &&

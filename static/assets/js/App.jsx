@@ -17,8 +17,50 @@ import 'tether/dist/js/tether';
 import 'bootstrap/dist/js/bootstrap';
 import './../../css/custom.css';
 
-import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import {createMuiTheme, MuiThemeProvider} from '@material-ui/core/styles';
+import indigo from '@material-ui/core/colors/indigo';
+import orange from '@material-ui/core/colors/orange';
+import green from '@material-ui/core/colors/green';
+
+
+import {far} from '@fortawesome/pro-regular-svg-icons';
+import {library} from '@fortawesome/fontawesome-svg-core'
+import {fas} from '@fortawesome/pro-solid-svg-icons';
+import {fal} from '@fortawesome/pro-light-svg-icons';
+import {fab} from '@fortawesome/free-brands-svg-icons';
+
+library.add(fab, fal, far, fas);
+
+const theme = createMuiTheme({
+    typography: {
+        useNextVariants: true,
+        fontFamily: [
+            '-apple-system',
+            'BlinkMacSystemFont',
+            '"Segoe UI"',
+            'Roboto',
+            '"Helvetica Neue"',
+            'Arial',
+            'sans-serif',
+            '"Apple Color Emoji"',
+            '"Segoe UI Emoji"',
+            '"Segoe UI Symbol"',
+        ].join(','),
+        fontSize: 12,
+    },
+    palette: {
+        primary: green,
+        secondary: indigo,
+        error: orange,
+        // Used by `getContrastText()` to maximize the contrast between the background and
+        // the text.
+        contrastThreshold: 3,
+        // Used to shift a color's luminance by approximately
+        // two indexes within its tonal palette.
+        // E.g., shift from Red 500 to Red 300 or Red 700.
+        tonalOffset: 0.2,
+    },
+});
 
 const createStoreWithMiddleware = applyMiddleware(ReduxPromise, thunk)(createStore);
 const store = configureStore();
@@ -44,7 +86,7 @@ import AppBandas from './06_app_bandas/App';
 const App = () => {
     return (
         <Provider store={store}>
-            <MuiThemeProvider muiTheme={getMuiTheme()}>
+            <MuiThemeProvider theme={theme}>
                 <BrowserRouter>
                     <Fragment>
                         <Notify/>

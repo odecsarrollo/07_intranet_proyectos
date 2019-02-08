@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react';
 import {Route, Switch} from 'react-router-dom';
 import Loading from '../00_utilities/components/system/loading_overlay';
+import DrawerMenu from '../00_utilities/components/ui/drawer/drawer_menu';
 
 import Menu from './00_menu/index';
 import AppIndex from './index';
@@ -10,25 +11,22 @@ import InformeTunelVentas from './informes/tuberia_ventas/cuadro_tuberia_ventas'
 import ClientesList from "../03_app_admin/especificas/clientes/clientes/containers/clientes_container";
 import ClienteDetail from "../03_app_admin/especificas/clientes/clientes/containers/cliente_detail";
 
-const App = (props) => {
+const App = () => {
     return (
         <Loading>
-            <Fragment>
-                <Menu/>
-                <div className="p-3">
-                    <Switch>
-                        <Route exact path='/app/ventas/' component={AppIndex}/>
-                        <Route exact path='/app/ventas/clientes/clientes/list' component={ClientesList}/>
-                        <Route exact path='/app/ventas/clientes/clientes/detail/:id' component={ClienteDetail}/>
-                        <Route exact path='/app/ventas/cotizaciones/cotizaciones/list'
-                               component={CotizacionesList}/>
-                        <Route exact path='/app/ventas/cotizaciones/cotizaciones/detail/:id'
-                               component={CotizacionesDetail}/>
-                        <Route exact path='/app/ventas/informes/cuadro_tuberia_ventas'
-                               component={InformeTunelVentas}/>
-                    </Switch>
-                </div>
-            </Fragment>
+            <DrawerMenu lista_menu={<Menu/>} titulo='Ventas'>
+                <Switch>
+                    <Route exact path='/app/ventas/' component={AppIndex}/>
+                    <Route exact path='/app/ventas/clientes/clientes/list' component={ClientesList}/>
+                    <Route exact path='/app/ventas/clientes/clientes/detail/:id' component={ClienteDetail}/>
+                    <Route exact path='/app/ventas/cotizaciones/cotizaciones/list'
+                           component={CotizacionesList}/>
+                    <Route exact path='/app/ventas/cotizaciones/cotizaciones/detail/:id'
+                           component={CotizacionesDetail}/>
+                    <Route exact path='/app/ventas/informes/cuadro_tuberia_ventas'
+                           component={InformeTunelVentas}/>
+                </Switch>
+            </DrawerMenu>
         </Loading>
     )
 };

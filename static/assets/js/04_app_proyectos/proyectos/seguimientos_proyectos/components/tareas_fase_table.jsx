@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import {fechaFormatoDos, fechaFormatoUno} from "../../../../00_utilities/common";
-import {MyDialogButtonDelete} from '../../../../00_utilities/components/ui/dialog';
+import {fechaFormatoDos} from "../../../../00_utilities/common";
+import MyDialogButtonDelete from '../../../../00_utilities/components/ui/dialog/delete_dialog';
 import AsignadoTareaFaseLiteral from './adicionar_asignado_a';
 import TdCambiarEstadoTarea from './cambiar_estado_tarea';
 

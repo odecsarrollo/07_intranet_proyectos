@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react';
+import React, {Component} from 'react';
 import {connect} from "react-redux";
 import * as actions from "../../../../../../01_actions/01_index";
 import CargarDatos from "../../../../../../00_utilities/components/system/cargar_datos";
@@ -6,7 +6,7 @@ import {
     COLABORADORES_COSTOS_MESES as permisos_view
 } from "../../../../../../00_utilities/permisos/types";
 import {permisosAdapter, REGEX_SOLO_NUMEROS} from "../../../../../../00_utilities/common";
-import TextField from 'material-ui/TextField';
+import TextField from '@material-ui/core/TextField';
 import moment from 'moment';
 
 import Tabla from '../components/costos_nomina_tabla';
@@ -82,6 +82,10 @@ class List extends Component {
         })
     }
 
+    handleChange = name => event => {
+        this.setState({[name]: event.target.value});
+    };
+
     render() {
         const {
             object_list,
@@ -96,11 +100,12 @@ class List extends Component {
                 <div className="row">
                     <div className="col-12 col-md-4">
                         <TextField
-                            hintText="El año"
-                            floatingLabelText="Año"
+                            label="El año"
+                            floatinglabeltext="Año"
                             value={ano}
-                            errorText={ano_error}
-                            onChange={(e, v) => {
+                            errortext={ano_error}
+                            onChange={(e) => {
+                                const v = e.target.value;
                                 this.setState({ano: v});
                                 if (!REGEX_SOLO_NUMEROS.test(v) || v.length !== 4 || Number(v) < 0) {
                                     this.setState({ano_error: 'Debe ser un año válido'})
@@ -112,10 +117,11 @@ class List extends Component {
                     </div>
                     <div className="col-12 col-md-4">
                         <TextField
-                            hintText="Mes"
-                            floatingLabelText="Mes"
+                            label="Mes"
+                            floatinglabeltext="Mes"
                             value={mes}
-                            onChange={(e, v) => {
+                            onChange={(e) => {
+                                const v = e.target.value;
                                 this.setState({mes: v});
                                 if (!REGEX_SOLO_NUMEROS.test(v) || Number(v) > 12 || Number(v) < 1) {
                                     this.setState({mes_error: 'Debe ser un mes válido'})
@@ -123,7 +129,7 @@ class List extends Component {
                                     this.setState({mes_error: ''})
                                 }
                             }}
-                            errorText={mes_error}
+                            errortext={mes_error}
                         />
                     </div>
                     <div className="col-12 col-md-4">

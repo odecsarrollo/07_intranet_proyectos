@@ -1,8 +1,6 @@
 import React from "react";
-import Checkbox from 'material-ui/Checkbox';
-import {MyDialogButtonDelete} from '../../../../00_utilities/components/ui/dialog';
-import {IconButtonTableEdit, IconButtonTableSee} from '../../../../00_utilities/components/ui/icon/iconos';
-import {Link} from 'react-router-dom'
+import MyDialogButtonDelete from '../../../../00_utilities/components/ui/dialog/delete_dialog';
+import IconButtonTableEdit from '../../../../00_utilities/components/ui/icon/table_icon_button_edit';
 
 import ReactTable from "react-table";
 import {pesosColombianos} from "../../../../00_utilities/common";

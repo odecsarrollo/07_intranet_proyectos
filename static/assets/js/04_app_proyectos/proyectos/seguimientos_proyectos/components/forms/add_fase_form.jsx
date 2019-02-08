@@ -1,5 +1,5 @@
 import React from 'react';
-import Checkbox from 'material-ui/Checkbox';
+import Checkbox from '@material-ui/core/Checkbox';
 
 
 const BaseFormProyecto = (props) => {
@@ -19,9 +19,11 @@ const BaseFormProyecto = (props) => {
                             key={e.id}
                             className="col-12 col-md-4 col-lg-3"
                             label={e.nombre.toLowerCase()}
-                            onCheck={() => props.adicionarQuitarFaseLiteral(e.id)}
+                            onChange={() => props.adicionarQuitarFaseLiteral(e.id)}
                             name={e.nombre}
                             checked={fases_en_proyecto_array.includes(e.id)}
+                            color='primary'
+
                         />
                     )
                 })

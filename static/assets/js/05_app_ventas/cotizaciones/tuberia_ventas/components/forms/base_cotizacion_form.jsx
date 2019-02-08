@@ -142,7 +142,7 @@ const FormBaseCotizacion = (props) => {
                 className="col-12"
                 nombre='Observación'
                 name='observacion'
-                multiLine={true}
+                multiline={true}
                 rows={2}
                 case='U'/>
             <MyDateTimePickerField

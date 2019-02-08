@@ -4,7 +4,7 @@ import FontIcon from 'material-ui/FontIcon';
 import {Link} from 'react-router-dom'
 
 
-const MenuTerceros = (props) => (
+const MenuTerceros = () => (
     <li className="nav-item dropdown">
         <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
            aria-haspopup="true" aria-expanded="false">

@@ -4,16 +4,25 @@ import * as actions from "./01_actions/01_index";
 import Loading from "./00_utilities/components/system/loading_overlay";
 import CargarDatos from "./00_utilities/components/system/cargar_datos";
 import {Link} from 'react-router-dom'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {withStyles} from "@material-ui/core/styles/index";
+import Typography from '@material-ui/core/Typography';
 
 const Boton = (props) => {
-    const {nombre, icono, link} = props;
+    const {nombre, icono, link, classes} = props;
     return (
-        <div className='col-6 col-md-4 mt-3 boton-index'>
+        <div className={'col-6 col-md-4 mt-3'}>
             <Link to={link}>
-                <div className='icono'>
+                <div className={classes.bordeBoton}>
                     <div className="row">
-                        <div className="col-12"><i className={`fas ${icono} fa-3x`}></i></div>
-                        <div className="col-12">{nombre}</div>
+                        <div className="col-12">
+                            <FontAwesomeIcon icon={['fas', icono]} size='3x' className={classes.iconoBoton}/>
+                        </div>
+                        <div className="col-12">
+                            <Typography variant="h6" color="primary" noWrap>
+                                {nombre}
+                            </Typography>
+                        </div>
                     </div>
                 </div>
             </Link>
@@ -47,7 +56,7 @@ class IndexApp extends Component {
     }
 
     render() {
-        const {mi_cuenta: {is_staff, is_superuser}} = this.props;
+        const {mi_cuenta: {is_staff, is_superuser}, classes} = this.props;
         return <Loading>
             <div className="mt-3">
                 <div className="container text-center">
@@ -60,31 +69,44 @@ class IndexApp extends Component {
                             <Boton
                                 nombre='Admin'
                                 link='/app/admin/'
-                                icono='fa-cogs'
+                                icono='cogs'
+                                classes={classes}
                             />
                         }
                         <Boton
                             nombre='Proyectos'
                             link='/app/proyectos/'
-                            icono='fa-wrench'
+                            icono='wrench'
+                            classes={classes}
                         />
                         <Boton
                             nombre='Ventas'
                             link='/app/ventas/'
-                            icono='fa-shopping-cart'
+                            icono='shopping-cart'
+                            classes={classes}
                         />
                         <Boton
                             nombre='Bandas'
                             link='/app/bandas/'
-                            icono='fa-puzzle-piece'
+                            icono='puzzle-piece'
+                            classes={classes}
                         />
                         <div className="col-4"></div>
                         <div className="col-4 boton-index mt-4">
                             <a href="/accounts/logout/?next=/">
-                                <div className='icono'>
+                                <div className='icono puntero'>
                                     <div className="row">
-                                        <div className="col-12"><i className={`fas fa-sign-out-alt`}></i></div>
-                                        <div className="col-12">Salir</div>
+                                        <div className="col-12">
+                                            <FontAwesomeIcon
+                                                icon={['fas', 'sign-out-alt']}
+                                                className={classes.iconoBoton}
+                                            />
+                                        </div>
+                                        <div className="col-12">
+                                            <Typography variant="h6" color="primary" noWrap>
+                                                Salir
+                                            </Typography>
+                                        </div>
                                     </div>
                                 </div>
                             </a>
@@ -105,4 +127,18 @@ function mapPropsToState(state, ownProps) {
     }
 }
 
-export default connect(mapPropsToState, actions)(IndexApp);
+const styles = theme => (
+    {
+        iconoBoton: {
+            color: theme.palette.primary.dark
+        },
+        bordeBoton: {
+            borderRadius: '25px',
+            border: `2px solid ${theme.palette.primary.dark}`,
+            padding: '1rem',
+            width: '100%'
+        }
+    })
+;
+
+export default withStyles(styles, {withTheme: true})(connect(mapPropsToState, actions)(IndexApp));

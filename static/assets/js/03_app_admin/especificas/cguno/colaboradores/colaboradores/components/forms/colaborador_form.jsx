@@ -41,6 +41,7 @@ class Form extends Component {
         return (
             <MyFormTagModal
                 onCancel={onCancel}
+                fullScreen = {true}
                 onSubmit={handleSubmit(onSubmit)}
                 reset={reset}
                 initialValues={initialValues}
@@ -48,6 +49,7 @@ class Form extends Component {
                 modal_open={modal_open}
                 pristine={pristine}
                 element_type={singular_name}
+                f
             >
                 <div className="col-12">
                     <div className="row">
@@ -118,7 +120,7 @@ class Form extends Component {
                     name='es_aprendiz'/>
 
                 <MyTextFieldSimple
-                    className="col-12 col-md-6"
+                    className="col-12"
                     nombre='Nro. Horas Mes'
                     name='nro_horas_mes'/>
 
@@ -153,7 +155,7 @@ class Form extends Component {
                 />
 
                 {
-                    !initialValues.es_cguno &&
+                    initialValues && !initialValues.es_cguno &&
                     <Fragment>
                         <MyTextFieldSimple
                             className="col-12 col-md-6"

@@ -1,10 +1,9 @@
 import React, {Fragment} from "react";
-import {MyDialogButtonDelete} from '../../../../00_utilities/components/ui/dialog';
+import MyDialogButtonDelete from '../../../../00_utilities/components/ui/dialog/delete_dialog';
 import {fechaFormatoUno, pesosColombianos} from '../../../../00_utilities/common';
-import Checkbox from 'material-ui/Checkbox';
 import ReactTooltip from 'react-tooltip'
 import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
+import Button from '@material-ui/core/Button';
 
 import ReactTable from "react-table";
 
@@ -45,21 +44,25 @@ class Tabla extends React.Component {
         const fecha_cierre = configuracion_costos ? configuracion_costos.fecha_cierre : null;
 
         const actions = [
-            <FlatButton
-                label="Cancelar"
-                secondary={true}
+            <Button
+                color="secondary"
+                variant="contained"
                 onClick={() => {
                     this.handleClose();
                 }}
-            />,
-            <FlatButton
-                label={`${item_modal && item_modal.verificado ? 'Quitar Verificado' : 'Verificar'}`}
-                primary={true}
+            >
+                Cancelar
+            </Button>,
+            <Button
+                color="primary"
+                variant="contained"
                 onClick={() => {
                     this.handleClose();
                     updateItem({...item_modal, verificado: !item_modal.verificado});
                 }}
-            />,
+            >
+                {`${item_modal && item_modal.verificado ? 'Quitar Verificado' : 'Verificar'}`}
+            </Button>,
         ];
         return (
             <Fragment>
@@ -225,7 +228,9 @@ class Tabla extends React.Component {
                                                     element_name={`en ${fechaFormatoUno(row.original.fecha)} para ${row.original.colaborador_nombre}`}
                                                     element_type={singular_name}
                                                 /> :
-                                                <Fragment></Fragment>
+                                                <Fragment>
+
+                                                </Fragment>
                                         )
                                     }
 

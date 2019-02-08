@@ -1,7 +1,8 @@
 import React, {Fragment} from "react";
-import Checkbox from 'material-ui/Checkbox';
-import {MyDialogButtonDelete} from '../../../../00_utilities/components/ui/dialog';
-import {IconButtonTableEdit, IconButtonTableSee} from '../../../../00_utilities/components/ui/icon/iconos';
+import Checkbox from '@material-ui/core/Checkbox';
+import MyDialogButtonDelete from '../../../../00_utilities/components/ui/dialog/delete_dialog';
+import IconButtonTableSee from '../../../../00_utilities/components/ui/icon/table_icon_button_detail';
+import IconButtonTableEdit from '../../../../00_utilities/components/ui/icon/table_icon_button_edit';
 import {Link} from 'react-router-dom'
 
 import ReactTable from "react-table";
@@ -175,8 +176,10 @@ class Tabla extends React.Component {
                                     show: permisos_object.change,
                                     Cell: row => (
                                         <Checkbox
+                                            style={{margin: 0, padding: 0}}
+                                            color='primary'
                                             checked={row.value}
-                                            onCheck={() => updateItem({...row.original, abierto: !row.value})}
+                                            onChange={() => updateItem({...row.original, abierto: !row.value})}
                                         />
                                     )
                                 },

@@ -1,5 +1,5 @@
 import React, {Fragment} from "react";
-import {IconButtonTableSee} from '../../../../00_utilities/components/ui/icon/iconos';
+import IconButtonTableSee from '../../../../00_utilities/components/ui/icon/table_icon_button_detail';
 import {fechaFormatoUno, pesosColombianos} from '../../../../00_utilities/common';
 import {Link} from 'react-router-dom'
 

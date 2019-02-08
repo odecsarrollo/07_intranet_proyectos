@@ -3,6 +3,7 @@ import * as actions from "../../../01_actions/01_index";
 import {connect} from "react-redux";
 import CargarDatos from "../../../00_utilities/components/system/cargar_datos";
 import {permisosAdapter, pesosColombianos} from "../../../00_utilities/common";
+import Typography from '@material-ui/core/Typography';
 import {
     COTIZACIONES as permisos_view
 } from "../../../00_utilities/permisos/types";
@@ -96,7 +97,9 @@ class InformeTunelVentas extends Component {
 
         return (
             <Fragment>
-                <div>Informe de Tuberias de Ventas</div>
+                <Typography variant="h5" gutterBottom color="primary">
+                    Informe de Tuberias de Ventas
+                </Typography>
                 <FormTuberiaVentas onSubmit={(v) => {
                     this.cargarDatos(v.ano, v.trimestre)
                 }}/>

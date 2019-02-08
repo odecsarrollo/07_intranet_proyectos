@@ -172,7 +172,7 @@ class Form extends Component {
                                         name='descripcion_tarea'
                                         nombre='Descripción'
                                         rows={5}
-                                        multiLine={true}
+                                        multiline={true}
                                         className='col-12'
                                         disabled={!autogestion_horas_trabajadas || verificado}
                                     />
