@@ -1,24 +1,53 @@
 import React from 'react';
-import MenuItem from 'material-ui/MenuItem';
-import FontIcon from 'material-ui/FontIcon';
-import {Link} from 'react-router-dom'
+import DrawerListItem from './../../00_utilities/components/ui/drawer/drawer_list_item';
+import ListCollapse from './../../00_utilities/components/ui/drawer/drawer_list_collapse';
 
+const MenuConsultas = () => (
+    <ListCollapse icono='search' texto='Consultas'>
+        <DrawerListItem
+            size='1x'
+            link='/app/proyectos/items/list'
+            texto='Items CGUno'
+            icono='user'
+            type='nested'
+        />
+        <DrawerListItem
+            size='1x'
+            link='/app/proyectos/consecutivo/list'
+            texto='Consecutivo Proyectos'
+            icono='user'
+            type='nested'
+        />
+        <DrawerListItem
+            size='1x'
+            link='/app/proyectos/literales_sin_sincronizar/list'
+            texto='Literales no sincronizados'
+            icono='user'
+            type='nested'
+        />
+        <DrawerListItem
+            size='1x'
+            link='/app/proyectos/proyectos/reporte_costos'
+            texto='Reporte Costos Proyectos 1'
+            icono='user'
+            type='nested'
+        />
+        <DrawerListItem
+            size='1x'
+            link='/app/proyectos/proyectos/reporte_dos'
+            texto='Reporte Costos Proyectos 2'
+            icono='user'
+            type='nested'
+        />
+        <DrawerListItem
+            size='1x'
+            link='/app/proyectos/proyectos/reporte_tres'
+            texto='Reporte Costos Proyectos 3'
+            icono='user'
+            type='nested'
+        />
 
-const MenuConsultas = (props) => (
-    <li className="nav-item dropdown">
-        <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-           aria-haspopup="true" aria-expanded="false">
-            <FontIcon className="fas fa-search"/>
-        </a>
-        <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-            <MenuItem primaryText="Items" containerElement={<Link to='/app/proyectos/items/list'/>}/>
-            <MenuItem primaryText="Consecutivo Proyectos" containerElement={<Link to='/app/proyectos/consecutivo/list'/>}/>
-            <MenuItem primaryText="Literales no sincronizados" containerElement={<Link to='/app/proyectos/literales_sin_sincronizar/list'/>}/>
-            <MenuItem primaryText="Reporte Costos Proyecto 1" containerElement={<Link to='/app/proyectos/proyectos/reporte_costos'/>}/>
-            <MenuItem primaryText="Reporte Costos Proyecto 2" containerElement={<Link to='/app/proyectos/proyectos/reporte_dos'/>}/>
-            <MenuItem primaryText="Reporte Costos Proyecto 3" containerElement={<Link to='/app/proyectos/proyectos/reporte_tres'/>}/>
-        </div>
-    </li>
+    </ListCollapse>
 );
 
 

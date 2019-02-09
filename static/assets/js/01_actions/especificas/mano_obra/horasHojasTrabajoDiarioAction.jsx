@@ -2,12 +2,12 @@ import {
     MANO_OBRA_HORAS_HOJA_TRABAJO_TYPES as TYPES
 } from '../../00_types';
 import {
-    fetchList,
-    updateObject,
-    fetchObject,
-    deleteObject,
-    createObject,
-    fetchListWithParameter, fetchObjectWithParameterPDF
+    fetchListOld,
+    updateObjectOld,
+    fetchObjectOld,
+    deleteObjectOld,
+    createObjectOld,
+    fetchListWithParameterOld, fetchObjectWithParameterPDFOld
 } from '../../00_general_fuctions'
 
 const current_url_api = 'mano_obra_hoja_trabajo_horas';
@@ -18,7 +18,7 @@ export function printReporteCostoTresProyecto(valores, callback = null, callback
         if (valores.lapso) {
             FULL_URL = `${FULL_URL}?fecha_inicial=${valores.fecha_inicial}&fecha_final=${valores.fecha_final}&con_mo_saldo_inicial=${valores.con_mo_saldo_inicial}`
         }
-        fetchObjectWithParameterPDF(FULL_URL, null, callback, callback_error)
+        fetchObjectWithParameterPDFOld(FULL_URL, null, callback, callback_error)
     }
 }
 
@@ -28,7 +28,7 @@ export function fetchHorasHojasTrabajosAutogestionadas(callback = null, callback
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchList(FULL_URL, dispatches, callback, callback_error);
+        fetchListOld(FULL_URL, dispatches, callback, callback_error);
     }
 }
 
@@ -38,7 +38,7 @@ export function fetchHorasHojasTrabajosAutogestionadasxFechas(fecha_inicial, fec
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListWithParameter(FULL_URL, dispatches, callback, callback_error);
+        fetchListWithParameterOld(FULL_URL, dispatches, callback, callback_error);
     }
 }
 
@@ -48,7 +48,7 @@ export function fetchHorasHojasTrabajosxLiteral(literal_id, callback = null, cal
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListWithParameter(FULL_URL, dispatches, callback, callback_error);
+        fetchListWithParameterOld(FULL_URL, dispatches, callback, callback_error);
     }
 }
 
@@ -57,7 +57,7 @@ export const createHoraHojaTrabajo = (values, callback = null, callback_error = 
         const dispatches = (response) => {
             dispatch({type: TYPES.create, payload: response})
         };
-        createObject(current_url_api, values, dispatches, callback, callback_error)
+        createObjectOld(current_url_api, values, dispatches, callback, callback_error)
     }
 };
 export const deleteHoraHojaTrabajo = (id, callback = null, callback_error = null) => {
@@ -65,7 +65,7 @@ export const deleteHoraHojaTrabajo = (id, callback = null, callback_error = null
         const dispatches = (response) => {
             dispatch({type: TYPES.delete, payload: id})
         };
-        deleteObject(current_url_api, id, dispatches, callback, callback_error)
+        deleteObjectOld(current_url_api, id, dispatches, callback, callback_error)
     }
 };
 export const fetchHorasHojasTrabajos = (callback = null, callback_error = null) => {
@@ -73,7 +73,7 @@ export const fetchHorasHojasTrabajos = (callback = null, callback_error = null) 
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchList(current_url_api, dispatches, callback, callback_error);
+        fetchListOld(current_url_api, dispatches, callback, callback_error);
     }
 };
 export const fetchHoraHojaTrabajo = (id, callback = null, callback_error = null) => {
@@ -81,7 +81,7 @@ export const fetchHoraHojaTrabajo = (id, callback = null, callback_error = null)
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch, payload: response})
         };
-        fetchObject(current_url_api, id, dispatches, callback, callback_error);
+        fetchObjectOld(current_url_api, id, dispatches, callback, callback_error);
     }
 };
 export const clearHorasHojasTrabajos = () => {
@@ -95,6 +95,6 @@ export const updateHoraHojaTrabajo = (id, values, callback = null, callback_erro
         const dispatches = (response) => {
             dispatch({type: TYPES.update, payload: response})
         };
-        updateObject(current_url_api, id, values, dispatches, callback, callback_error)
+        updateObjectOld(current_url_api, id, values, dispatches, callback, callback_error)
     }
 };

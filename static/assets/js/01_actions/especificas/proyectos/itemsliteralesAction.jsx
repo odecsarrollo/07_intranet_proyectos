@@ -4,7 +4,7 @@ import {
 } from '../../00_types';
 
 import {
-    fetchListWithParameter
+    fetchListWithParameterOld
 } from '../../00_general_fuctions'
 
 const current_url_api = 'items_literales';
@@ -21,6 +21,6 @@ export function fetchItemsLiterales(id_literal, callback = null, callback_error 
         const dispatches = (response) => {
             dispatch({type: FETCH_ITEMS_LITERALES, payload: response})
         };
-        fetchListWithParameter(FULL_URL, dispatches, callback, callback_error)
+        fetchListWithParameterOld(FULL_URL, dispatches, callback, callback_error)
     }
 }

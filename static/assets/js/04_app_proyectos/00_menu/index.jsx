@@ -1,6 +1,6 @@
 import React, {Fragment} from 'react';
-import Consultas from './consultas';
-import HojasTrabajo from './hojasTrabajos';
+import MenuConsultas from './consultas';
+import MenuManoObra from './manoObra';
 import DrawerListItem from '../../00_utilities/components/ui/drawer/drawer_list_item';
 
 const Menu = () => <Fragment>
@@ -10,6 +10,8 @@ const Menu = () => <Fragment>
         texto='Principal'
         icono='home'
     />
+    <MenuManoObra/>
+    <MenuConsultas/>
     <DrawerListItem
         size='lg'
         link='/app/proyectos/proyectos/list'

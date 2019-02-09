@@ -4,9 +4,11 @@ import * as actions from "../../../../01_actions/01_index";
 import CargarDatos from "../../../../00_utilities/components/system/cargar_datos";
 import {Titulo} from "../../../../00_utilities/templates/fragmentos";
 import ValidarPermisos from "../../../../00_utilities/permisos/validar_permisos";
+import FormControl from '@material-ui/core/FormControl';
 import {tengoPermiso} from "../../../../00_utilities/common";
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
+import SelectField from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
 import {ListaBusqueda} from '../../../../00_utilities/utiles';
 import {
     PERMISO_LIST_ITEM_BIABLE as can_list_permiso,
@@ -49,7 +51,8 @@ class ItemsList extends Component {
         this.props.fetchMisPermisos(() => this.props.noCargando(), this.error_callback)
     }
 
-    handleChangeTipoConsulta(event, index, tipo_consulta) {
+    handleChangeTipoConsulta(event) {
+        const tipo_consulta=event.target.value
         this.setState({tipo_consulta});
     }
 
@@ -84,15 +87,28 @@ class ItemsList extends Component {
             <ValidarPermisos can_see={can_list} nombre='listas de items CGUno'>
                 <Titulo>Items CGUno</Titulo>
                 <div className="col-12">
-                    <SelectField
-                        floatingLabelText="Tipo Consulta"
-                        value={this.state.tipo_consulta}
-                        onChange={this.handleChangeTipoConsulta}
-                    >
-                        <MenuItem value={1} primaryText="Descripción"/>
-                        <MenuItem value={2} primaryText="ID Cguno"/>
-                        <MenuItem value={3} primaryText="Referencia"/>
-                    </SelectField>
+                    <FormControl fullWidth={true}>
+                        <InputLabel htmlFor='select-tipo-consulta'>
+                            Tipo Consulta
+                        </InputLabel>
+                        <SelectField
+                            value={this.state.tipo_consulta}
+                            onChange={this.handleChangeTipoConsulta}
+                            inputProps={{
+                                id: `select-tipo-consulta`,
+                            }}
+                        >
+                            <MenuItem value={1}>
+                                Descripción
+                            </MenuItem>
+                            <MenuItem value={2}>
+                                ID Cguno
+                            </MenuItem>
+                            <MenuItem value={3}>
+                                Referencia
+                            </MenuItem>
+                        </SelectField>
+                    </FormControl>
                 </div>
                 <div className="col-12">
                     <ListaBusqueda>

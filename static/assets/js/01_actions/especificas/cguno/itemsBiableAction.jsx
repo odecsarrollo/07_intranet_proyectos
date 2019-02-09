@@ -5,8 +5,8 @@ import {
 } from '../../00_types';
 
 import {
-    fetchObject,
-    fetchListWithParameter
+    fetchObjectOld,
+    fetchListWithParameterOld
 } from '../../00_general_fuctions'
 
 const current_url_api = 'items_biable';
@@ -23,7 +23,7 @@ export function fetchItemsBiablexParametro(tipo_consulta, parametro, callback = 
         const dispatches = (response) => {
             dispatch({type: FETCH_ITEMS_BIABLE, payload: response})
         };
-        fetchListWithParameter(FULL_URL, dispatches, callback, callback_error);
+        fetchListWithParameterOld(FULL_URL, dispatches, callback, callback_error);
     }
 }
 
@@ -33,7 +33,7 @@ export function fetchItemsBiablexCodigos(codigos, callback = null, callback_erro
         const dispatches = (response) => {
             dispatch({type: FETCH_ITEMS_BIABLE, payload: response})
         };
-        fetchListWithParameter(FULL_URL, dispatches, callback, callback_error);
+        fetchListWithParameterOld(FULL_URL, dispatches, callback, callback_error);
     }
 }
 
@@ -42,6 +42,6 @@ export function fetchItemBiable(id, callback = null, callback_error = null) {
         const dispatches = (response) => {
             dispatch({type: FETCH_ITEM_BIABLE, payload: response})
         };
-        fetchObject(current_url_api, id, dispatches, callback, callback_error);
+        fetchObjectOld(current_url_api, id, dispatches, callback, callback_error);
     }
 }

@@ -1,8 +1,9 @@
-import _ from 'lodash';
+import {omit, mapKeys} from 'lodash';
 
 const mostrarLogs = (tipo) => {
     const mostrar = false;
     if (mostrar) {
+        console.log('usando base reducers');
         console.log(`Entro a base reducer ${tipo}`);
     }
 };
@@ -13,27 +14,21 @@ export default function (actions_types, state = [], action) {
         case actions_types.create:
             mostrarLogs('create');
             return {...state, [action.payload.data.id]: action.payload.data};
-            break;
         case actions_types.delete:
             mostrarLogs('delete');
-            return _.omit(state, action.payload);
-            break;
+            return omit(state, action.payload);
         case actions_types.fetch_all:
             mostrarLogs('fetch_all');
-            return _.mapKeys(action.payload.data, 'id');
-            break;
+            return mapKeys(action.payload.data, 'id');
         case actions_types.fetch:
             mostrarLogs('fetch');
             return {...state, [action.payload.data.id]: action.payload.data};
-            break;
         case actions_types.clear:
             mostrarLogs('clear');
             return {};
-            break;
         case actions_types.update:
             mostrarLogs('update');
             return {...state, [action.payload.data.id]: action.payload.data};
-            break;
         default:
             return state;
     }

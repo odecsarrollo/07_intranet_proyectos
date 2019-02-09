@@ -2,7 +2,10 @@ import React, {Fragment} from "react";
 import MyDialogButtonDelete from '../../../../00_utilities/components/ui/dialog/delete_dialog';
 import {fechaFormatoUno, pesosColombianos} from '../../../../00_utilities/common';
 import ReactTooltip from 'react-tooltip'
-import Dialog from 'material-ui/Dialog';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
 import Button from '@material-ui/core/Button';
 
 import ReactTable from "react-table";
@@ -43,46 +46,47 @@ class Tabla extends React.Component {
 
         const fecha_cierre = configuracion_costos ? configuracion_costos.fecha_cierre : null;
 
-        const actions = [
-            <Button
-                color="secondary"
-                variant="contained"
-                onClick={() => {
-                    this.handleClose();
-                }}
-            >
-                Cancelar
-            </Button>,
-            <Button
-                color="primary"
-                variant="contained"
-                onClick={() => {
-                    this.handleClose();
-                    updateItem({...item_modal, verificado: !item_modal.verificado});
-                }}
-            >
-                {`${item_modal && item_modal.verificado ? 'Quitar Verificado' : 'Verificar'}`}
-            </Button>,
-        ];
         return (
             <Fragment>
                 <Dialog
-                    title="Verificación hora de trabajo"
-                    actions={actions}
-                    modal={false}
                     open={this.state.open}
-                    onRequestClose={this.handleClose}
                 >
-                    {item_modal &&
-                    <div>
-                        <strong>Colaborador: </strong>{item_modal.colaborador_nombre}<br/>
-                        <strong>Fecha: </strong>{fechaFormatoUno(item_modal.fecha)}<br/>
-                        <strong>Literal: </strong>{item_modal.literal_nombre}<br/>
-                        <strong>Descripción Literal: </strong>{item_modal.literal_descripcion}<br/>
-                        <strong>Motivo: </strong>{item_modal.descripcion_tarea}<br/>
-                        <strong>Tiempo: </strong>{item_modal.horas} horas y {item_modal.minutos} minutos<br/>
-                    </div>
-                    }
+                    <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
+                        Verificación hora de trabajo
+                    </DialogTitle>
+                    <DialogContent>
+                        {item_modal &&
+                        <div>
+                            <strong>Colaborador: </strong>{item_modal.colaborador_nombre}<br/>
+                            <strong>Fecha: </strong>{fechaFormatoUno(item_modal.fecha)}<br/>
+                            <strong>Literal: </strong>{item_modal.literal_nombre}<br/>
+                            <strong>Descripción Literal: </strong>{item_modal.literal_descripcion}<br/>
+                            <strong>Motivo: </strong>{item_modal.descripcion_tarea}<br/>
+                            <strong>Tiempo: </strong>{item_modal.horas} horas y {item_modal.minutos} minutos<br/>
+                        </div>
+                        }
+                    </DialogContent>
+                    <DialogActions>
+                        <Button
+                            color="secondary"
+                            variant="contained"
+                            onClick={() => {
+                                this.handleClose();
+                            }}
+                        >
+                            Cancelar
+                        </Button>
+                        <Button
+                            color="primary"
+                            variant="contained"
+                            onClick={() => {
+                                this.handleClose();
+                                updateItem({...item_modal, verificado: !item_modal.verificado});
+                            }}
+                        >
+                            {`${item_modal && item_modal.verificado ? 'Quitar Verificado' : 'Verificar'}`}
+                        </Button>
+                    </DialogActions>
                 </Dialog>
                 <ReactTooltip/>
                 <ReactTable

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import CalendarField from './calendarioField';
 import PropTypes from "prop-types";
+import Button from '@material-ui/core/Button';
 
 class FechasRangoFiltro extends Component {
     constructor(props) {
@@ -49,7 +50,13 @@ class FechasRangoFiltro extends Component {
                         {
                             filtro_fecha_max &&
                             <div className="col-md-12">
-                                <input type="submit" className='btn btn-primary' value="Buscar"></input>
+                                <Button
+                                    color="primary"
+                                    variant="contained"
+                                    type="submit"
+                                >
+                                    Buscar
+                                </Button>
                             </div>
                         }
                     </div>

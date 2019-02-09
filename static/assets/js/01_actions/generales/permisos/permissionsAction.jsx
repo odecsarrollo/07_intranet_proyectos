@@ -8,10 +8,10 @@ import {
 } from '../../00_types';
 
 import {
-    fetchList,
-    updateObject,
-    fetchObject,
-    fetchListWithParameter
+    fetchListOld,
+    updateObjectOld,
+    fetchObjectOld,
+    fetchListWithParameterOld
 } from '../../00_general_fuctions'
 
 const current_url_api = 'permisos';
@@ -23,7 +23,7 @@ export function fetchMisPermisos(callback = null, callback_error = null) {
         const dispatches = (response) => {
             dispatch({type: FETCH_MIS_PERMISOS, payload: response})
         };
-        fetchList(FULL_URL, dispatches, callback, callback_error);
+        fetchListOld(FULL_URL, dispatches, callback, callback_error);
     }
 }
 
@@ -34,7 +34,7 @@ export function fetchPermisosActivos(callback = null, callback_error = null) {
         const dispatches = (response) => {
             dispatch({type: FETCH_PERMISOS, payload: response})
         };
-        fetchList(FULL_URL, dispatches, callback, callback_error);
+        fetchListOld(FULL_URL, dispatches, callback, callback_error);
     }
 }
 
@@ -45,7 +45,7 @@ export function fetchOtroUsuarioPermisos(id, callback = null, callback_error = n
         const dispatches = (response) => {
             dispatch({type: FETCH_OTRO_USUARIO_PERMISOS, payload: response})
         };
-        fetchListWithParameter(FULL_URL, dispatches, callback, callback_error);
+        fetchListWithParameterOld(FULL_URL, dispatches, callback, callback_error);
     }
 }
 
@@ -54,7 +54,7 @@ export const fetchPermisos = (callback = null, callback_error = null) => {
         const dispatches = (response) => {
             dispatch({type: FETCH_PERMISOS, payload: response})
         };
-        fetchList(current_url_api, dispatches, callback, callback_error);
+        fetchListOld(current_url_api, dispatches, callback, callback_error);
     }
 };
 
@@ -63,7 +63,7 @@ export const updatePermiso = (id, values, callback = null, callback_error = null
         const dispatches = (response) => {
             dispatch({type: UPDATE_PERMISO, payload: response})
         };
-        updateObject(current_url_api, id, values, dispatches, callback, callback_error)
+        updateObjectOld(current_url_api, id, values, dispatches, callback, callback_error)
     }
 };
 
@@ -72,7 +72,7 @@ export const fetchPermiso = (id, callback = null, callback_error = null) => {
         const dispatches = (response) => {
             dispatch({type: FETCH_PERMISO, payload: response})
         };
-        fetchObject(current_url_api, id, dispatches, callback, callback_error);
+        fetchObjectOld(current_url_api, id, dispatches, callback, callback_error);
     }
 };
 
