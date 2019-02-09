@@ -40,30 +40,26 @@ class Detail extends Component {
 
     cargarDatos() {
         const {id} = this.props.match.params;
-        const {noCargando, cargando} = this.props;
-        cargando();
-        const cargarGruposPermisos = () => this.props.fetchGruposPermisos(() => noCargando(), this.error_callback);
-        const cargarPermisosActivos = () => this.props.fetchPermisosActivos(cargarGruposPermisos, this.error_callback);
-        const cargarPermisosUsuario = () => this.props.fetchOtroUsuarioPermisos(id, cargarPermisosActivos, this.error_callback);
-        const cargarUsuario = () => this.props.fetchUsuario(id, cargarPermisosUsuario, this.error_callback);
-        const cargarMisPermisos = () => this.props.fetchMisPermisos(cargarUsuario, this.error_callback);
-        this.props.fetchMiCuenta(cargarMisPermisos, this.error_callback);
+        const cargarGruposPermisos = () => this.props.fetchGruposPermisos();
+        const cargarPermisosActivos = () => this.props.fetchPermisosActivos({callback: cargarGruposPermisos});
+        const cargarPermisosUsuario = () => this.props.fetchOtroUsuarioPermisos(id, {callback: cargarPermisosActivos});
+        const cargarUsuario = () => this.props.fetchUsuario(id, {callback: cargarPermisosUsuario});
+        const cargarMisPermisos = () => this.props.fetchMisPermisos({callback: cargarUsuario});
+        this.props.fetchMiCuenta({callback: cargarMisPermisos});
 
     }
 
     actualizarPermiso(permiso) {
         const {id} = this.props.match.params;
-        const {cargando, noCargando} = this.props;
-        cargando();
-        const CargarPermisosUsuario = () => this.props.fetchOtroUsuarioPermisos(id, () => noCargando(), this.error_callback);
-        this.props.addPermisoUsuario(id, permiso.id, CargarPermisosUsuario, this.error_callback)
+        const CargarPermisosUsuario = () => this.props.fetchOtroUsuarioPermisos(id);
+        this.props.addPermisoUsuario(id, permiso.id, {callback: CargarPermisosUsuario})
     }
 
     actualizarGrupo(grupo) {
         const {id} = this.props.match.params;
         const {cargando, noCargando} = this.props;
         cargando();
-        const CargarUsuario = () => this.props.fetchUsuario(id, () => noCargando(), this.error_callback);
+        const CargarUsuario = () => this.props.fetchUsuario(id);
         this.props.addGrupoUsuario(id, grupo.id, CargarUsuario, this.error_callback)
     }
 

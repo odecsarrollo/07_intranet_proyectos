@@ -25,10 +25,8 @@ class List extends Component {
     }
 
     cargarDatos() {
-        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
-        cargando();
-        const cargarCotizaciones = () => this.props.fetchCotizacionesTuberiaVentas(() => noCargando(), notificarErrorAjaxAction);
-        this.props.fetchMisPermisos(cargarCotizaciones, notificarErrorAjaxAction)
+        const cargarCotizaciones = () => this.props.fetchCotizacionesTuberiaVentas();
+        this.props.fetchMisPermisos({callback: cargarCotizaciones})
 
     }
 
@@ -40,7 +38,7 @@ class List extends Component {
             <Fragment>
                 <ListCrud
                     object_list={object_list}
-                    permisos_object={{...cotizaciones_permisos,list:cotizaciones_permisos.list_tuberia_ventas}}
+                    permisos_object={{...cotizaciones_permisos, list: cotizaciones_permisos.list_tuberia_ventas}}
                     proyectos_permisos={proyectos_permisos}
                     {...this.props}
                 />

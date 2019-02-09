@@ -1,10 +1,10 @@
 import React, {Component} from 'react'
 import ValidarPermisos from "../permisos/validar_permisos";
 import PropTypes from "prop-types";
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 
-function crudHOC(CreateForm = null, Tabla) {
+function crudHOC(CreateForm, Tabla) {
     class CRUD extends Component {
         constructor(props) {
             super(props);
@@ -19,42 +19,39 @@ function crudHOC(CreateForm = null, Tabla) {
         }
 
         onDelete(item) {
-            const {method_pool} = this.props;
+            const {method_pool, notificarAction, singular_name, successDeleteCallback = null} = this.props;
             const callback = () => {
-                console.log('ññeg')
+                const {to_string} = item;
+                notificarAction(`Se ha eliminado con éxito ${singular_name.toLowerCase()} ${to_string}`);
                 this.setState({modal_open: false, item_seleccionado: null});
+                if (successDeleteCallback) {
+                    successDeleteCallback(item);
+                }
             };
-            method_pool.deleteObjectMethod(item, {callback});
+            method_pool.deleteObjectMethod(item.id, {callback});
         }
 
         onSubmit(item, uno = null, dos = null, cerrar_modal = true) {
-            const {method_pool} = this.props;
+            const {method_pool, notificarAction, singular_name, successSubmitCallback = null} = this.props;
+            const callback = (response) => {
+                const {to_string} = response;
+                notificarAction(`Se ha ${item.id ? 'actualizado' : 'creado'} con éxito ${singular_name.toLowerCase()} ${to_string}`);
+                this.setState({modal_open: !cerrar_modal, item_seleccionado: cerrar_modal ? null : response});
+                if (successSubmitCallback) {
+                    successSubmitCallback(response);
+                }
+            };
             if (item.id) {
-                method_pool.updateObjectMethod(
-                    item,
-                    () => {
-                        this.setState({modal_open: !cerrar_modal, item_seleccionado: cerrar_modal ? null : item});
-                    }
-                );
+                method_pool.updateObjectMethod(item.id, item, {callback});
             } else {
-                method_pool.createObjectMethod(item, {
-                    callback: () => {
-                        this.setState({modal_open: !cerrar_modal, item_seleccionado: cerrar_modal ? null : item});
-                    }
-                });
+                method_pool.createObjectMethod(item, {callback});
             }
         }
 
         onSelectItemEdit(item) {
             const {method_pool} = this.props;
-            method_pool.fetchObjectMethod(
-                item.id,
-                (objecto) => {
-                    this.setState({
-                        modal_open: true, item_seleccionado: objecto
-                    })
-                }
-            );
+            const callback = () => this.setState({modal_open: true, item_seleccionado: item});
+            method_pool.fetchObjectMethod(item.id, {callback});
         }
 
         setSelectItem(item_seleccionado) {
@@ -72,14 +69,12 @@ function crudHOC(CreateForm = null, Tabla) {
                 modal_open
             } = this.state;
             const list_array = _.map(list, e => e);
+
             return (
                 <ValidarPermisos can_see={permisos_object.list} nombre={plural_name}>
-                    {
-                        plural_name &&
-                        <Typography variant="h5" gutterBottom color="primary">
-                            {plural_name}
-                        </Typography>
-                    }
+                    <Typography variant="h5" gutterBottom color="primary">
+                        {plural_name}
+                    </Typography>
                     {
                         permisos_object.add &&
                         <Button
@@ -91,6 +86,7 @@ function crudHOC(CreateForm = null, Tabla) {
                         >
                             Nuevo
                         </Button>
+
                     }
                     {
                         modal_open &&

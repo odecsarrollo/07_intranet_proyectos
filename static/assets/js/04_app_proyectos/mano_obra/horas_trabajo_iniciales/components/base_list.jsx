@@ -35,43 +35,34 @@ class List extends Component {
     }
 
     fetchObjectMethod(item_id, successCallback) {
-        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
-        const success_method = (item) => {
+        const callback = (item) => {
             successCallback(item);
-            noCargando();
         };
-        cargando();
-        this.props.fetchHoraColaboradorProyectoInicial(item_id, success_method, notificarErrorAjaxAction);
+        this.props.fetchHoraColaboradorProyectoInicial(item_id, {callback});
     }
 
     createObjectMethod(item, successCallback) {
-        const {cargando, notificarErrorAjaxAction} = this.props;
-        const success_method = () => {
+        const callback = () => {
             this.successSubmitCallback(item);
             successCallback();
         };
-        cargando();
-        this.props.createHoraColaboradorProyectoInicial(item, success_method, notificarErrorAjaxAction);
+        this.props.createHoraColaboradorProyectoInicial(item, {callback});
     }
 
     updateObjectMethod(item, successCallback) {
-        const {cargando, notificarErrorAjaxAction} = this.props;
-        const success_method = () => {
+        const callback = () => {
             this.successSubmitCallback(item);
             successCallback();
         };
-        cargando();
-        this.props.updateHoraColaboradorProyectoInicial(item.id, item, success_method, notificarErrorAjaxAction);
+        this.props.updateHoraColaboradorProyectoInicial(item.id, item, callback);
     }
 
     deleteObjectMethod(item, successCallback) {
-        const {cargando, notificarErrorAjaxAction} = this.props;
-        const success_method = () => {
+        const callback = () => {
             this.successDeleteCallback(item);
             successCallback();
         };
-        cargando();
-        this.props.deleteHoraColaboradorProyectoInicial(item.id, success_method, notificarErrorAjaxAction);
+        this.props.deleteHoraColaboradorProyectoInicial(item.id, {callback});
     }
 
     render() {

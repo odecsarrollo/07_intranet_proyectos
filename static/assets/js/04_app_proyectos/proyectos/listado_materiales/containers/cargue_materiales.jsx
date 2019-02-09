@@ -150,26 +150,9 @@ class CargueMateriales extends Component {
 
     onTraerCodigosProductos(callback = null) {
         const {listado_cargue} = this.state;
-        const {
-            fetchItemsBiablexCodigos,
-            notificarErrorAjaxAction,
-            cargando,
-            noCargando,
-        } = this.props;
-        cargando();
         const codigos = _.map(listado_cargue, e => parseInt(e.CGUNO));
         const codigos_numeros = codigos.filter(e => Number.isInteger(e));
-        fetchItemsBiablexCodigos(
-            JSON.stringify(codigos_numeros),
-            () => {
-                if (callback) {
-                    callback()
-                } else {
-                    noCargando();
-                }
-            },
-            notificarErrorAjaxAction
-        );
+        this.props.fetchItemsBiablexCodigos(JSON.stringify(codigos_numeros), {callback});
     }
 
     onDeleteFila(fila) {

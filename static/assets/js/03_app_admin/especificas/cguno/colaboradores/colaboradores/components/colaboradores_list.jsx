@@ -36,56 +36,41 @@ class List extends Component {
     }
 
     fetchObjectMethod(item_id, successCallback) {
-        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
-        const success_method = (item) => {
+        const callback = (item) => {
             successCallback(item);
-            noCargando();
         };
-        cargando();
-        this.props.fetchColaborador(item_id, success_method, notificarErrorAjaxAction);
+        this.props.fetchColaborador(item_id, {callback});
     }
 
     createObjectMethod(item, successCallback) {
-        const {cargando, notificarErrorAjaxAction} = this.props;
-        const success_method = () => {
+        const callback = () => {
             this.successSubmitCallback(item);
             successCallback();
         };
-        cargando();
-        this.props.createColaborador(item, success_method, notificarErrorAjaxAction);
+        this.props.createColaborador(item, {callback});
     }
 
     updateObjectMethod(item, successCallback) {
-        const {cargando, notificarErrorAjaxAction} = this.props;
-        const success_method = () => {
+        const callback = () => {
             this.successSubmitCallback(item);
             successCallback();
         };
-        cargando();
-        this.props.updateColaborador(item.id, item, success_method, notificarErrorAjaxAction);
+        this.props.updateColaborador(item.id, item, {callback});
     }
 
     deleteObjectMethod(item, successCallback) {
-        const {cargando, notificarErrorAjaxAction} = this.props;
-        const success_method = () => {
+        const callback = () => {
             this.successDeleteCallback(item);
             successCallback();
         };
-        cargando();
-        this.props.deleteColaborador(item.id, success_method, notificarErrorAjaxAction);
+        this.props.deleteColaborador(item.id, {callback});
     }
 
     onCreateColaboradorUsuario(item) {
-        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
-        cargando();
-        this.props.createColaboradorUsuario(
-            item.id,
-            (response) => {
-                this.props.notificarAction(`Se ha creado el usuario ${response.usuario_username} para ${response.nombres} ${response.apellidos} con exitoso!`)
-                noCargando();
-            },
-            notificarErrorAjaxAction
-        )
+        const callback = (response) => {
+            this.props.notificarAction(`Se ha creado el usuario ${response.usuario_username} para ${response.nombres} ${response.apellidos} con exitoso!`)
+        }
+        this.props.createColaboradorUsuario(item.id, {callback})
     }
 
     render() {

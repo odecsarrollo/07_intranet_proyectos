@@ -35,43 +35,34 @@ class List extends Component {
     }
 
     fetchObjectMethod(item_id, successCallback) {
-        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
-        const success_method = (item) => {
+        const callback = (item) => {
             successCallback(item);
-            noCargando();
         };
-        cargando();
-        this.props.fetchFase(item_id, success_method, notificarErrorAjaxAction);
+        this.props.fetchFase(item_id, {callback});
     }
 
     createObjectMethod(item, successCallback) {
-        const {cargando, notificarErrorAjaxAction} = this.props;
-        const success_method = () => {
+        const callback = () => {
             this.successSubmitCallback(item);
             successCallback();
         };
-        cargando();
-        this.props.createFase(item, success_method, notificarErrorAjaxAction);
+        this.props.createFase(item, {callback});
     }
 
     updateObjectMethod(item, successCallback) {
-        const {cargando, notificarErrorAjaxAction} = this.props;
-        const success_method = () => {
+        const callback = () => {
             this.successSubmitCallback(item);
             successCallback();
         };
-        cargando();
-        this.props.updateFase(item.id, item, success_method, notificarErrorAjaxAction);
+        this.props.updateFase(item.id, item, {callback});
     }
 
     deleteObjectMethod(item, successCallback) {
-        const {cargando, notificarErrorAjaxAction} = this.props;
-        const success_method = () => {
+        const callback = () => {
             this.successDeleteCallback(item);
             successCallback();
         };
-        cargando();
-        this.props.deleteFase(item.id, success_method, notificarErrorAjaxAction);
+        this.props.deleteFase(item.id, {callback});
     }
 
     render() {

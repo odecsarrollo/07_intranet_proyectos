@@ -42,34 +42,17 @@ class List extends Component {
     }
 
     consultarPorFecha(fecha_inicial, fecha_final) {
-        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
-        cargando();
-        this.props.fetchColaboradoresCostosMesesxFechas(fecha_inicial, fecha_final, () => noCargando(), notificarErrorAjaxAction);
+        this.props.fetchColaboradoresCostosMesesxFechas(fecha_inicial, fecha_final);
     }
 
     cargarDatos() {
-        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
-        cargando();
-        const cargarCentrosCostos = () => this.props.fetchCentrosCostosColaboradores(() => noCargando(), notificarErrorAjaxAction);
-        const cargarConfigCostos = () => this.props.fetchConfiguracionesCostos(cargarCentrosCostos, notificarErrorAjaxAction)
-        this.props.fetchMisPermisos(cargarConfigCostos, notificarErrorAjaxAction)
+        const cargarCentrosCostos = () => this.props.fetchCentrosCostosColaboradores();
+        const cargarConfigCostos = () => this.props.fetchConfiguracionesCostos({callback:cargarCentrosCostos})
+        this.props.fetchMisPermisos({callback: cargarConfigCostos})
     }
 
     updateColaboradorCostoMes(id, item, callback = null) {
-        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
-        cargando();
-        const success_callback = () => {
-            noCargando();
-            if (callback) {
-                callback();
-            }
-        };
-        this.props.updateColaboradorCostoMes(
-            id,
-            item,
-            success_callback,
-            notificarErrorAjaxAction
-        )
+        this.props.updateColaboradorCostoMes(id, item, {callback})
     }
 
     buscarBusqueda(lista, busqueda) {

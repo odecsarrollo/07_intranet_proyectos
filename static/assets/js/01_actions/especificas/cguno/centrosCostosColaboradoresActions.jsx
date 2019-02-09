@@ -1,64 +1,69 @@
+import {CENTRO_COSTO_COLABORADOR_TYPES as TYPES} from '../../00_types';
 import {
-    CREATE_CENTRO_COSTO_COLABORADOR,
-    DELETE_CENTRO_COSTO_COLABORADOR,
-    FETCH_CENTROS_COSTOS_COLABORADORES,
-    FETCH_CENTRO_COSTO_COLABORADOR,
-    CLEAR_CENTROS_COSTOS_COLABORADORES,
-    UPDATE_CENTRO_COSTO_COLABORADOR,
-} from '../../00_types';
-import {
-    fetchListOld,
-    updateObjectOld,
-    fetchObjectOld,
-    deleteObjectOld,
-    createObjectOld,
-    callApiMethodWithParametersOld
+    fetchListGet,
+    updateObject,
+    fetchObject,
+    deleteObject,
+    createObject,
 } from '../../00_general_fuctions'
 
 const current_url_api = 'colaboradores_centros_costos';
-export const createCentroCostoColaborador = (values, callback = null, callback_error = null) => {
+export const createCentroCostoColaborador = (values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: CREATE_CENTRO_COSTO_COLABORADOR, payload: response})
+            dispatch({type: TYPES.create, payload: response})
         };
-        createObjectOld(current_url_api, values, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        createObject(current_url_api, values, options);
     }
 };
-export const deleteCentroCostoColaborador = (id, callback = null, callback_error = null) => {
+export const deleteCentroCostoColaborador = (id, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: DELETE_CENTRO_COSTO_COLABORADOR, payload: id})
+            dispatch({type: TYPES.delete, payload: id})
         };
-        deleteObjectOld(current_url_api, id, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        deleteObject(current_url_api, id, options);
     }
 };
-export const fetchCentrosCostosColaboradores = (callback = null, callback_error = null) => {
+export const fetchCentrosCostosColaboradores = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: FETCH_CENTROS_COSTOS_COLABORADORES, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListOld(current_url_api, dispatches, callback, callback_error);
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGet(current_url_api, options);
     }
 };
-export const fetchCentroCostoColaborador = (id, callback = null, callback_error = null) => {
+
+export const fetchCentroCostoColaborador = (id, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: FETCH_CENTRO_COSTO_COLABORADOR, payload: response})
+            dispatch({type: TYPES.fetch, payload: response})
         };
-        fetchObjectOld(current_url_api, id, dispatches, callback, callback_error);
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        fetchObject(current_url_api, id, options);
     }
 };
+
 export const clearCentrosCostosColaboradores = () => {
     return (dispatch) => {
-        dispatch({type: CLEAR_CENTROS_COSTOS_COLABORADORES});
+        dispatch({type: TYPES.clear});
 
     }
 };
-export const updateCentroCostoColaborador = (id, values, callback = null, callback_error = null) => {
+export const updateCentroCostoColaborador = (id, values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: UPDATE_CENTRO_COSTO_COLABORADOR, payload: response})
+            dispatch({type: TYPES.update, payload: response})
         };
-        updateObjectOld(current_url_api, id, values, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        updateObject(current_url_api, id, values, options);
     }
 };

@@ -29,10 +29,10 @@ class List extends Component {
     cargarDatos() {
         const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
         cargando();
-        const cargarProyectos = () => this.props.fetchProyectosAbiertos(() => noCargando(), notificarErrorAjaxAction);
-        const cargarHorasHojasTrabajo = () => this.props.fetchHorasHojasTrabajosAutogestionadas(cargarProyectos, notificarErrorAjaxAction);
-        const cargarConfigCostos = () => this.props.fetchConfiguracionesCostos(cargarHorasHojasTrabajo, notificarErrorAjaxAction);
-        this.props.fetchMisPermisos(cargarConfigCostos, notificarErrorAjaxAction)
+        const cargarProyectos = () => this.props.fetchProyectosAbiertos();
+        const cargarHorasHojasTrabajo = () => this.props.fetchHorasHojasTrabajosAutogestionadas({callback: cargarProyectos});
+        const cargarConfigCostos = () => this.props.fetchConfiguracionesCostos({callback: cargarHorasHojasTrabajo});
+        this.props.fetchMisPermisos({callback: cargarConfigCostos})
 
     }
 
@@ -43,9 +43,7 @@ class List extends Component {
         return (
             <Fragment>
                 <RangoFechas metodoBusquedaFechas={(i, f) => {
-                    const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
-                    cargando();
-                    this.props.fetchHorasHojasTrabajosAutogestionadasxFechas(i, f, () => noCargando(), notificarErrorAjaxAction);
+                    this.props.fetchHorasHojasTrabajosAutogestionadasxFechas(i, f);
                 }}/>
                 <ListCrud
                     object_list={object_list}

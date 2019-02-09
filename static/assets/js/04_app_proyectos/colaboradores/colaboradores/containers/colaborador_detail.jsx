@@ -31,14 +31,10 @@ class Detail extends Component {
 
     cargarDatos() {
         const {id} = this.props.match.params;
-        const {noCargando, cargando, notificarAction, notificarErrorAjaxAction} = this.props;
-        cargando();
-        const success_callback = () => {
-            noCargando();
-        };
-        const cargarProyectosAbiertos = () => this.props.fetchProyectosAbiertos(id, success_callback, notificarErrorAjaxAction);
-        const cargarColaborador = () => this.props.fetchColaborador(id, cargarProyectosAbiertos, notificarErrorAjaxAction);
-        this.props.fetchMisPermisos(cargarColaborador, notificarErrorAjaxAction);
+        const cargarProyectosAbiertos = () => this.props.fetchProyectosAbiertos(id);
+        const cargarColaborador = () => this.props.fetchColaborador(id, {callback: cargarProyectosAbiertos});
+        this.props.fetchMisPermisos({callback: cargarColaborador});
+
 
     }
 
@@ -62,7 +58,7 @@ class Detail extends Component {
                 literales: e.mis_literales.filter(e => object.literales_autorizados.includes(e.id))
             })
         });
-        literales_actuales = _.orderBy(_.pickBy(literales_actuales, e => e.literales.length > 0),['id_proyecto']);
+        literales_actuales = _.orderBy(_.pickBy(literales_actuales, e => e.literales.length > 0), ['id_proyecto']);
 
         return (
             <ValidarPermisos can_see={permisos.detail} nombre='detalles de colaborador'>

@@ -35,44 +35,34 @@ class List extends Component {
     }
 
     fetchObjectMethod(item_id, successCallback) {
-        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
-        console.log('entroooo')
-        const success_method = (item) => {
+        const callback = (item) => {
             successCallback(item);
-            noCargando();
         };
-        cargando();
-        this.props.fetchProyecto(item_id, success_method, notificarErrorAjaxAction);
+        this.props.fetchProyecto(item_id, {callback});
     }
 
     createObjectMethod(item, successCallback) {
-        const {cargando, notificarErrorAjaxAction} = this.props;
-        const success_method = () => {
+        const callback = () => {
             this.successSubmitCallback(item);
             successCallback();
         };
-        cargando();
-        this.props.createProyecto({...item, en_cguno: false}, success_method, notificarErrorAjaxAction);
+        this.props.createProyecto({...item, en_cguno: false}, {callback});
     }
 
     updateObjectMethod(item, successCallback) {
-        const {cargando, notificarErrorAjaxAction} = this.props;
-        const success_method = () => {
+        const callback = () => {
             this.successSubmitCallback(item);
             successCallback();
         };
-        cargando();
-        this.props.updateProyecto(item.id, item, success_method, notificarErrorAjaxAction);
+        this.props.updateProyecto(item.id, item, {callback});
     }
 
     deleteObjectMethod(item, successCallback) {
-        const {cargando, notificarErrorAjaxAction} = this.props;
-        const success_method = () => {
+        const callback = () => {
             this.successDeleteCallback(item);
             successCallback();
         };
-        cargando();
-        this.props.deleteProyecto(item.id, success_method, notificarErrorAjaxAction);
+        this.props.deleteProyecto(item.id, {callback});
     }
 
     render() {

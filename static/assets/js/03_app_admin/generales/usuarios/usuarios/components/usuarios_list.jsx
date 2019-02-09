@@ -39,43 +39,34 @@ class List extends Component {
     }
 
     fetchObjectMethod(item_id, successCallback) {
-        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
-        const success_method = (item) => {
+        const callback = (item) => {
             successCallback(item);
-            noCargando();
         };
-        cargando();
-        this.props.fetchUsuario(item_id, success_method, notificarErrorAjaxAction);
+        this.props.fetchUsuario(item_id, {callback});
     }
 
     createObjectMethod(item, successCallback) {
-        const {cargando, notificarErrorAjaxAction} = this.props;
-        const success_method = () => {
+        const callback = () => {
             this.successSubmitCallback(item);
             successCallback();
         };
-        cargando();
-        this.props.createUsuario(item, success_method, notificarErrorAjaxAction);
+        this.props.createUsuario(item, {callback});
     }
 
     updateObjectMethod(item, successCallback) {
-        const {cargando, notificarErrorAjaxAction} = this.props;
-        const success_method = () => {
+        const callback = () => {
             this.successSubmitCallback(item);
             successCallback();
         };
-        cargando();
-        this.props.updateUsuario(item.id, item, success_method, notificarErrorAjaxAction);
+        this.props.updateUsuario(item.id, item, {callback});
     }
 
     deleteObjectMethod(item, successCallback) {
-        const {cargando, notificarErrorAjaxAction} = this.props;
-        const success_method = () => {
+        const callback = () => {
             this.successDeleteCallback(item);
             successCallback();
         };
-        cargando();
-        this.props.deleteUsuario(item.id, success_method, notificarErrorAjaxAction);
+        this.props.deleteUsuario(item.id, {callback});
     }
 
     render() {

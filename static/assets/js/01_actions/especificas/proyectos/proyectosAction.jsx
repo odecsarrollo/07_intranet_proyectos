@@ -1,19 +1,11 @@
-import {
-    CREATE_PROYECTO,
-    FETCH_PROYECTOS,
-    FETCH_PROYECTO,
-    UPDATE_PROYECTO,
-    DELETE_PROYECTO,
-    CLEAR_PROYECTOS,
-    UPLOAD_ARCHIVO_PROYECTO,
-} from '../../00_types';
+import {PROYECTO_TYPES as TYPES} from '../../00_types';
 
 import {
-    fetchListOld,
-    fetchObjectOld,
-    updateObjectOld,
-    createObjectOld,
-    deleteObjectOld,
+    fetchListGet,
+    fetchObject,
+    updateObject,
+    createObject,
+    deleteObject,
     fetchObjectWithParameterPDFOld,
     callApiMethodWithParametersPDFOld, fetchListWithParameterOld
 } from '../../00_general_fuctions'
@@ -24,7 +16,7 @@ export function fetchProyectosxParametro(parametro, callback = null, callback_er
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/listar_proyectos_x_parametro/?parametro=${parametro}`;
         const dispatches = (response) => {
-            dispatch({type: FETCH_PROYECTOS, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: response})
         };
         fetchListWithParameterOld(FULL_URL, dispatches, callback, callback_error);
     }
@@ -51,81 +43,106 @@ export function printReporteCostoDosProyecto(valores, callback = null, callback_
     }
 }
 
-export const fetchProyectos = (callback = null, callback_error = null) => {
+export const fetchProyectos = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: FETCH_PROYECTOS, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListOld(current_url_api, dispatches, callback, callback_error);
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGet(current_url_api, options);
     }
 };
 
 export const clearProyectos = () => {
     return (dispatch) => {
-        dispatch({type: CLEAR_PROYECTOS})
+        dispatch({type: TYPES.clear})
     }
 };
 
-export function fetchProyectosAbiertos(callback = null, callback_error = null) {
-    return function (dispatch) {
+export const fetchProyectosAbiertos = (options_action = {}) => {
+    return (dispatch) => {
         const FULL_URL = `${current_url_api}/abiertos`;
         const dispatches = (response) => {
-            dispatch({type: FETCH_PROYECTOS, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListOld(FULL_URL, dispatches, callback, callback_error)
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGet(FULL_URL, options);
     }
-}
+};
 
-export function fetchProyectosConLiteralesAbiertos(callback = null, callback_error = null) {
+export const fetchProyectosConLiteralesAbiertos = (options_action = {}) => {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/con_literales_abiertos`;
         const dispatches = (response) => {
-            dispatch({type: FETCH_PROYECTOS, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListOld(FULL_URL, dispatches, callback, callback_error)
-    }
-}
-
-export const fetchProyecto = (id, callback = null, callback_error = null) => {
-    return (dispatch) => {
-        const dispatches = (response) => {
-            dispatch({type: FETCH_PROYECTO, payload: response})
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
         };
-        fetchObjectOld(current_url_api, id, dispatches, callback, callback_error);
+        fetchListGet(FULL_URL, options);
     }
 };
 
-export const updateProyecto = (id, values, callback = null, callback_error = null) => {
+export const fetchProyecto = (id, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: UPDATE_PROYECTO, payload: response})
+            dispatch({type: TYPES.fetch, payload: response})
         };
-        updateObjectOld(current_url_api, id, values, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        fetchObject(current_url_api, id, options);
     }
 };
 
-export const deleteProyecto = (id, callback = null, callback_error = null) => {
+export const updateProyecto = (id, values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: DELETE_PROYECTO, payload: id})
+            dispatch({type: TYPES.update, payload: response})
         };
-        deleteObjectOld(current_url_api, id, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        updateObject(current_url_api, id, values, options);
     }
 };
 
-export const createProyecto = (values, callback = null, callback_error = null) => {
+export const deleteProyecto = (id, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: CREATE_PROYECTO, payload: response})
+            dispatch({type: TYPES.delete, payload: id})
         };
-        createObjectOld(current_url_api, values, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        deleteObject(current_url_api, id, options);
+    }
+};
+
+export const createProyecto = (values, options_action = {}) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.create, payload: response})
+        };
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        createObject(current_url_api, values, options);
     }
 };
 
 export const uploadArchivoProyecto = (id, values, callback = null, callback_error = null) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: UPLOAD_ARCHIVO_PROYECTO, payload: response})
+            dispatch({type: TYPES.upload, payload: response})
         };
         callApiMethodWithParametersPDFOld(current_url_api, id, 'upload_archivo', values, dispatches, callback, callback_error)
     }

@@ -51,8 +51,7 @@ class IndexApp extends Component {
 
 
     cargarDatos() {
-        this.props.cargando();
-        this.props.fetchMiCuenta(() => this.props.noCargando(), this.error_callback);
+        this.props.fetchMiCuenta();
     }
 
     render() {

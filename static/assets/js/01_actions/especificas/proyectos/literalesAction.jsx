@@ -1,11 +1,11 @@
-import {FETCH_PROYECTOS, LITERAL_TYPES as TYPES} from '../../00_types';
+import {LITERAL_TYPES as TYPES} from '../../00_types';
 
 import {
-    fetchListOld,
-    updateObjectOld,
-    fetchObjectOld,
-    deleteObjectOld,
-    createObjectOld,
+    fetchListGet,
+    updateObject,
+    fetchObject,
+    deleteObject,
+    createObject,
     fetchListWithParameterOld,
     callApiMethodWithParametersOld,
     callApiMethodWithParametersPDFOld
@@ -53,14 +53,21 @@ export function quitarMiembroLiteral(id, id_usuario, callback = null, callback_e
     }
 }
 
-export function fetchLiterales(callback = null, callback_error = null) {
-    return function (dispatch) {
+export const fetchLiterales = (options_action = {}) => {
+    return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListOld(current_url_api, dispatches, callback, callback_error)
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGet(current_url_api, options);
     }
-}
+};
 
 export function fetchLiteralesXProyecto(proyecto_id, callback = null, callback_error = null) {
     return function (dispatch) {
@@ -71,79 +78,112 @@ export function fetchLiteralesXProyecto(proyecto_id, callback = null, callback_e
     }
 }
 
-export function fetchLiteralesAbiertos(callback = null, callback_error = null) {
+export const fetchLiteralesAbiertos = (options_action = {}) => {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/abiertos`;
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListOld(FULL_URL, dispatches, callback, callback_error)
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGet(FULL_URL, options);
     }
-}
+};
 
-export function fetchLiteralesConSeguimiento(callback = null, callback_error = null) {
+export const fetchLiteralesConSeguimiento = (options_action = {}) => {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/con_seguimiento`;
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListOld(FULL_URL, dispatches, callback, callback_error)
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGet(FULL_URL, options);
     }
-}
+};
 
-export function fetchLiteralesSinSincronizar(callback = null, callback_error = null) {
+
+export const fetchLiteralesSinSincronizar = (options_action = {}) => {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/sin_sincronizar`;
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListOld(FULL_URL, dispatches, callback, callback_error)
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGet(FULL_URL, options);
     }
-}
+};
 
-export function fetchLiteralesProyectoAbierto(callback = null, callback_error = null) {
+export const fetchLiteralesProyectoAbierto = (options_action = {}) => {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/proyecto_abierto`;
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListOld(FULL_URL, dispatches, callback, callback_error)
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGet(FULL_URL, options);
     }
-}
+};
 
-export function fetchLiteral(id, callback = null, callback_error = null) {
-    return function (dispatch) {
+export const fetchLiteral = (id, options_action = {}) => {
+    return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch, payload: response})
         };
-        fetchObjectOld(current_url_api, id, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        fetchObject(current_url_api, id, options);
     }
-}
+};
 
-export const createLiteral = (values, callback = null, callback_error = null) => {
+export const createLiteral = (values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.create, payload: response})
         };
-        createObjectOld(current_url_api, values, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        createObject(current_url_api, values, options);
     }
 };
 
-export const deleteLiteral = (id, callback = null, callback_error = null) => {
+export const deleteLiteral = (id, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.delete, payload: id})
         };
-        deleteObjectOld(current_url_api, id, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        deleteObject(current_url_api, id, options);
     }
 };
 
-export const updateLiteral = (id, values, callback = null, callback_error = null) => {
+export const updateLiteral = (id, values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.update, payload: response})
         };
-        updateObjectOld(current_url_api, id, values, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        updateObject(current_url_api, id, values, options);
     }
 };
 

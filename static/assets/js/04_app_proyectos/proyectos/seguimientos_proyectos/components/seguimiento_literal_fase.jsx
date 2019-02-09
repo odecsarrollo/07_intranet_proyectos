@@ -103,13 +103,7 @@ class FaseLiteral extends Component {
     }
 
     deleteTarea(tarea_id) {
-        const {cargando, notificarErrorAjaxAction} = this.props;
-        cargando();
-        this.props.deleteTareaFase(
-            tarea_id,
-            () => this.cargarTareasFase(),
-            notificarErrorAjaxAction
-        );
+        this.props.deleteTareaFase(tarea_id, {callback: () => this.cargarTareasFase()});
     }
 
     cambiarResponsable(responsable, callback) {

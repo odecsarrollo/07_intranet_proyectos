@@ -11,14 +11,7 @@ class ConfiguracionCostosDashboard extends Component {
     }
 
     componentDidMount() {
-        const {
-            fetchConfiguracionesCostos,
-            noCargando,
-            cargando,
-            notificarErrorAjaxAction
-        } = this.props;
-        cargando();
-        fetchConfiguracionesCostos(() => noCargando(), notificarErrorAjaxAction)
+        this.props.fetchConfiguracionesCostos()
     }
 
     onSubmit(values) {

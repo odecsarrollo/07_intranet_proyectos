@@ -66,26 +66,18 @@ export default class CotizacionAbrirCarpetaLista extends Component {
     }
 
     fetchObjectMethod(item_id, successCallback) {
-        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
-        const success_method = (item) => {
+        const callback = (item) => {
             successCallback(item);
-            noCargando();
         };
-        cargando();
-        this.props.fetchCotizacion(item_id, success_method, notificarErrorAjaxAction);
+        this.props.fetchCotizacion(item_id, {callback});
     }
 
     createObjectMethod(item, successCallback) {
-        const {cargando, notificarErrorAjaxAction} = this.props;
-        const success_method = () => {
+        const callback = () => {
             this.successSubmitCallback(item);
             successCallback();
         };
-        cargando();
-        this.props.createProyecto({
-            ...item,
-            en_cguno: false
-        }, success_method, notificarErrorAjaxAction);
+        this.props.createProyecto({...item, en_cguno: false}, {callback});
     }
 
     updateObjectMethod(item, successCallback) {

@@ -36,24 +36,20 @@ class List extends Component {
     }
 
     fetchObjectMethod(item_id, successCallback) {
-        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
-        const success_method = (item) => {
+        const callback = (item) => {
             successCallback(item);
-            noCargando();
         };
-        cargando();
-        this.props.fetchHojaTrabajo(item_id, success_method, notificarErrorAjaxAction);
+        this.props.fetchHojaTrabajo(item_id, {callback});
     }
 
     createObjectMethod(item, successCallback) {
-        const {cargando, notificarErrorAjaxAction, history} = this.props;
-        const success_method = (response) => {
+        const {history} = this.props;
+        const callback = (response) => {
             this.successSubmitCallback(item);
             successCallback();
             history.push(`/app/proyectos/mano_obra/hojas_trabajo/detail/${response.id}`);
         };
-        cargando();
-        this.props.createHojaTrabajo(item, success_method, notificarErrorAjaxAction);
+        this.props.createHojaTrabajo(item, {callback});
     }
 
     updateObjectMethod(item, successCallback) {
@@ -61,13 +57,11 @@ class List extends Component {
     }
 
     deleteObjectMethod(item, successCallback) {
-        const {cargando, notificarErrorAjaxAction} = this.props;
-        const success_method = () => {
+        const callback = () => {
             this.successDeleteCallback(item);
             successCallback();
         };
-        cargando();
-        this.props.deleteHojaTrabajo(item.id, success_method, notificarErrorAjaxAction);
+        this.props.deleteHojaTrabajo(item.id, {callback});
     }
 
     render() {

@@ -49,57 +49,41 @@ class Detail extends Component {
 
     cargarDatos() {
         const {id} = this.props.match.params;
-        const {noCargando, cargando, notificarErrorAjaxAction} = this.props;
-        cargando();
-        const success_callback = () => {
-            noCargando();
-        };
-        const cargarArchivos = () => this.props.fetchArchivosCotizaciones_x_cotizacion(id, success_callback, notificarErrorAjaxAction);
-        const cargarMiCuenta = () => this.props.fetchMiCuenta(cargarArchivos, notificarErrorAjaxAction);
-        const cargarSeguimientos = () => this.props.fetchSeguimientosCotizacionesxCotizacion(id, cargarMiCuenta, notificarErrorAjaxAction);
-        const cargarCotizacion = () => this.props.fetchCotizacion(id, cargarSeguimientos, notificarErrorAjaxAction);
-        this.props.fetchMisPermisos(cargarCotizacion, notificarErrorAjaxAction);
+        const cargarArchivos = () => this.props.fetchArchivosCotizaciones_x_cotizacion(id);
+        const cargarMiCuenta = () => this.props.fetchMiCuenta({callback: cargarArchivos});
+        const cargarSeguimientos = () => this.props.fetchSeguimientosCotizacionesxCotizacion(id, {callback: cargarMiCuenta});
+        const cargarCotizacion = () => this.props.fetchCotizacion(id, {callback: cargarSeguimientos});
+        this.props.fetchMisPermisos({callback: cargarCotizacion});
 
     }
 
     guardarCambiosCotizacion(cotizacion) {
         const {id} = this.props.match.params;
         const {history} = this.props;
-        const {noCargando, cargando, notificarErrorAjaxAction} = this.props;
-        cargando();
-        const successful_callback = () => {
-            noCargando();
+        const callback = () => {
             history.push('/app/ventas')
         };
-        this.props.updateCotizacion(id, cotizacion, successful_callback, notificarErrorAjaxAction)
+        this.props.updateCotizacion(id, cotizacion, {callback})
     }
 
     guardarComentario(comentario) {
         const {id} = this.props.match.params;
-        const {noCargando, cargando, notificarErrorAjaxAction} = this.props;
-        cargando();
         const seguimiento = {...comentario, cotizacion: id, tipo_seguimiento: 0};
-        this.props.createSeguimientoCotizacion(seguimiento, () => noCargando(), notificarErrorAjaxAction)
+        this.props.createSeguimientoCotizacion(seguimiento)
     }
 
     eliminarSeguimiento(seguimiento_id) {
-        const {noCargando, cargando, notificarErrorAjaxAction} = this.props;
-        cargando();
-        this.props.deleteSeguimientoCotizacion(seguimiento_id, () => noCargando(), notificarErrorAjaxAction)
+        this.props.deleteSeguimientoCotizacion(seguimiento_id)
     }
 
     guardarTarea(tarea) {
         const {id} = this.props.match.params;
-        const {noCargando, cargando, notificarErrorAjaxAction} = this.props;
-        cargando();
         const seguimiento = {...tarea, cotizacion: id, tipo_seguimiento: 2};
-        this.props.createSeguimientoCotizacion(seguimiento, () => noCargando(), notificarErrorAjaxAction)
+        this.props.createSeguimientoCotizacion(seguimiento)
     }
 
     actualizarSeguimiento(seguimiento) {
-        const {noCargando, cargando, notificarErrorAjaxAction} = this.props;
-        cargando();
-        this.props.updateSeguimientoCotizacion(seguimiento.id, seguimiento, () => noCargando(), notificarErrorAjaxAction)
+        this.props.updateSeguimientoCotizacion(seguimiento.id, seguimiento)
     }
 
     onSubmitUploadArchivo(valores) {
@@ -191,7 +175,8 @@ class Detail extends Component {
                 <Titulo>Detalle de
                     Cotización {object.nro_cotizacion && `Nro. ${object.unidad_negocio}-${object.nro_cotizacion}`}</Titulo>
                 <div className="row">
-                    <CotizacionInfo object={object} permisos_proyecto={permisos_proyecto} permisos_cotizacion={permisos} {...this.props}/>
+                    <CotizacionInfo object={object} permisos_proyecto={permisos_proyecto}
+                                    permisos_cotizacion={permisos} {...this.props}/>
                     <div className="col-12 mt-3">
                         <Tabs>
                             <TabList>

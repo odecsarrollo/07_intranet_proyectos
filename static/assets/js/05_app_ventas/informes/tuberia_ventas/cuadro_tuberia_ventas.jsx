@@ -25,10 +25,8 @@ class InformeTunelVentas extends Component {
     }
 
     cargarDatos(ano = null, trimestre = null) {
-        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
-        cargando();
-        const cargarCotizaciones = () => this.props.fetchCotizacionesTuberiaVentasResumen(ano, trimestre, () => noCargando(), notificarErrorAjaxAction);
-        this.props.fetchMisPermisos(cargarCotizaciones, notificarErrorAjaxAction)
+        const cargarCotizaciones = () => this.props.fetchCotizacionesTuberiaVentasResumen(ano, trimestre);
+        this.props.fetchMisPermisos({callback: cargarCotizaciones})
 
     }
 

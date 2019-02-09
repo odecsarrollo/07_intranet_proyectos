@@ -48,11 +48,11 @@ class ItemsList extends Component {
 
     cargarDatos() {
         this.props.cargando();
-        this.props.fetchMisPermisos(() => this.props.noCargando(), this.error_callback)
+        this.props.fetchMisPermisos()
     }
 
     handleChangeTipoConsulta(event) {
-        const tipo_consulta=event.target.value
+        const tipo_consulta=event.target.value;
         this.setState({tipo_consulta});
     }
 

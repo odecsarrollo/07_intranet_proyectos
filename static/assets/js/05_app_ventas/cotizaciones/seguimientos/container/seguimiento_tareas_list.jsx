@@ -64,11 +64,9 @@ class SeguimientoTareasCotizacionesList extends Component {
     }
 
     cargarDatos() {
-        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
-        cargando();
-        const cargarCotizacionesAgendadas = () => this.props.fetchCotizacionesAgendadas(() => noCargando(), notificarErrorAjaxAction);
-        const cargarSeguimientos = () => this.props.fetchSeguimientosCotizacionesTareasPendientes(cargarCotizacionesAgendadas, notificarErrorAjaxAction);
-        this.props.fetchMisPermisos(cargarSeguimientos, notificarErrorAjaxAction)
+        const cargarCotizacionesAgendadas = () => this.props.fetchCotizacionesAgendadas();
+        const cargarSeguimientos = () => this.props.fetchSeguimientosCotizacionesTareasPendientes({callback: cargarCotizacionesAgendadas});
+        this.props.fetchMisPermisos({callback: cargarSeguimientos})
     }
 
     componentDidMount() {

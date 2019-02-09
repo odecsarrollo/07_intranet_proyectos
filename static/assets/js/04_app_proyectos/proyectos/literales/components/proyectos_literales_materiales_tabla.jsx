@@ -56,12 +56,7 @@ class TablaProyectosLiteralesMateriales extends Component {
     }
 
     cargarDatos(id_literal) {
-        const {
-            notificarErrorAjaxAction,
-            noCargando,
-            fetchItemsLiterales,
-        } = this.props;
-        fetchItemsLiterales(id_literal, () => noCargando(), notificarErrorAjaxAction);
+        this.props.fetchItemsLiterales(id_literal);
     }
 
     render() {

@@ -53,50 +53,30 @@ class LiteralDetail extends Component {
     }
 
     onUpdateLiteral(literal) {
-        const {
-            clearCurrentLiteral,
-            cargando,
-            noCargando,
-            notificarErrorAjaxAction,
-            callbackCargarDatosProyecto = null
-        } = this.props;
-        cargando();
+        const {clearCurrentLiteral, callbackCargarDatosProyecto = null} = this.props;
         clearCurrentLiteral();
-        this.props.updateLiteral(
-            literal.id,
-            literal,
-            () => {
-                noCargando();
-                if (callbackCargarDatosProyecto) {
-                    callbackCargarDatosProyecto();
-                }
-            },
-            notificarErrorAjaxAction
-        );
+        const callback = () => () => {
+            if (callbackCargarDatosProyecto) {
+                callbackCargarDatosProyecto();
+            }
+        };
+        this.props.updateLiteral(literal.id, literal, {callback});
     }
 
     onDeleteLiteral(literal) {
         const {
-            cargando,
-            noCargando,
-            notificarErrorAjaxAction,
             clearCurrentLiteral = null,
             callbackCargarDatosProyecto = null
         } = this.props;
-        cargando();
-        this.props.deleteLiteral(
-            literal.id,
-            () => {
-                noCargando();
-                if (clearCurrentLiteral) {
-                    clearCurrentLiteral(null);
-                }
-                if (callbackCargarDatosProyecto) {
-                    callbackCargarDatosProyecto();
-                }
-            },
-            notificarErrorAjaxAction
-        );
+        const callback = () => {
+            if (clearCurrentLiteral) {
+                clearCurrentLiteral(null);
+            }
+            if (callbackCargarDatosProyecto) {
+                callbackCargarDatosProyecto();
+            }
+        };
+        this.props.deleteLiteral(literal.id, {callback});
     }
 
     render() {

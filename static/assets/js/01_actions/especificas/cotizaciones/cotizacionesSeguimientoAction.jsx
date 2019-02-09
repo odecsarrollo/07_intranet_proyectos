@@ -1,37 +1,46 @@
 import {SEGUIMIENTO_COTIZACION_TYPES as TYPES} from '../../00_types';
 import {
-    fetchListOld,
-    updateObjectOld,
-    fetchObjectOld,
-    deleteObjectOld,
-    createObjectOld,
+    fetchListGet,
+    updateObject,
+    fetchObject,
+    deleteObject,
+    createObject,
     callApiMethodWithParametersOld,
     fetchListWithParameterOld
 } from '../../00_general_fuctions'
 
 const current_url_api = 'cotizaciones_seguimiento';
-export const createSeguimientoCotizacion = (values, callback = null, callback_error = null) => {
+export const createSeguimientoCotizacion = (values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.create, payload: response})
         };
-        createObjectOld(current_url_api, values, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        createObject(current_url_api, values, options);
     }
 };
-export const deleteSeguimientoCotizacion = (id, callback = null, callback_error = null) => {
+export const deleteSeguimientoCotizacion = (id, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.delete, payload: id})
         };
-        deleteObjectOld(current_url_api, id, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        deleteObject(current_url_api, id, options);
     }
 };
-export const fetchSeguimientosCotizaciones = (callback = null, callback_error = null) => {
+export const fetchSeguimientosCotizaciones = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListOld(current_url_api, dispatches, callback, callback_error);
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGet(current_url_api, options);
     }
 };
 
@@ -45,35 +54,45 @@ export function fetchSeguimientosCotizacionesxCotizacion(cotizacion_id, callback
     }
 }
 
-export function fetchSeguimientosCotizacionesTareasPendientes(callback = null, callback_error = null) {
+export function fetchSeguimientosCotizacionesTareasPendientes(options_action = {}) {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/listar_tareas_pendientes`;
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListOld(FULL_URL, dispatches, callback, callback_error);
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGet(FULL_URL, options);
     }
 }
 
-export const fetchSeguimientoCotizacion = (id, callback = null, callback_error = null) => {
+export const fetchSeguimientoCotizacion = (id, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch, payload: response})
         };
-        fetchObjectOld(current_url_api, id, dispatches, callback, callback_error);
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        fetchObject(current_url_api, id, options);
     }
 };
+
 export const clearSeguimientosCotizaciones = () => {
     return (dispatch) => {
         dispatch({type: TYPES.clear});
 
     }
 };
-export const updateSeguimientoCotizacion = (id, values, callback = null, callback_error = null) => {
+export const updateSeguimientoCotizacion = (id, values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.update, payload: response})
         };
-        updateObjectOld(current_url_api, id, values, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        updateObject(current_url_api, id, values, options);
     }
 };

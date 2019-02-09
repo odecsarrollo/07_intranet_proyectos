@@ -39,23 +39,16 @@ class PermisosList extends Component {
     }
 
     cargarDatos() {
-        this.props.cargando();
-        const cargarPermisos = () => this.props.fetchPermisos(() => this.props.noCargando(), this.error_callback);
-        this.props.fetchMisPermisos(cargarPermisos, this.error_callback)
+        const cargarPermisos = () => this.props.fetchPermisos();
+        this.props.fetchMisPermisos({callback: cargarPermisos})
 
     }
 
     updatePermiso(permiso) {
-        this.props.cargando();
-        this.props.updatePermiso(
-            permiso.id,
-            permiso,
-            () => {
-                this.props.noCargando();
-                this.notificar(`Se ha actualizado con éxito el permiso ${permiso.codename}`)
-            },
-            this.error_callback
-        )
+        const callback = () => {
+            this.notificar(`Se ha actualizado con éxito el permiso ${permiso.codename}`)
+        };
+        this.props.updatePermiso(permiso.id, permiso, {callback})
     }
 
 

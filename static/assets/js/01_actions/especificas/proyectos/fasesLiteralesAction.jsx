@@ -1,10 +1,10 @@
 import {FASE_LITERAL_TYPES as TYPES} from '../../00_types';
 import {
-    fetchListOld,
-    updateObjectOld,
-    fetchObjectOld,
-    deleteObjectOld,
-    createObjectOld,
+    fetchListGet,
+    updateObject,
+    fetchObject,
+    deleteObject,
+    createObject,
     fetchListWithParameterOld,
     callApiMethodWithParametersOld
 } from '../../00_general_fuctions'
@@ -22,30 +22,40 @@ export const cargarTareasFaseLiteral = (id, listado, callback = null, callback_e
     }
 };
 
-export const createFaseLiteral = (values, callback = null, callback_error = null) => {
+export const createFaseLiteral = (values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.create, payload: response})
         };
-        createObjectOld(current_url_api, values, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        createObject(current_url_api, values, options);
     }
 };
-export const deleteFaseLiteral = (id, callback = null, callback_error = null) => {
+export const deleteFaseLiteral = (id, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.delete, payload: id})
         };
-        deleteObjectOld(current_url_api, id, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        deleteObject(current_url_api, id, options);
     }
 };
-export const fetchFasesLiterales = (callback = null, callback_error = null) => {
+export const fetchFasesLiterales = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListOld(current_url_api, dispatches, callback, callback_error);
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGet(current_url_api, options);
     }
 };
+
 export const fetchFasesLiterales_x_literal = (id_literal, callback = null, callback_error = null) => {
     return (dispatch) => {
         const dispatches = (response) => {
@@ -64,25 +74,28 @@ export const deleteListaTareasFaseLitera = (id, listado, callback = null, callba
         callApiMethodWithParametersOld(current_url_api, id, 'eliminar_tareas', params, dispatches, callback, callback_error);
     }
 };
-export const fetchFaseLiteral = (id, callback = null, callback_error = null) => {
+export const fetchFaseLiteral = (id, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch, payload: response})
         };
-        fetchObjectOld(current_url_api, id, dispatches, callback, callback_error);
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        fetchObject(current_url_api, id, options);
     }
 };
+
 export const clearFasesLiterales = () => {
     return (dispatch) => {
         dispatch({type: TYPES.clear});
 
     }
 };
-export const updateFaseLiteral = (id, values, callback = null, callback_error = null) => {
+export const updateFaseLiteral = (id, values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.update, payload: response})
         };
-        updateObjectOld(current_url_api, id, values, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        updateObject(current_url_api, id, values, options);
     }
 };

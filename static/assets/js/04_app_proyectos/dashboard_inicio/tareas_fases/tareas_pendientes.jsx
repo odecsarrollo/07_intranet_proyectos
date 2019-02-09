@@ -75,9 +75,7 @@ class TareasPendientesList extends Component {
     }
 
     cargarTareasPendientes() {
-        const {cargando, noCargando, notificarErrorAjaxAction, fetchMisPendientesTareasFases} = this.props;
-        cargando();
-        fetchMisPendientesTareasFases(() => noCargando(), notificarErrorAjaxAction);
+        this.props.fetchMisPendientesTareasFases();
     }
 
     cambiarFiltroPendientes(filtro) {

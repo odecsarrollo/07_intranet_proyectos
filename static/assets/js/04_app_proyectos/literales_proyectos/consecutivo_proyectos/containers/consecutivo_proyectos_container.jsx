@@ -24,10 +24,8 @@ class List extends Component {
     }
 
     cargarDatos() {
-        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
-        cargando();
-        const cargarLiterales = () => this.props.fetchLiterales(() => noCargando(), notificarErrorAjaxAction);
-        this.props.fetchMisPermisos(cargarLiterales, notificarErrorAjaxAction)
+        const cargarLiterales = () => this.props.fetchLiterales();
+        this.props.fetchMisPermisos({callback: cargarLiterales})
 
     }
 
@@ -37,7 +35,7 @@ class List extends Component {
         return (
             <Fragment>
                 <Tabla
-                    data={_.map(_.orderBy(object_list,['abierto','id_literal'],['desc','desc']), e => e)}
+                    data={_.map(_.orderBy(object_list, ['abierto', 'id_literal'], ['desc', 'desc']), e => e)}
                     singular_name='Consecutivos Proyectos'
                     permisos_object={bloque_1_permisos}
                 />

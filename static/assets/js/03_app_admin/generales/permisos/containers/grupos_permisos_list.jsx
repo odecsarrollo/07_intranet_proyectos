@@ -48,24 +48,20 @@ class GruposPermisosList extends Component {
     }
 
     onSubmit(item) {
-        const success_callback = (response) => {
-            this.props.noCargando();
+        const callback = (response) => {
             this.notificar(`Se ha ${item.id ? 'actualizado' : 'creado'} con éxito el grupo de permisos ${response.name}`);
         };
-        this.props.cargando();
-
         if (item.id) {
-            this.props.updateGrupoPermiso(item.id, item, success_callback, this.error_callback)
+            this.props.updateGrupoPermiso(item.id, item, {callback})
         } else {
-            this.props.createGrupoPermiso(item, success_callback, this.error_callback)
+            this.props.createGrupoPermiso(item, {callback})
         }
     }
 
     cargarDatos() {
-        this.props.cargando();
-        const cargarGruposPermisos = () => this.props.fetchGruposPermisos(() => this.props.noCargando(), this.error_callback);
-        const cargarPermisosActivos = () => this.props.fetchPermisosActivos(cargarGruposPermisos, this.error_callback);
-        this.props.fetchMisPermisos(cargarPermisosActivos, this.error_callback);
+        const cargarGruposPermisos = () => this.props.fetchGruposPermisos();
+        const cargarPermisosActivos = () => this.props.fetchPermisosActivos({callback: cargarGruposPermisos});
+        this.props.fetchMisPermisos({callback: cargarPermisosActivos});
     }
 
     actualizarPermiso(permiso, item, onSelectItem) {
@@ -82,12 +78,10 @@ class GruposPermisosList extends Component {
     }
 
     onDelete(grupoPermiso) {
-        const success_callback = () => {
-            this.props.noCargando();
+        const callback = () => {
             this.notificar(`Se ha eliminado con éxito el grupo de permisos ${grupoPermiso.name}`)
         };
-        this.props.cargando();
-        this.props.deleteGrupoPermiso(grupoPermiso.id, success_callback, this.error_callback)
+        this.props.deleteGrupoPermiso(grupoPermiso.id, {callback})
     }
 
     render() {
@@ -141,7 +135,7 @@ class GruposPermisosList extends Component {
                                     }}
 
                                     onSelectItemDetail={(item) => {
-                                        this.props.fetchGruposPermisos(item.id, () => onSelectItem(item), this.error_callback);
+                                        this.props.fetchGruposPermisos(item.id, {callback: () => onSelectItem(item)});
                                     }}
                                     updateItem={(item) => this.onSubmit(item, list_manager_state.singular_name)}
                                 />

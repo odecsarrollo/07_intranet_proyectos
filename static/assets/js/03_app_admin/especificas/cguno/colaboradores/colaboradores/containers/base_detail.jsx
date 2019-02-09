@@ -25,13 +25,8 @@ class Detail extends Component {
 
     cargarDatos() {
         const {id} = this.props.match.params;
-        const {noCargando, cargando, notificarAction, notificarErrorAjaxAction} = this.props;
-        cargando();
-        const success_callback = () => {
-            noCargando();
-        };
-        const cargarColaborador = () => this.props.fetchColaborador(id, success_callback, notificarErrorAjaxAction);
-        this.props.fetchMisPermisos(cargarColaborador, notificarErrorAjaxAction);
+        const cargarColaborador = () => this.props.fetchColaborador(id);
+        this.props.fetchMisPermisos({callback: cargarColaborador});
 
     }
 

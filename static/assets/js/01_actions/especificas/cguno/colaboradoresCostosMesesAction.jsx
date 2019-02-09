@@ -1,72 +1,78 @@
+import {COLABORADOR_COSTO_MES_TYPES as TYPES} from '../../00_types';
 import {
-    CREATE_COLABORADOR_COSTO_MES,
-    DELETE_COLABORADOR_COSTO_MES,
-    FETCH_COLABORADORES_COSTOS_MESES,
-    FETCH_COLABORADOR_COSTO_MES,
-    CLEAR_COLABORADORES_COSTOS_MESES,
-    UPDATE_COLABORADOR_COSTO_MES,
-} from '../../00_types';
-import {
-    fetchListOld,
-    updateObjectOld,
-    fetchObjectOld,
-    deleteObjectOld,
-    createObjectOld,
+    fetchListGet,
+    updateObject,
+    fetchObject,
+    deleteObject,
+    createObject,
     fetchListWithParameterOld
 } from '../../00_general_fuctions'
 
 const current_url_api = 'colaboradores_costo_nomina';
-export const createColaboradorCostoMes = (values, callback = null, callback_error = null) => {
+export const createColaboradorCostoMes = (values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: CREATE_COLABORADOR_COSTO_MES, payload: response})
+            dispatch({type: TYPES.create, payload: response})
         };
-        createObjectOld(current_url_api, values, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        createObject(current_url_api, values, options);
     }
 };
-export const deleteColaboradorCostoMes = (id, callback = null, callback_error = null) => {
+export const deleteColaboradorCostoMes = (id, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: DELETE_COLABORADOR_COSTO_MES, payload: id})
+            dispatch({type: TYPES.delete, payload: id})
         };
-        deleteObjectOld(current_url_api, id, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        deleteObject(current_url_api, id, options);
     }
 };
-export const fetchColaboradoresCostosMeses = (callback = null, callback_error = null) => {
+export const fetchColaboradoresCostosMeses = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: FETCH_COLABORADORES_COSTOS_MESES, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListOld(current_url_api, dispatches, callback, callback_error);
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGet(current_url_api, options);
     }
 };
+
 export const fetchColaboradoresCostosMesesxFechas = (fecha_inicial, fecha_final, callback = null, callback_error = null) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: FETCH_COLABORADORES_COSTOS_MESES, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: response})
         };
         fetchListWithParameterOld(`${current_url_api}/listar_x_fechas/?fecha_inicial=${fecha_inicial}&fecha_final=${fecha_final}`, dispatches, callback, callback_error);
     }
 };
-export const fetchColaboradorCostoMes = (id, callback = null, callback_error = null) => {
+export const fetchColaboradorCostoMes = (id, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: FETCH_COLABORADOR_COSTO_MES, payload: response})
+            dispatch({type: TYPES.fetch, payload: response})
         };
-        fetchObjectOld(current_url_api, id, dispatches, callback, callback_error);
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        fetchObject(current_url_api, id, options);
     }
 };
+
 export const clearColaboradoresCostosMeses = () => {
     return (dispatch) => {
-        dispatch({type: CLEAR_COLABORADORES_COSTOS_MESES});
+        dispatch({type: TYPES.clear});
 
     }
 };
-export const updateColaboradorCostoMes = (id, values, callback = null, callback_error = null) => {
+export const updateColaboradorCostoMes = (id, values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: UPDATE_COLABORADOR_COSTO_MES, payload: response})
+            dispatch({type: TYPES.update, payload: response})
         };
-        updateObjectOld(current_url_api, id, values, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        updateObject(current_url_api, id, values, options);
     }
 };

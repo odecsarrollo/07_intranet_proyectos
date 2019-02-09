@@ -32,11 +32,11 @@ class List extends Component {
         cargando();
         const date_today = moment(new Date());
         const today = date_today.format('YYYY-MM-DD');
-        const cargarHojasTrabajoHoy = () => this.props.fetchHojasTrabajosxFechas(today, today, () => noCargando(), notificarErrorAjaxAction);
-        const cargarMiCuenta = () => this.props.fetchMiCuenta(cargarHojasTrabajoHoy, notificarErrorAjaxAction);
-        const cargarConfigCostos = () => this.props.fetchConfiguracionesCostos(cargarMiCuenta, notificarErrorAjaxAction)
-        const cargarColaboradores = () => this.props.fetchColaboradoresEnProyectos(cargarConfigCostos, notificarErrorAjaxAction);
-        this.props.fetchMisPermisos(cargarColaboradores, notificarErrorAjaxAction)
+        const cargarHojasTrabajoHoy = () => this.props.fetchHojasTrabajosxFechas(today, today);
+        const cargarMiCuenta = () => this.props.fetchMiCuenta({calback: cargarHojasTrabajoHoy});
+        const cargarConfigCostos = () => this.props.fetchConfiguracionesCostos({callback: cargarMiCuenta});
+        const cargarColaboradores = () => this.props.fetchColaboradoresEnProyectos({callback: cargarConfigCostos});
+        this.props.fetchMisPermisos({callback: cargarColaboradores})
 
     }
 
@@ -51,9 +51,7 @@ class List extends Component {
         return (
             <Fragment>
                 <RangoFechas metodoBusquedaFechas={(i, f) => {
-                    const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
-                    cargando();
-                    this.props.fetchHojasTrabajosxFechas(i, f, () => noCargando(), notificarErrorAjaxAction);
+                    this.props.fetchHojasTrabajosxFechas(i, f);
                 }}/>
                 <ListCrud
                     object_list={object_list}

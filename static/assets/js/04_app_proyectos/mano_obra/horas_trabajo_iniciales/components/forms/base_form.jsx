@@ -12,18 +12,14 @@ import validate from './validate';
 class Form extends Component {
     cargarMaestrarFormulario() {
         const {
-            noCargando,
-            notificarErrorAjaxAction,
             proyectos_list,
             colaboradores_list,
             centros_costos_list,
         } = this.props;
         if (_.size(proyectos_list) === 0 || _.size(colaboradores_list) === 0 || _.size(centros_costos_list) === 0) {
-            const cargarProyectos = () => this.props.fetchProyectos(() => noCargando(), notificarErrorAjaxAction);
-            const cargarColaboradores = () => this.props.fetchColaboradoresEnProyectos(cargarProyectos, notificarErrorAjaxAction);
-            this.props.fetchCentrosCostosColaboradores(cargarColaboradores, notificarErrorAjaxAction);
-        } else {
-            noCargando();
+            const cargarProyectos = () => this.props.fetchProyectos();
+            const cargarColaboradores = () => this.props.fetchColaboradoresEnProyectos({callback: cargarProyectos});
+            this.props.fetchCentrosCostosColaboradores({callback: cargarColaboradores});
         }
     }
 

@@ -25,17 +25,9 @@ class PanelArchivosProyectos extends Component {
     }
 
     cargarDatos() {
-        const {
-            noCargando,
-            cargando,
-            notificarErrorAjaxAction,
-            fetchArchivosProyectos_x_proyecto,
-            proyecto,
-            fetchMisPermisos
-        } = this.props;
-        cargando();
-        const cargarArchivosProyecto = () => fetchArchivosProyectos_x_proyecto(proyecto.id, () => noCargando(), notificarErrorAjaxAction)
-        fetchMisPermisos(cargarArchivosProyecto, notificarErrorAjaxAction);
+        const {proyecto} = this.props;
+        const cargarArchivosProyecto = () => this.props.fetchArchivosProyectos_x_proyecto(proyecto.id);
+        this.props.fetchMisPermisos({callback: cargarArchivosProyecto});
     }
 
     onSelectArchivo(item_seleccionado) {

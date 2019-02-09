@@ -29,14 +29,9 @@ class Detail extends Component {
 
     cargarDatos() {
         const {id} = this.props.match.params;
-        const {noCargando, cargando, notificarAction, notificarErrorAjaxAction} = this.props;
-        cargando();
-        const success_callback = () => {
-            noCargando();
-        };
-        const cargarContactos = () => this.props.fetchContactosClientes_por_cliente(id, success_callback, notificarErrorAjaxAction);
-        const cargarCliente = () => this.props.fetchCliente(id, cargarContactos, notificarErrorAjaxAction);
-        this.props.fetchMisPermisos(cargarCliente, notificarErrorAjaxAction);
+        const cargarContactos = () => this.props.fetchContactosClientes_por_cliente(id);
+        const cargarCliente = () => this.props.fetchCliente(id, {callback: cargarContactos});
+        this.props.fetchMisPermisos({callback: cargarCliente});
 
     }
 

@@ -37,20 +37,16 @@ class Form extends Component {
 
     componentDidMount() {
         const {
-            noCargando,
-            cargando,
             notificarErrorAjaxAction,
             item_seleccionado,
             initialValues,
             fetchContactosClientes_por_cliente,
         } = this.props;
-        cargando();
+
 
         const cargarResponsable = () => {
             if (item_seleccionado.responsable) {
-                this.props.fetchUsuario(item_seleccionado.responsable, () => noCargando(), notificarErrorAjaxAction)
-            } else {
-                noCargando();
+                this.props.fetchUsuario(item_seleccionado.responsable)
             }
         };
 
@@ -59,12 +55,11 @@ class Form extends Component {
             const {cliente} = initialValues;
             cargarContactos = () => fetchContactosClientes_por_cliente(
                 cliente,
-                cargarResponsable,
-                notificarErrorAjaxAction
+                {callback: cargarResponsable}
             );
         }
-        const cargarClientes = () => this.props.fetchClientes(cargarContactos, notificarErrorAjaxAction);
-        this.props.fetchUsuariosxPermiso('gestionar_cotizacion', cargarClientes, notificarErrorAjaxAction);
+        const cargarClientes = () => this.props.fetchClientes({callback: cargarContactos});
+        this.props.fetchUsuariosxPermiso('gestionar_cotizacion', {callback: cargarClientes});
     }
 
     render() {

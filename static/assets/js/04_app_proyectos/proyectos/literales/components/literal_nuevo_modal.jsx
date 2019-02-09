@@ -31,17 +31,19 @@ class LiteralModalCreate extends Component {
         const nuevo_literal = {...item, proyecto: object.id, id_literal, en_cguno: false};
         const crearLiteral = () => this.props.createLiteral(
             nuevo_literal,
-            () => {
-                this.setState({modal_open: false});
-                if (callback) {
-                    callback()
-                }
-                noCargando()
-            },
-            notificarErrorAjaxAction
+            {
+                callback:
+                    () => {
+                        this.setState({modal_open: false});
+                        if (callback) {
+                            callback()
+                        }
+                        noCargando()
+                    }
+            }
         );
         if (!existe_literal) {
-            this.props.fetchLiteralesXProyecto(object.id, crearLiteral, notificarErrorAjaxAction);
+            this.props.fetchLiteralesXProyecto(object.id, crearLiteral);
         } else {
             notificarErrorAjaxAction('Ya existe este literal');
         }

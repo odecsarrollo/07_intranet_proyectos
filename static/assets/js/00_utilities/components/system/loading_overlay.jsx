@@ -5,12 +5,16 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {withStyles} from "@material-ui/core/styles/index";
 import Typography from '@material-ui/core/Typography';
 
+
 const LoadingOverlay = (props) => {
-    const {esta_cargando, classes} = props;
-    let isActive = esta_cargando ? 'block' : 'none';
+    const {esta_cargando: {cargando, mensaje}, classes, theme} = props;
+    let isActive = cargando ? 'block' : 'none';
     const style = {
         display: isActive
     };
+    // if (!props.isAuthenticated) {
+    //     return <Redirect to="/"/>
+    // }
     return (
         <div className={classes.loadingOverloadUno}>
             <div className={classes.loadingOverloadDos} style={style}>
@@ -19,6 +23,9 @@ const LoadingOverlay = (props) => {
                     <Typography variant="h4" color="inherit" noWrap>
                         Procesando...
                     </Typography>
+                    <Typography variant="overline" color="inherit" gutterBottom>
+                        {mensaje}
+                    </Typography>
                 </div>
             </div>
             {props.children}
@@ -26,7 +33,7 @@ const LoadingOverlay = (props) => {
     )
 };
 
-function mapPropsToState(state, ownProps) {
+function mapPropsToState(state) {
     return {
         esta_cargando: state.esta_cargando
     }

@@ -175,7 +175,6 @@ export function fetchListGet(url, options) {
     createRequest(request, {...options, mensaje_cargando});
 }
 
-
 export function fetchListWithParameterOld(url, dispatches = null, callback = null, callback_error = null) {
     console.log(`%cFETCH LIST PARAMETROS - %c${url.toUpperCase()}`, 'color:red', 'color:blue');
     const FULL_URL = `${url}&format=json`;
@@ -188,58 +187,68 @@ export function fetchListWithParameterOld(url, dispatches = null, callback = nul
     );
 }
 
-export function fetchObjectOld(url, id, dispatches = null, callback = null, callback_error = null) {
+export function fetchObject(url, id, options) {
     console.log(`%cFETCH OBJETO - %c${url.toUpperCase()} - %cID ${id}`, 'color:red', 'color:blue', 'color:green');
+    const mensaje_cargando = `Consultando elemento en ${url.toUpperCase()}`;
     const FULL_URL = `${url}/${id}/?format=json`;
     const request = axios_instance.get(FULL_URL);
-    createRequestOld(
-        request,
-        dispatches,
-        callback,
-        callback_error
-    );
+    /*    const headers = {"Content-Type": "application/json"};
+        if (localStorage.token) {
+            headers["Authorization"] = `Token ${localStorage.token}`;
+        }
+        axios_instance.defaults.headers = headers;*/
+    createRequest(request, {...options, mensaje_cargando});
 }
 
-export function updateObjectOld(url, id, values, dispatches = null, callback = null, callback_error = null, config = null) {
+
+export function updateObject(url, id, values, options, config = null) {
     console.log(`%cUPDATE OBJETO - %c${url.toUpperCase()} - %cID ${id}`, 'color:red', 'color:blue', 'color:green');
+    const mensaje_cargando = `Actualizando elemento en ${url.toUpperCase()}`;
     axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
     axios_instance.defaults.xsrfCookieName = "csrftoken";
+
+    /*    const headers = {"Content-Type": "application/json"};
+        if (localStorage.token) {
+            headers["Authorization"] = `Token ${localStorage.token}`;
+        }
+        axios_instance.defaults.headers = headers;*/
     const FULL_URL = `${url}/${id}/`;
     const request = axios_instance.put(FULL_URL, values, config);
-    createRequestOld(
-        request,
-        dispatches,
-        callback,
-        callback_error
-    );
+    createRequest(request, {...options, mensaje_cargando});
 }
 
-export function createObjectOld(url, values, dispatches = null, callback = null, callback_error = null) {
+
+export function createObject(url, values, options) {
     console.log(`%cCREATE OBJETO - %c${url.toUpperCase()}`, 'color:red', 'color:blue');
+    const mensaje_cargando = `Creando elemento en ${url.toUpperCase()}`;
     axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
     axios_instance.defaults.xsrfCookieName = "csrftoken";
+    /*    const headers = {"Content-Type": "application/json"};
+        if (localStorage.token) {
+            headers["Authorization"] = `Token ${localStorage.token}`;
+        }
+        axios_instance.defaults.headers = headers;*/
     const FULL_URL = `${url}/`;
     const request = axios_instance.post(FULL_URL, values);
-    createRequestOld(
-        request,
-        dispatches,
-        callback,
-        callback_error
-    );
+    createRequest(request, {...options, mensaje_cargando});
 }
 
-export function deleteObjectOld(url, id, dispatches = null, callback = null, callback_error = null) {
+
+export function deleteObject(url, id, options) {
     console.log(`%cDELETE OBJETO - %c${url.toUpperCase()} - %cID ${id}`, 'color:red', 'color:blue', 'color:green');
+    const mensaje_cargando = `Eliminando elemento en ${url.toUpperCase()}`;
     axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
     axios_instance.defaults.xsrfCookieName = "csrftoken";
+
+    /*    const headers = {"Content-Type": "application/json"};
+        if (localStorage.token) {
+            headers["Authorization"] = `Token ${localStorage.token}`;
+        }
+        axios_instance.defaults.headers = headers;*/
+
     const FULL_URL = `${url}/${id}/`;
     const request = axios_instance.delete(FULL_URL);
-    createRequestOld(
-        request,
-        dispatches,
-        callback,
-        callback_error
-    );
+    createRequest(request, {...options, mensaje_cargando});
 }
 
 

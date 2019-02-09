@@ -1,19 +1,6 @@
-import {
-    CLEAR_ITEMS_LITERALES,
-    FETCH_ITEMS_LITERALES
-} from '../../../01_actions/00_types';
-
-import _ from 'lodash';
+import {ITEMS_LITERALES_TYPES as TYPES} from '../../../01_actions/00_types';
+import baseReducer from '../../baseReducer'
 
 export default function (state = [], action) {
-    switch (action.type) {
-        case FETCH_ITEMS_LITERALES:
-            return _.mapKeys(action.payload.data, 'id');
-            break;
-        case CLEAR_ITEMS_LITERALES:
-            return {};
-            break;
-        default:
-            return state;
-    }
+    return baseReducer(TYPES, state, action)
 }

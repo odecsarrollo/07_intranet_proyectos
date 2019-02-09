@@ -46,9 +46,7 @@ class Detail extends Component {
     }
 
     onUpdateProyecto(proyecto) {
-        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
-        cargando();
-        this.props.updateProyecto(proyecto.id, proyecto, () => noCargando(), notificarErrorAjaxAction);
+        this.props.updateProyecto(proyecto.id, proyecto);
     }
 
     onLiteralSelect(select_literal_id) {
@@ -60,10 +58,10 @@ class Detail extends Component {
 
     onTabClick(tab_index) {
         const {id} = this.props.match.params;
-        const {noCargando, cargando, notificarErrorAjaxAction} = this.props;
+        const {cargando, notificarErrorAjaxAction} = this.props;
         cargando();
         if (tab_index === 1) {
-            const cargarCotizacioneParaCrearLiterales = () => this.props.fetchCotizacionesPidiendoCarpeta(() => noCargando(), notificarErrorAjaxAction);
+            const cargarCotizacioneParaCrearLiterales = () => this.props.fetchCotizacionesPidiendoCarpeta();
             this.props.fetchLiteralesXProyecto(id, cargarCotizacioneParaCrearLiterales, notificarErrorAjaxAction);
         }
     }
@@ -71,15 +69,10 @@ class Detail extends Component {
 
     cargarDatos() {
         const {id} = this.props.match.params;
-        const {noCargando, cargando, notificarErrorAjaxAction} = this.props;
-        cargando();
-        const success_callback = () => {
-            noCargando();
-        };
-        const cargarCotizacioneParaCrearLiterales = () => this.props.fetchCotizacionesPidiendoCarpeta(success_callback, notificarErrorAjaxAction);
-        const cargarLiterales = () => this.props.fetchLiteralesXProyecto(id, cargarCotizacioneParaCrearLiterales, notificarErrorAjaxAction);
-        const cargarProyecto = () => this.props.fetchProyecto(id, cargarLiterales, notificarErrorAjaxAction);
-        this.props.fetchMisPermisos(cargarProyecto, notificarErrorAjaxAction);
+        const cargarCotizacioneParaCrearLiterales = () => this.props.fetchCotizacionesPidiendoCarpeta();
+        const cargarLiterales = () => this.props.fetchLiteralesXProyecto(id, {callback: cargarCotizacioneParaCrearLiterales});
+        const cargarProyecto = () => this.props.fetchProyecto(id, {callback: cargarLiterales});
+        this.props.fetchMisPermisos({callback: cargarProyecto});
 
     }
 

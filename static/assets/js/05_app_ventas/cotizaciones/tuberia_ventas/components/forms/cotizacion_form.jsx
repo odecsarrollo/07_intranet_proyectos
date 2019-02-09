@@ -17,24 +17,14 @@ class Form extends Component {
 
     componentDidMount() {
         const {
-            noCargando,
-            cargando,
-            notificarErrorAjaxAction,
-            fetchClientes,
-            initialValues,
-            fetchContactosClientes_por_cliente,
+            initialValues
         } = this.props;
-        cargando();
-        let cargarContactos = () => noCargando();
+        let cargarContactos = () => console.log('para retornar algo');
         if (initialValues) {
             const {cliente} = initialValues;
-            cargarContactos = () => fetchContactosClientes_por_cliente(
-                cliente,
-                () => noCargando(),
-                notificarErrorAjaxAction
-            );
+            cargarContactos = () => this.props.fetchContactosClientes_por_cliente(cliente);
         }
-        fetchClientes(cargarContactos, notificarErrorAjaxAction);
+        this.props.fetchClientes({callback: cargarContactos});
     }
 
     componentWillUnmount() {
@@ -101,7 +91,7 @@ class Form extends Component {
 function mapPropsToState(state, ownProps) {
     const {item_seleccionado} = ownProps;
     return {
-        myValues: selector(state, 'estado', 'valor_ofertado', 'cliente','subir_anterior'),
+        myValues: selector(state, 'estado', 'valor_ofertado', 'cliente', 'subir_anterior'),
         initialValues: item_seleccionado,
     }
 }

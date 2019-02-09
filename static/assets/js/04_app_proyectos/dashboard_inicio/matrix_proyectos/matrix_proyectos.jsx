@@ -33,9 +33,7 @@ class LiteralesSeguimiento extends Component {
     }
 
     cargarLiteralesConSeguimiento() {
-        const {cargando, noCargando, notificarErrorAjaxAction, fetchPendientesTareasFases} = this.props;
-        cargando();
-        fetchPendientesTareasFases(() => noCargando(), notificarErrorAjaxAction);
+        this.props.fetchPendientesTareasFases();
     }
 
     onClickPlusZoom() {

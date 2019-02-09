@@ -38,14 +38,12 @@ class ListadoElementos extends Component {
     };
 
     cargarElementos(value = null) {
-        const {notificarErrorAjaxAction, cargando, noCargando} = this.props;
         let index = value !== null ? value : this.state.slideIndex;
-        cargando();
         if (index === 0) {
-            const cargarColaboradores = () => this.props.fetchColaboradores(() => noCargando(), notificarErrorAjaxAction);
-            this.props.fetchCentrosCostosColaboradores(cargarColaboradores, notificarErrorAjaxAction);
+            const cargarColaboradores = () => this.props.fetchColaboradores();
+            this.props.fetchCentrosCostosColaboradores({callback: cargarColaboradores});
         } else if (index === 1) {
-            this.props.fetchCentrosCostosColaboradores(() => noCargando(), notificarErrorAjaxAction);
+            this.props.fetchCentrosCostosColaboradores();
         }
     }
 
@@ -60,9 +58,7 @@ class ListadoElementos extends Component {
     }
 
     cargarDatos() {
-        const {notificarErrorAjaxAction, cargando} = this.props;
-        cargando();
-        this.props.fetchMisPermisos(() => this.cargarElementos(), notificarErrorAjaxAction)
+        this.props.fetchMisPermisos({callback: this.cargarElementos})
     }
 
     render() {

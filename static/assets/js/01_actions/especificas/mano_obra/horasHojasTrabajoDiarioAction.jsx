@@ -2,11 +2,11 @@ import {
     MANO_OBRA_HORAS_HOJA_TRABAJO_TYPES as TYPES
 } from '../../00_types';
 import {
-    fetchListOld,
-    updateObjectOld,
-    fetchObjectOld,
-    deleteObjectOld,
-    createObjectOld,
+    fetchListGet,
+    updateObject,
+    fetchObject,
+    deleteObject,
+    createObject,
     fetchListWithParameterOld, fetchObjectWithParameterPDFOld
 } from '../../00_general_fuctions'
 
@@ -22,15 +22,22 @@ export function printReporteCostoTresProyecto(valores, callback = null, callback
     }
 }
 
-export function fetchHorasHojasTrabajosAutogestionadas(callback = null, callback_error = null) {
+export const fetchHorasHojasTrabajosAutogestionadas = (options_action = {}) => {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/autogestionadas_x_fechas`;
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListOld(FULL_URL, dispatches, callback, callback_error);
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGet(FULL_URL, options);
     }
-}
+};
 
 export function fetchHorasHojasTrabajosAutogestionadasxFechas(fecha_inicial, fecha_final, callback = null, callback_error = null) {
     return function (dispatch) {
@@ -52,49 +59,62 @@ export function fetchHorasHojasTrabajosxLiteral(literal_id, callback = null, cal
     }
 }
 
-export const createHoraHojaTrabajo = (values, callback = null, callback_error = null) => {
+export const createHoraHojaTrabajo = (values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.create, payload: response})
         };
-        createObjectOld(current_url_api, values, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        createObject(current_url_api, values, options);
     }
 };
-export const deleteHoraHojaTrabajo = (id, callback = null, callback_error = null) => {
+export const deleteHoraHojaTrabajo = (id, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.delete, payload: id})
         };
-        deleteObjectOld(current_url_api, id, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        deleteObject(current_url_api, id, options);
     }
 };
-export const fetchHorasHojasTrabajos = (callback = null, callback_error = null) => {
+export const fetchHorasHojasTrabajos = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListOld(current_url_api, dispatches, callback, callback_error);
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGet(current_url_api, options);
     }
 };
-export const fetchHoraHojaTrabajo = (id, callback = null, callback_error = null) => {
+
+export const fetchHoraHojaTrabajo = (id, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch, payload: response})
         };
-        fetchObjectOld(current_url_api, id, dispatches, callback, callback_error);
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        fetchObject(current_url_api, id, options);
     }
 };
+
 export const clearHorasHojasTrabajos = () => {
     return (dispatch) => {
         dispatch({type: TYPES.clear});
 
     }
 };
-export const updateHoraHojaTrabajo = (id, values, callback = null, callback_error = null) => {
+export const updateHoraHojaTrabajo = (id, values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.update, payload: response})
         };
-        updateObjectOld(current_url_api, id, values, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        updateObject(current_url_api, id, values, options);
     }
 };

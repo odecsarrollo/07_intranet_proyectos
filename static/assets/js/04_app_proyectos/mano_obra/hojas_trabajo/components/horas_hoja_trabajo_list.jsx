@@ -36,47 +36,39 @@ class List extends Component {
     }
 
     fetchObjectMethod(item_id, successCallback) {
-        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
-        const success_method = (item) => {
+        const callback = (item) => {
             successCallback(item);
-            this.props.fetchHojaTrabajo(item.hoja, () => noCargando(), notificarErrorAjaxAction);
+            this.props.fetchHojaTrabajo(item.hoja);
         };
-        cargando();
-        this.props.fetchHoraHojaTrabajo(item_id, success_method, notificarErrorAjaxAction);
+        this.props.fetchHoraHojaTrabajo(item_id, {callback});
     }
 
     createObjectMethod(item, successCallback) {
-        const {cargando, notificarErrorAjaxAction} = this.props;
-        const success_method = () => {
+        const callback = () => {
             this.successSubmitCallback(item);
             successCallback();
         };
-        cargando();
-        const cargarHojaTrabajo = (r) => this.props.fetchHojaTrabajo(r.hoja, success_method, notificarErrorAjaxAction);
-        this.props.createHoraHojaTrabajo(item, cargarHojaTrabajo, notificarErrorAjaxAction);
+        const cargarHojaTrabajo = (r) => this.props.fetchHojaTrabajo(r.hoja, {callback});
+        this.props.createHoraHojaTrabajo(item, {callback: cargarHojaTrabajo});
     }
 
     updateObjectMethod(item, successCallback) {
-        const {cargando, notificarErrorAjaxAction} = this.props;
-        const success_method = () => {
+        const callback = () => {
             this.successSubmitCallback(item);
             successCallback();
         };
-        cargando();
-        const cargarHojaTrabajo = (r) => this.props.fetchHojaTrabajo(r.hoja, success_method, notificarErrorAjaxAction);
-        this.props.updateHoraHojaTrabajo(item.id, item, cargarHojaTrabajo, notificarErrorAjaxAction);
+        const cargarHojaTrabajo = (r) => this.props.fetchHojaTrabajo(r.hoja, {callback});
+        this.props.updateHoraHojaTrabajo(item.id, item, {callback: cargarHojaTrabajo});
     }
 
     deleteObjectMethod(item, successCallback) {
-        const {cargando, notificarErrorAjaxAction} = this.props;
-        const success_method = () => {
+        const callback = () => {
             this.successDeleteCallback(item);
             successCallback();
         };
-        cargando();
         const hoja = item.hoja;
-        const cargarHojaTrabajo = () => this.props.fetchHojaTrabajo(hoja, success_method, notificarErrorAjaxAction);
-        this.props.deleteHoraHojaTrabajo(item.id, cargarHojaTrabajo, notificarErrorAjaxAction);
+        const cargarHojaTrabajo = () => this.props.fetchHojaTrabajo(hoja, {callback});
+        this.props.deleteHoraHojaTrabajo(item.id, {callback: cargarHojaTrabajo});
     }
 
     render() {

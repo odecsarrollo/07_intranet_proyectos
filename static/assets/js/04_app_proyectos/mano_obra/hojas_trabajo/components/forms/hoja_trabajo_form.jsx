@@ -11,14 +11,7 @@ import moment from "moment-timezone";
 
 class Form extends Component {
     componentDidMount() {
-        const {
-            fetchConfiguracionesCostos,
-            noCargando,
-            cargando,
-            notificarErrorAjaxAction
-        } = this.props;
-        cargando();
-        fetchConfiguracionesCostos(() => noCargando(), notificarErrorAjaxAction)
+        this.props.fetchConfiguracionesCostos()
     }
 
     render() {

@@ -49,13 +49,11 @@ class ListadoElementos extends Component {
     };
 
     cargarElementos(value = null) {
-        const {notificarErrorAjaxAction, cargando, noCargando} = this.props;
         let index = value !== null ? value : this.state.slideIndex;
-        cargando();
         if (index === 0) {
-            this.props.fetchAlgos1(() => noCargando(), notificarErrorAjaxAction);
+            this.props.fetchAlgos1();
         } else if (index === 2) {
-            this.props.fetchAlgos2(() => noCargando(), notificarErrorAjaxAction);
+            this.props.fetchAlgos2();
         }
     }
 
@@ -69,9 +67,7 @@ class ListadoElementos extends Component {
     }
 
     cargarDatos() {
-        const {notificarErrorAjaxAction, cargando} = this.props;
-        cargando();
-        this.props.fetchMisPermisos(() => this.cargarElementos(), notificarErrorAjaxAction)
+        this.props.fetchMisPermisos()
     }
 
     render() {

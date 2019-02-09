@@ -29,11 +29,9 @@ class List extends Component {
     }
 
     cargarDatos() {
-        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
-        cargando();
-        const cargarCotizacionesParaCarpetas = () => this.props.fetchCotizacionesPidiendoCarpeta(() => noCargando(), notificarErrorAjaxAction);
-        const cargarProyectos = () => this.props.fetchProyectos(cargarCotizacionesParaCarpetas, notificarErrorAjaxAction);
-        this.props.fetchMisPermisos(cargarProyectos, notificarErrorAjaxAction)
+        const cargarCotizacionesParaCarpetas = () => this.props.fetchCotizacionesPidiendoCarpeta();
+        const cargarProyectos = () => this.props.fetchProyectos({callback: cargarCotizacionesParaCarpetas});
+        this.props.fetchMisPermisos({callback: cargarProyectos})
 
     }
 

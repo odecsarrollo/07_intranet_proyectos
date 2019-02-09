@@ -2,11 +2,11 @@ import {
     MANO_OBRA_HOJA_TRABAJO_TYPES as TYPES
 } from '../../00_types';
 import {
-    fetchListOld,
-    updateObjectOld,
-    fetchObjectOld,
-    deleteObjectOld,
-    createObjectOld,
+    fetchListGet,
+    updateObject,
+    fetchObject,
+    deleteObject,
+    createObject,
     fetchListWithParameterOld
 } from '../../00_general_fuctions'
 
@@ -22,49 +22,61 @@ export function fetchHojasTrabajosxFechas(fecha_inicial, fecha_final, callback =
     }
 }
 
-export const createHojaTrabajo = (values, callback = null, callback_error = null) => {
+export const createHojaTrabajo = (values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.create, payload: response})
         };
-        createObjectOld(current_url_api, values, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        createObject(current_url_api, values, options);
     }
 };
-export const deleteHojaTrabajo = (id, callback = null, callback_error = null) => {
+export const deleteHojaTrabajo = (id, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.delete, payload: id})
         };
-        deleteObjectOld(current_url_api, id, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        deleteObject(current_url_api, id, options);
     }
 };
-export const fetchHojasTrabajos = (callback = null, callback_error = null) => {
+export const fetchHojasTrabajos = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListOld(current_url_api, dispatches, callback, callback_error);
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGet(current_url_api, options);
     }
 };
-export const fetchHojaTrabajo = (id, callback = null, callback_error = null) => {
+export const fetchHojaTrabajo = (id, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch, payload: response})
         };
-        fetchObjectOld(current_url_api, id, dispatches, callback, callback_error);
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        fetchObject(current_url_api, id, options);
     }
 };
+
 export const clearHojasTrabajos = () => {
     return (dispatch) => {
         dispatch({type: TYPES.clear});
 
     }
 };
-export const updateHojaTrabajo = (id, values, callback = null, callback_error = null) => {
+export const updateHojaTrabajo = (id, values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.update, payload: response})
         };
-        updateObjectOld(current_url_api, id, values, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        updateObject(current_url_api, id, values, options);
     }
 };

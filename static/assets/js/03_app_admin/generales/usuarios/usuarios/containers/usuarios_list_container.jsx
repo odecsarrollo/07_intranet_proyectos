@@ -25,10 +25,8 @@ class List extends Component {
     }
 
     cargarDatos() {
-        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
-        cargando();
-        const cargarUsuarios = () => this.props.fetchUsuarios(() => noCargando(), notificarErrorAjaxAction);
-        this.props.fetchMisPermisos(cargarUsuarios, notificarErrorAjaxAction)
+        const cargarUsuarios = () => this.props.fetchUsuarios();
+        this.props.fetchMisPermisos({callback: cargarUsuarios})
 
     }
 

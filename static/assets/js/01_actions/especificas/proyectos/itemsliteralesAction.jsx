@@ -1,7 +1,4 @@
-import {
-    FETCH_ITEMS_LITERALES,
-    CLEAR_ITEMS_LITERALES
-} from '../../00_types';
+import {ITEMS_LITERALES_TYPES as TYPES} from '../../00_types';
 
 import {
     fetchListWithParameterOld
@@ -11,7 +8,7 @@ const current_url_api = 'items_literales';
 
 export function clearItemsLiterales() {
     return function (dispatch) {
-        dispatch({type: CLEAR_ITEMS_LITERALES});
+        dispatch({type: TYPES.clear});
     }
 }
 
@@ -19,7 +16,7 @@ export function fetchItemsLiterales(id_literal, callback = null, callback_error 
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/listar_items_x_literal/?id_literal=${id_literal}`;
         const dispatches = (response) => {
-            dispatch({type: FETCH_ITEMS_LITERALES, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: response})
         };
         fetchListWithParameterOld(FULL_URL, dispatches, callback, callback_error)
     }

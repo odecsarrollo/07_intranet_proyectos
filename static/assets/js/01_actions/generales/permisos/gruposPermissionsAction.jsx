@@ -1,18 +1,13 @@
 import {
-    CREATE_GRUPO_PERMISO,
-    DELETE_GRUPO_PERMISO,
-    FETCH_GRUPOS_PERMISOS,
-    FETCH_GRUPO_PERMISO,
-    CLEAR_GRUPOS_PERMISOS,
-    UPDATE_GRUPO_PERMISO
+    GRUPO_PERMISO_TYPES as TYPES
 } from '../../00_types';
 
 import {
-    fetchListOld,
-    updateObjectOld,
-    fetchObjectOld,
-    deleteObjectOld,
-    createObjectOld,
+    fetchListGet,
+    updateObject,
+    fetchObject,
+    deleteObject,
+    createObject,
     callApiMethodWithParametersOld
 } from '../../00_general_fuctions'
 
@@ -26,49 +21,62 @@ export const addPermisoGrupo = (id, permiso_id, callback = null, callback_error 
     }
 };
 
-export const createGrupoPermiso = (values, callback = null, callback_error = null) => {
+export const createGrupoPermiso = (values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: CREATE_GRUPO_PERMISO, payload: response})
+            dispatch({type: TYPES.create, payload: response})
         };
-        createObjectOld(current_url_api, values, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        createObject(current_url_api, values, options);
     }
 };
-export const deleteGrupoPermiso = (id, callback = null, callback_error = null) => {
+export const deleteGrupoPermiso = (id, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: DELETE_GRUPO_PERMISO, payload: id})
+            dispatch({type: TYPES.delete, payload: id})
         };
-        deleteObjectOld(current_url_api, id, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        deleteObject(current_url_api, id, options);
     }
 };
-export const fetchGruposPermisos = (callback = null, callback_error = null) => {
+export const fetchGruposPermisos = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: FETCH_GRUPOS_PERMISOS, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListOld(current_url_api, dispatches, callback, callback_error);
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGet(current_url_api, options);
     }
 };
-export const fetchGrupoPermiso = (id, callback = null, callback_error = null) => {
+
+export const fetchGrupoPermiso = (id, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: FETCH_GRUPO_PERMISO, payload: response})
+            dispatch({type: TYPES.fetch, payload: response})
         };
-        fetchObjectOld(current_url_api, id, dispatches, callback, callback_error);
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        fetchObject(current_url_api, id, options);
     }
 };
+
 export const clearGruposPermisos = () => {
     return (dispatch) => {
-        dispatch({type: CLEAR_GRUPOS_PERMISOS});
+        dispatch({type: TYPES.clear});
 
     }
 };
-export const updateGrupoPermiso = (id, values, callback = null, callback_error = null) => {
+export const updateGrupoPermiso = (id, values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: UPDATE_GRUPO_PERMISO, payload: response})
+            dispatch({type: TYPES.update, payload: response})
         };
-        updateObjectOld(current_url_api, id, values, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        updateObject(current_url_api, id, values, options);
     }
 };

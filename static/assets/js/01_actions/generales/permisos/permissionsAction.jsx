@@ -1,42 +1,52 @@
 import {
-    FETCH_MIS_PERMISOS,
-    FETCH_PERMISOS,
-    FETCH_PERMISO,
-    CLEAR_PERMISOS,
+    PERMISO_TYPES as TYPES,
     FETCH_OTRO_USUARIO_PERMISOS,
-    UPDATE_PERMISO
 } from '../../00_types';
 
 import {
-    fetchListOld,
-    updateObjectOld,
-    fetchObjectOld,
+    fetchListGet,
+    updateObject,
+    fetchObject,
     fetchListWithParameterOld
 } from '../../00_general_fuctions'
 
 const current_url_api = 'permisos';
 
-export function fetchMisPermisos(callback = null, callback_error = null) {
+export const fetchMisPermisos = (options_action = {}) => {
     return function (dispatch) {
         const SUB_URL = '/mis_permisos';
         const FULL_URL = `${current_url_api}${SUB_URL}`;
         const dispatches = (response) => {
-            dispatch({type: FETCH_MIS_PERMISOS, payload: response})
+            dispatch({type: TYPES.fetch_mis_permisos, payload: response})
         };
-        fetchListOld(FULL_URL, dispatches, callback, callback_error);
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGet(FULL_URL, options);
     }
-}
+};
 
-export function fetchPermisosActivos(callback = null, callback_error = null) {
+export const fetchPermisosActivos = (options_action = {}) => {
     return function (dispatch) {
         const SUB_URL = '/permisos_activos';
         const FULL_URL = `${current_url_api}${SUB_URL}`;
         const dispatches = (response) => {
-            dispatch({type: FETCH_PERMISOS, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListOld(FULL_URL, dispatches, callback, callback_error);
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGet(FULL_URL, options);
     }
-}
+};
 
 export function fetchOtroUsuarioPermisos(id, callback = null, callback_error = null) {
     return function (dispatch) {
@@ -49,36 +59,47 @@ export function fetchOtroUsuarioPermisos(id, callback = null, callback_error = n
     }
 }
 
-export const fetchPermisos = (callback = null, callback_error = null) => {
+export const fetchPermisos = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: FETCH_PERMISOS, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListOld(current_url_api, dispatches, callback, callback_error);
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGet(current_url_api, options);
     }
 };
 
-export const updatePermiso = (id, values, callback = null, callback_error = null) => {
+
+export const updatePermiso = (id, values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: UPDATE_PERMISO, payload: response})
+            dispatch({type: TYPES.update, payload: response})
         };
-        updateObjectOld(current_url_api, id, values, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        updateObject(current_url_api, id, values, options);
     }
 };
 
-export const fetchPermiso = (id, callback = null, callback_error = null) => {
+export const fetchPermiso = (id, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: FETCH_PERMISO, payload: response})
+            dispatch({type: TYPES.fetch, payload: response})
         };
-        fetchObjectOld(current_url_api, id, dispatches, callback, callback_error);
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        fetchObject(current_url_api, id, options);
     }
 };
+
 
 export const clearPermisos = () => {
     return (dispatch) => {
-        dispatch({type: CLEAR_PERMISOS});
+        dispatch({type: TYPES.clear});
 
     }
 };

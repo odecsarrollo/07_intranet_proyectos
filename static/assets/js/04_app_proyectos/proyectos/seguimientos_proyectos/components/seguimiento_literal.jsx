@@ -79,22 +79,18 @@ class SeguimientoLiteral extends Component {
 
     cargarDatos(id_literal) {
         const {
-            notificarErrorAjaxAction,
             fetchFases,
             fetchMiCuenta,
             fetchFasesLiterales_x_literal,
             fetchMiembrosLiterales_x_literal,
-            noCargando,
-            cargando,
             fetchUsuarios,
         } = this.props;
-        cargando();
-        const cargarMiCuenta = () => fetchMiCuenta(() => noCargando(), notificarErrorAjaxAction);
-        const cargarUsuarios = () => fetchUsuarios(cargarMiCuenta, notificarErrorAjaxAction);
-        const cargarMiembros = () => fetchMiembrosLiterales_x_literal(id_literal, cargarUsuarios, notificarErrorAjaxAction);
-        const cargarFasesxLiteral = () => fetchFasesLiterales_x_literal(id_literal, cargarMiembros, notificarErrorAjaxAction);
-        const cargarFases = () => fetchFases(cargarFasesxLiteral, notificarErrorAjaxAction);
-        this.props.fetchMisPermisos(cargarFases, notificarErrorAjaxAction);
+        const cargarMiCuenta = () => fetchMiCuenta();
+        const cargarUsuarios = () => fetchUsuarios({callback:cargarMiCuenta});
+        const cargarMiembros = () => fetchMiembrosLiterales_x_literal(id_literal, {callback: cargarUsuarios});
+        const cargarFasesxLiteral = () => fetchFasesLiterales_x_literal(id_literal, {callback: cargarMiembros});
+        const cargarFases = () => fetchFases({callback: cargarFasesxLiteral});
+        this.props.fetchMisPermisos({callback: cargarFases});
     }
 
     adicionarMiembro(usuario_id) {

@@ -15,8 +15,8 @@ class Form extends Component {
     }
 
     componentDidMount() {
-        const {initialValues, proyectos_list, mi_cuenta, noCargando, notificarErrorAjaxAction} = this.props;
-        this.props.fetchProyectosConLiteralesAbiertos(() => noCargando(), notificarErrorAjaxAction);
+        const {initialValues, proyectos_list, mi_cuenta} = this.props;
+        this.props.fetchProyectosConLiteralesAbiertos();
         const autogestion_horas_trabajadas = !!(
             mi_cuenta.colaborador &&
             mi_cuenta.colaborador.autogestion_horas_trabajadas

@@ -1,19 +1,13 @@
 import {
-    CREATE_USUARIO,
-    DELETE_USUARIO,
-    FETCH_USUARIOS,
-    FETCH_USUARIO,
-    CLEAR_USUARIOS,
-    UPDATE_USUARIO,
-    FETCH_MI_CUENTA
+    USUARIO_TYPES as TYPES
 } from '../00_types';
 
 import {
-    fetchListOld,
-    updateObjectOld,
-    fetchObjectOld,
-    createObjectOld,
-    deleteObjectOld,
+    fetchListGet,
+    updateObject,
+    fetchObject,
+    createObject,
+    deleteObject,
     callApiMethodWithParametersOld, fetchListWithParameterOld
 } from '../00_general_fuctions'
 
@@ -23,7 +17,7 @@ export function fetchUsuariosxPermiso(permiso_nombre, callback = null, callback_
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/listar_x_permiso/?permiso_nombre=${permiso_nombre}`;
         const dispatches = (response) => {
-            dispatch({type: FETCH_USUARIOS, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: response})
         };
         fetchListWithParameterOld(FULL_URL, dispatches, callback, callback_error);
     }
@@ -45,58 +39,77 @@ export const addGrupoUsuario = (id, grupo_id, callback = null, callback_error = 
     }
 };
 
-export const createUsuario = (values, callback = null, callback_error = null) => {
+export const createUsuario = (values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: CREATE_USUARIO, payload: response})
+            dispatch({type: TYPES.create, payload: response})
         };
-        createObjectOld(current_url_api, values, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        createObject(current_url_api, values, options);
     }
 };
-export const deleteUsuario = (id, callback = null, callback_error = null) => {
+export const deleteUsuario = (id, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: DELETE_USUARIO, payload: id})
+            dispatch({type: TYPES.delete, payload: id})
         };
-        deleteObjectOld(current_url_api, id, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        deleteObject(current_url_api, id, options);
     }
 };
-export const fetchUsuarios = (callback = null, callback_error = null) => {
+export const fetchUsuarios = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: FETCH_USUARIOS, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListOld(current_url_api, dispatches, callback, callback_error);
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGet(current_url_api, options);
     }
 };
 
-export const fetchMiCuenta = (callback = null, callback_error = null) => {
+export const fetchMiCuenta = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: FETCH_MI_CUENTA, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListOld(`${current_url_api}/mi_cuenta`, dispatches, callback, callback_error);
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGet(`${current_url_api}/mi_cuenta`, options);
     }
 };
 
-export const fetchUsuario = (id, callback = null, callback_error = null) => {
+export const fetchUsuario = (id, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: FETCH_USUARIO, payload: response})
+            dispatch({type: TYPES.fetch, payload: response})
         };
-        fetchObjectOld(current_url_api, id, dispatches, callback, callback_error);
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        fetchObject(current_url_api, id, options);
     }
 };
+
 export const clearUsuarios = () => {
     return (dispatch) => {
-        dispatch({type: CLEAR_USUARIOS})
+        dispatch({type: TYPES.clear})
     }
 };
-export const updateUsuario = (id, values, callback = null, callback_error = null) => {
+export const updateUsuario = (id, values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: UPDATE_USUARIO, payload: response})
+            dispatch({type: TYPES.update, payload: response})
         };
-        updateObjectOld(current_url_api, id, values, dispatches, callback, callback_error)
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        updateObject(current_url_api, id, values, options);
     }
 };
