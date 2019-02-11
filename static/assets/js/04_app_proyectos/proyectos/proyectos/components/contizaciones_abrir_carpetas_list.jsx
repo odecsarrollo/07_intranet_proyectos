@@ -54,13 +54,14 @@ export default class CotizacionAbrirCarpetaLista extends Component {
     }
 
     createCotizacion(item) {
-        this.props.createProyecto({...item, en_cguno: false});
+        const {cargarDatos} = this.props;
+        this.props.createProyecto({...item, en_cguno: false}, {callback: () => cargarDatos()});
     }
 
     render() {
         const {lista, permisos_object} = this.props;
         const method_pool = {
-            fetchObjectMethod: this.fetchCotizacion,
+            fetchObjectMethod: this.props.fetchCotizacion,
             deleteObjectMethod: null,
             createObjectMethod: this.createCotizacion,
             updateObjectMethod: null,

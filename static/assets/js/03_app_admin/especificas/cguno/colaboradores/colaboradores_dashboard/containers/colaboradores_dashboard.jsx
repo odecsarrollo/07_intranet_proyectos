@@ -8,6 +8,7 @@ import {permisosAdapter} from "../../../../../../00_utilities/common";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import {
+    CLIENTES as permisos_view,
     COLABORADORES as bloque_1_permisos,
     COLABORADORES as bloque_2_permisos,
 } from "../../../../../../00_utilities/permisos/types";
@@ -39,7 +40,7 @@ class ListadoElementos extends Component {
 
     cargarDatos() {
         const {slideIndex} = this.state;
-        this.props.fetchMisPermisos({callback: () => this.cargarElementos(slideIndex)})
+        this.props.tengoMisPermisosxListado([permisos_view, bloque_1_permisos, bloque_2_permisos], {callback: () => this.cargarElementos(slideIndex)})
     }
 
     cargarElementos(value = null) {

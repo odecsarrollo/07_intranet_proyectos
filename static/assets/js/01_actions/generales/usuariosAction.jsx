@@ -8,28 +8,35 @@ import {
     fetchObject,
     createObject,
     deleteObject,
-    callApiMethodWithParametersOld,
-    fetchListWithParameterOld,
-    callApiMethodPostParameters
+    callApiMethodPostParameters,
+    fetchListGetURLParameters
 } from '../00_general_fuctions'
 
 const current_url_api = 'usuarios';
 
-export function fetchUsuariosxPermiso(permiso_nombre, callback = null, callback_error = null) {
+export function fetchUsuariosxPermiso(permiso_nombre, options_action = {}) {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/listar_x_permiso/?permiso_nombre=${permiso_nombre}`;
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListWithParameterOld(FULL_URL, dispatches, callback, callback_error);
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGetURLParameters(FULL_URL, options);
     }
 }
 
-export const addPermisoUsuario = (id, permiso_id, callback = null, callback_error = null) => {
+export const addPermisoUsuario = (id, permiso_id, options_action = {}) => {
     return (dispatch) => {
         let params = new URLSearchParams();
         params.append('id_permiso', permiso_id);
-        callApiMethodWithParametersOld(current_url_api, id, 'adicionar_permiso', params, null, callback, callback_error)
+        const options = {...options_action, dispatch_method: dispatch};
+        callApiMethodPostParameters(current_url_api, id, 'adicionar_permiso', params, options)
     }
 };
 

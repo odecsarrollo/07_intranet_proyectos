@@ -27,7 +27,7 @@ class PanelArchivosProyectos extends Component {
     cargarDatos() {
         const {proyecto} = this.props;
         const cargarArchivosProyecto = () => this.props.fetchArchivosProyectos_x_proyecto(proyecto.id);
-        this.props.fetchMisPermisos({callback: cargarArchivosProyecto});
+        this.props.tengoMisPermisosxListado([permisos_view], {callback: cargarArchivosProyecto});
     }
 
     onSelectArchivo(item_seleccionado) {
@@ -35,72 +35,55 @@ class PanelArchivosProyectos extends Component {
     }
 
     onDeleteArchivo(archivo_id) {
-        const {
-            notificarErrorAjaxAction,
-            deleteArchivoProyecto,
-            cargando,
-            noCargando,
-            proyecto,
-            fetchArchivosProyectos_x_proyecto
-        } = this.props;
-        cargando();
-        const success = () => {
-            fetchArchivosProyectos_x_proyecto(proyecto.id, () => noCargando(), notificarErrorAjaxAction);
-        };
-        deleteArchivoProyecto(archivo_id, success, notificarErrorAjaxAction)
+        const {proyecto} = this.props;
+        const cargarArchivosProyecto = this.props.fetchArchivosProyectos_x_proyecto(proyecto.id);
+        this.props.deleteArchivoProyecto(archivo_id, {callback: cargarArchivosProyecto})
     }
 
-    onUploadArchivo(e, callback = null) {
-        const {notificarAction, notificarErrorAjaxAction, proyecto, cargando, noCargando, uploadArchivoProyecto} = this.props;
-        cargando();
+    onUploadArchivo(e) {
+        const {proyecto, notificarAction} = this.props;
         const file = e.archivo[0];
         if (file) {
             let formData = new FormData();
             formData.append('archivo', file);
             formData.append('nombre', e.nombre_archivo);
-            uploadArchivoProyecto(
+            this.props.uploadArchivoProyecto(
                 proyecto.id,
                 formData,
-                () => {
-                    this.props.fetchArchivosProyectos_x_proyecto(
-                        proyecto.id,
-                        res => {
-                            if (callback) {
-                                callback(res);
-                            }
-                            notificarAction(`La ha subido el archivo para el proyecto `);
-                            noCargando();
+                {
+                    callback:
+                        () => {
+                            this.props.fetchArchivosProyectos_x_proyecto(
+                                proyecto.id,
+                                {
+                                    callback: () => {
+                                        notificarAction(`La ha subido el archivo para el proyecto`);
+                                        this.setState({adicionar_documento: false});
+                                    }
+                                }
+                            );
                         }
-                    )
-                },
-                notificarErrorAjaxAction
+                }
             )
         }
     }
 
     onSubmitUploadArchivo(valores) {
-        const {noCargando, cargando, notificarErrorAjaxAction, updateArchivoProyecto} = this.props;
         const {id} = valores;
-        cargando();
         if (id) {
             delete valores.archivo;
-            updateArchivoProyecto(
+            this.props.updateArchivoProyecto(
                 id,
                 valores,
-                () => {
-                    this.setState({adicionar_documento: false});
-                    noCargando();
-                },
-                notificarErrorAjaxAction
+                {
+                    callback:
+                        () => {
+                            this.setState({adicionar_documento: false});
+                        }
+                }
             )
         } else {
-            this.onUploadArchivo(
-                valores,
-                () => {
-                    this.setState({adicionar_documento: false});
-                    noCargando();
-                }
-            );
+            this.onUploadArchivo(valores);
         }
     }
 

@@ -7,18 +7,19 @@ import {
     fetchObject,
     deleteObject,
     createObject,
-    fetchListWithParameterOld, fetchObjectWithParameterPDFOld
+    fetchListGetURLParameters,
+    fetchObjectWithParameterPDF
 } from '../../00_general_fuctions'
 
 const current_url_api = 'mano_obra_hoja_trabajo_horas';
 
-export function printReporteCostoTresProyecto(valores, callback = null, callback_error = null) {
+export function printReporteCostoTresProyecto(valores, options_action = {}) {
     return function (dispatch) {
         let FULL_URL = `${current_url_api}/print_costos_tres/`;
         if (valores.lapso) {
             FULL_URL = `${FULL_URL}?fecha_inicial=${valores.fecha_inicial}&fecha_final=${valores.fecha_final}&con_mo_saldo_inicial=${valores.con_mo_saldo_inicial}`
         }
-        fetchObjectWithParameterPDFOld(FULL_URL, null, callback, callback_error)
+        fetchObjectWithParameterPDF(FULL_URL, options_action)
     }
 }
 
@@ -39,23 +40,37 @@ export const fetchHorasHojasTrabajosAutogestionadas = (options_action = {}) => {
     }
 };
 
-export function fetchHorasHojasTrabajosAutogestionadasxFechas(fecha_inicial, fecha_final, callback = null, callback_error = null) {
+export function fetchHorasHojasTrabajosAutogestionadasxFechas(fecha_inicial, fecha_final, options_action = {}) {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/autogestionadas_x_fechas/?fecha_inicial=${fecha_inicial}&fecha_final=${fecha_final}`;
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListWithParameterOld(FULL_URL, dispatches, callback, callback_error);
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGetURLParameters(FULL_URL, options);
     }
 }
 
-export function fetchHorasHojasTrabajosxLiteral(literal_id, callback = null, callback_error = null) {
+export function fetchHorasHojasTrabajosxLiteral(literal_id, options_action = {}) {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/horas_por_literal/?literal_id=${literal_id}`;
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListWithParameterOld(FULL_URL, dispatches, callback, callback_error);
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGetURLParameters(FULL_URL, options);
     }
 }
 

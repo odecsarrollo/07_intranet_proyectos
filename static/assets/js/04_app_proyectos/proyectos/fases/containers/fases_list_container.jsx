@@ -26,7 +26,7 @@ class List extends Component {
 
     cargarDatos() {
         const cargarFases = this.props.fetchFases();
-        this.props.fetchMisPermisos({callback: cargarFases})
+        this.props.tengoMisPermisosxListado([permisos_view], {callback: cargarFases})
     }
 
     render() {

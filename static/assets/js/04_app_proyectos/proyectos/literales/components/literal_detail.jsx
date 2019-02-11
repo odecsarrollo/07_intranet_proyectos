@@ -40,15 +40,8 @@ class LiteralDetail extends Component {
     }
 
     cargarDatos() {
-        const {
-            id_literal,
-            fetchLiteral,
-            cargando,
-            noCargando,
-            notificarErrorAjaxAction
-        } = this.props;
-        cargando();
-        fetchLiteral(id_literal, () => noCargando(), notificarErrorAjaxAction);
+        const {id_literal} = this.props;
+        this.props.fetchLiteral(id_literal);
         this.setState({tab_index: 2});
     }
 

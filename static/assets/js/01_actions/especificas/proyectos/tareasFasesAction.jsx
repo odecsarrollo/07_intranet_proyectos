@@ -5,8 +5,7 @@ import {
     fetchObject,
     deleteObject,
     createObject,
-    callApiMethodWithParametersOld,
-    fetchListWithParameterOld
+    fetchListGetURLParameters
 } from '../../00_general_fuctions'
 
 const current_url_api = 'fases_tareas';
@@ -57,7 +56,7 @@ export const fetchMisPendientesTareasFases = (options_action = {}) => {
             dispatch_method: dispatch,
             clear_action_type: limpiar_coleccion ? TYPES.clear : null
         };
-        fetchListGet(`${current_url_api}/mis_pendientes`,options);
+        fetchListGet(`${current_url_api}/mis_pendientes`, options);
     }
 };
 
@@ -77,12 +76,19 @@ export const fetchPendientesTareasFases = (options_action = {}) => {
     }
 };
 
-export const fetchTareasFases_x_literal = (id_fase_literal, callback = null, callback_error = null) => {
+export const fetchTareasFases_x_literal = (id_fase_literal, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListWithParameterOld(`${current_url_api}/por_fase_literal/?id_fase_literal=${id_fase_literal}`, dispatches, callback, callback_error);
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGetURLParameters(`${current_url_api}/por_fase_literal/?id_fase_literal=${id_fase_literal}`, options);
     }
 };
 

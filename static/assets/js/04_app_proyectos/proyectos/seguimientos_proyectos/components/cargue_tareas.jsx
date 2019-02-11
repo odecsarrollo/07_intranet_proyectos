@@ -39,15 +39,7 @@ class CargueTareas extends Component {
     }
 
     onCargarListado(listado_cargue) {
-        const {
-            notificarErrorAjaxAction,
-            cargando,
-            noCargando,
-            cargarTareasFaseLiteral,
-            fase,
-            cargarTareasFase
-        } = this.props;
-        cargando();
+        const {fase} = this.props;
         const cargue = _.map(listado_cargue, e => {
             return (
                 {
@@ -62,14 +54,14 @@ class CargueTareas extends Component {
                 }
             )
         });
-        cargarTareasFaseLiteral(
+        this.props.cargarTareasFaseLiteral(
             fase.id,
             cargue,
-            () => {
-                cargarTareasFase();
-                noCargando();
-            },
-            notificarErrorAjaxAction
+            {
+                callback: () => {
+                    this.props.cargarTareasFase();
+                }
+            }
         );
     }
 

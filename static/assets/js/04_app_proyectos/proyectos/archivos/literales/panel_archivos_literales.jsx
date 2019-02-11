@@ -22,14 +22,7 @@ class PanelArchivosLiterales extends Component {
     }
 
     cargarDatos(id_literal) {
-        const {
-            noCargando,
-            cargando,
-            notificarErrorAjaxAction,
-            fetchArchivosLiterales_x_literal,
-        } = this.props;
-        cargando();
-        fetchArchivosLiterales_x_literal(id_literal, () => noCargando(), notificarErrorAjaxAction)
+        this.props.fetchArchivosLiterales_x_literal(id_literal)
     }
 
     onSelectArchivo(item_seleccionado) {
@@ -37,72 +30,58 @@ class PanelArchivosLiterales extends Component {
     }
 
     onDeleteArchivo(archivo_id) {
-        const {
-            notificarErrorAjaxAction,
-            deleteArchivoLiteral,
-            cargando,
-            noCargando,
-            id_literal,
-            fetchArchivosLiterales_x_literal
-        } = this.props;
-        cargando();
-        const success = () => {
-            fetchArchivosLiterales_x_literal(id_literal, () => noCargando(), notificarErrorAjaxAction);
-        };
-        deleteArchivoLiteral(archivo_id, success, notificarErrorAjaxAction)
+        const {id_literal} = this.props;
+        this.props.deleteArchivoLiteral(
+            archivo_id,
+            {callback: () => this.props.fetchArchivosLiterales_x_literal(id_literal)}
+        )
     }
 
-    onUploadArchivo(e, callback = null) {
-        const {notificarAction, notificarErrorAjaxAction, id_literal, cargando, noCargando, uploadArchivoLiteral} = this.props;
-        cargando();
+    onUploadArchivo(e) {
+        const {id_literal, notificarAction} = this.props;
         const file = e.archivo[0];
         if (file) {
             let formData = new FormData();
             formData.append('archivo', file);
             formData.append('nombre', e.nombre_archivo);
-            uploadArchivoLiteral(
+            this.props.uploadArchivoLiteral(
                 id_literal,
                 formData,
-                () => {
-                    this.props.fetchArchivosLiterales_x_literal(
-                        id_literal,
-                        res => {
-                            if (callback) {
-                                callback(res);
-                            }
-                            notificarAction(`La ha subido el archivo para el literal`);
-                            noCargando();
+                {
+                    callback:
+                        () => {
+                            this.props.fetchArchivosLiterales_x_literal(
+                                id_literal,
+                                {
+                                    callback:
+                                        () => {
+                                            notificarAction(`La ha subido el archivo para el literal`);
+                                            this.setState({adicionar_documento: false});
+                                        }
+                                }
+                            )
                         }
-                    )
-                },
-                notificarErrorAjaxAction
+                }
             )
         }
     }
 
     onSubmitUploadArchivo(valores) {
-        const {noCargando, cargando, notificarErrorAjaxAction, updateArchivoLiteral} = this.props;
         const {id} = valores;
-        cargando();
         if (id) {
             delete valores.archivo;
-            updateArchivoLiteral(
+            this.props.updateArchivoLiteral(
                 id,
                 valores,
-                () => {
-                    this.setState({adicionar_documento: false});
-                    noCargando();
-                },
-                notificarErrorAjaxAction
+                {
+                    callback:
+                        () => {
+                            this.setState({adicionar_documento: false});
+                        }
+                }
             )
         } else {
-            this.onUploadArchivo(
-                valores,
-                () => {
-                    this.setState({adicionar_documento: false});
-                    noCargando();
-                }
-            );
+            this.onUploadArchivo(valores);
         }
     }
 

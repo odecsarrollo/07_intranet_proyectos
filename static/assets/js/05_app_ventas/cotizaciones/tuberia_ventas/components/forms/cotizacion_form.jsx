@@ -33,18 +33,7 @@ class Form extends Component {
     }
 
     cargarContactosCliente(cliente_id) {
-        const {
-            noCargando,
-            cargando,
-            notificarErrorAjaxAction,
-            fetchContactosClientes_por_cliente,
-        } = this.props;
-        cargando();
-        fetchContactosClientes_por_cliente(
-            cliente_id,
-            () => noCargando(),
-            notificarErrorAjaxAction
-        );
+        this.props.fetchContactosClientes_por_cliente(cliente_id);
     }
 
     render() {

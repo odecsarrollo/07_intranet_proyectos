@@ -5,20 +5,21 @@ import {
     fetchObject,
     deleteObject,
     createObject,
-    fetchListWithParameterOld,
-    callApiMethodWithParametersOld
+    fetchListGetURLParameters,
+    callApiMethodPostParameters
 } from '../../00_general_fuctions'
 
 const current_url_api = 'fases_literales';
 
-export const cargarTareasFaseLiteral = (id, listado, callback = null, callback_error = null) => {
+export const cargarTareasFaseLiteral = (id, listado, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch, payload: response})
         };
         let params = new URLSearchParams();
         params.append('listado', JSON.stringify(listado));
-        callApiMethodWithParametersOld(current_url_api, id, 'cargar_tareas', params, dispatches, callback, callback_error)
+        const options = {...options_action, dispatch_method: dispatch};
+        callApiMethodPostParameters(current_url_api, id, 'cargar_tareas', params, options)
     }
 };
 
@@ -56,22 +57,30 @@ export const fetchFasesLiterales = (options_action = {}) => {
     }
 };
 
-export const fetchFasesLiterales_x_literal = (id_literal, callback = null, callback_error = null) => {
+export const fetchFasesLiterales_x_literal = (id_literal, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListWithParameterOld(`${current_url_api}/por_literal/?id_literal=${id_literal}`, dispatches, callback, callback_error);
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGetURLParameters(`${current_url_api}/por_literal/?id_literal=${id_literal}`, options);
     }
 };
-export const deleteListaTareasFaseLitera = (id, listado, callback = null, callback_error = null) => {
+export const deleteListaTareasFaseLitera = (id, listado, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch, payload: response})
         };
         let params = new URLSearchParams();
         params.append('listado', JSON.stringify(listado));
-        callApiMethodWithParametersOld(current_url_api, id, 'eliminar_tareas', params, dispatches, callback, callback_error);
+        const options = {...options_action, dispatch_method: dispatch};
+        callApiMethodPostParameters(current_url_api, id, 'eliminar_tareas', params, options)
     }
 };
 export const fetchFaseLiteral = (id, options_action = {}) => {

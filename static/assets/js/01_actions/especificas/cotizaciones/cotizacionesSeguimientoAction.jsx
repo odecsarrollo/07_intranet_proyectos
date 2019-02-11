@@ -5,8 +5,7 @@ import {
     fetchObject,
     deleteObject,
     createObject,
-    callApiMethodWithParametersOld,
-    fetchListWithParameterOld
+    fetchListGetURLParameters
 } from '../../00_general_fuctions'
 
 const current_url_api = 'cotizaciones_seguimiento';
@@ -44,13 +43,20 @@ export const fetchSeguimientosCotizaciones = (options_action = {}) => {
     }
 };
 
-export function fetchSeguimientosCotizacionesxCotizacion(cotizacion_id, callback = null, callback_error = null) {
+export function fetchSeguimientosCotizacionesxCotizacion(cotizacion_id, options_action = {}) {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/listar_x_cotizacion/?cotizacion_id=${cotizacion_id}`;
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListWithParameterOld(FULL_URL, dispatches, callback, callback_error);
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGetURLParameters(FULL_URL, options);
     }
 }
 

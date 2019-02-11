@@ -50,24 +50,14 @@ class TareasPendientesList extends Component {
     }
 
     actualizarTarea(tarea_id, datos) {
-        const {
-            cargando,
-            updateTareaFase,
-            notificarErrorAjaxAction,
-            fetchTareaFase
-        } = this.props;
-        cargando();
-
         const actualizarTarea = (tarea) => {
-            updateTareaFase(
+            this.props.updateTareaFase(
                 tarea_id,
                 {...tarea, ...datos},
-                () => this.cargarTareasPendientes(),
-                notificarErrorAjaxAction
+                {callback: () => this.cargarTareasPendientes()}
             )
         };
-
-        fetchTareaFase(tarea_id, actualizarTarea, notificarErrorAjaxAction)
+        this.props.fetchTareaFase(tarea_id, {callback: actualizarTarea})
     }
 
     cargarDatos() {

@@ -2,7 +2,9 @@ import React, {Component, Fragment} from 'react';
 import {connect} from "react-redux";
 import * as actions from "../../../../../01_actions/01_index";
 import CargarDatos from "../../../../../00_utilities/components/system/cargar_datos";
-import {CLIENTES as permisos_view} from "../../../../../00_utilities/permisos/types";
+import {
+    CLIENTES as permisos_view
+} from "../../../../../00_utilities/permisos/types";
 import {permisosAdapter} from "../../../../../00_utilities/common";
 import CreateForm from '../components/forms/clientes_form';
 import Tabla from '../components/clientes_tabla';
@@ -26,7 +28,7 @@ class List extends Component {
 
     cargarDatos() {
         const cargarClientes = () => this.props.fetchClientes();
-        this.props.fetchMisPermisos({callback: cargarClientes})
+        this.props.tengoMisPermisosxListado([permisos_view], {callback: cargarClientes});
 
     }
 

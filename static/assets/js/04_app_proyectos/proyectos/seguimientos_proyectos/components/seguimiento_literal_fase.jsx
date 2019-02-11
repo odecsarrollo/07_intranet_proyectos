@@ -27,15 +27,17 @@ class FaseLiteral extends Component {
     }
 
     eliminarTareasSelecionadas() {
-        const {deleteListaTareasFaseLitera, fase, notificarErrorAjaxAction} = this.props;
-        deleteListaTareasFaseLitera(
+        const {fase} = this.props;
+        this.props.deleteListaTareasFaseLitera(
             fase.id,
             this.state.tareas_seleccionadas,
-            () => {
-                this.cargarTareasFase();
-                this.setState({selecciono_todas: false, tareas_seleccionadas: []})
-            },
-            notificarErrorAjaxAction
+            {
+                callback:
+                    () => {
+                        this.cargarTareasFase();
+                        this.setState({selecciono_todas: false, tareas_seleccionadas: []})
+                    }
+            }
         );
     }
 
@@ -74,32 +76,20 @@ class FaseLiteral extends Component {
     }
 
     addTarea(tarea) {
-        const {
-            fase,
-            notificarErrorAjaxAction,
-            updateTareaFase,
-            createTareaFase
-        } = this.props;
+        const {fase} = this.props;
         if (tarea.id) {
-            updateTareaFase(tarea.id, tarea, () => this.cargarTareasFase(), notificarErrorAjaxAction);
+            this.props.updateTareaFase(tarea.id, tarea, {callback: () => this.cargarTareasFase()});
         } else {
             const nueva_tarea = {...tarea, fase_literal: fase.id};
-            createTareaFase(nueva_tarea, () => this.cargarTareasFase(), notificarErrorAjaxAction);
+            this.props.createTareaFase(nueva_tarea, {callback: () => this.cargarTareasFase()});
         }
     }
 
     cargarTareasFase() {
-        const {fase, cargando, noCargando, fetchTareasFases_x_literal, fetchFaseLiteral, notificarErrorAjaxAction} = this.props;
-        cargando();
+        const {fase} = this.props;
         this.setState({mostrar_add_tareas: false});
-        const cargarTareas = () => fetchTareasFases_x_literal(
-            fase.id,
-            () => {
-                noCargando();
-            },
-            notificarErrorAjaxAction
-        );
-        fetchFaseLiteral(fase.id, cargarTareas, notificarErrorAjaxAction)
+        const cargarTareas = () => this.props.fetchTareasFases_x_literal(fase.id);
+        this.props.fetchFaseLiteral(fase.id, {callback: cargarTareas})
     }
 
     deleteTarea(tarea_id) {
@@ -107,46 +97,14 @@ class FaseLiteral extends Component {
     }
 
     cambiarResponsable(responsable, callback) {
-        const {
-            fase,
-            cargando,
-            noCargando,
-            fetchFaseLiteral,
-            updateFaseLiteral,
-            notificarErrorAjaxAction
-        } = this.props;
-        cargando();
-        const actualizarFaseLiteral = () => updateFaseLiteral(
-            fase.id,
-            {...fase, responsable},
-            () => {
-                callback();
-                noCargando();
-            },
-            notificarErrorAjaxAction
-        );
-        fetchFaseLiteral(fase.id, actualizarFaseLiteral, notificarErrorAjaxAction);
+        const {fase} = this.props;
+        const actualizarFaseLiteral = () => this.props.updateFaseLiteral(fase.id, {...fase, responsable}, {callback});
+        this.props.fetchFaseLiteral(fase.id, {callback: actualizarFaseLiteral});
     }
 
     cambiarAsignadoTarea(tarea, asignado_a, callback = null) {
-        const {
-            cargando,
-            noCargando,
-            fetchTareaFase,
-            updateTareaFase,
-            notificarErrorAjaxAction
-        } = this.props;
-        cargando();
-        const actualizarTareaFase = (response) => updateTareaFase(
-            tarea.id,
-            {...response, asignado_a},
-            () => {
-                callback();
-                noCargando();
-            },
-            notificarErrorAjaxAction
-        );
-        fetchTareaFase(tarea.id, actualizarTareaFase, notificarErrorAjaxAction);
+        const actualizarTareaFase = (response) => this.props.pdateTareaFase(tarea.id, {...response, asignado_a}, {callback});
+        this.props.fetchTareaFase(tarea.id, {callback:actualizarTareaFase});
     }
 
     render() {

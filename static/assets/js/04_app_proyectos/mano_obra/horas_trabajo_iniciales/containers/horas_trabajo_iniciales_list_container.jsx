@@ -33,7 +33,7 @@ class List extends Component {
 
     cargarDatos() {
         const cargarHorasIniciales = () => this.props.fetchHorasColaboradoresProyectosIniciales();
-        this.props.fetchMisPermisos({callback:cargarHorasIniciales})
+        this.props.tengoMisPermisosxListado([permisos_view],{callback:cargarHorasIniciales})
 
     }
 

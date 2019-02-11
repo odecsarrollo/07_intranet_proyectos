@@ -5,14 +5,13 @@ import CargarDatos from "../../../../00_utilities/components/system/cargar_datos
 import {Titulo} from "../../../../00_utilities/templates/fragmentos";
 import ValidarPermisos from "../../../../00_utilities/permisos/validar_permisos";
 import FormControl from '@material-ui/core/FormControl';
-import {tengoPermiso} from "../../../../00_utilities/common";
+import {permisosAdapter} from "../../../../00_utilities/common";
 import SelectField from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import {ListaBusqueda} from '../../../../00_utilities/utiles';
 import {
-    PERMISO_LIST_ITEM_BIABLE as can_list_permiso,
-    PERMISO_ULTIMO_COSTO_ITEM_BIABLE as can_see_ultimo_costo_permiso
+    ITEM_BIABLE as permisos_view, LITERALES as literales_permisos_view
 } from "../../../../00_utilities/permisos/types";
 
 import Tabla from '../components/items_tabla';
@@ -25,17 +24,7 @@ class ItemsList extends Component {
         });
         this.handleChangeTipoConsulta = this.handleChangeTipoConsulta.bind(this);
         this.onBuscar = this.onBuscar.bind(this);
-        this.error_callback = this.error_callback.bind(this);
-        this.notificar = this.notificar.bind(this);
         this.cargarDatos = this.cargarDatos.bind(this);
-    }
-
-    error_callback(error) {
-        this.props.notificarErrorAjaxAction(error);
-    }
-
-    notificar(mensaje) {
-        this.props.notificarAction(mensaje);
     }
 
     componentDidMount() {
@@ -47,44 +36,32 @@ class ItemsList extends Component {
     }
 
     cargarDatos() {
-        this.props.cargando();
-        this.props.fetchMisPermisos()
+        this.props.tengoMisPermisosxListado([permisos_view])
     }
 
     handleChangeTipoConsulta(event) {
-        const tipo_consulta=event.target.value;
+        const tipo_consulta = event.target.value;
         this.setState({tipo_consulta});
     }
 
     onBuscar(e, busqueda) {
         e.preventDefault();
-        this.props.cargando();
         if (this.state.tipo_consulta === 2) {
-            this.props.fetchItemsBiablexParametro(
-                this.state.tipo_consulta, busqueda,
-                () => this.props.noCargando(),
-                this.error_callback
-            );
+            this.props.fetchItemsBiablexParametro(this.state.tipo_consulta, busqueda);
         }
 
         if ((this.state.tipo_consulta === 1 || this.state.tipo_consulta === 3) && busqueda.length >= 3) {
-            this.props.fetchItemsBiablexParametro(
-                this.state.tipo_consulta, busqueda,
-                () => this.props.noCargando(),
-                this.error_callback
-            );
+            this.props.fetchItemsBiablexParametro(this.state.tipo_consulta, busqueda);
         } else {
             this.props.clearItemsBiable();
-            this.props.noCargando();
         }
     }
 
     render() {
         const {object_list, mis_permisos} = this.props;
-        const can_list = tengoPermiso(mis_permisos, can_list_permiso);
-        const can_see_ultimo_costo = tengoPermiso(mis_permisos, can_see_ultimo_costo_permiso);
+        const permisos = permisosAdapter(mis_permisos, permisos_view);
         return (
-            <ValidarPermisos can_see={can_list} nombre='listas de items CGUno'>
+            <ValidarPermisos can_see={permisos.list} nombre='listas de items CGUno'>
                 <Titulo>Items CGUno</Titulo>
                 <div className="col-12">
                     <FormControl fullWidth={true}>
@@ -127,7 +104,7 @@ class ItemsList extends Component {
                     </ListaBusqueda>
                 </div>
                 <Tabla
-                    can_see_ultimo_costo={can_see_ultimo_costo}
+                    can_see_ultimo_costo={permisos.ver_ultimo_costo}
                     data={_.map(object_list, e => e)}
                 />
                 <CargarDatos

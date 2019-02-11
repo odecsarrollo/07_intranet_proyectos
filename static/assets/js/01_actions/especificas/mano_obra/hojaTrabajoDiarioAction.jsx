@@ -18,7 +18,13 @@ export function fetchHojasTrabajosxFechas(fecha_inicial, fecha_final, options_ac
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
-        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
         fetchListGetURLParameters(FULL_URL, options);
     }
 }

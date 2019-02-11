@@ -16,18 +16,12 @@ class ConfiguracionCostosDashboard extends Component {
 
     onSubmit(values) {
         const {
-            updateConfiguracionCosto,
-            createConfiguracionCosto,
-            configuracion_costos,
-            noCargando,
-            cargando,
-            notificarErrorAjaxAction
+            configuracion_costos
         } = this.props;
-        cargando();
         if (configuracion_costos) {
-            updateConfiguracionCosto(configuracion_costos.id, values, () => noCargando(), notificarErrorAjaxAction)
+            this.props.updateConfiguracionCosto(configuracion_costos.id, values)
         } else {
-            createConfiguracionCosto(values, () => noCargando(), notificarErrorAjaxAction)
+            this.props.createConfiguracionCosto(values)
         }
     }
 

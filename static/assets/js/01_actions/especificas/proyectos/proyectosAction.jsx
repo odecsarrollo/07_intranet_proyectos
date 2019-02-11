@@ -6,9 +6,9 @@ import {
     updateObject,
     createObject,
     deleteObject,
-    fetchObjectWithParameterPDFOld,
-    callApiMethodWithParametersPDFOld,
-    fetchListGetURLParameters
+    fetchObjectWithParameterPDF,
+    fetchListGetURLParameters,
+    uploadPDF
 } from '../../00_general_fuctions'
 
 const current_url_api = 'proyectos';
@@ -19,29 +19,34 @@ export function fetchProyectosxParametro(parametro, options_action = {}) {
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
-        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
         fetchListGetURLParameters(FULL_URL, options);
     }
 }
 
-export function printReporteCostoProyecto(id_proyecto, valores, callback = null, callback_error = null) {
+export function printReporteCostoProyecto(id_proyecto, valores, options_action = {}) {
     return function (dispatch) {
         let FULL_URL = `${current_url_api}/print_costos/?id_proyecto=${id_proyecto}`;
         if (valores.lapso) {
             FULL_URL = `${FULL_URL}&fecha_inicial=${valores.fecha_inicial}&fecha_final=${valores.fecha_final}&con_mo_saldo_inicial=${valores.con_mo_saldo_inicial}`
         }
-        fetchObjectWithParameterPDFOld(FULL_URL, null, callback, callback_error)
+        fetchObjectWithParameterPDF(FULL_URL, options_action)
     }
 }
 
-export function printReporteCostoDosProyecto(valores, callback = null, callback_error = null) {
+export function printReporteCostoDosProyecto(valores, options_action = {}) {
     return function (dispatch) {
         let FULL_URL = `${current_url_api}/print_costos_dos/`;
         if (valores.lapso) {
-            console.log('si tiene lapso')
             FULL_URL = `${FULL_URL}?fecha_inicial=${valores.fecha_inicial}&fecha_final=${valores.fecha_final}&con_mo_saldo_inicial=${valores.con_mo_saldo_inicial}`
         }
-        fetchObjectWithParameterPDFOld(FULL_URL, null, callback, callback_error)
+        fetchObjectWithParameterPDF(FULL_URL, options_action)
     }
 }
 
@@ -123,7 +128,7 @@ export const updateProyecto = (id, values, options_action = {}) => {
 
 export const deleteProyecto = (id, options_action = {}) => {
     return (dispatch) => {
-        const dispatches = (response) => {
+        const dispatches = () => {
             dispatch({type: TYPES.delete, payload: id})
         };
         const options = {dispatches, ...options_action, dispatch_method: dispatch};
@@ -141,11 +146,9 @@ export const createProyecto = (values, options_action = {}) => {
     }
 };
 
-export const uploadArchivoProyecto = (id, values, callback = null, callback_error = null) => {
+export const uploadArchivoProyecto = (id, values, options_action = {}) => {
     return (dispatch) => {
-        const dispatches = (response) => {
-            dispatch({type: TYPES.upload, payload: response})
-        };
-        callApiMethodWithParametersPDFOld(current_url_api, id, 'upload_archivo', values, dispatches, callback, callback_error)
+        const options = {...options_action, dispatch_method: dispatch};
+        uploadPDF(current_url_api, id, 'upload_archivo', values, options)
     }
 };

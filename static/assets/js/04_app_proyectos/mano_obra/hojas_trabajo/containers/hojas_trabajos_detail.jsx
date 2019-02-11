@@ -38,7 +38,7 @@ class Detail extends Component {
         const cargarHojaTrabajo = () => this.props.fetchHojaTrabajo(id);
         const cargarMiCuenta = () => this.props.fetchMiCuenta({callback: cargarHojaTrabajo});
         const cargarConfigCostos = () => this.props.fetchConfiguracionesCostos({callback: cargarMiCuenta});
-        this.props.fetchMisPermisos({callback: cargarConfigCostos});
+        this.props.tengoMisPermisosxListado([permisos_view, permisos_view_horas], {callback: cargarConfigCostos});
 
     }
 

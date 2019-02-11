@@ -64,14 +64,8 @@ class TablaProyectosLiteralesManoObra extends Component {
     }
 
     cargarDatos(id_literal) {
-        const {
-            notificarErrorAjaxAction,
-            fetchHorasColaboradoresProyectosInicialesxLiteral,
-            fetchHorasHojasTrabajosxLiteral,
-            noCargando,
-        } = this.props;
-        const cargarHorasManoObraInicialLiteral = () => fetchHorasColaboradoresProyectosInicialesxLiteral(id_literal, () => noCargando(), notificarErrorAjaxAction);
-        fetchHorasHojasTrabajosxLiteral(id_literal, () => cargarHorasManoObraInicialLiteral(), notificarErrorAjaxAction);
+        const cargarHorasManoObraInicialLiteral = () => this.props.fetchHorasColaboradoresProyectosInicialesxLiteral(id_literal);
+        this.props.fetchHorasHojasTrabajosxLiteral(id_literal, {callback: cargarHorasManoObraInicialLiteral});
     }
 
     render() {

@@ -6,13 +6,13 @@ import {
     fetchObject,
     createObject,
     deleteObject,
-    callApiMethodWithParametersOld,
-    callApiMethodOld
+    callApiMethodPostParameters,
+    callApiMethodPost
 } from '../../00_general_fuctions'
 
 const current_url_api = 'colaboradores';
 
-export const modificarAutorizacionLiteralColaborador = (id, literal_id, tipo, callback = null, callback_error = null) => {
+export const modificarAutorizacionLiteralColaborador = (id, literal_id, tipo, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch, payload: response})
@@ -20,7 +20,8 @@ export const modificarAutorizacionLiteralColaborador = (id, literal_id, tipo, ca
         let params = new URLSearchParams();
         params.append('literal_id', literal_id);
         params.append('tipo', tipo);
-        callApiMethodWithParametersOld(current_url_api, id, 'modificar_autorizacion_literal', params, dispatches, callback, callback_error);
+        const options = {...options_action, dispatch_method: dispatch};
+        callApiMethodPostParameters(current_url_api, id, 'modificar_autorizacion_literal', params, options)
     }
 };
 
@@ -85,21 +86,32 @@ export const updateColaborador = (id, values, options_action = {}) => {
 };
 
 
-export function createColaboradorUsuario(id, callback = null, callback_error = null) {
+export function createColaboradorUsuario(id, options_action = {}) {
     return function (dispatch) {
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch, payload: response})
         };
-        callApiMethodOld(current_url_api, id, 'crear_usuario', dispatches, callback, callback_error);
+
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch
+        };
+        callApiMethodPost(current_url_api, id, 'crear_usuario', options)
     }
 }
 
-export function activateColaboradorUsuario(id, callback = null, callback_error = null) {
+export function activateColaboradorUsuario(id, options_action = {}) {
     return function (dispatch) {
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch, payload: response})
         };
-        callApiMethodOld(current_url_api, id, 'cambiar_activacion', dispatches, callback, callback_error);
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch
+        };
+        callApiMethodPost(current_url_api, id, 'cambiar_activacion', options)
     }
 }
 

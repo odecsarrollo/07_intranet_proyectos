@@ -90,7 +90,9 @@ class IndexApp extends Component {
                             icono='puzzle-piece'
                             classes={classes}
                         />
-                        <div className="col-4"></div>
+                        <div className="col-4">
+
+                        </div>
                         <div className="col-4 boton-index mt-4">
                             <a href="/accounts/logout/?next=/">
                                 <div className='icono puntero'>

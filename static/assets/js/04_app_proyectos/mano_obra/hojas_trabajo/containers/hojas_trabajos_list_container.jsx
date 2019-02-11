@@ -42,7 +42,7 @@ class List extends Component {
         const cargarHojasTrabajoHoy = () => this.props.fetchHojasTrabajosxFechas(today, today, {callback: cargarMiCuenta});
         const cargarConfigCostos = () => this.props.fetchConfiguracionesCostos({callback: cargarHojasTrabajoHoy});
         const cargarColaboradores = () => this.props.fetchColaboradoresEnProyectos({callback: cargarConfigCostos});
-        this.props.fetchMisPermisos({callback: cargarColaboradores})
+        this.props.tengoMisPermisosxListado([permisos_view],{callback: cargarColaboradores})
 
     }
 

@@ -5,7 +5,7 @@ import {
     fetchObject,
     deleteObject,
     createObject,
-    fetchListWithParameterOld
+    fetchListGetURLParameters
 } from '../../00_general_fuctions'
 
 const current_url_api = 'literales_archivos';
@@ -43,13 +43,20 @@ export const fetchArchivosLiterales = (options_action = {}) => {
     }
 };
 
-export const fetchArchivosLiterales_x_literal = (literal_id, callback = null, callback_error = null) => {
+export const fetchArchivosLiterales_x_literal = (literal_id, options_action = {}) => {
     return (dispatch) => {
         const url = `${current_url_api}/listar_x_literal/?literal_id=${literal_id}`;
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListWithParameterOld(url, dispatches, callback, callback_error);
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGetURLParameters(url, options);
     }
 };
 

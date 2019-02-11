@@ -4,7 +4,6 @@ import {pesosColombianos} from "../../../../00_utilities/common";
 
 class Tabla extends React.Component {
     render() {
-
         const {data, can_see_ultimo_costo} = this.props;
         return (
             <div>

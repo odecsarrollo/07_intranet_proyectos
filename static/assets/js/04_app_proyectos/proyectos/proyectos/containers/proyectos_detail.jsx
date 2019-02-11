@@ -58,11 +58,9 @@ class Detail extends Component {
 
     onTabClick(tab_index) {
         const {id} = this.props.match.params;
-        const {cargando, notificarErrorAjaxAction} = this.props;
-        cargando();
         if (tab_index === 1) {
             const cargarCotizacioneParaCrearLiterales = () => this.props.fetchCotizacionesPidiendoCarpeta();
-            this.props.fetchLiteralesXProyecto(id, cargarCotizacioneParaCrearLiterales, notificarErrorAjaxAction);
+            this.props.fetchLiteralesXProyecto(id, {callback: cargarCotizacioneParaCrearLiterales});
         }
     }
 
@@ -72,7 +70,7 @@ class Detail extends Component {
         const cargarCotizacioneParaCrearLiterales = () => this.props.fetchCotizacionesPidiendoCarpeta();
         const cargarLiterales = () => this.props.fetchLiteralesXProyecto(id, {callback: cargarCotizacioneParaCrearLiterales});
         const cargarProyecto = () => this.props.fetchProyecto(id, {callback: cargarLiterales});
-        this.props.fetchMisPermisos({callback: cargarProyecto});
+        this.props.tengoMisPermisosxListado([permisos_view, literales_permisos_view, cotizaciones_permisos_view, archivos_proyecto_permisos_view], {callback: cargarProyecto});
 
     }
 

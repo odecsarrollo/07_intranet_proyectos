@@ -31,13 +31,10 @@ class List extends Component {
     }
 
     cargarDatos() {
-        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
-        cargando();
         const cargarProyectos = () => this.props.fetchProyectosAbiertos();
         const cargarHorasHojasTrabajo = () => this.props.fetchHorasHojasTrabajosAutogestionadas({callback: cargarProyectos});
         const cargarConfigCostos = () => this.props.fetchConfiguracionesCostos({callback: cargarHorasHojasTrabajo});
-        this.props.fetchMisPermisos({callback: cargarConfigCostos})
-
+        this.props.tengoMisPermisosxListado([permisos_view, permisos_view_hoja], {callback: cargarConfigCostos})
     }
 
     render() {

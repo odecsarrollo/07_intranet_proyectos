@@ -4,10 +4,9 @@ import * as actions from "../../../../01_actions/01_index";
 import CargarDatos from "../../../../00_utilities/components/system/cargar_datos";
 import Typography from '@material-ui/core/Typography';
 import ValidarPermisos from "../../../../00_utilities/permisos/validar_permisos";
-import {tengoPermiso, permisosAdapter} from "../../../../00_utilities/common";
+import {permisosAdapter} from "../../../../00_utilities/common";
 import {
-    PERMISSION as permisos_view,
-    PERMISO_CHANGE_PERMISSION_PLUS as can_change_permiso_plus
+    PERMISSION as permisos_view
 } from '../../../../00_utilities/permisos/types';
 
 
@@ -35,8 +34,7 @@ class PermisosList extends Component {
 
     cargarDatos() {
         const cargarPermisos = () => this.props.fetchPermisos();
-        this.props.fetchMisPermisos({callback: cargarPermisos})
-
+        this.props.tengoMisPermisosxListado([permisos_view], {callback: cargarPermisos});
     }
 
     updatePermiso(permiso) {
@@ -49,7 +47,6 @@ class PermisosList extends Component {
 
     render() {
         const {mis_permisos, permisos} = this.props;
-        const can_change_permiso = tengoPermiso(mis_permisos, can_change_permiso_plus);
         const permisos_this_view = permisosAdapter(mis_permisos, permisos_view);
 
         return (
@@ -63,7 +60,7 @@ class PermisosList extends Component {
                 <Tabla
                     permisos={permisos}
                     updatePermiso={this.updatePermiso}
-                    can_change={can_change_permiso}/>
+                    can_change={permisos_this_view.change_plus}/>
                 <CargarDatos cargarDatos={this.cargarDatos}/>
             </ValidarPermisos>
         )

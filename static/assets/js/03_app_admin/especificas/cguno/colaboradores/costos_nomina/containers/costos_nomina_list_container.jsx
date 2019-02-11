@@ -47,8 +47,8 @@ class List extends Component {
 
     cargarDatos() {
         const cargarCentrosCostos = () => this.props.fetchCentrosCostosColaboradores();
-        const cargarConfigCostos = () => this.props.fetchConfiguracionesCostos({callback:cargarCentrosCostos})
-        this.props.fetchMisPermisos({callback: cargarConfigCostos})
+        const cargarConfigCostos = () => this.props.fetchConfiguracionesCostos({callback: cargarCentrosCostos})
+        this.props.tengoMisPermisosxListado([permisos_view], {callback: cargarConfigCostos})
     }
 
     updateColaboradorCostoMes(id, item, callback = null) {

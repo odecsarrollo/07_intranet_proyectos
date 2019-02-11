@@ -20,6 +20,7 @@ class List extends Component {
     constructor(props) {
         super(props);
         this.cargarDatos = this.cargarDatos.bind(this);
+        this.deleteProyecto = this.deleteProyecto.bind(this);
         this.plural_name = 'Proyectos';
         this.singular_name = 'Proyecto';
     }
@@ -36,8 +37,12 @@ class List extends Component {
     cargarDatos() {
         const cargarCotizacionesParaCarpetas = () => this.props.fetchCotizacionesPidiendoCarpeta();
         const cargarProyectos = () => this.props.fetchProyectos({callback: cargarCotizacionesParaCarpetas});
-        this.props.fetchMisPermisos({callback: cargarProyectos})
+        this.props.tengoMisPermisosxListado([permisos_view, cotizaciones_permisos_view], {callback: cargarProyectos})
 
+    }
+
+    deleteProyecto(item) {
+        this.props.deleteProyecto(item, {callback: this.cargarDatos()})
     }
 
     render() {
@@ -58,7 +63,7 @@ class List extends Component {
 
         const method_pool = {
             fetchObjectMethod: this.props.fetchProyecto,
-            deleteObjectMethod: this.props.deleteProyecto,
+            deleteObjectMethod: this.deleteProyecto,
             createObjectMethod: this.props.createProyecto,
             updateObjectMethod: this.props.updateProyecto,
         };
@@ -66,6 +71,7 @@ class List extends Component {
         return (
             <Fragment>
                 <CotizacionAbrirCarpetaLista
+                    cargarDatos={this.cargarDatos}
                     lista={cotizaciones_list_2}
                     {...this.props}
                     permisos_object={{

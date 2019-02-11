@@ -5,7 +5,7 @@ import {
     fetchObject,
     deleteObject,
     createObject,
-    fetchListWithParameterOld
+    fetchListGetURLParameters
 } from '../../00_general_fuctions'
 
 const current_url_api = 'clientes_contactos';
@@ -43,12 +43,19 @@ export const fetchContactosClientes = (options_action = {}) => {
     }
 };
 
-export const fetchContactosClientes_por_cliente = (cliente_id, callback = null, callback_error = null) => {
+export const fetchContactosClientes_por_cliente = (cliente_id, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListWithParameterOld(`${current_url_api}/por_cliente/?cliente_id=${cliente_id}`, dispatches, callback, callback_error);
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGetURLParameters(`${current_url_api}/por_cliente/?cliente_id=${cliente_id}`, options);
     }
 };
 export const fetchContactoCliente = (id, options_action = {}) => {

@@ -52,7 +52,7 @@ class UsuariosDetail extends Component {
             },
         });
         const cargarUsuario = () => this.props.fetchUsuario(id, {callback: cargarPermisosActivos});
-        this.props.fetchMisPermisos({callback: cargarUsuario})
+        this.props.tengoMisPermisosxListado([permisos_view], {callback: cargarUsuario})
 
     }
 

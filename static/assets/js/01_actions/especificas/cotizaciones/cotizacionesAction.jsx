@@ -5,8 +5,8 @@ import {
     fetchObject,
     deleteObject,
     createObject,
-    callApiMethodWithParametersPDFOld,
-    fetchListWithParameterOld
+    uploadPDF,
+    fetchListGetURLParameters
 } from '../../00_general_fuctions'
 
 const current_url_api = 'cotizaciones';
@@ -101,7 +101,16 @@ export const fetchCotizacionesTuberiaVentasResumen = (ano = null, trimestre = nu
         };
         if (ano && trimestre) {
             const FULL_URL = `${current_url_api}/cotizaciones_resumen_tuberia_ventas/?ano=${ano}&trimestre=${trimestre}`;
-            fetchListWithParameterOld(FULL_URL, dispatches);
+
+            const {limpiar_coleccion = true} = options_action;
+            const options = {
+                dispatches,
+                ...options_action,
+                dispatch_method: dispatch,
+                clear_action_type: limpiar_coleccion ? TYPES.clear : null
+            };
+            fetchListGetURLParameters(FULL_URL, options);
+
         } else {
             const FULL_URL = `${current_url_api}/cotizaciones_resumen_tuberia_ventas`;
             const {limpiar_coleccion = true} = options_action;
@@ -142,11 +151,9 @@ export const updateCotizacion = (id, values, options_action = {}) => {
         updateObject(current_url_api, id, values, options);
     }
 };
-export const uploadArchivoCotizacion = (id, values, callback = null, callback_error = null) => {
+export const uploadArchivoCotizacion = (id, values, options_action = {}) => {
     return (dispatch) => {
-        const dispatches = (response) => {
-            dispatch({type: TYPES.upload, payload: response})
-        };
-        callApiMethodWithParametersPDFOld(current_url_api, id, 'upload_archivo', values, dispatches, callback, callback_error)
+        const options = {...options_action, dispatch_method: dispatch};
+        uploadPDF(current_url_api, id, 'upload_archivo', values, options)
     }
 };

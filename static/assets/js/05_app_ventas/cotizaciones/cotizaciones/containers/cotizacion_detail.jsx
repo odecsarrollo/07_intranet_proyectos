@@ -53,7 +53,7 @@ class Detail extends Component {
         const cargarMiCuenta = () => this.props.fetchMiCuenta({callback: cargarArchivos});
         const cargarSeguimientos = () => this.props.fetchSeguimientosCotizacionesxCotizacion(id, {callback: cargarMiCuenta});
         const cargarCotizacion = () => this.props.fetchCotizacion(id, {callback: cargarSeguimientos});
-        this.props.fetchMisPermisos({callback: cargarCotizacion});
+        this.props.tengoMisPermisosxListado([permisos_view, proyecto_permisos_view, archivo_cotizacion_permisos_view], {callback: cargarCotizacion});
 
     }
 
@@ -87,28 +87,16 @@ class Detail extends Component {
     }
 
     onSubmitUploadArchivo(valores) {
-        const {noCargando, cargando, notificarErrorAjaxAction, updateArchivoCotizacion} = this.props;
         const {id} = valores;
-        cargando();
         if (id) {
             delete valores.archivo;
-            updateArchivoCotizacion(
+            this.props.updateArchivoCotizacion(
                 id,
                 valores,
-                () => {
-                    this.setState({adicionar_documento: false});
-                    noCargando();
-                },
-                notificarErrorAjaxAction
+                {callback: () => this.setState({adicionar_documento: false})}
             )
         } else {
-            this.onUploadArchivo(
-                valores,
-                () => {
-                    this.setState({adicionar_documento: false});
-                    noCargando();
-                }
-            );
+            this.onUploadArchivo(valores);
         }
     }
 
@@ -117,24 +105,15 @@ class Detail extends Component {
     }
 
     onDeleteArchivo(archivo_id) {
-        const {
-            notificarErrorAjaxAction,
-            deleteArchivoCotizacion,
-            cargando,
-            noCargando,
-            object,
-            fetchArchivosCotizaciones_x_cotizacion
-        } = this.props;
-        cargando();
-        const success = () => {
-            fetchArchivosCotizaciones_x_cotizacion(object.id, () => noCargando(), notificarErrorAjaxAction);
-        };
-        deleteArchivoCotizacion(archivo_id, success, notificarErrorAjaxAction)
+        const {object} = this.props;
+        this.props.deleteArchivoCotizacion(
+            archivo_id,
+            {callback: () => this.props.fetchArchivosCotizaciones_x_cotizacion(object.id)}
+        )
     }
 
-    onUploadArchivo(e, callback = null) {
-        const {notificarAction, notificarErrorAjaxAction, object, cargando, noCargando} = this.props;
-        cargando();
+    onUploadArchivo(e) {
+        const {notificarAction, object} = this.props;
         const file = e.archivo[0];
         if (file) {
             let formData = new FormData();
@@ -143,19 +122,18 @@ class Detail extends Component {
             this.props.uploadArchivoCotizacion(
                 object.id,
                 formData,
-                () => {
-                    this.props.fetchArchivosCotizaciones_x_cotizacion(
-                        object.id,
-                        res => {
-                            if (callback) {
-                                callback(res);
-                            }
-                            notificarAction(`La ha subido el archivo para la cotizacion ${object.nro_cotizacion ? object.nro_cotizacion : object.id}`);
-                            noCargando();
+                {
+                    callback:
+                        () => {
+                            this.props.fetchArchivosCotizaciones_x_cotizacion(
+                                object.id,
+                                () => {
+                                    notificarAction(`La ha subido el archivo para la cotizacion ${object.nro_cotizacion ? object.nro_cotizacion : object.id}`);
+                                    this.setState({adicionar_documento: false});
+                                }
+                            )
                         }
-                    )
-                },
-                notificarErrorAjaxAction
+                }
             )
         }
     }

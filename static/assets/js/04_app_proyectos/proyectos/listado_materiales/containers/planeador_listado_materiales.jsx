@@ -6,14 +6,7 @@ import TablaListadoMateriales from '../../listado_materiales/components/listado_
 class PlaneadorMateriaPrima extends Component {
     componentDidMount() {
         const {id} = this.props.match.params;
-        const {
-            noCargando,
-            cargando,
-            notificarErrorAjaxAction,
-            fetchLiteral,
-        } = this.props;
-        cargando();
-        fetchLiteral(id, () => noCargando(), notificarErrorAjaxAction)
+        this.props.fetchLiteral(id)
     }
 
     render() {

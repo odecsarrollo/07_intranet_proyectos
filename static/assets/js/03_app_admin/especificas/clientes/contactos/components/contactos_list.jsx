@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import CreateForm from '../components/forms/contacto_form';
 import Tabla from '../components/contactos_tabla';
 import crudHOC from '../../../../../00_utilities/components/hoc_crud';
+import {CLIENTES as permisos_view} from "../../../../../00_utilities/permisos/types";
 
 
 const CRUD = crudHOC(CreateForm, Tabla);
@@ -25,7 +26,7 @@ class List extends Component {
     cargarDatos() {
         const {id} = this.props.match.params;
         const cargarContactos = this.props.fetchContactosClientes_por_cliente(id);
-        this.props.fetchMisPermisos({callback: cargarContactos})
+        this.props.tengoMisPermisosxListado([permisos_view], {callback: cargarContactos})
     }
 
     render() {

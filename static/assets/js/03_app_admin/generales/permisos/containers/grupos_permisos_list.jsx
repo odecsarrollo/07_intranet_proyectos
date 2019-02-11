@@ -3,6 +3,7 @@ import {connect} from "react-redux";
 import * as actions from "../../../../01_actions/01_index";
 import CargarDatos from "../../../../00_utilities/components/system/cargar_datos";
 import {
+    CLIENTES as permisos_view,
     GROUPS as permisos_view_groups
 } from "../../../../00_utilities/permisos/types";
 import {permisosAdapter} from "../../../../00_utilities/common";
@@ -61,7 +62,7 @@ class List extends Component {
                 }
             }
         );
-        this.props.fetchMisPermisos({callback: cargarPermisosActivos});
+        this.props.tengoMisPermisosxListado([permisos_view, permisos_view_groups], {callback: cargarPermisosActivos});
     }
 
     onSelectItemDetail(item) {

@@ -7,6 +7,7 @@ import moment from 'moment-timezone';
 import momentLocaliser from "react-widgets-moment";
 
 import {
+    CLIENTES as permisos_view,
     COTIZACIONES as permisos_cotizaciones_view
 } from "../../../../00_utilities/permisos/types";
 import {permisosAdapter} from "../../../../00_utilities/common";
@@ -66,7 +67,7 @@ class SeguimientoTareasCotizacionesList extends Component {
     cargarDatos() {
         const cargarCotizacionesAgendadas = () => this.props.fetchCotizacionesAgendadas();
         const cargarSeguimientos = () => this.props.fetchSeguimientosCotizacionesTareasPendientes({callback: cargarCotizacionesAgendadas});
-        this.props.fetchMisPermisos({callback: cargarSeguimientos})
+        this.props.tengoMisPermisosxListado([permisos_view, permisos_cotizaciones_view], {callback: cargarSeguimientos})
     }
 
     componentDidMount() {

@@ -3,6 +3,7 @@ import {connect} from "react-redux";
 import * as actions from "../../../../01_actions/01_index";
 import CargarDatos from "../../../../00_utilities/components/system/cargar_datos";
 import {
+    CLIENTES as permisos_view,
     USUARIOS as permisos_view_groups
 } from "../../../../00_utilities/permisos/types";
 import {permisosAdapter} from "../../../../00_utilities/common";
@@ -30,7 +31,7 @@ class List extends Component {
     cargarDatos() {
         const cargarUsuarios = () => this.props.fetchUsuarios();
         const cargarMiCuenta = this.props.fetchMiCuenta({callback: cargarUsuarios});
-        this.props.fetchMisPermisos({callback: cargarMiCuenta})
+        this.props.tengoMisPermisosxListado([permisos_view, permisos_view_groups], {callback: cargarMiCuenta})
     }
 
     render() {

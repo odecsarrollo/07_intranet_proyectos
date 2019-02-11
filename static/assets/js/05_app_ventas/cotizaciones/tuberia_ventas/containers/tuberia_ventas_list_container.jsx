@@ -30,7 +30,7 @@ class List extends Component {
 
     cargarDatos() {
         const cargarCotizaciones = () => this.props.fetchCotizacionesTuberiaVentas();
-        this.props.fetchMisPermisos({callback: cargarCotizaciones})
+        this.props.tengoMisPermisosxListado([permisos_view, proyectos_permisos_view], {callback: cargarCotizaciones})
 
     }
 

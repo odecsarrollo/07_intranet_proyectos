@@ -51,23 +51,16 @@ class ListadoMateriales extends Component {
     }
 
     onActualizarCambios() {
-        const {
-            actualizarItemsListadoMateriales,
-            literal,
-            cargando,
-            noCargando,
-            notificarErrorAjaxAction
-        } = this.props;
-        cargando();
+        const {literal} = this.props;
         const cambios = this.obtenerCambios();
-        actualizarItemsListadoMateriales(
+        this.props.actualizarItemsListadoMateriales(
             literal.id,
             cambios,
-            (res) => {
-                noCargando();
-                this.setState({listado_actual: _.mapKeys(res, 'id')})
-            },
-            notificarErrorAjaxAction
+            {
+                callback: (res) => {
+                    this.setState({listado_actual: _.mapKeys(res, 'id')})
+                }
+            }
         );
     }
 

@@ -1,5 +1,3 @@
-export const PERMISO_CHANGE_PERMISSION_PLUS = 'change_permissionplus';
-
 export const GROUPS = {
     add: 'add_group',
     delete: 'delete_group',
@@ -10,7 +8,8 @@ export const GROUPS = {
 
 export const PERMISSION = {
     change: 'change_permission',
-    list: 'list_permission'
+    list: 'list_permission',
+    change_plus:'change_permissionplus'
 };
 
 export const USUARIOS = {
@@ -23,15 +22,6 @@ export const USUARIOS = {
     make_user_staff: 'make_user_staff',
     make_user_active: 'make_user_active',
 };
-
-///////////////////////////////////////////////////
-
-
-export const PERMISO_ADD_TERCERO = 'add_tercero';
-export const PERMISO_DELETE_TERCERO = 'delete_tercero';
-export const PERMISO_CHANGE_TERCERO = 'change_tercero';
-export const PERMISO_LIST_TERCERO = 'list_tercero';
-export const PERMISO_DETAIL_TERCERO = 'detail_tercero';
 
 
 export const PROYECTOS = {
@@ -50,10 +40,10 @@ export const PROYECTOS = {
     detail_proyect_manager: 'detail_proyecto_project_manager',
 };
 
-
-export const PERMISO_ULTIMO_COSTO_ITEM_BIABLE = 'ultimo_costo_itemsbiable';
-export const PERMISO_LIST_ITEM_BIABLE = 'list_itemsbiable';
-
+export const ITEM_BIABLE = {
+    list: 'list_itemsbiable',
+    ver_ultimo_costo: 'ultimo_costo_itemsbiable',
+};
 
 export const CENTROS_COSTOS_COLABORADORES = {
     add: 'add_colaboradorcentrocosto',

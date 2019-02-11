@@ -99,6 +99,7 @@ export function createRequest(request, options = {}) {
             }
             if (dispatch_method) {
                 if (response.data && response.data.result) {
+                    console.log('si tuvo result')
                     dispatch_method(createNotification(notificarAction(response.data.result)));
                 }
                 dispatch_method({type: LOADING_STOP})
@@ -125,43 +126,6 @@ export function createRequest(request, options = {}) {
         );
 }
 
-
-export function createRequestOld(request, dispatches = null, callback = null, callback_error = null) {
-    return request
-        .then(response => {
-            if (dispatches) {
-                dispatches(response)
-            }
-            if (callback) {
-                callback(response.data)
-            }
-        }).catch(error => {
-                if (callback_error) {
-                    if (!error.response) {
-                        callback_error({type_error: 'no_connection'})
-                    } else if (error.request) {
-                        callback_error({...error, type_error: error.request.status})
-                    } else {
-                        callback_error({...error, type_error: 'otro'})
-                    }
-                }
-            }
-        );
-}
-
-export function fetchListOld(url, dispatches = null, callback = null, callback_error = null) {
-    console.log(`%cFETCH LIST - %c${url.toUpperCase()}`, 'color:red', 'color:blue');
-    const FULL_URL = `${url}/?format=json`;
-    const request = axios_instance.get(FULL_URL);
-    createRequestOld(
-        request,
-        dispatches,
-        callback,
-        callback_error
-    );
-}
-
-
 export function fetchListGet(url, options) {
     console.log(`%cFETCH LIST - %c${url.toUpperCase()}`, 'color:red', 'color:blue');
     const mensaje_cargando = `Consultando ${url.toUpperCase()}`;
@@ -174,7 +138,6 @@ export function fetchListGet(url, options) {
     const request = axios_instance.get(FULL_URL);
     createRequest(request, {...options, mensaje_cargando});
 }
-
 export function fetchListGetURLParameters(url, options) {
     console.log(`%cFETCH LIST PARAMETROS - %c${url.toUpperCase()}`, 'color:red', 'color:blue');
     const mensaje_cargando = `Consultando ${url.toUpperCase()}`;
@@ -188,28 +151,16 @@ export function fetchListGetURLParameters(url, options) {
     createRequest(request, {...options, mensaje_cargando});
 }
 
-export function fetchListWithParameterOld(url, dispatches = null, callback = null, callback_error = null) {
-    console.log(`%cFETCH LIST PARAMETROS - %c${url.toUpperCase()}`, 'color:red', 'color:blue');
-    const FULL_URL = `${url}&format=json`;
-    const request = axios_instance.get(FULL_URL);
-    createRequestOld(
-        request,
-        dispatches,
-        callback,
-        callback_error
-    );
-}
-
 export function fetchObject(url, id, options) {
     console.log(`%cFETCH OBJETO - %c${url.toUpperCase()} - %cID ${id}`, 'color:red', 'color:blue', 'color:green');
     const mensaje_cargando = `Consultando elemento en ${url.toUpperCase()}`;
     const FULL_URL = `${url}/${id}/?format=json`;
     const request = axios_instance.get(FULL_URL);
-    /*    const headers = {"Content-Type": "application/json"};
-        if (localStorage.token) {
-            headers["Authorization"] = `Token ${localStorage.token}`;
-        }
-        axios_instance.defaults.headers = headers;*/
+    const headers = {"Content-Type": "application/json"};
+    if (localStorage.token) {
+        headers["Authorization"] = `Token ${localStorage.token}`;
+    }
+    axios_instance.defaults.headers = headers;
     createRequest(request, {...options, mensaje_cargando});
 }
 
@@ -220,11 +171,11 @@ export function updateObject(url, id, values, options, config = null) {
     axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
     axios_instance.defaults.xsrfCookieName = "csrftoken";
 
-    /*    const headers = {"Content-Type": "application/json"};
-        if (localStorage.token) {
-            headers["Authorization"] = `Token ${localStorage.token}`;
-        }
-        axios_instance.defaults.headers = headers;*/
+    const headers = {"Content-Type": "application/json"};
+    if (localStorage.token) {
+        headers["Authorization"] = `Token ${localStorage.token}`;
+    }
+    axios_instance.defaults.headers = headers;
     const FULL_URL = `${url}/${id}/`;
     const request = axios_instance.put(FULL_URL, values, config);
     createRequest(request, {...options, mensaje_cargando});
@@ -236,11 +187,11 @@ export function createObject(url, values, options) {
     const mensaje_cargando = `Creando elemento en ${url.toUpperCase()}`;
     axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
     axios_instance.defaults.xsrfCookieName = "csrftoken";
-    /*    const headers = {"Content-Type": "application/json"};
-        if (localStorage.token) {
-            headers["Authorization"] = `Token ${localStorage.token}`;
-        }
-        axios_instance.defaults.headers = headers;*/
+    const headers = {"Content-Type": "application/json"};
+    if (localStorage.token) {
+        headers["Authorization"] = `Token ${localStorage.token}`;
+    }
+    axios_instance.defaults.headers = headers;
     const FULL_URL = `${url}/`;
     const request = axios_instance.post(FULL_URL, values);
     createRequest(request, {...options, mensaje_cargando});
@@ -253,44 +204,46 @@ export function deleteObject(url, id, options) {
     axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
     axios_instance.defaults.xsrfCookieName = "csrftoken";
 
-    /*    const headers = {"Content-Type": "application/json"};
-        if (localStorage.token) {
-            headers["Authorization"] = `Token ${localStorage.token}`;
-        }
-        axios_instance.defaults.headers = headers;*/
+    const headers = {"Content-Type": "application/json"};
+    if (localStorage.token) {
+        headers["Authorization"] = `Token ${localStorage.token}`;
+    }
+    axios_instance.defaults.headers = headers;
 
     const FULL_URL = `${url}/${id}/`;
     const request = axios_instance.delete(FULL_URL);
     createRequest(request, {...options, mensaje_cargando});
 }
 
-
-export function callApiMethodOld(url, id, method, dispatches = null, callback = null, callback_error = null) {
-    console.log(`%cAPI METODO ${method.toUpperCase()} - %c${url.toUpperCase()} - %cID ${id}`, 'color:red', 'color:blue', 'color:green');
+export function uploadPDF(url, id, method, values, options) {
+    console.log(`%cAPI UPLOAD PDF ${method.toUpperCase()} CON PARMAETROS - %c${url.toUpperCase()} - %cID ${id}`, 'color:red', 'color:blue', 'color:green');
+    const mensaje_cargando = `Ejecutando ${method.toUpperCase()} en ${url.toUpperCase()}`;
     axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
     axios_instance.defaults.xsrfCookieName = "csrftoken";
+    const headers = {};
+    if (localStorage.token) {
+        headers["Authorization"] = `Token ${localStorage.token}`;
+        headers["Content-Type"] = 'application/x-www-form-urlencoded;charset=UTF-8';
+    }
+    axios_instance.defaults.headers = headers;
     const FULL_URL = `${url}/${id}/${method}/`;
-    const request = axios_instance.post(FULL_URL);
-    createRequestOld(
-        request,
-        dispatches,
-        callback,
-        callback_error
-    );
+    const request = axios_instance.post(FULL_URL, values, {responseType: 'arraybuffer'});
+    createRequest(request, {...options, mensaje_cargando});
 }
 
-export function callApiMethodWithParametersOld(url, id, method, parameters, dispatches = null, callback = null, callback_error = null) {
-    console.log(`%cAPI METODO ${method.toUpperCase()} CON PARMAETROS - %c${url.toUpperCase()} - %cID ${id}`, 'color:red', 'color:blue', 'color:green');
+export function callApiMethodPost(url, id, method, options) {
+    console.log(`%cAPI METODO ${method.toUpperCase()} - %c${url.toUpperCase()} - %cID ${id}`, 'color:red', 'color:blue', 'color:green');
+    const mensaje_cargando = `Ejecutando ${method.toUpperCase()} en ${url.toUpperCase()}`;
     axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
     axios_instance.defaults.xsrfCookieName = "csrftoken";
+    const headers = {};
+    if (localStorage.token) {
+        headers["Authorization"] = `Token ${localStorage.token}`;
+    }
+    axios_instance.defaults.headers = headers;
     const FULL_URL = `${url}/${id}/${method}/`;
-    const request = axios_instance.post(FULL_URL, parameters);
-    createRequestOld(
-        request,
-        dispatches,
-        callback,
-        callback_error
-    );
+    const request = axios_instance.post(FULL_URL);
+    createRequest(request, {...options, mensaje_cargando});
 }
 
 export function callApiMethodPostParameters(url, id, method, values, options) {
@@ -309,42 +262,10 @@ export function callApiMethodPostParameters(url, id, method, values, options) {
     createRequest(request, {...options, mensaje_cargando});
 }
 
-export function listRoutePostWithParametersOld(url, method, parameters, dispatches = null, callback = null, callback_error = null) {
-    console.log(`%cLIST ROUTE POST ${method.toUpperCase()} CON PARMAETROS - %c${url.toUpperCase()}`, 'color:red', 'color:blue');
-    axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
-    axios_instance.defaults.xsrfCookieName = "csrftoken";
-    const FULL_URL = `${url}/${method}/`;
-    const request = axios_instance.post(FULL_URL, parameters);
-    createRequestOld(
-        request,
-        dispatches,
-        callback,
-        callback_error
-    );
-}
-
-export function callApiMethodWithParametersPDFOld(url, id, method, parameters, dispatches = null, callback = null, callback_error = null) {
-    console.log(`%cAPI METODO ${method.toUpperCase()} CON PARMAETROS - %c${url.toUpperCase()} - %cID ${id} PARA PDF`, 'color:red', 'color:blue', 'color:green');
-    axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
-    axios_instance.defaults.xsrfCookieName = "csrftoken";
-    const FULL_URL = `${url}/${id}/${method}/`;
-    const request = axios_instance.post(FULL_URL, parameters, {responseType: 'arraybuffer'});
-    createRequestOld(
-        request,
-        dispatches,
-        callback,
-        callback_error
-    );
-}
-
-export function fetchObjectWithParameterPDFOld(url, dispatches = null, callback = null, callback_error = null) {
+export function fetchObjectWithParameterPDF(url, options) {
     console.log(`%cFETCH LIST PARAMETROS - %c${url.toUpperCase()} PARA PDF`, 'color:red', 'color:blue');
+    const mensaje_cargando = `Ejecutando PDF ${method.toUpperCase()} en ${url.toUpperCase()}`;
     const FULL_URL = `${url}&format=json`;
     const request = axios_instance.get(FULL_URL, {responseType: 'arraybuffer'});
-    createRequestOld(
-        request,
-        dispatches,
-        callback,
-        callback_error
-    );
+    createRequest(request, {...options, mensaje_cargando});
 }

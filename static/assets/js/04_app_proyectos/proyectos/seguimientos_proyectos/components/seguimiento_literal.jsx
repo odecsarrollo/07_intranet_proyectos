@@ -6,12 +6,12 @@ import * as actions from "../../../../01_actions/01_index";
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import {permisosAdapter} from "../../../../00_utilities/common";
 import {
+    CLIENTES as permisos_view,
     COTIZACIONES as cotizaciones_permisos_view,
     PROYECTOS as proyectos_permisos_view,
 } from "../../../../00_utilities/permisos/types";
 
 import MiembroLiteral from './adicionar_miembro';
-import {noCargando} from "../../../../01_actions/generales/utiles/loadingAction";
 
 import moment from 'moment-timezone';
 
@@ -86,83 +86,51 @@ class SeguimientoLiteral extends Component {
             fetchUsuarios,
         } = this.props;
         const cargarMiCuenta = () => fetchMiCuenta();
-        const cargarUsuarios = () => fetchUsuarios({callback:cargarMiCuenta});
+        const cargarUsuarios = () => fetchUsuarios({callback: cargarMiCuenta});
         const cargarMiembros = () => fetchMiembrosLiterales_x_literal(id_literal, {callback: cargarUsuarios});
         const cargarFasesxLiteral = () => fetchFasesLiterales_x_literal(id_literal, {callback: cargarMiembros});
         const cargarFases = () => fetchFases({callback: cargarFasesxLiteral});
-        this.props.fetchMisPermisos({callback: cargarFases});
+        this.props.tengoMisPermisosxListado([permisos_view, proyectos_permisos_view, cotizaciones_permisos_view], {callback: cargarFases});
     }
 
     adicionarMiembro(usuario_id) {
-        const {
-            adicionarMiembroLiteral,
-            id_literal,
-            notificarErrorAjaxAction,
-        } = this.props;
-        adicionarMiembroLiteral(id_literal, usuario_id, () => this.cargarDatos(id_literal), notificarErrorAjaxAction);
+        const {id_literal} = this.props;
+        this.props.adicionarMiembroLiteral(id_literal, usuario_id, {callback: () => this.cargarDatos(id_literal)});
     }
 
     quitarMiembro(usuario_id) {
-        const {
-            quitarMiembroLiteral,
-            id_literal,
-            notificarErrorAjaxAction,
-        } = this.props;
-        quitarMiembroLiteral(id_literal, usuario_id, () => this.cargarDatos(id_literal), notificarErrorAjaxAction);
+        const {id_literal} = this.props;
+        this.props.quitarMiembroLiteral(id_literal, usuario_id, {callback: () => this.cargarDatos(id_literal)});
     }
 
     editarMiembro(miembro, cambios) {
-        const {
-            noCargando,
-            cargando,
-            fetchMiembroLiteral,
-            updateMiembroLiteral,
-            notificarErrorAjaxAction
-        } = this.props;
-        cargando();
-        const actualizarMiembro = (response) => updateMiembroLiteral(miembro.id, {...response, ...cambios}, () => noCargando(), notificarErrorAjaxAction);
-        fetchMiembroLiteral(miembro.id, actualizarMiembro, notificarErrorAjaxAction)
+        const actualizarMiembro = (response) => this.props.updateMiembroLiteral(miembro.id, {...response, ...cambios});
+        this.props.fetchMiembroLiteral(miembro.id, {callback: actualizarMiembro})
     }
 
     adicionarQuitarFaseLiteral(id_fase) {
-        const {
-            notificarErrorAjaxAction,
-            adicionarQuitarFaseLiteral,
-            cargando,
-            id_literal,
-        } = this.props;
-        cargando();
-        adicionarQuitarFaseLiteral(id_literal, id_fase, () => this.cargarDatos(id_literal), notificarErrorAjaxAction)
+        const {id_literal} = this.props;
+        this.props.adicionarQuitarFaseLiteral(id_literal, id_fase, {callback: () => this.cargarDatos(id_literal)})
     }
 
     onSeleccionarFase(fase_literal_id) {
-        const {cargando, noCargando, fetchFaseLiteral, notificarErrorAjaxAction, fetchTareasFases_x_literal} = this.props;
         const {fase_seleccionada_id} = this.state;
-        cargando();
         if (fase_seleccionada_id === fase_literal_id) {
             this.setState({fase_seleccionada_id: null});
-            noCargando();
         } else {
             const success_callback = () => {
                 this.setState({fase_seleccionada_id: fase_literal_id});
-                noCargando();
             };
-            const cargarTareas = () => fetchTareasFases_x_literal(fase_literal_id, success_callback);
-            fetchFaseLiteral(fase_literal_id, cargarTareas, notificarErrorAjaxAction)
+            const cargarTareas = () => this.props.fetchTareasFases_x_literal(fase_literal_id, {callback: success_callback});
+            this.props.fetchFaseLiteral(fase_literal_id, {callback: cargarTareas})
         }
     }
 
     actualizarTarea(tarea_id, datos) {
         const {
-            cargando,
             noCargando,
-            updateTareaFase,
-            notificarErrorAjaxAction,
-            fetchTareaFase,
-            fetchFaseLiteral,
             callBackSeguimiento = null
         } = this.props;
-        cargando();
         const success_callback = () => {
             if (callBackSeguimiento) {
                 callBackSeguimiento();
@@ -171,17 +139,11 @@ class SeguimientoLiteral extends Component {
                 noCargando();
             }
         };
-        const cargarFaseLiteral = (tarea) => fetchFaseLiteral(tarea.fase_literal, success_callback, notificarErrorAjaxAction);
+        const cargarFaseLiteral = (tarea) => this.props.fetchFaseLiteral(tarea.fase_literal, {callback: success_callback});
         const actualizarTarea = (tarea) => {
-            updateTareaFase(
-                tarea_id,
-                {...tarea, ...datos},
-                cargarFaseLiteral,
-                notificarErrorAjaxAction
-            )
+            this.props.updateTareaFase(tarea_id, {...tarea, ...datos}, {callback: cargarFaseLiteral})
         };
-
-        fetchTareaFase(tarea_id, actualizarTarea, notificarErrorAjaxAction)
+        this.props.fetchTareaFase(tarea_id, {callback: actualizarTarea})
     }
 
     onClickPlusZoom() {

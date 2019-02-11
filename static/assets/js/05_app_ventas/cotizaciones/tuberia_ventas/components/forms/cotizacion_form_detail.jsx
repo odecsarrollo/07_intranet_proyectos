@@ -21,28 +21,11 @@ class Form extends Component {
     }
 
     cargarContactosCliente(cliente_id) {
-        const {
-            noCargando,
-            cargando,
-            notificarErrorAjaxAction,
-            fetchContactosClientes_por_cliente,
-        } = this.props;
-        cargando();
-        fetchContactosClientes_por_cliente(
-            cliente_id,
-            () => noCargando(),
-            notificarErrorAjaxAction
-        );
+        this.props.fetchContactosClientes_por_cliente(cliente_id);
     }
 
     componentDidMount() {
-        const {
-            notificarErrorAjaxAction,
-            item_seleccionado,
-            initialValues,
-            fetchContactosClientes_por_cliente,
-        } = this.props;
-
+        const {item_seleccionado, initialValues} = this.props;
 
         const cargarResponsable = () => {
             if (item_seleccionado.responsable) {
@@ -53,10 +36,7 @@ class Form extends Component {
         let cargarContactos = cargarResponsable;
         if (initialValues) {
             const {cliente} = initialValues;
-            cargarContactos = () => fetchContactosClientes_por_cliente(
-                cliente,
-                {callback: cargarResponsable}
-            );
+            cargarContactos = () => this.props.fetchContactosClientes_por_cliente(cliente, {callback: cargarResponsable});
         }
         const cargarClientes = () => this.props.fetchClientes({callback: cargarContactos});
         this.props.fetchUsuariosxPermiso('gestionar_cotizacion', {callback: cargarClientes});

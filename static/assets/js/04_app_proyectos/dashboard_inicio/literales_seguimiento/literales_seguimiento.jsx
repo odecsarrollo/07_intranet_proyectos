@@ -20,9 +20,7 @@ class LiteralesSeguimiento extends Component {
     }
 
     cargarLiteralesConSeguimiento() {
-        const {cargando, noCargando, notificarErrorAjaxAction, fetchLiteralesConSeguimiento} = this.props;
-        cargando();
-        fetchLiteralesConSeguimiento(() => noCargando(), notificarErrorAjaxAction);
+        this.props.fetchLiteralesConSeguimiento();
     }
 
     render() {

@@ -15,7 +15,6 @@ class LiteralModalCreate extends Component {
     onSubmit(item) {
         const {
             cargando,
-            noCargando,
             object,
             literales_list,
             notificarErrorAjaxAction,
@@ -38,12 +37,11 @@ class LiteralModalCreate extends Component {
                         if (callback) {
                             callback()
                         }
-                        noCargando()
                     }
             }
         );
         if (!existe_literal) {
-            this.props.fetchLiteralesXProyecto(object.id, crearLiteral);
+            this.props.fetchLiteralesXProyecto(object.id, {callback: crearLiteral});
         } else {
             notificarErrorAjaxAction('Ya existe este literal');
         }

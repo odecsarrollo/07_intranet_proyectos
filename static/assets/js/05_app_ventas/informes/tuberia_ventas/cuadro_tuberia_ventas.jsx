@@ -26,7 +26,7 @@ class InformeTunelVentas extends Component {
 
     cargarDatos(ano = null, trimestre = null) {
         const cargarCotizaciones = () => this.props.fetchCotizacionesTuberiaVentasResumen(ano, trimestre);
-        this.props.fetchMisPermisos({callback: cargarCotizaciones})
+        this.props.tengoMisPermisosxListado([permisos_view], {callback: cargarCotizaciones})
 
     }
 

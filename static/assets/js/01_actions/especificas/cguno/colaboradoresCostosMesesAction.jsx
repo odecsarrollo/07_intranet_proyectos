@@ -5,7 +5,7 @@ import {
     fetchObject,
     deleteObject,
     createObject,
-    fetchListWithParameterOld
+    fetchListGetURLParameters
 } from '../../00_general_fuctions'
 
 const current_url_api = 'colaboradores_costo_nomina';
@@ -43,12 +43,19 @@ export const fetchColaboradoresCostosMeses = (options_action = {}) => {
     }
 };
 
-export const fetchColaboradoresCostosMesesxFechas = (fecha_inicial, fecha_final, callback = null, callback_error = null) => {
+export const fetchColaboradoresCostosMesesxFechas = (fecha_inicial, fecha_final, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListWithParameterOld(`${current_url_api}/listar_x_fechas/?fecha_inicial=${fecha_inicial}&fecha_final=${fecha_final}`, dispatches, callback, callback_error);
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGetURLParameters(`${current_url_api}/listar_x_fechas/?fecha_inicial=${fecha_inicial}&fecha_final=${fecha_final}`, options);
     }
 };
 export const fetchColaboradorCostoMes = (id, options_action = {}) => {

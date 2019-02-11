@@ -164,15 +164,7 @@ class CargueMateriales extends Component {
     }
 
     onCargarListado() {
-        const {
-            cargarItemsListadoMateriales,
-            literal,
-            notificarErrorAjaxAction,
-            cargando,
-            noCargando,
-            items_cguno
-        } = this.props;
-        cargando();
+        const {literal, items_cguno} = this.props;
         const hacerCargue = () => {
             const cargue = _.map(this.state.listado_cargue, e => {
                 const existe = _.has(items_cguno, e.CGUNO);
@@ -190,7 +182,7 @@ class CargueMateriales extends Component {
                     }
                 )
             });
-            cargarItemsListadoMateriales(literal.id, cargue, () => noCargando(), notificarErrorAjaxAction);
+            this.props.cargarItemsListadoMateriales(literal.id, cargue);
         };
         this.onTraerCodigosProductos(hacerCargue);
     }

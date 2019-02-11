@@ -25,7 +25,7 @@ class List extends Component {
 
     cargarDatos() {
         const cargarLiterales = () => this.props.fetchLiterales();
-        this.props.fetchMisPermisos({callback: cargarLiterales})
+        this.props.tengoMisPermisosxListado([permisos_view], {callback: cargarLiterales})
 
     }
 
