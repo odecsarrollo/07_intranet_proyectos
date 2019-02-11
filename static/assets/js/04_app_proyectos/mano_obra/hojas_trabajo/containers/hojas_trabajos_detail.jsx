@@ -9,13 +9,19 @@ import {
     MANOS_OBRAS_HOJAS_TRABAJOS as permisos_view,
     MANOS_OBRAS_HORAS_HOJAS_TRABAJOS as permisos_view_horas
 } from "../../../../00_utilities/permisos/types";
+import CreateForm from '../components/forms/hora_hoja_trabajo_form';
+import Tabla from '../components/horas_hojas_trabajos_tabla';
+import crudHOC from '../../../../00_utilities/components/hoc_crud';
 
-import HorasHojasTrabajoList from '../components/horas_hoja_trabajo_list';
+const CRUDHorasHojasTrabajoList = crudHOC(CreateForm, Tabla);
 
 class Detail extends Component {
     constructor(props) {
         super(props);
         this.cargarDatos = this.cargarDatos.bind(this);
+        this.createHoraTrabajo = this.createHoraTrabajo.bind(this);
+        this.updateHoraTrabajo = this.updateHoraTrabajo.bind(this);
+        this.deleteHoraTrabajo = this.deleteHoraTrabajo.bind(this);
     }
 
     componentDidMount() {
@@ -31,9 +37,25 @@ class Detail extends Component {
         const {id} = this.props.match.params;
         const cargarHojaTrabajo = () => this.props.fetchHojaTrabajo(id);
         const cargarMiCuenta = () => this.props.fetchMiCuenta({callback: cargarHojaTrabajo});
-        const cargarConfigCostos = () => this.props.fetchConfiguracionesCostos({callback:cargarMiCuenta});
+        const cargarConfigCostos = () => this.props.fetchConfiguracionesCostos({callback: cargarMiCuenta});
         this.props.fetchMisPermisos({callback: cargarConfigCostos});
 
+    }
+
+    createHoraTrabajo(item) {
+        const cargarHojaTrabajo = (r) => this.props.fetchHojaTrabajo(r.hoja);
+        this.props.createHoraHojaTrabajo(item, {callback: cargarHojaTrabajo});
+    }
+
+    updateHoraTrabajo(item) {
+        const cargarHojaTrabajo = (r) => this.props.fetchHojaTrabajo(r.hoja);
+        this.props.updateHoraHojaTrabajo(item.id, item, {callback: cargarHojaTrabajo});
+    }
+
+    deleteHoraTrabajo(item) {
+        const {id} = this.props.match.params;
+        const cargarHojaTrabajo = () => this.props.fetchHojaTrabajo(id);
+        this.props.deleteHoraHojaTrabajo(item, {callback: cargarHojaTrabajo});
     }
 
     render() {
@@ -58,6 +80,13 @@ class Detail extends Component {
             mis_horas_trabajadas,
         } = object;
 
+        const horas_trabajo_crud_method_pool = {
+            fetchObjectMethod: this.props.fetchHoraHojaTrabajo,
+            deleteObjectMethod: this.deleteHoraTrabajo,
+            createObjectMethod: this.createHoraTrabajo,
+            updateObjectMethod: this.updateHoraTrabajo,
+        };
+
         return (
             <ValidarPermisos can_see={permisos.detail} nombre='detalles de hoja de trabajo'>
                 <Titulo>Detalle {object.username}</Titulo>
@@ -80,8 +109,9 @@ class Detail extends Component {
                         </Fragment>
                     }
                 </div>
-                <HorasHojasTrabajoList
-                    object_list={mis_horas_trabajadas}
+                <CRUDHorasHojasTrabajoList
+                    method_pool={horas_trabajo_crud_method_pool}
+                    list={mis_horas_trabajadas}
                     permisos_object={{
                         ...permisos_horas,
                         add: permisos_horas.add && puede_modificar,
@@ -89,6 +119,8 @@ class Detail extends Component {
                     }}
                     permisos_hoja={permisos}
                     hoja_trabajo={object}
+                    plural_name='Horas Hojas de Trabajo'
+                    singular_name='Hora Hoja de Trabajo'
                     {...this.props}
                 />
                 <CargarDatos cargarDatos={this.cargarDatos}/>

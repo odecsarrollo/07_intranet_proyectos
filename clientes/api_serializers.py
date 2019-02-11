@@ -4,6 +4,11 @@ from .models import ClienteBiable, ContactoCliente
 
 
 class ClienteSerializer(serializers.ModelSerializer):
+    to_string = serializers.SerializerMethodField()
+
+    def get_to_string(self, instance):
+        return instance.nombre
+
     class Meta:
         model = ClienteBiable
         fields = [
@@ -11,11 +16,16 @@ class ClienteSerializer(serializers.ModelSerializer):
             'id',
             'nit',
             'nombre',
+            'to_string',
         ]
 
 
 class ContactoClienteSerializer(serializers.ModelSerializer):
     creado_por_username = serializers.CharField(source='creado_por.username', read_only=True)
+    to_string = serializers.SerializerMethodField()
+
+    def get_to_string(self, instance):
+        return instance.full_nombre
 
     class Meta:
         model = ContactoCliente
@@ -34,6 +44,7 @@ class ContactoClienteSerializer(serializers.ModelSerializer):
             'telefono_2',
             'full_nombre',
             'cargo',
+            'to_string',
         ]
         extra_kwargs = {
             'full_nombre': {'read_only': True},

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from "react-redux";
 import * as actions from "../../../../01_actions/01_index";
 import CargarDatos from "../../../../00_utilities/components/system/cargar_datos";
-import {Titulo} from "../../../../00_utilities/templates/fragmentos";
+import Typography from '@material-ui/core/Typography';
 import ValidarPermisos from "../../../../00_utilities/permisos/validar_permisos";
 import {tengoPermiso, permisosAdapter} from "../../../../00_utilities/common";
 import {
@@ -17,13 +17,8 @@ class PermisosList extends Component {
     constructor(props) {
         super(props);
         this.cargarDatos = this.cargarDatos.bind(this);
-        this.error_callback = this.error_callback.bind(this);
         this.updatePermiso = this.updatePermiso.bind(this);
         this.notificar = this.notificar.bind(this);
-    }
-
-    error_callback(error) {
-        this.props.notificarErrorAjaxAction(error);
     }
 
     notificar(mensaje) {
@@ -55,13 +50,16 @@ class PermisosList extends Component {
     render() {
         const {mis_permisos, permisos} = this.props;
         const can_change_permiso = tengoPermiso(mis_permisos, can_change_permiso_plus);
-
         const permisos_this_view = permisosAdapter(mis_permisos, permisos_view);
 
         return (
-            <ValidarPermisos can_see={permisos_this_view.list}
-                             nombre='listas de permisos'>
-                <Titulo>Lista de Permisos</Titulo>
+            <ValidarPermisos
+                can_see={permisos_this_view.list}
+                nombre='listas de permisos'
+            >
+                <Typography variant="h5" gutterBottom color="primary">
+                    Lista de Permisos
+                </Typography>
                 <Tabla
                     permisos={permisos}
                     updatePermiso={this.updatePermiso}

@@ -7,18 +7,20 @@ import {
     createObject,
     deleteObject,
     fetchObjectWithParameterPDFOld,
-    callApiMethodWithParametersPDFOld, fetchListWithParameterOld
+    callApiMethodWithParametersPDFOld,
+    fetchListGetURLParameters
 } from '../../00_general_fuctions'
 
 const current_url_api = 'proyectos';
 
-export function fetchProyectosxParametro(parametro, callback = null, callback_error = null) {
+export function fetchProyectosxParametro(parametro, options_action = {}) {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/listar_proyectos_x_parametro/?parametro=${parametro}`;
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListWithParameterOld(FULL_URL, dispatches, callback, callback_error);
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        fetchListGetURLParameters(FULL_URL, options);
     }
 }
 

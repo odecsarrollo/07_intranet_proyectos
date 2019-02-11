@@ -64,7 +64,7 @@ class ItemProyecto extends Component {
             </div>
         )
     }
-};
+}
 
 class PanelRelacion extends Component {
     constructor(props) {
@@ -145,72 +145,44 @@ class DialogRelacionarProyecto extends Component {
     }
 
     buscarProyecto(busqueda) {
-        const {
-            fetchProyectosxParametro,
-            noCargando,
-            cargando,
-            notificarErrorAjaxAction
-        } = this.props;
-        cargando();
-        fetchProyectosxParametro(busqueda, () => noCargando(), notificarErrorAjaxAction)
+        this.props.fetchProyectosxParametro(busqueda)
     }
 
     buscarLiteral(busqueda) {
-        const {
-            fetchLiteralesxParametro,
-            noCargando,
-            cargando,
-            notificarErrorAjaxAction
-        } = this.props;
-        cargando();
-        fetchLiteralesxParametro(busqueda, () => noCargando(), notificarErrorAjaxAction)
+        this.props.fetchLiteralesxParametro(busqueda)
     }
 
     solicitarAbrirCarpeta(abrir_carpeta) {
         const {
-            noCargando,
-            cargando,
-            notificarErrorAjaxAction,
-            updateCotizacion,
-            fetchCotizacion,
             object
         } = this.props;
-        cargando();
-        fetchCotizacion(
+        this.props.fetchCotizacion(
             object.id,
-            cotizacion => {
-                updateCotizacion(
-                    cotizacion.id,
-                    {...cotizacion, abrir_carpeta},
-                    () => noCargando(),
-                    notificarErrorAjaxAction
-                )
-            },
-            notificarErrorAjaxAction
+            {
+                callback:
+                    cotizacion => {
+                        this.props.updateCotizacion(
+                            cotizacion.id,
+                            {...cotizacion, abrir_carpeta}
+                        )
+                    }
+            }
         )
     }
 
     solicitarCrearLiteral(crear_literal, crear_literal_id_proyecto) {
-        const {
-            noCargando,
-            cargando,
-            notificarErrorAjaxAction,
-            updateCotizacion,
-            fetchCotizacion,
-            object
-        } = this.props;
-        cargando();
-        fetchCotizacion(
+        const {object} = this.props;
+        this.props.fetchCotizacion(
             object.id,
-            cotizacion => {
-                updateCotizacion(
-                    cotizacion.id,
-                    {...cotizacion, crear_literal, crear_literal_id_proyecto},
-                    () => noCargando(),
-                    notificarErrorAjaxAction
-                )
-            },
-            notificarErrorAjaxAction
+            {
+                callback:
+                    cotizacion => {
+                        this.props.updateCotizacion(
+                            cotizacion.id,
+                            {...cotizacion, crear_literal, crear_literal_id_proyecto}
+                        )
+                    }
+            }
         )
     }
 
@@ -319,124 +291,93 @@ class CotizacionInfo extends Component {
     onActualizarProyecto(id) {
         this.setState({relacionar_proyecto: false});
         const {
-            object,
-            fetchProyecto,
-            updateProyecto,
-            fetchCotizacion,
-            noCargando,
-            cargando,
-            notificarErrorAjaxAction
+            object
         } = this.props;
-        cargando();
-        fetchProyecto(
+        this.props.fetchProyecto(
             id,
-            proyecto => {
-                updateProyecto(
-                    id,
-                    {...proyecto, cotizacion: object.id},
-                    () => {
-                        fetchCotizacion(object.id,
-                            () => noCargando(),
-                            notificarErrorAjaxAction
+            {
+                callback:
+                    proyecto => {
+                        this.props.updateProyecto(
+                            id,
+                            {...proyecto, cotizacion: object.id},
+                            {
+                                callback: () => {
+                                    this.props.fetchCotizacion(object.id)
+                                }
+                            }
                         )
-                    },
-                    notificarErrorAjaxAction
-                )
-            },
-            notificarErrorAjaxAction
+                    }
+            }
         );
     }
 
     onActualizarLiteral(id) {
         this.setState({relacionar_proyecto: false});
-        const {
-            object,
-            fetchLiteral,
-            updateLiteral,
-            fetchCotizacion,
-            noCargando,
-            cargando,
-            notificarErrorAjaxAction
-        } = this.props;
-        cargando();
-        fetchLiteral(
+        const {object} = this.props;
+        this.props.fetchLiteral(
             id,
-            literal => {
-                updateLiteral(
-                    id,
-                    {...literal, cotizacion: object.id},
-                    () => {
-                        fetchCotizacion(object.id,
-                            () => noCargando(),
-                            notificarErrorAjaxAction
+            {
+                callback:
+                    literal => {
+                        this.props.updateLiteral(
+                            id,
+                            {...literal, cotizacion: object.id},
+                            {
+                                callback:
+                                    () => {
+                                        this.props.fetchCotizacion(object.id)
+                                    }
+                            }
                         )
-                    },
-                    notificarErrorAjaxAction
-                )
-            },
-            notificarErrorAjaxAction
+                    }
+            }
         );
     }
 
     onEliminarProyectoCotizacion(id) {
         this.setState({relacionar_proyecto: false});
-        const {
-            object,
-            fetchProyecto,
-            updateProyecto,
-            fetchCotizacion,
-            noCargando,
-            cargando,
-            notificarErrorAjaxAction
-        } = this.props;
-        cargando();
-        fetchProyecto(
+        const {object} = this.props;
+        this.props.fetchProyecto(
             id,
-            proyecto => {
-                updateProyecto(
-                    id,
-                    {...proyecto, cotizacion: null},
-                    () => {
-                        fetchCotizacion(object.id,
-                            () => noCargando(),
-                            notificarErrorAjaxAction
+            {
+                callback:
+                    proyecto => {
+                        this.props.updateProyecto(
+                            id,
+                            {...proyecto, cotizacion: null},
+                            {
+                                callback:
+                                    () => {
+                                        this.props.fetchCotizacion(object.id)
+                                    }
+                            }
                         )
-                    },
-                    notificarErrorAjaxAction
-                )
-            },
-            notificarErrorAjaxAction
+                    }
+            }
         );
     }
 
     onEliminarLiteralCotizacion(id) {
         this.setState({relacionar_proyecto: false});
-        const {
-            object,
-            fetchLiteral,
-            updateLiteral,
-            fetchCotizacion,
-            noCargando,
-            cargando,
-            notificarErrorAjaxAction
-        } = this.props;
-        cargando();
-        fetchLiteral(
+        const {object} = this.props;
+        this.props.fetchLiteral(
             id,
-            literal => {
-                updateLiteral(
-                    id,
-                    {...literal, cotizacion: null},
-                    () => {
-                        fetchCotizacion(object.id,
-                            () => noCargando(),
-                            notificarErrorAjaxAction
+            {
+                callback:
+                    literal => {
+                        this.props.updateLiteral(
+                            id,
+                            {...literal, cotizacion: null},
+                            {
+                                callback:
+                                    () => {
+                                        this.props.fetchCotizacion(object.id)
+                                    }
+                            }
                         )
-                    },
-                    notificarErrorAjaxAction
-                )
-            },
-            notificarErrorAjaxAction
+                    }
+            }
         );
     }
 
@@ -540,7 +481,6 @@ class CotizacionInfo extends Component {
                             </span>
                                 }</span>
                             }
-
                             <br/>
                         </Fragment>
                     }

@@ -6,8 +6,11 @@ import {
     HORAS_COLABORADORES_PROYECTOS_INICIALES as permisos_view
 } from "../../../../00_utilities/permisos/types";
 import {permisosAdapter} from "../../../../00_utilities/common";
+import CreateForm from '../components/forms/base_form';
+import Tabla from '../components/hora_trabajo_iniciales_tabla';
+import crudHOC from '../../../../00_utilities/components/hoc_crud';
 
-import ListCrud from '../components/base_list';
+const CRUD = crudHOC(CreateForm, Tabla);
 
 
 class List extends Component {
@@ -37,11 +40,20 @@ class List extends Component {
     render() {
         const {object_list, mis_permisos} = this.props;
         const bloque_1_permisos = permisosAdapter(mis_permisos, permisos_view);
+        const method_pool = {
+            fetchObjectMethod: this.props.fetchHoraColaboradorProyectoInicial,
+            deleteObjectMethod: this.props.deleteHoraColaboradorProyectoInicial,
+            createObjectMethod: this.props.createHoraColaboradorProyectoInicial,
+            updateObjectMethod: this.props.updateHoraColaboradorProyectoInicial,
+        };
         return (
             <Fragment>
-                <ListCrud
-                    object_list={object_list}
+                <CRUD
+                    method_pool={method_pool}
+                    list={object_list}
                     permisos_object={bloque_1_permisos}
+                    plural_name='Horas Colaboradores Proyectos Iniciales'
+                    singular_name='Hora Colaborador Proyecto Inicial'
                     {...this.props}
                 />
                 <CargarDatos

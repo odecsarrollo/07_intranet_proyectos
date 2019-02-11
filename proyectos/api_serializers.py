@@ -196,6 +196,10 @@ class ProyectoSerializer(serializers.ModelSerializer):
                                                    max_digits=20, decimal_places=2)
     valor_cliente = serializers.DecimalField(source='cotizacion.valor_orden_compra', read_only=True,
                                              max_digits=20, decimal_places=2)
+    to_string = serializers.SerializerMethodField()
+
+    def get_to_string(self, instance):
+        return '%s - %s' % (instance.id_proyecto, instance.nombre)
 
     def get_cotizacion_nro(self, obj):
         if obj.cotizacion:
@@ -224,4 +228,5 @@ class ProyectoSerializer(serializers.ModelSerializer):
             'valor_cliente',
             'nombre',
             'cliente_nombre',
+            'to_string',
         ]

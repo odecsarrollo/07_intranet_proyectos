@@ -7,18 +7,19 @@ import {
     fetchObject,
     deleteObject,
     createObject,
-    fetchListWithParameterOld
+    fetchListGetURLParameters
 } from '../../00_general_fuctions'
 
 const current_url_api = 'mano_obra_hoja_trabajo';
 
-export function fetchHojasTrabajosxFechas(fecha_inicial, fecha_final, callback = null, callback_error = null) {
+export function fetchHojasTrabajosxFechas(fecha_inicial, fecha_final, options_action = {}) {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/listar_x_fechas/?fecha_inicial=${fecha_inicial}&fecha_final=${fecha_final}`;
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListWithParameterOld(FULL_URL, dispatches, callback, callback_error);
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        fetchListGetURLParameters(FULL_URL, options);
     }
 }
 

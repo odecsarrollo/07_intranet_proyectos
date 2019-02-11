@@ -7,7 +7,8 @@ import {
     fetchListGet,
     updateObject,
     fetchObject,
-    fetchListWithParameterOld
+    fetchListWithParameterOld,
+    fetchListGetURLParameters
 } from '../../00_general_fuctions'
 
 const current_url_api = 'permisos';
@@ -48,14 +49,39 @@ export const fetchPermisosActivos = (options_action = {}) => {
     }
 };
 
-export function fetchOtroUsuarioPermisos(id, callback = null, callback_error = null) {
+export function fetchPermisosPorGrupo(grupo_id, options_action = {}) {
+    return function (dispatch) {
+        const SUB_URL = `/por_grupo/?grupo_id=${grupo_id}`;
+        const FULL_URL = `${current_url_api}${SUB_URL}`;
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch_all, payload: response})
+        };
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGetURLParameters(FULL_URL, options);
+    }
+}
+
+export function fetchPermisosxUsuario(id, options_action = {}) {
     return function (dispatch) {
         const SUB_URL = `/permiso_x_usuario/?user_id=${id}`;
         const FULL_URL = `${current_url_api}${SUB_URL}`;
         const dispatches = (response) => {
-            dispatch({type: FETCH_OTRO_USUARIO_PERMISOS, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListWithParameterOld(FULL_URL, dispatches, callback, callback_error);
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        fetchListGetURLParameters(FULL_URL, options);
     }
 }
 

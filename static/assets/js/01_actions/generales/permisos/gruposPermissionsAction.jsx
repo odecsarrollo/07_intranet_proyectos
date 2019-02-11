@@ -8,16 +8,17 @@ import {
     fetchObject,
     deleteObject,
     createObject,
-    callApiMethodWithParametersOld
+    callApiMethodPostParameters
 } from '../../00_general_fuctions'
 
 const current_url_api = 'grupos_permisos';
 
-export const addPermisoGrupo = (id, permiso_id, callback = null, callback_error = null) => {
+export const addPermisoGrupo = (id, permiso_id, options_action = {}) => {
     return (dispatch) => {
         let params = new URLSearchParams();
         params.append('id_permiso', permiso_id);
-        callApiMethodWithParametersOld(current_url_api, id, 'adicionar_permiso', params, null, callback, callback_error)
+        const options = {...options_action, dispatch_method: dispatch};
+        callApiMethodPostParameters(current_url_api, id, 'adicionar_permiso', params, options)
     }
 };
 

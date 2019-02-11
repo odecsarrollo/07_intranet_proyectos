@@ -4,8 +4,7 @@ import {
     updateObject,
     fetchObject,
     deleteObject,
-    createObject,
-    callApiMethodWithParametersOld
+    createObject
 } from '../../00_general_fuctions'
 
 const current_url_api = 'fases';

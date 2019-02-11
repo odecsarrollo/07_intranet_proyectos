@@ -8,7 +8,9 @@ import {
     fetchObject,
     createObject,
     deleteObject,
-    callApiMethodWithParametersOld, fetchListWithParameterOld
+    callApiMethodWithParametersOld,
+    fetchListWithParameterOld,
+    callApiMethodPostParameters
 } from '../00_general_fuctions'
 
 const current_url_api = 'usuarios';
@@ -31,13 +33,15 @@ export const addPermisoUsuario = (id, permiso_id, callback = null, callback_erro
     }
 };
 
-export const addGrupoUsuario = (id, grupo_id, callback = null, callback_error = null) => {
+export const addGrupoUsuario = (id, grupo_id, options_action = {}) => {
     return (dispatch) => {
         let params = new URLSearchParams();
         params.append('id_grupo', grupo_id);
-        callApiMethodWithParametersOld(current_url_api, id, 'adicionar_grupo', params, null, callback, callback_error)
+        const options = {...options_action, dispatch_method: dispatch};
+        callApiMethodPostParameters(current_url_api, id, 'adicionar_grupo', params, options)
     }
 };
+
 
 export const createUsuario = (values, options_action = {}) => {
     return (dispatch) => {
@@ -76,7 +80,7 @@ export const fetchUsuarios = (options_action = {}) => {
 export const fetchMiCuenta = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_cuenta, payload: response})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {

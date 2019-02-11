@@ -8,7 +8,8 @@ import {
     createObject,
     fetchListWithParameterOld,
     callApiMethodWithParametersOld,
-    callApiMethodWithParametersPDFOld
+    callApiMethodWithParametersPDFOld,
+    fetchListGetURLParameters
 } from '../../00_general_fuctions'
 
 const current_url_api = 'literales';
@@ -19,13 +20,14 @@ export const clearLiterales = () => {
     }
 };
 
-export function fetchLiteralesxParametro(parametro, callback = null, callback_error = null) {
+export function fetchLiteralesxParametro(parametro, options_action = {}) {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/listar_literales_x_parametro/?parametro=${parametro}`;
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
-        fetchListWithParameterOld(FULL_URL, dispatches, callback, callback_error);
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        fetchListGetURLParameters(FULL_URL, options);
     }
 }
 

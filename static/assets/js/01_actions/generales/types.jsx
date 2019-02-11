@@ -1,6 +1,5 @@
 export const FETCH_MIS_PERMISOS = '';
 export const FETCH_OTRO_USUARIO_PERMISOS = 'fetch_otro_usuario_permisos';
-export const FETCH_MI_CUENTA = 'fetch_mi_cuenta';
 
 ////cargando
 export const LOADING = 'is_loading';
@@ -30,5 +29,5 @@ export const USUARIO_TYPES = {
     fetch: 'fetch_usuario',
     clear: 'clear_usuarios',
     update: 'update_usuario',
-    cuenta: 'fetch_mi_cuenta'
+    fetch_cuenta: 'fetch_mi_cuenta'
 };

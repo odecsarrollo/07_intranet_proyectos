@@ -37,6 +37,11 @@ class ListadoElementos extends Component {
         });
     };
 
+    cargarDatos() {
+        const {slideIndex} = this.state;
+        this.props.fetchMisPermisos({callback: () => this.cargarElementos(slideIndex)})
+    }
+
     cargarElementos(value = null) {
         let index = value !== null ? value : this.state.slideIndex;
         if (index === 0) {
@@ -57,9 +62,6 @@ class ListadoElementos extends Component {
         this.props.clearCentrosCostosColaboradores();
     }
 
-    cargarDatos() {
-        this.props.fetchMisPermisos({callback: this.cargarElementos})
-    }
 
     render() {
         const {bloque_1_list, bloque_2_list, mis_permisos} = this.props;

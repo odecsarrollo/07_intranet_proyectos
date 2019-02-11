@@ -20,13 +20,6 @@ const MenuConsultas = () => (
         />
         <DrawerListItem
             size='1x'
-            link='/app/proyectos/literales_sin_sincronizar/list'
-            texto='Literales no sincronizados'
-            icono='user'
-            type='nested'
-        />
-        <DrawerListItem
-            size='1x'
             link='/app/proyectos/proyectos/reporte_costos'
             texto='Reporte Costos Proyectos 1'
             icono='user'

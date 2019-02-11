@@ -6,6 +6,11 @@ from .models import Fase, TareaFase, FaseLiteral
 
 
 class FaseSerializer(serializers.ModelSerializer):
+    to_string = serializers.SerializerMethodField()
+
+    def get_to_string(self, instance):
+        return instance.nombre
+
     class Meta:
         model = Fase
         fields = [
@@ -15,6 +20,7 @@ class FaseSerializer(serializers.ModelSerializer):
             'orden',
             'color',
             'letra_color',
+            'to_string',
         ]
 
 

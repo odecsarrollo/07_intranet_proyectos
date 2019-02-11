@@ -6,6 +6,10 @@ from cguno.api_serializers import ColaboradorBiableSerializer
 
 class UsuarioSerializer(serializers.ModelSerializer):
     colaborador = ColaboradorBiableSerializer(many=False, read_only=True)
+    to_string = serializers.SerializerMethodField()
+
+    def get_to_string(self, instance):
+        return ('%s %s' % (instance.first_name, instance.last_name)).title()
 
     class Meta:
         model = User
@@ -22,6 +26,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
             'date_joined',
             'is_superuser',
             'colaborador',
+            'to_string',
             'groups',
         ]
 

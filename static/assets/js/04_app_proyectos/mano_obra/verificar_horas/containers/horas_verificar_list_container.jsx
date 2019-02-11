@@ -9,7 +9,11 @@ import {
 import {permisosAdapter} from "../../../../00_utilities/common";
 import RangoFechas from "../../../../00_utilities/calendariosRangosFiltro";
 
-import ListCrud from '../components/horas_verificar_list';
+import CreateForm from '../../hojas_trabajo/components/forms/hora_hoja_trabajo_form';
+import Tabla from '../components/horas_verificar_tabla';
+import crudHOC from '../../../../00_utilities/components/hoc_crud';
+
+const CRUD = crudHOC(CreateForm, Tabla);
 
 
 class List extends Component {
@@ -40,15 +44,24 @@ class List extends Component {
         const {object_list, mis_permisos} = this.props;
         const bloque_1_permisos = permisosAdapter(mis_permisos, permisos_view);
         const permisos_hoja = permisosAdapter(mis_permisos, permisos_view_hoja);
+        const method_pool = {
+            fetchObjectMethod: this.props.fetchHoraHojaTrabajo,
+            deleteObjectMethod: this.props.deleteHoraHojaTrabajo,
+            createObjectMethod: this.props.createHoraHojaTrabajo,
+            updateObjectMethod: this.props.updateHoraHojaTrabajo,
+        };
         return (
             <Fragment>
                 <RangoFechas metodoBusquedaFechas={(i, f) => {
                     this.props.fetchHorasHojasTrabajosAutogestionadasxFechas(i, f);
                 }}/>
-                <ListCrud
-                    object_list={object_list}
+                <CRUD
+                    method_pool={method_pool}
+                    list={object_list}
                     permisos_hoja={permisos_hoja}
                     permisos_object={{...bloque_1_permisos, list: bloque_1_permisos.verificar, add: false}}
+                    plural_name='Verificar'
+                    singular_name='Verificar'
                     {...this.props}
                 />
                 <CargarDatos

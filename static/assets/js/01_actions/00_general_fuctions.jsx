@@ -175,6 +175,19 @@ export function fetchListGet(url, options) {
     createRequest(request, {...options, mensaje_cargando});
 }
 
+export function fetchListGetURLParameters(url, options) {
+    console.log(`%cFETCH LIST PARAMETROS - %c${url.toUpperCase()}`, 'color:red', 'color:blue');
+    const mensaje_cargando = `Consultando ${url.toUpperCase()}`;
+    const FULL_URL = `${url}&format=json`;
+    const headers = {"Content-Type": "application/json"};
+    if (localStorage.token) {
+        headers["Authorization"] = `Token ${localStorage.token}`;
+    }
+    axios_instance.defaults.headers = headers;
+    const request = axios_instance.get(FULL_URL);
+    createRequest(request, {...options, mensaje_cargando});
+}
+
 export function fetchListWithParameterOld(url, dispatches = null, callback = null, callback_error = null) {
     console.log(`%cFETCH LIST PARAMETROS - %c${url.toUpperCase()}`, 'color:red', 'color:blue');
     const FULL_URL = `${url}&format=json`;
@@ -278,6 +291,22 @@ export function callApiMethodWithParametersOld(url, id, method, parameters, disp
         callback,
         callback_error
     );
+}
+
+export function callApiMethodPostParameters(url, id, method, values, options) {
+    console.log(`%cAPI METODO ${method.toUpperCase()} CON PARMAETROS - %c${url.toUpperCase()} - %cID ${id}`, 'color:red', 'color:blue', 'color:green');
+    const mensaje_cargando = `Ejecutando ${method.toUpperCase()} en ${url.toUpperCase()}`;
+    axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+    axios_instance.defaults.xsrfCookieName = "csrftoken";
+    const headers = {};
+    if (localStorage.token) {
+        headers["Authorization"] = `Token ${localStorage.token}`;
+        headers["Content-Type"] = 'application/x-www-form-urlencoded;charset=UTF-8';
+    }
+    axios_instance.defaults.headers = headers;
+    const FULL_URL = `${url}/${id}/${method}/`;
+    const request = axios_instance.post(FULL_URL, values);
+    createRequest(request, {...options, mensaje_cargando});
 }
 
 export function listRoutePostWithParametersOld(url, method, parameters, dispatches = null, callback = null, callback_error = null) {

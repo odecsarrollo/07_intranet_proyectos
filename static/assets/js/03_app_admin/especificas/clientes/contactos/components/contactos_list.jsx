@@ -9,67 +9,36 @@ const CRUD = crudHOC(CreateForm, Tabla);
 class List extends Component {
     constructor(props) {
         super(props);
-        this.method_pool = {
-            fetchObjectMethod: this.fetchObjectMethod.bind(this),
-            deleteObjectMethod: this.deleteObjectMethod.bind(this),
-            createObjectMethod: this.createObjectMethod.bind(this),
-            updateObjectMethod: this.updateObjectMethod.bind(this),
-        };
+        this.cargarDatos = this.cargarDatos.bind(this);
         this.plural_name = 'Contactos';
         this.singular_name = 'Contacto';
     }
 
-    successSubmitCallback(item) {
-        const nombre = `${item.nombres} ${item.apellidos}`;
-        const {noCargando, notificarAction} = this.props;
-        notificarAction(`Se ha ${item.id ? 'actualizado' : 'creado'} con éxito ${this.singular_name.toLowerCase()} ${nombre}`);
-        noCargando()
+    componentDidMount() {
+        this.cargarDatos();
     }
 
-
-    successDeleteCallback(item) {
-        const nombre = `${item.nombres} ${item.apellidos}`;
-        const {noCargando, notificarAction} = this.props;
-        notificarAction(`Se ha eliminado con éxito ${this.singular_name.toLowerCase()} ${nombre}`);
-        noCargando()
+    componentWillUnmount() {
+        this.props.clearContactosClientes();
     }
 
-    fetchObjectMethod(item_id, successCallback) {
-        const callback = (item) => {
-            successCallback(item);
-        };
-        this.props.fetchContactoCliente(item_id, {callback});
-    }
-
-    createObjectMethod(item, successCallback) {
-        const callback = () => {
-            this.successSubmitCallback(item);
-            successCallback();
-        };
-        this.props.createContactoCliente(item, {callback});
-    }
-
-    updateObjectMethod(item, successCallback) {
-        const callback = () => {
-            this.successSubmitCallback(item);
-            successCallback();
-        };
-        this.props.updateContactoCliente(item.id, item, {callback});
-    }
-
-    deleteObjectMethod(item, successCallback) {
-        const callback = () => {
-            this.successDeleteCallback(item);
-            successCallback();
-        };
-        this.props.deleteContactoCliente(item.id, {callback});
+    cargarDatos() {
+        const {id} = this.props.match.params;
+        const cargarContactos = this.props.fetchContactosClientes_por_cliente(id);
+        this.props.fetchMisPermisos({callback: cargarContactos})
     }
 
     render() {
         const {object_list, permisos_object} = this.props;
+        const method_pool = {
+            fetchObjectMethod: this.props.fetchContactoCliente,
+            deleteObjectMethod: this.props.deleteContactoCliente,
+            createObjectMethod: this.props.createContactoCliente,
+            updateObjectMethod: this.props.updateContactoCliente,
+        };
         return (
             <CRUD
-                method_pool={this.method_pool}
+                method_pool={method_pool}
                 list={object_list}
                 permisos_object={permisos_object}
                 plural_name={this.plural_name}

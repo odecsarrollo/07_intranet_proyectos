@@ -7,14 +7,18 @@ import {
     PROYECTOS as proyectos_permisos_view,
 } from "../../../../00_utilities/permisos/types";
 import {permisosAdapter} from "../../../../00_utilities/common";
+import Tabla from '../components/cotizaciones_tabla';
+import crudHOC from '../../../../00_utilities/components/hoc_crud';
 
-import ListCrud from '../components/cotizaciones_list';
+const CRUD = crudHOC(null, Tabla);
 
 
 class List extends Component {
     constructor(props) {
         super(props);
         this.cargarDatos = this.cargarDatos.bind(this);
+        this.plural_name = 'Cotizaciones';
+        this.singular_name = 'Cotizacion';
     }
 
     componentDidMount() {
@@ -27,7 +31,7 @@ class List extends Component {
 
     cargarDatos() {
         const cargarCotizaciones = () => this.props.fetchCotizaciones();
-        this.props.fetchMisPermisos({callback:cargarCotizaciones})
+        this.props.fetchMisPermisos({callback: cargarCotizaciones})
 
     }
 
@@ -35,12 +39,22 @@ class List extends Component {
         const {object_list, mis_permisos} = this.props;
         const cotizaciones_permisos = permisosAdapter(mis_permisos, permisos_view);
         const proyectos_permisos = permisosAdapter(mis_permisos, proyectos_permisos_view);
+        const method_pool = {
+            fetchObjectMethod: this.props.fetchCotizacion,
+            deleteObjectMethod: this.props.deleteCotizacion,
+            createObjectMethod: this.props.createCotizacion,
+            updateObjectMethod: this.props.updateCotizacion,
+        };
+
         return (
             <Fragment>
-                <ListCrud
-                    object_list={object_list}
+                <CRUD
+                    method_pool={method_pool}
+                    list={object_list}
                     permisos_object={{...cotizaciones_permisos, add: false}}
                     proyectos_permisos={proyectos_permisos}
+                    plural_name={this.plural_name}
+                    singular_name={this.singular_name}
                     {...this.props}
                 />
                 <CargarDatos

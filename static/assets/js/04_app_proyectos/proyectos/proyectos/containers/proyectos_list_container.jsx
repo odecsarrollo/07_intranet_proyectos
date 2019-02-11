@@ -7,8 +7,11 @@ import {
     COTIZACIONES as cotizaciones_permisos_view,
 } from "../../../../00_utilities/permisos/types";
 import {permisosAdapter} from "../../../../00_utilities/common";
+import CreateForm from '../components/forms/proyectos_modal_form';
+import Tabla from '../components/proyectos_tabla';
+import crudHOC from '../../../../00_utilities/components/hoc_crud';
 
-import ListCrud from '../components/proyectos_list';
+const CRUD = crudHOC(CreateForm, Tabla);
 
 import CotizacionAbrirCarpetaLista from '../components/contizaciones_abrir_carpetas_list';
 
@@ -17,6 +20,8 @@ class List extends Component {
     constructor(props) {
         super(props);
         this.cargarDatos = this.cargarDatos.bind(this);
+        this.plural_name = 'Proyectos';
+        this.singular_name = 'Proyecto';
     }
 
     componentDidMount() {
@@ -51,6 +56,13 @@ class List extends Component {
             return c
         });
 
+        const method_pool = {
+            fetchObjectMethod: this.props.fetchProyecto,
+            deleteObjectMethod: this.props.deleteProyecto,
+            createObjectMethod: this.props.createProyecto,
+            updateObjectMethod: this.props.updateProyecto,
+        };
+
         return (
             <Fragment>
                 <CotizacionAbrirCarpetaLista
@@ -64,12 +76,17 @@ class List extends Component {
                         list: true
                     }}
                 />
-                <ListCrud
-                    object_list={_.orderBy(object_list, ['id_proyecto'], ['desc'])}
+
+                <CRUD
+                    method_pool={method_pool}
+                    list={_.orderBy(object_list, ['id_proyecto'], ['desc'])}
                     permisos_cotizaciones={permisos_cotizaciones}
                     permisos_object={permisos_proyectos}
+                    plural_name={this.plural_name}
+                    singular_name={this.singular_name}
                     {...this.props}
                 />
+
                 <CargarDatos
                     cargarDatos={this.cargarDatos}
                 />

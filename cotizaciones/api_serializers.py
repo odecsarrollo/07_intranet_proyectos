@@ -42,6 +42,14 @@ class CotizacionSerializer(serializers.ModelSerializer):
     color_tuberia_ventas = serializers.SerializerMethodField()
     porcentaje_tuberia_ventas = serializers.SerializerMethodField()
 
+    to_string = serializers.SerializerMethodField()
+
+    def get_to_string(self, instance):
+        nro_cotizacion = ''
+        if instance.nro_cotizacion:
+            nro_cotizacion = '%s -' % (instance.nro_cotizacion)
+        return '%s%s' % (nro_cotizacion, instance.descripcion_cotizacion.title())
+
     def get_porcentaje_tuberia_ventas(self, obj):
         fecha_ini = obj.fecha_cambio_estado
         fecha_seg = obj.fecha_limite_segumiento_estado
@@ -122,6 +130,7 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'crear_literal_id_proyecto',
             'color_tuberia_ventas',
             'porcentaje_tuberia_ventas',
+            'to_string',
         ]
         extra_kwargs = {
             'mi_proyecto': {'read_only': True},

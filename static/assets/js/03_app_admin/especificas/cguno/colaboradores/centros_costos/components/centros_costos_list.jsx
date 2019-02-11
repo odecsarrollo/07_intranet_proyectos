@@ -10,60 +10,13 @@ class List extends Component {
     constructor(props) {
         super(props);
         this.method_pool = {
-            fetchObjectMethod: this.fetchObjectMethod.bind(this),
-            deleteObjectMethod: this.deleteObjectMethod.bind(this),
-            createObjectMethod: this.createObjectMethod.bind(this),
-            updateObjectMethod: this.updateObjectMethod.bind(this),
+            fetchObjectMethod: this.props.fetchCentroCostoColaborador,
+            deleteObjectMethod: this.props.deleteCentroCostoColaborador,
+            createObjectMethod: this.props.createCentroCostoColaborador,
+            updateObjectMethod: this.props.updateCentroCostoColaborador,
         };
         this.plural_name = 'Centros Costos';
         this.singular_name = 'Centro Costo';
-    }
-
-    successSubmitCallback(item) {
-        const nombre = item.nombre;
-        const {noCargando, notificarAction} = this.props;
-        notificarAction(`Se ha ${item.id ? 'actualizado' : 'creado'} con éxito ${this.singular_name.toLowerCase()} ${nombre}`);
-        noCargando()
-    }
-
-
-    successDeleteCallback(item) {
-        const nombre = item.nombre;
-        const {noCargando, notificarAction} = this.props;
-        notificarAction(`Se ha eliminado con éxito ${this.singular_name.toLowerCase()} ${nombre}`);
-        noCargando()
-    }
-
-    fetchObjectMethod(item_id, successCallback) {
-        const callback = (item) => {
-            successCallback(item);
-        };
-        this.props.fetchCentroCostoColaborador(item_id, {callback});
-    }
-
-    createObjectMethod(item, successCallback) {
-        const callback = () => {
-            this.successSubmitCallback(item);
-            successCallback();
-        };
-        this.props.createCentroCostoColaborador(item, {callback});
-    }
-
-    updateObjectMethod(item, successCallback) {
-        const callback = () => {
-            this.successSubmitCallback(item);
-            successCallback();
-        };
-        this.props.updateCentroCosto(item.id, item, {callback});
-    }
-
-    deleteObjectMethod(item, successCallback) {
-        const {cargando, notificarErrorAjaxAction} = this.props;
-        const callback = () => {
-            this.successDeleteCallback(item);
-            successCallback();
-        };
-        this.props.deleteCentroCostoColaborador(item.id, {callback});
     }
 
     render() {

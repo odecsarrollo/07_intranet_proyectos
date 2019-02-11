@@ -1,8 +1,8 @@
 import React, {Component, Fragment} from 'react';
 import {reduxForm} from 'redux-form';
-import {MyTextFieldSimple} from '../../../../../../00_utilities/components/ui/forms/fields';
+import {MyTextFieldSimple} from '../../../../../00_utilities/components/ui/forms/fields';
 import {connect} from "react-redux";
-import {MyFormTagModal} from '../../../../../../00_utilities/components/ui/forms/MyFormTagModal';
+import {MyFormTagModal} from '../../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import validate from './validate';
 import asyncValidate from './asyncValidate';
 

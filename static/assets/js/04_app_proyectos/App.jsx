@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react';
+import React from 'react';
 import {Route, Switch} from 'react-router-dom';
 import Loading from '../00_utilities/components/system/loading_overlay';
 
@@ -11,9 +11,7 @@ import ConcecutivoProyectosList
 import HojasTrabajoList from './mano_obra/hojas_trabajo/containers/hojas_trabajos_list_container';
 import HojasTrabajoDetail from './mano_obra/hojas_trabajo/containers/hojas_trabajos_detail';
 import VerificarHorasList from './mano_obra/verificar_horas/containers/horas_verificar_list_container';
-import ColaboradoresList from './colaboradores/colaboradores/containers/colaboradores_list_container';
-import ColaboradoresDetail from './colaboradores/colaboradores/containers/colaborador_detail';
-import HorasTrabajoColaboradorInicialesList from './mano_obra/horas_trabajo_iniciales/containers/base_list_container';
+import HorasTrabajoColaboradorInicialesList from './mano_obra/horas_trabajo_iniciales/containers/horas_trabajo_iniciales_list_container';
 
 import ProyectosCGUnoList from "./proyectos/proyectos/containers/proyectos_list_container";
 import ProyectosCGUnoDetail from "./proyectos/proyectos/containers/proyectos_detail";
@@ -23,12 +21,6 @@ import FasesProyectosList from "./proyectos/fases/containers/fases_list_containe
 import ReporteCosto from "./proyectos/reportes/reporte_1/containers/reporte_1";
 import ReporteDos from "./proyectos/reportes/reporte_2/containers/reporte_2";
 import ReporteTres from "./proyectos/reportes/reporte_3/containers/reporte_3";
-
-
-//import CargueMateriales from "./proyectos/listado_materiales/containers/cargue_materiales";
-
-import LiteralesSinSincronizar
-    from "./proyectos/literales_sin_sincronizar/containers/literales_sin_sincronizar_list_container";
 
 
 import PlaneadorMateriaPrima
@@ -50,16 +42,10 @@ const App = () => {
                            component={HojasTrabajoDetail}/>
                     <Route exact path='/app/proyectos/mano_obra/verificar_horas/list'
                            component={VerificarHorasList}/>
-                    <Route exact path='/app/proyectos/colaboradores/colaboradores/list'
-                           component={ColaboradoresList}/>
-                    <Route exact path='/app/proyectos/colaboradores/colaboradores/detail/:id'
-                           component={ColaboradoresDetail}/>
                     <Route exact path='/app/proyectos/mano_obra/horas_colaborador_proyecto_inicial/list'
                            component={HorasTrabajoColaboradorInicialesList}/>
                     <Route exact path='/app/proyectos/proyectos/list' component={ProyectosCGUnoList}/>
                     <Route exact path='/app/proyectos/proyectos/detail/:id' component={ProyectosCGUnoDetail}/>
-                    <Route exact path='/app/proyectos/literales_sin_sincronizar/list'
-                           component={LiteralesSinSincronizar}/>
 
                     <Route exact path='/app/proyectos/proyectos/reporte_costos' component={ReporteCosto}/>
                     <Route exact path='/app/proyectos/proyectos/reporte_dos' component={ReporteDos}/>
