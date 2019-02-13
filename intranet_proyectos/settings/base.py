@@ -67,8 +67,8 @@ MY_APPS = [
 THIRD_PART_APPS = [
     'model_utils',
     'crispy_forms',
-    'knox',
     'rest_framework',
+    'knox',
     'webpack_loader',
 ]
 

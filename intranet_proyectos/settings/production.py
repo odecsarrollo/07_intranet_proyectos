@@ -1,6 +1,7 @@
 from .base import *
+from datetime import timedelta
 
-DEBUG = True
+DEBUG = False
 ########## MANAGER CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#admins
 ADMINS = (
@@ -126,12 +127,6 @@ EMAIL_USE_SSL = str_to_bool(os.environ["EMAIL_USE_SSL"])
 DEFAULT_FROM_EMAIL = os.environ["DEFAULT_FROM_EMAIL"]
 ########## END EMAIL CONFIGURATION
 
-REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
-    ),
-    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
-}
 
 WEBPACK_LOADER = {
     'DEFAULT': {
@@ -140,7 +135,12 @@ WEBPACK_LOADER = {
     }
 }
 
-from datetime import timedelta
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
+}
 
 REST_KNOX = {
     'TOKEN_TTL': timedelta(hours=15),
