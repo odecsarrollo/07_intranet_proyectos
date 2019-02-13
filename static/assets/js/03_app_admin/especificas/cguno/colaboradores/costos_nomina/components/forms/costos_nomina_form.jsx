@@ -95,6 +95,7 @@ class Form extends Component {
                         }
                     })}
                     textField='name'
+                    filter='contains'
                     valuesField='id'
                     placeholder='Centro Costo'
                 />

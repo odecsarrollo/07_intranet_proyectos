@@ -129,7 +129,8 @@ DEFAULT_FROM_EMAIL = os.environ["DEFAULT_FROM_EMAIL"]
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
-    )
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
 }
 
 WEBPACK_LOADER = {
@@ -137,4 +138,10 @@ WEBPACK_LOADER = {
         'BUNDLE_DIR_NAME': 'assets/bundles/dist/',
         'STATS_FILE': os.path.join(SITE_ROOT, 'webpack-stats-prod.json'),
     }
+}
+
+from datetime import timedelta
+
+REST_KNOX = {
+    'TOKEN_TTL': timedelta(hours=15),
 }

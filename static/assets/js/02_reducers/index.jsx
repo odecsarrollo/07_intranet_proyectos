@@ -8,6 +8,7 @@ import usuariosReducer from './generales/usuariosReducer';
 import loadingReducer from './generales/loadingReducer';
 import miCuentaReducer from './generales/miCuentaReducer';
 import menuReducer from './generales/menuReducer';
+import auth from './generales/authentication/authenticationReducer';
 
 import proyectosReducer from './especificas/proyectos/proyectosReducer';
 import proyectosArchivosReducer from "./especificas/proyectos/archivosProyectosReducer";
@@ -47,6 +48,7 @@ const rootReducer = combineReducers({
     esta_cargando: loadingReducer,
     notifications: NotifyReducer,
     form: formReducer,
+    auth,
     proyectos: proyectosReducer,
     miembros_literales: miembrosLiteralesReducer,
     fases: fasesReducer,

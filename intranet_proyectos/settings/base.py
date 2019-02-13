@@ -67,12 +67,17 @@ MY_APPS = [
 THIRD_PART_APPS = [
     'model_utils',
     'crispy_forms',
+    'knox',
     'rest_framework',
     'webpack_loader',
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + MY_APPS + THIRD_PART_APPS
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

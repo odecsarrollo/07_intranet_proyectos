@@ -4,3 +4,4 @@ export * from './utiles/notificacionesActions';
 export * from './utiles/loadingAction';
 export * from './usuariosAction';
 export * from './menuAction';
+export * from './authentication/authenticationAction';

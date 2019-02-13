@@ -91,6 +91,7 @@ class Form extends Component {
                             placeholder='Seleccionar Asignado'
                             valueField='id'
                             textField='nombre'
+                            filter='contains'
                         />
                     </div>
                 </div>

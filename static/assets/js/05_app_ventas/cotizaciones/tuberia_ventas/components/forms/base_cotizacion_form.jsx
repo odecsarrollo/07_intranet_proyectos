@@ -88,6 +88,7 @@ const FormBaseCotizacion = (props) => {
                         textField='name'
                         valuesField='id'
                         placeholder='Cliente'
+                        filter='contains'
                         onSelect={(v) => cargarContactosCliente(v.id)}
                     />
                     {
@@ -102,6 +103,7 @@ const FormBaseCotizacion = (props) => {
                                 }
                             })}
                             textField='name'
+                            filter='contains'
                             valuesField='id'
                             placeholder='Contacto'
                         />

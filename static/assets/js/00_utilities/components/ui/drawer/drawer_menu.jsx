@@ -125,11 +125,12 @@ class DrawerMenu extends Component {
                             {titulo}
                         </Typography>
                         <div className='text-right' style={{position: 'absolute', right: 0}}>
-                            <a href="/accounts/logout/?next=/">
-                                <Button color="inherit">
-                                    Salir
-                                </Button>
-                            </a>
+                            <Button
+                                color="inherit"
+                                onClick={() => this.props.logout()}
+                            >
+                                Salir
+                            </Button>
                         </div>
                     </Toolbar>
                 </AppBar>

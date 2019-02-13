@@ -82,6 +82,7 @@ class Form extends Component {
                             valuesField='id'
                             className='col-12'
                             placeholder='Responsable'
+                            filter='contains'
                         />
                     }
                 </div>

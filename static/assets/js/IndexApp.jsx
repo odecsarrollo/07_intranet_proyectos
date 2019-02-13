@@ -100,23 +100,25 @@ class IndexApp extends Component {
                                 <div
                                     className={classNames(classes.bordeBoton, 'col-4 mt-3')}
                                 >
-                                    <a href="/accounts/logout/?next=/">
-                                        <div className='icono puntero'>
-                                            <div className="row">
-                                                <div className="col-12">
-                                                    <FontAwesomeIcon
-                                                        icon={'sign-out'}
-                                                        className={classes.iconoBoton}
-                                                    />
-                                                </div>
-                                                <div className="col-12">
-                                                    <Typography variant="h6" color="primary" noWrap>
-                                                        Salir
-                                                    </Typography>
-                                                </div>
+                                    <div className='icono puntero'
+                                         onClick={() => {
+                                             this.props.logout();
+                                         }}
+                                    >
+                                        <div className="row">
+                                            <div className="col-12">
+                                                <FontAwesomeIcon
+                                                    icon={'sign-out'}
+                                                    className={classes.iconoBoton}
+                                                />
+                                            </div>
+                                            <div className="col-12">
+                                                <Typography variant="h6" color="primary" noWrap>
+                                                    Salir
+                                                </Typography>
                                             </div>
                                         </div>
-                                    </a>
+                                    </div>
                                 </div>
                                 <div className="col-4"></div>
                             </div>

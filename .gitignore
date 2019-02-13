@@ -3,6 +3,7 @@ db.sqlite3
 /secretsLocal.json
 /cositas.txt
 /node_modules
+media/*
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml

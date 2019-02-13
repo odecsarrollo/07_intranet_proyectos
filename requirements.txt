@@ -1,3 +1,4 @@
+asn1crypto==0.24.0
 awsebcli==3.14.1
 blessed==1.15.0
 boto3==1.7.45
@@ -10,6 +11,7 @@ certifi==2018.4.16
 cffi==1.11.5
 chardet==3.0.4
 colorama==0.3.9
+cryptography==2.5
 cssselect2==0.2.1
 defusedxml==0.5.0
 Django==2.0.4
@@ -19,6 +21,7 @@ django-debug-toolbar==1.9.1
 django-filter==1.1.0
 django-model-utils==3.1.1
 django-registration-redux==2.1
+django-rest-knox==3.6.0
 django-storages==1.6.6
 django-webpack-loader==0.5.0
 djangorestframework==3.7.7
@@ -38,6 +41,7 @@ pathspec==0.5.5
 pdfrw==0.4
 Pillow==5.1.0
 pycparser==2.18
+pyOpenSSL==19.0.0
 Pyphen==0.9.4
 python-dateutil==2.7.3
 pytz==2018.7

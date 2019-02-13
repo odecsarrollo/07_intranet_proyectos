@@ -23,8 +23,9 @@ from index.views import IndexView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/auth/', include('usuarios.urls')),
     path('api/', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls')),
+    # path('api-auth/', include('rest_framework.urls')),
     url(r'^app/*', IndexView.as_view(), name='index'),
     path('', include('index.urls')),
 ]
