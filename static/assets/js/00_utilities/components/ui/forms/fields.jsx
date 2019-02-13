@@ -125,11 +125,12 @@ export const MyDropdownList = (props) => {
         </div>
     )
 };
-const renderCombobox = ({input, data, valueField, textField, placeholder, onSelect, meta: {touched, error, warning}}) => {
+const renderCombobox = ({input, data, valueField, textField, placeholder, onSelect, filter, meta: {touched, error, warning}}) => {
     return (
         <Fragment>
             <Combobox {...input}
                       data={data}
+                      filter={filter}
                       placeholder={placeholder}
                       valueField={valueField}
                       textField={textField}
