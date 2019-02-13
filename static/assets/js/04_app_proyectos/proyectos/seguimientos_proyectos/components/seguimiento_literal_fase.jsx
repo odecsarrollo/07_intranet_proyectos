@@ -5,6 +5,7 @@ import CargueTareas from './cargue_tareas';
 import ResponsableFaseLiteral from './adicionar_responsable';
 import TareasFase from './tareas_fase_table';
 import moment from "moment-timezone";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 class FaseLiteral extends Component {
     constructor(props) {
@@ -103,8 +104,11 @@ class FaseLiteral extends Component {
     }
 
     cambiarAsignadoTarea(tarea, asignado_a, callback = null) {
-        const actualizarTareaFase = (response) => this.props.pdateTareaFase(tarea.id, {...response, asignado_a}, {callback});
-        this.props.fetchTareaFase(tarea.id, {callback:actualizarTareaFase});
+        const actualizarTareaFase = (response) => this.props.pdateTareaFase(tarea.id, {
+            ...response,
+            asignado_a
+        }, {callback});
+        this.props.fetchTareaFase(tarea.id, {callback: actualizarTareaFase});
     }
 
     render() {
@@ -264,10 +268,11 @@ class FaseLiteral extends Component {
                             />
                             {
                                 puede_adicionar_tareas &&
-                                <i
-                                    className={`fa fa-${mostrar_add_tareas ? 'minus' : 'plus'} puntero`}
-                                    onClick={onClickAddTarea}>
-                                </i>
+                                <FontAwesomeIcon
+                                    className='puntero'
+                                    icon={`${mostrar_add_tareas ? 'minus' : 'plus'}-circle`}
+                                    onClick={onClickAddTarea}
+                                />
                             }
                             <TareasFase
                                 seleccionarTodasTareas={this.seleccionarTodasTareas}
@@ -293,11 +298,11 @@ class FaseLiteral extends Component {
                         tiene_tareas_seleccionadas &&
                         mostrar_tareas &&
                         <div className='text-right'>
-                            <i
-                                className='fas fa-trash puntero'
+                            <FontAwesomeIcon
+                                icon={'trash'}
+                                className='puntero'
                                 onClick={() => this.eliminarTareasSelecionadas()}
-                            >
-                            </i>
+                            />
                         </div>
                     }
                 </div>

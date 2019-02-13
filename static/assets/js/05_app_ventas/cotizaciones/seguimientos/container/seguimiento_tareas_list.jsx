@@ -15,6 +15,7 @@ import {permisosAdapter} from "../../../../00_utilities/common";
 moment.tz.setDefault("America/Bogota");
 moment.locale('es');
 momentLocaliser(moment);
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 import {Link} from 'react-router-dom'
 
@@ -36,7 +37,9 @@ const Tarea = (props) => {
     return (
         <Link to={link_to}>
             <li className="list-group-item" style={style}>
-                <i className={icono}></i> <strong>{nombre}</strong><br/>
+                <FontAwesomeIcon
+                    icon={icono}
+                /><strong>{nombre}</strong><br/>
                 <div className="row">
                     <div className="col-12 col-md-6">
                         <small>Fecha: <strong>{fechaFormatoUno(fecha)} ({diferencia_texto})</strong></small>
@@ -84,7 +87,7 @@ class SeguimientoTareasCotizacionesList extends Component {
                 nombre: t.nombre_tarea,
                 cotizacion: t.cotizacion,
                 cliente_nombre: t.cliente_nombre,
-                icono: 'fas fa-tasks',
+                icono: 'tasks',
                 key: `t-${t.cotizacion}-${t.id}`
             }
         });
@@ -95,7 +98,7 @@ class SeguimientoTareasCotizacionesList extends Component {
                 nombre: c.descripcion_cotizacion,
                 cotizacion: c.id,
                 cliente_nombre: c.cliente_nombre,
-                icono: 'fas fa-money-bill-alt',
+                icono: 'money-bill-alt',
                 key: `c-${c.id}`
             }
         });

@@ -1,6 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import Combobox from 'react-widgets/lib/Combobox';
 import MiembrosLista from './miembros_literal_list';
+import Button from '@material-ui/core/Button';
 
 export default class MiembroLiteral extends Component {
     constructor(props) {
@@ -69,12 +70,14 @@ export default class MiembroLiteral extends Component {
                         {
                             usuario_seleccionado &&
                             <div className="col-12 col-md-2">
-                                <button
-                                    className='btn btn-primary'
+                                <Button
+                                    color="primary"
+                                    variant="contained"
                                     onClick={() => adicionarMiembro(usuario_seleccionado.id)}
+                                    className='ml-3'
                                 >
                                     Adicionar
-                                </button>
+                                </Button>
                             </div>
                         }
                     </Fragment>

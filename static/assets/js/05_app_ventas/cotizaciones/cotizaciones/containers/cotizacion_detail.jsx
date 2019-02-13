@@ -18,6 +18,7 @@ import CotizacionForm from '../../tuberia_ventas/components/forms/cotizacion_for
 import CotizacionInfo from '../../tuberia_ventas/components/cotizacion_info';
 import UploadDocumentoForm from '../../../../04_app_proyectos/proyectos/archivos/forms/upload_documento_form';
 import ArchivosCotizacionList from '../../../../04_app_proyectos/proyectos/archivos/components/archivos_list';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 class Detail extends Component {
     constructor(props) {
@@ -185,12 +186,14 @@ class Detail extends Component {
                                 <TabPanel>
                                     {
                                         permisos_archivos_cotizacion.add &&
-                                        <i className={`fas fa-${adicionar_documento ? 'minus' : 'plus'}-circle puntero`}
-                                           onClick={() => this.setState((s) => ({
-                                               adicionar_documento: !s.adicionar_documento,
-                                               item_seleccionado: null
-                                           }))}>
-                                        </i>
+                                        <FontAwesomeIcon
+                                            className='puntero'
+                                            icon={`${adicionar_documento ? 'minus' : 'plus'}-circle`}
+                                            onClick={() => this.setState((s) => ({
+                                                adicionar_documento: !s.adicionar_documento,
+                                                item_seleccionado: null
+                                            }))}
+                                        />
                                     }
                                     {
                                         adicionar_documento &&

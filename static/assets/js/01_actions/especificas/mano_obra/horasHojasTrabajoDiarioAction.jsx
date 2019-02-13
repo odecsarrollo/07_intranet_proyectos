@@ -19,7 +19,11 @@ export function printReporteCostoTresProyecto(valores, options_action = {}) {
         if (valores.lapso) {
             FULL_URL = `${FULL_URL}?fecha_inicial=${valores.fecha_inicial}&fecha_final=${valores.fecha_final}&con_mo_saldo_inicial=${valores.con_mo_saldo_inicial}`
         }
-        fetchObjectWithParameterPDF(FULL_URL, options_action)
+        const options = {
+            ...options_action,
+            dispatch_method: dispatch
+        };
+        fetchObjectWithParameterPDF(FULL_URL, options)
     }
 }
 

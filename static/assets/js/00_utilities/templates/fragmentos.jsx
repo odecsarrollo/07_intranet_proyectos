@@ -53,29 +53,6 @@ export const SinObjeto = (props) => {
     return <div>Cargando...</div>
 };
 
-export const ListaAddBoton = (props) => {
-    const {can_add, onClick} = props;
-    return (
-        <Fragment>
-            {
-                can_add &&
-                <button
-                    className="btn btn-primary"
-                    style={{cursor: "pointer"}}
-                    onClick={onClick}
-                >
-                    <i className="fas fa-plus"
-                       aria-hidden="true"></i>
-                </button>
-            }
-        </Fragment>
-    )
-};
-
-ListaAddBoton.propTypes = {
-    can_add: PropTypes.bool,
-    onClick: PropTypes.func
-};
 
 export const TablaTdBoton = (props) => {
     const {onClick, icono, mostrar} = props;

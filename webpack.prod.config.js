@@ -20,11 +20,7 @@ config.plugins = config.plugins.concat([
     new UglifyJsPlugin({
         uglifyOptions: {
             comments: false,
-            compress: {
-                drop_console: true,
-                drop_debugger: true,
-                warnings: false
-            }
+            compress: true
         }
     }),
     new ExtractTextPlugin('webpack-style-[hash].css')

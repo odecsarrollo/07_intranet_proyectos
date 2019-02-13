@@ -7,6 +7,7 @@ import permisosReducer from './generales/permisos/permisosReducer';
 import usuariosReducer from './generales/usuariosReducer';
 import loadingReducer from './generales/loadingReducer';
 import miCuentaReducer from './generales/miCuentaReducer';
+import menuReducer from './generales/menuReducer';
 
 import proyectosReducer from './especificas/proyectos/proyectosReducer';
 import proyectosArchivosReducer from "./especificas/proyectos/archivosProyectosReducer";
@@ -37,6 +38,7 @@ import cotizacionesArchivosReducer from "./especificas/cotizaciones/archivosCoti
 import configuracionCostos from './especificas/configuraciones/configuracionCostosReducer';
 
 const rootReducer = combineReducers({
+    menu_status: menuReducer,
     mis_permisos: misPermisosReducer,
     permisos: permisosReducer,
     grupos_permisos: gruposPermisosReducer,

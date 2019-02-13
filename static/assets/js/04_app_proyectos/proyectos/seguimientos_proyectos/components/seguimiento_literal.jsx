@@ -6,10 +6,9 @@ import * as actions from "../../../../01_actions/01_index";
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import {permisosAdapter} from "../../../../00_utilities/common";
 import {
-    CLIENTES as permisos_view,
-    COTIZACIONES as cotizaciones_permisos_view,
     PROYECTOS as proyectos_permisos_view,
 } from "../../../../00_utilities/permisos/types";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 import MiembroLiteral from './adicionar_miembro';
 
@@ -53,6 +52,7 @@ class SeguimientoLiteral extends Component {
         this.cargarDatos = this.cargarDatos.bind(this);
         this.onClickPlusZoom = this.onClickPlusZoom.bind(this);
         this.onClickMinusZoom = this.onClickMinusZoom.bind(this);
+        this.onSelectTabClick = this.onSelectTabClick.bind(this);
     }
 
     componentWillUnmount() {
@@ -78,29 +78,18 @@ class SeguimientoLiteral extends Component {
     }
 
     cargarDatos(id_literal) {
-        const {
-            fetchFases,
-            fetchMiCuenta,
-            fetchFasesLiterales_x_literal,
-            fetchMiembrosLiterales_x_literal,
-            fetchUsuarios,
-        } = this.props;
-        const cargarMiCuenta = () => fetchMiCuenta();
-        const cargarUsuarios = () => fetchUsuarios({callback: cargarMiCuenta});
-        const cargarMiembros = () => fetchMiembrosLiterales_x_literal(id_literal, {callback: cargarUsuarios});
-        const cargarFasesxLiteral = () => fetchFasesLiterales_x_literal(id_literal, {callback: cargarMiembros});
-        const cargarFases = () => fetchFases({callback: cargarFasesxLiteral});
-        this.props.tengoMisPermisosxListado([permisos_view, proyectos_permisos_view, cotizaciones_permisos_view], {callback: cargarFases});
+        const cargarMiCuenta = () => this.props.fetchMiCuenta();
+        this.props.fetchFasesLiterales_x_literal(id_literal, {callback: cargarMiCuenta});
     }
 
     adicionarMiembro(usuario_id) {
         const {id_literal} = this.props;
-        this.props.adicionarMiembroLiteral(id_literal, usuario_id, {callback: () => this.cargarDatos(id_literal)});
+        this.props.adicionarMiembroLiteral(id_literal, usuario_id, {callback: () => this.onSelectTabClick(2)});
     }
 
     quitarMiembro(usuario_id) {
         const {id_literal} = this.props;
-        this.props.quitarMiembroLiteral(id_literal, usuario_id, {callback: () => this.cargarDatos(id_literal)});
+        this.props.quitarMiembroLiteral(id_literal, usuario_id, {callback: () => this.onSelectTabClick(2)});
     }
 
     editarMiembro(miembro, cambios) {
@@ -110,7 +99,7 @@ class SeguimientoLiteral extends Component {
 
     adicionarQuitarFaseLiteral(id_fase) {
         const {id_literal} = this.props;
-        this.props.adicionarQuitarFaseLiteral(id_literal, id_fase, {callback: () => this.cargarDatos(id_literal)})
+        this.props.adicionarQuitarFaseLiteral(id_literal, id_fase, {callback: () => this.onSelectTabClick(3)})
     }
 
     onSeleccionarFase(fase_literal_id) {
@@ -176,6 +165,20 @@ class SeguimientoLiteral extends Component {
             }
             return {distancia_separadores: nueva_distancia_separadores}
         })
+    }
+
+    onSelectTabClick(index) {
+        const {id_literal} = this.props;
+        if (index === 1) {
+            this.props.fetchFasesLiterales_x_literal(id_literal);
+        }
+        if (index === 2) {
+            this.props.fetchMiembrosLiterales_x_literal(id_literal, {callback: () => this.props.fetchUsuarios()});
+        }
+        if (index === 3) {
+            const cargarFasesxLiteral = () => this.props.fetchFasesLiterales_x_literal(id_literal);
+            this.props.fetchFases({callback: cargarFasesxLiteral});
+        }
     }
 
     render() {
@@ -245,9 +248,9 @@ class SeguimientoLiteral extends Component {
             <div>
                 <Tabs>
                     <TabList>
-                        <Tab>Tareas</Tab>
-                        <Tab>Miembros</Tab>
-                        <Tab>Fases</Tab>
+                        <Tab onClick={() => this.onSelectTabClick(1)}>Tareas</Tab>
+                        <Tab onClick={() => this.onSelectTabClick(2)}>Miembros</Tab>
+                        <Tab onClick={() => this.onSelectTabClick(3)}>Fases</Tab>
                     </TabList>
 
                     <TabPanel>
@@ -255,10 +258,16 @@ class SeguimientoLiteral extends Component {
                             {
                                 distancia_separadores * total_dias > 0 &&
                                 <div>
-                                    <i className='fas fa-minus-circle puntero'
-                                       onClick={() => this.onClickMinusZoom()}></i>
-                                    <i className='fas fa-plus-circle puntero'
-                                       onClick={() => this.onClickPlusZoom()}></i>
+                                    <FontAwesomeIcon
+                                        className='puntero'
+                                        icon='minus-circle'
+                                        onClick={() => this.onClickMinusZoom()}
+                                    />
+                                    <FontAwesomeIcon
+                                        className='puntero'
+                                        icon='plus-circle'
+                                        onClick={() => this.onClickPlusZoom()}
+                                    />
                                 </div>
                             }
                             <div
@@ -415,7 +424,6 @@ class SeguimientoLiteral extends Component {
 
 function mapPropsToState(state, ownProps) {
     return {
-        mis_permisos: state.mis_permisos,
         mi_cuenta: state.mi_cuenta,
         fases_list: state.fases,
         fases_literales_list: state.fases_literales,

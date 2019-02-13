@@ -3,12 +3,8 @@ import {reduxForm} from 'redux-form';
 import validate from './validate';
 import {formValueSelector} from 'redux-form'
 import {connect} from "react-redux";
-import {
-    MyTextFieldSimple,
-    MyDateTimePickerField,
-    MyCheckboxSimple,
-    MyCombobox
-} from '../../../../../../00_utilities/components/ui/forms/fields';
+import {MyDateTimePickerField, MyCheckboxSimple} from '../../../../../../00_utilities/components/ui/forms/fields';
+import Button from '@material-ui/core/Button';
 import moment from 'moment-timezone';
 
 const selector = formValueSelector('proyectoReporteCostosForm');
@@ -26,7 +22,7 @@ class Form extends Component {
         return (
             <form className='p-4' onSubmit={handleSubmit(v => {
                 onSubmit({
-                        ...v,
+                    ...v,
                     fecha_inicial: moment(v.fecha_inicial).format('YYYY-MM-DD'),
                     fecha_final: moment(v.fecha_final).format('YYYY-MM-DD')
                 });
@@ -68,12 +64,25 @@ class Form extends Component {
                         </div>
                     }
                 </div>
-                <button className='btn btn-primary' type="submit" disabled={pristine || submitting}>
+                <Button
+                    color="primary"
+                    variant="contained"
+                    type='submit'
+                    className='ml-3'
+                    disabled={submitting || pristine}
+                >
                     Generar
-                </button>
-                <button type="button" disabled={pristine || submitting} onClick={reset}>
+                </Button>
+
+                <Button
+                    color="secondary"
+                    variant="contained"
+                    onClick={reset}
+                    className='ml-3'
+                    disabled={submitting || pristine}
+                >
                     Limpiar
-                </button>
+                </Button>
             </form>
         )
     }

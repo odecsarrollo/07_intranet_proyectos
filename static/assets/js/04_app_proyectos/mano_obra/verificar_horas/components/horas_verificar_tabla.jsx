@@ -7,8 +7,11 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 
 import ReactTable from "react-table";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+
 
 class Tabla extends React.Component {
     constructor(props) {
@@ -179,15 +182,23 @@ class Tabla extends React.Component {
                                         <div className='text-center'>
                                             {
                                                 row.original.fecha > fecha_cierre &&
-                                                <i
-                                                    className='fas fa-edit puntero'
-                                                    style={{color: 'green'}}
+                                                <IconButton
+                                                    className='puntero'
+                                                    style={{
+                                                        margin: 0,
+                                                        padding: 4,
+                                                    }}
                                                     onClick={() => {
                                                         this.setState({item_modal: row.original});
                                                         this.handleOpen();
                                                     }}
                                                 >
-                                                </i>
+                                                    <FontAwesomeIcon
+                                                        style={{color: 'green'}}
+                                                        icon={'edit'}
+                                                        size='xs'
+                                                    />
+                                                </IconButton>
                                             }
                                         </div>
                                 },
@@ -198,19 +209,10 @@ class Tabla extends React.Component {
                                     maxWidth: 80,
                                     Cell: row =>
                                         <div className='text-center'>
-                                            {
-                                                row.value ?
-                                                    <i
-                                                        className='fas fa-check'
-                                                        style={{color: 'green'}}
-                                                    >
-                                                    </i> :
-                                                    <i
-                                                        className='fas fa-times'
-                                                        style={{color: 'red'}}
-                                                    >
-                                                    </i>
-                                            }
+                                            <FontAwesomeIcon
+                                                icon={row.value ? 'check' : 'times'}
+                                                style={{color: row.value ? 'green' : 'red'}}
+                                            />
                                         </div>
                                 },
                             ]

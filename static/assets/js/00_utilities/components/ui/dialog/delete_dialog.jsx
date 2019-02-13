@@ -42,7 +42,8 @@ class MyDialogButtonDelete extends Component {
             element_type,
             element_name,
             classes,
-            className = 'text-center'
+            className = 'text-center',
+            tamano_icono = 'xs'
         } = this.props;
         return (
             <Fragment>
@@ -56,8 +57,8 @@ class MyDialogButtonDelete extends Component {
                     >
                         <FontAwesomeIcon
                             className={classes.iconoDelete}
-                            icon={['fas', 'trash']}
-                            size='xs'
+                            icon={'trash'}
+                            size={tamano_icono}
                         />
                     </IconButton>
                 </div>

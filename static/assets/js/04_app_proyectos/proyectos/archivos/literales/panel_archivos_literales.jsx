@@ -3,6 +3,7 @@ import * as actions from "../../../../01_actions/01_index";
 import {connect} from "react-redux";
 import UploadDocumentoForm from '../forms/upload_documento_form';
 import ArchivosList from '../components/archivos_list';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 class PanelArchivosLiterales extends Component {
     constructor(props) {
@@ -98,12 +99,14 @@ class PanelArchivosLiterales extends Component {
             <div>
                 {
                     permisos.add &&
-                    <i className={`fas fa-${adicionar_documento ? 'minus' : 'plus'}-circle puntero`}
-                       onClick={() => this.setState((s) => ({
-                           adicionar_documento: !s.adicionar_documento,
-                           item_seleccionado: null
-                       }))}>
-                    </i>
+                    <FontAwesomeIcon
+                        className='puntero'
+                        icon={`${adicionar_documento ? 'minus' : 'plus'}-circle`}
+                        onClick={() => this.setState((s) => ({
+                            adicionar_documento: !s.adicionar_documento,
+                            item_seleccionado: null
+                        }))}
+                    />
                 }
                 {
                     adicionar_documento &&

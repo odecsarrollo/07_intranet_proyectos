@@ -1,9 +1,7 @@
-import json
-
 from django.contrib.auth.models import User, Permission, Group
 from django.db.models import Q
 
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, serializers
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 
@@ -98,5 +96,5 @@ class GroupViewSet(viewsets.ModelViewSet):
         validacion_reponse = {}
         name = self.request.GET.get('name', None)
         if name and qs.filter(name=name).exists():
-            validacion_reponse.update({'name': 'Ya exite'})
+            raise serializers.ValidationError({'name': 'Ya exite'})
         return Response(validacion_reponse)

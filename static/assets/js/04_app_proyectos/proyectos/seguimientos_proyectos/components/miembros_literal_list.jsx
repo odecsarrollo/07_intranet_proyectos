@@ -1,4 +1,6 @@
 import React, {Fragment} from 'react';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import Checkbox from '@material-ui/core/Checkbox';
 
 const MiembrosLista = (props) => {
     const {
@@ -61,43 +63,51 @@ const MiembrosLista = (props) => {
                                 puede_administrar &&
                                 <Fragment>
                                     <td style={table_style.td} className='text-center puntero'>
-                                        <i
-                                            className={`far ${m.puede_editar_tareas ? 'fa-check-square' : 'fa-square'}`}
+                                        <Checkbox
+                                            style={{margin: 0, padding: 0}}
+                                            color='primary'
+                                            checked={m.puede_editar_tareas}
                                             onClick={() => editarMiembro(m, {puede_editar_tareas: !m.puede_editar_tareas})}
-                                        >
-                                        </i>
+                                        />
                                     </td>
                                     <td style={table_style.td} className='text-center puntero'>
-                                        <i
-                                            className={`far ${m.puede_eliminar_tareas ? 'fa-check-square' : 'fa-square'}`}
+                                        <Checkbox
+                                            style={{margin: 0, padding: 0}}
+                                            color='primary'
+                                            checked={m.puede_eliminar_tareas}
                                             onClick={() => editarMiembro(m, {puede_eliminar_tareas: !m.puede_eliminar_tareas})}
-                                        >
-                                        </i>
+                                        />
                                     </td>
                                     <td style={table_style.td} className='text-center puntero'>
-                                        <i
-                                            className={`far ${m.puede_adicionar_tareas ? 'fa-check-square' : 'fa-square'}`}
+                                        <Checkbox
+                                            style={{margin: 0, padding: 0}}
+                                            color='primary'
+                                            checked={m.puede_adicionar_tareas}
                                             onClick={() => editarMiembro(m, {puede_adicionar_tareas: !m.puede_adicionar_tareas})}
-                                        >
-                                        </i>
+                                        />
                                     </td>
                                     <td style={table_style.td} className='text-center puntero'>
-                                        <i
-                                            className={`far ${m.puede_administrar_fases ? 'fa-check-square' : 'fa-square'}`}
+                                        <Checkbox
+                                            style={{margin: 0, padding: 0}}
+                                            color='primary'
+                                            checked={m.puede_administrar_fases}
                                             onClick={() => editarMiembro(m, {puede_administrar_fases: !m.puede_administrar_fases})}
-                                        >
-                                        </i>
+                                        />
                                     </td>
                                     <td style={table_style.td} className='text-center puntero'>
-                                        <i
-                                            className={`far ${m.puede_administrar_miembros ? 'fa-check-square' : 'fa-square'}`}
+                                        <Checkbox
+                                            style={{margin: 0, padding: 0}}
+                                            color='primary'
+                                            checked={m.puede_administrar_miembros}
                                             onClick={() => editarMiembro(m, {puede_administrar_miembros: !m.puede_administrar_miembros})}
-                                        >
-                                        </i>
+                                        />
                                     </td>
                                     <td style={table_style.td}>
-                                        <i className='far fa-trash puntero'
-                                           onClick={() => quitarMiembro(m.usuario)}></i>
+                                        <FontAwesomeIcon
+                                            icon={'trash'}
+                                            className='puntero'
+                                            onClick={() => quitarMiembro(m.usuario)}
+                                        />
                                     </td>
                                 </Fragment>
                             }

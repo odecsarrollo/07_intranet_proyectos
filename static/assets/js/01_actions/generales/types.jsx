@@ -31,3 +31,11 @@ export const USUARIO_TYPES = {
     update: 'update_usuario',
     fetch_cuenta: 'fetch_mi_cuenta'
 };
+
+export const MENU_TYPES = {
+    open: 'open_menu',
+    close: 'close_menu',
+    open_submenu: 'open_submenu',
+    close_submentu: 'close_submenu',
+    reset: 'reset_menu',
+};

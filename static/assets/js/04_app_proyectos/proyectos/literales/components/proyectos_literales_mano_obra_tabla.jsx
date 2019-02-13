@@ -3,6 +3,7 @@ import {ListaBusqueda} from '../../../../00_utilities/utiles';
 import {fechaFormatoUno, pesosColombianos} from "../../../../00_utilities/common";
 import {connect} from "react-redux";
 import * as actions from "../../../../01_actions/01_index";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 const ItemTablaCentroCosto = (props) => {
     const {item} = props;
@@ -26,8 +27,24 @@ const ItemTablaManoObra = (props) => {
             <td>{item.horas} horas y {item.minutos} minutos</td>
             <td>{pesosColombianos(item.tasa_valor_hora)}</td>
             <td>{pesosColombianos(item.costo_total)}</td>
-            <td>{item.verificado && <i className='fas fa-check-circle' style={{color: 'green'}}></i>}</td>
-            <td>{item.inicial && <i className='fas fa-check-circle' style={{color: 'green'}}></i>}</td>
+            <td>
+                {
+                    item.verificado &&
+                    <FontAwesomeIcon
+                        icon={'check-circle'}
+                        style={{color: 'green'}}
+                    />
+                }
+            </td>
+            <td>
+                {
+                    item.inicial &&
+                    <FontAwesomeIcon
+                        icon={'check-circle'}
+                        style={{color: 'green'}}
+                    />
+                }
+            </td>
         </tr>
     )
 };

@@ -94,7 +94,7 @@ class Form extends Component {
                             }}
                             element_name={initialValues.id_literal}
                             element_type='Literal'
-                            tamano_icono={'fa-2x'}
+                            tamano_icono={'2x'}
                         />
                     </div>
                 }

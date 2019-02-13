@@ -10,9 +10,11 @@ import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import {
     PROYECTOS as permisos_view,
+    CLIENTES as clientes_permisos_view,
     LITERALES as literales_permisos_view,
     COTIZACIONES as cotizaciones_permisos_view,
     ARCHIVOS_PROYECTOS as archivos_proyecto_permisos_view,
+    ARCHIVOS_LITERALES as archivos_literales_permisos_view,
 } from "../../../../00_utilities/permisos/types";
 import LiteralModalCreate from './../../literales/components/literal_nuevo_modal';
 import LiteralDetail from '../../literales/components/literal_detail';
@@ -70,7 +72,14 @@ class Detail extends Component {
         const cargarCotizacioneParaCrearLiterales = () => this.props.fetchCotizacionesPidiendoCarpeta();
         const cargarLiterales = () => this.props.fetchLiteralesXProyecto(id, {callback: cargarCotizacioneParaCrearLiterales});
         const cargarProyecto = () => this.props.fetchProyecto(id, {callback: cargarLiterales});
-        this.props.tengoMisPermisosxListado([permisos_view, literales_permisos_view, cotizaciones_permisos_view, archivos_proyecto_permisos_view], {callback: cargarProyecto});
+        this.props.tengoMisPermisosxListado([
+            permisos_view,
+            literales_permisos_view,
+            cotizaciones_permisos_view,
+            archivos_proyecto_permisos_view,
+            archivos_literales_permisos_view,
+            clientes_permisos_view
+        ], {callback: cargarProyecto});
 
     }
 
@@ -174,6 +183,7 @@ class Detail extends Component {
                                         item_seleccionado &&
                                         <div className="col-12 col-lg-9">
                                             <LiteralDetail
+                                                mis_permisos={mis_permisos}
                                                 callbackCargarDatosProyecto={() => this.cargarDatos()}
                                                 clearCurrentLiteral={this.clearCurrentLiteral}
                                                 id_literal={select_literal_id}
@@ -197,7 +207,7 @@ class Detail extends Component {
                             {
                                 archivos_proyecto_permisos.list &&
                                 <TabPanel>
-                                    <PanelArchivosProyecto proyecto={object}/>
+                                    <PanelArchivosProyecto proyecto={object} mis_permisos={mis_permisos}/>
                                 </TabPanel>
                             }
                         </Tabs>

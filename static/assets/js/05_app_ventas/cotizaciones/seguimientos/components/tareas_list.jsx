@@ -1,6 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import {fechaHoraFormatoUno, fechaFormatoUno} from "../../../../00_utilities/common";
 import FormTarea from "./forms/tarea_form";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 const Tarea = (props) => {
     const {tarea, eliminarSeguimiento, actualizarSeguimiento, mi_cuenta, cotizacion} = props;
@@ -97,16 +98,17 @@ export default class TareasList extends Component {
                             </span>
                     }
                     <div>
-                        <i className={`${!mostrar_formulario ? 'far fa-plus-circle' : 'far fa-minus-circle'} puntero`}
-                           onClick={() => {
-                               this.setState((s, p) => {
-                                   return {
-                                       mostrar_formulario: !s.mostrar_formulario
-                                   }
-                               })
-                           }}
-                        >
-                        </i>
+                        <FontAwesomeIcon
+                            className='puntero'
+                            icon={`${mostrar_formulario ? 'minus' : 'plus'}-circle`}
+                            onClick={() => {
+                                this.setState((s, p) => {
+                                    return {
+                                        mostrar_formulario: !s.mostrar_formulario
+                                    }
+                                })
+                            }}
+                        />
                     </div>
                 </div>
                 {

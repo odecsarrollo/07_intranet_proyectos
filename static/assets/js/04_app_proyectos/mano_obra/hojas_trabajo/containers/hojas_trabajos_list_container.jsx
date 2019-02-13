@@ -20,7 +20,6 @@ class List extends Component {
     constructor(props) {
         super(props);
         this.cargarDatos = this.cargarDatos.bind(this);
-        this.createHojaTrabajo = this.createHojaTrabajo.bind(this);
         this.plural_name = 'Hojas de Trabajo';
         this.singular_name = 'Hoja de Trabajo';
     }
@@ -42,23 +41,15 @@ class List extends Component {
         const cargarHojasTrabajoHoy = () => this.props.fetchHojasTrabajosxFechas(today, today, {callback: cargarMiCuenta});
         const cargarConfigCostos = () => this.props.fetchConfiguracionesCostos({callback: cargarHojasTrabajoHoy});
         const cargarColaboradores = () => this.props.fetchColaboradoresEnProyectos({callback: cargarConfigCostos});
-        this.props.tengoMisPermisosxListado([permisos_view],{callback: cargarColaboradores})
+        this.props.tengoMisPermisosxListado([permisos_view], {callback: cargarColaboradores})
 
     }
-
-    createHojaTrabajo(item) {
-        const {history} = this.props;
-        const callback = (response) => {
-            history.push(`/app/proyectos/mano_obra/hojas_trabajo/detail/${response.id}`);
-        };
-        this.props.createHojaTrabajo(item, {callback});
-    }
-
 
     render() {
         const {
             object_list,
-            mis_permisos
+            mis_permisos,
+            history
         } = this.props;
 
         const permisos = permisosAdapter(mis_permisos, permisos_view);
@@ -66,7 +57,7 @@ class List extends Component {
         const method_pool = {
             fetchObjectMethod: this.props.fetchHojaTrabajo,
             deleteObjectMethod: this.props.deleteHojaTrabajo,
-            createObjectMethod: this.createHojaTrabajo,
+            createObjectMethod: this.props.createHojaTrabajo,
             updateObjectMethod: this.props.updateHojaTrabajo,
         };
 
@@ -76,6 +67,7 @@ class List extends Component {
                     this.props.fetchHojasTrabajosxFechas(i, f);
                 }}/>
                 <CRUD
+                    posCreateMethod={(r) => history.push(`/app/proyectos/mano_obra/hojas_trabajo/detail/${r.id}`)}
                     method_pool={method_pool}
                     list={object_list}
                     permisos_object={{

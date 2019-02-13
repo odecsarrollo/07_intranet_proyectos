@@ -9,6 +9,7 @@ import {
     MyCheckboxSimple,
 } from '../../../../../../00_utilities/components/ui/forms/fields';
 import moment from 'moment-timezone';
+import Button from '@material-ui/core/Button';
 
 const selector = formValueSelector('proyectoReporteCostosForm');
 
@@ -73,12 +74,25 @@ class Form extends Component {
                         </div>
                     }
                 </div>
-                <button className='btn btn-primary' type="submit" disabled={pristine || submitting}>
+                <Button
+                    color="primary"
+                    variant="contained"
+                    type='submit'
+                    className='ml-3'
+                    disabled={submitting || pristine}
+                >
                     Generar
-                </button>
-                <button type="button" disabled={pristine || submitting} onClick={reset}>
+                </Button>
+
+                <Button
+                    color="secondary"
+                    variant="contained"
+                    onClick={reset}
+                    className='ml-3'
+                    disabled={submitting || pristine}
+                >
                     Limpiar
-                </button>
+                </Button>
             </form>
         )
     }

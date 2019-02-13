@@ -1,6 +1,7 @@
 import React from "react";
 import ReactTable from "react-table";
 import {pesosColombianos} from "../../../../00_utilities/common";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 class Tabla extends React.Component {
     render() {
@@ -50,7 +51,8 @@ class Tabla extends React.Component {
                                     accessor: "activo",
                                     maxWidth: 40,
                                     Cell: row => (
-                                        row.value && <i className='far fa-check-circle'></i>
+                                        row.value &&
+                                        <FontAwesomeIcon icon={'check-circle'}/>
                                     )
                                 },
                                 {

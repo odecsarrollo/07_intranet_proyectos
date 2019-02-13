@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from "prop-types";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 export default function CargarDatos(props) {
     const {cargarDatos} = props;
@@ -11,8 +12,11 @@ export default function CargarDatos(props) {
                 cargarDatos();
             }}
         >
-            <i className="fas fa-sync-alt fa-2x" aria-hidden="true">
-            </i>
+            <FontAwesomeIcon
+                className='puntero'
+                icon='sync-alt'
+                size='2x'
+            />
         </div>
     )
 }

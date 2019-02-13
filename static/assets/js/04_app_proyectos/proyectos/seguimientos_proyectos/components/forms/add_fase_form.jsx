@@ -1,6 +1,7 @@
 import React from 'react';
 import Checkbox from '@material-ui/core/Checkbox';
-
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const BaseFormProyecto = (props) => {
     const {fases_en_literal, puede_administrar} = props;
@@ -12,22 +13,28 @@ const BaseFormProyecto = (props) => {
     }
     return (
         <div className="row">
-            {
-                _.map(props.fases, e => {
-                    return (
-                        <Checkbox
-                            key={e.id}
-                            className="col-12 col-md-4 col-lg-3"
-                            label={e.nombre.toLowerCase()}
-                            onChange={() => props.adicionarQuitarFaseLiteral(e.id)}
-                            name={e.nombre}
-                            checked={fases_en_proyecto_array.includes(e.id)}
-                            color='primary'
+            <FormGroup>
+                {
+                    _.map(props.fases, e => {
+                        return (
+                            <FormControlLabel
+                                key={e.id}
+                                control={
+                                    <Checkbox
+                                        label={e.nombre.toLowerCase()}
+                                        onChange={() => props.adicionarQuitarFaseLiteral(e.id)}
+                                        name={e.nombre}
+                                        checked={fases_en_proyecto_array.includes(e.id)}
+                                        color='primary'
 
-                        />
-                    )
-                })
-            }
+                                    />
+                                }
+                                label={e.nombre}
+                            />
+                        )
+                    })
+                }
+            </FormGroup>
         </div>
     )
 };

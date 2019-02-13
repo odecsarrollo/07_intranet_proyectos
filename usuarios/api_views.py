@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User, Permission, Group
 from django.db.models import Q
-from rest_framework import viewsets, serializers
+from rest_framework import viewsets, serializers, permissions
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 
@@ -59,7 +59,16 @@ class UsuarioViewSet(viewsets.ModelViewSet):
         validacion_reponse = {}
         username = self.request.GET.get('username', None)
         if username and qs.filter(username=username).exists():
-            validacion_reponse.update({'username': 'Ya exite'})
+            raise serializers.ValidationError({'username': 'Ya exite'})
+        return Response(validacion_reponse)
+
+    @list_route(methods=['get'], permission_classes=[permissions.AllowAny])
+    def validar_username_login(self, request) -> Response:
+        qs = self.get_queryset()
+        validacion_reponse = {}
+        username = self.request.GET.get('username', None)
+        if username and not qs.filter(username=username).exists():
+            raise serializers.ValidationError({'username': 'Este usuario no existe'})
         return Response(validacion_reponse)
 
     @list_route(methods=['get'])

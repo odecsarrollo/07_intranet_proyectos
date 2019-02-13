@@ -3,6 +3,7 @@ import MyDialogButtonDelete from '../../../../00_utilities/components/ui/dialog/
 import {fechaFormatoUno, pesosColombianos} from '../../../../00_utilities/common';
 import IconButtonTableEdit from '../../../../00_utilities/components/ui/icon/table_icon_button_edit';
 import ReactTooltip from 'react-tooltip'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 import ReactTable from "react-table";
 
@@ -100,9 +101,10 @@ class Tabla extends React.Component {
                                         return (
                                             <div data-tip={row.original.descripcion_tarea} className='text-center'>
                                                 {
-                                                    row.value ?
-                                                        <i className='fas fa-check' style={{color: 'green'}}></i> :
-                                                        <i className='fas fa-times' style={{color: 'red'}}></i>
+                                                    <FontAwesomeIcon
+                                                        icon={row.value ? 'check' : 'times'}
+                                                        style={{color: row.value ? 'green' : 'red'}}
+                                                    />
                                                 }
                                             </div>
                                         )
@@ -133,7 +135,7 @@ class Tabla extends React.Component {
                                                     onDelete={() => {
                                                         onDelete(row.original)
                                                     }}
-                                                    element_name={`en ${fechaFormatoUno(row.original.fecha)} para ${row.original.colaborador_nombre}`}
+                                                    element_name={`en ${fechaFormatoUno(row.original.fecha)} para ${row.original.to_string}`}
                                                     element_type={singular_name}
                                                 /> :
                                                 <Fragment></Fragment>

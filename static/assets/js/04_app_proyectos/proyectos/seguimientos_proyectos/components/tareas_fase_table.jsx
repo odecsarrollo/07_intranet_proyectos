@@ -1,8 +1,11 @@
 import React, {Component} from 'react';
 import {fechaFormatoDos} from "../../../../00_utilities/common";
 import MyDialogButtonDelete from '../../../../00_utilities/components/ui/dialog/delete_dialog';
+import IconButtonTableEdit from '../../../../00_utilities/components/ui/icon/table_icon_button_edit';
 import AsignadoTareaFaseLiteral from './adicionar_asignado_a';
 import TdCambiarEstadoTarea from './cambiar_estado_tarea';
+import Checkbox from '@material-ui/core/Checkbox';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 export default class TareasFase extends Component {
     render() {
@@ -50,15 +53,16 @@ export default class TareasFase extends Component {
                     }
                     <th style={table_style.th}>
                         Selec.
-                        <i
-                            className={`far ${selecciono_todas ? 'fa-check-square' : 'fa-square' } puntero`}
+                        <Checkbox
+                            style={{margin: 0, padding: 0}}
+                            color='primary'
+                            checked={selecciono_todas}
                             onClick={() => seleccionarTodasTareas()}
-                        >
-                        </i>
+                        />
                     </th>
                 </tr>
                 </thead>
-                <tbody>
+                < tbody>
                 {
                     _.map(
                         _.orderBy(fases_tareas, ['fecha_limite', ['desc']]), e => {
@@ -81,8 +85,9 @@ export default class TareasFase extends Component {
                                     <td style={table_style.td} className='text-center'>
                                         {
                                             e.terminado &&
-                                            <i className='fas fa-check-circle'
-                                               style={{color: 'green'}}></i>
+                                            <FontAwesomeIcon
+                                                icon={'check-circle'}
+                                            />
                                         }
                                     </td>
                                     <td style={table_style.td} className='text-center'>
@@ -109,24 +114,22 @@ export default class TareasFase extends Component {
                                     {
                                         puede_editar_tarea &&
                                         <td style={table_style.td}>
-                                            <i
-                                                className='fas fa-edit puntero'
+                                            <IconButtonTableEdit
                                                 onClick={() => {
                                                     setState({
                                                         tarea_seleccionada: e,
                                                         mostrar_add_tareas: true
                                                     })
-                                                }}
-                                            >
-                                            </i>
+                                                }}/>
                                         </td>
                                     }
                                     <td style={table_style.td} className='text-center'>
-                                        <i
-                                            className={`far ${esta_seleccionada ? 'fa-check-square' : 'fa-square' } puntero`}
+                                        <Checkbox
+                                            style={{margin: 0, padding: 0}}
+                                            color='primary'
+                                            checked={esta_seleccionada}
                                             onClick={() => adicionarQuitarTareasSeleccionadas(e.id)}
-                                        >
-                                        </i>
+                                        />
                                     </td>
                                 </tr>
                             )

@@ -17,7 +17,7 @@ const IconButtonTableEdit = (props) => {
             >
                 <FontAwesomeIcon
                     className={classes.icono}
-                    icon={['fas', 'edit']}
+                    icon='edit'
                     size='xs'
                 />
             </IconButton>

@@ -84,7 +84,7 @@ class Tabla extends React.Component {
                                 Cell: row => (
                                     row.value && <div className='text-center' style={{color: 'green'}}>
                                         <FontAwesomeIcon
-                                            icon={['fas', 'check-circle']}
+                                            icon={'check-circle'}
                                         />
                                     </div>
                                 )
@@ -97,7 +97,7 @@ class Tabla extends React.Component {
                                 Cell: row => (
                                     row.value && <div className='text-center' style={{color: 'green'}}>
                                         <FontAwesomeIcon
-                                            icon={['fas', 'check-circle']}
+                                            icon={'check-circle'}
                                         />
                                     </div>
                                 )
@@ -110,7 +110,7 @@ class Tabla extends React.Component {
                                     row.value &&
                                     <div className='text-center' style={{color: 'green'}}>
                                         <FontAwesomeIcon
-                                            icon={['fas', 'check-circle']}
+                                            icon={'check-circle'}
                                         />
                                     </div>
                                 )
@@ -122,7 +122,7 @@ class Tabla extends React.Component {
                                 Cell: row => (
                                     row.value && <div className='text-center' style={{color: 'green'}}>
                                         <FontAwesomeIcon
-                                            icon={['fas', 'check-circle']}
+                                            icon={'check-circle'}
                                         />
                                     </div>
                                 )
@@ -210,7 +210,7 @@ class Tabla extends React.Component {
                                         <span>Crear Usuario
                                             <FontAwesomeIcon
                                                 className='puntero'
-                                                icon={['fas', 'plus']}
+                                                icon={'plus'}
                                                 onClick={() => onCreateColaboradorUsuario(row.original)}
                                             />
                                         </span> :
@@ -234,7 +234,7 @@ class Tabla extends React.Component {
                                             })}
                                         /> :
                                         row.value && <FontAwesomeIcon
-                                            icon={['fas', 'check-circle']}
+                                            icon={'check-circle'}
                                         />
                                 )
                             },

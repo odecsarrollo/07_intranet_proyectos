@@ -8,22 +8,19 @@ const MenuManoObra = () => (
             size='1x'
             link='/app/proyectos/mano_obra/horas_colaborador_proyecto_inicial/list'
             texto='Iniciales Horas de Trabajo'
-            icono='user'
-            type='nested'
+            type='main'
         />
         <DrawerListItem
             size='1x'
             link='/app/proyectos/mano_obra/hojas_trabajo/list'
             texto='Hojas de Trabajo'
-            icono='user'
-            type='nested'
+            type='main'
         />
         <DrawerListItem
             size='1x'
             link='/app/proyectos/mano_obra/verificar_horas/list'
             texto='Verifica Horas'
-            icono='user'
-            type='nested'
+            type='main'
         />
     </ListCollapse>
 );

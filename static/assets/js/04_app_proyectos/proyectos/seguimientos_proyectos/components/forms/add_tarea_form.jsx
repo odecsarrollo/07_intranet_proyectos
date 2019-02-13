@@ -1,6 +1,5 @@
 import React, {Component, Fragment} from 'react';
 import {reduxForm} from 'redux-form';
-import Combobox from 'react-widgets/lib/Combobox';
 import BotoneriaModalForm from '../../../../../00_utilities/components/ui/forms/botoneria_modal_form';
 import {
     MyTextFieldSimple,
@@ -8,6 +7,7 @@ import {
     MyCombobox
 } from '../../../../../00_utilities/components/ui/forms/fields';
 import {connect} from "react-redux";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 class Form extends Component {
     constructor(props) {
@@ -45,14 +45,13 @@ class Form extends Component {
                             nombre='Descripción'
                             name='descripcion'
                         />
-                        <i
-                            className={!mostrar_mas ? 'fas fa-plus puntero' : 'fas fa-minus puntero'}
-                            style={{position: 'absolute', right: 10, top: 100}}
+                        <FontAwesomeIcon
+                            className='puntero'
+                            icon={`${mostrar_mas ? 'minus' : 'plus'}-circle`}
                             onClick={() => this.setState(s => {
                                 return {mostrar_mas: !s.mostrar_mas}
                             })}
-                        >
-                        </i>
+                        />
                         {
                             mostrar_mas &&
                             <Fragment>

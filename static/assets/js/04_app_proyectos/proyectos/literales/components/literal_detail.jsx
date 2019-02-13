@@ -151,7 +151,7 @@ class LiteralDetail extends Component {
                         {permisos_archivos_literal.list && <Tab onClick={() => this.onTabClick(3)}>Documentos</Tab>}
                     </TabList>
                     <TabPanel>
-                        <SeguimientoLiteral id_literal={id_literal}/>
+                        <SeguimientoLiteral id_literal={id_literal} mis_permisos={mis_permisos}/>
                     </TabPanel>
                     <TabPanel>
                         <TablaProyectoLiteralesMateriales id_literal={id_literal}/>
@@ -184,7 +184,6 @@ class LiteralDetail extends Component {
 function mapPropsToState(state, ownProps) {
     const {id_literal} = ownProps;
     return {
-        mis_permisos: state.mis_permisos,
         literal: _.size(state.literales) > 0 ? state.literales[id_literal] : null
     }
 }

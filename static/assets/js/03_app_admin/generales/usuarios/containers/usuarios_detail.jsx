@@ -125,19 +125,19 @@ class UsuariosDetail extends Component {
                     <div className="col-md-4">
                         <Typography variant="body1" gutterBottom color="primary">
                             Activo <FontAwesomeIcon
-                            icon={['fas', `${usuario.is_active ? 'check-circle' : 'times'}`]}/>
+                            icon={usuario.is_active ? 'check-circle' : 'times'}/>
                         </Typography>
                     </div>
                     <div className="col-md-4">
                         <Typography variant="body1" gutterBottom color="primary">
                             Es Staff <FontAwesomeIcon
-                            icon={['fas', `${usuario.is_staff ? 'check-circle' : 'times'}`]}/>
+                            icon={usuario.is_staff ? 'check-circle' : 'times'}/>
                         </Typography>
                     </div>
                     <div className="col-md-4">
                         <Typography variant="body1" gutterBottom color="primary">
                             Es Super Usuario <FontAwesomeIcon
-                            icon={['fas', `${usuario.is_superuser ? 'check-circle' : 'times'}`]}/>
+                            icon={usuario.is_superuser ? 'check-circle' : 'times'}/>
                         </Typography>
                     </div>
                 </div>

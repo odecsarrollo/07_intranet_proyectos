@@ -7,6 +7,7 @@ import {Link} from 'react-router-dom'
 
 import moment from 'moment-timezone';
 import {fechaFormatoDos} from "../../../00_utilities/common";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 moment.tz.setDefault("America/Bogota");
 moment.locale('es');
@@ -198,10 +199,16 @@ class LiteralesSeguimiento extends Component {
                                 {
                                     distancia_separadores * total_dias > 0 &&
                                     <div className="col-12">
-                                        <i className='fas fa-minus-circle puntero'
-                                           onClick={() => this.onClickMinusZoom()}></i>
-                                        <i className='fas fa-plus-circle puntero'
-                                           onClick={() => this.onClickPlusZoom()}></i>
+                                        <FontAwesomeIcon
+                                            className='puntero'
+                                            icon='minus-circle'
+                                            onClick={() => this.onClickMinusZoom()}
+                                        />
+                                        <FontAwesomeIcon
+                                            className='puntero'
+                                            icon='plus-circle'
+                                            onClick={() => this.onClickPlusZoom()}
+                                        />
                                     </div>
                                 }
                             </div>

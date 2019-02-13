@@ -13,6 +13,8 @@ import List from '@material-ui/core/List';
 import Button from '@material-ui/core/Button';
 import {Link} from 'react-router-dom';
 import ListItem from '@material-ui/core/ListItem';
+import {connect} from "react-redux";
+import * as actions from "../../../../01_actions/01_index";
 
 
 const drawerWidth = 240;
@@ -88,71 +90,68 @@ class DrawerMenu extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            drawer_open: false
+            menu_status: false
         }
     }
 
-    onSalir() {
-        console.log('hola')
+    componentDidMount() {
+        this.props.resetMenu();
     }
 
-    handleDrawerOpen = () => {
-        this.setState({drawer_open: true});
-    };
-
-    handleDrawerClose = () => {
-        this.setState({drawer_open: false});
-    };
-
     render() {
-        const {classes, theme, lista_menu, titulo = 'Colocar Titulo'} = this.props;
+        const {classes, theme, lista_menu, titulo = 'Colocar Titulo', menu_status: {open_menu, submenu_abiertos}} = this.props;
+        const menu_abierto = submenu_abiertos > 0 || open_menu;
         return (
             <div className={classes.root}>
                 <CssBaseline/>
                 <AppBar
                     position="fixed"
                     className={classNames(classes.appBar, {
-                        [classes.appBarShift]: this.state.drawer_open,
+                        [classes.appBarShift]: menu_abierto,
                     })}
                 >
-                    <Toolbar disableGutters={!this.state.drawer_open}>
+                    <Toolbar disableGutters={!menu_abierto}>
                         <IconButton
                             color="inherit"
                             aria-label="Open drawer"
-                            onClick={this.handleDrawerOpen}
+                            onClick={() => this.props.openMenu()}
                             className={classNames(classes.menuButton, {
-                                [classes.hide]: this.state.drawer_open,
+                                [classes.hide]: menu_abierto,
                             })}
                         >
-                            <FontAwesomeIcon icon={['fas', 'bars']}/>
+                            <FontAwesomeIcon icon={'bars'}/>
                         </IconButton>
                         <Typography variant="h6" color="inherit" noWrap>
                             {titulo}
                         </Typography>
                         <div className='text-right' style={{position: 'absolute', right: 0}}>
-                            <Button color="inherit" onClick={() => this.onSalir()}>Salir</Button>
+                            <a href="/accounts/logout/?next=/">
+                                <Button color="inherit">
+                                    Salir
+                                </Button>
+                            </a>
                         </div>
                     </Toolbar>
                 </AppBar>
                 <Drawer
                     variant="permanent"
                     className={classNames(classes.drawer, {
-                        [classes.drawerOpen]: this.state.drawer_open,
-                        [classes.drawerClose]: !this.state.drawer_open,
+                        [classes.drawerOpen]: menu_abierto,
+                        [classes.drawerClose]: !menu_abierto,
                     })}
                     classes={{
                         paper: classNames({
-                            [classes.drawerOpen]: this.state.drawer_open,
-                            [classes.drawerClose]: !this.state.drawer_open,
+                            [classes.drawerOpen]: menu_abierto,
+                            [classes.drawerClose]: !menu_abierto,
                         }),
                     }}
-                    open={this.state.drawer_open}
+                    open={menu_abierto}
                 >
                     <div className={classes.toolbar}>
-                        <IconButton onClick={this.handleDrawerClose}>
+                        <IconButton onClick={() => this.props.closeMenu()}>
                             {theme.direction === 'rtl' ?
-                                <FontAwesomeIcon icon={['fas', 'angle-right']} className={classes.iconColor}/> :
-                                <FontAwesomeIcon icon={['fas', 'angle-left']} className={classes.iconColor}/>}
+                                <FontAwesomeIcon icon={'angle-right'} className={classes.iconColor}/> :
+                                <FontAwesomeIcon icon={'angle-left'} className={classes.iconColor}/>}
                         </IconButton>
                     </div>
                     <Divider/>
@@ -176,5 +175,10 @@ class DrawerMenu extends Component {
     }
 }
 
+function mapPropsToState(state, ownProps) {
+    return {
+        menu_status: state.menu_status
+    }
+}
 
-export default withStyles(styles, {withTheme: true})(DrawerMenu);
+export default withStyles(styles, {withTheme: true})(connect(mapPropsToState, actions)(DrawerMenu));

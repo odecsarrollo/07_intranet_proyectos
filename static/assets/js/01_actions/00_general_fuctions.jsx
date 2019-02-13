@@ -17,7 +17,7 @@ const notificarAction = (mensaje, tiempo = 5000) => {
         duration: tiempo,
         position: 'BottomRight',
         canDimiss: true,
-        icon: <FontAwesomeIcon icon={['fas', 'check']}/>
+        icon: <FontAwesomeIcon icon={'check'}/>
     }
 };
 
@@ -71,7 +71,7 @@ const notificacion_error = (error, tiempo = 7000) => {
         duration: tiempo,
         position: 'BottomRight',
         canDimiss: true,
-        icon: <FontAwesomeIcon icon={['fas', 'exclamation']}/>
+        icon: <FontAwesomeIcon icon={'exclamation'}/>
     };
 };
 
@@ -99,7 +99,6 @@ export function createRequest(request, options = {}) {
             }
             if (dispatch_method) {
                 if (response.data && response.data.result) {
-                    console.log('si tuvo result')
                     dispatch_method(createNotification(notificarAction(response.data.result)));
                 }
                 dispatch_method({type: LOADING_STOP})
@@ -130,23 +129,24 @@ export function fetchListGet(url, options) {
     console.log(`%cFETCH LIST - %c${url.toUpperCase()}`, 'color:red', 'color:blue');
     const mensaje_cargando = `Consultando ${url.toUpperCase()}`;
     const FULL_URL = `${url}/?format=json`;
-    const headers = {"Content-Type": "application/json"};
-    if (localStorage.token) {
-        headers["Authorization"] = `Token ${localStorage.token}`;
-    }
-    axios_instance.defaults.headers = headers;
+    // const headers = {"Content-Type": "application/json"};
+    // if (localStorage.token) {
+    //     headers["Authorization"] = `Token ${localStorage.token}`;
+    // }
+    // axios_instance.defaults.headers = headers;
     const request = axios_instance.get(FULL_URL);
     createRequest(request, {...options, mensaje_cargando});
 }
+
 export function fetchListGetURLParameters(url, options) {
     console.log(`%cFETCH LIST PARAMETROS - %c${url.toUpperCase()}`, 'color:red', 'color:blue');
     const mensaje_cargando = `Consultando ${url.toUpperCase()}`;
     const FULL_URL = `${url}&format=json`;
-    const headers = {"Content-Type": "application/json"};
-    if (localStorage.token) {
-        headers["Authorization"] = `Token ${localStorage.token}`;
-    }
-    axios_instance.defaults.headers = headers;
+    /*    const headers = {"Content-Type": "application/json"};
+        if (localStorage.token) {
+            headers["Authorization"] = `Token ${localStorage.token}`;
+        }
+        axios_instance.defaults.headers = headers;*/
     const request = axios_instance.get(FULL_URL);
     createRequest(request, {...options, mensaje_cargando});
 }
@@ -156,11 +156,11 @@ export function fetchObject(url, id, options) {
     const mensaje_cargando = `Consultando elemento en ${url.toUpperCase()}`;
     const FULL_URL = `${url}/${id}/?format=json`;
     const request = axios_instance.get(FULL_URL);
-    const headers = {"Content-Type": "application/json"};
-    if (localStorage.token) {
-        headers["Authorization"] = `Token ${localStorage.token}`;
-    }
-    axios_instance.defaults.headers = headers;
+    /*    const headers = {"Content-Type": "application/json"};
+        if (localStorage.token) {
+            headers["Authorization"] = `Token ${localStorage.token}`;
+        }
+        axios_instance.defaults.headers = headers;*/
     createRequest(request, {...options, mensaje_cargando});
 }
 
@@ -171,11 +171,11 @@ export function updateObject(url, id, values, options, config = null) {
     axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
     axios_instance.defaults.xsrfCookieName = "csrftoken";
 
-    const headers = {"Content-Type": "application/json"};
-    if (localStorage.token) {
-        headers["Authorization"] = `Token ${localStorage.token}`;
-    }
-    axios_instance.defaults.headers = headers;
+    /*    const headers = {"Content-Type": "application/json"};
+        if (localStorage.token) {
+            headers["Authorization"] = `Token ${localStorage.token}`;
+        }
+        axios_instance.defaults.headers = headers;*/
     const FULL_URL = `${url}/${id}/`;
     const request = axios_instance.put(FULL_URL, values, config);
     createRequest(request, {...options, mensaje_cargando});
@@ -187,11 +187,11 @@ export function createObject(url, values, options) {
     const mensaje_cargando = `Creando elemento en ${url.toUpperCase()}`;
     axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
     axios_instance.defaults.xsrfCookieName = "csrftoken";
-    const headers = {"Content-Type": "application/json"};
-    if (localStorage.token) {
-        headers["Authorization"] = `Token ${localStorage.token}`;
-    }
-    axios_instance.defaults.headers = headers;
+    /*    const headers = {"Content-Type": "application/json"};
+        if (localStorage.token) {
+            headers["Authorization"] = `Token ${localStorage.token}`;
+        }
+        axios_instance.defaults.headers = headers;*/
     const FULL_URL = `${url}/`;
     const request = axios_instance.post(FULL_URL, values);
     createRequest(request, {...options, mensaje_cargando});
@@ -204,12 +204,12 @@ export function deleteObject(url, id, options) {
     axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
     axios_instance.defaults.xsrfCookieName = "csrftoken";
 
-    const headers = {"Content-Type": "application/json"};
-    if (localStorage.token) {
-        headers["Authorization"] = `Token ${localStorage.token}`;
-    }
-    axios_instance.defaults.headers = headers;
-
+    /*  const headers = {"Content-Type": "application/json"};
+      if (localStorage.token) {
+          headers["Authorization"] = `Token ${localStorage.token}`;
+      }
+      axios_instance.defaults.headers = headers;
+  */
     const FULL_URL = `${url}/${id}/`;
     const request = axios_instance.delete(FULL_URL);
     createRequest(request, {...options, mensaje_cargando});
@@ -220,12 +220,12 @@ export function uploadPDF(url, id, method, values, options) {
     const mensaje_cargando = `Ejecutando ${method.toUpperCase()} en ${url.toUpperCase()}`;
     axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
     axios_instance.defaults.xsrfCookieName = "csrftoken";
-    const headers = {};
-    if (localStorage.token) {
-        headers["Authorization"] = `Token ${localStorage.token}`;
-        headers["Content-Type"] = 'application/x-www-form-urlencoded;charset=UTF-8';
-    }
-    axios_instance.defaults.headers = headers;
+    /*    const headers = {};
+        if (localStorage.token) {
+            headers["Authorization"] = `Token ${localStorage.token}`;
+            headers["Content-Type"] = 'application/x-www-form-urlencoded;charset=UTF-8';
+        }
+        axios_instance.defaults.headers = headers;*/
     const FULL_URL = `${url}/${id}/${method}/`;
     const request = axios_instance.post(FULL_URL, values, {responseType: 'arraybuffer'});
     createRequest(request, {...options, mensaje_cargando});
@@ -236,11 +236,11 @@ export function callApiMethodPost(url, id, method, options) {
     const mensaje_cargando = `Ejecutando ${method.toUpperCase()} en ${url.toUpperCase()}`;
     axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
     axios_instance.defaults.xsrfCookieName = "csrftoken";
-    const headers = {};
-    if (localStorage.token) {
-        headers["Authorization"] = `Token ${localStorage.token}`;
-    }
-    axios_instance.defaults.headers = headers;
+    /*    const headers = {};
+        if (localStorage.token) {
+            headers["Authorization"] = `Token ${localStorage.token}`;
+        }
+        axios_instance.defaults.headers = headers;*/
     const FULL_URL = `${url}/${id}/${method}/`;
     const request = axios_instance.post(FULL_URL);
     createRequest(request, {...options, mensaje_cargando});
@@ -251,12 +251,12 @@ export function callApiMethodPostParameters(url, id, method, values, options) {
     const mensaje_cargando = `Ejecutando ${method.toUpperCase()} en ${url.toUpperCase()}`;
     axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
     axios_instance.defaults.xsrfCookieName = "csrftoken";
-    const headers = {};
-    if (localStorage.token) {
-        headers["Authorization"] = `Token ${localStorage.token}`;
-        headers["Content-Type"] = 'application/x-www-form-urlencoded;charset=UTF-8';
-    }
-    axios_instance.defaults.headers = headers;
+    /*    const headers = {};
+        if (localStorage.token) {
+            headers["Authorization"] = `Token ${localStorage.token}`;
+            headers["Content-Type"] = 'application/x-www-form-urlencoded;charset=UTF-8';
+        }
+        axios_instance.defaults.headers = headers;*/
     const FULL_URL = `${url}/${id}/${method}/`;
     const request = axios_instance.post(FULL_URL, values);
     createRequest(request, {...options, mensaje_cargando});
@@ -264,8 +264,7 @@ export function callApiMethodPostParameters(url, id, method, values, options) {
 
 export function fetchObjectWithParameterPDF(url, options) {
     console.log(`%cFETCH LIST PARAMETROS - %c${url.toUpperCase()} PARA PDF`, 'color:red', 'color:blue');
-    const mensaje_cargando = `Ejecutando PDF ${method.toUpperCase()} en ${url.toUpperCase()}`;
     const FULL_URL = `${url}&format=json`;
     const request = axios_instance.get(FULL_URL, {responseType: 'arraybuffer'});
-    createRequest(request, {...options, mensaje_cargando});
+    createRequest(request, {...options, mensaje_cargando: ''});
 }

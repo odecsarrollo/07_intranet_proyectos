@@ -22,6 +22,13 @@ class HoraHojaTrabajoSerializer(serializers.ModelSerializer):
     creado_por_username = serializers.CharField(source='creado_por.username', read_only=True)
     centro_costo_nombre = serializers.CharField(source='hoja.tasa.centro_costo.nombre', read_only=True)
 
+    to_string = serializers.SerializerMethodField()
+
+    def get_to_string(self, instance):
+        return '%s:%s %s' % (
+            int(instance.cantidad_minutos / 60), instance.cantidad_minutos - (int(instance.cantidad_minutos / 60) * 60),
+            instance.literal.descripcion)
+
     def numero_horas(self, instance):
         return int(instance.cantidad_minutos / 60)
 
@@ -52,6 +59,7 @@ class HoraHojaTrabajoSerializer(serializers.ModelSerializer):
             'autogestionada',
             'colaborador_nombre',
             'creado_por_username',
+            'to_string',
         ]
 
 
@@ -63,6 +71,11 @@ class HojaTrabajoDiarioSerializer(serializers.ModelSerializer):
     cantidad_horas = serializers.DecimalField(decimal_places=4, max_digits=12, read_only=True)
     costo_total = serializers.DecimalField(decimal_places=4, max_digits=12, read_only=True)
     mis_horas_trabajadas = HoraHojaTrabajoSerializer(many=True, read_only=True)
+
+    to_string = serializers.SerializerMethodField()
+
+    def get_to_string(self, instance):
+        return instance.colaborador.full_name
 
     class Meta:
         model = HojaTrabajoDiario
@@ -77,6 +90,7 @@ class HojaTrabajoDiarioSerializer(serializers.ModelSerializer):
             'colaborador',
             'colaborador_nombre',
             'mis_horas_trabajadas',
+            'to_string',
         ]
 
 

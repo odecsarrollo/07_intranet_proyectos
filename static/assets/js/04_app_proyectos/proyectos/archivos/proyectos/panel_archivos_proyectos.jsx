@@ -4,6 +4,7 @@ import {connect} from "react-redux";
 import UploadDocumentoForm from '../forms/upload_documento_form';
 import ArchivosList from '../components/archivos_list';
 import {permisosAdapter} from "../../../../00_utilities/common";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {
     ARCHIVOS_PROYECTOS as permisos_view,
 } from "../../../../00_utilities/permisos/types";
@@ -26,8 +27,7 @@ class PanelArchivosProyectos extends Component {
 
     cargarDatos() {
         const {proyecto} = this.props;
-        const cargarArchivosProyecto = () => this.props.fetchArchivosProyectos_x_proyecto(proyecto.id);
-        this.props.tengoMisPermisosxListado([permisos_view], {callback: cargarArchivosProyecto});
+        this.props.fetchArchivosProyectos_x_proyecto(proyecto.id);
     }
 
     onSelectArchivo(item_seleccionado) {
@@ -95,12 +95,14 @@ class PanelArchivosProyectos extends Component {
             <Fragment>
                 {
                     permisos.add &&
-                    <i className={`fas fa-${adicionar_documento ? 'minus' : 'plus'}-circle puntero`}
-                       onClick={() => this.setState((s) => ({
-                           adicionar_documento: !s.adicionar_documento,
-                           item_seleccionado: null
-                       }))}>
-                    </i>
+                    <FontAwesomeIcon
+                        className='puntero'
+                        icon={`${adicionar_documento ? 'minus' : 'plus'}-circle`}
+                        onClick={() => this.setState((s) => ({
+                            adicionar_documento: !s.adicionar_documento,
+                            item_seleccionado: null
+                        }))}
+                    />
                 }
                 {
                     adicionar_documento &&
@@ -122,7 +124,6 @@ class PanelArchivosProyectos extends Component {
 
 function mapPropsToState(state) {
     return {
-        mis_permisos: state.mis_permisos,
         archivos_proyecto: state.archivos_proyecto
     }
 }

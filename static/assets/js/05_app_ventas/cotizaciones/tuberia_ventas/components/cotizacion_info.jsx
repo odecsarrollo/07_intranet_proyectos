@@ -100,10 +100,14 @@ class PanelRelacion extends Component {
                     !cotizacion.crear_literal &&
                     campo_busqueda.length > 5 &&
                     <Fragment>
-                        <button type="button"
-                                onClick={() => buscarMetodo(campo_busqueda)}>
+                        <Button
+                            color="primary"
+                            variant="contained"
+                            onClick={() => buscarMetodo(campo_busqueda)}
+                            className='ml-3'
+                        >
                             Buscar
-                        </button>
+                        </Button>
                         <div className="row">
                             {listado.map(e => {
                                 return (

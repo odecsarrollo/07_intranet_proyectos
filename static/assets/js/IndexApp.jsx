@@ -7,6 +7,7 @@ import {Link} from 'react-router-dom'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {withStyles} from "@material-ui/core/styles/index";
 import Typography from '@material-ui/core/Typography';
+import classNames from 'classnames';
 
 const Boton = (props) => {
     const {nombre, icono, link, classes} = props;
@@ -16,7 +17,7 @@ const Boton = (props) => {
                 <div className={classes.bordeBoton}>
                     <div className="row">
                         <div className="col-12">
-                            <FontAwesomeIcon icon={['fas', icono]} size='3x' className={classes.iconoBoton}/>
+                            <FontAwesomeIcon icon={icono} size='3x' className={classes.iconoBoton}/>
                         </div>
                         <div className="col-12">
                             <Typography variant="h6" color="primary" noWrap>
@@ -93,24 +94,32 @@ class IndexApp extends Component {
                         <div className="col-4">
 
                         </div>
-                        <div className="col-4 boton-index mt-4">
-                            <a href="/accounts/logout/?next=/">
-                                <div className='icono puntero'>
-                                    <div className="row">
-                                        <div className="col-12">
-                                            <FontAwesomeIcon
-                                                icon={['fas', 'sign-out-alt']}
-                                                className={classes.iconoBoton}
-                                            />
+                        <div className='col-12'>
+                            <div className="row">
+                                <div className="col-4"></div>
+                                <div
+                                    className={classNames(classes.bordeBoton, 'col-4 mt-3')}
+                                >
+                                    <a href="/accounts/logout/?next=/">
+                                        <div className='icono puntero'>
+                                            <div className="row">
+                                                <div className="col-12">
+                                                    <FontAwesomeIcon
+                                                        icon={'sign-out'}
+                                                        className={classes.iconoBoton}
+                                                    />
+                                                </div>
+                                                <div className="col-12">
+                                                    <Typography variant="h6" color="primary" noWrap>
+                                                        Salir
+                                                    </Typography>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className="col-12">
-                                            <Typography variant="h6" color="primary" noWrap>
-                                                Salir
-                                            </Typography>
-                                        </div>
-                                    </div>
+                                    </a>
                                 </div>
-                            </a>
+                                <div className="col-4"></div>
+                            </div>
                         </div>
                         <div className="col-4"></div>
                         <CargarDatos cargarDatos={this.cargarDatos}/>

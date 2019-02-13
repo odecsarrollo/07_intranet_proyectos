@@ -8,36 +8,31 @@ const MenuConsultas = () => (
             size='1x'
             link='/app/proyectos/items/list'
             texto='Items CGUno'
-            icono='user'
-            type='nested'
+            type='main'
         />
         <DrawerListItem
             size='1x'
             link='/app/proyectos/consecutivo/list'
             texto='Consecutivo Proyectos'
-            icono='user'
-            type='nested'
+            type='main'
         />
         <DrawerListItem
             size='1x'
             link='/app/proyectos/proyectos/reporte_costos'
             texto='Reporte Costos Proyectos 1'
-            icono='user'
-            type='nested'
+            type='main'
         />
         <DrawerListItem
             size='1x'
             link='/app/proyectos/proyectos/reporte_dos'
             texto='Reporte Costos Proyectos 2'
-            icono='user'
-            type='nested'
+            type='main'
         />
         <DrawerListItem
             size='1x'
             link='/app/proyectos/proyectos/reporte_tres'
             texto='Reporte Costos Proyectos 3'
-            icono='user'
-            type='nested'
+            type='main'
         />
 
     </ListCollapse>

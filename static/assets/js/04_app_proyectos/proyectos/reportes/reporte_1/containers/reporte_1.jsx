@@ -5,18 +5,12 @@ import FormReporte from '../components/forms/reporte_1_form'
 
 class ReporteCosto extends Component {
     imprimirCostos(id_proyecto, valores) {
-        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
-        cargando();
-        const success_callback = (response) => {
+        const callback = (response) => {
             const url = window.URL.createObjectURL(new Blob([response], {type: 'application/pdf'}));
             //PrinJs(url);
             window.open(url, "_blank");
-            noCargando();
         };
-        this.props.printReporteCostoProyecto(id_proyecto, valores, success_callback, (r) => {
-            notificarErrorAjaxAction(r, 60000);
-            noCargando();
-        })
+        this.props.printReporteCostoProyecto(id_proyecto, valores, {callback})
     }
 
     render() {

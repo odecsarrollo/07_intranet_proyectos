@@ -66,7 +66,7 @@ class Detail extends Component {
         const fecha_cierre = configuracion_costos ? configuracion_costos.fecha_cierre : null;
         const fecha_registro = object ? object.fecha : null;
         const puede_modificar = fecha_cierre && fecha_registro ? object.fecha > fecha_cierre : true;
-
+        const {id} = this.props.match.params;
 
         if (!object) {
             return <SinObjeto/>
@@ -82,9 +82,9 @@ class Detail extends Component {
 
         const horas_trabajo_crud_method_pool = {
             fetchObjectMethod: this.props.fetchHoraHojaTrabajo,
-            deleteObjectMethod: this.deleteHoraTrabajo,
-            createObjectMethod: this.createHoraTrabajo,
-            updateObjectMethod: this.updateHoraTrabajo,
+            deleteObjectMethod: this.props.deleteHoraHojaTrabajo,
+            createObjectMethod: this.props.createHoraHojaTrabajo,
+            updateObjectMethod: this.props.updateHoraHojaTrabajo
         };
 
         return (
@@ -110,6 +110,9 @@ class Detail extends Component {
                     }
                 </div>
                 <CRUDHorasHojasTrabajoList
+                    posCreateMethod={(r) => this.props.fetchHojaTrabajo(r.hoja)}
+                    posUpdateMethod={(r) => this.props.fetchHojaTrabajo(r.hoja)}
+                    posDeleteMethod={() => this.props.fetchHojaTrabajo(id)}
                     method_pool={horas_trabajo_crud_method_pool}
                     list={mis_horas_trabajadas}
                     permisos_object={{

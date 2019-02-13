@@ -17,7 +17,7 @@ const IconButtonTableSee = (props) => {
             >
                 <FontAwesomeIcon
                     className={classes.icono}
-                    icon={['fas', 'eye']}
+                    icon='eye'
                     size='xs'
                 />
             </IconButton>

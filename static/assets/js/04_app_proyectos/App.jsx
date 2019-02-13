@@ -22,10 +22,6 @@ import ReporteCosto from "./proyectos/reportes/reporte_1/containers/reporte_1";
 import ReporteDos from "./proyectos/reportes/reporte_2/containers/reporte_2";
 import ReporteTres from "./proyectos/reportes/reporte_3/containers/reporte_3";
 
-
-import PlaneadorMateriaPrima
-    from "../04_app_proyectos/proyectos/listado_materiales/containers/planeador_listado_materiales";
-
 const App = () => {
     return (
         <Loading>
@@ -51,9 +47,6 @@ const App = () => {
                     <Route exact path='/app/proyectos/proyectos/reporte_dos' component={ReporteDos}/>
                     <Route exact path='/app/proyectos/proyectos/reporte_tres' component={ReporteTres}/>
 
-
-                    <Route path='/app/proyectos/listado_materiales/planeador_materiales/:id'
-                           component={PlaneadorMateriaPrima}/>
                 </Switch>
             </DrawerMenu>
         </Loading>

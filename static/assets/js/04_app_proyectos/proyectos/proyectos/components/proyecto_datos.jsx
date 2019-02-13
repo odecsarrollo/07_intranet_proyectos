@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react';
 import {fechaFormatoUno, pesosColombianos} from "../../../../00_utilities/common";
 import {Link} from 'react-router-dom'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 const InfoProyecto = (props) => {
     const {proyecto, cotizaciones_permisos, cotizaciones_proyecto_list} = props;
@@ -13,10 +14,11 @@ const InfoProyecto = (props) => {
                 <span><strong>Nombre: </strong><small>{proyecto.nombre}</small></span>
             </div>
             <div className="col-12 col-md-6 col-lg-3">
-                                <span><strong>Sincronizado: </strong>
-                                    <i className={`fa fa-${proyecto.en_cguno ? 'check' : 'times'}`}>
-                                    </i>
-                                </span>
+                    <span><strong>Sincronizado: </strong>
+                        <FontAwesomeIcon
+                            icon={proyecto.en_cguno ? 'check' : 'times'}
+                        />
+                    </span>
             </div>
             <div className="col-12 col-md-6 col-lg-3">
                 <span><strong>Precio: </strong><small>{pesosColombianos(proyecto.valor_cliente)}</small></span>
@@ -29,7 +31,9 @@ const InfoProyecto = (props) => {
             </div>
             <div className="col-12 col-md-6 col-lg-3">
                                 <span><strong>Abierto: </strong>
-                                    <i className={`fa fa-${proyecto.abierto ? 'check' : 'times'}`}></i>
+                                    <FontAwesomeIcon
+                                        icon={proyecto.abierto ? 'check' : 'times'}
+                                    />
                                 </span>
             </div>
             <div className="col-12">

@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {pesosColombianos, fechaFormatoUno} from '../../../../../../00_utilities/common';
 import Combobox from 'react-widgets/lib/Combobox';
 
+import Checkbox from '@material-ui/core/Checkbox';
+
 class RowItemSelect extends Component {
     constructor(props) {
         super(props);
@@ -163,7 +165,6 @@ const TablaRow = (props) => {
                 permisos_object={permisos_object}
             />
             <td><span>{fila.colaborador_nombres} {fila.colaborador_apellidos}</span></td>
-            {/*<td><span>{fila.centro_costo_nombre}</span></td>*/}
             <RowItemSelect
                 modificable={es_modificable}
                 item={fila.centro_costo}
@@ -178,35 +179,27 @@ const TablaRow = (props) => {
 
 
             <td className='text-center'>
-                {permisos_object.change && es_modificable ?
-                    <i
-                        onClick={() => updateColaboradorCostoMes(fila.id, {...fila, es_aprendiz: !fila.es_aprendiz})}
-                        className={`${fila.es_aprendiz ? 'fas fa-check-square' : 'far fa-square'} puntero`}
-                    >
-                    </i> :
-                    <i
-                        className={`${fila.es_aprendiz ? 'fas fa-check-circle' : 'fas fa-times'}`}
-                    >
-                    </i>
-                }
+                <Checkbox
+                    disabled={!(permisos_object.change && es_modificable)}
+                    style={{margin: 0, padding: 0}}
+                    color='primary'
+                    checked={fila.es_aprendiz}
+                    onClick={() => updateColaboradorCostoMes(fila.id, {...fila, es_aprendiz: !fila.es_aprendiz})}
+                />
             </td>
 
 
             <td className='text-center'>
-                {permisos_object.change && es_modificable ?
-                    <i
-                        onClick={() => updateColaboradorCostoMes(fila.id, {
-                            ...fila,
-                            es_salario_fijo: !fila.es_salario_fijo
-                        })}
-                        className={`${fila.es_salario_fijo ? 'fas fa-check-square' : 'far fa-square'} puntero`}
-                    >
-                    </i> :
-                    <i
-                        className={`${fila.es_salario_fijo ? 'fas fa-check-circle' : 'fas fa-times'}`}
-                    >
-                    </i>
-                }
+                <Checkbox
+                    disabled={!(permisos_object.change && es_modificable)}
+                    style={{margin: 0, padding: 0}}
+                    color='primary'
+                    checked={fila.es_salario_fijo}
+                    onClick={() => updateColaboradorCostoMes(fila.id, {
+                        ...fila,
+                        es_salario_fijo: !fila.es_salario_fijo
+                    })}
+                />
             </td>
 
             <RowItem
@@ -316,30 +309,22 @@ const TablaRow = (props) => {
             <td className='text-right'><strong>{pesosColombianos(fila.valor_hora)}</strong></td>
 
             <td className='text-center'>
-                {permisos_object.change && es_modificable ?
-                    <i
-                        onClick={() => updateColaboradorCostoMes(fila.id, {...fila, modificado: !fila.modificado})}
-                        className={`${fila.modificado ? 'fas fa-check-square' : 'far fa-square'} puntero`}
-                    >
-                    </i> :
-                    <i
-                        className={`${fila.modificado ? 'fas fa-check-circle' : 'fas fa-times'}`}
-                    >
-                    </i>
-                }
+                <Checkbox
+                    disabled={!(permisos_object.change && es_modificable)}
+                    style={{margin: 0, padding: 0}}
+                    color='primary'
+                    checked={fila.modificado}
+                    onClick={() => updateColaboradorCostoMes(fila.id, {...fila, modificado: !fila.modificado})}
+                />
             </td>
             <td className='text-center'>
-                {permisos_object.change && puede_cambiar ?
-                    <i
-                        onClick={() => updateColaboradorCostoMes(fila.id, {...fila, verificado: !fila.verificado})}
-                        className={`${fila.verificado ? 'fas fa-check-square' : 'far fa-square'} puntero`}
-                    >
-                    </i> :
-                    <i
-                        className={`${fila.verificado ? 'fas fa-check-circle' : 'fas fa-times'}`}
-                    >
-                    </i>
-                }
+                <Checkbox
+                    disabled={!(permisos_object.change && puede_cambiar)}
+                    style={{margin: 0, padding: 0}}
+                    color='primary'
+                    checked={fila.verificado}
+                    onClick={() => updateColaboradorCostoMes(fila.id, {...fila, verificado: !fila.verificado})}
+                />
             </td>
         </tr>
     )

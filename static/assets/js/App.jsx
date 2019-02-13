@@ -18,18 +18,94 @@ import 'bootstrap/dist/js/bootstrap';
 import './../../css/custom.css';
 
 import {createMuiTheme, MuiThemeProvider} from '@material-ui/core/styles';
-import indigo from '@material-ui/core/colors/indigo';
+import red from '@material-ui/core/colors/red';
 import orange from '@material-ui/core/colors/orange';
-import green from '@material-ui/core/colors/green';
+import indigo from '@material-ui/core/colors/indigo';
 
+//import {faSpinnerThird, faWrench} from '@fortawesome/pro-regular-svg-icons';
+//import {fal} from '@fortawesome/pro-light-svg-icons';
+//import {fab} from '@fortawesome/free-brands-svg-icons';
 
-import {far} from '@fortawesome/pro-regular-svg-icons';
 import {library} from '@fortawesome/fontawesome-svg-core'
-import {fas} from '@fortawesome/pro-solid-svg-icons';
-import {fal} from '@fortawesome/pro-light-svg-icons';
-import {fab} from '@fortawesome/free-brands-svg-icons';
+import {
+    faWrench,
+    faCogs,
+    faShoppingCart,
+    faPuzzlePiece,
+    faSignOut,
+    faSpinnerThird,
+    faBars,
+    faHome,
+    faAlarmClock,
+    faAngleLeft,
+    faAngleDown,
+    faSearch,
+    faProjectDiagram,
+    faAngleUp,
+    faTrash,
+    faEdit,
+    faEye,
+    faUsers,
+    faUser,
+    faLock,
+    faObjectGroup,
+    faUserHardHat,
+    faSuitcase,
+    faMoneyBillAlt,
+    faFile,
+    faBook,
+    faPlusCircle,
+    faMinusCircle,
+    faDownload,
+    faSyncAlt,
+    faTimes,
+    faCheck,
+    faSquare,
+    faCheckSquare,
+    faExclamation,
+    faCheckCircle,
+    faTasks
+} from '@fortawesome/pro-solid-svg-icons';
 
-library.add(fab, fal, far, fas);
+library.add(
+    faWrench,
+    faCogs,
+    faShoppingCart,
+    faPuzzlePiece,
+    faSignOut,
+    faSpinnerThird,
+    faBars,
+    faHome,
+    faAlarmClock,
+    faAngleLeft,
+    faAngleDown,
+    faSearch,
+    faProjectDiagram,
+    faAngleUp,
+    faTrash,
+    faEdit,
+    faEye,
+    faUsers,
+    faUser,
+    faLock,
+    faObjectGroup,
+    faUserHardHat,
+    faSuitcase,
+    faMoneyBillAlt,
+    faFile,
+    faBook,
+    faPlusCircle,
+    faMinusCircle,
+    faDownload,
+    faSyncAlt,
+    faTimes,
+    faCheck,
+    faSquare,
+    faCheckSquare,
+    faExclamation,
+    faCheckCircle,
+    faTasks
+);
 
 const theme = createMuiTheme({
     typography: {
@@ -49,15 +125,10 @@ const theme = createMuiTheme({
         fontSize: 12,
     },
     palette: {
-        primary: green,
+        primary: orange,
         secondary: indigo,
-        error: orange,
-        // Used by `getContrastText()` to maximize the contrast between the background and
-        // the text.
+        error: red,
         contrastThreshold: 3,
-        // Used to shift a color's luminance by approximately
-        // two indexes within its tonal palette.
-        // E.g., shift from Red 500 to Red 300 or Red 700.
         tonalOffset: 0.2,
     },
 });
