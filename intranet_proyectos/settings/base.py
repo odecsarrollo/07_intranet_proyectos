@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/2.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
-
+from datetime import timedelta
 import os
 
 
@@ -169,3 +169,7 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = "media"
 STATIC_ROOT = "/static/"
+
+REST_KNOX = {
+    'TOKEN_TTL': timedelta(hours=15),
+}

@@ -162,7 +162,9 @@ class DrawerMenu extends Component {
                             <ListItem>
                                 <img src={`${img_static_url}/logo.png`} width="40"
                                      className="d-inline-block align-top mr-2"
-                                     alt=""/>
+                                     alt=""
+                                     style={{position:'relative', right:10}}
+                                />
                             </ListItem>
                         </Link>
                     </List>

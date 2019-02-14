@@ -1,5 +1,4 @@
 from .base import *
-from datetime import timedelta
 
 DEBUG = False
 ########## MANAGER CONFIGURATION
@@ -140,8 +139,4 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
-}
-
-REST_KNOX = {
-    'TOKEN_TTL': timedelta(hours=15),
 }
