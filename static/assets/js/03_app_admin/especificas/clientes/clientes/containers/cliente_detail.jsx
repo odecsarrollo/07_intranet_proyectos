@@ -30,15 +30,14 @@ class Detail extends Component {
     cargarDatos() {
         const {id} = this.props.match.params;
         const cargarContactos = () => this.props.fetchContactosClientes_por_cliente(id);
-        const cargarPermisos = () => this.props.tengoMisPermisosxListado([contactos_permisos_view, permisos_view], {callback: cargarContactos});
-        this.props.fetchCliente(id, {callback: cargarPermisos});
+        this.props.fetchCliente(id, {callback: cargarContactos});
 
     }
 
     render() {
         const {object, contactos, mis_permisos} = this.props;
-        const permisos = permisosAdapter(mis_permisos, permisos_view);
-        const permisos_contactos = permisosAdapter(mis_permisos, contactos_permisos_view);
+        const permisos = permisosAdapter(permisos_view);
+        const permisos_contactos = permisosAdapter(contactos_permisos_view);
 
         if (!object) {
             return <SinObjeto/>

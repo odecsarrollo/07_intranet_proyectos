@@ -25,13 +25,12 @@ class List extends Component {
     }
 
     cargarDatos() {
-        const cargarFases = this.props.fetchFases();
-        this.props.tengoMisPermisosxListado([permisos_view], {callback: cargarFases})
+        this.props.fetchFases();
     }
 
     render() {
         const {object_list, mis_permisos} = this.props;
-        const permisos_object = permisosAdapter(mis_permisos, permisos_view);
+        const permisos_object = permisosAdapter(permisos_view);
         const method_pool = {
             fetchObjectMethod: this.props.fetchFase,
             deleteObjectMethod: this.props.deleteFase,

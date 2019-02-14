@@ -33,8 +33,7 @@ class PermisosList extends Component {
     }
 
     cargarDatos() {
-        const cargarPermisos = () => this.props.fetchPermisos();
-        this.props.tengoMisPermisosxListado([permisos_view], {callback: cargarPermisos});
+        this.props.fetchPermisos();
     }
 
     updatePermiso(permiso) {
@@ -47,7 +46,7 @@ class PermisosList extends Component {
 
     render() {
         const {mis_permisos, permisos} = this.props;
-        const permisos_this_view = permisosAdapter(mis_permisos, permisos_view);
+        const permisos_this_view = permisosAdapter(permisos_view);
 
         return (
             <ValidarPermisos

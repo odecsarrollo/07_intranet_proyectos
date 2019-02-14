@@ -24,14 +24,12 @@ class List extends Component {
     }
 
     cargarDatos() {
-        const cargarLiterales = () => this.props.fetchLiterales();
-        this.props.tengoMisPermisosxListado([permisos_view], {callback: cargarLiterales})
-
+        this.props.fetchLiterales();
     }
 
     render() {
-        const {object_list, mis_permisos} = this.props;
-        const bloque_1_permisos = permisosAdapter(mis_permisos, permisos_view);
+        const {object_list} = this.props;
+        const bloque_1_permisos = permisosAdapter(permisos_view);
         return (
             <Fragment>
                 <Tabla
@@ -49,7 +47,6 @@ class List extends Component {
 
 function mapPropsToState(state, ownProps) {
     return {
-        mis_permisos: state.mis_permisos,
         object_list: state.literales
     }
 }

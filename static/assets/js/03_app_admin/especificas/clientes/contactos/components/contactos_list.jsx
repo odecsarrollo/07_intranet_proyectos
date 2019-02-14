@@ -25,8 +25,7 @@ class List extends Component {
 
     cargarDatos() {
         const {id} = this.props.match.params;
-        const cargarContactos = this.props.fetchContactosClientes_por_cliente(id);
-        this.props.tengoMisPermisosxListado([permisos_view], {callback: cargarContactos})
+        this.props.fetchContactosClientes_por_cliente(id);
     }
 
     render() {

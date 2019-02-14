@@ -30,13 +30,12 @@ class List extends Component {
 
     cargarDatos() {
         const cargarUsuarios = () => this.props.fetchUsuarios();
-        const cargarMiCuenta = this.props.fetchMiCuenta({callback: cargarUsuarios});
-        this.props.tengoMisPermisosxListado([permisos_view, permisos_view_groups], {callback: cargarMiCuenta})
+        this.props.fetchMiCuenta({callback: cargarUsuarios});
     }
 
     render() {
         const {object_list, mis_permisos, mi_cuenta} = this.props;
-        const permisos_object = permisosAdapter(mis_permisos, permisos_view_groups);
+        const permisos_object = permisosAdapter(permisos_view_groups);
         const method_pool = {
             fetchObjectMethod: this.props.fetchUsuario,
             deleteObjectMethod: this.props.deleteUsuario,

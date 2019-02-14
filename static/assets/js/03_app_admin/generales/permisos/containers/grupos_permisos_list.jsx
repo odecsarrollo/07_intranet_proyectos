@@ -51,7 +51,7 @@ class List extends Component {
 
     cargarDatos() {
         const cargarGruposPermisos = () => this.props.fetchGruposPermisos();
-        const cargarPermisosActivos = () => this.props.fetchPermisosActivos(
+        this.props.fetchPermisosActivos(
             {
                 callback: response => {
                     this.setState({
@@ -62,7 +62,6 @@ class List extends Component {
                 }
             }
         );
-        this.props.tengoMisPermisosxListado([permisos_view, permisos_view_groups], {callback: cargarPermisosActivos});
     }
 
     onSelectItemDetail(item) {
@@ -89,7 +88,7 @@ class List extends Component {
             todos_los_permisos,
             id_grupo_actual
         } = this.state;
-        const permisos_object = permisosAdapter(mis_permisos, permisos_view_groups);
+        const permisos_object = permisosAdapter(permisos_view_groups);
         const grupo_seleccionado = id_grupo_actual ? object_list[id_grupo_actual] : null;
         const method_pool = {
             fetchObjectMethod: this.props.fetchGrupoPermiso,

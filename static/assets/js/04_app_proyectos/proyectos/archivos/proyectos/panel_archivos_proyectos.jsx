@@ -90,7 +90,7 @@ class PanelArchivosProyectos extends Component {
     render() {
         const {archivos_proyecto, mis_permisos} = this.props;
         const {adicionar_documento, item_seleccionado} = this.state;
-        const permisos = permisosAdapter(mis_permisos, permisos_view);
+        const permisos = permisosAdapter(permisos_view);
         return (
             <Fragment>
                 {

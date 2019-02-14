@@ -1,6 +1,7 @@
 const initialState = {
     token: localStorage.getItem("token"),
     mi_cuenta: JSON.parse(localStorage.getItem("mi_cuenta")),
+    mis_permisos: JSON.parse(localStorage.getItem("mis_permisos")),
     isAuthenticated: null,
     isLoading: true,
     user: null,
@@ -25,6 +26,7 @@ export default function auth(state = initialState, action) {
         case 'LOGIN_SUCCESSFUL':
             localStorage.setItem("token", action.data.token);
             localStorage.setItem("mi_cuenta", action.data.mi_cuenta ? JSON.stringify(action.data.mi_cuenta) : null);
+            localStorage.setItem("mis_permisos", action.data.mis_permisos ? JSON.stringify(action.data.mis_permisos) : null);
             return {...state, ...action.data, isAuthenticated: true, isLoading: false, errors: null};
 
         case 'AUTHENTICATION_ERROR':
@@ -32,6 +34,7 @@ export default function auth(state = initialState, action) {
         case 'LOGOUT_SUCCESSFUL':
             localStorage.removeItem("token");
             localStorage.removeItem("mi_cuenta");
+            localStorage.removeItem("mis_permisos");
             return {
                 ...state,
                 errors: action.data,
@@ -39,7 +42,8 @@ export default function auth(state = initialState, action) {
                 user: null,
                 isAuthenticated: false,
                 isLoading: false,
-                mi_cuenta: null
+                mi_cuenta: null,
+                mis_permisos: null
             };
 
         default:

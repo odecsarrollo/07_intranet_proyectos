@@ -33,14 +33,13 @@ class List extends Component {
     cargarDatos() {
         const cargarProyectos = () => this.props.fetchProyectosAbiertos();
         const cargarHorasHojasTrabajo = () => this.props.fetchHorasHojasTrabajosAutogestionadas({callback: cargarProyectos});
-        const cargarConfigCostos = () => this.props.fetchConfiguracionesCostos({callback: cargarHorasHojasTrabajo});
-        this.props.tengoMisPermisosxListado([permisos_view, permisos_view_hoja], {callback: cargarConfigCostos})
+        this.props.fetchConfiguracionesCostos({callback: cargarHorasHojasTrabajo});
     }
 
     render() {
         const {object_list, mis_permisos} = this.props;
-        const bloque_1_permisos = permisosAdapter(mis_permisos, permisos_view);
-        const permisos_hoja = permisosAdapter(mis_permisos, permisos_view_hoja);
+        const bloque_1_permisos = permisosAdapter(permisos_view);
+        const permisos_hoja = permisosAdapter(permisos_view_hoja);
         const method_pool = {
             fetchObjectMethod: this.props.fetchHoraHojaTrabajo,
             deleteObjectMethod: this.props.deleteHoraHojaTrabajo,

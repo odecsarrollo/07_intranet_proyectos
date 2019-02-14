@@ -36,7 +36,7 @@ class ItemsList extends Component {
     }
 
     cargarDatos() {
-        this.props.tengoMisPermisosxListado([permisos_view])
+
     }
 
     handleChangeTipoConsulta(event) {
@@ -59,7 +59,7 @@ class ItemsList extends Component {
 
     render() {
         const {object_list, mis_permisos} = this.props;
-        const permisos = permisosAdapter(mis_permisos, permisos_view);
+        const permisos = permisosAdapter(permisos_view);
         return (
             <ValidarPermisos can_see={permisos.list} nombre='listas de items CGUno'>
                 <Titulo>Items CGUno</Titulo>

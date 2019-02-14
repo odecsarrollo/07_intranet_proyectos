@@ -32,7 +32,8 @@ export const formatBytes = (bytes, decimals = 3) => {
 export const upper = value => value && value.toUpperCase();
 export const lower = value => value && value.toLowerCase();
 
-export const tengoPermiso = (mis_permisos, permisos, tipo = 'and') => {
+export const tengoPermiso = (permisos, tipo = 'and') => {
+    const mis_permisos = _.map(JSON.parse(localStorage.getItem('mis_permisos')), e => e.codename);
     let permisos_a_validar_array = permisos;
     if (!Array.isArray(permisos)) {
         permisos_a_validar_array = [permisos]
@@ -51,6 +52,14 @@ export const tengoPermiso = (mis_permisos, permisos, tipo = 'and') => {
 };
 
 
-export const permisosAdapter = (mis_permisos, permisos_view) => {
-    return _.mapValues(permisos_view, p => tengoPermiso(mis_permisos, p));
+export const permisosAdapter = (permisos_view) => {
+    const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
+    if (mi_cuenta.is_superuser) {
+        return _.mapValues(permisos_view, p => {
+            return true
+        })
+    }
+    return _.mapValues(permisos_view, p => {
+        return tengoPermiso(p)
+    });
 };

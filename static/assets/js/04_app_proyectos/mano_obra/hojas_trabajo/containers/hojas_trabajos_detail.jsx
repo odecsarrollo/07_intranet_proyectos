@@ -37,8 +37,7 @@ class Detail extends Component {
         const {id} = this.props.match.params;
         const cargarHojaTrabajo = () => this.props.fetchHojaTrabajo(id);
         const cargarMiCuenta = () => this.props.fetchMiCuenta({callback: cargarHojaTrabajo});
-        const cargarConfigCostos = () => this.props.fetchConfiguracionesCostos({callback: cargarMiCuenta});
-        this.props.tengoMisPermisosxListado([permisos_view, permisos_view_horas], {callback: cargarConfigCostos});
+        this.props.fetchConfiguracionesCostos({callback: cargarMiCuenta});
 
     }
 
@@ -60,8 +59,8 @@ class Detail extends Component {
 
     render() {
         const {object, mis_permisos, configuracion_costos} = this.props;
-        const permisos = permisosAdapter(mis_permisos, permisos_view);
-        const permisos_horas = permisosAdapter(mis_permisos, permisos_view_horas);
+        const permisos = permisosAdapter(permisos_view);
+        const permisos_horas = permisosAdapter(permisos_view_horas);
 
         const fecha_cierre = configuracion_costos ? configuracion_costos.fecha_cierre : null;
         const fecha_registro = object ? object.fecha : null;

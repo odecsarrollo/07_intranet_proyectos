@@ -36,9 +36,7 @@ class List extends Component {
 
     cargarDatos() {
         const cargarCotizacionesParaCarpetas = () => this.props.fetchCotizacionesPidiendoCarpeta();
-        const cargarProyectos = () => this.props.fetchProyectos({callback: cargarCotizacionesParaCarpetas});
-        this.props.tengoMisPermisosxListado([permisos_view, cotizaciones_permisos_view], {callback: cargarProyectos})
-
+        this.props.fetchProyectos({callback: cargarCotizacionesParaCarpetas});
     }
 
     deleteProyecto(item) {
@@ -47,8 +45,8 @@ class List extends Component {
 
     render() {
         const {object_list, mis_permisos, cotizaciones_list} = this.props;
-        const permisos_proyectos = permisosAdapter(mis_permisos, permisos_view);
-        const permisos_cotizaciones = permisosAdapter(mis_permisos, cotizaciones_permisos_view);
+        const permisos_proyectos = permisosAdapter(permisos_view);
+        const permisos_cotizaciones = permisosAdapter(cotizaciones_permisos_view);
         const cotizaciones_list_2 = _.map(cotizaciones_list, c => {
             if (c.crear_literal) {
                 const proyectos = _.map(_.pickBy(object_list, p => {

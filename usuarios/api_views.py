@@ -5,6 +5,7 @@ from rest_framework import viewsets, generics, permissions, serializers
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 from .api_serializers import UsuarioSerializer, LoginUserSerializer, UserSerializer
+from permisos.api_serializers import PermissionSerializer
 
 
 class UsuarioViewSet(viewsets.ModelViewSet):
@@ -92,10 +93,26 @@ class LoginAPI(generics.GenericAPIView):
         tokens = AuthToken.objects.filter(user=user)
         tokens.delete()
 
+        if user.is_superuser:
+            permissions_list = None
+        else:
+            permissions_list = Permission.objects.filter(
+                Q(user=user) |
+                Q(group__user=user)
+            ).distinct()
+
         return Response({
             "user": UserSerializer(user, context=self.get_serializer_context()).data,
             "token": AuthToken.objects.create(user),
-            "mi_cuenta": UsuarioSerializer(user, context=self.get_serializer_context()).data
+            "mi_cuenta": UsuarioSerializer(
+                user,
+                context=self.get_serializer_context()
+            ).data,
+            "mis_permisos": PermissionSerializer(
+                permissions_list,
+                context=self.get_serializer_context(),
+                many=True
+            ).data,
         })
 
 

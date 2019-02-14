@@ -51,8 +51,7 @@ class UsuariosDetail extends Component {
                 cargarGruposPermisos();
             },
         });
-        const cargarUsuario = () => this.props.fetchUsuario(id, {callback: cargarPermisosActivos});
-        this.props.tengoMisPermisosxListado([permisos_view], {callback: cargarUsuario})
+        this.props.fetchUsuario(id, {callback: cargarPermisosActivos});
 
     }
 
@@ -82,7 +81,7 @@ class UsuariosDetail extends Component {
         const {usuario, mis_permisos, grupos_permisos} = this.props;
         let {permisos_usuario} = this.props;
         const {todos_los_permisos} = this.state;
-        const permisos = permisosAdapter(mis_permisos, permisos_view);
+        const permisos = permisosAdapter(permisos_view);
 
         const grupos_con_permisos = _.map(grupos_permisos, g => {
             const permisos_grupo = g.permissions.map(p => todos_los_permisos[p]);

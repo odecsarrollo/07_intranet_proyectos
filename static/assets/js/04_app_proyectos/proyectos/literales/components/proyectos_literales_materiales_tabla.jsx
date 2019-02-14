@@ -64,7 +64,7 @@ class TablaProyectosLiteralesMateriales extends Component {
             mis_permisos,
             items_literales
         } = this.props;
-        const permisos = permisosAdapter(mis_permisos, permisos_view);
+        const permisos = permisosAdapter(permisos_view);
         return (
             <ListaBusqueda>
                 {

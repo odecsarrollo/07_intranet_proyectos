@@ -40,7 +40,7 @@ class ListadoElementos extends Component {
 
     cargarDatos() {
         const {slideIndex} = this.state;
-        this.props.tengoMisPermisosxListado([permisos_view, bloque_1_permisos, bloque_2_permisos], {callback: () => this.cargarElementos(slideIndex)})
+        this.cargarElementos(slideIndex)
     }
 
     cargarElementos(value = null) {
@@ -67,8 +67,8 @@ class ListadoElementos extends Component {
     render() {
         const {bloque_1_list, bloque_2_list, mis_permisos} = this.props;
         const {slideIndex} = this.state;
-        const permisos_object_1 = permisosAdapter(mis_permisos, bloque_1_permisos);
-        const permisos_object_2 = permisosAdapter(mis_permisos, bloque_2_permisos);
+        const permisos_object_1 = permisosAdapter(bloque_1_permisos);
+        const permisos_object_2 = permisosAdapter(bloque_2_permisos);
 
         const can_see =
             permisos_object_1.list ||

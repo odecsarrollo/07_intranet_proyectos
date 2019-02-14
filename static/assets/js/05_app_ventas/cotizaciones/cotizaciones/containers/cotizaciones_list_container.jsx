@@ -30,15 +30,14 @@ class List extends Component {
     }
 
     cargarDatos() {
-        const cargarCotizaciones = () => this.props.fetchCotizaciones();
-        this.props.tengoMisPermisosxListado([permisos_view, proyectos_permisos_view], {callback: cargarCotizaciones})
+        this.props.fetchCotizaciones();
 
     }
 
     render() {
         const {object_list, mis_permisos} = this.props;
-        const cotizaciones_permisos = permisosAdapter(mis_permisos, permisos_view);
-        const proyectos_permisos = permisosAdapter(mis_permisos, proyectos_permisos_view);
+        const cotizaciones_permisos = permisosAdapter(permisos_view);
+        const proyectos_permisos = permisosAdapter(proyectos_permisos_view);
         const method_pool = {
             fetchObjectMethod: this.props.fetchCotizacion,
             deleteObjectMethod: this.props.deleteCotizacion,

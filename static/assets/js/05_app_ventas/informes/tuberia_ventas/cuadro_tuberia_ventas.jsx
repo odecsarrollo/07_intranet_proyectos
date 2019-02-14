@@ -25,14 +25,13 @@ class InformeTunelVentas extends Component {
     }
 
     cargarDatos(ano = null, trimestre = null) {
-        const cargarCotizaciones = () => this.props.fetchCotizacionesTuberiaVentasResumen(ano, trimestre);
-        this.props.tengoMisPermisosxListado([permisos_view], {callback: cargarCotizaciones})
+        this.props.fetchCotizacionesTuberiaVentasResumen(ano, trimestre);
 
     }
 
     render() {
         const {mis_permisos} = this.props;
-        const cotizaciones_permisos = permisosAdapter(mis_permisos, permisos_view);
+        const cotizaciones_permisos = permisosAdapter(permisos_view);
         if (!cotizaciones_permisos.informe_uno) {
             return (
                 <div>No tiene permisos suficientes para ver este informe</div>

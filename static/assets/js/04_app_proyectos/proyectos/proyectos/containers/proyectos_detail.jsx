@@ -71,16 +71,7 @@ class Detail extends Component {
         const {id} = this.props.match.params;
         const cargarCotizacioneParaCrearLiterales = () => this.props.fetchCotizacionesPidiendoCarpeta();
         const cargarLiterales = () => this.props.fetchLiteralesXProyecto(id, {callback: cargarCotizacioneParaCrearLiterales});
-        const cargarProyecto = () => this.props.fetchProyecto(id, {callback: cargarLiterales});
-        this.props.tengoMisPermisosxListado([
-            permisos_view,
-            literales_permisos_view,
-            cotizaciones_permisos_view,
-            archivos_proyecto_permisos_view,
-            archivos_literales_permisos_view,
-            clientes_permisos_view
-        ], {callback: cargarProyecto});
-
+        this.props.fetchProyecto(id, {callback: cargarLiterales});
     }
 
     render() {
@@ -90,10 +81,10 @@ class Detail extends Component {
             literales_list,
             contizaciones_list,
         } = this.props;
-        const permisos = permisosAdapter(mis_permisos, permisos_view);
-        const permisos_literales = permisosAdapter(mis_permisos, literales_permisos_view);
-        const cotizacion_permisos = permisosAdapter(mis_permisos, cotizaciones_permisos_view);
-        const archivos_proyecto_permisos = permisosAdapter(mis_permisos, archivos_proyecto_permisos_view);
+        const permisos = permisosAdapter(permisos_view);
+        const permisos_literales = permisosAdapter(literales_permisos_view);
+        const cotizacion_permisos = permisosAdapter(cotizaciones_permisos_view);
+        const archivos_proyecto_permisos = permisosAdapter(archivos_proyecto_permisos_view);
 
         if (!object) {
             return <SinObjeto/>

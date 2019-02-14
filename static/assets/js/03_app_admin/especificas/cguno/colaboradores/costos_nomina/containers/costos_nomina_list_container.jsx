@@ -47,8 +47,7 @@ class List extends Component {
 
     cargarDatos() {
         const cargarCentrosCostos = () => this.props.fetchCentrosCostosColaboradores();
-        const cargarConfigCostos = () => this.props.fetchConfiguracionesCostos({callback: cargarCentrosCostos})
-        this.props.tengoMisPermisosxListado([permisos_view], {callback: cargarConfigCostos})
+        this.props.fetchConfiguracionesCostos({callback: cargarCentrosCostos})
     }
 
     updateColaboradorCostoMes(id, item, callback = null) {
@@ -76,7 +75,7 @@ class List extends Component {
             centros_costos_list,
             configuracion_costos
         } = this.props;
-        const permisos_object = permisosAdapter(mis_permisos, permisos_view);
+        const permisos_object = permisosAdapter(permisos_view);
         const {ano, mes, ano_error, mes_error} = this.state;
         return (
             <ValidarPermisos can_see={permisos_object.list} nombre='Costos Colaboradores'>

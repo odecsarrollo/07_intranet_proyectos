@@ -79,9 +79,9 @@ class LiteralDetail extends Component {
             mis_permisos,
             id_literal
         } = this.props;
-        const permisos = permisosAdapter(mis_permisos, permisos_view);
-        const permisos_literales = permisosAdapter(mis_permisos, literales_permisos_view);
-        const permisos_archivos_literal = permisosAdapter(mis_permisos, archivos_literal_permisos_view);
+        const permisos = permisosAdapter(permisos_view);
+        const permisos_literales = permisosAdapter(literales_permisos_view);
+        const permisos_archivos_literal = permisosAdapter(archivos_literal_permisos_view);
         return (
             <Fragment>
                 <div className="row">

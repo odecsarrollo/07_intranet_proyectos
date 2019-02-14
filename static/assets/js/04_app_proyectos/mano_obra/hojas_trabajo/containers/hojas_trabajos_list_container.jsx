@@ -40,8 +40,7 @@ class List extends Component {
         const cargarMiCuenta = () => this.props.fetchMiCuenta();
         const cargarHojasTrabajoHoy = () => this.props.fetchHojasTrabajosxFechas(today, today, {callback: cargarMiCuenta});
         const cargarConfigCostos = () => this.props.fetchConfiguracionesCostos({callback: cargarHojasTrabajoHoy});
-        const cargarColaboradores = () => this.props.fetchColaboradoresEnProyectos({callback: cargarConfigCostos});
-        this.props.tengoMisPermisosxListado([permisos_view], {callback: cargarColaboradores})
+        this.props.fetchColaboradoresEnProyectos({callback: cargarConfigCostos});
 
     }
 
@@ -52,7 +51,7 @@ class List extends Component {
             history
         } = this.props;
 
-        const permisos = permisosAdapter(mis_permisos, permisos_view);
+        const permisos = permisosAdapter(permisos_view);
 
         const method_pool = {
             fetchObjectMethod: this.props.fetchHojaTrabajo,

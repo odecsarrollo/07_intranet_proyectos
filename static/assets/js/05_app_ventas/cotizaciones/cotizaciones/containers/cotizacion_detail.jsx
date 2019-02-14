@@ -53,8 +53,7 @@ class Detail extends Component {
         const cargarArchivos = () => this.props.fetchArchivosCotizaciones_x_cotizacion(id);
         const cargarMiCuenta = () => this.props.fetchMiCuenta({callback: cargarArchivos});
         const cargarSeguimientos = () => this.props.fetchSeguimientosCotizacionesxCotizacion(id, {callback: cargarMiCuenta});
-        const cargarCotizacion = () => this.props.fetchCotizacion(id, {callback: cargarSeguimientos});
-        this.props.tengoMisPermisosxListado([permisos_view, proyecto_permisos_view, archivo_cotizacion_permisos_view], {callback: cargarCotizacion});
+        this.props.fetchCotizacion(id, {callback: cargarSeguimientos});
 
     }
 
@@ -142,9 +141,9 @@ class Detail extends Component {
     render() {
         const {object, mis_permisos, seguimiento_list, mi_cuenta, archivos_list} = this.props;
         const {adicionar_documento, item_seleccionado} = this.state;
-        const permisos = permisosAdapter(mis_permisos, permisos_view);
-        const permisos_proyecto = permisosAdapter(mis_permisos, proyecto_permisos_view);
-        const permisos_archivos_cotizacion = permisosAdapter(mis_permisos, archivo_cotizacion_permisos_view);
+        const permisos = permisosAdapter(permisos_view);
+        const permisos_proyecto = permisosAdapter(proyecto_permisos_view);
+        const permisos_archivos_cotizacion = permisosAdapter(archivo_cotizacion_permisos_view);
         if (!object) {
             return <SinObjeto/>
         }

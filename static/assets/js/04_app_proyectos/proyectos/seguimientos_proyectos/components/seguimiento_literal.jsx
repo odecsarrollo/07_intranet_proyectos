@@ -233,7 +233,7 @@ class SeguimientoLiteral extends Component {
             }
         });
 
-        const proyecto_permisos = permisosAdapter(mis_permisos, proyectos_permisos_view);
+        const proyecto_permisos = permisosAdapter(proyectos_permisos_view);
 
         const puede_administrar_miembros = (miembro && miembro.puede_administrar_miembros) || proyecto_permisos.admin_proyect_manager;
         const puede_administrar_fases = (miembro && miembro.puede_administrar_fases) || proyecto_permisos.admin_proyect_manager;

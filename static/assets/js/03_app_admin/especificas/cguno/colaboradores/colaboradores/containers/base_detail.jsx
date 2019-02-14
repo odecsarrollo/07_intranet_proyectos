@@ -25,14 +25,13 @@ class Detail extends Component {
 
     cargarDatos() {
         const {id} = this.props.match.params;
-        const cargarColaborador = () => this.props.fetchColaborador(id);
-        this.props.tengoMisPermisosxListado([permisos_view],{callback: cargarColaborador});
+        this.props.fetchColaborador(id);
 
     }
 
     render() {
         const {object, mis_permisos} = this.props;
-        const permisos = permisosAdapter(mis_permisos, permisos_view);
+        const permisos = permisosAdapter(permisos_view);
 
 
         if (!object) {

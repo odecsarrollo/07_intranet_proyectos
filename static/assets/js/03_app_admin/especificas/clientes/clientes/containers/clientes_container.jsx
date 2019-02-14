@@ -27,14 +27,12 @@ class List extends Component {
     }
 
     cargarDatos() {
-        const cargarClientes = () => this.props.fetchClientes();
-        this.props.tengoMisPermisosxListado([permisos_view], {callback: cargarClientes});
-
+        this.props.fetchClientes();
     }
 
     render() {
         const {object_list, mis_permisos} = this.props;
-        const permisos_object = permisosAdapter(mis_permisos, permisos_view);
+        const permisos_object = permisosAdapter(permisos_view);
         const method_pool = {
             fetchObjectMethod: this.props.fetchCliente,
             deleteObjectMethod: this.props.deleteCliente,

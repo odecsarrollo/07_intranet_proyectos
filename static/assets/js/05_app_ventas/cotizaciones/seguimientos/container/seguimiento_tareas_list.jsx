@@ -69,8 +69,7 @@ class SeguimientoTareasCotizacionesList extends Component {
 
     cargarDatos() {
         const cargarCotizacionesAgendadas = () => this.props.fetchCotizacionesAgendadas();
-        const cargarSeguimientos = () => this.props.fetchSeguimientosCotizacionesTareasPendientes({callback: cargarCotizacionesAgendadas});
-        this.props.tengoMisPermisosxListado([permisos_view, permisos_cotizaciones_view], {callback: cargarSeguimientos})
+        this.props.fetchSeguimientosCotizacionesTareasPendientes({callback: cargarCotizacionesAgendadas});
     }
 
     componentDidMount() {
@@ -79,7 +78,7 @@ class SeguimientoTareasCotizacionesList extends Component {
 
     render() {
         const {tareas_list, cotizaciones_agendas_list, mis_permisos} = this.props;
-        const permisos_cotizaciones = permisosAdapter(mis_permisos, permisos_cotizaciones_view);
+        const permisos_cotizaciones = permisosAdapter(permisos_cotizaciones_view);
 
         const listado_tareas = _.map(tareas_list, t => {
             return {
