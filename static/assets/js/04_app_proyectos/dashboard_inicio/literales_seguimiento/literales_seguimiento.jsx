@@ -123,8 +123,8 @@ class LiteralesSeguimiento extends Component {
                     {
                         id_literal &&
                         <Fragment>
-                            <h5><strong>Literal: </strong> {literales[id_literal].id_literal}</h5>
-                            <h5><strong>Descripción: </strong> {literales[id_literal].descripcion}</h5>
+                            <h5><strong>Literal: </strong> {literales[id_literal] && literales[id_literal].id_literal}</h5>
+                            <h5><strong>Descripción: </strong> {literales[id_literal] && literales[id_literal].descripcion}</h5>
                             <SeguimientoLiteral
                                 id_literal={id_literal}
                                 callBackSeguimiento={this.cargarLiteralesConSeguimiento}

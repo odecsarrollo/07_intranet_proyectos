@@ -1,5 +1,6 @@
 import React, {Component, Fragment} from 'react';
 import ReactFileReader from 'react-file-reader';
+import Button from '@material-ui/core/Button';
 
 class CargueTareas extends Component {
     constructor(props) {
@@ -78,7 +79,7 @@ class CargueTareas extends Component {
                         this.inputFileChanged(files);
                     }} fileTypes='.csv'>
                     <Fragment>
-                        <button className='btn btn-primary puntero' ref="input_reader">Archivo de Cargue</button>
+                        <Button color='primary' ref="input_reader">Archivo de Cargue</Button>
                         {
                             archivo &&
                             <div style={{fontSize: '0.8rem'}}>

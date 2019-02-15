@@ -53,6 +53,7 @@ export default class ResponsableFaseLiteral extends Component {
                         placeholder='Seleccionar Responsable'
                         valueField='id'
                         textField='nombre'
+                        filter='contains'
                     />
                 }
             </div>

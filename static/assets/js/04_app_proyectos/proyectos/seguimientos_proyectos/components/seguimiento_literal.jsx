@@ -104,34 +104,31 @@ class SeguimientoLiteral extends Component {
 
     onSeleccionarFase(fase_literal_id) {
         const {fase_seleccionada_id} = this.state;
+        const {id_literal} = this.props;
         if (fase_seleccionada_id === fase_literal_id) {
             this.setState({fase_seleccionada_id: null});
         } else {
             const success_callback = () => {
                 this.setState({fase_seleccionada_id: fase_literal_id});
             };
-            const cargarTareas = () => this.props.fetchTareasFases_x_literal(fase_literal_id, {callback: success_callback});
+            const cargarMiembros = () => this.props.fetchMiembrosLiterales_x_literal(id_literal, {callback: success_callback});
+            const cargarTareas = () => this.props.fetchTareasFases_x_literal(fase_literal_id, {callback: cargarMiembros});
             this.props.fetchFaseLiteral(fase_literal_id, {callback: cargarTareas})
         }
     }
 
-    actualizarTarea(tarea_id, datos) {
-        const {
-            noCargando,
-            callBackSeguimiento = null
-        } = this.props;
+    actualizarTarea(tarea_id, datos, callback = null) {
+        const {callBackSeguimiento = null} = this.props;
         const success_callback = () => {
+            if (callback) {
+                callback();
+            }
             if (callBackSeguimiento) {
                 callBackSeguimiento();
             }
-            else {
-                noCargando();
-            }
         };
         const cargarFaseLiteral = (tarea) => this.props.fetchFaseLiteral(tarea.fase_literal, {callback: success_callback});
-        const actualizarTarea = (tarea) => {
-            this.props.updateTareaFase(tarea_id, {...tarea, ...datos}, {callback: cargarFaseLiteral})
-        };
+        const actualizarTarea = (tarea) => this.props.updateTareaFase(tarea_id, {...tarea, ...datos}, {callback: cargarFaseLiteral});
         this.props.fetchTareaFase(tarea_id, {callback: actualizarTarea})
     }
 
@@ -170,7 +167,8 @@ class SeguimientoLiteral extends Component {
     onSelectTabClick(index) {
         const {id_literal} = this.props;
         if (index === 1) {
-            this.props.fetchFasesLiterales_x_literal(id_literal);
+            const cargarFasesxLiterales = () => this.props.fetchFasesLiterales_x_literal(id_literal);
+            this.props.fetchMiembrosLiterales_x_literal(id_literal, {callback: () => cargarFasesxLiterales});
         }
         if (index === 2) {
             this.props.fetchMiembrosLiterales_x_literal(id_literal, {callback: () => this.props.fetchUsuarios()});

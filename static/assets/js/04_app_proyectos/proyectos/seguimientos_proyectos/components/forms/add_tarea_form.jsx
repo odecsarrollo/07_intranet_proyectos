@@ -36,7 +36,7 @@ class Form extends Component {
         });
         const {mostrar_mas} = this.state;
         return (
-            <form className="card" onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="m-2">
                     <h4>{initialValues ? 'Editar Tarea' : 'Nueva Tarea'}</h4>
                     <div className="row">
@@ -73,13 +73,13 @@ class Form extends Component {
                             </Fragment>
                         }
                         <MyDateTimePickerField
-                            className='col-12'
+                            className='col-12  col-sm-6'
                             nombre='Fecha Inicial'
                             name='fecha_inicial'
                             max={new Date(2999, 12, 31)}
                         />
                         <MyDateTimePickerField
-                            className='col-12'
+                            className='col-12 col-sm-6'
                             nombre='Fecha Límite'
                             name='fecha_limite'
                             max={new Date(2999, 12, 31)}
@@ -93,6 +93,9 @@ class Form extends Component {
                             textField='nombre'
                             filter='contains'
                         />
+                        <div style={{height: '300px'}}>
+
+                        </div>
                     </div>
                 </div>
                 <BotoneriaModalForm

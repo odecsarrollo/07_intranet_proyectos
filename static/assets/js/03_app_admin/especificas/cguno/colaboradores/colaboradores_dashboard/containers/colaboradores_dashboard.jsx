@@ -8,7 +8,6 @@ import {permisosAdapter} from "../../../../../../00_utilities/common";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import {
-    CLIENTES as permisos_view,
     COLABORADORES as bloque_1_permisos,
     COLABORADORES as bloque_2_permisos,
 } from "../../../../../../00_utilities/permisos/types";
@@ -65,7 +64,7 @@ class ListadoElementos extends Component {
 
 
     render() {
-        const {bloque_1_list, bloque_2_list, mis_permisos} = this.props;
+        const {bloque_1_list, bloque_2_list} = this.props;
         const {slideIndex} = this.state;
         const permisos_object_1 = permisosAdapter(bloque_1_permisos);
         const permisos_object_2 = permisosAdapter(bloque_2_permisos);

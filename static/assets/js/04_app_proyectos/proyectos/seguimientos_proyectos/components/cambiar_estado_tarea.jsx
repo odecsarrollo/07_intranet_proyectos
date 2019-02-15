@@ -30,15 +30,15 @@ class TdCambiarEstadoTarea extends Component {
                             ]}
                             onSelect={
                                 e => {
-                                    actualizarTarea(fila.id, {estado: e.id});
-                                    this.setState({cambiar_estado: false})
+                                    actualizarTarea(fila.id, {estado: e.id}, () => this.setState({cambiar_estado: false}))
                                 }}
                             placeholder='Seleccionar Estado'
                             valueField='id'
                             textField='nombre'
+                            filter='contains'
                         /> :
                         <span
-                            style={{fontSize:'9px'}}
+                            style={{fontSize: '9px'}}
                             className={puede_cambiar_estado ? 'puntero' : ''}
                             onClick={() => {
                                 if (puede_cambiar_estado) {

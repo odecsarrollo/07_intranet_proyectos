@@ -132,9 +132,9 @@ class FaseLiteralViewSet(viewsets.ModelViewSet):
             mes = int(linea.pop('mes'))
             dia = int(linea.pop('dia'))
             TareaFase.objects.create(
-                # creado_por=self.request.user,
                 fase_literal=fase_literal,
                 fecha_limite=datetime(ano, mes, dia),
+                fecha_inicial=datetime(ano, mes, dia),
                 **linea
             )
         serializer = self.get_serializer(fase_literal)
