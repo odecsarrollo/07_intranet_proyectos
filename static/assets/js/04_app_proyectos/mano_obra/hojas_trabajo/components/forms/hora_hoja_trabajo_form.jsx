@@ -15,7 +15,8 @@ class Form extends Component {
     }
 
     componentDidMount() {
-        const {initialValues, proyectos_list, mi_cuenta} = this.props;
+        const {initialValues, proyectos_list} = this.props;
+        const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
         this.props.fetchProyectosConLiteralesAbiertos();
         const autogestion_horas_trabajadas = !!(
             mi_cuenta.colaborador &&

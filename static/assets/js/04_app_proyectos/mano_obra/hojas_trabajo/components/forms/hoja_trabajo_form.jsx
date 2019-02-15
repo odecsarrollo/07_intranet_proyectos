@@ -4,7 +4,6 @@ import {
     MyCombobox,
     MyDateTimePickerField
 } from '../../../../../00_utilities/components/ui/forms/fields';
-import Combobox from 'react-widgets/lib/Combobox';
 import {connect} from "react-redux";
 import {MyFormTagModal} from '../../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import validate from './validate_hoja';

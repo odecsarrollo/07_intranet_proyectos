@@ -66,7 +66,6 @@ class List extends Component {
                     this.props.fetchHojasTrabajosxFechas(i, f);
                 }}/>
                 <CRUD
-                    mi_cuenta={mi_cuenta}
                     posCreateMethod={(r) => history.push(`/app/proyectos/mano_obra/hojas_trabajo/detail/${r.id}`)}
                     method_pool={method_pool}
                     list={object_list}
