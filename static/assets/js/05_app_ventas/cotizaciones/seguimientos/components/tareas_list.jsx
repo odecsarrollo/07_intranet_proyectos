@@ -4,7 +4,8 @@ import FormTarea from "./forms/tarea_form";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 const Tarea = (props) => {
-    const {tarea, eliminarSeguimiento, actualizarSeguimiento, mi_cuenta, cotizacion} = props;
+    const {tarea, eliminarSeguimiento, actualizarSeguimiento, cotizacion} = props;
+    const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
     const es_usuario_que_creo = mi_cuenta.id === tarea.creado_por;
     const es_responsable = cotizacion.responsable === mi_cuenta.id;
     const puede_cambiar_estado_tarea = es_usuario_que_creo || es_responsable;

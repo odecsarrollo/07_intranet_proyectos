@@ -6,6 +6,8 @@ import ResponsableFaseLiteral from './adicionar_responsable';
 import TareasFase from './tareas_fase_table';
 import moment from "moment-timezone";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import Modal from '@material-ui/core/Modal';
+import Dialog from '@material-ui/core/Dialog';
 
 class FaseLiteral extends Component {
     constructor(props) {
@@ -16,6 +18,8 @@ class FaseLiteral extends Component {
             selecciono_todas: false,
             tareas_seleccionadas: [],
             distancia_separadores: 10,
+            mostrar_1: false,
+            mostrar_2: false,
         };
         this.addTarea = this.addTarea.bind(this);
         this.deleteTarea = this.deleteTarea.bind(this);
@@ -25,6 +29,16 @@ class FaseLiteral extends Component {
         this.cambiarResponsable = this.cambiarResponsable.bind(this);
         this.cambiarAsignadoTarea = this.cambiarAsignadoTarea.bind(this);
         this.eliminarTareasSelecionadas = this.eliminarTareasSelecionadas.bind(this);
+        this.onPrueba = this.onPrueba.bind(this);
+        this.onPrueba2 = this.onPrueba2.bind(this);
+    }
+
+    onPrueba() {
+        this.setState({mostrar_1: true})
+    }
+
+    onPrueba2() {
+        this.setState({mostrar_2: true})
     }
 
     eliminarTareasSelecionadas() {
@@ -130,7 +144,7 @@ class FaseLiteral extends Component {
             actualizarTarea,
             fecha_minima
         } = this.props;
-        const {mostrar_add_tareas} = this.state;
+        const {mostrar_add_tareas, mostrar_1, mostrar_2} = this.state;
         const mostrar_tareas = fase_seleccionada_id === fase.id;
         const onClick = () => {
             onSeleccionarFase(fase.id);
@@ -257,6 +271,30 @@ class FaseLiteral extends Component {
                             />
                         </div>
                     }
+                    <Dialog
+                        onClose={this.handleClose}
+                        aria-labelledby="customized-dialog-title"
+                        open={this.state.open}
+                    >
+                        <TareasFase
+                            seleccionarTodasTareas={this.seleccionarTodasTareas}
+                            selecciono_todas={this.state.selecciono_todas}
+                            adicionarQuitarTareasSeleccionadas={this.adicionarQuitarTareasSeleccionadas}
+                            tareas_seleccionadas={this.state.tareas_seleccionadas}
+                            actualizarTarea={actualizarTarea}
+                            miembros_literales_list={miembros_literales_list}
+                            cambiarAsignadoTarea={this.cambiarAsignadoTarea}
+                            table_style={table_style}
+                            fases_tareas={fases_tareas}
+                            deleteTarea={this.deleteTarea}
+                            setState={this.setState.bind(this)}
+                            puede_editar_tarea={puede_editar_tareas}
+                            puede_eliminar_tarea={puede_eliminar_tareas}
+                            soy_responsable={soy_responsable}
+                            administra_proyectos={administra_proyectos}
+                            mi_id_usuario={mi_id_usuario}
+                        />
+                    </Dialog>
                     {
                         mostrar_tareas &&
                         <div className='m-3' style={{width: '1000px'}}>
@@ -274,24 +312,20 @@ class FaseLiteral extends Component {
                                     onClick={onClickAddTarea}
                                 />
                             }
-                            <TareasFase
-                                seleccionarTodasTareas={this.seleccionarTodasTareas}
-                                selecciono_todas={this.state.selecciono_todas}
-                                adicionarQuitarTareasSeleccionadas={this.adicionarQuitarTareasSeleccionadas}
-                                tareas_seleccionadas={this.state.tareas_seleccionadas}
-                                actualizarTarea={actualizarTarea}
-                                miembros_literales_list={miembros_literales_list}
-                                cambiarAsignadoTarea={this.cambiarAsignadoTarea}
-                                table_style={table_style}
-                                fases_tareas={fases_tareas}
-                                deleteTarea={this.deleteTarea}
-                                setState={this.setState.bind(this)}
-                                puede_editar_tarea={puede_editar_tareas}
-                                puede_eliminar_tarea={puede_eliminar_tareas}
-                                soy_responsable={soy_responsable}
-                                administra_proyectos={administra_proyectos}
-                                mi_id_usuario={mi_id_usuario}
+                            <FontAwesomeIcon
+                                className='puntero'
+                                icon={`${mostrar_add_tareas ? 'minus' : 'plus'}-circle`}
+                                onClick={this.onPrueba}
                             />
+                            <Modal open={mostrar_2}>
+                                <div style={{backgroundColor: 'white'}}>
+                                    Hola 2
+                                    asdfasdfads
+                                    adsfasd
+                                    asfasdf
+                                    asdfasdfa
+                                </div>
+                            </Modal>
                         </div>
                     }
                     {

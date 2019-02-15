@@ -5,7 +5,7 @@ import {
     fetchObject,
     deleteObject,
     createObject,
-    uploadPDF,
+    uploadArchivo,
     fetchListGetURLParameters
 } from '../../00_general_fuctions'
 
@@ -154,6 +154,6 @@ export const updateCotizacion = (id, values, options_action = {}) => {
 export const uploadArchivoCotizacion = (id, values, options_action = {}) => {
     return (dispatch) => {
         const options = {...options_action, dispatch_method: dispatch};
-        uploadPDF(current_url_api, id, 'upload_archivo', values, options)
+        uploadArchivo(current_url_api, id, 'upload_archivo', values, options)
     }
 };

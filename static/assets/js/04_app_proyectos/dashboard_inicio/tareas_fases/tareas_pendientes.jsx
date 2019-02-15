@@ -102,7 +102,6 @@ class TareasPendientesList extends Component {
             table_style,
             fases_tareas,
             modo = 1,
-            cargarDatos
         } = this.props;
         const {estado, literal} = this.state;
 
@@ -175,7 +174,6 @@ class TareasPendientesList extends Component {
 function mapPropsToState(state, ownProps) {
     return {
         mis_permisos: state.mis_permisos,
-        mi_cuenta: state.mi_cuenta,
         fases_tareas: state.fases_tareas,
     }
 }

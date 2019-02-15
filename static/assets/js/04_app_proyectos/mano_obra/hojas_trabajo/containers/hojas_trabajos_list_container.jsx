@@ -47,11 +47,11 @@ class List extends Component {
     render() {
         const {
             object_list,
-            mis_permisos,
             history
         } = this.props;
 
         const permisos = permisosAdapter(permisos_view);
+        const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
 
         const method_pool = {
             fetchObjectMethod: this.props.fetchHojaTrabajo,
@@ -66,6 +66,7 @@ class List extends Component {
                     this.props.fetchHojasTrabajosxFechas(i, f);
                 }}/>
                 <CRUD
+                    mi_cuenta={mi_cuenta}
                     posCreateMethod={(r) => history.push(`/app/proyectos/mano_obra/hojas_trabajo/detail/${r.id}`)}
                     method_pool={method_pool}
                     list={object_list}
@@ -100,7 +101,6 @@ function mapPropsToState(state, ownProps) {
         mis_permisos: state.mis_permisos,
         object_list: state.hojas_trabajos_diarios,
         colaboradores_list: state.colaboradores,
-        mi_cuenta: state.mi_cuenta,
         proyectos_list: state.proyectos,
         configuracion_costos: _.map(state.configuracion_costos, c => c)[0],
     }

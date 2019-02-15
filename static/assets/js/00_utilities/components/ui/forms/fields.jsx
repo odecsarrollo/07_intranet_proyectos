@@ -319,7 +319,7 @@ const renderRadioGroup = ({input, nombre, meta, options, required = false, meta:
             </RadioGroup>
         </FormControl>
     )
-}
+};
 
 export const MyRadioButtonGroup = (props) => {
     return (

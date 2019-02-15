@@ -27,10 +27,10 @@ class Form extends Component {
             modal_open,
             singular_name,
             colaboradores_list,
-            mi_cuenta,
             permisos_object,
             configuracion_costos,
         } = this.props;
+        const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
         let fecha_cierre_costos = new Date(1900, 0, 1);
 
         if (configuracion_costos) {

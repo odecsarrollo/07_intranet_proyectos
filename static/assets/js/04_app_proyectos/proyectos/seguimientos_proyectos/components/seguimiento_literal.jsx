@@ -185,10 +185,9 @@ class SeguimientoLiteral extends Component {
         const {
             fases_literales_list,
             miembros_literales_list,
-            usuarios,
-            mi_cuenta,
-            mis_permisos,
+            usuarios
         } = this.props;
+        const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
         let miembro = _.head(_.map(_.pickBy(miembros_literales_list, e => e.usuario === mi_cuenta.id), e => e));
         miembro = miembro ? miembro : null;
         const {fase_seleccionada_id} = this.state;
@@ -424,7 +423,6 @@ class SeguimientoLiteral extends Component {
 
 function mapPropsToState(state, ownProps) {
     return {
-        mi_cuenta: state.mi_cuenta,
         fases_list: state.fases,
         fases_literales_list: state.fases_literales,
         fases_tareas: state.fases_tareas,

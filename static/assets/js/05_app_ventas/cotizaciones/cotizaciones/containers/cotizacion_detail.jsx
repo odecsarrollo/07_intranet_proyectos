@@ -139,7 +139,7 @@ class Detail extends Component {
     }
 
     render() {
-        const {object, mis_permisos, seguimiento_list, mi_cuenta, archivos_list} = this.props;
+        const {object, seguimiento_list, archivos_list} = this.props;
         const {adicionar_documento, item_seleccionado} = this.state;
         const permisos = permisosAdapter(permisos_view);
         const permisos_proyecto = permisosAdapter(proyecto_permisos_view);
@@ -211,7 +211,6 @@ class Detail extends Component {
                             }
                             <TabPanel>
                                 <ComentariosList
-                                    mi_cuenta={mi_cuenta}
                                     seguimiento_list={seguimiento_list}
                                     guardarComentario={this.guardarComentario}
                                     eliminarSeguimiento={this.eliminarSeguimiento}
@@ -223,7 +222,6 @@ class Detail extends Component {
                             <TabPanel>
                                 <TareasList
                                     actualizarSeguimiento={this.actualizarSeguimiento}
-                                    mi_cuenta={mi_cuenta}
                                     seguimiento_list={seguimiento_list}
                                     guardarTarea={this.guardarTarea}
                                     eliminarSeguimiento={this.eliminarSeguimiento}
@@ -243,12 +241,10 @@ class Detail extends Component {
 function mapPropsToState(state, ownProps) {
     const {id} = ownProps.match.params;
     return {
-        mis_permisos: state.mis_permisos,
         seguimiento_list: state.cotizaciones_seguimientos,
         proyectos_list: state.proyectos,
         literales_list: state.literales,
         object: state.cotizaciones[id],
-        mi_cuenta: state.mi_cuenta,
         usuarios_list: state.usuarios,
         contactos_list: state.clientes_contactos,
         clientes_list: state.clientes,

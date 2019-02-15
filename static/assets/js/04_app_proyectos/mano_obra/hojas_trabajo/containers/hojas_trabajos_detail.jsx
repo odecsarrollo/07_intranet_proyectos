@@ -58,7 +58,7 @@ class Detail extends Component {
     }
 
     render() {
-        const {object, mis_permisos, configuracion_costos} = this.props;
+        const {object, configuracion_costos} = this.props;
         const permisos = permisosAdapter(permisos_view);
         const permisos_horas = permisosAdapter(permisos_view_horas);
 
@@ -136,7 +136,6 @@ function mapPropsToState(state, ownProps) {
     return {
         mis_permisos: state.mis_permisos,
         proyectos_list: state.proyectos,
-        mi_cuenta: state.mi_cuenta,
         object: state.hojas_trabajos_diarios[id],
         literales_list: state.literales,
         configuracion_costos: _.map(state.configuracion_costos, c => c)[0],

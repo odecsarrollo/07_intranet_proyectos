@@ -37,9 +37,9 @@ class Form extends Component {
     getListaAutorizada() {
         const {
             proyectos_list,
-            mi_cuenta,
             initialValues,
         } = this.props;
+        const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
         let literales_autorizados = mi_cuenta.colaborador.literales_autorizados;
 
         if (initialValues) {
@@ -70,11 +70,11 @@ class Form extends Component {
             singular_name,
             proyectos_list,
             object,
-            mi_cuenta,
             hoja_trabajo,
             literales_list,
         } = this.props;
 
+        const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
         const autogestion_horas_trabajadas = !!(
             mi_cuenta.colaborador &&
             mi_cuenta.colaborador.autogestion_horas_trabajadas

@@ -8,7 +8,7 @@ import {
     deleteObject,
     fetchObjectWithParameterPDF,
     fetchListGetURLParameters,
-    uploadPDF
+    uploadArchivo
 } from '../../00_general_fuctions'
 
 const current_url_api = 'proyectos';
@@ -157,6 +157,6 @@ export const createProyecto = (values, options_action = {}) => {
 export const uploadArchivoProyecto = (id, values, options_action = {}) => {
     return (dispatch) => {
         const options = {...options_action, dispatch_method: dispatch};
-        uploadPDF(current_url_api, id, 'upload_archivo', values, options)
+        uploadArchivo(current_url_api, id, 'upload_archivo', values, options)
     }
 };

@@ -45,7 +45,7 @@ class PermisosList extends Component {
 
 
     render() {
-        const {mis_permisos, permisos} = this.props;
+        const {permisos} = this.props;
         const permisos_this_view = permisosAdapter(permisos_view);
 
         return (
@@ -69,7 +69,6 @@ class PermisosList extends Component {
 
 function mapPropsToState(state, ownProps) {
     return {
-        mis_permisos: state.mis_permisos,
         permisos: state.permisos
     }
 }

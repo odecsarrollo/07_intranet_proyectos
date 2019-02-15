@@ -1,7 +1,7 @@
 import {LITERAL_TYPES as TYPES} from '../../00_types';
 
 import {
-    uploadPDF,
+    uploadArchivo,
     fetchObject,
     fetchListGet,
     updateObject,
@@ -207,6 +207,6 @@ export const updateLiteral = (id, values, options_action = {}) => {
 export const uploadArchivoLiteral = (id, values, options_action = {}) => {
     return (dispatch) => {
         const options = {...options_action, dispatch_method: dispatch};
-        uploadPDF(current_url_api, id, 'upload_archivo', values, options)
+        uploadArchivo(current_url_api, id, 'upload_archivo', values, options)
     }
 };

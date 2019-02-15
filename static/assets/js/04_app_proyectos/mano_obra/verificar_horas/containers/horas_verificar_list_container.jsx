@@ -37,7 +37,7 @@ class List extends Component {
     }
 
     render() {
-        const {object_list, mis_permisos} = this.props;
+        const {object_list} = this.props;
         const bloque_1_permisos = permisosAdapter(permisos_view);
         const permisos_hoja = permisosAdapter(permisos_view_hoja);
         const method_pool = {
@@ -70,11 +70,9 @@ class List extends Component {
 
 function mapPropsToState(state, ownProps) {
     return {
-        mis_permisos: state.mis_permisos,
         object_list: state.horas_hojas_trabajos,
         colaboradores_list: state.colaboradores,
         proyectos_list: state.proyectos,
-        mi_cuenta: state.mi_cuenta,
         configuracion_costos: _.map(state.configuracion_costos, c => c)[0],
     }
 }

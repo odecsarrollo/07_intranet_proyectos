@@ -3,7 +3,6 @@ import {connect} from "react-redux";
 import * as actions from "../../../../01_actions/01_index";
 import CargarDatos from "../../../../00_utilities/components/system/cargar_datos";
 import {
-    CLIENTES as permisos_view,
     USUARIOS as permisos_view_groups
 } from "../../../../00_utilities/permisos/types";
 import {permisosAdapter} from "../../../../00_utilities/common";
@@ -34,7 +33,7 @@ class List extends Component {
     }
 
     render() {
-        const {object_list, mis_permisos, mi_cuenta} = this.props;
+        const {object_list} = this.props;
         const permisos_object = permisosAdapter(permisos_view_groups);
         const method_pool = {
             fetchObjectMethod: this.props.fetchUsuario,
@@ -48,7 +47,6 @@ class List extends Component {
                 <CRUD
                     method_pool={method_pool}
                     list={object_list}
-                    mi_cuenta={mi_cuenta}
                     permisos_object={permisos_object}
                     plural_name='Usuarios'
                     singular_name='Usuario'
@@ -64,8 +62,6 @@ class List extends Component {
 
 function mapPropsToState(state, ownProps) {
     return {
-        mis_permisos: state.mis_permisos,
-        mi_cuenta: state.mi_cuenta,
         object_list: state.usuarios
     }
 }

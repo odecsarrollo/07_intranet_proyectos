@@ -1,8 +1,5 @@
 import React, {Component} from 'react';
-import {connect} from "react-redux";
-import * as actions from "./01_actions/01_index";
 import Loading from "./00_utilities/components/system/loading_overlay";
-import CargarDatos from "./00_utilities/components/system/cargar_datos";
 import {Link} from 'react-router-dom'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {withStyles} from "@material-ui/core/styles/index";
@@ -32,31 +29,10 @@ const Boton = (props) => {
 };
 
 class IndexApp extends Component {
-    constructor(props) {
-        super(props);
-        this.cargarDatos = this.cargarDatos.bind(this);
-        this.error_callback = this.error_callback.bind(this);
-    }
-
-    componentDidMount() {
-        this.cargarDatos()
-    }
-
-    error_callback(error) {
-        this.props.notificarErrorAjaxAction(error);
-    }
-
-    notificar(mensaje) {
-        this.props.notificarAction(mensaje);
-    }
-
-
-    cargarDatos() {
-        this.props.fetchMiCuenta();
-    }
-
     render() {
-        const {mi_cuenta: {is_staff, is_superuser}, classes} = this.props;
+        const {classes} = this.props;
+        const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
+        const {is_staff, is_superuser} = mi_cuenta;
         return <Loading>
             <div className="mt-3">
                 <div className="container text-center">
@@ -123,19 +99,10 @@ class IndexApp extends Component {
                                 <div className="col-4"></div>
                             </div>
                         </div>
-                        <div className="col-4"></div>
-                        <CargarDatos cargarDatos={this.cargarDatos}/>
                     </div>
                 </div>
             </div>
         </Loading>
-    }
-}
-
-function mapPropsToState(state, ownProps) {
-    return {
-        mis_permisos: state.mis_permisos,
-        mi_cuenta: state.mi_cuenta
     }
 }
 
@@ -153,4 +120,4 @@ const styles = theme => (
     })
 ;
 
-export default withStyles(styles, {withTheme: true})(connect(mapPropsToState, actions)(IndexApp));
+export default withStyles(styles, {withTheme: true})(IndexApp);

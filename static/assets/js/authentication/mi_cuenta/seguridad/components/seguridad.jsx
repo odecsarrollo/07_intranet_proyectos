@@ -13,15 +13,16 @@ class Seguridad extends Component {
     }
 
     onCambiarPin(values, callback) {
-        const {cambiarPinUsuario, auth: {mi_cuenta}} = this.props;
+        const {cambiarPinUsuario} = this.props;
+        const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
         cambiarPinUsuario(mi_cuenta.id, values.pin, values.password, {callback});
     }
 
     onCambiarPassword(values, callback) {
         const {
-            cambiarContrasenaUsuario,
-            auth: {mi_cuenta}
+            cambiarContrasenaUsuario
         } = this.props;
+        const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
 
         cambiarContrasenaUsuario(
             mi_cuenta.id,
@@ -33,7 +34,7 @@ class Seguridad extends Component {
     }
 
     render() {
-        const {auth: {mi_cuenta}} = this.props;
+        const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
         return (
             <div className="row">
                 {

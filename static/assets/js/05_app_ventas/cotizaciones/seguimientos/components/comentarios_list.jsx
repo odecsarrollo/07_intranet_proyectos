@@ -10,7 +10,8 @@ moment.locale('es');
 momentLocaliser(moment);
 
 const Comentario = (props) => {
-    const {comentario, eliminarSeguimiento, mi_cuenta} = props;
+    const {comentario, eliminarSeguimiento} = props;
+    const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
     const ahora = moment(new Date);
     const creacion = moment(comentario.created);
     const tiempo_creacion = ahora.diff(creacion, "minutes");

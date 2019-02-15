@@ -13,12 +13,11 @@ class Tabla extends React.Component {
         const {
             updateItem,
             singular_name,
-            mi_cuenta,
             onDelete,
             onSelectItemEdit,
             permisos_object
         } = this.props;
-
+        const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
         return (
             <div>
                 <ReactTable

@@ -212,8 +212,8 @@ export function deleteObject(url, id, options) {
     createRequest(request, {...options, mensaje_cargando});
 }
 
-export function uploadPDF(url, id, method, values, options) {
-    console.log(`%cAPI UPLOAD PDF ${method.toUpperCase()} CON PARMAETROS - %c${url.toUpperCase()} - %cID ${id}`, 'color:red', 'color:blue', 'color:green');
+export function uploadArchivo(url, id, method, values, options) {
+    console.log(`%cAPI UPLOAD ARCHIVO ${method.toUpperCase()} CON PARMAETROS - %c${url.toUpperCase()} - %cID ${id}`, 'color:red', 'color:blue', 'color:green');
     const mensaje_cargando = `Ejecutando ${method.toUpperCase()} en ${url.toUpperCase()}`;
     axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
     axios_instance.defaults.xsrfCookieName = "csrftoken";
