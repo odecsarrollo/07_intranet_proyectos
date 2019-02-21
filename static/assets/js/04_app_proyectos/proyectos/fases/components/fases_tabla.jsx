@@ -1,6 +1,7 @@
 import React from "react";
 import MyDialogButtonDelete from '../../../../00_utilities/components/ui/dialog/delete_dialog';
 import IconButtonTableEdit from '../../../../00_utilities/components/ui/icon/table_icon_button_edit';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 import ReactTable from "react-table";
 
@@ -34,6 +35,17 @@ class Tabla extends React.Component {
                                 Header: "Nombre",
                                 accessor: "nombre",
                                 maxWidth: 400,
+                            },
+                            {
+                                Header: "Maneja Compras",
+                                accessor: "es_para_compras",
+                                maxWidth: 100,
+                                Cell: row =>
+                                    <div className='text-center'>
+                                        <FontAwesomeIcon
+                                            icon={row.value ? 'check' : 'times'}
+                                        />
+                                    </div>
                             },
                             {
                                 Header: "Color",

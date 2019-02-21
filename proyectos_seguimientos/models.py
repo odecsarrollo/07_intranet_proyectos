@@ -11,6 +11,7 @@ class Fase(models.Model):
     color = models.CharField(max_length=10, default='black')
     letra_color = models.CharField(max_length=10, default='white')
     literales = models.ManyToManyField(Literal, through='FaseLiteral')
+    es_para_compras = models.BooleanField(default=False)
 
     class Meta:
         permissions = [

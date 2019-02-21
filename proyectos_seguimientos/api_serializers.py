@@ -18,6 +18,7 @@ class FaseSerializer(serializers.ModelSerializer):
             'id',
             'nombre',
             'orden',
+            'es_para_compras',
             'color',
             'letra_color',
             'to_string',

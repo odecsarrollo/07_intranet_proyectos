@@ -67,7 +67,8 @@ import {
     faExclamation,
     faCheckCircle,
     faTasks,
-    faPlus
+    faPlus,
+    faQrcode
 } from '@fortawesome/pro-solid-svg-icons';
 
 library.add(
@@ -108,7 +109,8 @@ library.add(
     faExclamation,
     faCheckCircle,
     faTasks,
-    faPlus
+    faPlus,
+    faQrcode
 );
 
 const theme = createMuiTheme({
@@ -203,6 +205,7 @@ function mapPropsToState(state, ownProps) {
         auth: state.auth,
     }
 }
+
 let RootContainer = connect(mapPropsToState, actions)(RootContainerComponent);
 
 export default class App extends Component {

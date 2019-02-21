@@ -1,6 +1,10 @@
 import React, {Component} from 'react';
 import {reduxForm} from 'redux-form';
-import {MyTextFieldSimple, MySelectField} from '../../../../../00_utilities/components/ui/forms/fields';
+import {
+    MyTextFieldSimple,
+    MySelectField,
+    MyCheckboxSimple
+} from '../../../../../00_utilities/components/ui/forms/fields';
 import {connect} from "react-redux";
 import {MyFormTagModal} from '../../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import validate from './validate';
@@ -55,6 +59,10 @@ class Form extends Component {
                             {value: 'white', primaryText: 'White'},
                         ]
                     }
+                />
+                <MyCheckboxSimple
+                    name='es_para_compras'
+                    nombre='Maneja Compras'
                 />
             </MyFormTagModal>
         )
