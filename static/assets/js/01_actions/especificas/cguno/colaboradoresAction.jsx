@@ -21,7 +21,7 @@ export const modificarAutorizacionLiteralColaborador = (id, literal_id, tipo, op
         params.append('literal_id', literal_id);
         params.append('tipo', tipo);
         const options = {...options_action, dispatch_method: dispatch};
-        callApiMethodPostParameters(current_url_api, id, 'modificar_autorizacion_literal', params, options)
+        return callApiMethodPostParameters(current_url_api, id, 'modificar_autorizacion_literal', params, options)
     }
 };
 
@@ -31,7 +31,7 @@ export const createColaborador = (values, options_action = {}) => {
             dispatch({type: TYPES.create, payload: response})
         };
         const options = {dispatches, ...options_action, dispatch_method: dispatch};
-        createObject(current_url_api, values, options);
+        return createObject(current_url_api, values, options);
     }
 };
 export const deleteColaborador = (id, options_action = {}) => {
@@ -40,7 +40,7 @@ export const deleteColaborador = (id, options_action = {}) => {
             dispatch({type: TYPES.delete, payload: id})
         };
         const options = {dispatches, ...options_action, dispatch_method: dispatch};
-        deleteObject(current_url_api, id, options);
+        return deleteObject(current_url_api, id, options);
     }
 };
 export const fetchColaboradores = (options_action = {}) => {
@@ -55,7 +55,7 @@ export const fetchColaboradores = (options_action = {}) => {
             dispatch_method: dispatch,
             clear_action_type: limpiar_coleccion ? TYPES.clear : null
         };
-        fetchListGet(current_url_api, options);
+        return fetchListGet(current_url_api, options);
     }
 };
 
@@ -65,7 +65,7 @@ export const fetchColaborador = (id, options_action = {}) => {
             dispatch({type: TYPES.fetch, payload: response})
         };
         const options = {dispatches, ...options_action, dispatch_method: dispatch};
-        fetchObject(current_url_api, id, options);
+        return fetchObject(current_url_api, id, options);
     }
 };
 
@@ -81,7 +81,7 @@ export const updateColaborador = (id, values, options_action = {}) => {
             dispatch({type: TYPES.update, payload: response})
         };
         const options = {dispatches, ...options_action, dispatch_method: dispatch};
-        updateObject(current_url_api, id, values, options);
+        return updateObject(current_url_api, id, values, options);
     }
 };
 
@@ -97,7 +97,7 @@ export function createColaboradorUsuario(id, options_action = {}) {
             ...options_action,
             dispatch_method: dispatch
         };
-        callApiMethodPost(current_url_api, id, 'crear_usuario', options)
+        return callApiMethodPost(current_url_api, id, 'crear_usuario', options)
     }
 }
 
@@ -111,7 +111,7 @@ export function activateColaboradorUsuario(id, options_action = {}) {
             ...options_action,
             dispatch_method: dispatch
         };
-        callApiMethodPost(current_url_api, id, 'cambiar_activacion', options)
+        return callApiMethodPost(current_url_api, id, 'cambiar_activacion', options)
     }
 }
 
@@ -128,7 +128,7 @@ export const fetchColaboradoresEnProyectos = (options_action = {}) => {
             dispatch_method: dispatch,
             clear_action_type: limpiar_coleccion ? TYPES.clear : null
         };
-        fetchListGet(FULL_URL, options);
+        return fetchListGet(FULL_URL, options);
     }
 };
 
@@ -145,6 +145,6 @@ export const fetchColaboradoresGestionHorasTrabajadas = (options_action = {}) =>
             dispatch_method: dispatch,
             clear_action_type: limpiar_coleccion ? TYPES.clear : null
         };
-        fetchListGet(FULL_URL, options);
+        return fetchListGet(FULL_URL, options);
     }
 };

@@ -31,7 +31,7 @@ function crudHOC(CreateForm, Tabla) {
                         posDeleteMethod(item);
                     }
                 };
-                method_pool.deleteObjectMethod(item.id, {callback});
+                return method_pool.deleteObjectMethod(item.id, {callback});
             }
         }
 
@@ -43,10 +43,10 @@ function crudHOC(CreateForm, Tabla) {
                 this.setState({modal_open: !cerrar_modal, item_seleccionado: cerrar_modal ? null : response});
 
                 if (item.id && posUpdateMethod) {
-                    posUpdateMethod(response);
+                    return posUpdateMethod(response);
                 }
                 if (!item.id && posCreateMethod) {
-                    posCreateMethod(response);
+                    return posCreateMethod(response);
                 }
             };
             if (item.id) {
@@ -54,14 +54,14 @@ function crudHOC(CreateForm, Tabla) {
                     console.log('No se ha asignado ningún método para UPDATE')
                 } else {
 
-                    method_pool.updateObjectMethod(item.id, item, {callback});
+                    return method_pool.updateObjectMethod(item.id, item, {callback});
                 }
             } else {
                 if (method_pool.createObjectMethod === null) {
                     console.log('No se ha asignado ningún método para CREATE')
                 } else {
 
-                    method_pool.createObjectMethod(item, {callback});
+                    return method_pool.createObjectMethod(item, {callback});
                 }
             }
         }
@@ -73,7 +73,7 @@ function crudHOC(CreateForm, Tabla) {
                 console.log('No se ha asignado ningún método para FETCH OBJECT')
             } else {
 
-                method_pool.fetchObjectMethod(item.id, {callback});
+                return method_pool.fetchObjectMethod(item.id, {callback});
             }
         }
 

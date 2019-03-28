@@ -5,7 +5,7 @@ from model_utils.models import TimeStampedModel
 
 
 class ClienteBiable(models.Model):
-    nit = models.CharField(max_length=20, null=True, blank=True)
+    nit = models.CharField(max_length=20, null=True)
     nombre = models.CharField(max_length=200)
 
     class Meta:
@@ -22,11 +22,11 @@ class ContactoCliente(TimeStampedModel):
     pais = models.CharField(max_length=200, null=True)
     ciudad = models.CharField(max_length=200, null=True)
     apellidos = models.CharField(max_length=200)
-    correo_electronico = models.EmailField(null=True, blank=True)
-    correo_electronico_2 = models.EmailField(null=True, blank=True)
-    telefono = models.CharField(max_length=120, null=True, blank=True)
-    telefono_2 = models.CharField(max_length=120, null=True, blank=True)
-    cargo = models.CharField(max_length=200, null=True, blank=True)
+    correo_electronico = models.EmailField(null=True)
+    correo_electronico_2 = models.EmailField(null=True)
+    telefono = models.CharField(max_length=120, null=True)
+    telefono_2 = models.CharField(max_length=120, null=True)
+    cargo = models.CharField(max_length=200, null=True)
 
     @property
     def full_nombre(self):

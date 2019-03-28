@@ -25,6 +25,6 @@ export function fetchItemsLiterales(id_literal, options_action = {}) {
             dispatch_method: dispatch,
             clear_action_type: limpiar_coleccion ? TYPES.clear : null
         };
-        fetchListGetURLParameters(FULL_URL, options);
+        return fetchListGetURLParameters(FULL_URL, options);
     }
 }

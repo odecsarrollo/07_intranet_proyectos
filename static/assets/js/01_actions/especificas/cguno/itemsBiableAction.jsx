@@ -26,7 +26,7 @@ export function fetchItemsBiablexParametro(tipo_consulta, parametro, options_act
             dispatch_method: dispatch,
             clear_action_type: limpiar_coleccion ? TYPES.clear : null
         };
-        fetchListGetURLParameters(FULL_URL, options);
+        return fetchListGetURLParameters(FULL_URL, options);
     }
 }
 
@@ -43,7 +43,7 @@ export function fetchItemsBiablexCodigos(codigos, options_action = {}) {
             dispatch_method: dispatch,
             clear_action_type: limpiar_coleccion ? TYPES.clear : null
         };
-        fetchListGetURLParameters(FULL_URL, options);
+        return fetchListGetURLParameters(FULL_URL, options);
     }
 }
 
@@ -53,6 +53,6 @@ export const fetchItemBiable = (id, options_action = {}) => {
             dispatch({type: TYPES.fetch, payload: response})
         };
         const options = {dispatches, ...options_action, dispatch_method: dispatch};
-        fetchObject(current_url_api, id, options);
+        return fetchObject(current_url_api, id, options);
     }
 };

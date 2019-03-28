@@ -1,12 +1,10 @@
-import React, {Component, Fragment} from 'react';
+import React, {Component} from 'react';
 import Loading from "./00_utilities/components/system/loading_overlay";
 import {Link} from 'react-router-dom'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {withStyles} from "@material-ui/core/styles/index";
 import Typography from '@material-ui/core/Typography';
 import classNames from 'classnames';
-import QRCode from 'qrcode-react';
-import QrReader from "react-qr-reader";
 
 const Boton = (props) => {
     const {nombre, icono, link, classes} = props;
@@ -31,57 +29,12 @@ const Boton = (props) => {
 };
 
 class IndexApp extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            delay: 300,
-            result: "No result",
-            open_qr_reader: false,
-        };
-        this.handleScan = this.handleScan.bind(this);
-    }
-
-    handleScan(data) {
-        if (data) {
-            this.setState({
-                result: data
-            });
-        }
-    }
-
-    handleError(err) {
-        console.error(err);
-    }
-
     render() {
         const {classes} = this.props;
-        const {open_qr_reader} = this.state;
         const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
         const {is_staff, is_superuser} = mi_cuenta;
         return <Loading>
             <div className="mt-3">
-                {
-                    is_superuser &&
-                    <Fragment>
-                        <QRCode value="marioalbertoyepessanchez"/>
-                        <div className='mt-5'>
-                            <FontAwesomeIcon
-                                icon={'qrcode'}
-                                size='2x'
-                                onClick={() => this.setState(s => ({open_qr_reader: !s.open_qr_reader}))}
-                            />
-                        </div>
-                        {
-                            open_qr_reader &&
-                            <QrReader
-                                delay={this.state.delay}
-                                onError={this.handleError}
-                                onScan={this.handleScan}
-                                style={{width: "100%"}}
-                            />
-                        }
-                    </Fragment>
-                }
                 <div className="container text-center">
                     <div className="row">
                         <div className="col-12 p-5">

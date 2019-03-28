@@ -32,7 +32,7 @@ export function fetchLiteralesxParametro(parametro, options_action = {}) {
             dispatch_method: dispatch,
             clear_action_type: limpiar_coleccion ? TYPES.clear : null
         };
-        fetchListGetURLParameters(FULL_URL, options);
+        return fetchListGetURLParameters(FULL_URL, options);
     }
 }
 
@@ -41,7 +41,7 @@ export function adicionarQuitarFaseLiteral(id, id_fase, options_action = {}) {
         let params = new URLSearchParams();
         params.append('id_fase', id_fase);
         const options = {...options_action, dispatch_method: dispatch};
-        callApiMethodPostParameters(current_url_api, id, 'adicionar_quitar_fase', params, options)
+        return callApiMethodPostParameters(current_url_api, id, 'adicionar_quitar_fase', params, options)
     }
 }
 
@@ -50,7 +50,7 @@ export function adicionarMiembroLiteral(id, id_usuario, options_action = {}) {
         let params = new URLSearchParams();
         params.append('id_usuario', id_usuario);
         const options = {...options_action, dispatch_method: dispatch};
-        callApiMethodPostParameters(current_url_api, id, 'adicionar_miembro', params, options)
+        return callApiMethodPostParameters(current_url_api, id, 'adicionar_miembro', params, options)
     }
 }
 
@@ -59,7 +59,7 @@ export function quitarMiembroLiteral(id, id_usuario, options_action = {}) {
         let params = new URLSearchParams();
         params.append('id_usuario', id_usuario);
         const options = {...options_action, dispatch_method: dispatch};
-        callApiMethodPostParameters(current_url_api, id, 'quitar_miembro', params, options)
+        return callApiMethodPostParameters(current_url_api, id, 'quitar_miembro', params, options)
     }
 }
 
@@ -75,7 +75,7 @@ export const fetchLiterales = (options_action = {}) => {
             dispatch_method: dispatch,
             clear_action_type: limpiar_coleccion ? TYPES.clear : null
         };
-        fetchListGet(current_url_api, options);
+        return fetchListGet(current_url_api, options);
     }
 };
 
@@ -91,7 +91,7 @@ export function fetchLiteralesXProyecto(proyecto_id, options_action = {}) {
             dispatch_method: dispatch,
             clear_action_type: limpiar_coleccion ? TYPES.clear : null
         };
-        fetchListGetURLParameters(`${current_url_api}/listar_x_proyecto/?proyecto_id=${proyecto_id}`, options)
+        return fetchListGetURLParameters(`${current_url_api}/listar_x_proyecto/?proyecto_id=${proyecto_id}`, options)
     }
 }
 
@@ -108,7 +108,7 @@ export const fetchLiteralesAbiertos = (options_action = {}) => {
             dispatch_method: dispatch,
             clear_action_type: limpiar_coleccion ? TYPES.clear : null
         };
-        fetchListGet(FULL_URL, options);
+        return fetchListGet(FULL_URL, options);
     }
 };
 
@@ -125,7 +125,7 @@ export const fetchLiteralesConSeguimiento = (options_action = {}) => {
             dispatch_method: dispatch,
             clear_action_type: limpiar_coleccion ? TYPES.clear : null
         };
-        fetchListGet(FULL_URL, options);
+        return fetchListGet(FULL_URL, options);
     }
 };
 
@@ -143,7 +143,7 @@ export const fetchLiteralesSinSincronizar = (options_action = {}) => {
             dispatch_method: dispatch,
             clear_action_type: limpiar_coleccion ? TYPES.clear : null
         };
-        fetchListGet(FULL_URL, options);
+        return fetchListGet(FULL_URL, options);
     }
 };
 
@@ -160,7 +160,7 @@ export const fetchLiteralesProyectoAbierto = (options_action = {}) => {
             dispatch_method: dispatch,
             clear_action_type: limpiar_coleccion ? TYPES.clear : null
         };
-        fetchListGet(FULL_URL, options);
+        return fetchListGet(FULL_URL, options);
     }
 };
 
@@ -170,7 +170,7 @@ export const fetchLiteral = (id, options_action = {}) => {
             dispatch({type: TYPES.fetch, payload: response})
         };
         const options = {dispatches, ...options_action, dispatch_method: dispatch};
-        fetchObject(current_url_api, id, options);
+        return fetchObject(current_url_api, id, options);
     }
 };
 
@@ -180,7 +180,7 @@ export const createLiteral = (values, options_action = {}) => {
             dispatch({type: TYPES.create, payload: response})
         };
         const options = {dispatches, ...options_action, dispatch_method: dispatch};
-        createObject(current_url_api, values, options);
+        return createObject(current_url_api, values, options);
     }
 };
 
@@ -190,7 +190,7 @@ export const deleteLiteral = (id, options_action = {}) => {
             dispatch({type: TYPES.delete, payload: id})
         };
         const options = {dispatches, ...options_action, dispatch_method: dispatch};
-        deleteObject(current_url_api, id, options);
+        return deleteObject(current_url_api, id, options);
     }
 };
 
@@ -200,7 +200,7 @@ export const updateLiteral = (id, values, options_action = {}) => {
             dispatch({type: TYPES.update, payload: response})
         };
         const options = {dispatches, ...options_action, dispatch_method: dispatch};
-        updateObject(current_url_api, id, values, options);
+        return updateObject(current_url_api, id, values, options);
     }
 };
 

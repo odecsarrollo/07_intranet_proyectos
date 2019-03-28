@@ -1,79 +1,12 @@
 import axios from "axios/index";
-import {LOADING, LOADING_STOP} from "./00_types";
-import {NOTIFICATION_TYPE_ERROR, NOTIFICATION_TYPE_SUCCESS} from 'react-redux-notify';
-import {createNotification} from 'react-redux-notify';
 import React from 'react';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import * as actions from "../01_actions/01_index";
+import {SubmissionError} from 'redux-form';
 
 const axios_instance = axios.create({
     baseURL: '/api/',
     //contentType: 'application/json; charset=utf-8',
 });
-
-const notificarAction = (mensaje, tiempo = 5000) => {
-    return {
-        message: mensaje,
-        type: NOTIFICATION_TYPE_SUCCESS,
-        duration: tiempo,
-        position: 'BottomRight',
-        canDimiss: true,
-        icon: <FontAwesomeIcon icon={'check'}/>
-    }
-};
-
-
-const notificacion_error = (error, tiempo = 7000) => {
-    let mensaje = '';
-    let mensaje_final = '';
-    const {type_error} = error;
-
-    if (error.response) {
-        mensaje_final += `Error ${error.response.status} ${error.response.statusText}`
-    }
-    if (type_error) {
-        switch (type_error) {
-            case 'no_connection':
-                mensaje = 'Se han presentado problemas de conexión';
-                break;
-            case 404:
-                mensaje = `El servicio de consulta se encuentra caido:`;
-                break;
-            case 400:
-                mensaje = `Problema en la consulta:`;
-                break;
-            case 403:
-                mensaje = `Problema en autenticación:`;
-                break;
-            case 401:
-                mensaje = `Problema en autenticación:`;
-                break;
-            case 500:
-                mensaje = `Error grave en el servidor, avisar al administrador:`;
-                break;
-            default:
-                mensaje += `Otro mensaje no especificado:`;
-        }
-    }
-
-    if (error.response && error.response.data) {
-        _.map(error.response.data, item => {
-            mensaje += `(${item})`
-        })
-    }
-    if (error.config && error.config.baseURL) {
-        mensaje += `(${error.config.baseURL})`
-    }
-    mensaje += ` ${mensaje_final}.`;
-
-    return {
-        message: mensaje,
-        type: NOTIFICATION_TYPE_ERROR,
-        duration: tiempo,
-        position: 'BottomRight',
-        canDimiss: true,
-        icon: <FontAwesomeIcon icon={'exclamation'}/>
-    };
-};
 
 export function createRequest(request, options = {}) {
     const {
@@ -90,7 +23,7 @@ export function createRequest(request, options = {}) {
         dispatch_method({type: clear_action_type})
     }
     if (dispatch_method && show_cargando) {
-        dispatch_method({type: LOADING, message: mensaje_cargando})
+        dispatch_method(actions.cargando(mensaje_cargando))
     }
     return request
         .then(response => {
@@ -99,27 +32,53 @@ export function createRequest(request, options = {}) {
             }
             if (dispatch_method) {
                 if (response.data && response.data.result) {
-                    dispatch_method(createNotification(notificarAction(response.data.result)));
+                    dispatch_method(actions.notificarAction(response.data.result));
                 }
-                dispatch_method({type: LOADING_STOP})
+                dispatch_method(actions.noCargando())
             }
             if (callback) {
                 callback(response.data)
             }
         }).catch(error => {
                 if (callback_error) {
-                    callback_error(error);
+                    callback_error(error)
                 }
-                if (dispatch_method) {
-                    let notificacion = null;
-                    if (!error.response) {
-                        notificacion = notificacion_error({type_error: 'no_connection'})
-                    } else if (error.request) {
-                        notificacion = notificacion_error({...error, type_error: error.request.status})
+                if (error.response) {
+                    if (error.response.status === 400) {
+                        dispatch_method(actions.noCargando());
+                        if (error.response && error.response.data) {
+                            if (error.response.data['non_field_errors']) {
+                                error.response.data['_error'] = error.response.data['non_field_errors'];
+                                dispatch_method(actions.notificarErrorAction(error.response.data['non_field_errors']));
+                            }
+                            if (error.response.data['_error']) {
+                                dispatch_method(actions.notificarErrorAction(error.response.data['_error']));
+                            }
+                            if (error.response.data['nro_identificacion']) {
+                                error.response.data['nro_identificacion_1'] = error.response.data['nro_identificacion']
+                            }
+                            throw new SubmissionError(error.response.data)
+                        }
+                    } else if (error.response.status === 401) {
+
+                    } else if (error.response.status === 403) {
+                        dispatch_method(actions.mostrar_error_loading(error.response.data['detail'], `${error.response.status}: ${error.response.statusText}`));
+                        dispatch_method(actions.notificarErrorAction(error.response.data['detail']));
+                    } else if (402 < error.response.status < 600) {
+                        dispatch_method(actions.mostrar_error_loading(error.response.data, `${error.response.status}: ${error.response.statusText}`));
+                        dispatch_method(actions.notificarErrorAction(error.response.status));
                     } else {
-                        notificacion = notificacion_error({...error, type_error: 'otro'})
+                        if (error.response.data) {
+                            console.log(error.response)
+                        }
                     }
-                    dispatch_method(createNotification(notificacion));
+                }
+                else if (!error.response) {
+                    if (error.message === 'Network Error') {
+                        dispatch_method(actions.mostrar_error_loading(error.stack, 'Error de red'))
+                    } else {
+                        dispatch_method(actions.mostrar_error_loading(error.stack, error.message))
+                    }
                 }
             }
         );
@@ -135,7 +94,7 @@ export function fetchListGet(url, options) {
     }
     axios_instance.defaults.headers = headers;
     const request = axios_instance.get(FULL_URL);
-    createRequest(request, {...options, mensaje_cargando});
+    return createRequest(request, {...options, mensaje_cargando});
 }
 
 export function fetchListGetURLParameters(url, options) {
@@ -148,7 +107,7 @@ export function fetchListGetURLParameters(url, options) {
     }
     axios_instance.defaults.headers = headers;
     const request = axios_instance.get(FULL_URL);
-    createRequest(request, {...options, mensaje_cargando});
+    return createRequest(request, {...options, mensaje_cargando});
 }
 
 export function fetchObject(url, id, options) {
@@ -161,7 +120,7 @@ export function fetchObject(url, id, options) {
         headers["Authorization"] = `Token ${localStorage.token}`;
     }
     axios_instance.defaults.headers = headers;
-    createRequest(request, {...options, mensaje_cargando});
+    return createRequest(request, {...options, mensaje_cargando});
 }
 
 
@@ -177,7 +136,7 @@ export function updateObject(url, id, values, options, config = null) {
     axios_instance.defaults.headers = headers;
     const FULL_URL = `${url}/${id}/`;
     const request = axios_instance.put(FULL_URL, values, config);
-    createRequest(request, {...options, mensaje_cargando});
+    return createRequest(request, {...options, mensaje_cargando});
 }
 
 
@@ -193,7 +152,7 @@ export function createObject(url, values, options) {
     axios_instance.defaults.headers = headers;
     const FULL_URL = `${url}/`;
     const request = axios_instance.post(FULL_URL, values);
-    createRequest(request, {...options, mensaje_cargando});
+    return createRequest(request, {...options, mensaje_cargando});
 }
 
 
@@ -209,7 +168,7 @@ export function deleteObject(url, id, options) {
     axios_instance.defaults.headers = headers;
     const FULL_URL = `${url}/${id}/`;
     const request = axios_instance.delete(FULL_URL);
-    createRequest(request, {...options, mensaje_cargando});
+    return createRequest(request, {...options, mensaje_cargando});
 }
 
 export function uploadArchivo(url, id, method, values, options) {
@@ -225,7 +184,7 @@ export function uploadArchivo(url, id, method, values, options) {
     axios_instance.defaults.headers = headers;
     const FULL_URL = `${url}/${id}/${method}/`;
     const request = axios_instance.post(FULL_URL, values, {responseType: 'arraybuffer'});
-    createRequest(request, {...options, mensaje_cargando});
+    return createRequest(request, {...options, mensaje_cargando});
 }
 
 export function callApiMethodPost(url, id, method, options) {
@@ -240,7 +199,7 @@ export function callApiMethodPost(url, id, method, options) {
     axios_instance.defaults.headers = headers;
     const FULL_URL = `${url}/${id}/${method}/`;
     const request = axios_instance.post(FULL_URL);
-    createRequest(request, {...options, mensaje_cargando});
+    return createRequest(request, {...options, mensaje_cargando});
 }
 
 export function callApiMethodPostParameters(url, id, method, values, options) {
@@ -256,12 +215,12 @@ export function callApiMethodPostParameters(url, id, method, values, options) {
     axios_instance.defaults.headers = headers;
     const FULL_URL = `${url}/${id}/${method}/`;
     const request = axios_instance.post(FULL_URL, values);
-    createRequest(request, {...options, mensaje_cargando});
+    return createRequest(request, {...options, mensaje_cargando});
 }
 
 export function fetchObjectWithParameterPDF(url, options) {
     console.log(`%cFETCH LIST PARAMETROS - %c${url.toUpperCase()} PARA PDF`, 'color:red', 'color:blue');
     const FULL_URL = `${url}&format=json`;
     const request = axios_instance.get(FULL_URL, {responseType: 'arraybuffer'});
-    createRequest(request, {...options, mensaje_cargando: ''});
+    return createRequest(request, {...options, mensaje_cargando: ''});
 }

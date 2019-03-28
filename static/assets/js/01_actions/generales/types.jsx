@@ -1,8 +1,10 @@
 export const FETCH_OTRO_USUARIO_PERMISOS = 'fetch_otro_usuario_permisos';
 
-////cargando
-export const LOADING = 'is_loading';
-export const LOADING_STOP = 'in_not_loading';
+export const LOADING = {
+    loading: 'is_loading',
+    stop: 'in_not_loading',
+    error: 'error_loading'
+};
 
 export const PERMISO_TYPES = {
     fetch_all: 'fetch_permisos',
