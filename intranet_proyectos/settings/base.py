@@ -62,6 +62,9 @@ MY_APPS = [
     'configuraciones.apps.ConfiguracionesConfig',
     'proyectos_seguimientos.apps.ProyectosSeguimientosConfig',
     'bandas_eurobelt.apps.BandasEurobeltConfig',
+    'sistema_informacion_origen.apps.SistemaInformacionOrigenConfig',
+    'geografia.apps.GeografiaConfig',
+    'sistema_informacion_catalogos.apps.SistemaInformacionCatalogosConfig'
 ]
 
 THIRD_PART_APPS = [

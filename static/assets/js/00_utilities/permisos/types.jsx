@@ -1,3 +1,28 @@
+export const PAISES = {
+    add: 'add_pais',
+    delete: 'delete_pais',
+    change: 'change_pais',
+    list: 'list_pais',
+    detail: 'view_pais',
+};
+
+export const DEPARTAMENTOS = {
+    add: 'add_departamento',
+    delete: 'delete_departamento',
+    change: 'change_departamento',
+    list: 'list_departamento',
+    detail: 'view_departamento',
+};
+
+export const CIUDADES = {
+    add: 'add_ciudad',
+    delete: 'delete_ciudad',
+    change: 'change_ciudad',
+    list: 'list_ciudad',
+    detail: 'view_ciudad',
+};
+
+
 export const GROUPS = {
     add: 'add_group',
     delete: 'delete_group',
@@ -9,7 +34,7 @@ export const GROUPS = {
 export const PERMISSION = {
     change: 'change_permission',
     list: 'list_permission',
-    change_plus:'change_permissionplus'
+    change_plus: 'change_permissionplus'
 };
 
 export const USUARIOS = {
@@ -192,4 +217,12 @@ export const ARCHIVOS_PROYECTOS = {
     change: 'change_archivoproyecto',
     list: 'list_archivoproyecto',
     detail: 'detail_archivoproyecto',
+};
+
+export const SISTEMAS_INFORMACION_ORIGEN = {
+    add: 'add_sistemainformacionorigen',
+    delete: 'delete_sistemainformacionorigen',
+    change: 'change_sistemainformacionorigen',
+    list: 'list_sistemainformacionorigen',
+    detail: 'view_sistemainformacionorigen',
 };

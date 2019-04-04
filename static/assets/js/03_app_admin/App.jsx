@@ -16,6 +16,10 @@ import ColaboradoresCostosNominaList
     from "./especificas/cguno/colaboradores/costos_nomina/containers/costos_nomina_list_container";
 import UsuariosDetail from "./generales/usuarios/containers/usuarios_detail";
 import ClientesList from "./especificas/clientes/clientes/containers/clientes_container";
+import SistemaInformacionOrigenList
+    from "./especificas/sistemas_informacion_origen/containers/sistemas_informacion_origen_container";
+import GeografiaList
+    from "./especificas/geografia/geografia_dashboard/containers/geografia_dashboard";
 
 
 import ConfiguracionCostosDashboard from "./especificas/configuraciones/containers/costos_dashboard";
@@ -28,6 +32,9 @@ class AdminApp extends Component {
                 <DrawerMenu lista_menu={<Menu/>} titulo='Admin'>
                     <Switch>
                         <Route exact path='/app/admin/' component={App1}/>
+                        <Route exact path='/app/admin/sistemas_informacion/list'
+                               component={SistemaInformacionOrigenList}/>
+                        <Route exact path='/app/admin/geografia/list' component={GeografiaList}/>
                         <Route exact path='/app/admin/permisos/list' component={PermisosList}/>
                         <Route exact path='/app/admin/grupos_permisos/list' component={GruposPermisosList}/>
                         <Route exact path='/app/admin/usuarios/list' component={UsuariosList}/>

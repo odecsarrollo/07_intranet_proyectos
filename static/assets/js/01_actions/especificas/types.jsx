@@ -1,3 +1,39 @@
+export const DEPARTAMENTO_TYPES = {
+    create: 'create_departamento',
+    delete: 'delete_departamento',
+    fetch_all: 'fetch_departamentos',
+    fetch: 'fetch_departamento',
+    clear: 'clear_departamentos',
+    update: 'update_departamento',
+};
+
+export const PAIS_TYPES = {
+    create: 'create_pais',
+    delete: 'delete_pais',
+    fetch_all: 'fetch_paises',
+    fetch: 'fetch_pais',
+    clear: 'clear_paises',
+    update: 'update_pais',
+};
+
+export const CIUDAD_TYPES = {
+    create: 'create_ciudad',
+    delete: 'delete_ciudad',
+    fetch_all: 'fetch_ciudades',
+    fetch: 'fetch_ciudad',
+    clear: 'clear_ciudades',
+    update: 'update_ciudad',
+};
+
+export const SISTEMA_INFORMACION_ORIGEN_TYPES = {
+    create: 'create_sistema_informacion_origen',
+    delete: 'delete_sistema_informacion_origen',
+    fetch_all: 'fetch_sistemas_informacion_origen',
+    fetch: 'fetch_sistema_informacion_origen',
+    clear: 'clear_sistemas_informacion_origen',
+    update: 'update_sistema_informacion_origen',
+};
+
 export const PROYECTO_TYPES = {
     create: 'create_proyecto',
     delete: 'delete_proyecto',

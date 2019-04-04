@@ -1,3 +1,4 @@
+export * from './sistema_informacion_origen/sistemaInformacionOrigenAction';
 export * from './proyectos/proyectosAction';
 export * from './proyectos/literalesAction';
 export * from './proyectos/miembrosLiteralesAction';
@@ -20,3 +21,6 @@ export * from './cotizaciones/cotizacionesAction';
 export * from './cotizaciones/cotizacionesSeguimientoAction';
 export * from './cotizaciones/archivosCotizacionesAction';
 export * from './configuraciones/configuracionCostosAction';
+export * from './geografia/paisesAction';
+export * from './geografia/ciudadesAction';
+export * from './geografia/departamentosAction';

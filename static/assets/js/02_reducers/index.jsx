@@ -38,6 +38,12 @@ import cotizacionesArchivosReducer from "./especificas/cotizaciones/archivosCoti
 
 import configuracionCostos from './especificas/configuraciones/configuracionCostosReducer';
 
+import sistemaInformacionOrigenReducer from './especificas/sistema_informacion_origen/sistemaInformacionOrigenReducer';
+
+import paisesReducer from './especificas/geografia/paisesReducer';
+import ciudadesReducer from './especificas/geografia/ciudadesReducer';
+import departamentosReducer from './especificas/geografia/departamentosReducer';
+
 const rootReducer = combineReducers({
     menu_status: menuReducer,
     mis_permisos: misPermisosReducer,
@@ -71,6 +77,12 @@ const rootReducer = combineReducers({
     archivos_cotizaciones: cotizacionesArchivosReducer,
     archivos_literales: literalesArchivosReducer,
     archivos_proyecto: proyectosArchivosReducer,
+
+    sistemas_informacion_reducer: sistemaInformacionOrigenReducer,
+
+    geografia_ciudades: ciudadesReducer,
+    geografia_departamentos: departamentosReducer,
+    geografia_paises: paisesReducer
 });
 
 export default rootReducer;

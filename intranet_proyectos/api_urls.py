@@ -9,6 +9,8 @@ from cotizaciones.api_urls import router as cotizaciones_router
 from configuraciones.api_urls import router as configuracion_costos_router
 from proyectos_seguimientos.api_urls import router as proyectos_seguimientos_router
 from bandas_eurobelt.api_urls import router as banda_eurobelt_router
+from sistema_informacion_origen.api_urls import router as sistema_informacion_origen_router
+from geografia.api_urls import router as geografia_router
 
 router = DefaultRouter()
 router.extend(proyectos_router)
@@ -21,3 +23,5 @@ router.extend(cotizaciones_router)
 router.extend(configuracion_costos_router)
 router.extend(proyectos_seguimientos_router)
 router.extend(banda_eurobelt_router)
+router.extend(sistema_informacion_origen_router)
+router.extend(geografia_router)

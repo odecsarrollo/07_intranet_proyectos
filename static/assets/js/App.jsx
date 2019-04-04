@@ -69,7 +69,9 @@ import {
     faCheckCircle,
     faTasks,
     faPlus,
-    faQrcode
+    faQrcode,
+    faDesktop,
+    faMap
 } from '@fortawesome/pro-solid-svg-icons';
 
 library.add(
@@ -112,7 +114,9 @@ library.add(
     faCheckCircle,
     faTasks,
     faPlus,
-    faQrcode
+    faQrcode,
+    faDesktop,
+    faMap,
 );
 
 const theme = createMuiTheme({
