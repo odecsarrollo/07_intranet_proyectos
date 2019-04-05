@@ -64,7 +64,8 @@ MY_APPS = [
     'bandas_eurobelt.apps.BandasEurobeltConfig',
     'sistema_informacion_origen.apps.SistemaInformacionOrigenConfig',
     'geografia.apps.GeografiaConfig',
-    'sistema_informacion_catalogos.apps.SistemaInformacionCatalogosConfig'
+    'cargues_catalogos.apps.CarguesCatalogosConfig',
+    'cargues_detalles.apps.CarguesDetallesConfig',
 ]
 
 THIRD_PART_APPS = [
