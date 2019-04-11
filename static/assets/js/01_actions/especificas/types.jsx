@@ -1,3 +1,21 @@
+export const TIPO_INDUSTRIA_TYPES = {
+    create: 'create_tipo_industria',
+    delete: 'delete_tipo_industria',
+    fetch_all: 'fetch_tipos_industrias',
+    fetch: 'fetch_tipo_industria',
+    clear: 'clear_tipos_industrias',
+    update: 'update_tipo_industria',
+};
+
+export const CANAL_DISTRIBUCION_TYPES = {
+    create: 'create_canal_distribucion',
+    delete: 'delete_canal_distribucion',
+    fetch_all: 'fetch_canales_distribuciones',
+    fetch: 'fetch_canal_distribucion',
+    clear: 'clear_canales_distribuciones',
+    update: 'update_canal_distribucion',
+};
+
 export const DEPARTAMENTO_TYPES = {
     create: 'create_departamento',
     delete: 'delete_departamento',
@@ -23,6 +41,15 @@ export const CIUDAD_TYPES = {
     fetch: 'fetch_ciudad',
     clear: 'clear_ciudades',
     update: 'update_ciudad',
+};
+
+export const CIUDAD_CARGUE_CATALOGO_TYPES = {
+    create: 'create_ciudad_cargue_catalogo',
+    delete: 'delete_ciudad_cargue_catalogo',
+    fetch_all: 'fetch_ciudades_cargues_catalogos',
+    fetch: 'fetch_ciudad_cargue_catalogo',
+    clear: 'clear_ciudades_cargues_catalogos',
+    update: 'update_ciudad_cargue_catalogo',
 };
 
 export const SISTEMA_INFORMACION_ORIGEN_TYPES = {

@@ -16,6 +16,7 @@ import ColaboradoresCostosNominaList
     from "./especificas/cguno/colaboradores/costos_nomina/containers/costos_nomina_list_container";
 import UsuariosDetail from "./generales/usuarios/containers/usuarios_detail";
 import ClientesList from "./especificas/clientes/clientes/containers/clientes_container";
+import ClientesDashboard from "./especificas/clientes/clientes_dashboard/containers/clientes_dashboard";
 import SistemaInformacionOrigenList
     from "./especificas/sistemas_informacion_origen/containers/sistemas_informacion_origen_container";
 import GeografiaList
@@ -44,6 +45,7 @@ class AdminApp extends Component {
                         <Route exact path='/app/admin/cguno/colaborador/detail/:id' component={ColaboradoresDetail}/>
                         <Route exact path='/app/admin/usuarios/detail/:id' component={UsuariosDetail}/>
                         <Route exact path='/app/admin/clientes/clientes/list' component={ClientesList}/>
+                        <Route exact path='/app/admin/clientes/clientes/dashboard' component={ClientesDashboard}/>
                         <Route exact path='/app/admin/configuraciones/costos/dashboard'
                                component={ConfiguracionCostosDashboard}/>
                     </Switch>

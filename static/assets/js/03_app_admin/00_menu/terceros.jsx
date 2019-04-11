@@ -20,7 +20,7 @@ const MenuTerceros = (props) => (
         />
         <DrawerListItem
             size='1x'
-            link='/app/admin/clientes/clientes/list'
+            link='/app/admin/clientes/clientes/dashboard'
             texto='Clientes'
             icono='suitcase'
             type='nested'

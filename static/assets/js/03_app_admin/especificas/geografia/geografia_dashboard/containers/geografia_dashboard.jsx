@@ -15,6 +15,7 @@ import {
 import BloquePaises from "../../paises/components/paises_list";
 import BloqueDepartamentos from "../../departamentos/components/departamentos_list";
 import BloqueCiudades from "../../ciudades/components/ciudades_list";
+import BloqueCiudadesCatalogos from "../../ciudades_cargue_catalogo/components/ciudades_cargue_catalogo_list";
 
 class GeografiaDashboard extends Component {
     constructor(props) {
@@ -25,7 +26,6 @@ class GeografiaDashboard extends Component {
         this.plural_name = 'Panel Geografia';
         this.singular_name = 'Panel Geografia';
         this.cargarDatos = this.cargarDatos.bind(this);
-
     }
 
     cargarDatos() {
@@ -44,6 +44,9 @@ class GeografiaDashboard extends Component {
             const cargar_ciudades = () => this.props.fetchCiudades();
             const cargar_departamentos = () => this.props.fetchDepartamentos({callback: cargar_ciudades});
             this.props.fetchPaises({callback: cargar_departamentos});
+        } else if (index === 3) {
+            const cargar_ciudades = () => this.props.fetchCiudades();
+            this.props.fetchCiudadesCarguesCatalogos({callback: cargar_ciudades})
         }
     }
 
@@ -61,7 +64,7 @@ class GeografiaDashboard extends Component {
     }
 
     render() {
-        const {ciudades, departamentos, paises} = this.props;
+        const {ciudades, departamentos, paises, ciudades_catalogos} = this.props;
         const {slideIndex} = this.state;
         const permisos_ciudades = permisosAdapter(ciudades_permisos_view);
         const permisos_departamentos = permisosAdapter(departamentos_permisos_view);
@@ -84,6 +87,7 @@ class GeografiaDashboard extends Component {
                     <Tab label="Paises"/>
                     <Tab label="Departamentos"/>
                     <Tab label="Ciudades"/>
+                    <Tab label="Ciudades Sistemas Informacion"/>
                 </Tabs>
 
                 {
@@ -113,6 +117,16 @@ class GeografiaDashboard extends Component {
                         {...this.props}
                     />
                 }
+                {
+                    slideIndex === 3 &&
+                    <BloqueCiudadesCatalogos
+                        object_list={ciudades_catalogos}
+                        permisos_object={permisos_departamentos}
+                        paises_list={paises}
+                        ciudades_list={ciudades}
+                        {...this.props}
+                    />
+                }
 
                 <CargarDatos
                     cargarDatos={this.cargarDatos}
@@ -128,6 +142,7 @@ function mapPropsToState(state, ownProps) {
     return {
         mis_permisos: state.mis_permisos,
         ciudades: state.geografia_ciudades,
+        ciudades_catalogos: state.ciudades_catalogos,
         departamentos: state.geografia_departamentos,
         paises: state.geografia_paises,
     }

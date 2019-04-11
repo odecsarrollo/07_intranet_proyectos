@@ -1,3 +1,19 @@
+export const TIPOS_INDUSTRIAS = {
+    add: 'add_tipoindustria',
+    delete: 'delete_tipoindustria',
+    change: 'change_tipoindustria',
+    list: 'list_tipoindustria',
+    detail: 'view_tipoindustria',
+};
+
+export const CANALES_DISTRIBUCIONES = {
+    add: 'add_canaldistribucion',
+    delete: 'delete_canaldistribucion',
+    change: 'change_canaldistribucion',
+    list: 'list_canaldistribucion',
+    detail: 'view_canaldistribucion',
+};
+
 export const PAISES = {
     add: 'add_pais',
     delete: 'delete_pais',
@@ -20,6 +36,14 @@ export const CIUDADES = {
     change: 'change_ciudad',
     list: 'list_ciudad',
     detail: 'view_ciudad',
+};
+
+export const CIUDADES_CARGUES_CATALOGOS = {
+    add: 'add_ciudadcatalogo',
+    delete: 'delete_ciudadcatalogo',
+    change: 'change_ciudadcatalogo',
+    list: 'list_ciudadcatalogo',
+    detail: 'view_ciudadcatalogo',
 };
 
 

@@ -3,8 +3,25 @@ from django.contrib.auth.models import User
 
 from model_utils.models import TimeStampedModel
 
+from sistema_informacion_origen.models import SistemaInformacionOrigen
 
+
+class CanalDistribucion(TimeStampedModel):
+    nombre = models.CharField(max_length=100, unique=True)
+
+
+class TipoIndustria(TimeStampedModel):
+    nombre = models.CharField(max_length=100, unique=True)
+    descripcion = models.TextField(max_length=300, null=True, blank=True)
+
+
+class GrupoCliente(models.Model):
+    nombre = models.CharField(max_length=120, unique=True)
+
+
+# Realmente cliente contacto
 class ClienteBiable(models.Model):
+    sistema_informacion = models.ForeignKey(SistemaInformacionOrigen, on_delete=models.PROTECT, null=True)
     nit = models.CharField(max_length=20, null=True)
     nombre = models.CharField(max_length=200)
 

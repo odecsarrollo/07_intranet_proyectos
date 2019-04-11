@@ -1,6 +1,44 @@
 from rest_framework import serializers
 
-from .models import ClienteBiable, ContactoCliente
+from .models import (
+    ClienteBiable,
+    ContactoCliente,
+    CanalDistribucion,
+    TipoIndustria
+)
+
+
+class TipoIndustriaSerializer(serializers.ModelSerializer):
+    to_string = serializers.SerializerMethodField()
+
+    def get_to_string(self, instance):
+        return instance.nombre
+
+    class Meta:
+        model = TipoIndustria
+        fields = [
+            'url',
+            'id',
+            'nombre',
+            'descripcion',
+            'to_string',
+        ]
+
+
+class CanalDistribucionSerializer(serializers.ModelSerializer):
+    to_string = serializers.SerializerMethodField()
+
+    def get_to_string(self, instance):
+        return instance.nombre
+
+    class Meta:
+        model = CanalDistribucion
+        fields = [
+            'url',
+            'id',
+            'nombre',
+            'to_string',
+        ]
 
 
 class ClienteSerializer(serializers.ModelSerializer):

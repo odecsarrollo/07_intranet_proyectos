@@ -2,8 +2,28 @@ from rest_framework import viewsets
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
 
-from .models import ClienteBiable, ContactoCliente
-from .api_serializers import ClienteSerializer, ContactoClienteSerializer
+from .models import (
+    ClienteBiable,
+    ContactoCliente,
+    TipoIndustria,
+    CanalDistribucion
+)
+from .api_serializers import (
+    ClienteSerializer,
+    ContactoClienteSerializer,
+    TipoIndustriaSerializer,
+    CanalDistribucionSerializer
+)
+
+
+class TipoIndustriaViewSet(viewsets.ModelViewSet):
+    queryset = TipoIndustria.objects.all()
+    serializer_class = TipoIndustriaSerializer
+
+
+class CanalDistribucionViewSet(viewsets.ModelViewSet):
+    queryset = CanalDistribucion.objects.all()
+    serializer_class = CanalDistribucionSerializer
 
 
 class ClienteViewSet(viewsets.ModelViewSet):

@@ -11,6 +11,7 @@ from proyectos_seguimientos.api_urls import router as proyectos_seguimientos_rou
 from bandas_eurobelt.api_urls import router as banda_eurobelt_router
 from sistema_informacion_origen.api_urls import router as sistema_informacion_origen_router
 from geografia.api_urls import router as geografia_router
+from cargues_catalogos.api_urls import router as cargues_catalogos_router
 
 router = DefaultRouter()
 router.extend(proyectos_router)
@@ -25,3 +26,4 @@ router.extend(proyectos_seguimientos_router)
 router.extend(banda_eurobelt_router)
 router.extend(sistema_informacion_origen_router)
 router.extend(geografia_router)
+router.extend(cargues_catalogos_router)

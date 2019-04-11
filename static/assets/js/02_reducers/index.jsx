@@ -31,6 +31,8 @@ import horasColaboradoresProyectosInicialesReducer
 
 import clientesReducer from "./especificas/clientes/clientesReducer";
 import clientesContactosReducer from "./especificas/clientes/clientesContactosReducer";
+import clientesCanalesDistribucionReducer from "./especificas/clientes/canalesDistribucionReducer";
+import clientesTiposIndustriasReducer from "./especificas/clientes/tiposIndustriasReducer";
 
 import cotizacionesReducer from "./especificas/cotizaciones/cotizacionesReducer";
 import cotizacionesSeguimientosReducer from "./especificas/cotizaciones/cotizacionesSeguimientosReducer";
@@ -42,6 +44,7 @@ import sistemaInformacionOrigenReducer from './especificas/sistema_informacion_o
 
 import paisesReducer from './especificas/geografia/paisesReducer';
 import ciudadesReducer from './especificas/geografia/ciudadesReducer';
+import ciudadesCatagolosReducer from './especificas/cargues_catalogos/ciudadesCarguesCatalogosReducer';
 import departamentosReducer from './especificas/geografia/departamentosReducer';
 
 const rootReducer = combineReducers({
@@ -70,7 +73,9 @@ const rootReducer = combineReducers({
     horas_hojas_trabajos: horasHojasTrabajosDiariosReducer,
     horas_colaboradores_proyectos_iniciales: horasColaboradoresProyectosInicialesReducer,
     clientes: clientesReducer,
+    clientes_tipos_industrias: clientesTiposIndustriasReducer,
     clientes_contactos: clientesContactosReducer,
+    clientes_canales: clientesCanalesDistribucionReducer,
     cotizaciones: cotizacionesReducer,
     cotizaciones_seguimientos: cotizacionesSeguimientosReducer,
     configuracion_costos: configuracionCostos,
@@ -80,6 +85,7 @@ const rootReducer = combineReducers({
 
     sistemas_informacion_reducer: sistemaInformacionOrigenReducer,
 
+    ciudades_catalogos: ciudadesCatagolosReducer,
     geografia_ciudades: ciudadesReducer,
     geografia_departamentos: departamentosReducer,
     geografia_paises: paisesReducer
