@@ -27,7 +27,7 @@ class Cell extends Component {
                                   placeholder='Seleccionar Ciudad'
                                   valueField='id'
                                   textField='name'
-                                  onChange={e => {
+                                  onSelect={e => {
                                       this.props.fetchCiudadCargueCatalogo(
                                           row.original.id,
                                           {

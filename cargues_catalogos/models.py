@@ -57,7 +57,6 @@ class ColaboradorCentroCostoCatalogo(models.Model):
     centro_costo_id = models.PositiveIntegerField()
     centro_costo_padre = models.ForeignKey('self', null=True, on_delete=models.PROTECT)
     nombre = models.CharField(unique=True, max_length=120)
-    linea = models.ForeignKey(LineaVendedorCatalogo, on_delete=models.PROTECT, null=True)
 
     class Meta:
         unique_together = [('sistema_informacion', 'centro_costo_id')]
@@ -98,6 +97,7 @@ class ColaboradorCatalogo(models.Model):
     es_cguno = models.BooleanField(default=False)
     autogestion_horas_trabajadas = models.BooleanField(default=False)
     es_salario_fijo = models.BooleanField(default=False)
+    linea = models.ForeignKey(LineaVendedorCatalogo, on_delete=models.PROTECT, null=True)
 
     def create_user(self):
         nombre_split = self.nombres.split()
