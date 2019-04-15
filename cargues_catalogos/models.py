@@ -66,7 +66,6 @@ class ColaboradorCentroCostoCatalogo(models.Model):
 
 
 class ColaboradorCatalogo(models.Model):
-    sistema_informacion = models.ForeignKey(SistemaInformacionOrigen, on_delete=models.PROTECT)
     usuario = models.OneToOneField(
         User,
         related_name='ncolaborador',
@@ -94,7 +93,7 @@ class ColaboradorCatalogo(models.Model):
     es_vendedor = models.BooleanField(default=False)
     es_aprendiz = models.BooleanField(default=False)
     en_proyectos = models.BooleanField(default=False)
-    es_cguno = models.BooleanField(default=False)
+    activo = models.BooleanField(default=True)
     autogestion_horas_trabajadas = models.BooleanField(default=False)
     es_salario_fijo = models.BooleanField(default=False)
     linea = models.ForeignKey(LineaVendedorCatalogo, on_delete=models.PROTECT, null=True)
@@ -140,8 +139,7 @@ class ColaboradorCatalogo(models.Model):
 
 
 class ClienteCatalogo(TimeStampedModel):
-    sistema_informacion = models.ForeignKey(SistemaInformacionOrigen, on_delete=models.PROTECT)
-    nit = models.CharField(max_length=20)
+    nit = models.CharField(max_length=20, unique=True)
     nombre = models.CharField(max_length=120)
     forma_pago = models.PositiveIntegerField(null=True)
     grupo = models.ForeignKey(GrupoCliente, null=True, related_name='empresas', on_delete=models.PROTECT)
@@ -151,9 +149,6 @@ class ClienteCatalogo(TimeStampedModel):
     esta_cerrado = models.BooleanField(default=False)
     no_vender = models.BooleanField(default=False)
     cliente_nuevo_nit = models.ForeignKey('self', null=True, on_delete=models.PROTECT)
-
-    class Meta:
-        unique_together = [('sistema_informacion', 'nit')]
 
 
 class ItemsCatalogo(models.Model):
@@ -192,7 +187,7 @@ class SucursalCatalogo(models.Model):
     nro_sucursal = models.PositiveIntegerField()
     cliente = models.ForeignKey(ClienteCatalogo, related_name='sucursales', on_delete=models.PROTECT)
     nombre_establecimiento = models.CharField(max_length=200, null=True)
-    nombre_establecimiento_intranet = models.CharField(max_length=200, null=True)
+    nombre_establecimiento_alternativo = models.CharField(max_length=200, null=True)
     cupo_credito = models.DecimalField(max_digits=10, decimal_places=0)
     condicion_pago = models.PositiveIntegerField(null=True)
     activo = models.BooleanField()
