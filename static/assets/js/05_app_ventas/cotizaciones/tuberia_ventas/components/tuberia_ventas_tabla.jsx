@@ -99,6 +99,23 @@ class Tabla extends React.Component {
                                         }
                                     },
                                     {
+                                        Header: "Contacto",
+                                        accessor: "contacto_cliente_nombre",
+                                        maxWidth: 190,
+                                        filterable: true,
+                                        filterMethod: (filter, row) => {
+                                            return row[filter.id].includes(filter.value.toUpperCase())
+                                        },
+                                        Cell: row => {
+                                            return (
+                                                <div style={{
+                                                    fontSize: '0.6rem',
+                                                    whiteSpace: 'normal'
+                                                }}>{row.value}</div>
+                                            )
+                                        }
+                                    },
+                                    {
                                         Header: "Responsable",
                                         maxWidth: 140,
                                         filterable: true,

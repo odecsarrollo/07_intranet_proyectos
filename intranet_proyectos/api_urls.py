@@ -12,6 +12,9 @@ from bandas_eurobelt.api_urls import router as banda_eurobelt_router
 from sistema_informacion_origen.api_urls import router as sistema_informacion_origen_router
 from geografia.api_urls import router as geografia_router
 from cargues_catalogos.api_urls import router as cargues_catalogos_router
+from importaciones.api_urls import router as importaciones_router
+from items.api_urls import router as items_router
+from listas_precios.api_urls import router as listas_precios_router
 
 router = DefaultRouter()
 router.extend(proyectos_router)
@@ -27,3 +30,6 @@ router.extend(banda_eurobelt_router)
 router.extend(sistema_informacion_origen_router)
 router.extend(geografia_router)
 router.extend(cargues_catalogos_router)
+router.extend(importaciones_router)
+router.extend(items_router)
+router.extend(listas_precios_router)

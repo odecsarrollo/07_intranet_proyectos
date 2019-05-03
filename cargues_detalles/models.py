@@ -34,7 +34,7 @@ class ItemsLiteralDetalle(models.Model):
 
 class FacturaDetalle(TimeStampedModel):
     sistema_informacion = models.ForeignKey(SistemaInformacionOrigen, on_delete=models.PROTECT)
-    ciudad_biable = models.ForeignKey(CiudadCatalogo, null=True, on_delete=models.PROTECT)
+    ciudad = models.ForeignKey(CiudadCatalogo, null=True, on_delete=models.PROTECT)
     fecha_documento = models.DateField(null=True)
     direccion_despacho = models.CharField(max_length=400, null=True)
     tipo_documento = models.CharField(max_length=3, null=True)
@@ -61,7 +61,7 @@ class MovimientoVentaDetalle(models.Model):
         related_name='items',
         on_delete=models.PROTECT
     )
-    item_biable = models.ForeignKey(ItemsCatalogo, null=True, related_name='ventas', on_delete=models.PROTECT)
+    item = models.ForeignKey(ItemsCatalogo, null=True, related_name='ventas', on_delete=models.PROTECT)
     precio_uni = models.DecimalField(max_digits=18, decimal_places=4, default=0)
     cantidad = models.DecimalField(max_digits=18, decimal_places=4, default=0)
     venta_bruta = models.DecimalField(max_digits=18, decimal_places=4, default=0)

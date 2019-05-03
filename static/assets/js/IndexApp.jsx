@@ -62,7 +62,7 @@ class IndexApp extends Component {
                             classes={classes}
                         />
                         <Boton
-                            nombre='Bandas'
+                            nombre='Bandas Eurobelt'
                             link='/app/bandas/'
                             icono='puzzle-piece'
                             classes={classes}

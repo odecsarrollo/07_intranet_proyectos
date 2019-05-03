@@ -46,6 +46,18 @@ import paisesReducer from './especificas/geografia/paisesReducer';
 import ciudadesReducer from './especificas/geografia/ciudadesReducer';
 import ciudadesCatagolosReducer from './especificas/cargues_catalogos/ciudadesCarguesCatalogosReducer';
 import departamentosReducer from './especificas/geografia/departamentosReducer';
+import categoriaProductoReducer from './especificas/items/categoriaProductoReducer';
+import monedasCambiosReducer from './especificas/importaciones/monedasCambiosReducer';
+import proveedoresImportacionesReducer from './especificas/importaciones/proveedoresImportacionesReducer';
+import margenesProveedoresReducer from './especificas/importaciones/margenesProveedoresReducer';
+import formaPagoCanalReducer from './especificas/listas_precios/formasPagosReducer';
+
+import bandaEurobeltColorReducer from './especificas/bandas_eurobelt/coloresReducer';
+import bandaEurobeltMaterialReducer from './especificas/bandas_eurobelt/materialesReducer';
+import bandaEurobeltTipoReducer from './especificas/bandas_eurobelt/tiposReducer';
+import bandaEurobeltSerieReducer from './especificas/bandas_eurobelt/seriesReducer';
+import categoriasReducer from './especificas/bandas_eurobelt/categoriasReducer';
+import componentesReducer from './especificas/bandas_eurobelt/componentesReducer';
 
 const rootReducer = combineReducers({
     menu_status: menuReducer,
@@ -88,7 +100,20 @@ const rootReducer = combineReducers({
     ciudades_catalogos: ciudadesCatagolosReducer,
     geografia_ciudades: ciudadesReducer,
     geografia_departamentos: departamentosReducer,
-    geografia_paises: paisesReducer
+    geografia_paises: paisesReducer,
+
+    categorias_productos: categoriaProductoReducer,
+    monedas_cambios: monedasCambiosReducer,
+    proveedores_importaciones: proveedoresImportacionesReducer,
+    margenes_proveedores: margenesProveedoresReducer,
+    formas_pagos_canales: formaPagoCanalReducer,
+
+    banda_eurobelt_tipos: bandaEurobeltTipoReducer,
+    banda_eurobelt_series: bandaEurobeltSerieReducer,
+    banda_eurobelt_materiales: bandaEurobeltMaterialReducer,
+    banda_eurobelt_colores: bandaEurobeltColorReducer,
+    banda_eurobelt_categorias: categoriasReducer,
+    banda_eurobelt_componentes: componentesReducer,
 });
 
 export default rootReducer;

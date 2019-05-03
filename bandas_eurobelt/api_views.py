@@ -1,14 +1,12 @@
 from rest_framework import viewsets
-from rest_framework.decorators import list_route
-from rest_framework.response import Response
-
 from .models import (
-    TipoBanda,
-    Material,
-    Color,
-    Serie,
-    Componente,
-    GrupoEnsamblado
+    TipoBandaBandaEurobelt,
+    MaterialBandaEurobelt,
+    ColorBandaEurobelt,
+    SerieBandaEurobelt,
+    ComponenteBandaEurobelt,
+    GrupoEnsambladoBandaEurobelt,
+    CategoriaComponenteBandaEurobelt
 )
 from .api_serializers import (
     TipoBandaSerializer,
@@ -16,35 +14,50 @@ from .api_serializers import (
     ColorSerializer,
     SerieSerializer,
     ComponenteSerializer,
-    GrupoEnsambladoSerializer
+    GrupoEnsambladoSerializer,
+    CategoriaSerializer
 )
 
 
+class CategoriaViewSet(viewsets.ModelViewSet):
+    queryset = CategoriaComponenteBandaEurobelt.objects.select_related(
+        'moneda'
+    ).all()
+    serializer_class = CategoriaSerializer
+
+
 class TipoBandaViewSet(viewsets.ModelViewSet):
-    queryset = TipoBanda.objects.all()
+    queryset = TipoBandaBandaEurobelt.objects.all()
     serializer_class = TipoBandaSerializer
 
 
 class MaterialViewSet(viewsets.ModelViewSet):
-    queryset = Material.objects.all()
+    queryset = MaterialBandaEurobelt.objects.all()
     serializer_class = MaterialSerializer
 
 
 class ColorViewSet(viewsets.ModelViewSet):
-    queryset = Color.objects.all()
+    queryset = ColorBandaEurobelt.objects.all()
     serializer_class = ColorSerializer
 
 
 class SerieViewSet(viewsets.ModelViewSet):
-    queryset = Serie.objects.all()
+    queryset = SerieBandaEurobelt.objects.all()
     serializer_class = SerieSerializer
 
 
 class ComponenteViewSet(viewsets.ModelViewSet):
-    queryset = Componente.objects.all()
+    queryset = ComponenteBandaEurobelt.objects.select_related(
+        'tipo_banda',
+        'categoria',
+        'color',
+        'material'
+    ).prefetch_related(
+        'series_compatibles'
+    ).all()
     serializer_class = ComponenteSerializer
 
 
 class GrupoEnsambladoViewSet(viewsets.ModelViewSet):
-    queryset = GrupoEnsamblado.objects.all()
+    queryset = GrupoEnsambladoBandaEurobelt.objects.all()
     serializer_class = GrupoEnsambladoSerializer

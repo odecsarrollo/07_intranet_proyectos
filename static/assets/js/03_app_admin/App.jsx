@@ -24,6 +24,11 @@ import GeografiaList
 
 
 import ConfiguracionCostosDashboard from "./especificas/configuraciones/containers/costos_dashboard";
+import ItemsDashboard from "./especificas/items/items_dashboard/containers/items_dashboard";
+import ImportacionesDashboard
+    from "./especificas/importaciones/importaciones_dashboard/containers/importaciones_dashboard";
+import ListasPreciosDashboard
+    from "./especificas/listas_precios/listas_precios_dashboard/containers/listas_precios_dashboard";
 
 
 class AdminApp extends Component {
@@ -48,6 +53,9 @@ class AdminApp extends Component {
                         <Route exact path='/app/admin/clientes/clientes/dashboard' component={ClientesDashboard}/>
                         <Route exact path='/app/admin/configuraciones/costos/dashboard'
                                component={ConfiguracionCostosDashboard}/>
+                        <Route exact path='/app/admin/items/dashboard' component={ItemsDashboard}/>
+                        <Route exact path='/app/admin/importaciones/dashboard' component={ImportacionesDashboard}/>
+                        <Route exact path='/app/admin/listas_precios/dashboard' component={ListasPreciosDashboard}/>
                     </Switch>
                 </DrawerMenu>
             </Loading>

@@ -1,3 +1,103 @@
+export const BANDA_EUROBELT_COMPONENTE_TYPES = {
+    create: 'create_banda_eurobelt_componente',
+    delete: 'delete_banda_eurobelt_componente',
+    fetch_all: 'fetch_banda_eurobelt_componentes',
+    fetch: 'fetch_banda_eurobelt_componente',
+    clear: 'clear_banda_eurobelt_componentes',
+    update: 'update_banda_eurobelt_componente',
+};
+
+export const BANDA_EUROBELT_CATEGORIA_TYPES = {
+    create: 'create_banda_eurobelt_categoria',
+    delete: 'delete_banda_eurobelt_categoria',
+    fetch_all: 'fetch_banda_eurobelt_categorias',
+    fetch: 'fetch_banda_eurobelt_categoria',
+    clear: 'clear_banda_eurobelt_categorias',
+    update: 'update_banda_eurobelt_categoria',
+};
+
+export const BANDA_EUROBELT_COLOR_TYPES = {
+    create: 'create_banda_eurobelt_color',
+    delete: 'delete_banda_eurobelt_color',
+    fetch_all: 'fetch_banda_eurobelt_colores',
+    fetch: 'fetch_banda_eurobelt_color',
+    clear: 'clear_banda_eurobelt_colores',
+    update: 'update_banda_eurobelt_color',
+};
+
+export const BANDA_EUROBELT_MATERIAL_TYPES = {
+    create: 'create_banda_eurobelt_material',
+    delete: 'delete_banda_eurobelt_material',
+    fetch_all: 'fetch_banda_eurobelt_materiales',
+    fetch: 'fetch_banda_eurobelt_material',
+    clear: 'clear_banda_eurobelt_materiales',
+    update: 'update_banda_eurobelt_material',
+};
+
+export const BANDA_EUROBELT_SERIE_TYPES = {
+    create: 'create_banda_eurobelt_serie',
+    delete: 'delete_banda_eurobelt_serie',
+    fetch_all: 'fetch_banda_eurobelt_series',
+    fetch: 'fetch_banda_eurobelt_serie',
+    clear: 'clear_banda_eurobelt_series',
+    update: 'update_banda_eurobelt_serie',
+};
+
+export const BANDA_EUROBELT_TIPO_TYPES = {
+    create: 'create_banda_eurobelt_tipo',
+    delete: 'delete_banda_eurobelt_tipo',
+    fetch_all: 'fetch_banda_eurobelt_tipos',
+    fetch: 'fetch_banda_eurobelt_tipo',
+    clear: 'clear_banda_eurobelt_tipos',
+    update: 'update_banda_eurobelt_tipo',
+};
+
+export const FORMA_PAGO_TYPES = {
+    create: 'create_forma_pago',
+    delete: 'delete_forma_pago',
+    fetch_all: 'fetch_formas_pagos',
+    fetch: 'fetch_forma_pago',
+    clear: 'clear_formas_pagos',
+    update: 'update_forma_pago',
+};
+
+export const MARGEN_PROVEEDOR_TYPES = {
+    create: 'create_margen_proveedor',
+    delete: 'delete_margen_proveedor',
+    fetch_all: 'fetch_margenes_proveedores',
+    fetch: 'fetch_margen_proveedor',
+    clear: 'clear_margenes_proveedores',
+    update: 'update_margen_proveedor',
+};
+
+export const PROVEEDOR_IMPORTACION_TYPES = {
+    create: 'create_proveedor_importacion',
+    delete: 'delete_proveedor_importacion',
+    fetch_all: 'fetch_proveedores_importaciones',
+    fetch: 'fetch_proveedor_importacion',
+    clear: 'clear_proveedores_importaciones',
+    update: 'update_proveedor_importacion',
+};
+
+export const MONEDA_CAMBIO_TYPES = {
+    create: 'create_moneda_cambio',
+    delete: 'delete_moneda_cambio',
+    fetch_all: 'fetch_monedas_cambios',
+    fetch: 'fetch_moneda_cambio',
+    clear: 'clear_monedas_cambios',
+    update: 'update_moneda_cambio',
+};
+
+
+export const CATEGORIA_PRODUCTO_TYPES = {
+    create: 'create_categoria_producto',
+    delete: 'delete_categoria_producto',
+    fetch_all: 'fetch_categorias_productos',
+    fetch: 'fetch_categoria_producto',
+    clear: 'clear_categorias_productos',
+    update: 'update_categoria_producto',
+};
+
 export const TIPO_INDUSTRIA_TYPES = {
     create: 'create_tipo_industria',
     delete: 'delete_tipo_industria',

@@ -66,6 +66,9 @@ MY_APPS = [
     'geografia.apps.GeografiaConfig',
     'cargues_catalogos.apps.CarguesCatalogosConfig',
     'cargues_detalles.apps.CarguesDetallesConfig',
+    'items.apps.ItemsConfig',
+    'importaciones.apps.ImportacionesConfig',
+    'listas_precios.apps.ListasPreciosConfig',
 ]
 
 THIRD_PART_APPS = [

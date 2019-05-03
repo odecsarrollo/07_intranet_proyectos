@@ -1,3 +1,83 @@
+export const BANDA_EUROBELT_CATEGORIAS = {
+    add: 'add_categoriacomponentebandaeurobelt',
+    delete: 'delete_categoriacomponentebandaeurobelt',
+    change: 'change_categoriacomponentebandaeurobelt',
+    list: 'list_categoriacomponentebandaeurobelt',
+    detail: 'view_categoriacomponentebandaeurobelt',
+};
+
+export const BANDA_EUROBELT_COLORES = {
+    add: 'add_materialbandaeurobelt',
+    delete: 'delete_materialbandaeurobelt',
+    change: 'change_materialbandaeurobelt',
+    list: 'list_materialbandaeurobelt',
+    detail: 'view_materialbandaeurobelt',
+};
+
+export const BANDA_EUROBELT_MATERIALES = {
+    add: 'add_materialbandaeurobelt',
+    delete: 'delete_materialbandaeurobelt',
+    change: 'change_materialbandaeurobelt',
+    list: 'list_materialbandaeurobelt',
+    detail: 'view_materialbandaeurobelt',
+};
+
+export const BANDA_EUROBELT_SERIES = {
+    add: 'add_seriebandaeurobelt',
+    delete: 'delete_seriebandaeurobelt',
+    change: 'change_seriebandaeurobelt',
+    list: 'list_seriebandaeurobelt',
+    detail: 'view_seriebandaeurobelt',
+};
+
+export const BANDA_EUROBELT_TIPOS = {
+    add: 'add_tipobandabandaeurobelt',
+    delete: 'delete_tipobandabandaeurobelt',
+    change: 'change_tipobandabandaeurobelt',
+    list: 'list_tipobandabandaeurobelt',
+    detail: 'view_tipobandabandaeurobelt',
+};
+
+export const FORMAS_PAGOS = {
+    add: 'add_formapagocanal',
+    delete: 'delete_formapagocanal',
+    change: 'change_formapagocanal',
+    list: 'list_formapagocanal',
+    detail: 'view_formapagocanal',
+};
+
+export const MARGENES_PROVEEDORES = {
+    add: 'add_margenprovedor',
+    delete: 'delete_margenprovedor',
+    change: 'change_margenprovedor',
+    list: 'list_margenprovedor',
+    detail: 'view_margenprovedor',
+};
+
+export const PROVEEDORES_IMPORTACIONES = {
+    add: 'add_proveedorimportacion',
+    delete: 'delete_proveedorimportacion',
+    change: 'change_proveedorimportacion',
+    list: 'list_proveedorimportacion',
+    detail: 'view_proveedorimportacion',
+};
+
+export const MONEDAS_CAMBIOS = {
+    add: 'add_monedacambio',
+    delete: 'delete_monedacambio',
+    change: 'change_monedacambio',
+    list: 'list_monedacambio',
+    detail: 'view_monedacambio',
+};
+
+export const CATEGORIAS_PRODUCTOS = {
+    add: 'add_categoriaproducto',
+    delete: 'delete_categoriaproducto',
+    change: 'change_categoriaproducto',
+    list: 'list_categoriaproducto',
+    detail: 'view_categoriaproducto',
+};
+
 export const TIPOS_INDUSTRIAS = {
     add: 'add_tipoindustria',
     delete: 'delete_tipoindustria',
