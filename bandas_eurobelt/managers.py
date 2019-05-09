@@ -22,5 +22,5 @@ class ComponenteManager(models.Manager):
         ).annotate(
             rentabilidad=F('precio_base') - F('costo_cop_fact_impor')
         ).all()
-        print(qs.first().__dict__)
+        #print(qs.first().__dict__)
         return qs
