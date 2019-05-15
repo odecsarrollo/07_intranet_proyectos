@@ -59,6 +59,9 @@ import bandaEurobeltSerieReducer from './especificas/bandas_eurobelt/seriesReduc
 import categoriasReducer from './especificas/bandas_eurobelt/categoriasReducer';
 import componentesReducer from './especificas/bandas_eurobelt/componentesReducer';
 
+
+import itemVentasCatalogosProductosReducer from './especificas/catalogos_productos/itemsVentasReducer';
+
 const rootReducer = combineReducers({
     menu_status: menuReducer,
     mis_permisos: misPermisosReducer,
@@ -114,6 +117,9 @@ const rootReducer = combineReducers({
     banda_eurobelt_colores: bandaEurobeltColorReducer,
     banda_eurobelt_categorias: categoriasReducer,
     banda_eurobelt_componentes: componentesReducer,
+
+
+    catalogos_productos_items_ventas: itemVentasCatalogosProductosReducer,
 });
 
 export default rootReducer;

@@ -69,6 +69,7 @@ MY_APPS = [
     'items.apps.ItemsConfig',
     'importaciones.apps.ImportacionesConfig',
     'listas_precios.apps.ListasPreciosConfig',
+    'catalogo_productos.apps.CatalogoProductosConfig',
 ]
 
 THIRD_PART_APPS = [

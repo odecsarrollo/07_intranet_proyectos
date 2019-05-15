@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import CreateForm from './forms/categorias_form';
-import Tabla from './categorias_tabla';
+import CreateForm from './forms/items_ventas_catalogos_servicios_form';
+import Tabla from './items_ventas_catalogos_servicios_tabla';
 import crudHOC from '../../../../../00_utilities/components/hoc_crud';
 
 
@@ -10,13 +10,13 @@ class List extends Component {
     constructor(props) {
         super(props);
         this.method_pool = {
-            fetchObjectMethod: this.props.fetchCategoriaProducto,
-            deleteObjectMethod: this.props.deleteCategoriaProducto,
-            createObjectMethod: this.props.createCategoriaProducto,
-            updateObjectMethod: this.props.updateCategoriaProducto,
+            fetchObjectMethod: this.props.fetchItemVentaCatalogo,
+            deleteObjectMethod: this.props.deleteItemVentaCatalogo,
+            createObjectMethod: this.props.createItemVentaCatalogo,
+            updateObjectMethod: this.props.updateItemVentaCatalogo,
         };
-        this.plural_name = 'Categorías';
-        this.singular_name = 'Categoría';
+        this.plural_name = 'Items Ventas';
+        this.singular_name = 'Item Venta';
     }
 
     render() {

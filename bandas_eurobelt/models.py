@@ -85,7 +85,7 @@ class ComponenteBandaEurobelt(models.Model):
     objects = ComponenteManager()
 
     def __str__(self):
-        nombre = self.tipo
+        nombre = self.referencia
         if self.tipo_banda:
             nombre = '%s %s' % (nombre, self.tipo_banda.nombre)
         if self.material.nombre:

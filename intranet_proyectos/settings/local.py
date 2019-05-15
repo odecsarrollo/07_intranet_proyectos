@@ -1,14 +1,15 @@
 from .base import *
 
 THIRD_PART_APPS = [
-    'debug_toolbar',
+    'silk',
 ]
 
 INSTALLED_APPS = INSTALLED_APPS + THIRD_PART_APPS
 
 ########## DEBUG TOOLBAR CONFIGURATION CONFIGURATION
-MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware', ]
-INTERNAL_IPS = '127.0.0.1'
+MIDDLEWARE += [
+    'silk.middleware.SilkyMiddleware',
+]
 ########## END TOOLBAR CONFIGURATION CONFIGURATION
 
 ########## DATABASE CONFIGURATION

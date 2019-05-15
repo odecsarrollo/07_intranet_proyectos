@@ -1,3 +1,12 @@
+export const ITEM_VENTA_CATALOGO_TYPES = {
+    create: 'create_item_venta_catalogo',
+    delete: 'delete_item_venta_catalogo',
+    fetch_all: 'fetch_items_ventas_catalogos',
+    fetch: 'fetch_item_venta_catalogo',
+    clear: 'clear_items_ventas_catalogos',
+    update: 'update_item_venta_catalogo',
+};
+
 export const BANDA_EUROBELT_COMPONENTE_TYPES = {
     create: 'create_banda_eurobelt_componente',
     delete: 'delete_banda_eurobelt_componente',

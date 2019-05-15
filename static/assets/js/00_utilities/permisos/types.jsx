@@ -1,3 +1,19 @@
+export const BANDA_EUROBELT_COMPONENTES = {
+    add: 'add_componentebandaeurobelt',
+    delete: 'delete_componentebandaeurobelt',
+    change: 'change_componentebandaeurobelt',
+    list: 'list_componentebandaeurobelt',
+    detail: 'view_componentebandaeurobelt',
+};
+
+export const ITEMS_VENTAS_CATALOGOS = {
+    add: 'add_itemventacatalogo',
+    delete: 'delete_itemventacatalogo',
+    change: 'change_itemventacatalogo',
+    list: 'list_itemventacatalogo',
+    detail: 'view_itemventacatalogo',
+};
+
 export const BANDA_EUROBELT_CATEGORIAS = {
     add: 'add_categoriacomponentebandaeurobelt',
     delete: 'delete_categoriacomponentebandaeurobelt',
@@ -132,7 +148,7 @@ export const GROUPS = {
     delete: 'delete_group',
     change: 'change_group',
     list: 'list_group',
-    detail: 'detail_group',
+    detail: 'view_group',
 };
 
 export const PERMISSION = {
@@ -146,7 +162,7 @@ export const USUARIOS = {
     delete: 'delete_user',
     change: 'change_user',
     list: 'list_user',
-    detail: 'detail_user',
+    detail: 'view_user',
     make_user_superuser: 'make_user_superuser',
     make_user_staff: 'make_user_staff',
     make_user_active: 'make_user_active',
@@ -158,7 +174,7 @@ export const PROYECTOS = {
     delete: 'delete_proyecto',
     change: 'change_proyecto',
     list: 'list_proyecto',
-    detail: 'detail_proyecto',
+    detail: 'view_proyecto',
     valor: 'valor_proyecto',
     costo: 'costo_proyecto',
     costo_presupuestado: 'costo_presupuestado_proyecto',
@@ -166,7 +182,7 @@ export const PROYECTOS = {
     costo_mano_obra: 'costo_mano_obra_proyecto',
     ultimo_costo_item_biable: 'ultimo_costo_itemsbiable',
     admin_proyect_manager: 'admon_proyecto_project_manager',
-    detail_proyect_manager: 'detail_proyecto_project_manager',
+    detail_proyect_manager: 'view_proyecto_project_manager',
 };
 
 export const ITEM_BIABLE = {
@@ -179,7 +195,7 @@ export const CENTROS_COSTOS_COLABORADORES = {
     delete: 'delete_colaboradorcentrocosto',
     change: 'change_colaboradorcentrocosto',
     list: 'list_colaboradorcentrocosto',
-    detail: 'detail_colaboradorcentrocosto',
+    detail: 'view_colaboradorcentrocosto',
 };
 
 export const COLABORADORES = {
@@ -187,7 +203,7 @@ export const COLABORADORES = {
     delete: 'delete_colaboradorbiable',
     change: 'change_colaboradorbiable',
     list: 'list_colaboradorbiable',
-    detail: 'detail_colaboradorbiable',
+    detail: 'view_colaboradorbiable',
 };
 
 export const COLABORADORES_COSTOS_MESES = {
@@ -195,7 +211,7 @@ export const COLABORADORES_COSTOS_MESES = {
     delete: 'delete_colaboradorcostomesbiable',
     change: 'change_colaboradorcostomesbiable',
     list: 'list_colaboradorcostomesbiable',
-    detail: 'detail_colaboradorcostomesbiable',
+    detail: 'view_colaboradorcostomesbiable',
 };
 
 export const MANOS_OBRAS_HOJAS_TRABAJOS = {
@@ -203,7 +219,7 @@ export const MANOS_OBRAS_HOJAS_TRABAJOS = {
     delete: 'delete_hojatrabajodiario',
     change: 'change_hojatrabajodiario',
     list: 'list_hojatrabajodiario',
-    detail: 'detail_hojatrabajodiario',
+    detail: 'view_hojatrabajodiario',
     costos: 'costos_hojatrabajodiario',
     add_para_otros: 'para_otros_hojatrabajodiario',
     list_solo_autogestionados: 'list_hojatrabajodiario_solo_autogestionados',
@@ -214,7 +230,7 @@ export const MANOS_OBRAS_HORAS_HOJAS_TRABAJOS = {
     delete: 'delete_horahojatrabajo',
     change: 'change_horahojatrabajo',
     list: 'list_horahojatrabajo',
-    detail: 'detail_horahojatrabajo',
+    detail: 'view_horahojatrabajo',
     verificar: 'verificar_horahojatrabajo',
 };
 
@@ -223,7 +239,7 @@ export const HORAS_COLABORADORES_PROYECTOS_INICIALES = {
     delete: 'delete_horatrabajocolaboradorliteralinicial',
     change: 'change_horatrabajocolaboradorliteralinicial',
     list: 'list_horatrabajocolaboradorliteralinicial',
-    detail: 'detail_horatrabajocolaboradorliteralinicial',
+    detail: 'view_horatrabajocolaboradorliteralinicial',
 };
 
 export const LITERALES = {
@@ -237,7 +253,7 @@ export const CLIENTES = {
     delete: 'delete_clientebiable',
     change: 'change_clientebiable',
     list: 'list_clientebiable',
-    detail: 'detail_clientebiable',
+    detail: 'view_clientebiable',
 };
 
 export const COTIZACIONES = {
@@ -245,7 +261,7 @@ export const COTIZACIONES = {
     delete: 'delete_cotizacion',
     change: 'change_cotizacion',
     list: 'list_cotizacion',
-    detail: 'detail_cotizacion',
+    detail: 'view_cotizacion',
     gestionar_cotizacion: 'gestionar_cotizacion',
     list_tuberia_ventas: 'list_tuberia_ventas',
     informe_uno: 'list_tuberia_informe_uno',
@@ -256,7 +272,7 @@ export const CONTACTOS_CLIENTES = {
     delete: 'delete_contactocliente',
     change: 'change_contactocliente',
     list: 'list_contactocliente',
-    detail: 'detail_contactocliente',
+    detail: 'view_contactocliente',
 };
 
 export const CONFIGURACIONES_COSTOS = {
@@ -264,7 +280,7 @@ export const CONFIGURACIONES_COSTOS = {
     delete: 'delete_configuracioncosto',
     change: 'change_configuracioncosto',
     list: 'list_configuracioncosto',
-    detail: 'detail_configuracioncosto',
+    detail: 'view_configuracioncosto',
 };
 
 export const ITEMS_LISTADOS_MATERIALES = {
@@ -272,7 +288,7 @@ export const ITEMS_LISTADOS_MATERIALES = {
     delete: 'delete_itemliteraldiseno',
     change: 'change_itemliteraldiseno',
     list: 'list_itemliteraldiseno',
-    detail: 'detail_itemliteraldiseno',
+    detail: 'view_itemliteraldiseno',
 };
 
 export const FASES = {
@@ -280,7 +296,7 @@ export const FASES = {
     delete: 'delete_fase',
     change: 'change_fase',
     list: 'list_fase',
-    detail: 'detail_fase',
+    detail: 'view_fase',
 };
 
 export const FASES_LITERALES = {
@@ -288,7 +304,7 @@ export const FASES_LITERALES = {
     delete: 'delete_faseliteral',
     change: 'change_faseliteral',
     list: 'list_faseliteral',
-    detail: 'detail_faseliteral',
+    detail: 'view_faseliteral',
 };
 
 export const TAREAS_FASES_LITERALES = {
@@ -296,7 +312,7 @@ export const TAREAS_FASES_LITERALES = {
     delete: 'delete_tareafase',
     change: 'change_tareafase',
     list: 'list_tareafase',
-    detail: 'detail_tareafase',
+    detail: 'view_tareafase',
 };
 
 export const ARCHIVOS_COTIZACIONES = {
@@ -304,7 +320,7 @@ export const ARCHIVOS_COTIZACIONES = {
     delete: 'delete_archivocotizacion',
     change: 'change_archivocotizacion',
     list: 'list_archivocotizacion',
-    detail: 'detail_archivocotizacion',
+    detail: 'view_archivocotizacion',
 };
 
 export const ARCHIVOS_LITERALES = {
@@ -312,7 +328,7 @@ export const ARCHIVOS_LITERALES = {
     delete: 'delete_archivoliteral',
     change: 'change_archivoliteral',
     list: 'list_archivoliteral',
-    detail: 'detail_archivoliteral',
+    detail: 'view_archivoliteral',
 };
 
 export const ARCHIVOS_PROYECTOS = {
@@ -320,7 +336,7 @@ export const ARCHIVOS_PROYECTOS = {
     delete: 'delete_archivoproyecto',
     change: 'change_archivoproyecto',
     list: 'list_archivoproyecto',
-    detail: 'detail_archivoproyecto',
+    detail: 'view_archivoproyecto',
 };
 
 export const SISTEMAS_INFORMACION_ORIGEN = {

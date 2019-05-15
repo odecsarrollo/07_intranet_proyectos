@@ -8,10 +8,12 @@ import {permisosAdapter} from "../../../../../00_utilities/common";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import {
-    CATEGORIAS_PRODUCTOS as categorias_productos_permisos_view
+    CATEGORIAS_PRODUCTOS as categorias_productos_permisos_view,
+    ITEMS_VENTAS_CATALOGOS as items_ventas_permisos_view,
 } from "../../../../../00_utilities/permisos/types";
 
 import BloqueCategorias from "../../categorias/components/categorias_list";
+import BloqueItemsVentas from "../../items_ventas_catalogo_productos/components/items_ventas_catalogos_servicios_list";
 
 class ItemsDashboard extends Component {
     constructor(props) {
@@ -33,6 +35,8 @@ class ItemsDashboard extends Component {
         let index = value !== null ? value : this.state.slideIndex;
         if (index === 0) {
             this.props.fetchCategoriasProductos();
+        } else if (index === 1) {
+            this.props.fetchItemsVentasCatalogos();
         }
     }
 
@@ -50,9 +54,13 @@ class ItemsDashboard extends Component {
     }
 
     render() {
-        const {categorias_productos} = this.props;
+        const {
+            categorias_productos,
+            items_ventas,
+        } = this.props;
         const {slideIndex} = this.state;
         const permisos_categorias_productos = permisosAdapter(categorias_productos_permisos_view);
+        const permisos_items_ventas = permisosAdapter(items_ventas_permisos_view);
 
         const can_see = permisos_categorias_productos.list;
         return (
@@ -65,13 +73,22 @@ class ItemsDashboard extends Component {
                     value={slideIndex}
                 >
                     <Tab label="Categorías"/>
+                    <Tab label="Items Ventas Catalogo"/>
                 </Tabs>
                 {
                     slideIndex === 0 &&
                     <BloqueCategorias
+                        {...this.props}
                         object_list={categorias_productos}
                         permisos_object={permisos_categorias_productos}
+                    />
+                }
+                {
+                    slideIndex === 1 &&
+                    <BloqueItemsVentas
                         {...this.props}
+                        object_list={items_ventas}
+                        permisos_object={permisos_items_ventas}
                     />
                 }
                 <CargarDatos
@@ -86,7 +103,10 @@ class ItemsDashboard extends Component {
 function mapPropsToState(state, ownProps) {
     return {
         mis_permisos: state.mis_permisos,
-        categorias_productos: state.categorias_productos
+        proveedores_importaciones: state.proveedores_importaciones,
+        margenes_proveedores: state.margenes_proveedores,
+        categorias_productos: state.categorias_productos,
+        items_ventas: state.catalogos_productos_items_ventas,
     }
 }
 

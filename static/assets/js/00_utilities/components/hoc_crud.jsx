@@ -68,7 +68,7 @@ function crudHOC(CreateForm, Tabla) {
 
         onSelectItemEdit(item) {
             const {method_pool} = this.props;
-            const callback = () => this.setState({modal_open: true, item_seleccionado: item});
+            const callback = (response) => this.setState({modal_open: true, item_seleccionado: response});
             if (method_pool.fetchObjectMethod === null) {
                 console.log('No se ha asignado ningún método para FETCH OBJECT')
             } else {
@@ -86,6 +86,7 @@ function crudHOC(CreateForm, Tabla) {
                 list,
                 plural_name,
                 permisos_object,
+                con_titulo = true
             } = this.props;
             const {
                 item_seleccionado,
@@ -95,9 +96,12 @@ function crudHOC(CreateForm, Tabla) {
 
             return (
                 <ValidarPermisos can_see={permisos_object.list} nombre={plural_name}>
-                    <Typography variant="h5" gutterBottom color="primary">
-                        {plural_name}
-                    </Typography>
+                    {
+                        con_titulo &&
+                        <Typography variant="h5" gutterBottom color="primary">
+                            {plural_name}
+                        </Typography>
+                    }
                     {
                         permisos_object.add &&
                         <Button
@@ -115,7 +119,7 @@ function crudHOC(CreateForm, Tabla) {
                         modal_open &&
                         <CreateForm
                             {...this.props}
-                            item_seleccionado={item_seleccionado}
+                            item_seleccionado={item_seleccionado ? list[item_seleccionado.id] : null}
                             modal_open={modal_open}
                             onCancel={() => this.setState({modal_open: false, item_seleccionado: null})}
                             onSubmit={this.onSubmit}
