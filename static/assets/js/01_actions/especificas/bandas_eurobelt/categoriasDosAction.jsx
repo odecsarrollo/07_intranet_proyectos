@@ -5,9 +5,10 @@ import {
     fetchObject,
     deleteObject,
     createObject,
+    callApiMethodPostParameters
 } from '../../00_general_fuctions'
 
-const current_url_api = 'banda_eurobelt_categorias';
+const current_url_api = 'banda_eurobelt_categorias_dos';
 export const createBandaEurobeltCategoria = (values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
@@ -26,6 +27,19 @@ export const deleteBandaEurobeltCategoria = (id, options_action = {}) => {
         return deleteObject(current_url_api, id, options);
     }
 };
+
+export const adicionarQuitarCategoriaProductoBandaEurobeltCategoria = (id, categoria_producto_id, options_action = {}) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        params.append('categoria_producto_id', categoria_producto_id);
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: response})
+        };
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'adicionar_quitar_categoria_producto', params, options)
+    }
+};
+
 export const fetchBandaEurobeltCategorias = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {

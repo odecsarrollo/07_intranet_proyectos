@@ -14,7 +14,7 @@ export const ITEMS_VENTAS_CATALOGOS = {
     detail: 'view_itemventacatalogo',
 };
 
-export const BANDA_EUROBELT_CATEGORIAS = {
+export const BANDA_EUROBELT_CATEGORIAS_DOS = {
     add: 'add_categoriacomponentebandaeurobelt',
     delete: 'delete_categoriacomponentebandaeurobelt',
     change: 'change_categoriacomponentebandaeurobelt',

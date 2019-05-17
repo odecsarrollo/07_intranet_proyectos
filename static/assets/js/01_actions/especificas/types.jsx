@@ -17,12 +17,12 @@ export const BANDA_EUROBELT_COMPONENTE_TYPES = {
 };
 
 export const BANDA_EUROBELT_CATEGORIA_TYPES = {
-    create: 'create_banda_eurobelt_categoria',
-    delete: 'delete_banda_eurobelt_categoria',
-    fetch_all: 'fetch_banda_eurobelt_categorias',
-    fetch: 'fetch_banda_eurobelt_categoria',
-    clear: 'clear_banda_eurobelt_categorias',
-    update: 'update_banda_eurobelt_categoria',
+    create: 'create_banda_eurobelt_categoria_dos',
+    delete: 'delete_banda_eurobelt_categoria_dos',
+    fetch_all: 'fetch_banda_eurobelt_categorias_dos',
+    fetch: 'fetch_banda_eurobelt_categoria_dos',
+    clear: 'clear_banda_eurobelt_categorias_dos',
+    update: 'update_banda_eurobelt_categoria_dos',
 };
 
 export const BANDA_EUROBELT_COLOR_TYPES = {

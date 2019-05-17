@@ -12,7 +12,7 @@ import {
     BANDA_EUROBELT_TIPOS as tipos_permisos_view,
     BANDA_EUROBELT_MATERIALES as materiales_permisos_view,
     BANDA_EUROBELT_SERIES as series_permisos_view,
-    BANDA_EUROBELT_CATEGORIAS as categorias_permisos_view,
+    BANDA_EUROBELT_CATEGORIAS_DOS as categorias_permisos_view,
     BANDA_EUROBELT_COMPONENTES as componentes_permisos_view,
 } from "../../../../00_utilities/permisos/types";
 
@@ -20,7 +20,7 @@ import BloqueTipos from "../../tipos/components/tipos_list";
 import BloqueMateriales from "../../materiales/components/materiales_list";
 import BloqueColores from "../../colores/components/colores_list";
 import BloqueSeries from "../../series/components/series_list";
-import BloqueCategorias from "../../categorias/components/categoria_list";
+import BloqueCategorias from "../../categorias_dos/components/categoria_dos_list";
 import BloqueComponentes from "../../componentes/components/componentes_list";
 
 class ItemsDashboard extends Component {
@@ -41,6 +41,7 @@ class ItemsDashboard extends Component {
 
     cargarElementos(value = null) {
         let index = value !== null ? value : this.state.slideIndex;
+        const cargarCategorias = () => this.props.fetchCategoriasProductos();
         if (index === 0) {
             const cargarCategorias = () => this.props.fetchBandaEurobeltCategorias();
             const cargarSeries = () => this.props.fetchBandaEurobeltSeries({callback: cargarCategorias});
@@ -50,7 +51,7 @@ class ItemsDashboard extends Component {
             this.props.fetchBandaEurobeltComponentes({callback: cargarTipos})
         }
         if (index === 1) {
-            this.props.fetchBandaEurobeltTipos();
+            this.props.fetchBandaEurobeltTipos({callback: cargarCategorias});
         }
         if (index === 2) {
             this.props.fetchBandaEurobeltMateriales();
@@ -62,8 +63,7 @@ class ItemsDashboard extends Component {
             this.props.fetchBandaEurobeltSeries();
         }
         if (index === 5) {
-            const cargarMonedas = () => this.props.fetchMonedasCambios();
-            this.props.fetchBandaEurobeltCategorias({callback: cargarMonedas});
+            this.props.fetchBandaEurobeltCategorias({callback: cargarCategorias});
         }
     }
 
@@ -81,7 +81,7 @@ class ItemsDashboard extends Component {
     }
 
     render() {
-        const {tipos, series, materiales, colores, categorias, monedas, componentes} = this.props;
+        const {tipos, series, materiales, colores, categorias_dos, componentes} = this.props;
         const {slideIndex} = this.state;
         const permisos_materiales = permisosAdapter(materiales_permisos_view);
         const permisos_series = permisosAdapter(series_permisos_view);
@@ -110,7 +110,7 @@ class ItemsDashboard extends Component {
                     <Tab label="Materiales"/>
                     <Tab label="Colores"/>
                     <Tab label="Series"/>
-                    <Tab label="Categorias"/>
+                    <Tab label="Categorias Dos"/>
                 </Tabs>
                 {
                     slideIndex === 0 &&
@@ -120,7 +120,7 @@ class ItemsDashboard extends Component {
                         materiales_list={materiales}
                         colores_list={colores}
                         series_list={series}
-                        categorias_list={categorias}
+                        categorias_list={categorias_dos}
                         permisos_object={permisos_tipos}
                         {...this.props}
                     />
@@ -129,6 +129,7 @@ class ItemsDashboard extends Component {
                     slideIndex === 1 &&
                     <BloqueTipos
                         object_list={tipos}
+                        categorias_list={categorias_dos}
                         permisos_object={permisos_tipos}
                         {...this.props}
                     />
@@ -160,8 +161,7 @@ class ItemsDashboard extends Component {
                 {
                     slideIndex === 5 &&
                     <BloqueCategorias
-                        object_list={categorias}
-                        monedas_list={monedas}
+                        object_list={categorias_dos}
                         permisos_object={permisos_series}
                         {...this.props}
                     />
@@ -182,9 +182,9 @@ function mapPropsToState(state, ownProps) {
         series: state.banda_eurobelt_series,
         materiales: state.banda_eurobelt_materiales,
         colores: state.banda_eurobelt_colores,
-        categorias: state.banda_eurobelt_categorias,
-        componentes: state.banda_eurobelt_componentes,
-        monedas: state.monedas_cambios,
+        categorias_dos: state.banda_eurobelt_categorias_dos,
+        categorias: state.categorias_productos,
+        componentes: state.banda_eurobelt_componentes
     }
 }
 

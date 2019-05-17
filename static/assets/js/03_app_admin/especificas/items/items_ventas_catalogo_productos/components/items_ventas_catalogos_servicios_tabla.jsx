@@ -8,14 +8,13 @@ import {pesosColombianos} from "../../../../../00_utilities/common";
 class Tabla extends React.Component {
     render() {
 
-        const data = this.props.data;
+        const data = _.orderBy(this.props.data, ['to_string'], ['asc']);
         const {
             singular_name,
             onDelete,
             onSelectItemEdit,
             permisos_object
         } = this.props;
-        console.log(data)
 
 
         return (

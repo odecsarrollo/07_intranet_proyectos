@@ -56,7 +56,7 @@ import bandaEurobeltColorReducer from './especificas/bandas_eurobelt/coloresRedu
 import bandaEurobeltMaterialReducer from './especificas/bandas_eurobelt/materialesReducer';
 import bandaEurobeltTipoReducer from './especificas/bandas_eurobelt/tiposReducer';
 import bandaEurobeltSerieReducer from './especificas/bandas_eurobelt/seriesReducer';
-import categoriasReducer from './especificas/bandas_eurobelt/categoriasReducer';
+import categoriasDosReducer from './especificas/bandas_eurobelt/categoriasDosReducer';
 import componentesReducer from './especificas/bandas_eurobelt/componentesReducer';
 
 
@@ -115,7 +115,7 @@ const rootReducer = combineReducers({
     banda_eurobelt_series: bandaEurobeltSerieReducer,
     banda_eurobelt_materiales: bandaEurobeltMaterialReducer,
     banda_eurobelt_colores: bandaEurobeltColorReducer,
-    banda_eurobelt_categorias: categoriasReducer,
+    banda_eurobelt_categorias_dos: categoriasDosReducer,
     banda_eurobelt_componentes: componentesReducer,
 
 

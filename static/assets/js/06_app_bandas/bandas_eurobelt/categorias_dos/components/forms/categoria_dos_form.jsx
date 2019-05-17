@@ -86,12 +86,12 @@ class Form extends Component {
     adicionarCategoriaProducto() {
         const {categoria_seleccionado_id} = this.state;
         const {initialValues} = this.props;
-        return this.props.adicionarQuitarCategoriaProductoBandaEurobeltTipo(initialValues.id, categoria_seleccionado_id)
+        return this.props.adicionarQuitarCategoriaProductoBandaEurobeltCategoria(initialValues.id, categoria_seleccionado_id)
     }
 
     quitarCategoriaProducto(categoria_producto_id) {
         const {initialValues} = this.props;
-        return this.props.adicionarQuitarCategoriaProductoBandaEurobeltTipo(initialValues.id, categoria_producto_id)
+        return this.props.adicionarQuitarCategoriaProductoBandaEurobeltCategoria(initialValues.id, categoria_producto_id)
     }
 
     render() {
@@ -181,7 +181,7 @@ function mapPropsToState(state, ownProps) {
 }
 
 Form = reduxForm({
-    form: "tiposBandasEurobelForm",
+    form: "categoriaEurobelForm",
     validate,
     enableReinitialize: true
 })(Form);

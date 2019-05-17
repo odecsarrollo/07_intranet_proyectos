@@ -4,7 +4,12 @@ from knox.models import AuthToken
 from rest_framework import viewsets, generics, permissions, serializers
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
-from .api_serializers import UsuarioSerializer, LoginUserSerializer, UserSerializer
+from .api_serializers import (
+    UsuarioSerializer,
+    LoginUserSerializer,
+    UserSerializer,
+    UsuarioConDetalleSerializer
+)
 from permisos.api_serializers import PermissionSerializer
 
 
@@ -13,6 +18,8 @@ class UsuarioViewSet(viewsets.ModelViewSet):
         'colaborador',
         'colaborador__cargo',
         'colaborador__centro_costo'
+    ).prefetch_related(
+        'groups',
     ).all()
     serializer_class = UsuarioSerializer
 
@@ -21,6 +28,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):
         qs = self.get_queryset().filter(
             id=request.user.id
         ).distinct()
+        self.serializer_class = UsuarioConDetalleSerializer
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 

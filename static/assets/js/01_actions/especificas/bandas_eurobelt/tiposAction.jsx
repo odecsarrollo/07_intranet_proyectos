@@ -4,7 +4,7 @@ import {
     updateObject,
     fetchObject,
     deleteObject,
-    createObject,
+    createObject, callApiMethodPostParameters,
 } from '../../00_general_fuctions'
 
 const current_url_api = 'banda_eurobelt_tipos';
@@ -24,6 +24,17 @@ export const deleteBandaEurobeltTipo = (id, options_action = {}) => {
         };
         const options = {dispatches, ...options_action, dispatch_method: dispatch};
         return deleteObject(current_url_api, id, options);
+    }
+};
+export const adicionarQuitarCategoriaProductoBandaEurobeltTipo = (id, categoria_producto_id, options_action = {}) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        params.append('categoria_producto_id', categoria_producto_id);
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: response})
+        };
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'adicionar_quitar_categoria_producto', params, options)
     }
 };
 export const fetchBandaEurobeltTipos = (options_action = {}) => {

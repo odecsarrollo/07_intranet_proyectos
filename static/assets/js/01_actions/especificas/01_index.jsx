@@ -36,7 +36,7 @@ export * from './bandas_eurobelt/coloresAction';
 export * from './bandas_eurobelt/tiposAction';
 export * from './bandas_eurobelt/seriesAction';
 export * from './bandas_eurobelt/materialesAction';
-export * from './bandas_eurobelt/categoriasAction';
+export * from './bandas_eurobelt/categoriasDosAction';
 export * from './bandas_eurobelt/componentesAction';
 
 export * from './catalogos_productos/itemsVentasAction';

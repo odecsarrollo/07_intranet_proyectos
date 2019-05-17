@@ -1,25 +1,21 @@
 from django.db import models
 
-from bandas_eurobelt.managers import ComponenteManager
 from cguno.models import ItemsBiable
 from importaciones.models import MonedaCambio
+from items.models import CategoriaProducto
 
 
-class CategoriaComponenteBandaEurobelt(models.Model):
-    nombre = models.CharField(max_length=100, unique=True)
-    nomenclatura = models.CharField(max_length=4, unique=True)
-    moneda = models.ForeignKey(MonedaCambio, on_delete=models.PROTECT, related_name="categorias_bandas_eurobelt")
-    factor_importacion = models.DecimalField(max_digits=18, decimal_places=3, default=1)
-    factor_importacion_aereo = models.DecimalField(max_digits=18, decimal_places=3, default=0)
-    margen_deseado = models.DecimalField(
-        max_digits=18,
-        decimal_places=3,
-        default=0
+class ConfiguracionNombreAutomatico(models.Model):
+    categoria = models.OneToOneField(
+        CategoriaProducto,
+        on_delete=models.PROTECT,
+        null=True,
+        related_name='nombre_automatico_erobelt'
     )
     nombre_con_categoria_uno = models.BooleanField(default=False)
     nombre_con_categoria_dos = models.BooleanField(default=False)
-    nombre_con_serie = models.BooleanField(default=False)
     nombre_con_tipo = models.BooleanField(default=False)
+    nombre_con_serie = models.BooleanField(default=False)
     nombre_con_material = models.BooleanField(default=False)
     nombre_con_color = models.BooleanField(default=False)
     nombre_con_ancho = models.BooleanField(default=False)
@@ -27,48 +23,66 @@ class CategoriaComponenteBandaEurobelt(models.Model):
     nombre_con_longitud = models.BooleanField(default=False)
     nombre_con_diametro = models.BooleanField(default=False)
 
-    def __str__(self):
-        return self.nombre
+
+class CategoriaDosComponenteBandaEurobelt(models.Model):
+    nombre = models.CharField(max_length=120, unique=True)
+    nomenclatura = models.CharField(max_length=4, unique=True)
+
+    categorias = models.ManyToManyField(CategoriaProducto, related_name='categorias_dos_eurobelt')
+
+    class Meta:
+        permissions = [
+            ("list_categoriadoscomponentebandaeurobelt", "Can see list categorias dos eurobelt"),
+        ]
 
 
 class MaterialBandaEurobelt(models.Model):
     nombre = models.CharField(max_length=100, unique=True)
     nomenclatura = models.CharField(max_length=4, unique=True)
 
-    def __str__(self):
-        return self.nombre
+    class Meta:
+        permissions = [
+            ("list_materialbandaeurobelt", "Can see list materiales bandas eurobelt"),
+        ]
 
 
 class TipoBandaBandaEurobelt(models.Model):
     nombre = models.CharField(max_length=100, unique=True)
     nomenclatura = models.CharField(max_length=4, unique=True)
+    categorias = models.ManyToManyField(CategoriaProducto, related_name='tipos_eurobelt')
 
-    def __str__(self):
-        return self.nombre
+    class Meta:
+        permissions = [
+            ("list_tipobandabandaeurobelt", "Can see list tipos bandas eurobelt"),
+        ]
 
 
 class ColorBandaEurobelt(models.Model):
     nombre = models.CharField(max_length=100, unique=True)
     nomenclatura = models.CharField(max_length=4, unique=True)
 
-    def __str__(self):
-        return self.nombre
+    class Meta:
+        permissions = [
+            ("list_colorbandaeurobelt", "Can see list colores bandas eurobelt"),
+        ]
 
 
 class SerieBandaEurobelt(models.Model):
     nombre = models.CharField(max_length=100, unique=True)
     nomenclatura = models.CharField(max_length=4, unique=True)
 
-    def __str__(self):
-        return self.nombre
+    class Meta:
+        permissions = [
+            ("list_seriebandaeurobelt", "Can see list series bandas eurobelt"),
+        ]
 
 
 class ComponenteBandaEurobelt(models.Model):
     referencia = models.CharField(max_length=100, null=True)
     descripcion_adicional = models.CharField(max_length=100, null=True)
     material = models.ForeignKey(MaterialBandaEurobelt, on_delete=models.PROTECT, related_name='componentes')
-    categoria = models.ForeignKey(
-        CategoriaComponenteBandaEurobelt,
+    categoria_dos = models.ForeignKey(
+        CategoriaDosComponenteBandaEurobelt,
         on_delete=models.PROTECT,
         related_name='componentes'
     )
@@ -82,7 +96,6 @@ class ComponenteBandaEurobelt(models.Model):
     diametro_varilla = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     item_cguno = models.ForeignKey(ItemsBiable, null=True, on_delete=models.PROTECT, related_name='componente_banda')
     costo = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    objects = ComponenteManager()
 
     def __str__(self):
         nombre = self.referencia
@@ -93,6 +106,11 @@ class ComponenteBandaEurobelt(models.Model):
         if self.color.nombre:
             nombre = '%s %s' % (nombre, self.color.nombre)
         return nombre
+
+    class Meta:
+        permissions = [
+            ("list_componentebandaeurobelt", "Can see list componentes bandas eurobelt"),
+        ]
 
 
 class GrupoEnsambladoBandaEurobelt(models.Model):

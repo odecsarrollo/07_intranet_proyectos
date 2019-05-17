@@ -31,10 +31,18 @@ class ItemsDashboard extends Component {
         this.cargarElementos(slideIndex)
     }
 
+    componentWillUnmount() {
+        this.props.clearBandaEurobeltCategorias();
+        this.props.clearBandaEurobeltTipos();
+        this.props.clearItemsVentasCatalogos();
+    }
+
     cargarElementos(value = null) {
         let index = value !== null ? value : this.state.slideIndex;
         if (index === 0) {
-            this.props.fetchCategoriasProductos();
+            const cargarCategoriasDos = () => this.props.fetchBandaEurobeltCategorias();
+            const cargarTipos = () => this.props.fetchBandaEurobeltTipos({callback: cargarCategoriasDos});
+            this.props.fetchCategoriasProductos({callback: cargarTipos});
         } else if (index === 1) {
             this.props.fetchItemsVentasCatalogos();
         }
@@ -103,6 +111,8 @@ class ItemsDashboard extends Component {
 function mapPropsToState(state, ownProps) {
     return {
         mis_permisos: state.mis_permisos,
+        tipos: state.banda_eurobelt_tipos,
+        categorias_dos: state.banda_eurobelt_categorias_dos,
         proveedores_importaciones: state.proveedores_importaciones,
         margenes_proveedores: state.margenes_proveedores,
         categorias_productos: state.categorias_productos,

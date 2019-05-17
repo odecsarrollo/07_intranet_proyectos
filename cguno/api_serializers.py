@@ -47,7 +47,6 @@ class ColaboradorBiableSerializer(serializers.ModelSerializer):
             'porcentaje_prestaciones_sociales',
             'base_salario',
             'auxilio_transporte',
-            'literales_autorizados',
         ]
         extra_kwargs = {'literales_autorizados': {'read_only': True}}
 

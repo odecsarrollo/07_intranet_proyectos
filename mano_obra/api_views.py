@@ -16,8 +16,8 @@ from .models import (
 from .api_serializers import (
     HoraHojaTrabajoSerializer,
     HojaTrabajoDiarioSerializer,
-    HoraTrabajoColaboradorLiteralInicialSerializer
-)
+    HoraTrabajoColaboradorLiteralInicialSerializer,
+    HojaTrabajoDiarioConDetalleSerializer)
 
 from cguno.models import ColaboradorCostoMesBiable
 
@@ -30,6 +30,7 @@ class HojaTrabajoDiarioViewSet(viewsets.ModelViewSet):
         'colaborador',
     ).prefetch_related(
         'mis_horas_trabajadas',
+        'mis_horas_trabajadas',
         'mis_horas_trabajadas__literal',
         'mis_horas_trabajadas__literal__proyecto',
     ).annotate(
@@ -39,6 +40,10 @@ class HojaTrabajoDiarioViewSet(viewsets.ModelViewSet):
                                          output_field=DecimalField(max_digits=4))
     ).all()
     serializer_class = HojaTrabajoDiarioSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        self.serializer_class = HojaTrabajoDiarioConDetalleSerializer
+        return super().retrieve(request, *args, **kwargs)
 
     def perform_create(self, serializer):
         instance = serializer.save(creado_por=self.request.user)

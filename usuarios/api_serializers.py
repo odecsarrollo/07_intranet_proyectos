@@ -6,7 +6,6 @@ from cguno.api_serializers import ColaboradorBiableSerializer
 
 
 class UsuarioSerializer(serializers.ModelSerializer):
-    colaborador = ColaboradorBiableSerializer(many=False, read_only=True)
     to_string = serializers.SerializerMethodField()
 
     def get_to_string(self, instance):
@@ -36,6 +35,10 @@ class UsuarioSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
+
+
+class UsuarioConDetalleSerializer(UsuarioSerializer):
+    colaborador = ColaboradorBiableSerializer(many=False, read_only=True)
 
 
 class LoginUserSerializer(serializers.Serializer):

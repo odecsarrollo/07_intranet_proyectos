@@ -1,4 +1,7 @@
 from rest_framework import viewsets
+from rest_framework.decorators import detail_route
+from rest_framework.response import Response
+
 from .models import (
     TipoBandaBandaEurobelt,
     MaterialBandaEurobelt,
@@ -6,7 +9,8 @@ from .models import (
     SerieBandaEurobelt,
     ComponenteBandaEurobelt,
     GrupoEnsambladoBandaEurobelt,
-    CategoriaComponenteBandaEurobelt
+    ConfiguracionNombreAutomatico,
+    CategoriaDosComponenteBandaEurobelt
 )
 from .api_serializers import (
     TipoBandaSerializer,
@@ -15,20 +19,67 @@ from .api_serializers import (
     SerieSerializer,
     ComponenteSerializer,
     GrupoEnsambladoSerializer,
-    CategoriaSerializer
+    ConfiguracionNombreAutomaticoSerializer,
+    CategoriaDosSerializer,
+    CategoriaDosConDetalleSerializer
 )
 
 
-class CategoriaViewSet(viewsets.ModelViewSet):
-    queryset = CategoriaComponenteBandaEurobelt.objects.select_related(
-        'moneda'
-    ).all()
-    serializer_class = CategoriaSerializer
+class CategoriaDosViewSet(viewsets.ModelViewSet):
+    queryset = CategoriaDosComponenteBandaEurobelt.objects.prefetch_related('categorias').all()
+    serializer_class = CategoriaDosSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        self.serializer_class = CategoriaDosConDetalleSerializer
+        return super().retrieve(request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        self.serializer_class = CategoriaDosConDetalleSerializer
+        return super().update(request, *args, **kwargs)
+
+    @detail_route(methods=['post'])
+    def adicionar_quitar_categoria_producto(self, request, pk=None):
+        from .services import categoria_dos_adicionar_quitar_relacion_categoria_producto
+        categoria_dos = self.get_object()
+        categoria_producto_id = self.request.POST.get('categoria_producto_id', None)
+        categoria_dos = categoria_dos_adicionar_quitar_relacion_categoria_producto(
+            categoria_dos_id=categoria_dos.id,
+            categoria_producto_id=categoria_producto_id
+        )
+        self.serializer_class = CategoriaDosConDetalleSerializer
+        serializer = self.get_serializer(categoria_dos)
+        return Response(serializer.data)
+
+
+class ConfiguracionNombreAutomaticoViewSet(viewsets.ModelViewSet):
+    queryset = ConfiguracionNombreAutomatico.objects.all()
+    serializer_class = ConfiguracionNombreAutomaticoSerializer
 
 
 class TipoBandaViewSet(viewsets.ModelViewSet):
-    queryset = TipoBandaBandaEurobelt.objects.all()
+    queryset = TipoBandaBandaEurobelt.objects.prefetch_related('categorias').all()
     serializer_class = TipoBandaSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        self.serializer_class = CategoriaDosConDetalleSerializer
+        return super().retrieve(request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        self.serializer_class = CategoriaDosConDetalleSerializer
+        return super().update(request, *args, **kwargs)
+
+    @detail_route(methods=['post'])
+    def adicionar_quitar_categoria_producto(self, request, pk=None):
+        from .services import tipos_banda_adicionar_quitar_relacion_categoria_producto
+        tipo_banda = self.get_object()
+        categoria_producto_id = self.request.POST.get('categoria_producto_id', None)
+        tipo_banda = tipos_banda_adicionar_quitar_relacion_categoria_producto(
+            tipo_banda_id=tipo_banda.id,
+            categoria_producto_id=categoria_producto_id
+        )
+        self.serializer_class = CategoriaDosConDetalleSerializer
+        serializer = self.get_serializer(tipo_banda)
+        return Response(serializer.data)
 
 
 class MaterialViewSet(viewsets.ModelViewSet):
@@ -49,7 +100,7 @@ class SerieViewSet(viewsets.ModelViewSet):
 class ComponenteViewSet(viewsets.ModelViewSet):
     queryset = ComponenteBandaEurobelt.objects.select_related(
         'tipo_banda',
-        'categoria',
+        'categoria_dos',
         'color',
         'material'
     ).prefetch_related(

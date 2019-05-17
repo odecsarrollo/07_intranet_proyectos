@@ -7,7 +7,7 @@ import ReactTable from "react-table";
 class Tabla extends React.Component {
     render() {
 
-        const data = this.props.data;
+        const data = _.orderBy(this.props.data, ['nombre'], ['asc']);
         const {
             singular_name,
             onDelete,
@@ -77,7 +77,7 @@ class Tabla extends React.Component {
                         ]
                     }
                 ]}
-                defaultPageSize={10}
+                defaultPageSize={20}
                 className="-striped -highlight tabla-maestra"
             />
         );

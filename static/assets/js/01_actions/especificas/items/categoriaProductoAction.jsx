@@ -4,7 +4,7 @@ import {
     updateObject,
     fetchObject,
     deleteObject,
-    createObject,
+    createObject, callApiMethodPostParameters,
 } from '../../00_general_fuctions'
 
 const current_url_api = 'items_categorias_productos';
@@ -40,6 +40,31 @@ export const fetchCategoriasProductos = (options_action = {}) => {
         return fetchListGet(current_url_api, options);
     }
 };
+
+export const adicionarQuitarTipoBandaCategoriaProducto = (id, tipo_banda_id, options_action = {}) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        params.append('tipo_banda_id', tipo_banda_id);
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: response})
+        };
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'adicionar_quitar_tipo_banda_eurobelt', params, options)
+    }
+};
+
+export const adicionarQuitarCategoriaDosCategoriaProducto = (id, categoria_dos_id, options_action = {}) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        params.append('categoria_dos_id', categoria_dos_id);
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: response})
+        };
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'adicionar_quitar_categoria_dos_banda_eurobelt', params, options)
+    }
+};
+
 export const fetchCategoriaProducto = (id, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {

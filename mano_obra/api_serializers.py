@@ -70,7 +70,6 @@ class HojaTrabajoDiarioSerializer(serializers.ModelSerializer):
     fecha = serializers.DateTimeField(format="%Y-%m-%d", input_formats=['%Y-%m-%d', 'iso-8601'])
     cantidad_horas = serializers.DecimalField(decimal_places=4, max_digits=12, read_only=True)
     costo_total = serializers.DecimalField(decimal_places=4, max_digits=12, read_only=True)
-    mis_horas_trabajadas = HoraHojaTrabajoSerializer(many=True, read_only=True)
 
     to_string = serializers.SerializerMethodField()
 
@@ -92,6 +91,10 @@ class HojaTrabajoDiarioSerializer(serializers.ModelSerializer):
             'mis_horas_trabajadas',
             'to_string',
         ]
+
+
+class HojaTrabajoDiarioConDetalleSerializer(HojaTrabajoDiarioSerializer):
+    mis_horas_trabajadas = HoraHojaTrabajoSerializer(many=True, read_only=True)
 
 
 class HoraTrabajoColaboradorLiteralInicialSerializer(serializers.ModelSerializer):

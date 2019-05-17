@@ -128,7 +128,7 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
             literal__proyecto__id_proyecto=OuterRef('id_proyecto')
         )
 
-        qs = Proyecto.objects.prefetch_related(
+        qs = self.queryset.prefetch_related(
             'mis_literales'
         ).annotate(
             costo_mano_obra=Coalesce(

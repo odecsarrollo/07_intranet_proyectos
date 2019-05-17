@@ -7,7 +7,7 @@ import ReactTable from "react-table";
 class Tabla extends React.Component {
     render() {
 
-        const data = this.props.data;
+        const data = _.orderBy(this.props.data, ['nombre'], ['asc']);
         const {
             singular_name,
             onDelete,
@@ -42,29 +42,6 @@ class Tabla extends React.Component {
                                 filterable: true,
                                 filterMethod: (filter, row) => row.value.includes(filter.value.toUpperCase()),
                                 Cell: row => `${row.value}`
-                            },
-                            {
-                                Header: "Moneda",
-                                maxWidth: 110,
-                                accessor: "moneda_nombre"
-                            },
-                            {
-                                Header: "Márgen Deseado",
-                                maxWidth: 110,
-                                accessor: "margen_deseado",
-                                Cell: row => `${parseFloat(row.value).toFixed(1)}%`
-                            },
-                            {
-                                Header: "Fact. Imp.",
-                                maxWidth: 110,
-                                accessor: "factor_importacion",
-                                Cell: row => `${parseFloat(row.value).toFixed(2)}`
-                            },
-                            {
-                                Header: "Fact. Imp. Aereo",
-                                maxWidth: 110,
-                                accessor: "factor_importacion_aereo",
-                                Cell: row => `${parseFloat(row.value).toFixed(2)}`
                             }
                         ]
                     },
@@ -100,7 +77,7 @@ class Tabla extends React.Component {
                         ]
                     }
                 ]}
-                defaultPageSize={10}
+                defaultPageSize={20}
                 className="-striped -highlight tabla-maestra"
             />
         );

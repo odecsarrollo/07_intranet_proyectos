@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from intranet_proyectos.general_mixins.custom_serializer_mixins import CustomSerializerMixin
 from .models import (
     TipoBandaBandaEurobelt,
     MaterialBandaEurobelt,
@@ -7,30 +8,27 @@ from .models import (
     SerieBandaEurobelt,
     ComponenteBandaEurobelt,
     GrupoEnsambladoBandaEurobelt,
-    CategoriaComponenteBandaEurobelt
+    ConfiguracionNombreAutomatico,
+    CategoriaDosComponenteBandaEurobelt
 )
 
+from items.api_serializers import CategoriaProductoSerializer
 
-class CategoriaSerializer(serializers.ModelSerializer):
+
+class ConfiguracionNombreAutomaticoSerializer(serializers.ModelSerializer):
+    categoria_nombre = serializers.CharField(source='categoria.nombre', read_only=True)
     to_string = serializers.SerializerMethodField()
-    moneda_nombre = serializers.CharField(source='moneda.nombre', read_only=True)
 
     def get_to_string(self, instance):
-        return instance.nombre
+        return 'Nombre automático para categoría %s' % instance.categoria.nombre
 
     class Meta:
-        model = CategoriaComponenteBandaEurobelt
+        model = ConfiguracionNombreAutomatico
         fields = [
             'url',
             'id',
-            'nombre',
-            'moneda',
-            'moneda_nombre',
-            'factor_importacion',
-            'factor_importacion_aereo',
-            'margen_deseado',
-            'to_string',
-            'nomenclatura',
+            'categoria',
+            'categoria_nombre',
             'nombre_con_categoria_uno',
             'nombre_con_categoria_dos',
             'nombre_con_serie',
@@ -44,7 +42,33 @@ class CategoriaSerializer(serializers.ModelSerializer):
         ]
 
 
-class TipoBandaSerializer(serializers.ModelSerializer):
+class CategoriaDosSerializer(CustomSerializerMixin, serializers.ModelSerializer):
+    to_string = serializers.SerializerMethodField()
+
+    def get_to_string(self, instance):
+        return instance.nombre
+
+    class Meta:
+        model = CategoriaDosComponenteBandaEurobelt
+        fields = [
+            'url',
+            'id',
+            'nombre',
+            'to_string',
+            'nomenclatura',
+            'categorias',
+        ]
+        extra_kwargs = {'categorias': {'read_only': True}}
+
+
+class CategoriaDosConDetalleSerializer(CategoriaDosSerializer):
+    categorias = CategoriaProductoSerializer(
+        many=True, read_only=True,
+        context={'quitar_campos': ['categorias_dos_eurobelt', 'tipos_eurobelt']}
+    )
+
+
+class TipoBandaSerializer(CustomSerializerMixin, serializers.ModelSerializer):
     to_string = serializers.SerializerMethodField()
 
     def get_to_string(self, instance):
@@ -57,8 +81,18 @@ class TipoBandaSerializer(serializers.ModelSerializer):
             'id',
             'nombre',
             'to_string',
+            'categorias',
             'nomenclatura',
         ]
+        extra_kwargs = {'categorias': {'read_only': True}}
+
+
+class TipoBandaConDetalleSerializer(TipoBandaSerializer):
+    categorias = CategoriaProductoSerializer(
+        many=True,
+        read_only=True,
+        context={'quitar_campos': ['categorias_dos_eurobelt', 'tipos_eurobelt']}
+    )
 
 
 class MaterialSerializer(serializers.ModelSerializer):
