@@ -75,6 +75,7 @@ class HojaTrabajoDiarioSerializer(serializers.ModelSerializer):
 
     def get_to_string(self, instance):
         # Prueba cambio código
+        # Prueba cambio código 2
         return instance.colaborador.full_name
 
     class Meta:
