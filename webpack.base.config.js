@@ -6,27 +6,23 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, './static/assets/bundles/'),
-        filename: "[name].js"
+        filename: "[name]-[hash].js"
     },
     plugins: [],
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.jsx$/,
-                loader: 'babel-loader',
-                exclude: '/node_modules/'
-            },
-            {
-                test: /\.json$/,
-                loader: 'json-loader'
+                exclude: /node_modules/,
+                use: ['babel-loader'],
             },
             {
                 test: /\.(gif|ttf|eot|svg|woff2?)$/,
-                loader: 'url-loader?name=[name].[ext]'
-            },
+                use: ['url-loader?name=[name].[ext]'],
+            }
         ]
     },
     resolve: {
-        extensions: ['.js', '.jsx']
-    }
+        extensions: ['*', '.js', '.jsx']
+    },
 };
