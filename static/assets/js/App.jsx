@@ -7,6 +7,8 @@ import thunk from 'redux-thunk';
 import reducers from './02_reducers/index';
 import {Notify} from 'react-redux-notify';
 import {connect} from "react-redux";
+import {hot} from 'react-hot-loader';
+
 import * as actions from "./01_actions/01_index";
 
 import 'react-redux-notify/dist/ReactReduxNotify.css';
@@ -216,7 +218,7 @@ function mapPropsToState(state, ownProps) {
     }
 }
 
-let RootContainer = connect(mapPropsToState, actions)(RootContainerComponent);
+let RootContainer = hot(module)(connect(mapPropsToState, actions)(RootContainerComponent));
 
 export default class App extends Component {
     render() {
