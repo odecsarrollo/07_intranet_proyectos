@@ -1,17 +1,16 @@
 import React, {Fragment, Component} from 'react';
 import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
 import {Provider} from 'react-redux';
-import {createStore, applyMiddleware} from 'redux';
+import {createStore, applyMiddleware, combineReducers} from 'redux';
 import ReduxPromise from 'redux-promise';
 import thunk from 'redux-thunk';
 import reducers from './02_reducers/index';
-import {Notify} from 'react-redux-notify';
 import {connect} from "react-redux";
 import {hot} from 'react-hot-loader';
+import Notification from './00_utilities/components/system/Notifications';
 
 import * as actions from "./01_actions/01_index";
 
-import 'react-redux-notify/dist/ReactReduxNotify.css';
 import "react-table/react-table.css";
 import 'react-widgets/dist/css/react-widgets.css';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -196,7 +195,7 @@ class RootContainerComponent extends Component {
         return (
             <BrowserRouter>
                 <Fragment>
-                    <Notify/>
+                    <Notification/>
                     <Switch>
                         <PrivateRoute exact path='/' component={AppIndex}/>
                         <PrivateRoute exact path='/app' component={AppIndex}/>

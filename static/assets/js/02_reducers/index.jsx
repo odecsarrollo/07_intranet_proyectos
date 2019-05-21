@@ -1,6 +1,5 @@
 import {combineReducers} from 'redux';
 import {reducer as formReducer} from 'redux-form';
-import NotifyReducer from 'react-redux-notify';
 import misPermisosReducer from './generales/permisos/misPermisosReducer';
 import gruposPermisosReducer from './generales/permisos/gruposPermisosReducer';
 import permisosReducer from './generales/permisos/permisosReducer';
@@ -62,6 +61,8 @@ import componentesReducer from './especificas/bandas_eurobelt/componentesReducer
 
 import itemVentasCatalogosProductosReducer from './especificas/catalogos_productos/itemsVentasReducer';
 
+import {reducer as notificationsReducers} from 'react-notification-system-redux';
+
 const rootReducer = combineReducers({
     menu_status: menuReducer,
     mis_permisos: misPermisosReducer,
@@ -70,7 +71,7 @@ const rootReducer = combineReducers({
     mi_cuenta: miCuentaReducer,
     usuarios: usuariosReducer,
     esta_cargando: loadingReducer,
-    notifications: NotifyReducer,
+    notifications: notificationsReducers,
     form: formReducer,
     auth,
     proyectos: proyectosReducer,

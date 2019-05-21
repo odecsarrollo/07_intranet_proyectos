@@ -32,7 +32,7 @@ export function createRequest(request, options = {}) {
             }
             if (dispatch_method) {
                 if (response.data && response.data.result) {
-                    dispatch_method(actions.notificarAction(response.data.result));
+                    dispatch_method(actions.notificarAction(response.data.result, 'success', 5, mensaje_cargando));
                 }
                 dispatch_method(actions.noCargando())
             }
@@ -72,8 +72,7 @@ export function createRequest(request, options = {}) {
                             console.log(error.response)
                         }
                     }
-                }
-                else if (!error.response) {
+                } else if (!error.response) {
                     if (error.message === 'Network Error') {
                         dispatch_method(actions.mostrar_error_loading(error.stack, 'Error de red'))
                     } else {
