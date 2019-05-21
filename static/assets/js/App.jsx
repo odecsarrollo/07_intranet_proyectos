@@ -170,6 +170,7 @@ import AppAdmin from './03_app_admin/App';
 import AppProyectos from './04_app_proyectos/App';
 import AppVentas from './05_app_ventas/App';
 import AppBandas from './06_app_bandas/App';
+import AppMedios from './07_app_medios/App';
 import Login from './authentication/login/containers/login';
 
 
@@ -204,6 +205,7 @@ class RootContainerComponent extends Component {
                         <PrivateRoute path='/app/proyectos' component={AppProyectos}/>
                         <PrivateRoute path='/app/ventas' component={AppVentas}/>
                         <PrivateRoute path='/app/bandas' component={AppBandas}/>
+                        <PrivateRoute path='/app/medios' component={AppMedios}/>
                     </Switch>
                 </Fragment>
             </BrowserRouter>

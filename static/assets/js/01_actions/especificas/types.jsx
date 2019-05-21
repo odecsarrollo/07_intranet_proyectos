@@ -1,3 +1,13 @@
+export const ETIQUETA_MEDIOS_TYPES = {
+    create: 'create_etiqueta_medios',
+    delete: 'delete_etiqueta_medios',
+    fetch_all: 'fetch_etiquetas_medios',
+    fetch: 'fetch_etiqueta_medios',
+    clear: 'clear_etiquetas_medios',
+    update: 'update_etiqueta_medios',
+};
+
+
 export const ITEM_VENTA_CATALOGO_TYPES = {
     create: 'create_item_venta_catalogo',
     delete: 'delete_item_venta_catalogo',

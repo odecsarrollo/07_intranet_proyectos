@@ -67,6 +67,12 @@ class IndexApp extends Component {
                             icono='puzzle-piece'
                             classes={classes}
                         />
+                        <Boton
+                            nombre='Medios'
+                            link='/app/medios/'
+                            icono='desktop'
+                            classes={classes}
+                        />
                         <div className="col-4">
 
                         </div>

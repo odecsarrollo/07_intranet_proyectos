@@ -61,6 +61,8 @@ import componentesReducer from './especificas/bandas_eurobelt/componentesReducer
 
 import itemVentasCatalogosProductosReducer from './especificas/catalogos_productos/itemsVentasReducer';
 
+import mediosEtiquetasReducers from './especificas/medios/etiquetasReducers';
+
 import {reducer as notificationsReducers} from 'react-notification-system-redux';
 
 const rootReducer = combineReducers({
@@ -121,6 +123,8 @@ const rootReducer = combineReducers({
 
 
     catalogos_productos_items_ventas: itemVentasCatalogosProductosReducer,
+
+    medios_etiquetas : mediosEtiquetasReducers   
 });
 
 export default rootReducer;
