@@ -6,8 +6,13 @@ from cotizaciones.models import Cotizacion
 
 
 class Proyecto(models.Model):
-    cotizacion = models.OneToOneField(Cotizacion, on_delete=models.SET_NULL, related_name='mi_proyecto', null=True,
-                                      blank=True)
+    cotizacion = models.OneToOneField(
+        Cotizacion,
+        on_delete=models.SET_NULL,
+        related_name='mi_proyecto',
+        null=True,
+        blank=True
+    )
     id_proyecto = models.CharField(max_length=15, unique=True)
     fecha_prometida = models.DateField(null=True, blank=True)
     abierto = models.BooleanField(default=True)
