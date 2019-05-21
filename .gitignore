@@ -1,6 +1,7 @@
 db.sqlite3
 .idea/*
 /secretsLocal.json
+/webpack-stats-local.json
 /cositas.txt
 /node_modules
 media/*
