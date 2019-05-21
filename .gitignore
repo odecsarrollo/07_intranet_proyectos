@@ -4,14 +4,11 @@ db.sqlite3
 /cositas.txt
 /node_modules
 media/*
+/webpack-stats.json
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
 .npmrc
 # Binary Files
-*/__pycache__/*
-*/migrations/*
-*/management/*
-*/settings/*
-*/general_mixins/*
+**/__pycache__/*
