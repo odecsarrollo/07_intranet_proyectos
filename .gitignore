@@ -9,3 +9,9 @@ media/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
 .npmrc
+# Binary Files
+*/__pycache__/*
+*/migrations/*
+*/management/*
+*/settings/*
+*/general_mixins/*
