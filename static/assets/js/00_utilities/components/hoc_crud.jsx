@@ -25,7 +25,7 @@ function crudHOC(CreateForm, Tabla) {
             } else {
                 const callback = () => {
                     const {to_string} = item;
-                    notificarAction(`Se ha eliminado con éxito ${singular_name.toLowerCase()} ${to_string}`);
+                    notificarAction(`Se ha eliminado con éxito ${singular_name.toLowerCase()} ${to_string}`, 'success', 5, 'Eliminación Exitosa');
                     this.setState({modal_open: false, item_seleccionado: null});
                     if (posDeleteMethod) {
                         posDeleteMethod(item);
@@ -39,7 +39,7 @@ function crudHOC(CreateForm, Tabla) {
             const {method_pool, notificarAction, singular_name, posCreateMethod = null, posUpdateMethod = null} = this.props;
             const callback = (response) => {
                 const {to_string} = response;
-                notificarAction(`Se ha ${item.id ? 'actualizado' : 'creado'} con éxito ${singular_name.toLowerCase()} ${to_string}`);
+                notificarAction(`Se ha ${item.id ? 'actualizado' : 'creado'} con éxito ${singular_name.toLowerCase()} ${to_string}`, 'success', 5, item.id ? 'Actualizacion Exitosa' : 'Creación Exitosa');
                 this.setState({modal_open: !cerrar_modal, item_seleccionado: cerrar_modal ? null : response});
 
                 if (item.id && posUpdateMethod) {
