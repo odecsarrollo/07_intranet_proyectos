@@ -33,6 +33,6 @@ DATABASES = {
 WEBPACK_LOADER = {
     'DEFAULT': {
         'BUNDLE_DIR_NAME': 'assets/bundles/deve/',
-        'STATS_FILE': os.path.join(SITE_ROOT, 'webpack-stats.json'),
+        'STATS_FILE': os.path.join(SITE_ROOT, 'webpack-stats-local.json'),
     }
 }
