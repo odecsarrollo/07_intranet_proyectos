@@ -1,7 +1,12 @@
 import React from 'react';
 import Notifications from 'react-notification-system-redux';
 
-export function notificarAction(mensaje, tipo = 'success', tiempo = 5, title = 'Información de Acción') {
+export function notificarAction(mensaje, options = {}) {
+    const {
+        tipo = 'success',
+        title = 'Información de Acción',
+        tiempo = 5
+    } = options;
     return function (dispatch) {
         const notificationOpts = {
             title,
@@ -13,7 +18,10 @@ export function notificarAction(mensaje, tipo = 'success', tiempo = 5, title = '
     }
 }
 
-export function notificarErrorAction(error, tiempo = 7) {
+export function notificarErrorAction(error, options = {}) {
+    const {
+        tiempo = 7
+    } = options;
     return function (dispatch) {
         const notificationOpts = {
             // uid: 'once-please', // you can specify your own uid if required
