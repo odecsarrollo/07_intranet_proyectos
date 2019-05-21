@@ -32,7 +32,7 @@ export function createRequest(request, options = {}) {
             }
             if (dispatch_method) {
                 if (response.data && response.data.result) {
-                    dispatch_method(actions.notificarAction(response.data.result, 'success', 5, mensaje_cargando));
+                    dispatch_method(actions.notificarAction(response.data.result, {title: mensaje_cargando}));
                 }
                 dispatch_method(actions.noCargando())
             }
