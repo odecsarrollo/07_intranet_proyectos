@@ -18,7 +18,7 @@ config.output.publicPath = 'http://localhost:3000/static/assets/bundles/deve/';
 config.output.path = path.resolve(__dirname, './static/assets/bundles/deve/');
 
 config.plugins = config.plugins.concat([
-    new BundleTracker({filename: './webpack-stats.json'}),
+    new BundleTracker({filename: './webpack-stats-local.json'}),
     new webpack.HotModuleReplacementPlugin(),
 ]);
 
