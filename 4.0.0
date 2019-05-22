@@ -1,4 +1,0 @@
-+ react-redux@6.0.1
-updated 1 package and audited 17338 packages in 8.805s
-found 49 vulnerabilities (6 low, 26 moderate, 16 high, 1 critical)
-  run `npm audit fix` to fix them, or `npm audit` for details

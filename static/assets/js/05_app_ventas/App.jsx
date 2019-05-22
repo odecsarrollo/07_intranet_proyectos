@@ -5,9 +5,9 @@ import DrawerMenu from '../00_utilities/components/ui/drawer/drawer_menu';
 
 import Menu from './00_menu/index';
 import AppIndex from './index';
-import CotizacionesList from './cotizaciones/cotizaciones/containers/cotizaciones_list_container';
-import CotizacionesDetail from './cotizaciones/cotizaciones/containers/cotizacion_detail';
-import InformeTunelVentas from './informes/tuberia_ventas/cuadro_tuberia_ventas';
+import CotizacionesList from './cotizaciones/cotizaciones/containers/CotizacionListContainer';
+import CotizacionesDetail from './cotizaciones/cotizaciones/containers/CotizacionDetail';
+import InformeTunelVentas from './informes/tuberia_ventas/CuadroTuberiaVentas';
 import ClientesList from "../03_app_admin/especificas/clientes/clientes/containers/ClienteContainer";
 import ClienteDetail from "../03_app_admin/especificas/clientes/clientes/containers/ClienteDetail";
 

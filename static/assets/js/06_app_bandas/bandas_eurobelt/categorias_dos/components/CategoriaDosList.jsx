@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import CreateForm from './forms/categoria_dos_form';
+import CreateForm from './forms/CategoriaDosForm';
 import Tabla from './CategoriaDosTabla';
 import crudHOC from '../../../../00_utilities/components/hoc_crud';
 

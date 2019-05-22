@@ -12,7 +12,7 @@ import {
     BANDA_EUROBELT_TIPOS as tipos_permisos_view,
     BANDA_EUROBELT_MATERIALES as materiales_permisos_view,
     BANDA_EUROBELT_SERIES as series_permisos_view,
-    BANDA_EUROBELT_CATEGORIAS_DOS as categorias_permisos_view,
+    BANDA_EUROBELT_CATEGORIAS_DOS as categorias_dos_permisos_view,
     BANDA_EUROBELT_COMPONENTES as componentes_permisos_view,
 } from "../../../../00_utilities/permisos/types";
 
@@ -87,7 +87,7 @@ class ItemsDashboard extends Component {
         const permisos_series = permisosAdapter(series_permisos_view);
         const permisos_colores = permisosAdapter(colores_permisos_view);
         const permisos_tipos = permisosAdapter(tipos_permisos_view);
-        const permisos_categorias = permisosAdapter(categorias_permisos_view);
+        const permisos_categorias_dos = permisosAdapter(categorias_dos_permisos_view);
         const permisos_componentes = permisosAdapter(componentes_permisos_view);
 
         const can_see = permisos_materiales.list ||
@@ -116,12 +116,7 @@ class ItemsDashboard extends Component {
                     slideIndex === 0 &&
                     <BloqueComponentes
                         object_list={componentes}
-                        tipos_list={tipos}
-                        materiales_list={materiales}
-                        colores_list={colores}
-                        series_list={series}
-                        categorias_list={categorias_dos}
-                        permisos_object={permisos_tipos}
+                        permisos_object={permisos_componentes}
                         {...this.props}
                     />
                 }
@@ -162,7 +157,7 @@ class ItemsDashboard extends Component {
                     slideIndex === 5 &&
                     <BloqueCategorias
                         object_list={categorias_dos}
-                        permisos_object={permisos_series}
+                        permisos_object={permisos_categorias_dos}
                         {...this.props}
                     />
                 }

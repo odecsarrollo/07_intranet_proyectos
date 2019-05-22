@@ -7,7 +7,7 @@ import {
     PROYECTOS as proyectos_permisos_view,
 } from "../../../../00_utilities/permisos/types";
 import {permisosAdapter} from "../../../../00_utilities/common";
-import Tabla from '../components/cotizaciones_tabla';
+import Tabla from '../components/CotizacionTabla';
 import crudHOC from '../../../../00_utilities/components/hoc_crud';
 
 const CRUD = crudHOC(null, Tabla);

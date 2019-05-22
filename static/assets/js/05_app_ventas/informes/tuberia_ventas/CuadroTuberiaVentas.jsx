@@ -8,7 +8,7 @@ import {
     COTIZACIONES as permisos_view
 } from "../../../00_utilities/permisos/types";
 
-import FormTuberiaVentas from './forms/tuberia_ventas_form'
+import FormTuberiaVentas from './forms/TuveriaVentaForm'
 
 class InformeTunelVentas extends Component {
     constructor(props) {

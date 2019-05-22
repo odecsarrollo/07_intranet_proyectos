@@ -18,11 +18,12 @@ class Form extends Component {
             handleSubmit,
             modal_open,
             singular_name,
-            tipos_list,
-            materiales_list,
-            colores_list,
-            series_list,
-            categorias_list
+            tipos,
+            materiales,
+            colores,
+            series,
+            categorias_dos,
+            categorias
         } = this.props;
         return (
             <MyFormTagModal
@@ -47,7 +48,7 @@ class Form extends Component {
                     name='serie'
                     busy={false}
                     autoFocus={false}
-                    data={_.map(_.orderBy(series_list, ['nombre'], ['asc']), e => {
+                    data={_.map(_.orderBy(series, ['nombre'], ['asc']), e => {
                         return {
                             'name': e.nombre,
                             'id': e.id
@@ -63,7 +64,7 @@ class Form extends Component {
                     name='tipo_banda'
                     busy={false}
                     autoFocus={false}
-                    data={_.map(_.orderBy(tipos_list, ['nombre'], ['asc']), e => {
+                    data={_.map(_.orderBy(tipos, ['nombre'], ['asc']), e => {
                         return {
                             'name': e.nombre,
                             'id': e.id
@@ -79,7 +80,7 @@ class Form extends Component {
                     name='material'
                     busy={false}
                     autoFocus={false}
-                    data={_.map(_.orderBy(materiales_list, ['nombre'], ['asc']), e => {
+                    data={_.map(_.orderBy(materiales, ['nombre'], ['asc']), e => {
                         return {
                             'name': e.nombre,
                             'id': e.id
@@ -92,10 +93,26 @@ class Form extends Component {
                 />
                 <MyCombobox
                     className="col-6"
+                    name='categoria'
+                    busy={false}
+                    autoFocus={false}
+                    data={_.map(_.orderBy(categorias, ['nombre'], ['asc']), e => {
+                        return {
+                            'name': e.nombre,
+                            'id': e.id
+                        }
+                    })}
+                    textField='name'
+                    filter='contains'
+                    valuesField='id'
+                    placeholder='Categoría'
+                />
+                <MyCombobox
+                    className="col-6"
                     name='color'
                     busy={false}
                     autoFocus={false}
-                    data={_.map(_.orderBy(colores_list, ['nombre'], ['asc']), e => {
+                    data={_.map(_.orderBy(colores, ['nombre'], ['asc']), e => {
                         return {
                             'name': e.nombre,
                             'id': e.id
@@ -111,7 +128,7 @@ class Form extends Component {
                     name='categoria'
                     busy={false}
                     autoFocus={false}
-                    data={_.map(_.orderBy(categorias_list, ['nombre'], ['asc']), e => {
+                    data={_.map(_.orderBy(categorias_dos, ['nombre'], ['asc']), e => {
                         return {
                             'name': e.nombre,
                             'id': e.id
