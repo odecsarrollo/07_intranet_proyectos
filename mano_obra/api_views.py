@@ -30,7 +30,6 @@ class HojaTrabajoDiarioViewSet(viewsets.ModelViewSet):
         'colaborador',
     ).prefetch_related(
         'mis_horas_trabajadas',
-        'mis_horas_trabajadas',
         'mis_horas_trabajadas__literal',
         'mis_horas_trabajadas__literal__proyecto',
     ).annotate(

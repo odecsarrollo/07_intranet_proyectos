@@ -34,7 +34,7 @@ class List extends Component {
     }
 
     render() {
-        const {object_list, mis_permisos} = this.props;
+        const {object_list} = this.props;
         const cotizaciones_permisos = permisosAdapter(permisos_view);
         const proyectos_permisos = permisosAdapter(proyectos_permisos_view);
         const method_pool = {
