@@ -74,8 +74,6 @@ class HojaTrabajoDiarioSerializer(serializers.ModelSerializer):
     to_string = serializers.SerializerMethodField()
 
     def get_to_string(self, instance):
-        # Prueba cambio código
-        # Prueba cambio código 2
         return instance.colaborador.full_name
 
     class Meta:
@@ -93,6 +91,7 @@ class HojaTrabajoDiarioSerializer(serializers.ModelSerializer):
             'mis_horas_trabajadas',
             'to_string',
         ]
+        extra_kwargs = {'mis_horas_trabajadas': {'read_only': True}}
 
 
 class HojaTrabajoDiarioConDetalleSerializer(HojaTrabajoDiarioSerializer):
