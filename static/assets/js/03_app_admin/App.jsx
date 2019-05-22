@@ -3,32 +3,31 @@ import {Route, Switch} from 'react-router-dom';
 import Loading from '../00_utilities/components/system/loading_overlay';
 import DrawerMenu from '../00_utilities/components/ui/drawer/drawer_menu';
 
-import Menu from './00_menu/index';
+import Menu from './00_menu/Menu';
 
 import App1 from "./index";
-import PermisosList from "./generales/permisos/containers/permisos_list";
-import GruposPermisosList from "./generales/permisos/containers/grupos_permisos_list";
-import UsuariosList from "./generales/usuarios/containers/usuarios_list_container";
+import PermisosList from "./generales/permisos/containers/PermisoList";
+import GruposPermisosList from "./generales/permisos/containers/GrupoPermisoList";
+import UsuariosList from "./generales/usuarios/containers/UsuarioListContainer";
 import ColaboradoresDashBoard
-    from "./especificas/cguno/colaboradores/colaboradores_dashboard/containers/colaboradores_dashboard";
+    from "./especificas/cguno/colaboradores/dashboard/containers/ColaboradorDashboard";
 import ColaboradoresDetail from "./especificas/cguno/colaboradores/colaboradores/containers/base_detail";
 import ColaboradoresCostosNominaList
-    from "./especificas/cguno/colaboradores/costos_nomina/containers/costos_nomina_list_container";
-import UsuariosDetail from "./generales/usuarios/containers/usuarios_detail";
-import ClientesList from "./especificas/clientes/clientes/containers/clientes_container";
-import ClientesDashboard from "./especificas/clientes/clientes_dashboard/containers/clientes_dashboard";
+    from "./especificas/cguno/colaboradores/costos_nomina/containers/CostoNominaListContainer";
+import UsuariosDetail from "./generales/usuarios/containers/UsuarioDetail";
+import ClientesList from "./especificas/clientes/clientes/containers/ClienteContainer";
+import ClientesDashboard from "./especificas/clientes/dashboard/containers/ClienteDashboard";
 import SistemaInformacionOrigenList
-    from "./especificas/sistemas_informacion_origen/containers/sistemas_informacion_origen_container";
+    from "./especificas/sistemas_informacion_origen/containers/SistemaInformacionOrigenContainer";
 import GeografiaList
-    from "./especificas/geografia/geografia_dashboard/containers/geografia_dashboard";
+    from "./especificas/geografia/dashboard/containers/GeografiaDashboard";
 
-
-import ConfiguracionCostosDashboard from "./especificas/configuraciones/containers/costos_dashboard";
-import ItemsDashboard from "./especificas/items/items_dashboard/containers/items_dashboard";
+import ConfiguracionCostosDashboard from "./especificas/configuraciones/containers/CostoDashboard";
+import ItemsDashboard from "./especificas/items/dashboard/containers/ItemDashboard";
 import ImportacionesDashboard
-    from "./especificas/importaciones/importaciones_dashboard/containers/importaciones_dashboard";
+    from "./especificas/importaciones/dashboard/containers/ImportacionDashboard";
 import ListasPreciosDashboard
-    from "./especificas/listas_precios/listas_precios_dashboard/containers/listas_precios_dashboard";
+    from "./especificas/listas_precios/dashboard/containers/ListaPrecioDashboard";
 
 
 class AdminApp extends Component {

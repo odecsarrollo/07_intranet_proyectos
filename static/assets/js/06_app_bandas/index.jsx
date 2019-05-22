@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import BandasEurobeltPropiedadesDashboard from './bandas_eurobelt/bandas_dashboard/containers/bandas_dashboard';
+import BandasEurobeltPropiedadesDashboard from './bandas_eurobelt/bandas_dashboard/containers/BandaDashboard';
 
 class App extends Component {
     render() {
