@@ -1,3 +1,12 @@
+export const ETIQUETA_MEDIOS_CATALOGOS = {
+    add: 'add_etiqueta',
+    delete: 'delete_etiqueta',
+    change: 'change_etiqueta',
+    list: 'list_etiqueta',
+    detail: 'view_etiqueta',
+};
+
+
 export const BANDA_EUROBELT_COMPONENTES = {
     add: 'add_componentebandaeurobelt',
     delete: 'delete_componentebandaeurobelt',

@@ -4,4 +4,4 @@ from .api_views import (
 )
 
 router = routers.DefaultRouter()
-router.register(r'etiquetas', EtiquetaViewSet)
+router.register(r'etiquetas_medios', EtiquetaViewSet)

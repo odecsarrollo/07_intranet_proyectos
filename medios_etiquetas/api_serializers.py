@@ -8,7 +8,7 @@ class EtiquetaSerializer(serializers.ModelSerializer):
     to_string = serializers.SerializerMethodField()
 
     def get_to_string(self, instance):
-        return instance.nombre
+        return instance.codigo
 
     class Meta:
         model = Etiqueta
