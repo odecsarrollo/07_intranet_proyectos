@@ -4,20 +4,30 @@ import {MyTextFieldSimple, MyFieldFileInput} from '../../../../00_utilities/comp
 import {connect} from "react-redux";
 import {MyFormTagModal} from '../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import validate from './validate';
-import {instanceOf} from "prop-types";
 
 class Form extends Component {
     constructor(props) {
         super(props);
         this.onChangeFile = this.onChangeFile.bind(this);
+        this.submitObject = this.submitObject.bind(this);
     }
 
     onChangeFile(f, v) {
         const archivo = v[0];
-        const nombre_archivo = archivo.name.split('.')[0];
-        console.log(archivo);
-        console.log(v[0]);
-        //this.props.change('nombre_archivo', nombre_archivo.toUpperCase());
+    }
+
+    submitObject(v){
+        const datos_formulario = _.omit(v, 'imagen');
+        let datos_a_subir = new FormData();
+        _.mapKeys(datos_formulario, (v, k) => {
+            datos_a_subir.append(k, v);
+        });
+        if (v.imagen) {
+            if (typeof v.imagen !== 'string') {
+                datos_a_subir.append('imagen', v.imagen[0]);
+            }
+        }
+        return datos_a_subir;
     }
 
     render() {
@@ -36,19 +46,9 @@ class Form extends Component {
             <MyFormTagModal
                 onCancel={onCancel}
                 fullScreen={false}
-                onSubmit={handleSubmit(v => {
-                    const datos_formulario = _.omit(v, 'imagen');
-                    let datos_a_subir = new FormData();
-                    _.mapKeys(datos_formulario, (v, k) => {
-                        datos_a_subir.append(k, v);
-                    });
-                    if (v.imagen) {
-                        if (typeof v.imagen !== 'string') {
-                            datos_a_subir.append('imagen', v.imagen[0]);
-                        }
-                    }
-                    onSubmit(datos_a_subir);
-                })}
+                onSubmit={handleSubmit(item => 
+                    onSubmit(this.submitObject(item))
+                )}
                 reset={reset}
                 initialValues={initialValues}
                 submitting={submitting}
@@ -67,18 +67,21 @@ class Form extends Component {
                         className="col-6"
                         nombre='Stock Minimo'
                         name='stock_min'
+                        type="number"
                         case='U'
                     />
                     <MyTextFieldSimple
                         className="col-6"
                         nombre='Alto'
                         name='alto'
+                        type="number"
                         case='U'
                     />
                     <MyTextFieldSimple
                         className="col-6"
                         nombre='Ancho'
                         name='ancho'
+                        type="number"
                         case='U'
                     />
                 </div>
@@ -95,7 +98,8 @@ class Form extends Component {
                 <div style={{paddingTop: '30px', paddingBottom: '30px'}}>
                     <MyFieldFileInput
                         name="imagen"
-                        onChange={this.onChangeFile}
+                        accept="image/png, image/jpeg"
+                        onChange={this.onChangeFile} 
                     />
                 </div>
             </MyFormTagModal>

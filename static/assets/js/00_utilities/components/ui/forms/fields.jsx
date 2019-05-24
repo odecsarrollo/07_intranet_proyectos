@@ -52,6 +52,7 @@ const renderInputField = (field) => {
             <input
                 {...field.input}
                 type="file"
+                accept = {field.accept}
                 value={null}
             />
             {field.meta.touched && field.meta.error &&

@@ -25,7 +25,6 @@ class Tabla extends React.Component {
                             {
                                 Header: "Codigo",
                                 accessor: "codigo",
-                         
                                 filterable: true
                             },
                             {
@@ -46,6 +45,14 @@ class Tabla extends React.Component {
                             {
                                 Header: "Descripcion",
                                 accessor: "descripcion",
+                            },
+                            {
+                                Header: "Imagen",
+                                Cell: ({original}) =>(
+                                    <div style={{textAlign:'center', width: '100%'}}>
+                                        <img style={{height:'80px', width: '150px'}} src={original.imagen}></img>
+                                    </div>
+                                )
                             }
                         ]
                     },

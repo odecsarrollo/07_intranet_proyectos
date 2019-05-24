@@ -54,9 +54,6 @@ export function createRequest(request, options = {}) {
                             if (error.response.data['_error']) {
                                 dispatch_method(actions.notificarErrorAction(error.response.data['_error']));
                             }
-                            if (error.response.data['nro_identificacion']) {
-                                error.response.data['nro_identificacion_1'] = error.response.data['nro_identificacion']
-                            }
                             throw new SubmissionError(error.response.data)
                         }
                     } else if (error.response.status === 401) {

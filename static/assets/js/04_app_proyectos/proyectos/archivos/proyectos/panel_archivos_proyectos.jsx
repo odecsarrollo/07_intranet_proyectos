@@ -36,7 +36,7 @@ class PanelArchivosProyectos extends Component {
 
     onDeleteArchivo(archivo_id) {
         const {proyecto} = this.props;
-        const cargarArchivosProyecto = this.props.fetchArchivosProyectos_x_proyecto(proyecto.id);
+        const cargarArchivosProyecto = () => this.props.fetchArchivosProyectos_x_proyecto(proyecto.id);
         this.props.deleteArchivoProyecto(archivo_id, {callback: cargarArchivosProyecto})
     }
 
