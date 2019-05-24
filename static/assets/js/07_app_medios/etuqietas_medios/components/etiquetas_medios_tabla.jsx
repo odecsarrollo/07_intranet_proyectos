@@ -46,9 +46,7 @@ class Tabla extends React.Component {
                             {
                                 Header: "Descripcion",
                                 accessor: "descripcion",
-                       
                             }
-
                         ]
                     },
                     {
@@ -67,7 +65,6 @@ class Tabla extends React.Component {
                                         element_name={`${row.original.to_string}`}
                                         element_type={singular_name}
                                     />
-
                             },
                             {
                                 Header: "Editar",
@@ -78,7 +75,6 @@ class Tabla extends React.Component {
                                         onClick={() => {
                                             onSelectItemEdit(row.original);
                                         }}/>
-
                             }
                         ]
                     }

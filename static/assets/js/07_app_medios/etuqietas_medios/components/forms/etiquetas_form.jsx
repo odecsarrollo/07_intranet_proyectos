@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { reduxForm } from 'redux-form';
-import { MyTextFieldSimple, MyFieldFileInput, MyFieldInputColor } from '../../../../00_utilities/components/ui/forms/fields';
+import { MyTextFieldSimple, MyFieldFileInput } from '../../../../00_utilities/components/ui/forms/fields';
 import { connect } from "react-redux";
 import { MyFormTagModal } from '../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import validate from './validate';
@@ -14,6 +14,7 @@ class Form extends Component {
     onChangeFile(f, v) {
         const archivo = v[0];
         const nombre_archivo = archivo.name.split('.')[0];
+        console.log(archivo);
         //this.props.change('nombre_archivo', nombre_archivo.toUpperCase());
     }
 
@@ -27,14 +28,9 @@ class Form extends Component {
             onCancel,
             handleSubmit,
             modal_open,
-            singular_name,
-            tipos_list,
-            materiales_list,
-            colores_list,
-            series_list,
-            categorias_list
+            singular_name
         } = this.props;
-
+        console.log(initialValues)
         return (
             <MyFormTagModal
                 onCancel={onCancel}
@@ -73,7 +69,7 @@ class Form extends Component {
                         case='U'
                     />
                 </div>
-                <div style={{width: '100%' }}>
+                <div style={{ width: '100%' }}>
                     <MyTextFieldSimple
                         className="col-6"
                         nombre='Descripcion'
@@ -84,13 +80,23 @@ class Form extends Component {
                     />
                 </div>
                 <div style={{ paddingTop: '30px', paddingBottom: '30px' }}>
-                    <MyFieldFileInput
-                        name="imagen"
-                        onChange={this.onChangeFile}
-                    />
+                    {    
+                        initialValues  &&
+                        <MyFieldFileInput
+                            name="imagen"
+                            onChange={this.onChangeFile}
+                        />
+                    }
                 </div>
             </MyFormTagModal>
         )
+    }
+}
+
+function mapPropsToState(state, ownProps) {
+    const { item_seleccionado } = ownProps;
+    return {
+        initialValues: item_seleccionado
     }
 }
 
@@ -99,5 +105,7 @@ Form = reduxForm({
     validate,
     enableReinitialize: true
 })(Form);
+
+Form = (connect(mapPropsToState, null)(Form));
 
 export default Form;

@@ -14,7 +14,7 @@ class EtiquetaMedios extends Component {
     constructor(props) {
         super(props);
         this.method_pool = {
-            fetchObjectMethod: this.props.fetchEtiquetasMedios,
+            fetchObjectMethod: this.props.fetchEtiquetaMedios,
             deleteObjectMethod: this.props.deleteEtiquetaMedios,
             createObjectMethod: this.props.createEtiquetaMedios,
             updateObjectMethod: this.props.updateEtiquetaMedios,
