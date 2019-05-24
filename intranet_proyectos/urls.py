@@ -31,8 +31,6 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
-    import debug_toolbar
-
     urlpatterns = [
                       url(r'^silk/', include('silk.urls', namespace='silk')),
                   ] + urlpatterns
