@@ -7,7 +7,7 @@ import {
     createObject,
 } from '../../00_general_fuctions'
 
-const current_url_api = 'medios_etiquetas_etiquetas';
+const current_url_api = 'etiquetas_medios';
 export const createEtiquetaMedios = (values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {dispatch({type: TYPES.create, payload: response})};

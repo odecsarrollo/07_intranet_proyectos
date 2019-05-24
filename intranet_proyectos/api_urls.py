@@ -16,6 +16,7 @@ from importaciones.api_urls import router as importaciones_router
 from items.api_urls import router as items_router
 from listas_precios.api_urls import router as listas_precios_router
 from catalogo_productos.api_urls import router as catalogo_productos_router
+from medios_etiquetas.api_urls import router as medios_etiquetas_router
 
 router = DefaultRouter()
 router.extend(proyectos_router)
@@ -35,3 +36,4 @@ router.extend(importaciones_router)
 router.extend(items_router)
 router.extend(listas_precios_router)
 router.extend(catalogo_productos_router)
+router.extend(medios_etiquetas_router)
