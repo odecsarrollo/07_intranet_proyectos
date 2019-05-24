@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
-import { reduxForm } from 'redux-form';
-import { MyTextFieldSimple, MyFieldFileInput } from '../../../../00_utilities/components/ui/forms/fields';
-import { connect } from "react-redux";
-import { MyFormTagModal } from '../../../../00_utilities/components/ui/forms/MyFormTagModal';
+import React, {Component} from 'react';
+import {reduxForm} from 'redux-form';
+import {MyTextFieldSimple, MyFieldFileInput} from '../../../../00_utilities/components/ui/forms/fields';
+import {connect} from "react-redux";
+import {MyFormTagModal} from '../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import validate from './validate';
+import {instanceOf} from "prop-types";
 
 class Form extends Component {
     constructor(props) {
@@ -15,6 +16,7 @@ class Form extends Component {
         const archivo = v[0];
         const nombre_archivo = archivo.name.split('.')[0];
         console.log(archivo);
+        console.log(v[0]);
         //this.props.change('nombre_archivo', nombre_archivo.toUpperCase());
     }
 
@@ -30,12 +32,23 @@ class Form extends Component {
             modal_open,
             singular_name
         } = this.props;
-        console.log(initialValues)
         return (
             <MyFormTagModal
                 onCancel={onCancel}
                 fullScreen={false}
-                onSubmit={handleSubmit(onSubmit)}
+                onSubmit={handleSubmit(v => {
+                    const datos_formulario = _.omit(v, 'imagen');
+                    let datos_a_subir = new FormData();
+                    _.mapKeys(datos_formulario, (v, k) => {
+                        datos_a_subir.append(k, v);
+                    });
+                    if (v.imagen) {
+                        if (typeof v.imagen !== 'string') {
+                            datos_a_subir.append('imagen', v.imagen[0]);
+                        }
+                    }
+                    onSubmit(datos_a_subir);
+                })}
                 reset={reset}
                 initialValues={initialValues}
                 submitting={submitting}
@@ -69,7 +82,7 @@ class Form extends Component {
                         case='U'
                     />
                 </div>
-                <div style={{ width: '100%' }}>
+                <div style={{width: '100%'}}>
                     <MyTextFieldSimple
                         className="col-6"
                         nombre='Descripcion'
@@ -79,14 +92,11 @@ class Form extends Component {
                         case='U'
                     />
                 </div>
-                <div style={{ paddingTop: '30px', paddingBottom: '30px' }}>
-                    {    
-                        initialValues  &&
-                        <MyFieldFileInput
-                            name="imagen"
-                            onChange={this.onChangeFile}
-                        />
-                    }
+                <div style={{paddingTop: '30px', paddingBottom: '30px'}}>
+                    <MyFieldFileInput
+                        name="imagen"
+                        onChange={this.onChangeFile}
+                    />
                 </div>
             </MyFormTagModal>
         )
@@ -94,7 +104,7 @@ class Form extends Component {
 }
 
 function mapPropsToState(state, ownProps) {
-    const { item_seleccionado } = ownProps;
+    const {item_seleccionado} = ownProps;
     return {
         initialValues: item_seleccionado
     }

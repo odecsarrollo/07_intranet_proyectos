@@ -39,6 +39,8 @@ function crudHOC(CreateForm, Tabla) {
         }
 
         onSubmit(item, uno = null, dos = null, cerrar_modal = true) {
+            const es_form_data = item instanceof FormData;
+            const form_data_id = es_form_data ? item.get('id') : null;
             const {method_pool, notificarAction, singular_name, posCreateMethod = null, posUpdateMethod = null} = this.props;
             const callback = (response) => {
                 const {to_string} = response;
@@ -55,11 +57,13 @@ function crudHOC(CreateForm, Tabla) {
                     return posCreateMethod(response);
                 }
             };
-            if (item.id) {
+            if (item.id || (es_form_data && form_data_id)) {
                 if (method_pool.updateObjectMethod === null) {
                     console.log('No se ha asignado ningún método para UPDATE')
                 } else {
-
+                    if (es_form_data) {
+                        return method_pool.updateObjectMethod(form_data_id, item, {callback});
+                    }
                     return method_pool.updateObjectMethod(item.id, item, {callback});
                 }
             } else {
