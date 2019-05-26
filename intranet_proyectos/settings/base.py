@@ -101,7 +101,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'intranet_proyectos.urls'
-
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
