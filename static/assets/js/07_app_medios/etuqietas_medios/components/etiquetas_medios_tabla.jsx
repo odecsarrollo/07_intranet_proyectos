@@ -25,8 +25,10 @@ class Tabla extends React.Component {
                             {
                                 Header: "Codigo",
                                 accessor: "codigo",
-                         
-                                filterable: true
+                                filterable: true,
+                                filterMethod: (filter, row) => {
+                                    return row[filter.id] && row[filter.id].includes(filter.value.toUpperCase())
+                                }
                             },
                             {
                                 Header: "Alto",
@@ -46,6 +48,10 @@ class Tabla extends React.Component {
                             {
                                 Header: "Descripcion",
                                 accessor: "descripcion",
+                                filterable: true,
+                                filterMethod: (filter, row) => {
+                                    return row[filter.id] && row[filter.id].includes(filter.value.toUpperCase())
+                                }
                             }
                         ]
                     },
