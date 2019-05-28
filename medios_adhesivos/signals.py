@@ -17,6 +17,4 @@ def backup_imagen_adhesivo_path(sender, instance, **kwargs):
 def delete_imagen_adhesivo(sender, instance, **kwargs):
     if hasattr(instance, '_current_imagen'):
         if instance._current_imagen != instance.imagen:
-            print(instance._current_imagen)
-            print(instance.imagen)
             instance._current_imagen.delete(save=False)
