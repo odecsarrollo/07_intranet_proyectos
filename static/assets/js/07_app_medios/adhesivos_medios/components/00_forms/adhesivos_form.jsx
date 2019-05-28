@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { Component } from 'react';
 import { reduxForm } from 'redux-form';
 
@@ -6,13 +5,8 @@ import { reduxForm } from 'redux-form';
 import { MyTextFieldSimple, MyFieldFileInput } from '../../../../00_utilities/components/ui/forms/fields';
 import { connect } from "react-redux";
 import { MyFormTagModal } from '../../../../00_utilities/components/ui/forms/MyFormTagModal';
-=======
-import React, {Component} from 'react';
-import {reduxForm} from 'redux-form';
-import {MyTextFieldSimple, MyFieldFileInput} from '../../../../00_utilities/components/ui/forms/fields';
-import {connect} from "react-redux";
-import {MyFormTagModal} from '../../../../00_utilities/components/ui/forms/MyFormTagModal';
->>>>>>> 365d54bba5b2c36a56d65d27ffd19658589a8241
+
+
 import validate from './validate';
 
 class Form extends Component {
@@ -23,18 +17,19 @@ class Form extends Component {
     }
 
     onChangeFile(f, v) {
-        const archivo = v[0];
+        //on Change null
     }
 
-    submitObject(v){
-        const datos_formulario = _.omit(v, 'imagen');
+    submitObject(item) {
+        const datos_formulario = _.omit(item, 'imagen');
         let datos_a_subir = new FormData();
-        _.mapKeys(datos_formulario, (v, k) => {
-            datos_a_subir.append(k, v);
+        _.mapKeys(datos_formulario, (item, key) => {
+            console.log(item);
+            datos_a_subir.append(key, item);
         });
-        if (v.imagen) {
-            if (typeof v.imagen !== 'string') {
-                datos_a_subir.append('imagen', v.imagen[0]);
+        if (item.imagen) {
+            if (typeof item.imagen !== 'string') {
+                datos_a_subir.append('imagen', item.imagen[0]);
             }
         }
         return datos_a_subir;
@@ -56,7 +51,7 @@ class Form extends Component {
             <MyFormTagModal
                 onCancel={onCancel}
                 fullScreen={false}
-                onSubmit={handleSubmit(item => 
+                onSubmit={handleSubmit(item =>
                     onSubmit(this.submitObject(item))
                 )}
                 reset={reset}
@@ -95,7 +90,7 @@ class Form extends Component {
                         case='U'
                     />
                 </div>
-                <div style={{width: '100%'}}>
+                <div style={{ width: '100%' }}>
                     <MyTextFieldSimple
                         className="col-6"
                         nombre='Descripcion'
@@ -105,11 +100,14 @@ class Form extends Component {
                         case='U'
                     />
                 </div>
-                <div style={{paddingTop: '30px', paddingBottom: '30px'}}>
+                <div style={{ width: '100%', textAlign: 'center', paddingTop: '20px' }}>
+                    {initialValues && initialValues.imagen && <img style={{ height: '200px', width: '280px' }} src={initialValues.imagen}></img>}
+                </div>
+                <div style={{ paddingTop: '30px', paddingBottom: '30px' }}>
                     <MyFieldFileInput
                         name="imagen"
                         accept="image/png, image/jpeg"
-                        onChange={this.onChangeFile} 
+                        onChange={this.onChangeFile}
                     />
                 </div>
             </MyFormTagModal>
@@ -118,14 +116,16 @@ class Form extends Component {
 }
 
 function mapPropsToState(state, ownProps) {
-    const {item_seleccionado} = ownProps;
+    console.log('state',state);
+    console.log('own',ownProps);
+    const { item_seleccionado } = ownProps;
     return {
         initialValues: item_seleccionado
     }
 }
 
 Form = reduxForm({
-    form: "etiquetaForm",
+    form: "adhesivosForm",
     validate,
     enableReinitialize: true
 })(Form);

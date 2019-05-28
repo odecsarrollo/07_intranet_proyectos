@@ -1,7 +1,7 @@
 from rest_framework import routers
 from .api_views import (
-    EtiquetaViewSet,
+    AdhesivoViewSet
 )
 
 router = routers.DefaultRouter()
-router.register(r'etiquetas_medios', EtiquetaViewSet)
+router.register(r'adhesivo', AdhesivoViewSet)

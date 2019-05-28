@@ -1,10 +1,10 @@
-export const ETIQUETA_MEDIOS_TYPES = {
-    create: 'create_etiqueta_medios',
-    delete: 'delete_etiqueta_medios',
-    fetch_all: 'fetch_etiquetas_medios',
-    fetch: 'fetch_etiqueta_medios',
-    clear: 'clear_etiquetas_medios',
-    update: 'update_etiqueta_medios',
+export const ADHESIVO_MEDIOS_TYPES = {
+    create: 'create_adhesivo_medios',
+    delete: 'delete_adhesivo_medios',
+    fetch_all: 'fetch_adhesivos_medios',
+    fetch: 'fetch_adhesivo_medios',
+    clear: 'clear_adhesivo_medios',
+    update: 'update_adhesivo_medios',
 };
 
 

@@ -1,6 +1,6 @@
 import React from "react";
-import MyDialogButtonDelete from '../../../00_utilities/components/ui/dialog/delete_dialog';
-import IconButtonTableEdit from '../../../00_utilities/components/ui/icon/table_icon_button_edit';
+import MyDialogButtonDelete from '../../../../00_utilities/components/ui/dialog/delete_dialog';
+import IconButtonTableEdit from '../../../../00_utilities/components/ui/icon/table_icon_button_edit';
 
 import ReactTable from "react-table";
 
@@ -25,14 +25,10 @@ class Tabla extends React.Component {
                             {
                                 Header: "Codigo",
                                 accessor: "codigo",
-<<<<<<< HEAD
                                 filterable: true,
                                 filterMethod: (filter, row) => {
                                     return row[filter.id] && row[filter.id].includes(filter.value.toUpperCase())
                                 }
-=======
-                                filterable: true
->>>>>>> 365d54bba5b2c36a56d65d27ffd19658589a8241
                             },
                             {
                                 Header: "Alto",
@@ -52,12 +48,11 @@ class Tabla extends React.Component {
                             {
                                 Header: "Descripcion",
                                 accessor: "descripcion",
-<<<<<<< HEAD
                                 filterable: true,
                                 filterMethod: (filter, row) => {
                                     return row[filter.id] && row[filter.id].includes(filter.value.toUpperCase())
                                 }
-=======
+
                             },
                             {
                                 Header: "Imagen",
@@ -66,7 +61,7 @@ class Tabla extends React.Component {
                                         <img style={{height:'80px', width: '150px'}} src={original.imagen}></img>
                                     </div>
                                 )
->>>>>>> 365d54bba5b2c36a56d65d27ffd19658589a8241
+
                             }
                         ]
                     },

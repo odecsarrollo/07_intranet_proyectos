@@ -1,10 +1,12 @@
-import React, {Component} from 'react';
-import EtiquetasMEdios from './etuqietas_medios/components/etiquetas_medios';
+import React, { Component } from 'react';
+import Dashboard from './adhesivos_medios/dashboard_adhesivos/Dashboard';
+
 
 class App extends Component {
+
     render() {
         return (
-            <EtiquetasMEdios/>
+            <Dashboard />
         )
     }
 }
