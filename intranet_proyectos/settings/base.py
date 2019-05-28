@@ -70,7 +70,7 @@ MY_APPS = [
     'importaciones.apps.ImportacionesConfig',
     'listas_precios.apps.ListasPreciosConfig',
     'catalogo_productos.apps.CatalogoProductosConfig',
-    'medios_etiquetas.apps.MediosEtiquetasConfig'
+    'medios_adhesivos.apps.MediosAdhesivosConfig',
 ]
 
 THIRD_PART_APPS = [

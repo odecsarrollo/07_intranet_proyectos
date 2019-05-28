@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import {connect} from "react-redux";
-import * as actions from "../../../01_actions/01_index";
-import CreateForm from './forms/etiquetas_form';
-import Tabla from './etiquetas_medios_tabla';
-import crudHOC from '../../../00_utilities/components/hoc_crud';
-import {permisosAdapter} from "../../../00_utilities/common";
-import {ETIQUETA_MEDIOS_CATALOGOS as etiquetas_permisos_view} from '../../../00_utilities/permisos/types';
+import * as actions from "../../../../01_actions/01_index";
+import CreateForm from '../00_forms/adhesivos_form';
+import Tabla from '../01_tabla/adhesivos_tabla';
+import crudHOC from '../../../../00_utilities/components/hoc_crud';
+import {permisosAdapter} from "../../../../00_utilities/common";
+import {ETIQUETA_MEDIOS_CATALOGOS as etiquetas_permisos_view} from '../../../../00_utilities/permisos/types';
 
 
 const CRUD = crudHOC(CreateForm, Tabla);
@@ -14,16 +14,16 @@ class EtiquetaMedios extends Component {
     constructor(props) {
         super(props);
         this.method_pool = {
-            fetchObjectMethod: this.props.fetchEtiquetaMedios,
-            deleteObjectMethod: this.props.deleteEtiquetaMedios,
+            fetchObjectMethod: this.props.fetchAdhesivoMedios,
+            deleteObjectMethod: this.props.deleteAdhesivoMedios,
             createObjectMethod: this.props.createEtiquetaMedios,
-            updateObjectMethod: this.props.updateEtiquetaMedios,
+            updateObjectMethod: this.props.updateAdhesivoMedios,
         };
         this.plural_name = 'Etiquetas';
         this.singular_name = 'Etiqueta';
     }
     componentDidMount() {
-        this.props.fetchEtiquetasMedios();
+        this.props.fetchAdhesivoTipo('etiquetas');
     }
     render() {
         const permisos_etiqueta_medios = permisosAdapter(etiquetas_permisos_view);
@@ -43,7 +43,7 @@ class EtiquetaMedios extends Component {
 
 function mapPropsToState(state, ownProps) {
     return {
-        etiquetas: state.medios_etiquetas
+        etiquetas: state.medios_adhesivos
     }
 }
 

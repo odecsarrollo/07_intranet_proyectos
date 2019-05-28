@@ -1,6 +1,6 @@
 import React from "react";
-import MyDialogButtonDelete from '../../../00_utilities/components/ui/dialog/delete_dialog';
-import IconButtonTableEdit from '../../../00_utilities/components/ui/icon/table_icon_button_edit';
+import MyDialogButtonDelete from '../../../../00_utilities/components/ui/dialog/delete_dialog';
+import IconButtonTableEdit from '../../../../00_utilities/components/ui/icon/table_icon_button_edit';
 
 import ReactTable from "react-table";
 
@@ -52,6 +52,16 @@ class Tabla extends React.Component {
                                 filterMethod: (filter, row) => {
                                     return row[filter.id] && row[filter.id].includes(filter.value.toUpperCase())
                                 }
+
+                            },
+                            {
+                                Header: "Imagen",
+                                Cell: ({original}) =>(
+                                    <div style={{textAlign:'center', width: '100%'}}>
+                                        <img style={{height:'80px', width: '150px'}} src={original.imagen}></img>
+                                    </div>
+                                )
+
                             }
                         ]
                     },

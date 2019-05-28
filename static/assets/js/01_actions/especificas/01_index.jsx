@@ -40,4 +40,4 @@ export * from './bandas_eurobelt/categoriasDosAction';
 export * from './bandas_eurobelt/componentesAction';
 
 export * from './catalogos_productos/itemsVentasAction';
-export * from './medios/etiquetasActions';
+export * from './medios/adhesivosActions';

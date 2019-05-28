@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 
-class Etiqueta(models.Model):
+class Adhesivo(models.Model):
 
     def archivo_upload_to(instance, filename):
         return "imagenes/medios/etiquetas/%s" % (filename)
@@ -15,3 +15,4 @@ class Etiqueta(models.Model):
     stock_min = models.IntegerField(null= True, default=0)
     descripcion = models.CharField(null= True, max_length=500)
     imagen = models.FileField(null= True, upload_to=archivo_upload_to)
+    sticker = models.BooleanField()

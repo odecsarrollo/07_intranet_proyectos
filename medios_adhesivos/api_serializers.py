@@ -1,17 +1,17 @@
 from rest_framework import serializers
 
 from .models import(
-    Etiqueta
+    Adhesivo
 )
 
-class EtiquetaSerializer(serializers.ModelSerializer):
+class AdhesivoSerializer(serializers.ModelSerializer):
     to_string = serializers.SerializerMethodField()
 
     def get_to_string(self, instance):
         return instance.codigo
 
     class Meta:
-        model = Etiqueta
+        model = Adhesivo
         fields = [
             'url',
             'id',
@@ -22,5 +22,6 @@ class EtiquetaSerializer(serializers.ModelSerializer):
             'stock_min',
             'descripcion',
             'imagen',
+            'sticker',
             'to_string'
         ]
