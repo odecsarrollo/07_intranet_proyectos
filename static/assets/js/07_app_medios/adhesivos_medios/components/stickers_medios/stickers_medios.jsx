@@ -23,7 +23,7 @@ class StickerMedios extends Component {
         this.singular_name = 'Stiker';
     }
     componentDidMount() {
-        this.props.fetchAdhesivoTipo('stickers');
+        this.props.fetchAdhesivoTipo(2);
     }
     render() {
         const permisos_etiqueta_medios = permisosAdapter(etiquetas_permisos_view);

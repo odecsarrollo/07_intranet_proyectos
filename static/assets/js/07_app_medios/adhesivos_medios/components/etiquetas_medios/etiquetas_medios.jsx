@@ -23,7 +23,7 @@ class EtiquetaMedios extends Component {
         this.singular_name = 'Etiqueta';
     }
     componentDidMount() {
-        this.props.fetchAdhesivoTipo('etiquetas');
+        this.props.fetchAdhesivoTipo(1);
     }
     render() {
         const permisos_etiqueta_medios = permisosAdapter(etiquetas_permisos_view);
