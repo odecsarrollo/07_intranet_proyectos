@@ -22,6 +22,6 @@ class AdhesivoSerializer(serializers.ModelSerializer):
             'stock_min',
             'descripcion',
             'imagen',
-            'sticker',
+            'tipo',
             'to_string'
         ]

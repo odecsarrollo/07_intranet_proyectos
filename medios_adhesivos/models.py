@@ -5,6 +5,11 @@ from django.db import models
 
 
 class Adhesivo(models.Model):
+    ADHESIVO_CHOICES = (
+        (1, 'Etiqueta'),
+        (2, 'Sticker')
+    )
+
     def archivo_upload_to(instance, filename):
         return "imagenes/medios/etiquetas/%s" % (filename)
 
@@ -15,4 +20,4 @@ class Adhesivo(models.Model):
     stock_min = models.IntegerField(null=True, default=0)
     descripcion = models.CharField(null=True, max_length=500)
     imagen = models.FileField(null=True, upload_to=archivo_upload_to)
-    sticker = models.BooleanField()
+    tipo = models.IntegerField(choices=ADHESIVO_CHOICES)

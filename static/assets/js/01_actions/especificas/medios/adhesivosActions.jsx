@@ -10,7 +10,7 @@ import {
 
 const current_url_api = 'adhesivo';
 export const createEtiquetaMedios = (values, options_action = {}) => {
-    values.append('sticker', false);
+    values.append('tipo', 1);
     return (dispatch) => {
         const dispatches = (response) => { dispatch({ type: TYPES.create, payload: response }) };
         const options = { dispatches, ...options_action, dispatch_method: dispatch };
@@ -18,7 +18,7 @@ export const createEtiquetaMedios = (values, options_action = {}) => {
     }
 };
 export const createStickerMedios = (values, options_action = {}) => {
-    values.append('sticker', true);
+    values.append('tipo', 2);
     return (dispatch) => {
         const dispatches = (response) => { dispatch({ type: TYPES.create, payload: response }) };
         const options = { dispatches, ...options_action, dispatch_method: dispatch };

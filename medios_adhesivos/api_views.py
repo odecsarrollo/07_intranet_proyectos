@@ -18,11 +18,7 @@ class AdhesivoViewSet(viewsets.ModelViewSet):
     @list_route(http_method_names=['get', ])
     def listar_adhesivos_x_tipo(self, request):
         tipo = request.GET.get('tipo')
-        qs= None
-        if tipo == "stickers":
-            qs = self.queryset.filter(sticker=True)
-        elif tipo == "etiquetas":
-            qs = self.queryset.filter(sticker=False)
+        qs = self.queryset.filter(tipo=tipo)
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
