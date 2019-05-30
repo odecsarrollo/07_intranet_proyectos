@@ -1,8 +1,10 @@
 from rest_framework import serializers
 
 from .models import(
-    Adhesivo
+    Adhesivo,
+    AdhesivoMovimiento
 )
+
 
 class AdhesivoSerializer(serializers.ModelSerializer):
     to_string = serializers.SerializerMethodField()
@@ -25,3 +27,20 @@ class AdhesivoSerializer(serializers.ModelSerializer):
             'tipo',
             'to_string'
         ]
+
+
+class MovimientoAdhesivoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = AdhesivoMovimiento
+        fields = [
+            'id',
+            'tipo',
+            'responsable',
+            'cantidad',
+            'descripcion',
+            'saldo',
+            'ultimo',
+            'adhesivo'
+        ]
+

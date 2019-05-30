@@ -41,3 +41,4 @@ export * from './bandas_eurobelt/componentesAction';
 
 export * from './catalogos_productos/itemsVentasAction';
 export * from './medios/adhesivosActions';
+export * from './medios/adhesivosMovimientosActions'
