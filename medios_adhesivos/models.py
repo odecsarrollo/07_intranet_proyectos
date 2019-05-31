@@ -1,6 +1,7 @@
 from django.db import models
 from model_utils.models import TimeStampedModel
 
+
 # Create your models here.
 
 
@@ -23,7 +24,6 @@ class Adhesivo(models.Model):
     tipo = models.IntegerField(choices=ADHESIVO_CHOICES)
 
 
-
 class AdhesivoMovimiento(TimeStampedModel):
     MOVIMIENTO_CHOICES = (
         ('E', 'Entrada'),
@@ -36,4 +36,7 @@ class AdhesivoMovimiento(TimeStampedModel):
     saldo = models.IntegerField()
     ultimo = models.BooleanField()
     adhesivo = models.ForeignKey(Adhesivo, on_delete=models.PROTECT, null=True)
-    
+
+    @property
+    def tipo_nombre(self) -> str:
+        return self.get_tipo_display()
