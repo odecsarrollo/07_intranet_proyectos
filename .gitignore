@@ -6,6 +6,7 @@ db.sqlite3
 /node_modules
 media/*
 /webpack-stats.json
+start_backend.ps1
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml

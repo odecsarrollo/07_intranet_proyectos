@@ -44,3 +44,4 @@ export * from './medios/adhesivosActions';
 
 
 export * from './contabilidad/anticipos/proformaConfiguracionAction';
+export * from './medios/adhesivosMovimientosActions'

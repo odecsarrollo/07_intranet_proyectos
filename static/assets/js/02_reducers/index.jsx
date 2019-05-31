@@ -66,6 +66,7 @@ import contabilidadProformaConfiguracionReducer
 import itemVentasCatalogosProductosReducer from './especificas/catalogos_productos/itemsVentasReducer';
 
 import mediosAdhesivosReducers from './especificas/medios/adhesivosReducers';
+import mediosAdhesivosMovimientosReducers from './especificas/medios/adhesivosMovimientosReducers';
 
 import {reducer as notificationsReducers} from 'react-notification-system-redux';
 
@@ -125,10 +126,10 @@ const rootReducer = combineReducers({
     banda_eurobelt_categorias_dos: categoriasDosReducer,
     banda_eurobelt_componentes: componentesReducer,
 
-
     catalogos_productos_items_ventas: itemVentasCatalogosProductosReducer,
 
     medios_adhesivos: mediosAdhesivosReducers,
+    medios_adhesivos_movimientos: mediosAdhesivosMovimientosReducers,
 
     contabilidad_proforma_configuracion: contabilidadProformaConfiguracionReducer
 });
