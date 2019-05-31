@@ -48,6 +48,8 @@ class MovimientoAdhesivoSerializer(serializers.ModelSerializer):
         )
         return movimiento
 
+
+
     class Meta:
         model = AdhesivoMovimiento
         fields = [
