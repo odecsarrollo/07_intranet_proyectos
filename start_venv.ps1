@@ -1,1 +1,0 @@
-..\venv\%systemdrive%%homepath%\my-venv\Scripts\activate
