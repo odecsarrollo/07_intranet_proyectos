@@ -1,3 +1,13 @@
+export const ADHESIVO_MOVIMIENTO_MEDIOS_TYPES = {
+    create: 'create_adhesivo_movimiento_medios',
+    delete: 'delete_adhesivo_movimiento_medios',
+    fetch_all: 'fetch_adhesivos_movimientos_medios',
+    fetch: 'fetch_adhesivo_movimiento_medios',
+    clear: 'clear_adhesivos_movimientos_medios',
+    update: 'update_adhesivo_movimiento_medios',
+};
+
+
 export const ADHESIVO_MEDIOS_TYPES = {
     create: 'create_adhesivo_medios',
     delete: 'delete_adhesivo_medios',
