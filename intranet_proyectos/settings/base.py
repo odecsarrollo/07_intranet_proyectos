@@ -71,9 +71,11 @@ MY_APPS = [
     'listas_precios.apps.ListasPreciosConfig',
     'catalogo_productos.apps.CatalogoProductosConfig',
     'medios_adhesivos.apps.MediosAdhesivosConfig',
+    'contabilidad_anticipos.apps.ContabilidadAnticiposConfig',
 ]
 
 THIRD_PART_APPS = [
+    'imagekit',
     'model_utils',
     'crispy_forms',
     'rest_framework',

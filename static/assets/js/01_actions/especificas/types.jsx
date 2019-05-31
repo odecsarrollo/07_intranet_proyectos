@@ -1,3 +1,13 @@
+export const PROFORMA_CONFIGURACION_TYPES = {
+    create: 'create_proforma_configuracion',
+    delete: 'delete_proforma_configuracion',
+    fetch_all: 'fetch_proforma_configuracion',
+    fetch: 'fetch_proforma_configuracion',
+    clear: 'clear_proforma_configuracion',
+    update: 'update_proforma_configuracion',
+};
+
+
 export const ADHESIVO_MEDIOS_TYPES = {
     create: 'create_adhesivo_medios',
     delete: 'delete_adhesivo_medios',

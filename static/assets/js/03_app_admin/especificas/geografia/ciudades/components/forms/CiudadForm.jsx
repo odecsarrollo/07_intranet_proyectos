@@ -104,13 +104,4 @@ Form = reduxForm({
     enableReinitialize: true
 })(Form);
 
-export default (connect
-
-(
-    mapPropsToState
-    ,
-    null
-)(
-    Form
-))
-;
+export default (connect(mapPropsToState, null)(Form));
