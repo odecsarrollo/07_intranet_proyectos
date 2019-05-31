@@ -14,7 +14,7 @@ class Tabla extends React.Component {
                         columns: [
                             {
                                 Header: "Tipo",
-                                accessor: "tipo",
+                                accessor: "tipo_nombre",
                                 filterable: true,
                                 filterMethod: (filter, row) => {
                                     return row[filter.id] && row[filter.id].includes(filter.value.toUpperCase())
@@ -23,22 +23,22 @@ class Tabla extends React.Component {
                             {
                                 Header: "Responsable",
                                 accessor: "responsable",
-                    
+
                             },
                             {
                                 Header: "Adhesivo",
-                                accessor: "adhesivo",
-                              
+                                accessor: "adhesivo_descripcion",
+
                             },
                             {
                                 Header: "Cantidad",
                                 accessor: "cantidad",
-                              
+
                             },
                             {
                                 Header: "Saldo",
                                 accessor: "saldo",
-                          
+
                             },
                             {
                                 Header: "Descripcion",

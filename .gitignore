@@ -4,6 +4,7 @@ db.sqlite3
 /webpack-stats-local.json
 /cositas.txt
 /node_modules
+/venv_intranet_proyectos/
 media/*
 /webpack-stats.json
 start_backend.ps1
@@ -14,3 +15,4 @@ start_backend.ps1
 .npmrc
 # Binary Files
 **/__pycache__/*
+requirements.txt
