@@ -1,4 +1,4 @@
-from rest_framework import viewsets, serializers, status
+from rest_framework import viewsets
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
 
@@ -23,10 +23,6 @@ class AdhesivoViewSet(viewsets.ModelViewSet):
         qs = self.queryset.filter(tipo=tipo)
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
-
-    # def create(self, validated_data):
-    # content = {'_error': ['No se puede eliminar, ya se encuentra verificado']}
-    # raise serializers.ValidationError(content)
 
 
 class AdhesivoMovimientoViewSet(viewsets.ModelViewSet):
