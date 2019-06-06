@@ -1,14 +1,27 @@
 import React, { Component } from 'react';
-import { reduxForm } from 'redux-form';
+import { reduxForm, formValueSelector  } from 'redux-form';
 import { MyTextFieldSimple, MyCombobox } from '../../../../00_utilities/components/ui/forms/fields';
 import { connect } from "react-redux";
 import { MyFormTagModal } from '../../../../00_utilities/components/ui/forms/MyFormTagModal';
 
+import validate from './validate_movimiento_adhesivo';
+
 class Form extends Component {
 
+    constructor(props) {
+        super(props);
+        this.changeTipo = this.changeTipo.bind(this);
+
+    }
+
+    changeTipo(value){
+        console.log(value)
+    }
 
 
     render() {
+
+
         const {
             pristine,
             submitting,
@@ -19,7 +32,8 @@ class Form extends Component {
             adhesivos,
             handleSubmit,
             modal_open,
-            singular_name
+            singular_name,
+            tipo
         } = this.props;
         return (
             <MyFormTagModal
@@ -33,7 +47,7 @@ class Form extends Component {
                 pristine={pristine}
                 element_type={singular_name}
             >
-                <div>
+                <div className="col-12">
                     <MyCombobox
                         data={[{ id: 'E', tipo: 'Entrada' }, { id: 'S', tipo: 'Salida' }]}
                         valuesField='id'
@@ -42,44 +56,42 @@ class Form extends Component {
                         name='tipo'
                         placeholder='Tipo de Movimiento'
                         filter='contains'
+                        onChange={this.changeTipo()}
                     />
                     <MyCombobox
-                        name='adhesivo'
-                        busy={false}
-                        autoFocus={false}
                         data={_.map(adhesivos, e => {
                             return {
-                                'codigo': e.codigo,
+                                'codigo': `${e.codigo} - ${e.disponible} Disponibles`,
                                 'id': e.id
                             }
                         })}
+                        name='adhesivo'
+                        autoFocus={true}
                         textField='codigo'
                         filter='contains'
                         valuesField='id'
-                        placeholder='Adhesivos'
+                        placeholder='Seleccione el Adhesivos'
                     />
                     <MyTextFieldSimple
                         className="col-6"
                         nombre='Cantidad'
                         name='cantidad'
                         type="number"
-                        case='U'
                     />
-                    <MyTextFieldSimple
+                    { tipo == 'S' &&
+                        <MyTextFieldSimple
                         className="col-6"
                         nombre='Responsable'
                         name='responsable'
-                        case='U'
+                        type = 'text'
                     />
-                </div>
-                <div style={{ width: '100%' }}>
-                    <MyTextFieldSimple
-                        className="col-6"
+                    }
+                        <MyTextFieldSimple
+                        className="col-12"
                         nombre='Descripcion'
                         name='descripcion'
                         multiline
                         rows="4"
-                        case='U'
                     />
                 </div>
             </MyFormTagModal>
@@ -87,15 +99,19 @@ class Form extends Component {
     }
 }
 
+const selector = formValueSelector('adhesivosMovimientosForm')
 function mapPropsToState(state, ownProps) {
     const { item_seleccionado } = ownProps;
+    const  tipo = selector(state, 'tipo')
     return {
-        initialValues: item_seleccionado
+        initialValues: item_seleccionado,
+        tipo
     }
 }
 
 Form = reduxForm({
     form: "adhesivosMovimientosForm",
+    validate,
     enableReinitialize: true
 })(Form);
 

@@ -3,19 +3,20 @@ from rest_framework.exceptions import ValidationError
 from .models import AdhesivoMovimiento
 
 
+# metodo que modifica el saldo del movimento
 def moviento_adhesivo_crear(
         adhesivo_id: int,
         cantidad: int,
         tipo: str,
-        descripcion: str,
         responsable: str,
+        descripcion: str = None,
 ) -> AdhesivoMovimiento:
+    # la cantidad no debe ser menor o igual a 0
     if cantidad <= 0:
         raise ValidationError({'_error': 'La cantidad debe ser mayor a 0 y es: %s' % cantidad})
 
-    qs = AdhesivoMovimiento.objects.filter(adhesivo_id=adhesivo_id, ultimo=True)
-
-    movimiento_anterior = qs.first()
+    # consulta el ultimo movimiento del adhesivo
+    movimiento_anterior = AdhesivoMovimiento.objects.filter(adhesivo_id=adhesivo_id, ultimo=True).first()
     saldo = cantidad
     if movimiento_anterior:
         if tipo == 'E':

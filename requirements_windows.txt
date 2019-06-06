@@ -16,11 +16,13 @@ cryptography==2.5
 cssselect2==0.2.1
 defusedxml==0.5.0
 Django==2.2
+django-appconf==1.0.3
 django-braces==1.12.0
 django-cors-headers==3.0.1
 django-crispy-forms==1.7.0
 django-debug-toolbar==1.9.1
 django-filter==1.1.0
+django-imagekit==4.0.2
 django-model-utils==3.1.1
 django-registration-redux==2.1
 django-rest-knox==3.6.0
@@ -45,6 +47,7 @@ MarkupSafe==1.1.1
 mysqlclient==1.4.2.post1
 pathspec==0.5.5
 pdfrw==0.4
+pilkit==2.0
 Pillow==5.1.0
 pycodestyle==2.5.0
 pycparser==2.18

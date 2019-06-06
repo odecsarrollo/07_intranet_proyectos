@@ -4,6 +4,7 @@ export const ADHESIVOS_MOVIMIENTOS_MEDIOS = {
     change: 'change_adhesivomovimiento',
     list: 'list_adhesivomovimiento',
     detail: 'view_adhesivomovimiento',
+    list_inventario: 'list_inventario_adhesivomovimiento',
 };
     
 

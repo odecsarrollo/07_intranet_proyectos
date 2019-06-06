@@ -32,6 +32,7 @@ class MovimientosEtiquetaMedios extends Component {
         const { movimientos_adhesivos } = this.props;
         return (
             <CRUD
+                posCreateMethod={()=>this.props.fetchAdhesivosMedios()}
                 method_pool={this.method_pool}
                 list={movimientos_adhesivos}
                 permisos_object={permisos_adhesivos_movimientos_medios}

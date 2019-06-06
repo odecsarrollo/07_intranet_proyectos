@@ -58,7 +58,7 @@ class Tabla extends React.Component {
                                 Header: "Imagen",
                                 Cell: ({original}) =>(
                                     <div style={{textAlign:'center', width: '100%'}}>
-                                        <img style={{height:'80px', width: '150px'}} src={original.imagen}></img>
+                                        <img src={original.imagen_small}></img>
                                     </div>
                                 )
 

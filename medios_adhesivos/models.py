@@ -1,8 +1,7 @@
 from django.db import models
 from model_utils.models import TimeStampedModel
-
-
-# Create your models here.
+from imagekit.models import ProcessedImageField, ImageSpecField
+from imagekit.processors import ResizeToFit, ResizeToFill
 
 
 class Adhesivo(models.Model):
@@ -20,8 +19,33 @@ class Adhesivo(models.Model):
     color = models.CharField(null=True, max_length=10)
     stock_min = models.IntegerField(null=True, default=0)
     descripcion = models.CharField(null=True, max_length=500)
-    imagen = models.FileField(null=True, upload_to=archivo_upload_to)
     tipo = models.IntegerField(choices=ADHESIVO_CHOICES)
+    imagen = ProcessedImageField(
+        processors=[ResizeToFit(width=200, height=280, upscale=False)],
+        format='PNG',
+        options={'quality': 100},
+        null=True,
+        upload_to=archivo_upload_to
+    )
+
+    imagen_small = ImageSpecField(
+        source='imagen',
+        processors=[
+            ResizeToFill(150, 80),
+        ],
+        format='JPEG'
+    )
+
+    class Meta:
+        permissions = [
+            ("list_adhesivo", "Can list adhesivo "),
+        ]
+
+
+
+    @property
+    def tipo_nombre(self) -> str:
+        return self.get_tipo_display()
 
 
 class AdhesivoMovimiento(TimeStampedModel):
@@ -36,6 +60,13 @@ class AdhesivoMovimiento(TimeStampedModel):
     saldo = models.IntegerField()
     ultimo = models.BooleanField()
     adhesivo = models.ForeignKey(Adhesivo, on_delete=models.PROTECT, null=True)
+
+    class Meta:
+        permissions = [
+            ("list_adhesivomovimiento", "Can list adhesivo movimiento "),
+            ("list_inventario_adhesivomovimiento", "Can list adhesivo movimiento inventario"),
+        ]
+
 
     @property
     def tipo_nombre(self) -> str:

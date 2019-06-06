@@ -53,20 +53,20 @@ function mapPropsToState(state) {
 const styles = theme => (
     {
         loadingOverloadUno: {
-            position: 'relative'
+            position: 'relative',
         },
         loadingOverloadDos: {
             content: '',
             background: 'rgba(255, 255, 255, 0.5)',
-            width: '100%',
-            height: '7000px',
+            //width: '100%',
+            //height: '7000px',
             opacity: '.9',
             position: 'absolute',
-            zIndex: 1400
+            zIndex: 1400,
         },
         loadingOverloadTres: {
-            maxHeight: '400px',
-            overflow: 'scroll',
+            //maxHeight: '400px',
+            //overflow: 'scroll',
             borderRadius: '10px',
             position: 'fixed',
             textAlign: 'center',
@@ -75,12 +75,13 @@ const styles = theme => (
             transform: 'translate(-50%, -50%)',
             zIndex: 1400,
             backgroundColor: theme.palette.primary.dark,
-            padding: '0.5rem',
-            color: 'white'
+            padding: '0.8rem',
+            color: 'white',
+            filter: 'drop-shadow(0 0 8px darkgrey)'
         },
         loadingOverloadTresError: {
-            maxHeight: '400px',
-            overflow: 'scroll',
+            //maxHeight: '400px',
+            //overflow: 'scroll',
             borderRadius: '10px',
             position: 'fixed',
             textAlign: 'center',

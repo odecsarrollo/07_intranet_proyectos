@@ -101,7 +101,7 @@ class Form extends Component {
                     />
                 </div>
                 <div style={{ width: '100%', textAlign: 'center', paddingTop: '20px' }}>
-                    {initialValues && initialValues.imagen && <img style={{ height: '200px', width: '280px' }} src={initialValues.imagen}></img>}
+                    {initialValues && initialValues.imagen && <img src={initialValues.imagen}></img>}
                 </div>
                 <div style={{ paddingTop: '30px', paddingBottom: '30px' }}>
                     <MyFieldFileInput

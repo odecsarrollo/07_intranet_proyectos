@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import EtiquetasMedios from '../components/etiquetas_medios/etiquetas_medios';
 import StickersMedios from '../components/stickers_medios/stickers_medios';
-import MovimientosEtiquetaMedios from '../components/adhesivos_movimientos_medios/adhesivos_movimientos_medios';
+import MovimientosEtiquetaMedios from '../components/adhesivos_movimientos_medios/adhesivos_movimientos_medios'
+import UltimosMovimientosAdhesivosMedios from '../components/adhesivos_ultimos_movimientos_medios/adhesivos_ultimos_movimientos_medios';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 
@@ -25,6 +26,9 @@ class Dashboard extends Component {
                         <Tab>
                             Stickers
                         </Tab>
+                        <Tab>
+                            Reporte
+                        </Tab>
                     </TabList>
                     <TabPanel>
                         <div style={{ marginTop: '40px' }}>
@@ -39,6 +43,11 @@ class Dashboard extends Component {
                     <TabPanel>
                         <div style={{ marginTop: '40px' }}>
                             <StickersMedios />
+                        </div>
+                    </TabPanel>
+                    <TabPanel>
+                        <div style={{ marginTop: '40px' }}>
+                            <UltimosMovimientosAdhesivosMedios />
                         </div>
                     </TabPanel>
                 </Tabs>
