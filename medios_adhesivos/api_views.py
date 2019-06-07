@@ -16,32 +16,31 @@ from .api_serializers import (
 
 
 class AdhesivoViewSet(viewsets.ModelViewSet):
-    #consulta los adhesivos en tiempo real
+    # consulta los adhesivos en tiempo real
     queryset = Adhesivo.objects.all()
-    #instancia del serializador
+    # instancia del serializador
     serializer_class = AdhesivoSerializer
 
-
-    #metodo que sobre escribe el
+    # metodo que sobre escribe el
     def get_queryset(self):
-        #consulta cual es el ultimo movimiento de los adhesivos
+        # consulta cual es el ultimo movimiento de los adhesivos
         disponible = AdhesivoMovimiento.objects.values('adhesivo_id').filter(
             adhesivo_id=OuterRef('id'),
             ultimo=True
         ).annotate(
             saldo=Coalesce(Sum('saldo'), 0)
         )
-        #crea una funcion que modifica un valor del modelo antes de enviarlo al fontend
+        # crea una funcion que modifica un valor del modelo antes de enviarlo al fontend
         qs = self.queryset.annotate(
             disponible=Coalesce(
                 ExpressionWrapper(
                     Subquery(disponible.values('saldo')),
-                    #especifica el tipo de campo que se va a adjuntar
+                    # especifica el tipo de campo que se va a adjuntar
                     output_field=IntegerField()
                 ), 0
             )
         )
-        #[print(x.__dict__) for x in qs.all()]
+        # [print(x.__dict__) for x in qs.all()]
 
         return qs
 

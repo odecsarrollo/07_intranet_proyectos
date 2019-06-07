@@ -65,8 +65,8 @@ const styles = theme => (
             zIndex: 1400,
         },
         loadingOverloadTres: {
-            //maxHeight: '400px',
-            //overflow: 'scroll',
+            maxHeight: '400px',
+            overflowY: 'auto',
             borderRadius: '10px',
             position: 'fixed',
             textAlign: 'center',
@@ -80,8 +80,8 @@ const styles = theme => (
             filter: 'drop-shadow(0 0 8px darkgrey)'
         },
         loadingOverloadTresError: {
-            //maxHeight: '400px',
-            //overflow: 'scroll',
+            maxHeight: '400px',
+            overflowY: 'auto',
             borderRadius: '10px',
             position: 'fixed',
             textAlign: 'center',

@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from model_utils.models import TimeStampedModel
 from imagekit.models import ProcessedImageField, ImageSpecField
@@ -41,8 +42,6 @@ class Adhesivo(models.Model):
             ("list_adhesivo", "Can list adhesivo "),
         ]
 
-
-
     @property
     def tipo_nombre(self) -> str:
         return self.get_tipo_display()
@@ -53,8 +52,9 @@ class AdhesivoMovimiento(TimeStampedModel):
         ('E', 'Entrada'),
         ('S', 'Salida')
     )
+    creado_por = models.ForeignKey(User, related_name='movimientos_adhesivos', on_delete=models.PROTECT)
     tipo = models.CharField(choices=MOVIMIENTO_CHOICES, max_length=1)
-    responsable = models.CharField(max_length=50)
+    responsable = models.CharField(max_length=100, null=True)
     cantidad = models.IntegerField()
     descripcion = models.CharField(max_length=200, null=True)
     saldo = models.IntegerField()
@@ -66,7 +66,6 @@ class AdhesivoMovimiento(TimeStampedModel):
             ("list_adhesivomovimiento", "Can list adhesivo movimiento "),
             ("list_inventario_adhesivomovimiento", "Can list adhesivo movimiento inventario"),
         ]
-
 
     @property
     def tipo_nombre(self) -> str:

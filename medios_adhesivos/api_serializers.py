@@ -12,7 +12,6 @@ class AdhesivoSerializer(serializers.ModelSerializer):
     to_string = serializers.SerializerMethodField()
     imagen_small = serializers.ImageField(read_only=True)
 
-
     def get_to_string(self, instance):
         return instance.codigo
 
@@ -37,9 +36,16 @@ class AdhesivoSerializer(serializers.ModelSerializer):
 
 
 class MovimientoAdhesivoSerializer(serializers.ModelSerializer):
+    creado_por_username = serializers.CharField(source='creado_por.username', read_only=True)
     adhesivo_descripcion = serializers.CharField(source='adhesivo.descripcion', read_only=True)
     tipo_adhesivo = serializers.CharField(source='adhesivo.tipo_nombre', read_only=True)
-    current_user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    creado_por = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    to_string = serializers.SerializerMethodField()
+
+    def get_to_string(self, instance):
+        return '%s de %s unidad(es) para %s' % (
+            instance.get_tipo_display(), instance.cantidad, instance.adhesivo.codigo
+        )
 
     # metodo que sobre escribe el movimiento antes de ser creados en la base de datos
     def create(self, validated_data):
@@ -49,13 +55,12 @@ class MovimientoAdhesivoSerializer(serializers.ModelSerializer):
         adhesivo = validated_data.pop('adhesivo')
         cantidad = validated_data.pop('cantidad')
         tipo = validated_data.pop('tipo')
-        responsable = validated_data.pop('current_user')
-        try:
-            descripcion = validated_data.pop('descripcion')
-        except:
-            descripcion = None
+        creado_por = validated_data.pop('creado_por')
+        responsable = validated_data.get('responsable', None)
+        descripcion = validated_data.get('descripcion', None)
         # modifica el movimiento
         movimiento = moviento_adhesivo_crear(
+            creado_por_id=creado_por.id,
             adhesivo_id=adhesivo.id,
             cantidad=cantidad,
             tipo=tipo,
@@ -77,14 +82,15 @@ class MovimientoAdhesivoSerializer(serializers.ModelSerializer):
             'descripcion',
             'saldo',
             'ultimo',
+            'creado_por',
+            'creado_por_username',
             'adhesivo',
-            'current_user',
-            'tipo_adhesivo'
+            'tipo_adhesivo',
+            'to_string'
         ]
         # kwargs es un objeto key value
         extra_kwargs = {
             'saldo': {'read_only': True},
             'ultimo': {'read_only': True},
-            'responsable': {'read_only': True},
-            'current_user': {'default': serializers.CurrentUserDefault()}
+            'responsable': {'read_only': True}
         }

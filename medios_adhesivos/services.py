@@ -9,6 +9,7 @@ def moviento_adhesivo_crear(
         cantidad: int,
         tipo: str,
         responsable: str,
+        creado_por_id: int,
         descripcion: str = None,
 ) -> AdhesivoMovimiento:
     # la cantidad no debe ser menor o igual a 0
@@ -39,7 +40,8 @@ def moviento_adhesivo_crear(
         descripcion=descripcion,
         responsable=responsable,
         ultimo=True,
-        saldo=saldo
+        saldo=saldo,
+        creado_por_id=creado_por_id
     )
 
     return movimiento_nuevo
