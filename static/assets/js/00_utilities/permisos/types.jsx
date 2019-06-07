@@ -42,11 +42,11 @@ export const ITEMS_VENTAS_CATALOGOS = {
 };
 
 export const BANDA_EUROBELT_CATEGORIAS_DOS = {
-    add: 'add_categoriacomponentebandaeurobelt',
-    delete: 'delete_categoriacomponentebandaeurobelt',
-    change: 'change_categoriacomponentebandaeurobelt',
-    list: 'list_categoriacomponentebandaeurobelt',
-    detail: 'view_categoriacomponentebandaeurobelt',
+    add: 'add_categoriadoscomponentebandaeurobelt',
+    delete: 'delete_categoriadoscomponentebandaeurobelt',
+    change: 'change_categoriadoscomponentebandaeurobelt',
+    list: 'list_categoriadoscomponentebandaeurobelt',
+    detail: 'view_categoriadoscomponentebandaeurobelt',
 };
 
 export const BANDA_EUROBELT_COLORES = {
