@@ -220,3 +220,13 @@ export function fetchObjectWithParameterPDF(url, options) {
     const request = axios_instance.get(FULL_URL, {responseType: 'arraybuffer'});
     return createRequest(request, {...options, mensaje_cargando: ''});
 }
+
+export function callApiMethodPostParametersPDF(url, id, method, parameters, options) {
+    console.log(`%cAPI METODO ${method.toUpperCase()} CON PARMAETROS - %c${url.toUpperCase()} - %cID ${id} PARA PDF`, 'color:red', 'color:blue', 'color:green');
+    const mensaje_cargando = `Ejecutando PDF ${method.toUpperCase()} en ${url.toUpperCase()}`;
+    axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+    axios_instance.defaults.xsrfCookieName = "csrftoken";
+    const FULL_URL = `${url}/${id}/${method}/`;
+    const request = axios_instance.post(FULL_URL, parameters, {responseType: 'arraybuffer'});
+    return createRequest(request, {...options, mensaje_cargando});
+}

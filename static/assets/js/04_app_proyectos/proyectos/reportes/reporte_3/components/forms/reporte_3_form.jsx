@@ -4,10 +4,8 @@ import validate from './validate';
 import {formValueSelector} from 'redux-form'
 import {connect} from "react-redux";
 import {
-    MyTextFieldSimple,
     MyDateTimePickerField,
     MyCheckboxSimple,
-    MyCombobox
 } from '../../../../../../00_utilities/components/ui/forms/fields';
 import moment from 'moment-timezone';
 

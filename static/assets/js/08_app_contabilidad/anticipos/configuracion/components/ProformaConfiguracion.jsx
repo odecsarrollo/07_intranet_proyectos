@@ -50,7 +50,6 @@ class ProformaConfiguracionForm extends Component {
             handleSubmit,
             form_values
         } = this.props;
-        console.log(form_values)
         return (
             <form onSubmit={handleSubmit(v => this.onSubmit(this.submitObject(v)))}>
                 <div className="row">
@@ -63,7 +62,14 @@ class ProformaConfiguracionForm extends Component {
                     {/*    rows={4}*/}
                     {/*/>*/}
                     <MyTextFieldSimple
-                        className="col-12 col-md-6"
+                        className="col-12 col-md-6 pr-3"
+                        nombre='Email Copia por defecto'
+                        name='email_copia_default'
+                        case='U'
+                        type='email'
+                    />
+                    <MyTextFieldSimple
+                        className="col-12 col-md-6 pr-3"
                         nombre='Información Bancaria'
                         name='informacion_bancaria'
                         case='U'
@@ -73,14 +79,14 @@ class ProformaConfiguracionForm extends Component {
                     {
                         initialValues && initialValues.encabezado &&
                         <div className="col-12">
-                            <img style={{height: '200px', width: '280px'}} src={initialValues.encabezado}></img>
+                            <img style={{width: '100%'}} src={initialValues.encabezado}></img>
                             <MyCheckboxSimple nombre='Borrar Encabezado?' name='borrar_encabezado'/>
                         </div>
                     }
                     {
                         initialValues && !initialValues.encabezado &&
                         <div className="col-12">
-                            Encabezado
+                            Encabezado (1190x228):
                             <MyFieldFileInput
                                 name="encabezado"
                                 accept="image/png, image/jpeg"

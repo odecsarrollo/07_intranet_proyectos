@@ -4,7 +4,7 @@ from django.db import models
 from model_utils.models import TimeStampedModel
 from cargues_catalogos.models import ClienteCatalogo
 from imagekit.models import ProcessedImageField
-from imagekit.processors import ResizeToFit, ResizeCanvas
+from imagekit.processors import ResizeToFit
 
 
 class ProformaConfiguracion(models.Model):
@@ -20,16 +20,17 @@ class ProformaConfiguracion(models.Model):
 
     informacion_odecopack = models.TextField(null=True)
     informacion_bancaria = models.TextField(null=True)
+    email_copia_default = models.EmailField(null=True)
     firma = ProcessedImageField(
         processors=[ResizeToFit(width=400, height=300, upscale=False)],
-        format='PNG',
+        format='JPEG',
         options={'quality': 100},
         null=True,
         upload_to=firma_upload_to
     )
     encabezado = ProcessedImageField(
-        processors=[ResizeToFit(400, 1300), ResizeCanvas(400, 1300)],
-        format='PNG',
+        processors=[ResizeToFit(1190, 228)],
+        format='JPEG',
         options={'quality': 100},
         null=True,
         upload_to=encabezado_upload_to
@@ -37,6 +38,13 @@ class ProformaConfiguracion(models.Model):
 
 
 class ProformaAnticipo(TimeStampedModel):
+    ESTADOS_CHOICES = (
+        ('CREADA', 'Creada'),
+        ('ENVIADA', 'Enviada'),
+        ('EDICION', 'Edicion'),
+        ('ANULADA', 'Anulada'),
+        ('CERRADA', 'Cerrada'),
+    )
     DIVISA_CHOICES = (
         ('USD', 'Dólares'),
         ('EUR', 'Euros'),
@@ -52,15 +60,20 @@ class ProformaAnticipo(TimeStampedModel):
         related_name='cobros_anticipos'
     )
     nro_consecutivo = models.IntegerField()
+    estado = models.CharField(max_length=20, choices=ESTADOS_CHOICES, default='CREADA')
+    email_destinatario = models.EmailField(null=True)
+    email_destinatario_dos = models.EmailField(null=True)
     informacion_locatario = models.TextField(null=True)
     informacion_cliente = models.TextField(null=True)
     divisa = models.CharField(choices=DIVISA_CHOICES, max_length=10)
-    tipo_documento = models.CharField(choices=TIPO_DOCUMENTO_CHOICES, max_length=10)
+    tipo_documento = models.CharField(choices=TIPO_DOCUMENTO_CHOICES, max_length=20)
     nit = models.CharField(max_length=20)
     nombre_cliente = models.CharField(max_length=200)
     fecha = models.DateField()
-    nro_orden_cobro = models.CharField(max_length=20)
+    nro_orden_compra = models.CharField(max_length=20)
     condicion_pago = models.CharField(max_length=200)
+    cobrado = models.BooleanField(default=False)
+    impuesto = models.DecimalField(max_digits=12, decimal_places=2, default=0)
 
 
 class ProformaAnticipoItem(TimeStampedModel):

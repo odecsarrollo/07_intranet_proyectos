@@ -1,3 +1,11 @@
+export const PROFORMAS_ANTICIPOS = {
+    add: 'add_proformaanticipo',
+    delete: 'delete_proformaanticipo',
+    change: 'change_proformaanticipo',
+    list: 'list_proformaanticipo',
+    view: 'view_proformaanticipo',
+};
+
 export const ADHESIVOS_MOVIMIENTOS_MEDIOS = {
     add: 'add_adhesivomovimiento',
     delete: 'delete_adhesivomovimiento',
@@ -5,7 +13,7 @@ export const ADHESIVOS_MOVIMIENTOS_MEDIOS = {
     list: 'list_adhesivomovimiento',
     detail: 'view_adhesivomovimiento',
 };
-    
+
 
 export const ADHESIVO_MEDIOS_CATALOGOS = {
     add: 'add_adhesivo',

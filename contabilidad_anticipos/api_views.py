@@ -1,5 +1,7 @@
 from django.core.exceptions import ValidationError
+from django.http import HttpResponse
 from rest_framework import viewsets
+from rest_framework.decorators import detail_route
 
 from .models import (
     ProformaConfiguracion,
@@ -39,3 +41,18 @@ class ProformaAnticipoItemViewSet(viewsets.ModelViewSet):
 class ProformaAnticipoViewSet(viewsets.ModelViewSet):
     queryset = ProformaAnticipo.objects.all()
     serializer_class = ProformaAnticipoSerializer
+
+    @detail_route(methods=['post'])
+    def imprimir_cobro(self, request, pk=None):
+        from .services import proforma_cobro_generar_pdf
+        anticipo = self.get_object()
+        output = proforma_cobro_generar_pdf(
+            id=anticipo.id,
+            request=self.request
+        )
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
+        response['Content-Transfer-Encoding'] = 'binary'
+        response.write(output.getvalue())
+        output.close()
+        return response
