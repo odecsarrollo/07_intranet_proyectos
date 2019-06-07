@@ -15,4 +15,3 @@ start_backend.ps1
 .npmrc
 # Binary Files
 **/__pycache__/*
-requirements.txt
