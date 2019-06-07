@@ -4,7 +4,7 @@ import {
 
 export default function (state = [], action) {
     switch (action.type) {
-        case TYPES.fetch_mis_permisos:
+        case TYPES.mis_permisos:
             return action.payload.data.map((permiso) => {
                 return permiso.codename
             });

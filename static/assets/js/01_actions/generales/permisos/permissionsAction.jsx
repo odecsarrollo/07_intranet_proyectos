@@ -6,12 +6,12 @@ import {
     fetchListGet,
     updateObject,
     fetchObject,
-    fetchListGetURLParameters, fetchListPost
+    fetchListGetURLParameters
 } from '../../00_general_fuctions'
 
 const current_url_api = 'permisos';
 
-export const tengoMisPermisosxListado = (listados_permisos = [], options_action = {}) => {
+export const fetchMisPermisosxListado = (listados_permisos = [], options_action = {}) => {
     let permisos_listado_consulta = '';
     listados_permisos.map(lista => {
         _.mapKeys(lista, (v) => {
@@ -22,7 +22,7 @@ export const tengoMisPermisosxListado = (listados_permisos = [], options_action 
         const SUB_URL = '/tengo_permisos';
         const FULL_URL = `${current_url_api}${SUB_URL}/?listado_permisos=${permisos_listado_consulta}`;
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_mis_permisos, payload: response})
+            dispatch({type: TYPES.mis_permisos, payload: response})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {
@@ -40,7 +40,7 @@ export const fetchMisPermisos = (options_action = {}) => {
         const SUB_URL = '/mis_permisos';
         const FULL_URL = `${current_url_api}${SUB_URL}`;
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_mis_permisos, payload: response})
+            dispatch({type: TYPES.mis_permisos, payload: response})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {

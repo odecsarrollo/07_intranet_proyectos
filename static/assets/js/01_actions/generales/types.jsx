@@ -9,7 +9,7 @@ export const LOADING = {
 export const PERMISO_TYPES = {
     fetch_all: 'fetch_permisos',
     fetch: 'fetch_permiso',
-    fetch_mis_permisos: 'fetch_mis_permisos',
+    mis_permisos: 'fetch_mis_permisos',
     clear: 'clear_permisos',
     update: 'update_permiso',
 };
