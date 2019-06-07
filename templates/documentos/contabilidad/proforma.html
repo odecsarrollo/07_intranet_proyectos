@@ -1,0 +1,76 @@
+{% load static l10n humanize %}
+<style>
+    @page {
+        text-align: justify;
+        font-family: Arial;
+        size: 21.6cm 27.9cm;
+        margin: 4cm 0.7cm 4cm 0.7cm;
+        @bottom-center {
+            font-size: 1rem;
+            content: "Página " counter(page) " de " counter(pages);
+        }
+    }
+
+    .text {
+        text-align: justify;
+        white-space: pre-line;
+        font-size: 0.7rem;
+    }
+
+    .title {
+        font-weight: bold;
+        font-size: 0.8rem;
+    }
+</style>
+<div>
+    <div>
+        <table style="width: 100%">
+            <tr>
+                <td colspan="2" style="padding: 3px">
+                    <div><span class="title">FECHA: </span>{{ anticipo.fecha }}</div>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 50%; padding: 3px; vertical-align: top">
+                    <div class="title">CLIENTE</div>
+                    <div class="text">{{ anticipo.informacion_cliente }}</div>
+                </td>
+                <td style="width: 50%; padding: 3px; vertical-align: top">
+                    {% if anticipo.informacion_locatario %}
+                        <div class="title">LOCATARIO</div>
+                        <div class="text">{{ anticipo.informacion_locatario }}</div>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    {% localize off %}
+                        <span class="title">{{ anticipo.get_tipo_documento_display|upper }}:</span>
+                        {{ anticipo.nro_consecutivo }}
+                    {% endlocalize %}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <span class="title">ORDEN DE COMPRA:</span> {{ anticipo.nro_orden_compra }}
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 60%; padding: 3px; vertical-align: top">
+                    <div class="title">DATOS BANCARIOS</div>
+                    <div class="text">{{ configuracion.informacion_bancaria }}</div>
+                </td>
+                <td style="width: 40%; padding: 3px; vertical-align: top">
+                    <div class="title">CONDICIONES DE PAGO</div>
+                    <div class="text">{{ anticipo.condicion_pago }}</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div style="width: 6cm; text-align: center">
+        <img style="width: 4cm" src="{{ configuracion.firma.url }}" alt="">
+        <div style="border-top: 1px black solid">
+            Firma Emisor
+        </div>
+    </div>
+</div>

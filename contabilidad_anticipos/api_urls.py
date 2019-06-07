@@ -7,5 +7,5 @@ from .api_views import (
 
 router = routers.DefaultRouter()
 router.register(r'contabilidad_anticipos_proforma_anticipo_configuracion', ProformaConfiguracionViewSet)
-router.register(r'contabilidad_anticipos_proformas_anticipos', ProformaAnticipoViewSet)
-router.register(r'contabilidad_anticipos_proformas_anticipos_items', ProformaAnticipoItemViewSet)
+router.register(r'contabilidad_anticipos_proformas_cobros', ProformaAnticipoViewSet)
+router.register(r'contabilidad_anticipos_proformas_cobros_items', ProformaAnticipoItemViewSet)

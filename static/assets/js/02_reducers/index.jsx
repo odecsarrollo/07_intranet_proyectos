@@ -61,6 +61,8 @@ import componentesReducer from './especificas/bandas_eurobelt/componentesReducer
 
 import contabilidadProformaConfiguracionReducer
     from './especificas/contabilidad/anticipos/proformaConfiguracionReducer';
+import contabilidadProformaAnticiposReducer
+    from './especificas/contabilidad/anticipos/proformaAnticipoReducer';
 
 
 import itemVentasCatalogosProductosReducer from './especificas/catalogos_productos/itemsVentasReducer';
@@ -130,6 +132,8 @@ const rootReducer = combineReducers({
     medios_adhesivos: mediosAdhesivosReducers,
     medios_adhesivos_movimientos: mediosAdhesivosMovimientosReducers,
     contabilidad_proforma_configuracion: contabilidadProformaConfiguracionReducer,
+
+    contabilidad_proforma_anticipos: contabilidadProformaAnticiposReducer,
 });
 
 export default rootReducer;

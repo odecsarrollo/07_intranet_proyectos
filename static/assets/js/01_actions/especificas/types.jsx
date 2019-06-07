@@ -1,3 +1,12 @@
+export const PROFORMA_ANTICIPO_TYPES = {
+    create: 'create_proforma_anticipo',
+    delete: 'delete_proforma_anticipo',
+    fetch_all: 'fetch_proformas_anticipos',
+    fetch: 'fetch_proforma_anticipo',
+    clear: 'clear_proformas_anticipos',
+    update: 'update_proforma_anticipo',
+};
+
 export const PROFORMA_CONFIGURACION_TYPES = {
     create: 'create_proforma_configuracion',
     delete: 'delete_proforma_configuracion',

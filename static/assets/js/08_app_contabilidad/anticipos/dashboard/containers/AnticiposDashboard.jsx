@@ -8,10 +8,11 @@ import {permisosAdapter} from "../../../../00_utilities/common";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import {
-    BANDA_EUROBELT_COLORES as colores_permisos_view
+    PROFORMAS_ANTICIPOS as proforma_anticipos_view
 } from "../../../../00_utilities/permisos/types";
 
 import BloqueProformaConfiguracion from "../../configuracion/components/ProformaConfiguracion";
+import BloqueProformaCobros from "../../anticipos/components/CobrosList";
 
 class ItemsDashboard extends Component {
     constructor(props) {
@@ -32,7 +33,7 @@ class ItemsDashboard extends Component {
     cargarElementos(value = null) {
         let index = value !== null ? value : this.state.slideIndex;
         if (index === 0) {
-            console.log('Index 0')
+            this.props.fetchProformasAnticipos()
         }
         if (index === 1) {
             this.props.fetchProformaConfiguracion()
@@ -54,8 +55,9 @@ class ItemsDashboard extends Component {
 
     render() {
         const {slideIndex} = this.state;
-        const {contabilidad_proforma_configuracion} = this.props;
+        const {contabilidad_proforma_configuracion, contabilidad_proforma_anticipos, mis_permisos} = this.props;
         const can_see = true;
+        const permisos_anticipos = permisosAdapter(proforma_anticipos_view);
         return (
             <ValidarPermisos can_see={can_see} nombre={this.plural_name}>
                 <Titulo>{this.singular_name}</Titulo>
@@ -70,14 +72,18 @@ class ItemsDashboard extends Component {
                 </Tabs>
                 {
                     slideIndex === 0 &&
-                    <div>Aqui val los anticipos</div>
+                    <BloqueProformaCobros
+                        {...this.props}
+                        object_list={contabilidad_proforma_anticipos}
+                        permisos_object={permisos_anticipos}
+                    />
                 }
                 {
                     slideIndex === 1 &&
                     _.size(contabilidad_proforma_configuracion) > 0 &&
                     <BloqueProformaConfiguracion
-                        item_seleccionado={_.map(contabilidad_proforma_configuracion)[0]}
                         {...this.props}
+                        item_seleccionado={_.map(contabilidad_proforma_configuracion)[0]}
                     />
                 }
                 <CargarDatos
@@ -93,6 +99,7 @@ function mapPropsToState(state, ownProps) {
     return {
         mis_permisos: state.mis_permisos,
         contabilidad_proforma_configuracion: state.contabilidad_proforma_configuracion,
+        contabilidad_proforma_anticipos: state.contabilidad_proforma_anticipos,
     }
 }
 
