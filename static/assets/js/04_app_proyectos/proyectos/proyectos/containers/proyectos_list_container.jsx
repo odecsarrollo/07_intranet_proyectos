@@ -6,7 +6,7 @@ import {
     PROYECTOS as permisos_view,
     COTIZACIONES as cotizaciones_permisos_view,
 } from "../../../../00_utilities/permisos/types";
-import {permisosAdapter} from "../../../../00_utilities/common";
+import {permisosAdapterDos} from "../../../../00_utilities/common";
 import CreateForm from '../components/forms/proyectos_modal_form';
 import Tabla from '../components/proyectos_tabla';
 import crudHOC from '../../../../00_utilities/components/hoc_crud';
@@ -26,7 +26,12 @@ class List extends Component {
     }
 
     componentDidMount() {
-        this.cargarDatos();
+     this.props.fetchMisPermisosxListado(
+            [
+                permisos_view,
+                cotizaciones_permisos_view
+            ], {callback: () => this.cargarDatos()}
+        );
     }
 
     componentWillUnmount() {
@@ -45,8 +50,8 @@ class List extends Component {
 
     render() {
         const {object_list, mis_permisos, cotizaciones_list} = this.props;
-        const permisos_proyectos = permisosAdapter(permisos_view);
-        const permisos_cotizaciones = permisosAdapter(cotizaciones_permisos_view);
+        const permisos_proyectos = permisosAdapterDos(mis_permisos, permisos_view);
+        const permisos_cotizaciones = permisosAdapterDos(mis_permisos, cotizaciones_permisos_view);
         const cotizaciones_list_2 = _.map(cotizaciones_list, c => {
             if (c.crear_literal) {
                 const proyectos = _.map(_.pickBy(object_list, p => {

@@ -5,7 +5,7 @@ import CargarDatos from "../../../../00_utilities/components/system/cargar_datos
 import {
     SISTEMAS_INFORMACION_ORIGEN as permisos_view
 } from "../../../../00_utilities/permisos/types";
-import {permisosAdapter} from "../../../../00_utilities/common";
+import {permisosAdapterDos} from "../../../../00_utilities/common";
 import CreateForm from '../components/forms/SistemaInformacionOrigenForm';
 import Tabla from '../components/SistemaInformacionOrigenTabla';
 import crudHOC from '../../../../00_utilities/components/hoc_crud';
@@ -19,7 +19,11 @@ class List extends Component {
     }
 
     componentDidMount() {
-        this.cargarDatos();
+        this.props.fetchMisPermisosxListado(
+            [
+                permisos_view
+            ], {callback: () => this.cargarDatos()}
+        );
     }
 
     componentWillUnmount() {
@@ -32,7 +36,7 @@ class List extends Component {
 
     render() {
         const {object_list, mis_permisos} = this.props;
-        const permisos_object = permisosAdapter(permisos_view);
+        const permisos_object = permisosAdapterDos(mis_permisos, permisos_view);
         const method_pool = {
             fetchObjectMethod: this.props.fetchSistemaInformacionOrigen,
             deleteObjectMethod: this.props.deleteSistemaInformacionOrigen,

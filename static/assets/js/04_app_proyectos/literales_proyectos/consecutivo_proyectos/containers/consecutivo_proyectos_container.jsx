@@ -5,7 +5,7 @@ import CargarDatos from "../../../../00_utilities/components/system/cargar_datos
 import {
     LITERALES as permisos_view
 } from "../../../../00_utilities/permisos/types";
-import {permisosAdapter} from "../../../../00_utilities/common";
+import {permisosAdapterDos} from "../../../../00_utilities/common";
 import Tabla from '../components/consecutivo_proyectos_tabla';
 
 
@@ -16,7 +16,11 @@ class List extends Component {
     }
 
     componentDidMount() {
-        this.cargarDatos();
+        this.props.fetchMisPermisosxListado(
+            [
+                permisos_view
+            ], {callback: () => this.cargarDatos()}
+        );
     }
 
     componentWillUnmount() {
@@ -28,8 +32,8 @@ class List extends Component {
     }
 
     render() {
-        const {object_list} = this.props;
-        const bloque_1_permisos = permisosAdapter(permisos_view);
+        const {object_list, mis_permisos} = this.props;
+        const bloque_1_permisos = permisosAdapterDos(mis_permisos, permisos_view);
         return (
             <Fragment>
                 <Tabla
@@ -47,6 +51,7 @@ class List extends Component {
 
 function mapPropsToState(state, ownProps) {
     return {
+        mis_permisos: state.mis_permisos,
         object_list: state.literales
     }
 }

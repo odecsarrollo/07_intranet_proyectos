@@ -5,7 +5,7 @@ import CargarDatos from "../../../../00_utilities/components/system/cargar_datos
 import {
     USUARIOS as permisos_view_groups
 } from "../../../../00_utilities/permisos/types";
-import {permisosAdapter} from "../../../../00_utilities/common";
+import {permisosAdapterDos} from "../../../../00_utilities/common";
 import CreateForm from '../components/forms/UsuarioForm';
 import Tabla from '../components/UsuarioTabla';
 import crudHOC from '../../../../00_utilities/components/hoc_crud';
@@ -20,7 +20,11 @@ class List extends Component {
     }
 
     componentDidMount() {
-        this.cargarDatos();
+        this.props.fetchMisPermisosxListado(
+            [
+                permisos_view_groups
+            ], {callback: () => this.cargarDatos()}
+        );
     }
 
     componentWillUnmount() {
@@ -33,8 +37,8 @@ class List extends Component {
     }
 
     render() {
-        const {object_list} = this.props;
-        const permisos_object = permisosAdapter(permisos_view_groups);
+        const {object_list, mis_permisos} = this.props;
+        const permisos_object = permisosAdapterDos(mis_permisos, permisos_view_groups);
         const method_pool = {
             fetchObjectMethod: this.props.fetchUsuario,
             deleteObjectMethod: this.props.deleteUsuario,
@@ -62,6 +66,7 @@ class List extends Component {
 
 function mapPropsToState(state, ownProps) {
     return {
+        mis_permisos: state.mis_permisos,
         object_list: state.usuarios
     }
 }

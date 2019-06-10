@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import * as actions from "../../../../01_actions/01_index";
 import CargarDatos from "../../../../00_utilities/components/system/cargar_datos";
 import ValidarPermisos from "../../../../00_utilities/permisos/validar_permisos";
-import {permisosAdapter} from "../../../../00_utilities/common";
+import {permisosAdapterDos} from "../../../../00_utilities/common";
 import {ListaBusqueda} from '../../../../00_utilities/utiles';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -30,7 +30,11 @@ class UsuariosDetail extends Component {
             fetchPermisosActivos
         } = this.props;
         fetchPermisosActivos({callback: (response) => this.setState({todos_los_permisos: _.mapKeys(response, 'id')})});
-        this.cargarDatos();
+        this.props.fetchMisPermisosxListado(
+            [
+                permisos_view
+            ], {callback: () => this.cargarDatos()}
+        );
     }
 
     componentWillUnmount() {
@@ -81,7 +85,7 @@ class UsuariosDetail extends Component {
         const {usuario, mis_permisos, grupos_permisos} = this.props;
         let {permisos_usuario} = this.props;
         const {todos_los_permisos} = this.state;
-        const permisos = permisosAdapter(permisos_view);
+        const permisos = permisosAdapterDos(mis_permisos, permisos_view);
 
         const grupos_con_permisos = _.map(grupos_permisos, g => {
             const permisos_grupo = g.permissions.map(p => todos_los_permisos[p]);

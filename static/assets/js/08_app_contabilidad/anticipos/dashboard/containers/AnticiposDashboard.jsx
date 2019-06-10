@@ -4,7 +4,7 @@ import * as actions from "../../../../01_actions/01_index";
 import CargarDatos from "../../../../00_utilities/components/system/cargar_datos";
 import {Titulo} from "../../../../00_utilities/templates/fragmentos";
 import ValidarPermisos from "../../../../00_utilities/permisos/validar_permisos";
-import {permisosAdapter} from "../../../../00_utilities/common";
+import {permisosAdapterDos} from "../../../../00_utilities/common";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import {
@@ -50,14 +50,18 @@ class ItemsDashboard extends Component {
     };
 
     componentDidMount() {
-        this.cargarDatos();
+        this.props.fetchMisPermisosxListado(
+            [
+                proforma_anticipos_view
+            ], {callback: () => this.cargarDatos()}
+        );
     }
 
     render() {
         const {slideIndex} = this.state;
         const {contabilidad_proforma_configuracion, contabilidad_proforma_anticipos, mis_permisos} = this.props;
         const can_see = true;
-        const permisos_anticipos = permisosAdapter(proforma_anticipos_view);
+        const permisos_anticipos = permisosAdapterDos(mis_permisos, proforma_anticipos_view);
         return (
             <ValidarPermisos can_see={can_see} nombre={this.plural_name}>
                 <Titulo>{this.singular_name}</Titulo>

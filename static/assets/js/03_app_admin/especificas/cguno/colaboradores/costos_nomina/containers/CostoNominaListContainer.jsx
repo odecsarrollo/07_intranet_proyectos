@@ -5,7 +5,7 @@ import CargarDatos from "../../../../../../00_utilities/components/system/cargar
 import {
     COLABORADORES_COSTOS_MESES as permisos_view
 } from "../../../../../../00_utilities/permisos/types";
-import {permisosAdapter, REGEX_SOLO_NUMEROS} from "../../../../../../00_utilities/common";
+import {permisosAdapterDos, REGEX_SOLO_NUMEROS} from "../../../../../../00_utilities/common";
 import TextField from '@material-ui/core/TextField';
 import moment from 'moment';
 
@@ -34,7 +34,11 @@ class List extends Component {
         const today = date_today.format('YYYY-MM-DD');
         const today_manana = date_today.add(1, 'day').format('YYYY-MM-DD');
         this.consultarPorFecha(today, today_manana);
-        this.cargarDatos();
+        this.props.fetchMisPermisosxListado(
+            [
+                permisos_view
+            ], {callback: () => this.cargarDatos()}
+        );
     }
 
     componentWillUnmount() {
@@ -75,7 +79,7 @@ class List extends Component {
             centros_costos_list,
             configuracion_costos
         } = this.props;
-        const permisos_object = permisosAdapter(permisos_view);
+        const permisos_object = permisosAdapterDos(mis_permisos, permisos_view);
         const {ano, mes, ano_error, mes_error} = this.state;
         return (
             <ValidarPermisos can_see={permisos_object.list} nombre='Costos Colaboradores'>

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {fechaFormatoDos, permisosAdapter, pesosColombianos, numeroFormato} from '../../../../00_utilities/common';
+import {fechaFormatoDos, permisosAdapterDos, pesosColombianos, numeroFormato} from '../../../../00_utilities/common';
 import {ListaBusqueda} from '../../../../00_utilities/utiles';
 import {connect} from "react-redux";
 import * as actions from "../../../../01_actions/01_index";
@@ -52,7 +52,11 @@ class TablaProyectosLiteralesMateriales extends Component {
 
     componentDidMount() {
         const {id_literal} = this.props;
-        this.cargarDatos(id_literal);
+        this.props.fetchMisPermisosxListado(
+            [
+                permisos_view
+            ], {callback: () => this.cargarDatos(id_literal)}
+        );
     }
 
     cargarDatos(id_literal) {
@@ -64,7 +68,7 @@ class TablaProyectosLiteralesMateriales extends Component {
             mis_permisos,
             items_literales
         } = this.props;
-        const permisos = permisosAdapter(permisos_view);
+        const permisos = permisosAdapterDos(mis_permisos, permisos_view);
         return (
             <ListaBusqueda>
                 {

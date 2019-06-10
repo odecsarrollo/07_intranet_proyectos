@@ -4,7 +4,7 @@ import * as actions from "../../../../01_actions/01_index";
 import CargarDatos from "../../../../00_utilities/components/system/cargar_datos";
 import {Titulo, SinObjeto} from "../../../../00_utilities/templates/fragmentos";
 import ValidarPermisos from "../../../../00_utilities/permisos/validar_permisos";
-import {permisosAdapter, fechaFormatoUno, pesosColombianos} from "../../../../00_utilities/common";
+import {permisosAdapterDos, fechaFormatoUno, pesosColombianos} from "../../../../00_utilities/common";
 import {
     MANOS_OBRAS_HOJAS_TRABAJOS as permisos_view,
     MANOS_OBRAS_HORAS_HOJAS_TRABAJOS as permisos_view_horas
@@ -25,7 +25,12 @@ class Detail extends Component {
     }
 
     componentDidMount() {
-        this.cargarDatos();
+        this.props.fetchMisPermisosxListado(
+            [
+                permisos_view,
+                permisos_view_horas
+            ], {callback: () => this.cargarDatos()}
+        );
     }
 
     componentWillUnmount() {
@@ -58,9 +63,9 @@ class Detail extends Component {
     }
 
     render() {
-        const {object, configuracion_costos} = this.props;
-        const permisos = permisosAdapter(permisos_view);
-        const permisos_horas = permisosAdapter(permisos_view_horas);
+        const {object, configuracion_costos, mis_permisos} = this.props;
+        const permisos = permisosAdapterDos(mis_permisos, permisos_view);
+        const permisos_horas = permisosAdapterDos(mis_permisos, permisos_view_horas);
 
         const fecha_cierre = configuracion_costos ? configuracion_costos.fecha_cierre : null;
         const fecha_registro = object ? object.fecha : null;

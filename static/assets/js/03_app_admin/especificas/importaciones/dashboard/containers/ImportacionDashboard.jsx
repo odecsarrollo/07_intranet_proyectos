@@ -4,7 +4,7 @@ import * as actions from "../../../../../01_actions/01_index";
 import CargarDatos from "../../../../../00_utilities/components/system/cargar_datos";
 import {Titulo} from "../../../../../00_utilities/templates/fragmentos";
 import ValidarPermisos from "../../../../../00_utilities/permisos/validar_permisos";
-import {permisosAdapter} from "../../../../../00_utilities/common";
+import {permisosAdapterDos} from "../../../../../00_utilities/common";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import {
@@ -59,15 +59,21 @@ class ItemsDashboard extends Component {
     };
 
     componentDidMount() {
-        this.cargarDatos();
+         this.props.fetchMisPermisosxListado(
+            [
+                monedas_cambios_permisos_view,
+                proveedores_permisos_view,
+                margenes_permisos_view
+            ], {callback: () => this.cargarDatos()}
+        );
     }
 
     render() {
-        const {monedas_cambios, proveedores_importaciones, margenes_proveedores, categorias_productos} = this.props;
+        const {monedas_cambios, proveedores_importaciones, margenes_proveedores, categorias_productos, mis_permisos} = this.props;
         const {slideIndex} = this.state;
-        const permisos_monedas_cambios = permisosAdapter(monedas_cambios_permisos_view);
-        const permisos_proveedores = permisosAdapter(proveedores_permisos_view);
-        const permisos_margenes = permisosAdapter(margenes_permisos_view);
+        const permisos_monedas_cambios = permisosAdapterDos(mis_permisos, monedas_cambios_permisos_view);
+        const permisos_proveedores = permisosAdapterDos(mis_permisos, proveedores_permisos_view);
+        const permisos_margenes = permisosAdapterDos(mis_permisos, margenes_permisos_view);
 
         const can_see = permisos_monedas_cambios.list;
         return (

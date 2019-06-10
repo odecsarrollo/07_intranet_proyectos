@@ -4,7 +4,7 @@ import FaseLiteral from './seguimiento_literal_fase';
 import {connect} from "react-redux";
 import * as actions from "../../../../01_actions/01_index";
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
-import {permisosAdapter} from "../../../../00_utilities/common";
+import {permisosAdapterDos} from "../../../../00_utilities/common";
 import {
     PROYECTOS as proyectos_permisos_view,
 } from "../../../../00_utilities/permisos/types";
@@ -67,7 +67,11 @@ class SeguimientoLiteral extends Component {
 
     componentDidMount() {
         const {id_literal} = this.props;
-        this.cargarDatos(id_literal);
+        this.props.fetchMisPermisosxListado(
+            [
+                proyectos_permisos_view
+            ], {callback: () => this.cargarDatos(id_literal)}
+        );
     }
 
     componentWillReceiveProps(nextProps) {
@@ -181,6 +185,7 @@ class SeguimientoLiteral extends Component {
 
     render() {
         const {
+            mis_permisos,
             fases_literales_list,
             miembros_literales_list,
             usuarios
@@ -230,7 +235,7 @@ class SeguimientoLiteral extends Component {
             }
         });
 
-        const proyecto_permisos = permisosAdapter(proyectos_permisos_view);
+        const proyecto_permisos = permisosAdapterDos(mis_permisos, proyectos_permisos_view);
 
         const puede_administrar_miembros = (miembro && miembro.puede_administrar_miembros) || proyecto_permisos.admin_proyect_manager;
         const puede_administrar_fases = (miembro && miembro.puede_administrar_fases) || proyecto_permisos.admin_proyect_manager;
@@ -421,6 +426,7 @@ class SeguimientoLiteral extends Component {
 
 function mapPropsToState(state, ownProps) {
     return {
+        mis_permisos: state.mis_permisos,
         fases_list: state.fases,
         fases_literales_list: state.fases_literales,
         fases_tareas: state.fases_tareas,

@@ -4,7 +4,7 @@ import * as actions from "../../../../01_actions/01_index";
 import CargarDatos from "../../../../00_utilities/components/system/cargar_datos";
 import {Titulo, SinObjeto} from "../../../../00_utilities/templates/fragmentos";
 import ValidarPermisos from "../../../../00_utilities/permisos/validar_permisos";
-import {permisosAdapter} from "../../../../00_utilities/common";
+import {permisosAdapterDos} from "../../../../00_utilities/common";
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import {
     COTIZACIONES as permisos_view,
@@ -40,7 +40,13 @@ class Detail extends Component {
     }
 
     componentDidMount() {
-        this.cargarDatos();
+        this.props.fetchMisPermisosxListado(
+            [
+                permisos_view,
+                proyecto_permisos_view,
+                archivo_cotizacion_permisos_view
+            ], {callback: () => this.cargarDatos()}
+        );
     }
 
     componentWillUnmount() {
@@ -139,11 +145,11 @@ class Detail extends Component {
     }
 
     render() {
-        const {object, seguimiento_list, archivos_list} = this.props;
+        const {object, seguimiento_list, archivos_list, mis_permisos} = this.props;
         const {adicionar_documento, item_seleccionado} = this.state;
-        const permisos = permisosAdapter(permisos_view);
-        const permisos_proyecto = permisosAdapter(proyecto_permisos_view);
-        const permisos_archivos_cotizacion = permisosAdapter(archivo_cotizacion_permisos_view);
+        const permisos = permisosAdapterDos(permisos_view);
+        const permisos_proyecto = permisosAdapterDos(mis_permisos, proyecto_permisos_view);
+        const permisos_archivos_cotizacion = permisosAdapterDos(mis_permisos, archivo_cotizacion_permisos_view);
         if (!object) {
             return <SinObjeto/>
         }
@@ -241,6 +247,7 @@ class Detail extends Component {
 function mapPropsToState(state, ownProps) {
     const {id} = ownProps.match.params;
     return {
+        mis_permisos: state.mis_permisos,
         seguimiento_list: state.cotizaciones_seguimientos,
         proyectos_list: state.proyectos,
         literales_list: state.literales,

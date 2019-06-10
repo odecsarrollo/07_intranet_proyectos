@@ -4,7 +4,7 @@ import * as actions from "../../../../01_actions/01_index";
 import CargarDatos from "../../../../00_utilities/components/system/cargar_datos";
 import Typography from '@material-ui/core/Typography';
 import ValidarPermisos from "../../../../00_utilities/permisos/validar_permisos";
-import {permisosAdapter} from "../../../../00_utilities/common";
+import {permisosAdapterDos} from "../../../../00_utilities/common";
 import {
     PERMISSION as permisos_view
 } from '../../../../00_utilities/permisos/types';
@@ -25,7 +25,11 @@ class PermisosList extends Component {
     }
 
     componentDidMount() {
-        this.cargarDatos();
+        this.props.fetchMisPermisosxListado(
+            [
+                permisos_view
+            ], {callback: () => this.cargarDatos()}
+        );
     }
 
     componentWillUnmount() {
@@ -45,8 +49,8 @@ class PermisosList extends Component {
 
 
     render() {
-        const {permisos} = this.props;
-        const permisos_this_view = permisosAdapter(permisos_view);
+        const {permisos, mis_permisos} = this.props;
+        const permisos_this_view = permisosAdapterDos(mis_permisos, permisos_view);
 
         return (
             <ValidarPermisos
@@ -69,6 +73,7 @@ class PermisosList extends Component {
 
 function mapPropsToState(state, ownProps) {
     return {
+        mis_permisos: state.mis_permisos,
         permisos: state.permisos
     }
 }

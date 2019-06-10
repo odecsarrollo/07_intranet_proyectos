@@ -4,7 +4,7 @@ import * as actions from "../../../../../../01_actions/01_index";
 import CargarDatos from "../../../../../../00_utilities/components/system/cargar_datos";
 import {Titulo, SinObjeto} from "../../../../../../00_utilities/templates/fragmentos";
 import ValidarPermisos from "../../../../../../00_utilities/permisos/validar_permisos";
-import {permisosAdapter} from "../../../../../../00_utilities/common";
+import {permisosAdapterDos} from "../../../../../../00_utilities/common";
 import {
     COLABORADORES as permisos_view
 } from "../../../../../../00_utilities/permisos/types";
@@ -16,7 +16,11 @@ class Detail extends Component {
     }
 
     componentDidMount() {
-        this.cargarDatos();
+        this.props.fetchMisPermisosxListado(
+            [
+                permisos_view
+            ], {callback: () => this.cargarDatos()}
+        );
     }
 
     componentWillUnmount() {
@@ -31,7 +35,7 @@ class Detail extends Component {
 
     render() {
         const {object, mis_permisos} = this.props;
-        const permisos = permisosAdapter(permisos_view);
+        const permisos = permisosAdapterDos(mis_permisos, permisos_view);
 
 
         if (!object) {

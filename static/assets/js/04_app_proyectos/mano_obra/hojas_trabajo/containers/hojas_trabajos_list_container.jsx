@@ -6,7 +6,7 @@ import RangoFechas from "../../../../00_utilities/calendariosRangosFiltro";
 import {
     MANOS_OBRAS_HOJAS_TRABAJOS as permisos_view
 } from "../../../../00_utilities/permisos/types";
-import {permisosAdapter} from "../../../../00_utilities/common";
+import {permisosAdapterDos} from "../../../../00_utilities/common";
 import CreateForm from '../components/forms/hoja_trabajo_form';
 import Tabla from '../components/hojas_trabajos_tabla';
 import crudHOC from '../../../../00_utilities/components/hoc_crud';
@@ -25,7 +25,11 @@ class List extends Component {
     }
 
     componentDidMount() {
-        this.cargarDatos();
+             this.props.fetchMisPermisosxListado(
+            [
+                permisos_view
+            ], {callback: () => this.cargarDatos()}
+        );
     }
 
     componentWillUnmount() {
@@ -47,10 +51,11 @@ class List extends Component {
     render() {
         const {
             object_list,
-            history
+            history,
+            mis_permisos
         } = this.props;
 
-        const permisos = permisosAdapter(permisos_view);
+        const permisos = permisosAdapterDos(mis_permisos, permisos_view);
         const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
 
         const method_pool = {

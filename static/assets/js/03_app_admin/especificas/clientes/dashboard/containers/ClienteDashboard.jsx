@@ -4,7 +4,7 @@ import * as actions from "../../../../../01_actions/01_index";
 import CargarDatos from "../../../../../00_utilities/components/system/cargar_datos";
 import {Titulo} from "../../../../../00_utilities/templates/fragmentos";
 import ValidarPermisos from "../../../../../00_utilities/permisos/validar_permisos";
-import {permisosAdapter} from "../../../../../00_utilities/common";
+import {permisosAdapterDos} from "../../../../../00_utilities/common";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import {
@@ -49,14 +49,19 @@ class ClientesDashboard extends Component {
     };
 
     componentDidMount() {
-        this.cargarDatos();
+             this.props.fetchMisPermisosxListado(
+            [
+                canales_permisos_view,
+                tipos_industrias_permisos_view
+            ], {callback: () => this.cargarDatos()}
+        );
     }
 
     render() {
-        const {canales, tipos_industrias} = this.props;
+        const {canales, tipos_industrias, mis_permisos} = this.props;
         const {slideIndex} = this.state;
-        const permisos_canales = permisosAdapter(canales_permisos_view);
-        const permisos_tipos_industrias = permisosAdapter(tipos_industrias_permisos_view);
+        const permisos_canales = permisosAdapterDos(mis_permisos, canales_permisos_view);
+        const permisos_tipos_industrias = permisosAdapterDos(mis_permisos, tipos_industrias_permisos_view);
 
         const can_see =
             permisos_canales.list ||
