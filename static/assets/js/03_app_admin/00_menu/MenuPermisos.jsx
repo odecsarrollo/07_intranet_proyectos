@@ -22,5 +22,4 @@ const MenuPermisos = () => (
     </ListCollapse>
 );
 
-
 export default MenuPermisos;

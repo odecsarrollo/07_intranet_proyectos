@@ -1,26 +1,14 @@
 import React, {Component, Fragment} from 'react';
 import SeguimientoLiteral from '../../proyectos/seguimientos_proyectos/components/seguimiento_literal';
-import CargarDatos from "../../../00_utilities/components/system/cargar_datos";
-import {connect} from "react-redux";
-import * as actions from "../../../01_actions/01_index";
 
 class LiteralesSeguimiento extends Component {
     constructor(props) {
         super(props);
         this.state = {id_literal: null};
-        this.cargarLiteralesConSeguimiento = this.cargarLiteralesConSeguimiento.bind(this);
-    }
-
-    componentDidMount() {
-        this.cargarLiteralesConSeguimiento();
     }
 
     componentWillUnmount() {
         this.props.clearLiterales();
-    }
-
-    cargarLiteralesConSeguimiento() {
-        this.props.fetchLiteralesConSeguimiento();
     }
 
     render() {
@@ -31,7 +19,7 @@ class LiteralesSeguimiento extends Component {
         const {id_literal} = this.state;
         return (
             <Fragment>
-                <div className="col-12 col-md-5 col-xl-4">
+                <div className="col-12">
                     <table className='table table-striped table-responsive' style={table_style.table}>
                         <thead>
                         <tr>
@@ -127,23 +115,16 @@ class LiteralesSeguimiento extends Component {
                             <h5><strong>Descripción: </strong> {literales[id_literal] && literales[id_literal].descripcion}</h5>
                             <SeguimientoLiteral
                                 id_literal={id_literal}
-                                callBackSeguimiento={this.cargarLiteralesConSeguimiento}
+                                callBackSeguimiento={this.props.fetchLiteralesConSeguimiento}
                             />
                         </Fragment>
                     }
                 </div>
-                <CargarDatos
-                    cargarDatos={this.cargarLiteralesConSeguimiento}
-                />
             </Fragment>
         )
     }
 }
 
-function mapPropsToState(state, ownProps) {
-    return {
-        literales: state.literales
-    }
-}
 
-export default connect(mapPropsToState, actions)(LiteralesSeguimiento)
+
+export default LiteralesSeguimiento;

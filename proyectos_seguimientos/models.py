@@ -24,7 +24,10 @@ class FaseLiteral(models.Model):
     literal = models.ForeignKey(Literal, on_delete=models.PROTECT, related_name='mis_fases')
     responsable = models.ForeignKey(User, on_delete=models.PROTECT, related_name='fases_a_revisar',
                                     null=True)
-
+    class Meta:
+        permissions = [
+            ("list_faseliteral", "Can see list fases literales"),
+        ]
 
 class TareaFase(TimeStampedModel):
     ESTADO_CHOICES = (

@@ -1,7 +1,4 @@
 import React, {Component, Fragment} from 'react';
-import CargarDatos from "../../../00_utilities/components/system/cargar_datos";
-import {connect} from "react-redux";
-import * as actions from "../../../01_actions/01_index";
 import Combobox from 'react-widgets/lib/Combobox';
 import {Link} from 'react-router-dom'
 
@@ -20,21 +17,13 @@ class LiteralesSeguimiento extends Component {
             filtro_miembro: null,
             filtro_fase: null,
         };
-        this.cargarLiteralesConSeguimiento = this.cargarLiteralesConSeguimiento.bind(this);
         this.onClickPlusZoom = this.onClickPlusZoom.bind(this);
         this.onClickMinusZoom = this.onClickMinusZoom.bind(this);
     }
 
-    componentDidMount() {
-        this.cargarLiteralesConSeguimiento();
-    }
 
     componentWillUnmount() {
         this.props.clearLiterales();
-    }
-
-    cargarLiteralesConSeguimiento() {
-        this.props.fetchPendientesTareasFases();
     }
 
     onClickPlusZoom() {
@@ -378,18 +367,10 @@ class LiteralesSeguimiento extends Component {
                         </div>
                     </div>
                 </div>
-                <CargarDatos
-                    cargarDatos={this.cargarLiteralesConSeguimiento}
-                />
             </Fragment>
         )
     }
 }
 
-function mapPropsToState(state, ownProps) {
-    return {
-        fases_tareas: state.fases_tareas
-    }
-}
 
-export default connect(mapPropsToState, actions)(LiteralesSeguimiento)
+export default LiteralesSeguimiento;
