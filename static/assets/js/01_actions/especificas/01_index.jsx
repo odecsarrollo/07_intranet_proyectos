@@ -41,8 +41,9 @@ export * from './bandas_eurobelt/componentesAction';
 
 export * from './catalogos_productos/itemsVentasAction';
 export * from './medios/adhesivosActions';
+export * from './medios/adhesivosMovimientosActions'
 
 
 export * from './contabilidad/anticipos/proformaConfiguracionAction';
 export * from './contabilidad/anticipos/proformaAnticipoAction';
-export * from './medios/adhesivosMovimientosActions'
+export * from './contabilidad/anticipos/proformaAnticipoItemAction';

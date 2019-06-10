@@ -1,3 +1,11 @@
+export const PROFORMAS_ANTICIPOS_ITEMS = {
+    add: 'add_proformaanticipoitem',
+    delete: 'delete_proformaanticipoitem',
+    change: 'change_proformaanticipoitem',
+    list: 'list_proformaanticipoitem',
+    detail: 'view_proformaanticipoitem',
+};
+
 export const PROFORMAS_ANTICIPOS = {
     add: 'add_proformaanticipo',
     delete: 'delete_proformaanticipo',
