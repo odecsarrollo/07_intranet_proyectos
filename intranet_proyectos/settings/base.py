@@ -72,6 +72,7 @@ MY_APPS = [
     'catalogo_productos.apps.CatalogoProductosConfig',
     'medios_adhesivos.apps.MediosAdhesivosConfig',
     'contabilidad_anticipos.apps.ContabilidadAnticiposConfig',
+    'sistemas_equipos.apps.SistemasEquiposConfig'
 ]
 
 THIRD_PART_APPS = [
