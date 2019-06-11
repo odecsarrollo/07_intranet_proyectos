@@ -40,6 +40,26 @@ class EquipoComputador(models.Model):
     estado = models.IntegerField(choices=ESTADO_CHOICES, default=1)
     descripcion = models.CharField(max_length=100, null=True)
 
+    class Meta:
+        permissions = [
+            ("list_sequipocomputador", "Can list computadores"),
+        ]
+
+    @property
+    def marca_nombre(self) -> str:
+        return self.get_marca_display()
+
+    @property
+    def procesador_nombre(self) -> str:
+        return self.get_procesador_display()
+
+    @property
+    def tipo_nombre(self) -> str:
+        return self.get_tipo_display()
+
+    @property
+    def estado_nombre(self) -> str:
+        return self.get_estado_display()
 
 class EquipoComputadorFoto(models.Model):
 
@@ -80,6 +100,9 @@ class EquipoCelular(models.Model):
     numero_2 = models.CharField(max_length=20, null=True)
     descripcion = models.CharField(max_length=100, null=True)
 
+    @property
+    def marca_nombre(self) -> str:
+        return self.get_marca_display()
 
 class EquipoCelularFoto(models.Model):
 

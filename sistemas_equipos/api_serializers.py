@@ -11,6 +11,11 @@ from .models import (
 
 class EquipoComputadorSerializer(serializers.ModelSerializer):
 
+    to_string = serializers.SerializerMethodField()
+
+    def get_to_string(self, instance):
+        return instance.nombre
+
     class Meta:
         model = EquipoComputador
         fields = [
@@ -22,10 +27,20 @@ class EquipoComputadorSerializer(serializers.ModelSerializer):
             'tipo',
             'serial',
             'estado',
-            'descripcion'
+            'descripcion',
+            'marca_nombre',
+            'procesador_nombre',
+            'tipo_nombre',
+            'estado_nombre',
+            'to_string'
         ]
 
 class EquipoCelularSerializer(serializers.ModelSerializer):
+
+    to_string = serializers.SerializerMethodField()
+
+    def get_to_string(self, instance):
+        return instance.referencia
 
     class Meta:
         model = EquipoCelular
@@ -37,7 +52,9 @@ class EquipoCelularSerializer(serializers.ModelSerializer):
             'imei_2',
             'numero_1',
             'numero_2',
-            'descripcion'
+            'descripcion',
+            'marca_nombre',
+            'to_string'
         ]
 
 

@@ -15,7 +15,6 @@ class UltimosMovimientosAdhesivosMedios extends Component {
         const {object_list, permisos_object} = this.props;
         return (
             <CRUD
-                method_pool={[]}
                 list={object_list}
                 permisos_object={permisos_object}
                 plural_name={this.plural_name}

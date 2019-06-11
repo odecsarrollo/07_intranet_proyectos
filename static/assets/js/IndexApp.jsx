@@ -10,14 +10,14 @@ const Boton = (props) => {
     const {nombre, icono, link, classes} = props;
     return (
         <div className={'col-6 col-md-4 mt-3'}>
-            <Link to={link}>
-                <div className={classes.bordeBoton}>
+            <Link to={link} className={classes.botonAnimado}>
+                <div className={[classes.bordeBoton, classes.botonAnimado].join(' ')}>
                     <div className="row">
                         <div className="col-12">
                             <FontAwesomeIcon icon={icono} size='3x' className={classes.iconoBoton}/>
                         </div>
                         <div className="col-12">
-                            <Typography variant="h6" color="primary" noWrap>
+                            <Typography variant="h6" color="primary" noWrap >
                                 {nombre}
                             </Typography>
                         </div>
@@ -73,9 +73,12 @@ class IndexApp extends Component {
                             icono='desktop'
                             classes={classes}
                         />
-                        <div className="col-4">
-
-                        </div>
+                        <Boton
+                            nombre='Sistemas'
+                            link='/app/sistemas/'
+                            icono='desktop'
+                            classes={classes}
+                        />
                         <div className='col-12'>
                             <div className="row">
                                 <div className="col-4"></div>
@@ -122,6 +125,16 @@ const styles = theme => (
             border: `2px solid ${theme.palette.primary.dark}`,
             padding: '1rem',
             width: '100%'
+        },
+        botonAnimado:{
+            transition: '0.3s',
+            '&:hover':{
+                textDecoration: 'none',
+                zIndex:  '100',
+                webkitTransform: 'scale(1.1)',
+                msTransform: 'scale(1.1)',
+                transform: 'scale(1.1)'
+           }
         }
     })
 ;

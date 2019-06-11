@@ -172,6 +172,7 @@ import AppVentas from './05_app_ventas/App';
 import AppBandas from './06_app_bandas/App';
 import AppMedios from './07_app_medios/App';
 import AppContabilidad from './08_app_contabilidad/App';
+import  AppSistemas from './09_app_sistemas/App';
 import Login from './authentication/login/containers/login';
 
 
@@ -208,6 +209,7 @@ class RootContainerComponent extends Component {
                         <PrivateRoute path='/app/bandas' component={AppBandas}/>
                         <PrivateRoute path='/app/medios' component={AppMedios}/>
                         <PrivateRoute path='/app/contabilidad' component={AppContabilidad}/>
+                        <PrivateRoute path='/app/sistemas' component={AppSistemas}/>
                     </Switch>
                 </Fragment>
             </BrowserRouter>

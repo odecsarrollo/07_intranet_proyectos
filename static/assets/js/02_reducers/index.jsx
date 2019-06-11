@@ -69,6 +69,7 @@ import itemVentasCatalogosProductosReducer from './especificas/catalogos_product
 
 import mediosAdhesivosReducers from './especificas/medios/adhesivosReducers';
 import mediosAdhesivosMovimientosReducers from './especificas/medios/adhesivosMovimientosReducers';
+import sistemasEquiposComputadoresReducers from './especificas/sistemas/computadoresReducers';
 
 import {reducer as notificationsReducers} from 'react-notification-system-redux';
 
@@ -134,6 +135,8 @@ const rootReducer = combineReducers({
     contabilidad_proforma_configuracion: contabilidadProformaConfiguracionReducer,
 
     contabilidad_proforma_anticipos: contabilidadProformaAnticiposReducer,
+
+    sistemas_equipos_computadores: sistemasEquiposComputadoresReducers
 });
 
 export default rootReducer;

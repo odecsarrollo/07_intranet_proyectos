@@ -1,6 +1,4 @@
 import React from "react";
-import MyDialogButtonDelete from '../../../../00_utilities/components/ui/dialog/delete_dialog';
-import IconButtonTableEdit from '../../../../00_utilities/components/ui/icon/table_icon_button_edit';
 
 import ReactTable from "react-table";
 
@@ -8,11 +6,6 @@ class Tabla extends React.Component {
     render() {
 
         const data = this.props.data;
-        const {
-            singular_name,
-            permisos_object
-        } = this.props;
-
         return (
             <ReactTable
                 data={data}

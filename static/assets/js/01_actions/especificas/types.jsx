@@ -1,3 +1,13 @@
+export const SISTEMAS_EQUIPO_COMPUTADOR_TYPES = {
+    create: 'create_sistemas_equipo_computador',
+    delete: 'delete_sistemas_equipo_computador',
+    fetch_all: 'fetch_sistemas_equipos_computadores',
+    fetch: 'fetch_sistemas_equipo_computador',
+    clear: 'clear_sistemas_equipos_computadores',
+    update: 'update_sistemas_equipo_computador',
+};
+
+
 export const PROFORMA_ANTICIPO_TYPES = {
     create: 'create_proforma_anticipo',
     delete: 'delete_proforma_anticipo',

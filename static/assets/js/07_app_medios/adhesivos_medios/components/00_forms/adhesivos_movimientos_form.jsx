@@ -10,17 +10,9 @@ class Form extends Component {
 
     constructor(props) {
         super(props);
-        this.changeTipo = this.changeTipo.bind(this);
-
     }
-
-    changeTipo(value){
-        console.log(value)
-    }
-
 
     render() {
-
 
         const {
             pristine,
@@ -56,7 +48,6 @@ class Form extends Component {
                         name='tipo'
                         placeholder='Tipo de Movimiento'
                         filter='contains'
-                        onChange={this.changeTipo()}
                     />
                     <MyCombobox
                         data={_.map(adhesivos, e => {
