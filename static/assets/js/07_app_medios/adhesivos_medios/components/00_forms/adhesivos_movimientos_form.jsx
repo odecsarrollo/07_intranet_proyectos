@@ -61,7 +61,7 @@ class Form extends Component {
                     <MyCombobox
                         data={_.map(adhesivos, e => {
                             return {
-                                'codigo': `${e.codigo} - ${e.disponible} Disponibles`,
+                                'codigo': `${e.codigo} - ${e.descripcion} - ${e.disponible} Disponibles`,
                                 'id': e.id
                             }
                         })}
