@@ -139,8 +139,8 @@ class ColaboradorCostoMesBiable(models.Model):
     porcentaje_arl = models.DecimalField(max_digits=10, decimal_places=4, default=0)
     porcentaje_salud = models.DecimalField(max_digits=10, decimal_places=4, default=0)
     porcentaje_prestaciones_sociales = models.DecimalField(max_digits=10, decimal_places=4, default=0)
-    nro_horas_mes = models.PositiveIntegerField(default=0, null=True, blank=True)
-    nro_horas_mes_trabajadas = models.PositiveIntegerField(default=0, null=True, blank=True)
+    nro_horas_mes = models.PositiveIntegerField(default=0)
+    nro_horas_mes_trabajadas = models.PositiveIntegerField(default=0)
     base_salario = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     auxilio_transporte = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     centro_costo = models.ForeignKey(ColaboradorCentroCosto, on_delete=models.PROTECT,

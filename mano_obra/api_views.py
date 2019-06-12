@@ -44,25 +44,6 @@ class HojaTrabajoDiarioViewSet(viewsets.ModelViewSet):
         self.serializer_class = HojaTrabajoDiarioConDetalleSerializer
         return super().retrieve(request, *args, **kwargs)
 
-    def perform_create(self, serializer):
-        instance = serializer.save(creado_por=self.request.user)
-        colaborador = instance.colaborador
-        object, created = ColaboradorCostoMesBiable.objects.get_or_create(
-            lapso=instance.fecha.replace(day=1),
-            colaborador=colaborador
-        )
-        instance.tasa = object
-        if created:
-            campos_tasas = colaborador._meta.get_fields()
-            for i in campos_tasas:
-                if hasattr(object, i.name) and i.name not in ['mis_dias_trabajados', 'id', 'colaborador']:
-                    valor = getattr(colaborador, i.name)
-                    setattr(object, i.name, valor)
-            object.save()
-            object.calcular_costo_total()
-
-        instance.save()
-
     @action(detail=False, http_method_names=['get', ])
     def listar_x_fechas(self, request):
         fecha_inicial = request.GET.get('fecha_inicial')

@@ -72,6 +72,19 @@ class HojaTrabajoDiarioSerializer(serializers.ModelSerializer):
     costo_total = serializers.DecimalField(decimal_places=4, max_digits=12, read_only=True)
 
     to_string = serializers.SerializerMethodField()
+    creado_por = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    def create(self, validated_data):
+        from .services import hoja_trabajo_diario_crear
+        usuario = validated_data.get('creado_por', None)
+        fecha = validated_data.get('fecha', None)
+        colaborador = validated_data.get('colaborador', None)
+        hoja_trabajo = hoja_trabajo_diario_crear(
+            colaborador_id=colaborador.id,
+            fecha=fecha,
+            creado_por_user_id=usuario.id
+        )
+        return hoja_trabajo
 
     def get_to_string(self, instance):
         return instance.colaborador.full_name
@@ -85,6 +98,7 @@ class HojaTrabajoDiarioSerializer(serializers.ModelSerializer):
             'tasa',
             'tasa_valor_hora',
             'costo_total',
+            'creado_por',
             'cantidad_horas',
             'colaborador',
             'colaborador_nombre',
