@@ -59,8 +59,8 @@ class FaseLiteralSerializer(serializers.ModelSerializer):
 
 
 class TareaFaseSerializer(serializers.ModelSerializer):
-    fecha_limite = serializers.DateTimeField(format="%Y-%m-%d", input_formats=['%Y-%m-%d', 'iso-8601'])
-    fecha_inicial = serializers.DateTimeField(format="%Y-%m-%d", input_formats=['%Y-%m-%d', 'iso-8601'])
+    fecha_limite = serializers.DateField(format="%Y-%m-%d", input_formats=['%Y-%m-%dT%H:%M:%S.%fZ', 'iso-8601'])
+    fecha_inicial = serializers.DateField(format="%Y-%m-%d", input_formats=['%Y-%m-%dT%H:%M:%S.%fZ', 'iso-8601'])
     vencido = serializers.SerializerMethodField()
     literal = serializers.IntegerField(source='fase_literal.literal.id', read_only=True)
     proyecto = serializers.IntegerField(source='fase_literal.literal.proyecto.id', read_only=True)

@@ -15,21 +15,21 @@ class CotizacionSerializer(serializers.ModelSerializer):
     mi_literal_id_literal = serializers.CharField(source='mi_literal.id_literal', read_only=True)
     mi_literal_id_proyecto = serializers.CharField(source='mi_literal.proyecto.id_proyecto', read_only=True)
     mi_literal_proyecto_id = serializers.CharField(source='mi_literal.proyecto.id', read_only=True)
-    orden_compra_fecha = serializers.DateTimeField(
+    orden_compra_fecha = serializers.DateField(
         format="%Y-%m-%d",
-        input_formats=['%Y-%m-%d', 'iso-8601'],
+        input_formats=['%Y-%m-%dT%H:%M:%S.%fZ', 'iso-8601'],
         allow_null=True,
         required=False
     )
-    fecha_entrega_pactada = serializers.DateTimeField(
+    fecha_entrega_pactada = serializers.DateField(
         format="%Y-%m-%d",
-        input_formats=['%Y-%m-%d', 'iso-8601'],
+        input_formats=['%Y-%m-%dT%H:%M:%S.%fZ', 'iso-8601'],
         allow_null=True,
         required=False
     )
-    fecha_entrega_pactada_cotizacion = serializers.DateTimeField(
+    fecha_entrega_pactada_cotizacion = serializers.DateField(
         format="%Y-%m-%d",
-        input_formats=['%Y-%m-%d', 'iso-8601'],
+        input_formats=['%Y-%m-%dT%H:%M:%S.%fZ', 'iso-8601'],
         allow_null=True,
         required=False
     )
