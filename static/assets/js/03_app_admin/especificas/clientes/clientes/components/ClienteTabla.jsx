@@ -17,6 +17,7 @@ class Tabla extends React.Component {
             onSelectItemEdit,
             permisos_object
         } = this.props;
+        console.log(permisos_object)
 
 
         return (

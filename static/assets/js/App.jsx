@@ -79,10 +79,6 @@ import {
     faCloudUploadAlt
 } from '@fortawesome/pro-solid-svg-icons';
 
-import {
-    faUbuntu
-} from '@fortawesome/free-brands-svg-icons';
-
 library.add(
     faWrench,
     faCogs,
@@ -128,8 +124,6 @@ library.add(
     faMap,
     faExchangeAlt,
     faConveyorBelt,
-    faUbuntu,
-    faCloudUploadAlt
 );
 
 const theme = createMuiTheme({

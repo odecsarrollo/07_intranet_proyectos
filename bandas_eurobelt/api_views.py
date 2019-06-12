@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from rest_framework.decorators import detail_route
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .models import (
@@ -37,7 +37,7 @@ class CategoriaDosViewSet(viewsets.ModelViewSet):
         self.serializer_class = CategoriaDosConDetalleSerializer
         return super().update(request, *args, **kwargs)
 
-    @detail_route(methods=['post'])
+    @action(detail=True, methods=['post'])
     def adicionar_quitar_categoria_producto(self, request, pk=None):
         from .services import categoria_dos_adicionar_quitar_relacion_categoria_producto
         categoria_dos = self.get_object()
@@ -68,7 +68,7 @@ class TipoBandaViewSet(viewsets.ModelViewSet):
         self.serializer_class = CategoriaDosConDetalleSerializer
         return super().update(request, *args, **kwargs)
 
-    @detail_route(methods=['post'])
+    @action(detail=True, methods=['post'])
     def adicionar_quitar_categoria_producto(self, request, pk=None):
         from .services import tipos_banda_adicionar_quitar_relacion_categoria_producto
         tipo_banda = self.get_object()

@@ -1,7 +1,7 @@
 from django.db.models import Sum, OuterRef, ExpressionWrapper, Subquery, IntegerField
 from django.db.models.functions import Coalesce
 from rest_framework import viewsets
-from rest_framework.decorators import list_route
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .models import (
@@ -44,7 +44,7 @@ class AdhesivoViewSet(viewsets.ModelViewSet):
 
         return qs
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def listar_adhesivos_x_tipo(self, request):
         tipo = request.GET.get('tipo')
         qs = self.get_queryset().filter(tipo=tipo)

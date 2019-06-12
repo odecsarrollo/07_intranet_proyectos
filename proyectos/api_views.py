@@ -6,7 +6,7 @@ from django.db.models.expressions import Exists
 from django.db.models.functions import Coalesce
 from django.http import HttpResponse
 from rest_framework import viewsets
-from rest_framework.decorators import list_route, detail_route
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from intranet_proyectos.utils_queryset import query_varios_campos
@@ -40,7 +40,7 @@ class ArchivoLiteralViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(creado_por=self.request.user)
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def listar_x_literal(self, request):
         literal_id = request.GET.get('literal_id')
         qs = self.get_queryset().filter(literal_id=literal_id)
@@ -55,7 +55,7 @@ class ArchivoProyectosViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(creado_por=self.request.user)
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def listar_x_proyecto(self, request):
         proyecto_id = request.GET.get('proyecto_id')
         qs = self.get_queryset().filter(proyecto_id=proyecto_id)
@@ -70,7 +70,7 @@ class MiembroLiteralViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
     ).all()
     serializer_class = MiembroLiteralSerializer
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def por_literal(self, request):
         literal_id = request.GET.get('literal_id')
         qs = None
@@ -88,7 +88,7 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
     ).all()
     serializer_class = ProyectoSerializer
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def listar_proyectos_x_parametro(self, request):
         parametro = request.GET.get('parametro')
         qs = None
@@ -158,7 +158,7 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
         )
         return qs
 
-    @detail_route(methods=['post'])
+    @action(detail=True, methods=['post'])
     def upload_archivo(self, request, pk=None):
         nombre_archivo = self.request.POST.get('nombre')
         proyecto = self.get_object()
@@ -172,13 +172,13 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
         serializer = self.get_serializer(proyecto)
         return Response(serializer.data)
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def abiertos(self, request):
         lista = self.get_queryset().filter(abierto=True).all()
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def con_literales_abiertos(self, request):
         lista = self.queryset.filter(
             Q(abierto=True) &
@@ -187,7 +187,7 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
-    @list_route(methods=['get'])
+    @action(detail=False, methods=['get'])
     def print_costos(self, request, pk=None):
         id_proyecto = request.GET.get('id_proyecto', None)
         fecha_inicial = request.GET.get('fecha_inicial', None)
@@ -216,7 +216,7 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
         output.close()
         return response
 
-    @list_route(methods=['get'])
+    @action(detail=False, methods=['get'])
     def print_costos_dos(self, request, pk=None):
         fecha_inicial = request.GET.get('fecha_inicial', None)
         fecha_final = request.GET.get('fecha_final', None)
@@ -252,7 +252,7 @@ class LiteralViewSet(viewsets.ModelViewSet):
     ).all()
     serializer_class = LiteralSerializer
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def listar_literales_x_parametro(self, request):
         parametro = request.GET.get('parametro')
         qs = None
@@ -324,7 +324,7 @@ class LiteralViewSet(viewsets.ModelViewSet):
         )
         return qs
 
-    @detail_route(methods=['post'])
+    @action(detail=True, methods=['post'])
     def upload_archivo(self, request, pk=None):
         nombre_archivo = self.request.POST.get('nombre')
         literal = self.get_object()
@@ -338,7 +338,7 @@ class LiteralViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(literal)
         return Response(serializer.data)
 
-    @detail_route(methods=['post'])
+    @action(detail=True, methods=['post'])
     def adicionar_quitar_fase(self, request, pk=None):
         literal = self.get_object()
         id_fase = int(request.POST.get('id_fase'))
@@ -353,7 +353,7 @@ class LiteralViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(literal)
         return Response(serializer.data)
 
-    @detail_route(methods=['post'])
+    @action(detail=True, methods=['post'])
     def adicionar_miembro(self, request, pk=None):
         literal = self.get_object()
         id_usuario = int(request.POST.get('id_usuario'))
@@ -363,7 +363,7 @@ class LiteralViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(literal)
         return Response(serializer.data)
 
-    @detail_route(methods=['post'])
+    @action(detail=True, methods=['post'])
     def quitar_miembro(self, request, pk=None):
         literal = self.get_object()
         id_usuario = int(request.POST.get('id_usuario'))
@@ -373,13 +373,13 @@ class LiteralViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(literal)
         return Response(serializer.data)
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def abiertos(self, request):
         lista = self.get_queryset().filter(abierto=True).all()
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def con_seguimiento(self, request):
         tareas_vencidas = TareaFase.objects.values('fase_literal__literal_id').annotate(
             cantidad=ExpressionWrapper(
@@ -495,7 +495,7 @@ class LiteralViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def proyecto_abierto(self, request):
         literales_abiertos = Literal.objects.filter(
             proyecto_id=OuterRef('proyecto_id'),
@@ -510,7 +510,7 @@ class LiteralViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def listar_x_proyecto(self, request):
         proyecto_id = request.GET.get('proyecto_id')
         qs = None
@@ -520,7 +520,7 @@ class LiteralViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def sin_sincronizar(self, request):
         lista = self.get_queryset().filter(en_cguno=False).all()
         serializer = self.get_serializer(lista, many=True)

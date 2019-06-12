@@ -25,7 +25,7 @@ class List extends Component {
     }
 
     componentDidMount() {
-             this.props.fetchMisPermisosxListado(
+        this.props.fetchMisPermisosxListado(
             [
                 permisos_view
             ], {callback: () => this.cargarDatos()}
@@ -65,6 +65,14 @@ class List extends Component {
             updateObjectMethod: this.props.updateHojaTrabajo,
         };
 
+        const can_add = permisos.add &&
+            (
+                permisos.add_para_otros ||
+                (
+                    mi_cuenta.colaborador &&
+                    mi_cuenta.colaborador.autogestion_horas_trabajadas
+                )
+            );
         return (
             <Fragment>
                 <RangoFechas metodoBusquedaFechas={(i, f) => {
@@ -76,17 +84,7 @@ class List extends Component {
                     list={object_list}
                     permisos_object={{
                         ...permisos,
-                        add:
-                            (
-                                permisos.add &&
-                                (
-                                    permisos.add_para_otros ||
-                                    (
-                                        mi_cuenta.colaborador &&
-                                        mi_cuenta.colaborador.autogestion_horas_trabajadas
-                                    )
-                                )
-                            )
+                        add: can_add
                     }}
                     plural_name={this.plural_name}
                     singular_name={this.singular_name}

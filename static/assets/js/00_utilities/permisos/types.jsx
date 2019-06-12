@@ -6,6 +6,14 @@ export const SISTEMAS_EQUIPOS_COMPUTADORES = {
     view: 'view_equipocomputador',
 };
 
+export const PROFORMAS_ANTICIPOS_ITEMS = {
+    add: 'add_proformaanticipoitem',
+    delete: 'delete_proformaanticipoitem',
+    change: 'change_proformaanticipoitem',
+    list: 'list_proformaanticipoitem',
+    detail: 'view_proformaanticipoitem',
+};
+
 export const PROFORMAS_ANTICIPOS = {
     add: 'add_proformaanticipo',
     delete: 'delete_proformaanticipo',
@@ -22,6 +30,7 @@ export const ADHESIVOS_MOVIMIENTOS_MEDIOS = {
     detail: 'view_adhesivomovimiento',
     list_inventario: 'list_inventario_adhesivomovimiento',
 };
+
 
 export const ADHESIVO_MEDIOS_CATALOGOS = {
     add: 'add_adhesivo',

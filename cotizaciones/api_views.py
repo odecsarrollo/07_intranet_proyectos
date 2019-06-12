@@ -3,7 +3,7 @@ from math import ceil
 from django.db.models import Max, Q, When, Case, DecimalField, Value, F
 from django.db.models.functions import Coalesce
 from rest_framework import viewsets
-from rest_framework.decorators import list_route, detail_route
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .models import Cotizacion, SeguimientoCotizacion, ArchivoCotizacion
@@ -93,7 +93,7 @@ class CotizacionViewSet(viewsets.ModelViewSet):
             estado=editado.estado
         )
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def listar_cotizacion_abrir_carpeta(self, request):
         qs = self.get_queryset().filter(
             (
@@ -108,14 +108,14 @@ class CotizacionViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def listar_cotizaciones_agendadas(self, request):
         qs = self.get_queryset().filter(fecha_entrega_pactada_cotizacion__isnull=False,
                                         estado__in=['Cita/Generación Interés', 'Configurando Propuesta'])
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def listar_cotizaciones_tuberia_ventas(self, request):
         month = datetime.datetime.now().month
         year = datetime.datetime.now().year
@@ -138,7 +138,7 @@ class CotizacionViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def cotizaciones_resumen_tuberia_ventas(self, request):
         year = int(request.GET.get('ano', datetime.datetime.now().year))
         current_date = datetime.datetime.now()
@@ -182,7 +182,7 @@ class CotizacionViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(qsFinal, many=True)
         return Response(serializer.data)
 
-    @detail_route(methods=['post'])
+    @action(detail=True, methods=['post'])
     def upload_archivo(self, request, pk=None):
         nombre_archivo = self.request.POST.get('nombre')
         cotizacion = self.get_object()
@@ -204,14 +204,14 @@ class SeguimientoCotizacionViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(creado_por=self.request.user)
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def listar_x_cotizacion(self, request):
         cotizacion_id = request.GET.get('cotizacion_id')
         qs = self.get_queryset().filter(cotizacion_id=cotizacion_id)
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def listar_tareas_pendientes(self, request):
         qs = SeguimientoCotizacion.objects.filter(
             tipo_seguimiento=2,
@@ -231,7 +231,7 @@ class ArchivoCotizacionViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(creado_por=self.request.user)
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def listar_x_cotizacion(self, request):
         cotizacion_id = request.GET.get('cotizacion_id')
         qs = self.get_queryset().filter(cotizacion_id=cotizacion_id)

@@ -16,7 +16,7 @@ from django.db.models import (
 from django.db.models.functions import Coalesce
 from rest_framework.response import Response
 from rest_framework import viewsets
-from rest_framework.decorators import list_route, detail_route
+from rest_framework.decorators import action
 
 from .models import Fase, FaseLiteral, TareaFase
 from .api_serializers import FaseLiteralSerializer, FaseSerializer, TareaFaseSerializer
@@ -35,14 +35,14 @@ class TareaFaseViewSet(viewsets.ModelViewSet):
     ).all()
     serializer_class = TareaFaseSerializer
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def por_fase_literal(self, request):
         id_fase_literal = self.request.GET.get('id_fase_literal')
         lista = self.get_queryset().filter(fase_literal_id=id_fase_literal).all()
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def mis_pendientes(self, request):
         usuario = self.request.user
         lista = self.get_queryset().annotate(
@@ -63,7 +63,7 @@ class TareaFaseViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def pendientes(self, request):
         usuario = self.request.user
         lista = self.get_queryset().annotate(
@@ -81,7 +81,7 @@ class TareaFaseViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def terminadas(self, request):
         usuario = self.request.user
         lista = self.get_queryset().annotate(
@@ -114,7 +114,7 @@ class FaseLiteralViewSet(viewsets.ModelViewSet):
     ).all()
     serializer_class = FaseLiteralSerializer
 
-    @detail_route(methods=['post'])
+    @action(detail=True, methods=['post'])
     def eliminar_tareas(self, request, pk=None):
         listado_tareas = json.loads(request.POST.get('listado'))
         fase_literal = self.get_object()
@@ -122,7 +122,7 @@ class FaseLiteralViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(fase_literal)
         return Response(serializer.data)
 
-    @detail_route(methods=['post'])
+    @action(detail=True, methods=['post'])
     def cargar_tareas(self, request, pk=None):
         listado_tareas = json.loads(request.POST.get('listado'))
         listado_tareas.pop(0)
@@ -181,7 +181,7 @@ class FaseLiteralViewSet(viewsets.ModelViewSet):
         )
         return qs
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def por_literal(self, request):
         id_literal = self.request.GET.get('id_literal')
         lista = self.get_queryset().filter(literal_id=id_literal).all()

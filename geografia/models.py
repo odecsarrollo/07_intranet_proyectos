@@ -6,6 +6,11 @@ from django.db import models
 class Pais(models.Model):
     nombre = models.CharField(max_length=120, unique=True)
 
+    class Meta:
+        permissions = [
+            ("list_pais", "Can list paises"),
+        ]
+
 
 class Departamento(models.Model):
     nombre = models.CharField(max_length=120)
@@ -13,6 +18,9 @@ class Departamento(models.Model):
 
     class Meta:
         unique_together = ('nombre', 'pais')
+        permissions = [
+            ("list_departamento", "Can list departamentos"),
+        ]
 
 
 class Ciudad(models.Model):
@@ -21,3 +29,6 @@ class Ciudad(models.Model):
 
     class Meta:
         unique_together = ('nombre', 'departamento')
+        permissions = [
+            ("list_ciudad", "Can list ciudad"),
+        ]

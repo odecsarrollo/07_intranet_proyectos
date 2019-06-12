@@ -51,39 +51,6 @@ export const tengoPermisoDos = (mis_permisos, permisos, tipo = 'and') => {
     }
 };
 
-
-export const tengoPermiso = (permisos, tipo = 'and') => {
-    const mis_permisos = _.map(JSON.parse(localStorage.getItem('mis_permisos')), e => e.codename);
-    let permisos_a_validar_array = permisos;
-    if (!Array.isArray(permisos)) {
-        permisos_a_validar_array = [permisos]
-    }
-    const mis_permisos_array = _.map(mis_permisos, permiso => {
-        return permiso
-    });
-    const validaciones_array = permisos_a_validar_array.map(permiso => {
-        return mis_permisos_array.includes(permiso)
-    });
-    if (tipo === "and") {
-        return !validaciones_array.includes(false);
-    } else if (tipo === "or") {
-        return validaciones_array.includes(true);
-    }
-};
-
-
-export const permisosAdapter = (permisos_view) => {
-    const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
-    if (mi_cuenta.is_superuser) {
-        return _.mapValues(permisos_view, p => {
-            return true
-        })
-    }
-    return _.mapValues(permisos_view, p => {
-        return tengoPermiso(p)
-    });
-};
-
 export const permisosAdapterDos = (mis_permisos, permisos_view) => {
     return _.mapValues(permisos_view, p => tengoPermisoDos(mis_permisos, p));
 };

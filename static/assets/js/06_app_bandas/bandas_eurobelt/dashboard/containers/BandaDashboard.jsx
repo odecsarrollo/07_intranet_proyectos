@@ -104,6 +104,7 @@ class ItemsDashboard extends Component {
             permisos_categorias.list ||
             permisos_componentes.list ||
             permisos_tipos.list;
+        console.log(can_see)
         return (
             <ValidarPermisos can_see={can_see} nombre={this.plural_name}>
                 <Titulo>{this.singular_name}</Titulo>

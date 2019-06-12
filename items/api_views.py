@@ -1,6 +1,5 @@
-from django.db.models import Prefetch
 from rest_framework import viewsets
-from rest_framework.decorators import detail_route
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .models import (
@@ -37,7 +36,7 @@ class CategoriaProductoViewSet(viewsets.ModelViewSet):
         self.serializer_class = CategoriaProductoConDetalleSerializer
         return super().update(request, *args, **kwargs)
 
-    @detail_route(methods=['post'])
+    @action(detail=True, methods=['post'])
     def adicionar_quitar_categoria_dos_banda_eurobelt(self, request, pk=None):
         from .services import categoria_producto_adicionar_quitar_relacion_categorias_dos_banda_eurobelt
         categoria_producto = self.get_object()
@@ -50,7 +49,7 @@ class CategoriaProductoViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(categoria_producto)
         return Response(serializer.data)
 
-    @detail_route(methods=['post'])
+    @action(detail=True, methods=['post'])
     def adicionar_quitar_tipo_banda_eurobelt(self, request, pk=None):
         from .services import categoria_producto_adicionar_quitar_relacion_tipo_banda_eurobelt
         categoria_producto = self.get_object()

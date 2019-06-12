@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.http import HttpResponse
 from rest_framework import viewsets
-from rest_framework.decorators import detail_route
+from rest_framework.decorators import action
 
 from .models import (
     ProformaConfiguracion,
@@ -42,7 +42,7 @@ class ProformaAnticipoViewSet(viewsets.ModelViewSet):
     queryset = ProformaAnticipo.objects.all()
     serializer_class = ProformaAnticipoSerializer
 
-    @detail_route(methods=['post'])
+    @action(detail=True, methods=['post'])
     def imprimir_cobro(self, request, pk=None):
         from .services import proforma_cobro_generar_pdf
         anticipo = self.get_object()

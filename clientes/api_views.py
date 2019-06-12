@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from rest_framework.decorators import list_route
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .models import (
@@ -38,7 +38,7 @@ class ContactoClienteViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(creado_por=self.request.user)
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def por_cliente(self, request):
         cliente_id = request.GET.get('cliente_id')
         lista = self.queryset.filter(cliente_id=cliente_id).all()
