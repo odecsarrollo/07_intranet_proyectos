@@ -1,5 +1,6 @@
 from rest_framework import viewsets
-
+from rest_framework.decorators import list_route
+from rest_framework.response import Response
 from .models import (
     EquipoComputador,
     EquipoCelular,
@@ -18,6 +19,12 @@ from .api_serializers import (
 class EquipoComputadorViewSet(viewsets.ModelViewSet):
     queryset = EquipoComputador.objects.all()
     serializer_class = EquipoComputadorSerializer
+
+    @list_route(http_method_names=['post', ])
+    def subir_archivo (self, request):
+        print(request)
+        #return Response(serializer.data)
+        return None
 
 class EquipoCelularViewSet(viewsets.ModelViewSet):
     queryset = EquipoCelular.objects.all()

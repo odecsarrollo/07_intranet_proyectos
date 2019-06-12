@@ -5,6 +5,7 @@ export const SISTEMAS_EQUIPO_COMPUTADOR_TYPES = {
     fetch: 'fetch_sistemas_equipo_computador',
     clear: 'clear_sistemas_equipos_computadores',
     update: 'update_sistemas_equipo_computador',
+    upload_file: 'upload_sistemas_equipo_computador'
 };
 
 

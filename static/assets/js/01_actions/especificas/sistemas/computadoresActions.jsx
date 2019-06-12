@@ -1,10 +1,10 @@
 import {SISTEMAS_EQUIPO_COMPUTADOR_TYPES as TYPES } from '../../00_types';
 import {
-     fetchListGet,
+    fetchListGet,
     updateObject,
     fetchObject,
     deleteObject,
-    createObject,
+    createObject
 } from '../../00_general_fuctions'
 
 const current_url_api = 'computador';
@@ -50,3 +50,19 @@ const options = {dispatches, ...options_action, dispatch_method: dispatch};
        return updateObject(current_url_api, id, values, options);
     }
 };
+export function fetchComputadoresFile(file, options_action = {}) {
+    return function (dispatch) {
+        const FULL_URL = `${current_url_api}/subir_archivo/?file=${file}`;
+        const dispatches = (response) => {
+            dispatch({ type: TYPES.upload_file, payload: response })
+        };
+        const { limpiar_coleccion = true } = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        return createObject(FULL_URL, file, options);
+    }
+}

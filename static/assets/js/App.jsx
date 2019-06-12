@@ -30,6 +30,7 @@ import indigo from '@material-ui/core/colors/indigo';
 //import {fab} from '@fortawesome/free-brands-svg-icons';
 
 import {library} from '@fortawesome/fontawesome-svg-core'
+
 import {
     faWrench,
     faCogs,
@@ -74,8 +75,13 @@ import {
     faDesktop,
     faMap,
     faExchangeAlt,
-    faConveyorBelt
+    faConveyorBelt,
+    faCloudUploadAlt
 } from '@fortawesome/pro-solid-svg-icons';
+
+import {
+    faUbuntu
+} from '@fortawesome/free-brands-svg-icons';
 
 library.add(
     faWrench,
@@ -122,6 +128,8 @@ library.add(
     faMap,
     faExchangeAlt,
     faConveyorBelt,
+    faUbuntu,
+    faCloudUploadAlt
 );
 
 const theme = createMuiTheme({
