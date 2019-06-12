@@ -2,7 +2,7 @@ from django.contrib.auth.models import User, Permission, Group
 from django.db.models import Q
 from knox.models import AuthToken
 from rest_framework import viewsets, generics, permissions, serializers
-from rest_framework.decorators import list_route, detail_route
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from .api_serializers import (
     UsuarioSerializer,
@@ -23,7 +23,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     ).all()
     serializer_class = UsuarioSerializer
 
-    @list_route(methods=['get'])
+    @action(detail=False, methods=['get'])
     def mi_cuenta(self, request):
         qs = self.get_queryset().filter(
             id=request.user.id
@@ -32,7 +32,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
-    @detail_route(methods=['post'])
+    @action(detail=True, methods=['post'])
     def adicionar_permiso(self, request, pk=None):
         usuario = self.get_object()
         id_permiso = int(request.POST.get('id_permiso'))
@@ -47,7 +47,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(usuario)
         return Response(serializer.data)
 
-    @detail_route(methods=['post'])
+    @action(detail=True, methods=['post'])
     def adicionar_grupo(self, request, pk=None):
         usuario = self.get_object()
         id_grupo = int(request.POST.get('id_grupo'))
@@ -62,7 +62,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(usuario)
         return Response(serializer.data)
 
-    @list_route(methods=['get'])
+    @action(detail=False, methods=['get'])
     def validar_nuevo_usuario(self, request) -> Response:
         qs = self.get_queryset()
         validacion_reponse = {}
@@ -71,7 +71,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):
             raise serializers.ValidationError({'username': 'Ya exite'})
         return Response(validacion_reponse)
 
-    @list_route(methods=['get'], permission_classes=[permissions.AllowAny])
+    @action(detail=False, methods=['get'], permission_classes=[permissions.AllowAny])
     def validar_username_login(self, request) -> Response:
         qs = self.get_queryset()
         validacion_reponse = {}
@@ -80,7 +80,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):
             raise serializers.ValidationError({'username': 'Este usuario no existe'})
         return Response(validacion_reponse)
 
-    @list_route(methods=['get'])
+    @action(detail=False, methods=['get'])
     def listar_x_permiso(self, request):
         permiso_nombre = request.GET.get('permiso_nombre')
         qs = self.get_queryset().filter(

@@ -2,7 +2,7 @@ import json
 
 from intranet_proyectos.utils_queryset import query_varios_campos
 from rest_framework import viewsets
-from rest_framework.decorators import list_route, detail_route
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .models import (
@@ -46,7 +46,7 @@ class ColaboradorBiableViewSet(viewsets.ModelViewSet):
             usuario.save()
         super().perform_destroy(instance)
 
-    @list_route(methods=['get'])
+    @action(detail=False, methods=['get'])
     def mi_colaborador(self, request):
         qs = self.get_queryset().filter(
             usuario_id=request.user.id
@@ -54,25 +54,25 @@ class ColaboradorBiableViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def en_proyectos(self, request):
         lista = self.queryset.filter(en_proyectos=True).all()
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def en_proyectos_para_gestion_horas_trabajadas(self, request):
         lista = self.queryset.filter(en_proyectos=True, autogestion_horas_trabajadas=False).all()
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def en_proyectos_autogestion_horas_trabajadas(self, request):
         lista = self.queryset.filter(en_proyectos=True, autogestion_horas_trabajadas=True).all()
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
-    @detail_route(methods=['post'])
+    @action(detail=True, methods=['post'])
     def crear_usuario(self, request, pk=None):
         colaborador = self.get_object()
         if (not colaborador.usuario):
@@ -80,7 +80,7 @@ class ColaboradorBiableViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(colaborador)
         return Response(serializer.data)
 
-    @detail_route(methods=['post'])
+    @action(detail=True, methods=['post'])
     def modificar_autorizacion_literal(self, request, pk=None):
         colaborador = self.get_object()
         literal_id = request.POST.get('literal_id')
@@ -92,7 +92,7 @@ class ColaboradorBiableViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(colaborador)
         return Response(serializer.data)
 
-    @detail_route(methods=['post'])
+    @action(detail=True, methods=['post'])
     def cambiar_activacion(self, request, pk=None):
         colaborador = self.get_object()
         usuario = colaborador.usuario
@@ -110,7 +110,7 @@ class ItemsLiteralBiableViewSet(viewsets.ModelViewSet):
     serializer_class = ItemsLiteralBiableSerializer
     http_method_names = []
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def listar_items_x_literal(self, request):
         literal_id = request.GET.get('id_literal')
         lista = self.queryset.filter(literal_id=literal_id).order_by('item_biable__descripcion').all()
@@ -123,7 +123,7 @@ class ItemBiableViewSet(viewsets.ModelViewSet):
     serializer_class = ItemsBiableSerializer
     http_method_names = ['get', ]
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def listar_items_x_parametro(self, request):
         parametro = request.GET.get('parametro')
         tipo_parametro = int(request.GET.get('tipo_parametro'))
@@ -144,7 +144,7 @@ class ItemBiableViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def consultar_arreglo_codigos(self, request):
         codigos = request.GET.get('codigos')
         qs = self.queryset.filter(id_item__in=json.loads(codigos))
@@ -160,7 +160,7 @@ class ColaboradorCostoMesBiableViewSet(viewsets.ModelViewSet):
         instance = serializer.save()
         instance.calcular_costo_total()
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def listar_x_fechas(self, request):
         fecha_inicial = request.GET.get('fecha_inicial')
         fecha_final = request.GET.get('fecha_final')

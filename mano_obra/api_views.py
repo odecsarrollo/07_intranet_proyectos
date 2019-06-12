@@ -5,7 +5,7 @@ from django.db.models import Sum, Value as V, F, ExpressionWrapper, DecimalField
 from django.db.models.functions import Coalesce
 from django.http import HttpResponse
 from rest_framework import viewsets, serializers
-from rest_framework.decorators import list_route
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .models import (
@@ -63,7 +63,7 @@ class HojaTrabajoDiarioViewSet(viewsets.ModelViewSet):
 
         instance.save()
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def listar_x_fechas(self, request):
         fecha_inicial = request.GET.get('fecha_inicial')
         fecha_final = request.GET.get('fecha_final')
@@ -136,21 +136,21 @@ class HoraHojaTrabajoViewSet(HoraHojaTrabajoPDFMixin, viewsets.ModelViewSet):
         instance = serializer.save()
         self.ajusta_horas(instance)
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def horas_por_hoja_trabajo(self, request):
         hoja_id = request.GET.get('hoja_id')
         lista = self.queryset.filter(hoja_id=hoja_id).all()
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def horas_por_literal(self, request):
         literal_id = request.GET.get('literal_id')
         lista = self.queryset.filter(literal_id=literal_id).all()
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def autogestionadas_x_fechas(self, request):
         fecha_inicial = request.GET.get('fecha_inicial')
         fecha_final = request.GET.get('fecha_final')
@@ -162,7 +162,7 @@ class HoraHojaTrabajoViewSet(HoraHojaTrabajoPDFMixin, viewsets.ModelViewSet):
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
-    @list_route(methods=['get'])
+    @action(detail=False, methods=['get'])
     def print_costos_tres(self, request, pk=None):
         fecha_inicial = request.GET.get('fecha_inicial', None)
         fecha_final = request.GET.get('fecha_final', None)
@@ -203,7 +203,7 @@ class HoraTrabajoColaboradorLiteralInicialViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(creado_por=self.request.user)
 
-    @list_route(http_method_names=['get', ])
+    @action(detail=False, http_method_names=['get', ])
     def horas_por_literal(self, request):
         literal_id = request.GET.get('literal_id')
         lista = self.queryset.filter(literal_id=literal_id).all()
