@@ -15,6 +15,9 @@ class PaisCatalogo(models.Model):
 
     class Meta:
         unique_together = [('sistema_informacion', 'pais_id')]
+        permissions = [
+            ("list_paiscatalogo", "Can list paises catalogos"),
+        ]
 
 
 class DepartamentoCatalogo(models.Model):
@@ -25,6 +28,9 @@ class DepartamentoCatalogo(models.Model):
 
     class Meta:
         unique_together = [('sistema_informacion', 'departamento_id')]
+        permissions = [
+            ("list_departamentocatalogo", "Can list departamentos catalogos"),
+        ]
 
 
 class CiudadCatalogo(models.Model):
@@ -36,6 +42,9 @@ class CiudadCatalogo(models.Model):
 
     class Meta:
         unique_together = [('sistema_informacion', 'ciudad_id')]
+        permissions = [
+            ("list_ciudadcatalogo", "Can list ciudades catalogos"),
+        ]
 
 
 class CargosCatalogo(models.Model):
@@ -126,8 +135,7 @@ class ColaboradorCatalogo(models.Model):
 
     class Meta:
         permissions = [
-            ("list_colaboradorcatalogo", "Can see list colaboradores"),
-            ("detail_colaboradorcatalogo", "Can see detail colaborador"),
+            ("list_colaboradorcatalogo", "Can see list colaboradores")
         ]
 
     def __str__(self):
@@ -149,6 +157,11 @@ class ClienteCatalogo(TimeStampedModel):
     esta_cerrado = models.BooleanField(default=False)
     no_vender = models.BooleanField(default=False)
     cliente_nuevo_nit = models.ForeignKey('self', null=True, on_delete=models.PROTECT)
+
+    class Meta:
+        permissions = [
+            ("list_clientecatalogo", "Can see list clientes catalogos")
+        ]
 
 
 class ItemsCatalogo(models.Model):
@@ -180,6 +193,9 @@ class ItemsCatalogo(models.Model):
 
     class Meta:
         unique_together = [('sistema_informacion', 'id_item')]
+        permissions = [
+            ("list_itemscatalogo", "Can see list items catalogos")
+        ]
 
 
 class SucursalCatalogo(models.Model):
@@ -208,3 +224,6 @@ class SucursalCatalogo(models.Model):
 
     class Meta:
         unique_together = [('sistema_informacion', 'nro_sucursal', 'cliente')]
+        permissions = [
+            ("list_sucursalcatalogo", "Can see list sucursales catalogos")
+        ]

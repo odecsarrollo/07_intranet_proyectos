@@ -4,7 +4,7 @@ import * as actions from "../../../../01_actions/01_index";
 import CargarDatos from "../../../../00_utilities/components/system/cargar_datos";
 import {Titulo} from "../../../../00_utilities/templates/fragmentos";
 import ValidarPermisos from "../../../../00_utilities/permisos/validar_permisos";
-import {permisosAdapter} from "../../../../00_utilities/common";
+import {permisosAdapterDos} from "../../../../00_utilities/common";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import {
@@ -77,25 +77,34 @@ class ItemsDashboard extends Component {
     };
 
     componentDidMount() {
-        this.cargarDatos();
+            this.props.fetchMisPermisosxListado(
+            [
+                colores_permisos_view,
+                tipos_permisos_view,
+                materiales_permisos_view,
+                series_permisos_view,
+                categorias_dos_permisos_view,
+                componentes_permisos_view
+            ], {callback: () => this.cargarDatos()}
+        );
     }
 
     render() {
-        const {tipos, series, materiales, colores, categorias_dos, componentes} = this.props;
+        const {tipos, series, materiales, colores, categorias_dos, componentes, mis_permisos} = this.props;
         const {slideIndex} = this.state;
-        const permisos_materiales = permisosAdapter(materiales_permisos_view);
-        const permisos_series = permisosAdapter(series_permisos_view);
-        const permisos_colores = permisosAdapter(colores_permisos_view);
-        const permisos_tipos = permisosAdapter(tipos_permisos_view);
-        const permisos_categorias_dos = permisosAdapter(categorias_dos_permisos_view);
-        const permisos_componentes = permisosAdapter(componentes_permisos_view);
-
+        const permisos_materiales = permisosAdapterDos(mis_permisos, materiales_permisos_view);
+        const permisos_series = permisosAdapterDos(mis_permisos, series_permisos_view);
+        const permisos_colores = permisosAdapterDos(mis_permisos, colores_permisos_view);
+        const permisos_tipos = permisosAdapterDos(mis_permisos, tipos_permisos_view);
+        const permisos_categorias = permisosAdapterDos(mis_permisos, categorias_dos_permisos_view);
+        const permisos_componentes = permisosAdapterDos(mis_permisos, componentes_permisos_view);
         const can_see = permisos_materiales.list ||
             permisos_series.list ||
             permisos_colores.list ||
             permisos_categorias.list ||
             permisos_componentes.list ||
             permisos_tipos.list;
+        console.log(can_see)
         return (
             <ValidarPermisos can_see={can_see} nombre={this.plural_name}>
                 <Titulo>{this.singular_name}</Titulo>
@@ -157,7 +166,7 @@ class ItemsDashboard extends Component {
                     slideIndex === 5 &&
                     <BloqueCategorias
                         object_list={categorias_dos}
-                        permisos_object={permisos_categorias_dos}
+                        permisos_object={permisos_categorias}
                         {...this.props}
                     />
                 }
@@ -180,6 +189,7 @@ function mapPropsToState(state, ownProps) {
         categorias_dos: state.banda_eurobelt_categorias_dos,
         categorias: state.categorias_productos,
         componentes: state.banda_eurobelt_componentes
+
     }
 }
 

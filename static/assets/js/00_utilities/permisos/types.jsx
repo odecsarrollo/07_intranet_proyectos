@@ -50,19 +50,19 @@ export const ITEMS_VENTAS_CATALOGOS = {
 };
 
 export const BANDA_EUROBELT_CATEGORIAS_DOS = {
-    add: 'add_categoriacomponentebandaeurobelt',
-    delete: 'delete_categoriacomponentebandaeurobelt',
-    change: 'change_categoriacomponentebandaeurobelt',
-    list: 'list_categoriacomponentebandaeurobelt',
-    detail: 'view_categoriacomponentebandaeurobelt',
+    add: 'add_categoriadoscomponentebandaeurobelt',
+    delete: 'delete_categoriadoscomponentebandaeurobelt',
+    change: 'change_categoriadoscomponentebandaeurobelt',
+    list: 'list_categoriadoscomponentebandaeurobelt',
+    detail: 'view_categoriadoscomponentebandaeurobelt',
 };
 
 export const BANDA_EUROBELT_COLORES = {
-    add: 'add_materialbandaeurobelt',
-    delete: 'delete_materialbandaeurobelt',
-    change: 'change_materialbandaeurobelt',
-    list: 'list_materialbandaeurobelt',
-    detail: 'view_materialbandaeurobelt',
+    add: 'add_colorbandaeurobelt',
+    delete: 'delete_colorbandaeurobelt',
+    change: 'change_colorbandaeurobelt',
+    list: 'list_colorbandaeurobelt',
+    detail: 'view_colorbandaeurobelt',
 };
 
 export const BANDA_EUROBELT_MATERIALES = {

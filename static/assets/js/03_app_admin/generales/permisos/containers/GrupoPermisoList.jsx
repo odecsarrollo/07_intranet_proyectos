@@ -6,7 +6,7 @@ import {
     CLIENTES as permisos_view,
     GROUPS as permisos_view_groups
 } from "../../../../00_utilities/permisos/types";
-import {permisosAdapter} from "../../../../00_utilities/common";
+import {permisosAdapterDos} from "../../../../00_utilities/common";
 import CreateForm from '../components/forms/GrupoPermisoForm';
 import Tabla from '../components/GrupoPermisoTabla';
 import crudHOC from '../../../../00_utilities/components/hoc_crud';
@@ -30,7 +30,11 @@ class List extends Component {
     }
 
     componentDidMount() {
-        this.cargarDatos();
+        this.props.fetchMisPermisosxListado(
+            [
+                permisos_view_groups
+            ], {callback: () => this.cargarDatos()}
+        );
     }
 
     componentWillUnmount() {
@@ -88,7 +92,7 @@ class List extends Component {
             todos_los_permisos,
             id_grupo_actual
         } = this.state;
-        const permisos_object = permisosAdapter(permisos_view_groups);
+        const permisos_object = permisosAdapterDos(mis_permisos, permisos_view_groups);
         const grupo_seleccionado = id_grupo_actual ? object_list[id_grupo_actual] : null;
         const method_pool = {
             fetchObjectMethod: this.props.fetchGrupoPermiso,

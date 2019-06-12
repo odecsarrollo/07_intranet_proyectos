@@ -4,12 +4,12 @@ import * as actions from "../../../../../../01_actions/01_index";
 import CargarDatos from "../../../../../../00_utilities/components/system/cargar_datos";
 import {Titulo} from "../../../../../../00_utilities/templates/fragmentos";
 import ValidarPermisos from "../../../../../../00_utilities/permisos/validar_permisos";
-import {permisosAdapter} from "../../../../../../00_utilities/common";
+import {permisosAdapterDos} from "../../../../../../00_utilities/common";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import {
     COLABORADORES as bloque_1_permisos,
-    COLABORADORES as bloque_2_permisos,
+    CENTROS_COSTOS_COLABORADORES as bloque_2_permisos,
 } from "../../../../../../00_utilities/permisos/types";
 
 import BloqueColaboradores from '../../colaboradores/components/ColaboradorList';
@@ -53,7 +53,12 @@ class ListadoElementos extends Component {
     }
 
     componentDidMount() {
-        this.cargarDatos();
+        this.props.fetchMisPermisosxListado(
+            [
+                bloque_1_permisos,
+                bloque_2_permisos
+            ], {callback: () => this.cargarDatos()}
+        );
     }
 
 
@@ -64,10 +69,10 @@ class ListadoElementos extends Component {
 
 
     render() {
-        const {bloque_1_list, bloque_2_list} = this.props;
+        const {bloque_1_list, bloque_2_list, mis_permisos} = this.props;
         const {slideIndex} = this.state;
-        const permisos_object_1 = permisosAdapter(bloque_1_permisos);
-        const permisos_object_2 = permisosAdapter(bloque_2_permisos);
+        const permisos_object_1 = permisosAdapterDos(mis_permisos, bloque_1_permisos);
+        const permisos_object_2 = permisosAdapterDos(mis_permisos, bloque_2_permisos);
 
         const can_see =
             permisos_object_1.list ||

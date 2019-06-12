@@ -1,10 +1,18 @@
-import React, {Component, Fragment} from 'react';
+import React, {Component} from 'react';
 import TareasPendientesList from '../tareas_fases/tareas_pendientes';
 import LiteralesSeguimiento from '../literales_seguimiento/literales_seguimiento';
 import MatrixProyectos from '../matrix_proyectos/matrix_proyectos';
 import {connect} from "react-redux";
 import * as actions from "../../../01_actions/01_index";
-import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import CargarDatos from '../../../00_utilities/components/system/cargar_datos';
+import {permisosAdapterDos} from "../../../00_utilities/common";
+import ValidarPermisos from "../../../00_utilities/permisos/validar_permisos";
+import {
+    FASES_LITERALES as fases_literales_view
+} from '../../../00_utilities/permisos/types'
+
 
 const table_style = {
     th: {
@@ -20,80 +28,141 @@ const table_style = {
         paddingRight: '4px',
     },
     table: {
-        fontSize: '12px'
+        fontSize: '12px',
+        width: '100%'
+    }
+};
+
+const tab_style = {
+    div:{
+        marginTop: '50px'
     }
 };
 
 class Dashboard extends Component {
     constructor(props) {
         super(props);
-        this.state = {tabIndex: 0};
+        this.state = {
+            slideIndex: 0,
+            labelModo: 'Mis Tareas'
+        };
+        this.handleChange = this.handleChange.bind(this)
+        this.cargarDatos = this.cargarDatos.bind(this);
+        this.plural_name = 'Literales';
+    }
+
+    handleChange = (event, value) => {
+        if (value !== this.state.slideIndex) {
+            this.cargarElementos(value);
+        }
+        this.setState({
+            slideIndex: value,
+        });
+    };
+
+    cargarDatos() {
+        const {slideIndex} = this.state;
+        this.cargarElementos(slideIndex)
+    }
+
+    cargarElementos(value = null) {
+        let index = value !== null ? value : this.state.slideIndex;
+        if (index === 0) {
+            this.props.fetchMisPendientesTareasFases();
+            this.setState({
+                labelModo: 'Mis Tareas'
+            });
+        } else if (index === 1) {
+            this.props.fetchMisPendientesTareasFases();
+            this.setState({
+                labelModo: 'Para Supervisar'
+            });
+        } else if (index === 2) {
+            this.props.fetchLiteralesConSeguimiento();
+        } else if (index === 3) {
+            this.props.fetchPendientesTareasFases();
+        }
+    }
+
+    componentDidMount() {
+               this.props.fetchMisPermisosxListado(
+            [
+                fases_literales_view
+            ], {callback: () => this.cargarDatos()}
+        );
     }
 
     render() {
+        const {slideIndex, labelModo} = this.state;
+        const {fases_tareas, literales, mis_permisos} = this.props;
+        const permisos_literales = permisosAdapterDos(mis_permisos, fases_literales_view)
+        console.log(permisos_literales)
+        const can_see = permisos_literales.list;
+
         return (
-            <div className='col-12'>
-                <Tabs selectedIndex={this.state.tabIndex} onSelect={tabIndex => this.setState({tabIndex})}>
-                    <TabList>
-                        <Tab>
-                            Mis Tareas
-                        </Tab>
-                        <Tab>
-                            Supervisar
-                        </Tab>
+            <ValidarPermisos can_see={can_see} nombre={this.plural_name}>
+                <Tabs
+                    indicatorColor="primary"
+                    textColor="primary"
+                    onChange={this.handleChange}
+                    value={slideIndex}
+                >
+                    <Tab label="Mis Tareas"/>
+                    <Tab label="Supervisar"/>
+                    <Tab label="Seguimiento Literales"/>
+                    <Tab label="Prueba"/>
+                </Tabs>
 
-                        <Tab>
-                            Seguimiento Literales
-                        </Tab>
-
-                        <Tab>
-                            Prueba
-                        </Tab>
-                    </TabList>
-
-                    <TabPanel>
-                        <div className="row">
+                    {
+                        slideIndex === 0 &&
                             <TareasPendientesList
+                                {...this.props}
                                 table_style={table_style}
+                                fases_tareas = {_.pickBy(fases_tareas, e => e.soy_asignado)}
+                                label_modo = {labelModo}
                                 modo={1}
-                            />
-                        </div>
-                    </TabPanel>
-
-
-                    <TabPanel>
-                        <div className="row">
-                            <TareasPendientesList
+                        />
+                    }
+                    {
+                        slideIndex === 1 &&
+                          <TareasPendientesList
+                                {...this.props}
                                 table_style={table_style}
+                                fases_tareas = {_.pickBy(fases_tareas, e => e.soy_responsable && !e.soy_asignado)}
+                                label_modo = {labelModo}
                                 modo={2}
                             />
-                        </div>
-                    </TabPanel>
-
-                    <TabPanel>
-                        <div className="row">
+                    }
+                    {
+                        slideIndex === 2 &&
                             <LiteralesSeguimiento
+                                {...this.props}
                                 table_style={table_style}
+                                literales = {literales}
                             />
-                        </div>
-                    </TabPanel>
-
-                    <TabPanel>
-                        <div className="row">
+                    }
+                    {
+                        slideIndex === 3 &&
                             <MatrixProyectos
+                                {...this.props}
                                 table_style={table_style}
+                                fases_tareas = {fases_tareas}
                             />
-                        </div>
-                    </TabPanel>
-                </Tabs>
-            </div>
+                    }
+
+                <CargarDatos
+                    cargarDatos={this.cargarDatos}
+                />
+             </ValidarPermisos>
         )
     }
 }
 
 function mapPropsToState(state, ownProps) {
     return {
-        mis_permisos: state.mis_permisos
+        mis_permisos: state.mis_permisos,
+        fases_tareas: state.fases_tareas,
+        literales: state.literales,
     }
 }
 

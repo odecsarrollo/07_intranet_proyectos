@@ -5,7 +5,7 @@ import CargarDatos from "../../../../00_utilities/components/system/cargar_datos
 import {Titulo} from "../../../../00_utilities/templates/fragmentos";
 import ValidarPermisos from "../../../../00_utilities/permisos/validar_permisos";
 import FormControl from '@material-ui/core/FormControl';
-import {permisosAdapter} from "../../../../00_utilities/common";
+import {permisosAdapterDos} from "../../../../00_utilities/common";
 import SelectField from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -28,7 +28,11 @@ class ItemsList extends Component {
     }
 
     componentDidMount() {
-        this.cargarDatos();
+        this.props.fetchMisPermisosxListado(
+            [
+                permisos_view
+            ], {callback: () => this.cargarDatos()}
+        );
     }
 
     componentWillUnmount() {
@@ -59,7 +63,7 @@ class ItemsList extends Component {
 
     render() {
         const {object_list, mis_permisos} = this.props;
-        const permisos = permisosAdapter(permisos_view);
+        const permisos = permisosAdapterDos(mis_permisos, permisos_view);
         return (
             <ValidarPermisos can_see={permisos.list} nombre='listas de items CGUno'>
                 <Titulo>Items CGUno</Titulo>

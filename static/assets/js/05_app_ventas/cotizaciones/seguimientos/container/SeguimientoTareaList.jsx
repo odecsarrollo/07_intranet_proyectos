@@ -10,7 +10,7 @@ import {
     CLIENTES as permisos_view,
     COTIZACIONES as permisos_cotizaciones_view
 } from "../../../../00_utilities/permisos/types";
-import {permisosAdapter} from "../../../../00_utilities/common";
+import {permisosAdapterDos} from "../../../../00_utilities/common";
 
 moment.tz.setDefault("America/Bogota");
 moment.locale('es');
@@ -73,12 +73,16 @@ class SeguimientoTareasCotizacionesList extends Component {
     }
 
     componentDidMount() {
-        this.cargarDatos()
+        this.props.fetchMisPermisosxListado(
+            [
+                permisos_cotizaciones_view
+            ], {callback: () => this.cargarDatos()}
+        );
     }
 
     render() {
         const {tareas_list, cotizaciones_agendas_list, mis_permisos} = this.props;
-        const permisos_cotizaciones = permisosAdapter(permisos_cotizaciones_view);
+        const permisos_cotizaciones = permisosAdapterDos(mis_permisos, permisos_cotizaciones_view);
 
         const listado_tareas = _.map(tareas_list, t => {
             return {

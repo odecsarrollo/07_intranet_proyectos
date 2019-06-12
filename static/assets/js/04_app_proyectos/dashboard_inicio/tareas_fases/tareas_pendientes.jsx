@@ -1,8 +1,5 @@
 import React, {Component, Fragment} from 'react';
 import TareasAsignadasPanel from './tareas_listados';
-import CargarDatos from "../../../00_utilities/components/system/cargar_datos";
-import {connect} from "react-redux";
-import * as actions from "../../../01_actions/01_index";
 import {fechaFormatoDos} from "../../../00_utilities/common";
 import TdCambiarEstadoTarea from '../../proyectos/seguimientos_proyectos/components/cambiar_estado_tarea';
 
@@ -40,7 +37,6 @@ class TareasPendientesList extends Component {
     constructor(props) {
         super(props);
         this.cambiarFiltroPendientes = this.cambiarFiltroPendientes.bind(this);
-        this.cargarDatos = this.cargarDatos.bind(this);
         this.actualizarTarea = this.actualizarTarea.bind(this);
         this.cargarTareasPendientes = this.cargarTareasPendientes.bind(this);
         this.state = {
@@ -60,9 +56,6 @@ class TareasPendientesList extends Component {
         this.props.fetchTareaFase(tarea_id, {callback: actualizarTarea})
     }
 
-    cargarDatos() {
-        this.cargarTareasPendientes();
-    }
 
     cargarTareasPendientes() {
         this.props.fetchMisPendientesTareasFases();
@@ -90,7 +83,6 @@ class TareasPendientesList extends Component {
 
 
     componentDidMount() {
-        this.cargarDatos();
         this.setState({
             estado: null,
             literal: null
@@ -101,27 +93,23 @@ class TareasPendientesList extends Component {
         const {
             table_style,
             fases_tareas,
-            modo = 1,
+            label_modo,
+            modo
         } = this.props;
+        console.log(fases_tareas)
         const {estado, literal} = this.state;
-
-        let tareas = _.pickBy(fases_tareas, e => e.soy_asignado);
-        if (modo === 2) {
-            tareas = _.pickBy(fases_tareas, e => e.soy_responsable && !e.soy_asignado);
-        }
-
-        const lista_tareas_actual = this.obtenerListaTareas(tareas);
+        const lista_tareas_actual = this.obtenerListaTareas(fases_tareas);
 
         return (
             <Fragment>
                 <div className="col-12 text-center">
-                    <h3>{modo === 1 ? 'Mis Tareas' : 'Para Supervisar'}</h3>
+                    <h3>{label_modo}</h3>
                 </div>
                 <div className="col-12 col-md-4 col-lg-3">
                     <TareasAsignadasPanel
                         estado={estado}
                         literal={literal}
-                        tareas_asignadas={tareas}
+                        tareas_asignadas={fases_tareas}
                         cambiarFiltroPendientes={this.cambiarFiltroPendientes}
                         table_style={table_style}
                     />
@@ -163,19 +151,11 @@ class TareasPendientesList extends Component {
                         </tfoot>
                     </table>
                 </div>
-                <CargarDatos
-                    cargarDatos={this.cargarDatos}
-                />
             </Fragment>
         )
     }
 }
 
-function mapPropsToState(state, ownProps) {
-    return {
-        mis_permisos: state.mis_permisos,
-        fases_tareas: state.fases_tareas,
-    }
-}
 
-export default connect(mapPropsToState, actions)(TareasPendientesList)
+
+export default TareasPendientesList;

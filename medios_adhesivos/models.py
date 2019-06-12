@@ -34,6 +34,7 @@ class Adhesivo(models.Model):
         processors=[
             ResizeToFill(150, 80),
         ],
+
         format='JPEG'
     )
 

@@ -6,7 +6,7 @@ import {
     MANOS_OBRAS_HORAS_HOJAS_TRABAJOS as permisos_view,
     MANOS_OBRAS_HOJAS_TRABAJOS as permisos_view_hoja,
 } from "../../../../00_utilities/permisos/types";
-import {permisosAdapter} from "../../../../00_utilities/common";
+import {permisosAdapterDos} from "../../../../00_utilities/common";
 import RangoFechas from "../../../../00_utilities/calendariosRangosFiltro";
 
 import CreateForm from '../../hojas_trabajo/components/forms/hora_hoja_trabajo_form';
@@ -23,7 +23,12 @@ class List extends Component {
     }
 
     componentDidMount() {
-        this.cargarDatos();
+             this.props.fetchMisPermisosxListado(
+            [
+                permisos_view,
+                permisos_view_hoja
+            ], {callback: () => this.cargarDatos()}
+        );
     }
 
     componentWillUnmount() {
@@ -37,9 +42,9 @@ class List extends Component {
     }
 
     render() {
-        const {object_list} = this.props;
-        const bloque_1_permisos = permisosAdapter(permisos_view);
-        const permisos_hoja = permisosAdapter(permisos_view_hoja);
+        const {object_list, mis_permisos} = this.props;
+        const bloque_1_permisos = permisosAdapterDos(mis_permisos, permisos_view);
+        const permisos_hoja = permisosAdapterDos(mis_permisos, permisos_view_hoja);
         const method_pool = {
             fetchObjectMethod: this.props.fetchHoraHojaTrabajo,
             deleteObjectMethod: this.props.deleteHoraHojaTrabajo,
@@ -70,6 +75,7 @@ class List extends Component {
 
 function mapPropsToState(state, ownProps) {
     return {
+        mis_permisos: state.mis_permisos,
         object_list: state.horas_hojas_trabajos,
         colaboradores_list: state.colaboradores,
         proyectos_list: state.proyectos,

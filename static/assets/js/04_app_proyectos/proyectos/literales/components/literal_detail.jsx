@@ -1,5 +1,5 @@
 import React, {Fragment, Component} from 'react';
-import {fechaFormatoUno, permisosAdapter, pesosColombianos} from "../../../../00_utilities/common";
+import {fechaFormatoUno, permisosAdapterDos, pesosColombianos} from "../../../../00_utilities/common";
 import TablaProyectoLiteralesMateriales from '../../literales/components/proyectos_literales_materiales_tabla';
 import TablaProyectoLiteralesManoObra from '../../literales/components/proyectos_literales_mano_obra_tabla';
 import InformacionLiteralGeneral from '../../literales/components/proyectos_literales_general';
@@ -32,7 +32,13 @@ class LiteralDetail extends Component {
     }
 
     componentDidMount() {
-        this.cargarDatos();
+        this.props.fetchMisPermisosxListado(
+            [
+                literales_permisos_view,
+                permisos_view,
+                archivos_literal_permisos_view
+            ], {callback: () => this.cargarDatos()}
+        );
     }
 
     componentWillUnmount() {
@@ -79,9 +85,9 @@ class LiteralDetail extends Component {
             mis_permisos,
             id_literal
         } = this.props;
-        const permisos = permisosAdapter(permisos_view);
-        const permisos_literales = permisosAdapter(literales_permisos_view);
-        const permisos_archivos_literal = permisosAdapter(archivos_literal_permisos_view);
+        const permisos = permisosAdapterDos(mis_permisos, permisos_view);
+        const permisos_literales = permisosAdapterDos(mis_permisos, literales_permisos_view);
+        const permisos_archivos_literal = permisosAdapterDos(mis_permisos, archivos_literal_permisos_view);
         return (
             <Fragment>
                 <div className="row">

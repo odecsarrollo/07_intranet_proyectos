@@ -9,14 +9,29 @@ from sistema_informacion_origen.models import SistemaInformacionOrigen
 class CanalDistribucion(TimeStampedModel):
     nombre = models.CharField(max_length=100, unique=True)
 
+    class Meta:
+        permissions = [
+            ['list_canaldistribucion', 'Puede listar canales de distribucion'],
+        ]
+
 
 class TipoIndustria(TimeStampedModel):
     nombre = models.CharField(max_length=100, unique=True)
     descripcion = models.TextField(max_length=300, null=True, blank=True)
 
+    class Meta:
+        permissions = [
+            ['list_tipoindustria', 'Puede listar tipos industrias'],
+        ]
+
 
 class GrupoCliente(models.Model):
     nombre = models.CharField(max_length=120, unique=True)
+
+    class Meta:
+        permissions = [
+            ['list_grupocliente', 'Puede listar grupos clientes'],
+        ]
 
 
 # Realmente cliente contacto

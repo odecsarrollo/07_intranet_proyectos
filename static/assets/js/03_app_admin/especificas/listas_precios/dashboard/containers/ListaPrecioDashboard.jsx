@@ -4,7 +4,7 @@ import * as actions from "../../../../../01_actions/01_index";
 import CargarDatos from "../../../../../00_utilities/components/system/cargar_datos";
 import {Titulo} from "../../../../../00_utilities/templates/fragmentos";
 import ValidarPermisos from "../../../../../00_utilities/permisos/validar_permisos";
-import {permisosAdapter} from "../../../../../00_utilities/common";
+import {permisosAdapterDos} from "../../../../../00_utilities/common";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import {
@@ -47,13 +47,17 @@ class ItemsDashboard extends Component {
     };
 
     componentDidMount() {
-        this.cargarDatos();
+        this.props.fetchMisPermisosxListado(
+            [
+                formas_pagos_canales_permisos_view
+            ], {callback: () => this.cargarDatos()}
+        );
     }
 
     render() {
-        const {formas_pagos_canales, canales} = this.props;
+        const {formas_pagos_canales, canales, mis_permisos} = this.props;
         const {slideIndex} = this.state;
-        const permisos_formas_pagos_canales = permisosAdapter(formas_pagos_canales_permisos_view);
+        const permisos_formas_pagos_canales = permisosAdapterDos(mis_permisos, formas_pagos_canales_permisos_view);
 
         const can_see = permisos_formas_pagos_canales.list;
         return (

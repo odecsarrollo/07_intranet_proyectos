@@ -4,7 +4,7 @@ import * as actions from "../../../../../01_actions/01_index";
 import CargarDatos from "../../../../../00_utilities/components/system/cargar_datos";
 import {Titulo} from "../../../../../00_utilities/templates/fragmentos";
 import ValidarPermisos from "../../../../../00_utilities/permisos/validar_permisos";
-import {permisosAdapter} from "../../../../../00_utilities/common";
+import {permisosAdapterDos} from "../../../../../00_utilities/common";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import {
@@ -60,15 +60,21 @@ class GeografiaDashboard extends Component {
     };
 
     componentDidMount() {
-        this.cargarDatos();
+        this.props.fetchMisPermisosxListado(
+            [
+                ciudades_permisos_view,
+                departamentos_permisos_view,
+                paises_permisos_view
+            ], {callback: () => this.cargarDatos()}
+        );
     }
 
     render() {
-        const {ciudades, departamentos, paises, ciudades_catalogos} = this.props;
+        const {ciudades, departamentos, paises, ciudades_catalogos, mis_permisos} = this.props;
         const {slideIndex} = this.state;
-        const permisos_ciudades = permisosAdapter(ciudades_permisos_view);
-        const permisos_departamentos = permisosAdapter(departamentos_permisos_view);
-        const permisos_paises = permisosAdapter(paises_permisos_view);
+        const permisos_ciudades = permisosAdapterDos(mis_permisos, ciudades_permisos_view);
+        const permisos_departamentos = permisosAdapterDos(mis_permisos, departamentos_permisos_view);
+        const permisos_paises = permisosAdapterDos(mis_permisos, paises_permisos_view);
 
         const can_see =
             permisos_ciudades.list ||

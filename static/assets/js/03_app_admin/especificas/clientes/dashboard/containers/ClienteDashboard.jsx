@@ -4,15 +4,15 @@ import * as actions from "../../../../../01_actions/01_index";
 import CargarDatos from "../../../../../00_utilities/components/system/cargar_datos";
 import {Titulo} from "../../../../../00_utilities/templates/fragmentos";
 import ValidarPermisos from "../../../../../00_utilities/permisos/validar_permisos";
-import {permisosAdapter} from "../../../../../00_utilities/common";
+import {permisosAdapterDos} from "../../../../../00_utilities/common";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import {
     CANALES_DISTRIBUCIONES as canales_permisos_view,
     TIPOS_INDUSTRIAS as tipos_industrias_permisos_view
 } from "../../../../../00_utilities/permisos/types";
-import BloquePaises from "../../canales/components/CanalDistribucionList";
-import BloqueDepartamentos from "../../tipos_industrias/components/TipoIndustriaList";
+import BloqueCanales from "../../canales/components/CanalDistribucionList";
+import BloqueTiposIndustrias from "../../tipos_industrias/components/TipoIndustriaList";
 
 class ClientesDashboard extends Component {
     constructor(props) {
@@ -49,14 +49,19 @@ class ClientesDashboard extends Component {
     };
 
     componentDidMount() {
-        this.cargarDatos();
+        this.props.fetchMisPermisosxListado(
+            [
+                canales_permisos_view,
+                tipos_industrias_permisos_view
+            ], {callback: () => this.cargarDatos()}
+        );
     }
 
     render() {
-        const {canales, tipos_industrias} = this.props;
+        const {canales, tipos_industrias, mis_permisos} = this.props;
         const {slideIndex} = this.state;
-        const permisos_canales = permisosAdapter(canales_permisos_view);
-        const permisos_tipos_industrias = permisosAdapter(tipos_industrias_permisos_view);
+        const permisos_canales = permisosAdapterDos(mis_permisos, canales_permisos_view);
+        const permisos_tipos_industrias = permisosAdapterDos(mis_permisos, tipos_industrias_permisos_view);
 
         const can_see =
             permisos_canales.list ||
@@ -77,7 +82,7 @@ class ClientesDashboard extends Component {
 
                 {
                     slideIndex === 0 &&
-                    <BloquePaises
+                    <BloqueCanales
                         object_list={canales}
                         permisos_object={permisos_canales}
                         {...this.props}
@@ -85,7 +90,7 @@ class ClientesDashboard extends Component {
                 }
                 {
                     slideIndex === 1 &&
-                    <BloqueDepartamentos
+                    <BloqueTiposIndustrias
                         object_list={tipos_industrias}
                         permisos_object={permisos_tipos_industrias}
                         {...this.props}

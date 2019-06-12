@@ -3,7 +3,7 @@ import * as actions from "../../../../01_actions/01_index";
 import {connect} from "react-redux";
 import UploadDocumentoForm from '../forms/upload_documento_form';
 import ArchivosList from '../components/archivos_list';
-import {permisosAdapter} from "../../../../00_utilities/common";
+import {permisosAdapterDos} from "../../../../00_utilities/common";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {
     ARCHIVOS_PROYECTOS as permisos_view,
@@ -22,7 +22,11 @@ class PanelArchivosProyectos extends Component {
     }
 
     componentDidMount() {
-        this.cargarDatos();
+        this.props.fetchMisPermisosxListado(
+            [
+                permisos_view
+            ], {callback: () => this.cargarDatos()}
+        );
     }
 
     cargarDatos() {
@@ -90,7 +94,7 @@ class PanelArchivosProyectos extends Component {
     render() {
         const {archivos_proyecto, mis_permisos} = this.props;
         const {adicionar_documento, item_seleccionado} = this.state;
-        const permisos = permisosAdapter(permisos_view);
+        const permisos = permisosAdapterDos(mis_permisos, permisos_view);
         return (
             <Fragment>
                 {

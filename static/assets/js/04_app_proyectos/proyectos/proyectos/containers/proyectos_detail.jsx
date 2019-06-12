@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import * as actions from "../../../../01_actions/01_index";
 import {SinObjeto} from "../../../../00_utilities/templates/fragmentos";
 import ValidarPermisos from "../../../../00_utilities/permisos/validar_permisos";
-import {permisosAdapter} from "../../../../00_utilities/common";
+import {permisosAdapterDos} from "../../../../00_utilities/common";
 import TablaProyectoLiterales from '../../literales/components/proyectos_literales_tabla';
 import FormEditProyecto from '../../proyectos/components/proyectos_general';
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
@@ -36,7 +36,14 @@ class Detail extends Component {
     }
 
     componentDidMount() {
-        this.cargarDatos();
+     this.props.fetchMisPermisosxListado(
+            [
+                permisos_view,
+                literales_permisos_view,
+                cotizaciones_permisos_view,
+                archivos_proyecto_permisos_view
+            ], {callback: () => this.cargarDatos()}
+        );
     }
 
     componentWillUnmount() {
@@ -81,10 +88,10 @@ class Detail extends Component {
             literales_list,
             contizaciones_list,
         } = this.props;
-        const permisos = permisosAdapter(permisos_view);
-        const permisos_literales = permisosAdapter(literales_permisos_view);
-        const cotizacion_permisos = permisosAdapter(cotizaciones_permisos_view);
-        const archivos_proyecto_permisos = permisosAdapter(archivos_proyecto_permisos_view);
+        const permisos = permisosAdapterDos(mis_permisos, permisos_view);
+        const permisos_literales = permisosAdapterDos(mis_permisos, literales_permisos_view);
+        const cotizacion_permisos = permisosAdapterDos(mis_permisos, cotizaciones_permisos_view);
+        const archivos_proyecto_permisos = permisosAdapterDos(mis_permisos, archivos_proyecto_permisos_view);
 
         if (!object) {
             return <SinObjeto/>

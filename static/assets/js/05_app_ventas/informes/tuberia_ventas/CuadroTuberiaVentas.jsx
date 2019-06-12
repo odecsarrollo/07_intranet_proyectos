@@ -2,7 +2,7 @@ import React, {Component, Fragment} from 'react';
 import * as actions from "../../../01_actions/01_index";
 import {connect} from "react-redux";
 import CargarDatos from "../../../00_utilities/components/system/cargar_datos";
-import {permisosAdapter, pesosColombianos} from "../../../00_utilities/common";
+import {permisosAdapterDos, pesosColombianos} from "../../../00_utilities/common";
 import Typography from '@material-ui/core/Typography';
 import {
     COTIZACIONES as permisos_view
@@ -17,7 +17,11 @@ class InformeTunelVentas extends Component {
     }
 
     componentDidMount() {
-        this.cargarDatos();
+        this.props.fetchMisPermisosxListado(
+            [
+                permisos_view
+            ], {callback: () => this.cargarDatos()}
+        );
     }
 
     componentWillUnmount() {
@@ -31,7 +35,7 @@ class InformeTunelVentas extends Component {
 
     render() {
         const {mis_permisos} = this.props;
-        const cotizaciones_permisos = permisosAdapter(permisos_view);
+        const cotizaciones_permisos = permisosAdapterDos(mis_permisos, permisos_view);
         if (!cotizaciones_permisos.informe_uno) {
             return (
                 <div>No tiene permisos suficientes para ver este informe</div>

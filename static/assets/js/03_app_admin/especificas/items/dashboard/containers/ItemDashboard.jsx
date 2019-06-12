@@ -4,7 +4,7 @@ import * as actions from "../../../../../01_actions/01_index";
 import CargarDatos from "../../../../../00_utilities/components/system/cargar_datos";
 import {Titulo} from "../../../../../00_utilities/templates/fragmentos";
 import ValidarPermisos from "../../../../../00_utilities/permisos/validar_permisos";
-import {permisosAdapter} from "../../../../../00_utilities/common";
+import {permisosAdapterDos} from "../../../../../00_utilities/common";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import {
@@ -58,7 +58,12 @@ class ItemsDashboard extends Component {
     };
 
     componentDidMount() {
-        this.cargarDatos();
+        this.props.fetchMisPermisosxListado(
+            [
+                categorias_productos_permisos_view,
+                items_ventas_permisos_view
+            ], {callback: () => this.cargarDatos()}
+        );
     }
 
     render() {
@@ -67,10 +72,11 @@ class ItemsDashboard extends Component {
             items_ventas,
         } = this.props;
         const {slideIndex} = this.state;
-        const permisos_categorias_productos = permisosAdapter(categorias_productos_permisos_view);
-        const permisos_items_ventas = permisosAdapter(items_ventas_permisos_view);
+        const {mis_permisos} = this.props;
+        const permisos_categorias_productos = permisosAdapterDos(mis_permisos, categorias_productos_permisos_view);
+        const permisos_items_ventas = permisosAdapterDos(mis_permisos, items_ventas_permisos_view);
 
-        const can_see = permisos_categorias_productos.list;
+        const can_see = permisos_categorias_productos.list || permisos_items_ventas.list;
         return (
             <ValidarPermisos can_see={can_see} nombre={this.plural_name}>
                 <Titulo>{this.singular_name}</Titulo>

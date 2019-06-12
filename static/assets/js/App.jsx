@@ -74,7 +74,7 @@ import {
     faDesktop,
     faMap,
     faExchangeAlt,
-    faConveyorBelt
+    faConveyorBelt,
 } from '@fortawesome/pro-solid-svg-icons';
 
 library.add(
