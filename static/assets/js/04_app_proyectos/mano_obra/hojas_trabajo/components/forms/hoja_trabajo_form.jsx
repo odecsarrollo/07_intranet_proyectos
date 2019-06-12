@@ -8,6 +8,7 @@ import {connect} from "react-redux";
 import {MyFormTagModal} from '../../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import validate from './validate_hoja';
 import moment from "moment-timezone";
+import {fechaToYMD} from "../../../../../00_utilities/common";
 
 class Form extends Component {
     componentDidMount() {
@@ -41,12 +42,13 @@ class Form extends Component {
             <MyFormTagModal
                 onCancel={onCancel}
                 onSubmit={handleSubmit((v) => {
+                    const fecha = fechaToYMD(v.fecha);
                     if (!permisos_object.add_para_otros) {
                         if (mi_cuenta.colaborador) {
-                            onSubmit({...v, colaborador: mi_cuenta.colaborador.id})
+                            onSubmit({...v, colaborador: mi_cuenta.colaborador.id, fecha})
                         }
                     } else {
-                        onSubmit(v)
+                        onSubmit({...v, fecha})
                     }
                 })}
                 reset={reset}

@@ -20,6 +20,8 @@ export const fechaHoraFormatoUno = (fecha) => {
     return `${fechaFormatoUno(fecha)} ${dateTime.hours()}:${dateTime.minutes()}`;
 };
 
+export const fechaToYMD = (fecha) => fecha.getFullYear() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getDate();
+
 export const formatBytes = (bytes, decimals = 3) => {
     if (bytes === 0) return '0 Bytes';
     const k = 1000,

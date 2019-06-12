@@ -67,7 +67,7 @@ class HojaTrabajoDiarioSerializer(serializers.ModelSerializer):
     colaborador_nombre = serializers.CharField(source='colaborador.full_name', read_only=True)
     tasa_valor_hora = serializers.DecimalField(source='tasa.valor_hora', decimal_places=2, max_digits=12,
                                                read_only=True)
-    fecha = serializers.DateField(format="%Y-%m-%d", input_formats=['%Y-%m-%dT%H:%M:%S.%fZ', 'iso-8601'])
+    fecha = serializers.DateField(format="%Y-%m-%d", input_formats=['%Y-%m-%d', 'iso-8601'])
     cantidad_horas = serializers.DecimalField(decimal_places=4, max_digits=12, read_only=True)
     costo_total = serializers.DecimalField(decimal_places=4, max_digits=12, read_only=True)
 
