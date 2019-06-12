@@ -33,9 +33,9 @@ class CotizacionSerializer(serializers.ModelSerializer):
         allow_null=True,
         required=False
     )
-    fecha_limite_segumiento_estado = serializers.DateTimeField(
+    fecha_limite_segumiento_estado = serializers.DateField(
         format="%Y-%m-%d",
-        input_formats=['%Y-%m-%d', 'iso-8601'],
+        input_formats=['%Y-%m-%dT%H:%M:%S.%fZ', 'iso-8601'],
         allow_null=True,
         required=False
     )
