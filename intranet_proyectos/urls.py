@@ -25,14 +25,18 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/auth/', include('usuarios.urls')),
     path('api/', include(router.urls)),
-    # path('api-auth/', include('rest_framework.urls')),
     url(r'^app/*', IndexView.as_view(), name='index'),
     path('', include('index.urls')),
 ]
 
 if settings.DEBUG:
+    from rest_framework.schemas import get_schema_view
+
+    schema_view = get_schema_view(title="Example API")
+
     urlpatterns = [
                       url(r'^silk/', include('silk.urls', namespace='silk')),
+                      url('^schema$', schema_view),
                   ] + urlpatterns
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

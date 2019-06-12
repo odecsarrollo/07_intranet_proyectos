@@ -38,7 +38,8 @@ class ConfiguracionNombreAutomaticoSerializer(serializers.ModelSerializer):
             'nombre_con_ancho',
             'nombre_con_alto',
             'nombre_con_longitud',
-            'nombre_con_diametro'
+            'nombre_con_diametro',
+            'to_string',
         ]
 
 
@@ -150,7 +151,6 @@ class ComponenteSerializer(serializers.ModelSerializer):
     material_nombre = serializers.CharField(source='material.nombre', read_only=True)
     moneda_nombre = serializers.CharField(source='categoria.moneda.nombre', read_only=True)
     moneda_tasa = serializers.CharField(source='categoria.moneda.cambio', read_only=True)
-    categoria_nombre = serializers.CharField(source='categoria.nombre', read_only=True)
     color_nombre = serializers.CharField(source='color.nombre', read_only=True)
     tipo_banda_nombre = serializers.CharField(source='tipo_banda.nombre', read_only=True)
     margen_utilidad = serializers.DecimalField(
@@ -176,8 +176,6 @@ class ComponenteSerializer(serializers.ModelSerializer):
             'url',
             'id',
             'descripcion_adicional',
-            'categoria',
-            'categoria_nombre',
             'moneda_nombre',
             'moneda_tasa',
             'margen_utilidad',
