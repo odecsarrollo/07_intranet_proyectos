@@ -76,7 +76,7 @@ class ItemsDashboard extends Component {
         const permisos_categorias_productos = permisosAdapterDos(mis_permisos, categorias_productos_permisos_view);
         const permisos_items_ventas = permisosAdapterDos(mis_permisos, items_ventas_permisos_view);
 
-        const can_see = permisos_categorias_productos.list;
+        const can_see = permisos_categorias_productos.list || permisos_items_ventas.list;
         return (
             <ValidarPermisos can_see={can_see} nombre={this.plural_name}>
                 <Titulo>{this.singular_name}</Titulo>

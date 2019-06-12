@@ -9,7 +9,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import {
     COLABORADORES as bloque_1_permisos,
-    COLABORADORES as bloque_2_permisos,
+    CENTROS_COSTOS_COLABORADORES as bloque_2_permisos,
 } from "../../../../../../00_utilities/permisos/types";
 
 import BloqueColaboradores from '../../colaboradores/components/ColaboradorList';

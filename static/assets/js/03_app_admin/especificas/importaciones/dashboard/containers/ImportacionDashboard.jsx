@@ -59,7 +59,7 @@ class ItemsDashboard extends Component {
     };
 
     componentDidMount() {
-         this.props.fetchMisPermisosxListado(
+        this.props.fetchMisPermisosxListado(
             [
                 monedas_cambios_permisos_view,
                 proveedores_permisos_view,
@@ -75,7 +75,9 @@ class ItemsDashboard extends Component {
         const permisos_proveedores = permisosAdapterDos(mis_permisos, proveedores_permisos_view);
         const permisos_margenes = permisosAdapterDos(mis_permisos, margenes_permisos_view);
 
-        const can_see = permisos_monedas_cambios.list;
+        const can_see = permisos_monedas_cambios.list ||
+            proveedores_permisos_view.list ||
+            margenes_permisos_view.list;
         return (
             <ValidarPermisos can_see={can_see} nombre={this.plural_name}>
                 <Titulo>{this.singular_name}</Titulo>

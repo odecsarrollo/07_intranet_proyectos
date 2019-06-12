@@ -11,8 +11,8 @@ import {
     CANALES_DISTRIBUCIONES as canales_permisos_view,
     TIPOS_INDUSTRIAS as tipos_industrias_permisos_view
 } from "../../../../../00_utilities/permisos/types";
-import BloquePaises from "../../canales/components/CanalDistribucionList";
-import BloqueDepartamentos from "../../tipos_industrias/components/TipoIndustriaList";
+import BloqueCanales from "../../canales/components/CanalDistribucionList";
+import BloqueTiposIndustrias from "../../tipos_industrias/components/TipoIndustriaList";
 
 class ClientesDashboard extends Component {
     constructor(props) {
@@ -49,7 +49,7 @@ class ClientesDashboard extends Component {
     };
 
     componentDidMount() {
-             this.props.fetchMisPermisosxListado(
+        this.props.fetchMisPermisosxListado(
             [
                 canales_permisos_view,
                 tipos_industrias_permisos_view
@@ -82,7 +82,7 @@ class ClientesDashboard extends Component {
 
                 {
                     slideIndex === 0 &&
-                    <BloquePaises
+                    <BloqueCanales
                         object_list={canales}
                         permisos_object={permisos_canales}
                         {...this.props}
@@ -90,7 +90,7 @@ class ClientesDashboard extends Component {
                 }
                 {
                     slideIndex === 1 &&
-                    <BloqueDepartamentos
+                    <BloqueTiposIndustrias
                         object_list={tipos_industrias}
                         permisos_object={permisos_tipos_industrias}
                         {...this.props}

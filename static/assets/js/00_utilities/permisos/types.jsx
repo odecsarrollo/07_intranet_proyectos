@@ -50,11 +50,11 @@ export const BANDA_EUROBELT_CATEGORIAS_DOS = {
 };
 
 export const BANDA_EUROBELT_COLORES = {
-    add: 'add_materialbandaeurobelt',
-    delete: 'delete_materialbandaeurobelt',
-    change: 'change_materialbandaeurobelt',
-    list: 'list_materialbandaeurobelt',
-    detail: 'view_materialbandaeurobelt',
+    add: 'add_colorbandaeurobelt',
+    delete: 'delete_colorbandaeurobelt',
+    change: 'change_colorbandaeurobelt',
+    list: 'list_colorbandaeurobelt',
+    detail: 'view_colorbandaeurobelt',
 };
 
 export const BANDA_EUROBELT_MATERIALES = {
