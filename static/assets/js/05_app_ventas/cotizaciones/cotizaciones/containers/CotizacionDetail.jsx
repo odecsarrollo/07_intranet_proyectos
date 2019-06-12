@@ -147,7 +147,7 @@ class Detail extends Component {
     render() {
         const {object, seguimiento_list, archivos_list, mis_permisos} = this.props;
         const {adicionar_documento, item_seleccionado} = this.state;
-        const permisos = permisosAdapterDos(permisos_view);
+        const permisos = permisosAdapterDos(mis_permisos, permisos_view);
         const permisos_proyecto = permisosAdapterDos(mis_permisos, proyecto_permisos_view);
         const permisos_archivos_cotizacion = permisosAdapterDos(mis_permisos, archivo_cotizacion_permisos_view);
         if (!object) {
