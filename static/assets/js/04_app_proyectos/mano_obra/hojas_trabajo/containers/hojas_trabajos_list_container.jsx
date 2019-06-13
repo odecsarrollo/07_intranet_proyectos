@@ -39,10 +39,13 @@ class List extends Component {
     }
 
     cargarDatos() {
+        const {permisos: {add_para_otros}} = this.props;
         const date_today = moment(new Date());
-        const today = date_today.format('YYYY-MM-DD');
+        const hoy = date_today.format('YYYY-MM-DD');
+        const hace_un_mes = date_today.add({days: -30}).format('YYYY-MM-DD');
+        const fecha_inicial = add_para_otros ? hoy : hace_un_mes;
         const cargarMiCuenta = () => this.props.fetchMiCuenta();
-        const cargarHojasTrabajoHoy = () => this.props.fetchHojasTrabajosxFechas(today, today, {callback: cargarMiCuenta});
+        const cargarHojasTrabajoHoy = () => this.props.fetchHojasTrabajosxFechas(fecha_inicial, hoy, {callback: cargarMiCuenta});
         const cargarConfigCostos = () => this.props.fetchConfiguracionesCostos({callback: cargarHojasTrabajoHoy});
         this.props.fetchColaboradoresEnProyectos({callback: cargarConfigCostos});
 
@@ -52,10 +55,9 @@ class List extends Component {
         const {
             object_list,
             history,
-            mis_permisos
+            permisos
         } = this.props;
 
-        const permisos = permisosAdapterDos(mis_permisos, permisos_view);
         const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
 
         const method_pool = {
@@ -99,7 +101,9 @@ class List extends Component {
 }
 
 function mapPropsToState(state, ownProps) {
+    const permisos = permisosAdapterDos(state.mis_permisos, permisos_view);
     return {
+        permisos,
         mis_permisos: state.mis_permisos,
         object_list: state.hojas_trabajos_diarios,
         colaboradores_list: state.colaboradores,

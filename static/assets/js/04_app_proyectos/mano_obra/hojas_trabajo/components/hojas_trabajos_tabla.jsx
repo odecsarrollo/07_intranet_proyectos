@@ -123,7 +123,7 @@ class Tabla extends React.Component {
                         ]
                     }
                 ]}
-                defaultPageSize={10}
+                defaultPageSize={50}
                 className="-striped -highlight tabla-maestra"
             />
         );

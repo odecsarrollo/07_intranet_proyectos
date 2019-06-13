@@ -23,6 +23,14 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     ).all()
     serializer_class = UsuarioSerializer
 
+    # def retrieve(self, request, *args, **kwargs):
+    #     from django.db.models.deletion import Collector
+    #     instancia = self.get_object()
+    #     collector = Collector(using='default')  # or specific database
+    #     collector.collect([instancia], keep_parents=True,collect_related=True)
+    #     print(collector.instances_with_model())
+    #     return super().retrieve(request, *args, **kwargs)
+
     @action(detail=False, methods=['get'])
     def mi_cuenta(self, request):
         qs = self.get_queryset().filter(
