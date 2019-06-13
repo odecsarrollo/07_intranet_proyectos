@@ -56,16 +56,13 @@ class List extends Component {
             history,
             permisos
         } = this.props;
-
         const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
-
         const method_pool = {
             fetchObjectMethod: this.props.fetchHojaTrabajo,
             deleteObjectMethod: this.props.deleteHojaTrabajo,
             createObjectMethod: this.props.createHojaTrabajo,
             updateObjectMethod: this.props.updateHojaTrabajo,
         };
-
         const can_add = permisos.add &&
             (
                 permisos.add_para_otros ||
