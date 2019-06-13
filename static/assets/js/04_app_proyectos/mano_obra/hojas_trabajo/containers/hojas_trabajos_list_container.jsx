@@ -48,7 +48,6 @@ class List extends Component {
         const cargarHojasTrabajoHoy = () => this.props.fetchHojasTrabajosxFechas(fecha_inicial, hoy, {callback: cargarMiCuenta});
         const cargarConfigCostos = () => this.props.fetchConfiguracionesCostos({callback: cargarHojasTrabajoHoy});
         this.props.fetchColaboradoresEnProyectos({callback: cargarConfigCostos});
-
     }
 
     render() {
