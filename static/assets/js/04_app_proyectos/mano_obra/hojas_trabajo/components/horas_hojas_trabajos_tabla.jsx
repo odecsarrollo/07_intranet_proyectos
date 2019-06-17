@@ -10,7 +10,7 @@ import ReactTable from "react-table";
 class Tabla extends React.Component {
     render() {
 
-        const data = _.orderBy(this.props.data, ['fecha'], ['desc']);
+        const data = _.map(_.orderBy(this.props.data, ['fecha'], ['desc']));
         const {
             updateItem,
             singular_name,
@@ -54,12 +54,12 @@ class Tabla extends React.Component {
                                     accessor: "horas",
                                     maxWidth: 90,
                                     Footer:
-                                    _.size(data) > 0 &&
-                                    <div className='text-right'>
+                                        _.size(data) > 0 &&
+                                        <div className='text-right'>
                                             <span>
                                                 {((_.map(data, e => e.cantidad_minutos).reduce(((total, actual) => total + actual))) / 60).toFixed(2)} Horas
                                             </span>
-                                    </div>
+                                        </div>
                                     ,
                                     Cell: row =>
                                         <div className='text-right'>
@@ -81,13 +81,13 @@ class Tabla extends React.Component {
                                     maxWidth: 100,
                                     show: permisos_hoja.costos,
                                     Footer:
-                                    permisos_hoja.costos &&
-                                    _.size(data) > 0 &&
-                                    <div className='text-right'>
+                                        permisos_hoja.costos &&
+                                        _.size(data) > 0 &&
+                                        <div className='text-right'>
                                         <span>
                                             {pesosColombianos(_.map(data, e => e.costo_total).reduce(((total, actual) => total + actual)))}
                                         </span>
-                                    </div>,
+                                        </div>,
                                     Cell: row =>
                                         <div className='text-right'>
                                             {pesosColombianos(row.value)}

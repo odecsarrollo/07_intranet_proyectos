@@ -15,7 +15,8 @@ class Tabla extends React.Component {
             singular_name,
             onDelete,
             onSelectItemEdit,
-            permisos_object
+            permisos_object,
+            onSelectForDelete
         } = this.props;
         const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
         return (
@@ -128,6 +129,7 @@ class Tabla extends React.Component {
                                         )
                                         &&
                                         <MyDialogButtonDelete
+                                            onSelectForDelete={onSelectForDelete}
                                             onDelete={() => {
                                                 onDelete(row.original)
                                             }}

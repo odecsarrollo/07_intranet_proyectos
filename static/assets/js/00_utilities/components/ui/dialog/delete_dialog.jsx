@@ -30,10 +30,17 @@ class MyDialogButtonDelete extends Component {
             is_open: false,
         });
         this.setStateDialog = this.setStateDialog.bind(this);
+        this.onClickButton = this.onClickButton.bind(this);
     }
 
     setStateDialog(estado) {
         this.setState(estado)
+    }
+
+    onClickButton() {
+        const {onSelectForDelete} = this.props;
+        onSelectForDelete();
+        this.setState({is_open: true})
     }
 
     render() {
@@ -53,7 +60,7 @@ class MyDialogButtonDelete extends Component {
                             margin: 0,
                             padding: 4,
                         }}
-                        onClick={() => this.setState({is_open: true})}
+                        onClick={() => this.onClickButton()}
                     >
                         <FontAwesomeIcon
                             className={classes.iconoDelete}

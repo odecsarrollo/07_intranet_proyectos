@@ -118,7 +118,7 @@ class Detail extends Component {
                     posUpdateMethod={(r) => this.props.fetchHojaTrabajo(r.hoja)}
                     posDeleteMethod={() => this.props.fetchHojaTrabajo(id)}
                     method_pool={horas_trabajo_crud_method_pool}
-                    list={mis_horas_trabajadas}
+                    list={_.mapKeys(mis_horas_trabajadas,'id')}
                     permisos_object={{
                         ...permisos_horas,
                         add: permisos_horas.add && puede_modificar,

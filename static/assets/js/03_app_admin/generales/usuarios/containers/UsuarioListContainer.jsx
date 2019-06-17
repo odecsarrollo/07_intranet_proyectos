@@ -44,6 +44,7 @@ class List extends Component {
             deleteObjectMethod: this.props.deleteUsuario,
             createObjectMethod: this.props.createUsuario,
             updateObjectMethod: this.props.updateUsuario,
+            selectForDeleteObjectMethod: this.props.fetchUsuario,
         };
 
         return (

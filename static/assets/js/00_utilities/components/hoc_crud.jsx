@@ -14,8 +14,16 @@ function crudHOC(CreateForm, Tabla) {
             });
             this.onSubmit = this.onSubmit.bind(this);
             this.onDelete = this.onDelete.bind(this);
+            this.onSelectForDelete = this.onSelectForDelete.bind(this);
             this.onSelectItemEdit = this.onSelectItemEdit.bind(this);
             this.setSelectItem = this.setSelectItem.bind(this);
+        }
+
+        onSelectForDelete() {
+            const {method_pool: {selectForDeleteObjectMethod}} = this.props;
+            if (selectForDeleteObjectMethod) {
+                console.log('lo hizo')
+            }
         }
 
         onDelete(item) {
@@ -142,6 +150,7 @@ function crudHOC(CreateForm, Tabla) {
                         data={list_array}
                         updateItem={this.onSubmit}
                         onDelete={this.onDelete}
+                        onSelectForDelete={this.onSelectForDelete}
                         onSelectItemEdit={this.onSelectItemEdit}
                     />
                 </ValidarPermisos>

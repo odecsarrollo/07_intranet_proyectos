@@ -17,45 +17,21 @@ class Form extends Component {
     componentDidMount() {
         const {initialValues, proyectos_list} = this.props;
         const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
-        this.props.fetchProyectosConLiteralesAbiertos();
-        const autogestion_horas_trabajadas = !!(
-            mi_cuenta.colaborador &&
-            mi_cuenta.colaborador.autogestion_horas_trabajadas
-        );
+        this.props.fetchProyectosConLiteralesAbiertos({
+            callback: () => {
+                if (initialValues) {
+                    const {proyecto} = initialValues;
+                    this.props.fetchProyecto(proyecto, {callback: () => this.props.fetchLiteralesXProyecto(proyecto)});
+                }
+            }
+        });
 
         let proyectos_list_array = proyectos_list;
-
-        // if (autogestion_horas_trabajadas) {
-        //     proyectos_list_array = this.getListaAutorizada();
-        // }
 
         if (initialValues) {
             const {proyecto} = initialValues;
             this.setState({proyecto: proyectos_list_array[proyecto]});
         }
-    }
-
-    getListaAutorizada() {
-        const {
-            proyectos_list,
-            initialValues,
-        } = this.props;
-        const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
-        let literales_autorizados = mi_cuenta.colaborador.literales_autorizados;
-
-        if (initialValues) {
-            literales_autorizados = [...literales_autorizados, initialValues.literal]
-        }
-
-        let proyectos_list_array = _.map(proyectos_list, e => {
-            return ({
-                ...e,
-                mis_literales: e.mis_literales.filter(e => literales_autorizados.includes(e.id))
-            })
-        });
-        proyectos_list_array = _.pickBy(proyectos_list_array, e => e.mis_literales.length > 0);
-        proyectos_list_array = _.mapKeys(proyectos_list_array, 'id');
-        return proyectos_list_array;
     }
 
     render() {
@@ -88,9 +64,6 @@ class Form extends Component {
         }
 
         let proyectos_list_array = _.map(_.sortBy(proyectos_list, ['id_proyecto'], ['asc']), e => e);
-        // if (autogestion_horas_trabajadas) {
-        //     proyectos_list_array = _.map(this.getListaAutorizada(), e => e);
-        // }
 
         let proyecto_literales = null;
         if (literales_list) {
@@ -198,7 +171,7 @@ function mapPropsToState(state, ownProps) {
 }
 
 Form = reduxForm({
-    form: "hojaTrabajoForm",
+    form: "horaHojaTrabajoForm",
     validate,
     enableReinitialize: true
 })(Form);
