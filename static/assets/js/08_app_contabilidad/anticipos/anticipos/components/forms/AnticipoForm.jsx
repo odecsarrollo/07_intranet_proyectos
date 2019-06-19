@@ -45,6 +45,11 @@ class Form extends Component {
             singular_name,
         } = this.props;
         const {show_adicionar_item} = this.state;
+        const {initialValues: {items}} = this.props;
+        items.map(e => {
+            console.log('aqui fue')
+            console.log(e)
+        })
         return (
             <MyFormTagModal
                 fullScreen={true}
@@ -140,6 +145,28 @@ class Form extends Component {
                                 onClick={() => this.setState(s => ({show_adicionar_item: !s.show_adicionar_item}))}
                             />
                         </div>
+                        <div className="col-12">
+                            {
+                                items.length > 0 &&
+                                <table className='table table-responsive table-striped'>
+                                    <thead>
+
+                                    </thead>
+                                    <tbody>
+                                    {
+                                        items.map(
+                                            e => <tr>
+                                                <td>{e.descripcion}</td>
+                                                <td>{e.cantidad}</td>
+                                                <td>{e.valor_unitario}</td>
+                                            </tr>
+                                        )
+                                    }
+
+                                    </tbody>
+                                </table>
+                            }
+                        </div>
                         <MyTextFieldSimple
                             className="col-12 col-md-6 pr-3"
                             nombre='Impuesto'
@@ -153,6 +180,7 @@ class Form extends Component {
                     show_adicionar_item &&
                     <div className='col-12'>
                         <NuevoItemModal
+                            {...this.props}
                             is_open={show_adicionar_item}
                             onCancel={() => this.setState({show_adicionar_item: false})}
                         />

@@ -75,6 +75,11 @@ class ProformaAnticipo(TimeStampedModel):
     cobrado = models.BooleanField(default=False)
     impuesto = models.DecimalField(max_digits=12, decimal_places=2, default=0)
 
+    class Meta:
+        permissions = [
+            ("list_proformaanticipo", "Can list proformas anticipos"),
+        ]
+
 
 class ProformaAnticipoItem(TimeStampedModel):
     proforma_anticipo = models.ForeignKey(

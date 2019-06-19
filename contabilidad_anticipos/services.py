@@ -6,7 +6,22 @@ from django.utils import timezone
 from PyPDF2 import PdfFileReader, PdfFileWriter
 from weasyprint import CSS, HTML
 
-from .models import ProformaAnticipo, ProformaConfiguracion
+from .models import ProformaAnticipo, ProformaConfiguracion, ProformaAnticipoItem
+
+
+def proforma_anticipo_item_adicionar(
+        proforma_anticipo_id: int,
+        descripcion: str,
+        cantidad: float,
+        valor_unitario: float
+) -> ProformaAnticipo:
+    item = ProformaAnticipoItem.objects.create(
+        descripcion=descripcion,
+        cantidad=cantidad,
+        valor_unitario=valor_unitario,
+        proforma_anticipo_id=proforma_anticipo_id
+    )
+    return item.proforma_anticipo
 
 
 def proforma_anticipo_crear_actualizar(

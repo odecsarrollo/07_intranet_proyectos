@@ -11,6 +11,7 @@ import {
     PROFORMAS_ANTICIPOS as proforma_anticipos_view
 } from "../../../../00_utilities/permisos/types";
 
+
 import BloqueProformaConfiguracion from "../../configuracion/components/ProformaConfiguracion";
 import BloqueProformaCobros from "../../anticipos/components/CobrosList";
 
@@ -60,8 +61,8 @@ class ItemsDashboard extends Component {
     render() {
         const {slideIndex} = this.state;
         const {contabilidad_proforma_configuracion, contabilidad_proforma_anticipos, mis_permisos} = this.props;
-        const can_see = true;
         const permisos_anticipos = permisosAdapterDos(mis_permisos, proforma_anticipos_view);
+        const can_see = permisos_anticipos.list;
         return (
             <ValidarPermisos can_see={can_see} nombre={this.plural_name}>
                 <Titulo>{this.singular_name}</Titulo>

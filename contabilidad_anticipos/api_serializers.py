@@ -37,6 +37,19 @@ class ProformaConfiguracionSerializer(serializers.ModelSerializer):
         ]
 
 
+class ProformaAnticipoItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProformaAnticipoItem
+        fields = [
+            'url',
+            'id',
+            'proforma_anticipo',
+            'descripcion',
+            'cantidad',
+            'valor_unitario',
+        ]
+
+
 class ProformaAnticipoSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
@@ -112,6 +125,7 @@ class ProformaAnticipoSerializer(serializers.ModelSerializer):
             'tipo_documento',
             'divisa',
             'nit',
+            'items',
             'nombre_cliente',
             'estado',
             'email_destinatario',
@@ -128,14 +142,5 @@ class ProformaAnticipoSerializer(serializers.ModelSerializer):
         }
 
 
-class ProformaAnticipoItemSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProformaAnticipoItem
-        fields = [
-            'url',
-            'id',
-            'proforma_anticipo',
-            'descripcion',
-            'cantidad',
-            'valor_unitario',
-        ]
+class ProformaAnticipoConDetalleSerializer(ProformaAnticipoSerializer):
+    items = ProformaAnticipoItemSerializer(many=True, read_only=True)

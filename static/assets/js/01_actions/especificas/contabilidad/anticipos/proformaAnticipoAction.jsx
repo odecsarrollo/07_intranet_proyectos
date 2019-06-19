@@ -6,6 +6,7 @@ import {
     deleteObject,
     createObject,
     callApiMethodPostParametersPDF,
+    callApiMethodPostParameters,
 } from '../../../00_general_fuctions'
 
 const current_url_api = 'contabilidad_anticipos_proformas_cobros';
@@ -16,6 +17,29 @@ export const createProformaAnticipo = (values, options_action = {}) => {
         };
         const options = {dispatches, ...options_action, dispatch_method: dispatch};
         return createObject(current_url_api, values, options);
+    }
+};
+
+export const addItemProformaAnticipo = (id, cantidad, descripcion, valor_unitario, options_action = {}) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch, payload: response})
+        };
+        let params = new URLSearchParams();
+        params.append('cantidad', cantidad);
+        params.append('descripcion', descripcion);
+        params.append('valor_unitario', valor_unitario);
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'adicionar_item', params, options)
+    }
+};
+
+export const eliminarItemProformaAnticipo = (id, item_id, options_action = {}) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        params.append('item_id', item_id);
+        const options = {...options_action, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'eliminar_item', params, options)
     }
 };
 

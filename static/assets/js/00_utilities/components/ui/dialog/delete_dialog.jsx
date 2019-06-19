@@ -39,7 +39,9 @@ class MyDialogButtonDelete extends Component {
 
     onClickButton() {
         const {onSelectForDelete} = this.props;
-        onSelectForDelete();
+        if (onSelectForDelete) {
+            onSelectForDelete();
+        }
         this.setState({is_open: true})
     }
 
