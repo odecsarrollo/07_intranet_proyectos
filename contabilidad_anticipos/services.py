@@ -16,23 +16,28 @@ def proforma_anticipo_enviar(
         proforma_anticipo_id: int,
         request
 ) -> ProformaAnticipo:
-    proforma_anticipo = proforma_anticipo_cambiar_estado(
-        estado='ENVIADA',
-        proforma_anticipo_id=proforma_anticipo_id
-    )
+    configuracion = ProformaConfiguracion.objects.first()
+    proforma_anticipo = ProformaAnticipo.objects.get(pk=proforma_anticipo_id)
     correos = []
     if proforma_anticipo.email_destinatario:
-        correos += [proforma_anticipo.email_destinatario]
+        correos.append(proforma_anticipo.email_destinatario)
     if proforma_anticipo.email_destinatario_dos:
-        correos += [proforma_anticipo.email_destinatario_dos]
+        correos.append(proforma_anticipo.email_destinatario_dos)
 
     if not correos:
         raise ValidationError({'_error': 'No se han especificado destinatarios'})
+    if configuracion.email_copia_default:
+        correos.append(configuracion.email_copia_default)
 
+    print(proforma_anticipo.documento)
     if proforma_anticipo.documento:
         documento = proforma_cobro_generar_pdf(id=proforma_anticipo_id, request=request)
     else:
         documento = proforma_cobro_generar_pdf(id=proforma_anticipo_id, request=request, generar_archivo=True)
+    proforma_anticipo = proforma_anticipo_cambiar_estado(
+        estado='ENVIADA',
+        proforma_anticipo_id=proforma_anticipo_id
+    )
     return proforma_anticipo
 
 
