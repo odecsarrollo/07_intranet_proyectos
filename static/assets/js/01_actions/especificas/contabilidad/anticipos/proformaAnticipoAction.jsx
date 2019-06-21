@@ -7,6 +7,7 @@ import {
     createObject,
     callApiMethodPostParametersPDF,
     callApiMethodPostParameters,
+    callApiMethodPost,
 } from '../../../00_general_fuctions'
 
 const current_url_api = 'contabilidad_anticipos_proformas_cobros';
@@ -34,11 +35,36 @@ export const addItemProformaAnticipo = (id, cantidad, descripcion, valor_unitari
     }
 };
 
+export const cambiarEstadoProformaAnticipo = (id, estado, options_action = {}) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch, payload: response})
+        };
+        let params = new URLSearchParams();
+        params.append('estado', estado);
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'cambiar_estado', params, options)
+    }
+};
+
+export const enviarProformaAnticipo = (id, options_action = {}) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch, payload: response})
+        };
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPost(current_url_api, id, 'enviar_cobro', options)
+    }
+};
+
 export const eliminarItemProformaAnticipo = (id, item_id, options_action = {}) => {
     return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch, payload: response})
+        };
         let params = new URLSearchParams();
         params.append('item_id', item_id);
-        const options = {...options_action, dispatch_method: dispatch};
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
         return callApiMethodPostParameters(current_url_api, id, 'eliminar_item', params, options)
     }
 };

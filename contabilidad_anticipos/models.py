@@ -1,6 +1,8 @@
 import datetime
+from decimal import Decimal
 
 from django.db import models
+from django.db.models import Sum, F
 from model_utils.models import TimeStampedModel
 from cargues_catalogos.models import ClienteCatalogo
 from imagekit.models import ProcessedImageField
@@ -41,11 +43,13 @@ class ProformaAnticipo(TimeStampedModel):
     ESTADOS_CHOICES = (
         ('CREADA', 'Creada'),
         ('ENVIADA', 'Enviada'),
+        ('RECIBIDA', 'Recibida'),
         ('EDICION', 'Edicion'),
         ('ANULADA', 'Anulada'),
         ('CERRADA', 'Cerrada'),
     )
     DIVISA_CHOICES = (
+        ('COP', 'Pesos Colombianos'),
         ('USD', 'Dólares'),
         ('EUR', 'Euros'),
     )
@@ -60,6 +64,7 @@ class ProformaAnticipo(TimeStampedModel):
         related_name='cobros_anticipos'
     )
     nro_consecutivo = models.IntegerField()
+    version = models.IntegerField(default=1)
     estado = models.CharField(max_length=20, choices=ESTADOS_CHOICES, default='CREADA')
     email_destinatario = models.EmailField(null=True)
     email_destinatario_dos = models.EmailField(null=True)
@@ -74,11 +79,37 @@ class ProformaAnticipo(TimeStampedModel):
     condicion_pago = models.CharField(max_length=200)
     cobrado = models.BooleanField(default=False)
     impuesto = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    fecha_cambio_estado = models.DateField(null=True)
+    fecha_seguimiento = models.DateField(null=True)
+
+    @property
+    def editable(self) -> bool:
+        return self.estado in ['CREADA', 'EDICION']
+
+    @property
+    def documento(self):
+        if self.editable:
+            return None
+        return self.envios.last()
+
+    @property
+    def valor_total_sin_impuesto(self) -> Decimal:
+        return self.items.aggregate(total=Sum(F('cantidad') * F('valor_unitario')))['total']
 
     class Meta:
         permissions = [
             ("list_proformaanticipo", "Can list proformas anticipos"),
         ]
+
+
+class ProformaAnticipoEnvios(TimeStampedModel):
+    proforma_anticipo = models.ForeignKey(
+        ProformaAnticipo,
+        related_name='envios',
+        on_delete=models.PROTECT
+    )
+    archivo = models.FileField(null=True)
+    version = models.PositiveIntegerField()
 
 
 class ProformaAnticipoItem(TimeStampedModel):
@@ -90,3 +121,7 @@ class ProformaAnticipoItem(TimeStampedModel):
     descripcion = models.CharField(max_length=300)
     cantidad = models.DecimalField(decimal_places=2, max_digits=12)
     valor_unitario = models.DecimalField(decimal_places=2, max_digits=12)
+
+    @property
+    def valor_total(self):
+        return self.valor_unitario * self.cantidad

@@ -78,6 +78,54 @@ class Tabla extends React.Component {
                                 }
                             },
                             {
+                                Header: "Version",
+                                accessor: "version",
+                                maxWidth: 80,
+                                filterable: true,
+                                filterMethod: (filter, row) => {
+                                    return row[filter.id].includes(filter.value.toUpperCase())
+                                }
+                            },
+                            {
+                                Header: "Estado",
+                                accessor: "estado_display",
+                                maxWidth: 200,
+                                filterable: true,
+                                filterMethod: (filter, row) => {
+                                    return row[filter.id].toUpperCase().includes(filter.value.toUpperCase())
+                                },
+                                Cell: row => {
+                                    return (
+                                        <div
+                                            style={{
+                                                width: '100%',
+                                                height: '100%',
+                                                borderRadius: '2px',
+                                            }}
+                                        >
+                                            <div
+                                                style={{
+                                                    width: `${row.original.porcentaje_a_verificacion > 100 ? 100 : row.original.porcentaje_a_verificacion}%`,
+                                                    height: '100%',
+                                                    padding: '2px',
+                                                    backgroundColor: row.original && row.original.color_estado,
+                                                    borderRadius: '2px',
+                                                    transition: 'all .2s ease-out'
+                                                }}
+                                            >
+                                                {row.value}
+                                                {
+                                                    row.original.porcentaje_a_verificacion > 0 &&
+                                                    <div className='text-right'>
+                                                        {row.original.porcentaje_a_verificacion}%
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    )
+                                },
+                            },
+                            {
                                 Header: "Divisa",
                                 accessor: "divisa",
                                 maxWidth: 80,

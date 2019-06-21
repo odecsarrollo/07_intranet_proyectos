@@ -1,6 +1,6 @@
-import React, { Fragment } from 'react';
-import { upper, lower } from "../../../common";
-import { Field } from 'redux-form';
+import React, {Fragment} from 'react';
+import {upper, lower} from "../../../common";
+import {Field} from 'redux-form';
 import PropTypes from "prop-types";
 
 import MenuItem from '@material-ui/core/MenuItem';
@@ -29,7 +29,9 @@ const renderInputColor = ({input}) => {
     console.log(input);
     return (
         <Fragment>
-            <InputColor initialHexColor="#5e72e4" onChange={(e) => { input.onChange(e.hex); }} />
+            <InputColor initialHexColor="#5e72e4" onChange={(e) => {
+                input.onChange(e.hex);
+            }}/>
         </Fragment>
     )
 }
@@ -52,11 +54,11 @@ const renderInputField = (field) => {
             <input
                 {...field.input}
                 type="file"
-                accept = {field.accept}
+                accept={field.accept}
                 value={null}
             />
             {field.meta.touched && field.meta.error &&
-                <span className='form-field-error'>{field.meta.error}</span>}
+            <span className='form-field-error'>{field.meta.error}</span>}
         </Fragment>
     )
 };
@@ -72,10 +74,10 @@ export const MyFieldFileInput = (props) => {
     )
 };
 
-const renderTextField = ({ input, label, meta: { touched, error, warning }, ...custom }) => {
+const renderTextField = ({input, label, meta: {touched, error, warning}, ...custom}) => {
     let new_custom = custom;
     if (touched && error) {
-        new_custom = { ...custom, helperText: error }
+        new_custom = {...custom, helperText: error}
     }
     return (
         <Fragment>
@@ -115,22 +117,22 @@ MyTextFieldSimple.propTypes = {
     nombre: PropTypes.string
 };
 
-const renderDropdownList = ({ input, data, valueField, textField, placeholder, onSelect }) => {
+const renderDropdownList = ({input, data, valueField, textField, placeholder, onSelect}) => {
     return (
         <DropdownList {...input}
-            data={data}
-            placeholder={placeholder}
-            valueField={valueField}
-            textField={textField}
-            onChange={input.onChange}
-            onSelect={onSelect}
+                      data={data}
+                      placeholder={placeholder}
+                      valueField={valueField}
+                      textField={textField}
+                      onChange={input.onChange}
+                      onSelect={onSelect}
         />
     )
 };
 
 
 export const MyDropdownList = (props) => {
-    const { busy = false, textField = 'name', valuesField = 'id', className, label = null } = props;
+    const {busy = false, textField = 'name', valuesField = 'id', className, label = null} = props;
     return (
         <div className={`${className}`}>
             {
@@ -148,20 +150,21 @@ export const MyDropdownList = (props) => {
         </div>
     )
 };
-const renderCombobox = ({ input, data, valueField, textField, placeholder, onSelect, filter, meta: { touched, error, warning } }) => {
+const renderCombobox = ({input, data, valueField, textField, placeholder, onSelect, readOnly, filter, meta: {touched, error, warning}}) => {
     return (
         <Fragment>
             <Combobox {...input}
-                data={data}
-                filter={filter}
-                placeholder={placeholder}
-                valueField={valueField}
-                textField={textField}
-                onChange={e => {
-                    input.onChange(typeof (e) === 'string' ? e : e[valueField]);
-                }}
-                onSelect={onSelect}
-                onBlur={() => input.onBlur()}
+                      data={data}
+                      filter={filter}
+                      placeholder={placeholder}
+                      valueField={valueField}
+                      textField={textField}
+                      readOnly={readOnly}
+                      onChange={e => {
+                          input.onChange(typeof (e) === 'string' ? e : e[valueField]);
+                      }}
+                      onSelect={onSelect}
+                      onBlur={() => input.onBlur()}
             />
             {touched && ((error && <span className='form-field-error'>{error}</span>) || (warning &&
                 <span>{warning}</span>))}
@@ -170,7 +173,7 @@ const renderCombobox = ({ input, data, valueField, textField, placeholder, onSel
 };
 
 export const MyCombobox = (props) => {
-    const { busy = false, textField = 'name', valuesField = 'id', autoFocus = false, onSelect, className } = props;
+    const {busy = false, textField = 'name', valuesField = 'id', autoFocus = false, onSelect, className, readOnly = false} = props;
     return (
         <div className={`${className} mt-4`}>
             <Field
@@ -182,6 +185,7 @@ export const MyCombobox = (props) => {
                 onChange={v => v[valuesField]}
                 onSelect={onSelect}
                 busy={busy}
+                readOnly={readOnly}
             />
         </div>
     )
@@ -200,7 +204,7 @@ MyCombobox.propTypes = {
     data: PropTypes.any,
 };
 
-const renderCheckbox = ({ input, label }) => (
+const renderCheckbox = ({input, label}) => (
     <FormControlLabel
         control={
             <Checkbox
@@ -214,7 +218,7 @@ const renderCheckbox = ({ input, label }) => (
 );
 
 export const MyCheckboxSimple = (props) => {
-    const { onClick } = props;
+    const {onClick} = props;
     return (
         <Field
             onClick={() => {
@@ -236,7 +240,7 @@ MyCheckboxSimple.propTypes = {
     nombre: PropTypes.string
 };
 
-const renderDateTimePicker = ({ input: { onChange, value }, meta: { touched, error }, show_edad, max = new Date(), min = new Date(1900, 0, 1) }) => {
+const renderDateTimePicker = ({input: {onChange, value}, readOnly, meta: {touched, error}, show_edad, max = new Date(), min = new Date(1900, 0, 1)}) => {
     const now = moment().tz('America/Bogota');
     const fechaHoy = moment(now, "YYYY MM DD", "es");
     const fecha_nacimiento = moment(value, "YYYY MM DD", "es").tz('America/Bogota');
@@ -245,6 +249,7 @@ const renderDateTimePicker = ({ input: { onChange, value }, meta: { touched, err
     return (
         <Fragment>
             <DateTimePicker
+                readOnly={readOnly}
                 onChange={onChange}
                 format="YYYY-MM-DD"
                 time={false}
@@ -258,11 +263,13 @@ const renderDateTimePicker = ({ input: { onChange, value }, meta: { touched, err
 };
 
 export const MyDateTimePickerField = (props) => {
+    const {readOnly = false} = props;
     return (
         <div className={props.className}>
             <label>{props.nombre}</label>
             <Field
                 name={props.name}
+                readOnly={readOnly}
                 type="date"
                 fullWidth={true}
                 label={props.nombre}
@@ -280,7 +287,7 @@ MyDateTimePickerField.propTypes = {
 };
 
 
-const renderSelect = ({ input, nombre, name, options }) => (
+const renderSelect = ({input, nombre, name, options}) => (
     <FormControl fullWidth={true}>
         <InputLabel htmlFor={`select-${input.name}`}>
             {nombre}
@@ -324,7 +331,7 @@ MySelectField.propTypes = {
     options: PropTypes.any
 };
 
-const renderRadioGroup = ({ input, nombre, meta, options, required = false, meta: { touched, error }, ...rest }) => {
+const renderRadioGroup = ({input, nombre, meta, options, required = false, meta: {touched, error}, ...rest}) => {
     return (
         <FormControl component="fieldset" error={error && touched} required={required}>
             <FormLabel component="legend">{nombre}</FormLabel>
@@ -336,7 +343,7 @@ const renderRadioGroup = ({ input, nombre, meta, options, required = false, meta
             >
                 {options.map(o => {
                     return (
-                        <FormControlLabel key={o.label} value={o.value} control={<Radio />} label={o.label} />
+                        <FormControlLabel key={o.label} value={o.value} control={<Radio/>} label={o.label}/>
                     )
                 })}
             </RadioGroup>

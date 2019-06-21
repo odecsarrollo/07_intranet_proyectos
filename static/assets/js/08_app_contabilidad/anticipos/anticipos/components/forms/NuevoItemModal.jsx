@@ -21,14 +21,13 @@ class NuevoItemModal extends Component {
     }
 
     adicionarItem() {
-        const {item: {cantidad, valor_unitario, descripcion}} = this.state;
-        const {initialValues} = this.props;
-        this.props.addItemProformaAnticipo(initialValues.id, cantidad, descripcion, valor_unitario);
+        const {adicionarItem} = this.props;
+        adicionarItem(this.state.item)
     }
 
     eliminarItem(item_id) {
-        const {initialValues} = this.props;
-        this.props.eliminarItemProformaAnticipo(initialValues.id, item_id);
+        const {eliminarItem} = this.props;
+        eliminarItem(item_id);
     }
 
     render() {

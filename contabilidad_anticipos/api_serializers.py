@@ -1,9 +1,11 @@
+from django.utils import timezone
 from rest_framework import serializers
 
 from .models import (
     ProformaAnticipo,
     ProformaAnticipoItem,
-    ProformaConfiguracion
+    ProformaConfiguracion,
+    ProformaAnticipoEnvios,
 )
 
 
@@ -50,7 +52,69 @@ class ProformaAnticipoItemSerializer(serializers.ModelSerializer):
         ]
 
 
+class ProformaAnticipoEnvioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProformaAnticipoEnvios
+        fields = [
+            'id',
+            'proforma_anticipo',
+            'archivo',
+            'version',
+        ]
+
+
 class ProformaAnticipoSerializer(serializers.ModelSerializer):
+    valor_total_con_impuesto = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    estado_display = serializers.CharField(source='get_estado_display', read_only=True)
+    valor_total_sin_impuesto = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    color_estado = serializers.SerializerMethodField()
+    porcentaje_a_verificacion = serializers.SerializerMethodField()
+    documento = ProformaAnticipoEnvioSerializer(read_only=True)
+    fecha_seguimiento = serializers.DateField(
+        format="%Y-%m-%d",
+        input_formats=['%Y-%m-%dT%H:%M:%S.%fZ', 'iso-8601'],
+        allow_null=True,
+        required=False
+    )
+
+    def get_porcentaje_a_verificacion(self, obj):
+        fecha_ini = obj.fecha_cambio_estado
+        fecha_seg = obj.fecha_seguimiento
+        if obj.estado not in ['ENVIADA', 'RECIBIDA']:
+            return None
+        if fecha_ini and fecha_seg:
+            fecha_act = timezone.datetime.now().date()
+            delta = (fecha_act - fecha_ini).days
+            dias = (fecha_seg - fecha_ini).days
+            if dias == 0:
+                porcentaje = 1
+            else:
+                porcentaje = delta / dias
+            return round(porcentaje * 100, 2)
+        else:
+            return None
+
+    def get_color_estado(self, obj):
+        fecha_ini = obj.fecha_cambio_estado
+        fecha_seg = obj.fecha_seguimiento
+        fecha_act = timezone.datetime.now().date()
+        if obj.estado not in ['ENVIADA', 'RECIBIDA']:
+            return None
+        if fecha_ini and fecha_seg:
+            delta = (fecha_act - fecha_ini).days
+            dias = (fecha_seg - fecha_ini).days
+            if dias == 0:
+                porcentaje = 1
+            else:
+                porcentaje = delta / dias
+            if porcentaje >= 0.9:
+                return 'tomato'
+            elif porcentaje > 0.66:
+                return 'yellow'
+            else:
+                return 'lightgreen'
+        if not obj.fecha_cambio_estado:
+            return None
 
     def create(self, validated_data):
         from .services import proforma_anticipo_crear_actualizar
@@ -86,6 +150,7 @@ class ProformaAnticipoSerializer(serializers.ModelSerializer):
         from .services import proforma_anticipo_crear_actualizar
         informacion_locatario = validated_data.get('informacion_locatario', None)
         informacion_cliente = validated_data.get('informacion_cliente')
+        fecha_seguimiento = validated_data.get('fecha_seguimiento')
         email_destinatario = validated_data.get('email_destinatario', None)
         email_destinatario_dos = validated_data.get('email_destinatario_dos', None)
         impuesto = validated_data.get('impuesto', 0)
@@ -102,6 +167,7 @@ class ProformaAnticipoSerializer(serializers.ModelSerializer):
             informacion_locatario=informacion_locatario,
             informacion_cliente=informacion_cliente,
             divisa=divisa,
+            fecha_seguimiento=fecha_seguimiento,
             nit=nit,
             nombre_cliente=nombre_cliente,
             fecha=fecha,
@@ -125,22 +191,43 @@ class ProformaAnticipoSerializer(serializers.ModelSerializer):
             'tipo_documento',
             'divisa',
             'nit',
+            'editable',
+            'envios',
+            'documento',
             'items',
             'nombre_cliente',
+            'estado_display',
+            'fecha_seguimiento',
             'estado',
             'email_destinatario',
             'email_destinatario_dos',
             'cobrado',
             'fecha',
             'nro_orden_compra',
+            'editable',
             'condicion_pago',
             'impuesto',
+            'estado',
+            'porcentaje_a_verificacion',
+            'color_estado',
+            'valor_total_sin_impuesto',
+            'version',
+            'valor_total_con_impuesto',
         ]
         extra_kwargs = {
             'nro_consecutivo': {'read_only': True},
             'informacion_locatario': {'allow_blank': True},
+            'email_destinatario': {'allow_blank': True},
+            'email_destinatario_dos': {'allow_blank': True},
+            'editable': {'read_only': True},
+            'items': {'read_only': True},
+            'version': {'read_only': True},
+            'documento': {'read_only': True},
+            'envios': {'read_only': True},
         }
 
 
 class ProformaAnticipoConDetalleSerializer(ProformaAnticipoSerializer):
     items = ProformaAnticipoItemSerializer(many=True, read_only=True)
+    documento = ProformaAnticipoEnvioSerializer(read_only=True)
+    envios = ProformaAnticipoEnvioSerializer(read_only=True, many=True)

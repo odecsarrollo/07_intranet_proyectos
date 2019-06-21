@@ -1,12 +1,66 @@
 import datetime
+import random
 from io import BytesIO
 
+from django.core.files import File
 from django.template.loader import get_template
 from django.utils import timezone
 from PyPDF2 import PdfFileReader, PdfFileWriter
+from rest_framework.exceptions import ValidationError
 from weasyprint import CSS, HTML
 
-from .models import ProformaAnticipo, ProformaConfiguracion, ProformaAnticipoItem
+from .models import ProformaAnticipo, ProformaConfiguracion, ProformaAnticipoItem, ProformaAnticipoEnvios
+
+
+def proforma_anticipo_enviar(
+        proforma_anticipo_id: int,
+        request
+) -> ProformaAnticipo:
+    proforma_anticipo = proforma_anticipo_cambiar_estado(
+        estado='ENVIADA',
+        proforma_anticipo_id=proforma_anticipo_id
+    )
+    correos = []
+    if proforma_anticipo.email_destinatario:
+        correos += [proforma_anticipo.email_destinatario]
+    if proforma_anticipo.email_destinatario_dos:
+        correos += [proforma_anticipo.email_destinatario_dos]
+
+    if not correos:
+        raise ValidationError({'_error': 'No se han especificado destinatarios'})
+
+    if proforma_anticipo.documento:
+        documento = proforma_cobro_generar_pdf(id=proforma_anticipo_id, request=request)
+    else:
+        documento = proforma_cobro_generar_pdf(id=proforma_anticipo_id, request=request, generar_archivo=True)
+    return proforma_anticipo
+
+
+def proforma_anticipo_cambiar_estado(
+        estado: str,
+        proforma_anticipo_id: int
+) -> ProformaAnticipo:
+    anticipo = ProformaAnticipo.objects.get(pk=proforma_anticipo_id)
+    if estado == 'EDICION' and anticipo.estado != estado:
+        anticipo.version += 1
+        anticipo.save()
+    if anticipo.estado in 'CERRADA':
+        raise ValidationError({'_error': 'Una proforma en estado cerrado no puede cambiar de estado'})
+    if estado != anticipo.estado:
+        anticipo.fecha_cambio_estado = timezone.now().date()
+    anticipo.estado = estado
+    anticipo.save()
+    return anticipo
+
+
+def proforma_anticipo_eliminar(
+        proforma_anticipo_id: int
+):
+    anticipo = ProformaAnticipo.objects.get(pk=proforma_anticipo_id)
+    if anticipo.estado != 'CREADA':
+        raise ValidationError({'_error': 'Solo proformas en estado CREADA se pueden eliminar'})
+    anticipo.items.all().delete()
+    anticipo.delete()
 
 
 def proforma_anticipo_item_adicionar(
@@ -15,13 +69,29 @@ def proforma_anticipo_item_adicionar(
         cantidad: float,
         valor_unitario: float
 ) -> ProformaAnticipo:
-    item = ProformaAnticipoItem.objects.create(
-        descripcion=descripcion,
-        cantidad=cantidad,
-        valor_unitario=valor_unitario,
-        proforma_anticipo_id=proforma_anticipo_id
-    )
+    proforma = ProformaAnticipo.objects.get(pk=proforma_anticipo_id)
+    if proforma.editable:
+        item = ProformaAnticipoItem.objects.create(
+            descripcion=descripcion,
+            cantidad=cantidad,
+            valor_unitario=valor_unitario,
+            proforma_anticipo_id=proforma_anticipo_id
+        )
+    else:
+        raise ValidationError({'_error': 'No se puede adicionar items, no esta en modo edición'})
     return item.proforma_anticipo
+
+
+def proforma_anticipo_item_eliminar(
+        proforma_anticipo_id: int,
+        proforma_anticipo_item_id: int
+) -> ProformaAnticipo:
+    proforma = ProformaAnticipo.objects.get(pk=proforma_anticipo_id)
+    if proforma.editable:
+        proforma.items.get(pk=proforma_anticipo_item_id).delete()
+    else:
+        raise ValidationError({'_error': 'No se puede eliminar items, no esta en modo edición'})
+    return proforma
 
 
 def proforma_anticipo_crear_actualizar(
@@ -37,10 +107,15 @@ def proforma_anticipo_crear_actualizar(
         email_destinatario: str = '',
         email_destinatario_dos: str = '',
         impuesto=float,
+        fecha_seguimiento: datetime.date = None,
         id: int = None
 ) -> ProformaAnticipo:
     if id:
         anticipo = ProformaAnticipo.objects.get(pk=id)
+        if anticipo.estado not in ['EDICION', 'CREADA']:
+            if fecha_seguimiento == anticipo.fecha_seguimiento:
+                raise ValidationError(
+                    {'_error': 'Para poder editar una proforma debe de ponerla primero en estado de edición'})
     else:
         now = timezone.now()
         year = now.year.__str__()[2:4]
@@ -53,6 +128,7 @@ def proforma_anticipo_crear_actualizar(
         anticipo = ProformaAnticipo()
         anticipo.nro_consecutivo = consecutivo
 
+    anticipo.fecha_seguimiento = fecha_seguimiento
     anticipo.informacion_locatario = informacion_locatario
     anticipo.informacion_cliente = informacion_cliente
     anticipo.email_destinatario = email_destinatario
@@ -111,7 +187,8 @@ def generar_base_pdf(request) -> BytesIO:
 
 def proforma_cobro_generar_pdf(
         id: int,
-        request
+        request,
+        generar_archivo=False
 ) -> BytesIO:
     anticipo = ProformaAnticipo.objects.prefetch_related('items').get(pk=id)
     configuracion = ProformaConfiguracion.objects.first()
@@ -135,6 +212,7 @@ def proforma_cobro_generar_pdf(
     main_doc.write_pdf(
         target=output
     )
+
     pdf_documento_reader = PdfFileReader(output)
     writer_con_logo = PdfFileWriter()
     cantidad_hojas = pdf_documento_reader.getNumPages()
@@ -148,4 +226,13 @@ def proforma_cobro_generar_pdf(
         page_object_documento.mergePage(page_object_base)
         writer_con_logo.addPage(page_object_documento)
     writer_con_logo.write(output)
+    if generar_archivo:
+        filename = "%s_ALE%s.pdf" % (
+            'cosa',
+            random.randint(1000, 9999)
+        )
+        envio = ProformaAnticipoEnvios()
+        envio.version = anticipo.version
+        envio.proforma_anticipo = anticipo
+        envio.archivo.save(filename, File(output))
     return output
