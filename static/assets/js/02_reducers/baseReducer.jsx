@@ -21,7 +21,11 @@ export default function (actions_types, state = {}, action, mapKey = 'id') {
             return mapKeys(action.payload.data, mapKey);
         case actions_types.fetch:
             mostrarLogs('fetch');
-            return {...state, [action.payload.data.id]: action.payload.data};
+            if (!_.isEqual(state[action.payload.data.id], action.payload.data)) {
+                return {...state, [action.payload.data.id]: action.payload.data};
+            } else {
+                return state
+            }
         case actions_types.clear:
             mostrarLogs('clear');
             return {};

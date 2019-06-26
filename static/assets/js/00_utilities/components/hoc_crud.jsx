@@ -3,6 +3,16 @@ import ValidarPermisos from "../permisos/validar_permisos";
 import PropTypes from "prop-types";
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import ExcelDownload from "../../00_utilities/components/system/ExcelDownload";
+
+const style = {
+    seleccionar_todo: {
+        position: 'absolute',
+        bottom: 0,
+        right:50,
+        zIndex:10000
+    }
+};
 
 function crudHOC(CreateForm, Tabla) {
     class CRUD extends Component {
@@ -10,13 +20,26 @@ function crudHOC(CreateForm, Tabla) {
             super(props);
             this.state = ({
                 item_seleccionado: null,
-                modal_open: false
+                modal_open: false,
+                data_to_excel: {},
             });
             this.onSubmit = this.onSubmit.bind(this);
             this.onDelete = this.onDelete.bind(this);
             this.onSelectForDelete = this.onSelectForDelete.bind(this);
             this.onSelectItemEdit = this.onSelectItemEdit.bind(this);
             this.setSelectItem = this.setSelectItem.bind(this);
+            this.onSelectDataToExcel = this.onSelectDataToExcel.bind(this);
+        }
+
+
+        onSelectDataToExcel(item) {
+            let {data_to_excel} = this.state;
+            if (data_to_excel[item.id]) {
+                data_to_excel = _.omit(data_to_excel, item.id);
+            } else {
+                data_to_excel = {...data_to_excel, [item.id]: item}
+            }
+            this.setState({data_to_excel})
         }
 
         onSelectForDelete() {
@@ -108,9 +131,21 @@ function crudHOC(CreateForm, Tabla) {
             } = this.props;
             const {
                 item_seleccionado,
-                modal_open
+                modal_open,
+                data_to_excel,
             } = this.state;
             const list_array = _.map(list, e => e);
+
+            const onSeleccionarTodo = () => {
+                if (_.size(data_to_excel) === _.size(list)) {
+                    this.setState({data_to_excel: {}})
+                } else {
+                    this.setState({data_to_excel: list})
+                }
+
+            };
+
+            console.log(data_to_excel)
 
             return (
                 <ValidarPermisos can_see={permisos_object.list} nombre={plural_name}>
@@ -131,7 +166,14 @@ function crudHOC(CreateForm, Tabla) {
                         >
                             Nuevo
                         </Button>
-
+                    }
+                    {
+                        _.size(data_to_excel) > 0 &&
+                        <ExcelDownload
+                            data={_.map(data_to_excel)}
+                            name={plural_name ? plural_name : 'documento'}
+                            file_name={plural_name ? plural_name : 'documento'}
+                        />
                     }
                     {
                         modal_open &&
@@ -144,15 +186,25 @@ function crudHOC(CreateForm, Tabla) {
                             setSelectItem={this.setSelectItem}
                         />
                     }
-
-                    <Tabla
-                        {...this.props}
-                        data={list_array}
-                        updateItem={this.onSubmit}
-                        onDelete={this.onDelete}
-                        onSelectForDelete={this.onSelectForDelete}
-                        onSelectItemEdit={this.onSelectItemEdit}
-                    />
+                    <div>
+                        <span
+                            style={style.seleccionar_todo}
+                            className='puntero'
+                            onClick={onSeleccionarTodo}
+                        >
+                            {_.size(data_to_excel) === _.size(list) ? 'Quitar Selección' : 'Seleccionar Todo'}
+                        </span>
+                        <Tabla
+                            {...this.props}
+                            data_to_excel={data_to_excel}
+                            onSelectDataToExcel={this.onSelectDataToExcel}
+                            data={list_array}
+                            updateItem={this.onSubmit}
+                            onDelete={this.onDelete}
+                            onSelectForDelete={this.onSelectForDelete}
+                            onSelectItemEdit={this.onSelectItemEdit}
+                        />
+                    </div>
                 </ValidarPermisos>
             )
         }

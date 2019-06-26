@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import CreateForm from '../00_forms/adhesivos_form';
-import Tabla from '../01_tabla/adhesivos_tabla';
+import CreateForm from '../00_forms/AdhesivoForm';
+import Tabla from '../01_tabla/AdhesivoTabla';
 import crudHOC from '../../../../00_utilities/components/hoc_crud';
 
 
