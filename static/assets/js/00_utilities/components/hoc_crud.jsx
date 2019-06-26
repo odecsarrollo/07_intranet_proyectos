@@ -145,8 +145,6 @@ function crudHOC(CreateForm, Tabla) {
 
             };
 
-            console.log(data_to_excel)
-
             return (
                 <ValidarPermisos can_see={permisos_object.list} nombre={plural_name}>
                     {

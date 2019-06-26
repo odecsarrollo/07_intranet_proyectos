@@ -1,4 +1,4 @@
-import React, {Fragment, Component, Suspense} from 'react';
+import React, {Fragment, Component} from 'react';
 import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import {createStore, applyMiddleware, combineReducers} from 'redux';
@@ -171,7 +171,7 @@ function configureStore() {
 import AppIndex from './IndexApp';
 import AppAdmin from './03_app_admin/App';
 
-const AppProyectos = React.lazy(() => import('./04_app_proyectos/App'));
+import AppProyectos from './04_app_proyectos/App';
 import AppVentas from './05_app_ventas/App';
 import AppBandas from './06_app_bandas/App';
 import AppMedios from './07_app_medios/App';
@@ -203,20 +203,18 @@ class RootContainerComponent extends Component {
             <BrowserRouter>
                 <Fragment>
                     <Notification/>
-                    <Suspense fallback={<div>Loading...</div>}>
-                        <Switch>
-                            <PrivateRoute exact path='/' component={AppIndex}/>
-                            <PrivateRoute exact path='/app' component={AppIndex}/>
-                            <Route path='/app/login' component={Login}/>
-                            <PrivateRoute path='/app/admin' component={AppAdmin}/>
-                            <PrivateRoute path='/app/proyectos' component={AppProyectos}/>
-                            <PrivateRoute path='/app/ventas' component={AppVentas}/>
-                            <PrivateRoute path='/app/bandas' component={AppBandas}/>
-                            <PrivateRoute path='/app/medios' component={AppMedios}/>
-                            <PrivateRoute path='/app/contabilidad' component={AppContabilidad}/>
-                            <PrivateRoute path='/app/sistemas' component={AppSistemas}/>
-                        </Switch>
-                    </Suspense>
+                    <Switch>
+                        <PrivateRoute exact path='/' component={AppIndex}/>
+                        <PrivateRoute exact path='/app' component={AppIndex}/>
+                        <Route path='/app/login' component={Login}/>
+                        <PrivateRoute path='/app/admin' component={AppAdmin}/>
+                        <PrivateRoute path='/app/proyectos' component={AppProyectos}/>
+                        <PrivateRoute path='/app/ventas' component={AppVentas}/>
+                        <PrivateRoute path='/app/bandas' component={AppBandas}/>
+                        <PrivateRoute path='/app/medios' component={AppMedios}/>
+                        <PrivateRoute path='/app/contabilidad' component={AppContabilidad}/>
+                        <PrivateRoute path='/app/sistemas' component={AppSistemas}/>
+                    </Switch>
                 </Fragment>
             </BrowserRouter>
         )
