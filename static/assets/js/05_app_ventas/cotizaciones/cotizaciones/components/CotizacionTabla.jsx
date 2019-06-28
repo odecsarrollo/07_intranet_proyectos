@@ -209,7 +209,7 @@ const Tabla = memo((props) => {
                                 maxWidth: 100,
                                 Cell: row => <div className='text-right'>
                                     {
-                                        row.original.valor_orden_compra ?
+                                        row.original.valor_orden_compra > 0 ?
                                             pesosColombianos(row.original.valor_orden_compra) :
                                             pesosColombianos(row.value)
                                     }
