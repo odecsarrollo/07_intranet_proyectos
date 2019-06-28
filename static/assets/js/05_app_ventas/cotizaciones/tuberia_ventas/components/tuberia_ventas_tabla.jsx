@@ -64,7 +64,8 @@ const Tabla = memo((props) => {
                     noDataText={`No hay elementos para mostrar tipo ${singular_name}`}
                     columns={[
                         {
-                            Header: "Seleccionar",
+                            Header: "Selec.",
+                            maxWidth:50,
                             accessor: "id",
                             Cell: row => {
                                 return (
