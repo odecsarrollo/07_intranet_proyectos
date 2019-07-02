@@ -25,11 +25,11 @@ class Form extends Component {
     }
 
     componentDidMount() {
-        const {item_seleccionado, initialValues} = this.props;
+        const {initialValues} = this.props;
 
         const cargarResponsable = () => {
-            if (item_seleccionado.responsable) {
-                this.props.fetchUsuario(item_seleccionado.responsable)
+            if (initialValues.responsable) {
+                this.props.fetchUsuario(initialValues.responsable)
             }
         };
 
@@ -100,10 +100,8 @@ class Form extends Component {
 }
 
 function mapPropsToState(state, ownProps) {
-    const {item_seleccionado} = ownProps;
     return {
-        myValues: selector(state, 'estado', 'valor_ofertado', 'cliente'),
-        initialValues: item_seleccionado
+        myValues: selector(state, 'estado', 'valor_ofertado', 'cliente')
     }
 }
 

@@ -40,6 +40,7 @@ class DepartamentoSerializer(serializers.ModelSerializer):
 
 class CiudadSerializer(serializers.ModelSerializer):
     pais_nombre = serializers.CharField(source='departamento.pais.nombre', read_only=True)
+    pais = serializers.IntegerField(source='departamento.pais.id', read_only=True)
     departamento_nombre = serializers.CharField(source='departamento.nombre', read_only=True)
     to_string = serializers.SerializerMethodField()
 
@@ -53,6 +54,7 @@ class CiudadSerializer(serializers.ModelSerializer):
             'id',
             'nombre',
             'departamento',
+            'pais',
             'pais_nombre',
             'departamento_nombre',
             'to_string',

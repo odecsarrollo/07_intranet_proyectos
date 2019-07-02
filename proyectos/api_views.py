@@ -27,8 +27,8 @@ from .api_serializers import (
     LiteralSerializer,
     MiembroLiteralSerializer,
     ArchivoLiteralSerializer,
-    ArchivoProyectoSerializer
-)
+    ArchivoProyectoSerializer,
+    ProyectoConDetalleSerializer)
 from mano_obra.models import HoraHojaTrabajo, HoraTrabajoColaboradorLiteralInicial
 from .mixins import LiteralesPDFMixin
 
@@ -87,6 +87,20 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
         'cotizacion__cliente',
     ).all()
     serializer_class = ProyectoSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        self.queryset = self.queryset.prefetch_related(
+            'mis_literales',
+            'mis_literales__mis_horas_trabajadas',
+            'mis_literales__mis_horas_trabajadas__hoja',
+            'mis_literales__mis_horas_trabajadas__hoja__tasa',
+            'mis_literales__mis_horas_trabajadas__hoja__colaborador',
+            'mis_literales__mis_horas_trabajadas__hoja__tasa__centro_costo',
+            'mis_literales__mis_materiales',
+            'mis_literales__mis_materiales__item_biable',
+        )
+        self.serializer_class = ProyectoConDetalleSerializer
+        return super().retrieve(request, *args, **kwargs)
 
     @action(detail=False, http_method_names=['get', ])
     def listar_proyectos_x_parametro(self, request):

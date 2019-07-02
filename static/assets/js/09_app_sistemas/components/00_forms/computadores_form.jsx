@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import { reduxForm } from 'redux-form';
+import React, {Component} from 'react';
+import {reduxForm} from 'redux-form';
 import Button from '@material-ui/core/Button';
 import {MyTextFieldSimple, MyCombobox} from '../../../00_utilities/components/ui/forms/fields';
-import { connect } from "react-redux";
-import { MyFormTagModal } from '../../../00_utilities/components/ui/forms/MyFormTagModal';
+import {connect} from "react-redux";
+import {MyFormTagModal} from '../../../00_utilities/components/ui/forms/MyFormTagModal';
 import validate from './validate_computador';
 
 class Form extends Component {
@@ -25,26 +25,26 @@ class Form extends Component {
         } = this.props;
 
         const marcas = [
-            {id:1, value:'SONY'},
-            {id:2, value:'TOSHIBA'},
-            {id:3, value:'LENOVO'},
-            {id:4, value:'ASUS'},
-            {id:5, value:'DELL'},
-            {id:6, value:'MAC'}
-            ];
+            {id: 1, value: 'SONY'},
+            {id: 2, value: 'TOSHIBA'},
+            {id: 3, value: 'LENOVO'},
+            {id: 4, value: 'ASUS'},
+            {id: 5, value: 'DELL'},
+            {id: 6, value: 'MAC'}
+        ];
         const procesadores = [
-            {id:1, value:'CORE I3'},
-            {id:2, value:'CORE I5'},
-            {id:3, value:'CORE I7'},
-            {id:4, value:'AMD'}
+            {id: 1, value: 'CORE I3'},
+            {id: 2, value: 'CORE I5'},
+            {id: 3, value: 'CORE I7'},
+            {id: 4, value: 'AMD'}
         ];
         const tipos = [
-            {id:1, value:'ESCRITORIO'},
-            {id:2, value:'PORTATIL'},
+            {id: 1, value: 'ESCRITORIO'},
+            {id: 2, value: 'PORTATIL'},
         ];
         const estados = [
-            {id:1, value:'EN PRODUCCIÓN'},
-            {id:2, value:'FUERA DE PRODUCCIÓN'},
+            {id: 1, value: 'EN PRODUCCIÓN'},
+            {id: 2, value: 'FUERA DE PRODUCCIÓN'},
         ];
         return (
             <MyFormTagModal
@@ -132,19 +132,11 @@ class Form extends Component {
     }
 }
 
-function mapPropsToState(state, ownProps) {
-    const { item_seleccionado } = ownProps;
-    return {
-        initialValues: item_seleccionado
-    }
-}
-
 Form = reduxForm({
     form: "computadoresForm",
     validate,
     enableReinitialize: true
 })(Form);
 
-Form = (connect(mapPropsToState, null)(Form));
 
 export default Form;

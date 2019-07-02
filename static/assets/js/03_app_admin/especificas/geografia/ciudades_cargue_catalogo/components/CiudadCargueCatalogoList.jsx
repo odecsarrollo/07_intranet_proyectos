@@ -1,37 +1,45 @@
-import React, {Component} from 'react';
-import CreateForm from './forms/CiudadCargueCatalogoForm';
+import React, {memo, useEffect} from 'react';
 import Tabla from './CiudadCargueCatalogoTabla';
 import crudHOC from '../../../../../00_utilities/components/hoc_crud';
+import {useDispatch} from "react-redux/es/hooks/useDispatch";
+import * as actions from "../../../../../01_actions/01_index";
+import {useSelector} from "react-redux/es/hooks/useSelector";
+import useTengoPermisos from "../../../../../00_utilities/hooks/useTengoPermisos";
+import {CIUDADES_CARGUES_CATALOGOS} from "../../../../../00_utilities/permisos/types";
 
 
-const CRUD = crudHOC(CreateForm, Tabla);
+const CRUD = crudHOC(null, Tabla);
 
-class List extends Component {
-    constructor(props) {
-        super(props);
-        this.method_pool = {
-            fetchObjectMethod: this.props.fetchCiudad,
-            deleteObjectMethod: this.props.deleteCiudad,
-            createObjectMethod: this.props.createCiudad,
-            updateObjectMethod: this.props.updateCiudad,
+const List = memo((props) => {
+    const dispatch = useDispatch();
+    const cargarDatos = () => {
+        dispatch(actions.fetchCiudadesCarguesCatalogos());
+    };
+    useEffect(() => {
+        cargarDatos();
+        return () => {
+            dispatch(actions.clearCiudadesCarguesCatalogos());
         };
-        this.plural_name = 'Ciudades';
-        this.singular_name = 'Ciudad';
-    }
-
-    render() {
-        const {object_list, permisos_object} = this.props;
-        return (
-            <CRUD
-                method_pool={this.method_pool}
-                list={object_list}
-                permisos_object={permisos_object}
-                plural_name={this.plural_name}
-                singular_name={this.singular_name}
-                {...this.props}
-            />
-        )
-    }
-}
+    }, []);
+    const list = useSelector(state => state.ciudades_catalogos);
+    const permisos = {...useTengoPermisos(CIUDADES_CARGUES_CATALOGOS), add: false, change: false};
+    const method_pool = {
+        fetchObjectMethod: (id, options) => dispatch(actions.fetchCiudad(id, options)),
+        deleteObjectMethod: null,
+        createObjectMethod: null,
+        updateObjectMethod: (id, item, options) => dispatch(actions.updateCiudad(id, item, options)),
+    };
+    return (
+        <CRUD
+            posSummitMethod={() => cargarDatos()}
+            method_pool={method_pool}
+            list={list}
+            permisos_object={permisos}
+            plural_name=''
+            singular_name='Ciudad Catalogo'
+            cargarDatos={cargarDatos}
+        />
+    )
+});
 
 export default List;

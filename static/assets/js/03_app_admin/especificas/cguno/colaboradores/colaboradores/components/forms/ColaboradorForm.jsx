@@ -41,7 +41,7 @@ class Form extends Component {
         return (
             <MyFormTagModal
                 onCancel={onCancel}
-                fullScreen = {true}
+                fullScreen={true}
                 onSubmit={handleSubmit(onSubmit)}
                 reset={reset}
                 initialValues={initialValues}
@@ -174,12 +174,6 @@ class Form extends Component {
     }
 }
 
-function mapPropsToState(state, ownProps) {
-    const {item_seleccionado} = ownProps;
-    return {
-        initialValues: item_seleccionado
-    }
-}
 
 Form = reduxForm({
     form: "colaboradorForm",
@@ -187,6 +181,5 @@ Form = reduxForm({
     enableReinitialize: true
 })(Form);
 
-Form = (connect(mapPropsToState, null)(Form));
 
 export default Form;

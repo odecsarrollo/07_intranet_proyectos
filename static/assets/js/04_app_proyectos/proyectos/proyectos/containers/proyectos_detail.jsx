@@ -36,7 +36,7 @@ class Detail extends Component {
     }
 
     componentDidMount() {
-     this.props.fetchMisPermisosxListado(
+        this.props.fetchMisPermisosxListado(
             [
                 permisos_view,
                 literales_permisos_view,
@@ -170,7 +170,8 @@ class Detail extends Component {
                                             />
                                         }
                                         <TablaProyectoLiterales
-                                            lista_literales={_.map(literales_list, e => e)}
+                                            lista_literales={object.mis_literales}
+                                            lista_literales2={_.map(literales_list, e => e)}
                                             onSelectItem={this.onLiteralSelect}
                                             select_literal_id={select_literal_id}
                                             proyecto={object}

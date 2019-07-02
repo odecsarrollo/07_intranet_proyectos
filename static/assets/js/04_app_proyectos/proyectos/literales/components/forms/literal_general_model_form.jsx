@@ -50,8 +50,7 @@ class ModelForm extends Component {
 }
 
 function mapPropsToState(state, ownProps) {
-    let initialValues = null;
-    const {item_seleccionado} = ownProps;
+    let {initialValues} = ownProps;
     if (item_seleccionado) {
         const {descripcion, cotizacion} = item_seleccionado;
         initialValues = {

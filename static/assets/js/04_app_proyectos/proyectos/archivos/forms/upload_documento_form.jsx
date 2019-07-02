@@ -58,9 +58,7 @@ class Form extends Component {
 }
 
 function mapPropsToState(state, ownProps) {
-    const {item_seleccionado} = ownProps;
     return {
-        initialValues: item_seleccionado,
         valores: selector(state, 'archivo', 'nombre_archivo'),
     }
 }

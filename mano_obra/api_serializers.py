@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from intranet_proyectos.general_mixins.custom_serializer_mixins import CustomSerializerMixin
 from .models import (
     HojaTrabajoDiario,
     HoraHojaTrabajo,
@@ -7,7 +8,7 @@ from .models import (
 )
 
 
-class HoraHojaTrabajoSerializer(serializers.ModelSerializer):
+class HoraHojaTrabajoSerializer(CustomSerializerMixin, serializers.ModelSerializer):
     literal_nombre = serializers.CharField(source='literal.id_literal', read_only=True)
     literal_descripcion = serializers.CharField(source='literal.descripcion', read_only=True)
     literal_abierto = serializers.BooleanField(source='literal.proyecto.abierto', read_only=True)

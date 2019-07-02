@@ -9,8 +9,8 @@ const style = {
     seleccionar_todo: {
         position: 'absolute',
         bottom: 0,
-        right:50,
-        zIndex:10000
+        right: 50,
+        zIndex: 10000
     }
 };
 
@@ -177,7 +177,7 @@ function crudHOC(CreateForm, Tabla) {
                         modal_open &&
                         <CreateForm
                             {...this.props}
-                            item_seleccionado={item_seleccionado ? list[item_seleccionado.id] : null}
+                            initialValues={item_seleccionado ? list[item_seleccionado.id] : null}
                             modal_open={modal_open}
                             onCancel={() => this.setState({modal_open: false, item_seleccionado: null})}
                             onSubmit={this.onSubmit}

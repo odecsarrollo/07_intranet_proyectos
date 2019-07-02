@@ -74,7 +74,7 @@ class LiteralModalCreate extends Component {
                     modal_open &&
                     <CreateForm
                         {...this.props}
-                        item_seleccionado={item_seleccionado}
+                        initialValues={item_seleccionado}
                         modal_open={modal_open}
                         onCancel={() => this.setState({modal_open: false, item_seleccionado: null})}
                         onSubmit={this.onSubmit}

@@ -176,9 +176,10 @@ class CotizacionViewSet(viewsets.ModelViewSet):
         if qs2:
             qsFinal = qs2
         if qs3:
-            qsFinal = qsFinal | qs3
-        # from pprint import pprint
-        # [pprint(vars(a)) for a in qs.all()]
+            if qsFinal:
+                qsFinal = qsFinal | qs3
+            else:
+                qsFinal = qs3
         serializer = self.get_serializer(qsFinal, many=True)
         return Response(serializer.data)
 

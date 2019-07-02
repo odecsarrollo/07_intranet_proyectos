@@ -45,19 +45,10 @@ class Form extends Component {
     }
 }
 
-function mapPropsToState(state, ownProps) {
-    const {item_seleccionado} = ownProps;
-    return {
-        initialValues: item_seleccionado
-    }
-}
-
 Form = reduxForm({
     form: "clienteForm",
     validate,
     enableReinitialize: true
 })(Form);
-
-Form = (connect(mapPropsToState, null)(Form));
 
 export default Form;

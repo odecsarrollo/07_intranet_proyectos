@@ -45,18 +45,18 @@ class Form extends Component {
 }
 
 function mapPropsToState(state, ownProps) {
-    const {item_seleccionado} = ownProps;
+    const {initialValues} = ownProps;
     const item = {
-        costo_presupuestado: item_seleccionado.costo_presupuestado,
-        orden_compra_fecha: item_seleccionado.orden_compra_fecha,
-        fecha_entrega_pactada: item_seleccionado.fecha_entrega_pactada,
-        valor_cliente: item_seleccionado.valor_orden_compra,
-        cotizacion: item_seleccionado.id,
+        costo_presupuestado: initialValues.costo_presupuestado,
+        orden_compra_fecha: initialValues.orden_compra_fecha,
+        fecha_entrega_pactada: initialValues.fecha_entrega_pactada,
+        valor_cliente: initialValues.valor_orden_compra,
+        cotizacion: initialValues.id,
         abierto: true,
-        cotizacion_nro:`${item_seleccionado.unidad_negocio}-${item_seleccionado.nro_cotizacion}`,
+        cotizacion_nro:`${initialValues.unidad_negocio}-${initialValues.nro_cotizacion}`,
         en_cguno: 0,
-        nombre: item_seleccionado.descripcion_cotizacion,
-        cliente_nombre: item_seleccionado.cliente_nombre,
+        nombre: initialValues.descripcion_cotizacion,
+        cliente_nombre: initialValues.cliente_nombre,
     };
     return {
         initialValues: item

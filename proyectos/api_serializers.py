@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from cguno.api_serializers import ItemsLiteralBiableSerializer
+from mano_obra.api_serializers import HoraHojaTrabajoSerializer
 from .models import Proyecto, Literal, MiembroLiteral, ArchivoLiteral, ArchivoProyecto
 
 
@@ -170,9 +172,11 @@ class LiteralSerializer(serializers.ModelSerializer):
             'cantidad_horas_mano_obra',
             'cantidad_horas_mano_obra_inicial',
             'proyecto',
+            'mis_horas_trabajadas',
             'orden_compra_nro',
             'orden_compra_fecha',
             'fecha_entrega_pactada',
+            'mis_materiales',
             'valor_cliente',
             'cotizacion',
             'cotizacion_nro',
@@ -225,8 +229,30 @@ class ProyectoSerializer(serializers.ModelSerializer):
             'orden_compra_nro',
             'orden_compra_fecha',
             'fecha_entrega_pactada',
+            'mis_literales',
             'valor_cliente',
             'nombre',
             'cliente_nombre',
             'to_string',
         ]
+
+
+class LiteralConDetalleSerializer(LiteralSerializer):
+    mis_materiales = ItemsLiteralBiableSerializer(many=True, read_only=True)
+    mis_horas_trabajadas = HoraHojaTrabajoSerializer(
+        many=True,
+        read_only=True,
+        context={
+            'quitar_campos': [
+                'literal_nombre',
+                'literal_descripcion',
+                'literal_abierto',
+                'creado_por',
+                'creado_por_username'
+            ]
+        }
+    )
+
+
+class ProyectoConDetalleSerializer(ProyectoSerializer):
+    mis_literales = LiteralConDetalleSerializer(many=True, read_only=True)

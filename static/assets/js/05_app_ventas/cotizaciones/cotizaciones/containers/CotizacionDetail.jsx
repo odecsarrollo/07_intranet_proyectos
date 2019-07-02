@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react';
+import React, {Component} from 'react';
 import {connect} from "react-redux";
 import * as actions from "../../../../01_actions/01_index";
 import CargarDatos from "../../../../00_utilities/components/system/cargar_datos";
@@ -180,7 +180,7 @@ class Detail extends Component {
                                 permisos.change &&
                                 <TabPanel>
                                     <CotizacionForm
-                                        item_seleccionado={object}
+                                        initialValues={object}
                                         onSubmit={this.guardarCambiosCotizacion}
                                         {...this.props}
                                     />
@@ -204,7 +204,7 @@ class Detail extends Component {
                                         adicionar_documento &&
                                         <UploadDocumentoForm
                                             onSubmit={this.onSubmitUploadArchivo}
-                                            item_seleccionado={item_seleccionado}
+                                            initialValues={item_seleccionado}
                                         />
                                     }
                                     <ArchivosCotizacionList

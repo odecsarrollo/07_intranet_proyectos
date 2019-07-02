@@ -79,9 +79,12 @@ const ItemTabla = (props) => {
 const TablaProyectosLiterales = (props) => {
     const {
         lista_literales,
+        lista_literales2,
         proyecto,
         permisos
     } = props;
+    console.log(lista_literales2)
+    console.log(lista_literales)
     return (
         <table className="table table-responsive table-striped tabla-maestra" style={style.tabla}>
             <thead>

@@ -6,7 +6,6 @@ import {
     MyCheckboxSimple
 } from '../../../../00_utilities/components/ui/forms/fields';
 import {connect} from "react-redux";
-import {MyFormTagModal} from '../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import BotoneriaModalForm from "../../../../00_utilities/components/ui/forms/botoneria_modal_form";
 
 

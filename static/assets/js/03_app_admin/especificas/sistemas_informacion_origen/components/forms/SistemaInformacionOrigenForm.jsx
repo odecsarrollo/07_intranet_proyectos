@@ -46,19 +46,10 @@ class sistemaInformacionOrigenForm extends Component {
     }
 }
 
-function mapPropsToState(state, ownProps) {
-    const {item_seleccionado} = ownProps;
-    return {
-        initialValues: item_seleccionado
-    }
-}
-
 sistemaInformacionOrigenForm = reduxForm({
     form: "sistemaInformacionOrigenForm",
     validate: validate,
     enableReinitialize: true
 })(sistemaInformacionOrigenForm);
-
-sistemaInformacionOrigenForm = (connect(mapPropsToState, null)(sistemaInformacionOrigenForm));
 
 export default sistemaInformacionOrigenForm;

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import TuberiaVentas from './cotizaciones/tuberia_ventas/containers/tuberia_ventas_list_container';
+import TuberiaVentas from './cotizaciones/tuberia_ventas/containers/TuberiaVentasList';
 
 class App extends Component {
     render() {

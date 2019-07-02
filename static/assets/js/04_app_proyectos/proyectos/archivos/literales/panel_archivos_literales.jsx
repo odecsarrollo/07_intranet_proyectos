@@ -112,7 +112,7 @@ class PanelArchivosLiterales extends Component {
                     adicionar_documento &&
                     <UploadDocumentoForm
                         onSubmit={this.onSubmitUploadArchivo}
-                        item_seleccionado={item_seleccionado}
+                        initialValues={item_seleccionado}
                     />
                 }
                 <ArchivosList

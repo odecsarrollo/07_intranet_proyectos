@@ -49,13 +49,6 @@ class Form extends Component {
     }
 }
 
-function mapPropsToState(state, ownProps) {
-    const {item_seleccionado} = ownProps;
-    return {
-        initialValues: item_seleccionado
-    }
-}
-
 Form = reduxForm({
     form: "grupoPermisosForm",
     onSubmitSuccess: afterSubmit,
@@ -64,7 +57,5 @@ Form = reduxForm({
     asyncBlurFields: ['name'],
     enableReinitialize: true
 })(Form);
-
-Form = (connect(mapPropsToState, null)(Form));
 
 export default Form;
