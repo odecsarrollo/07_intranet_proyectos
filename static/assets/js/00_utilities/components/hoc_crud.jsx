@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import ExcelDownload from "../../00_utilities/components/system/ExcelDownload";
+import CargarDatos from "./system/cargar_datos";
 
 const style = {
     seleccionar_todo: {
@@ -127,7 +128,8 @@ function crudHOC(CreateForm, Tabla) {
                 list,
                 plural_name,
                 permisos_object,
-                con_titulo = true
+                con_titulo = true,
+                cargarDatos = null
             } = this.props;
             const {
                 item_seleccionado,
@@ -203,6 +205,11 @@ function crudHOC(CreateForm, Tabla) {
                             onSelectItemEdit={this.onSelectItemEdit}
                         />
                     </div>
+                    {
+                        cargarDatos && <CargarDatos
+                            cargarDatos={cargarDatos}
+                        />
+                    }
                 </ValidarPermisos>
             )
         }

@@ -113,7 +113,7 @@ class HojaTrabajoDiarioConDetalleSerializer(HojaTrabajoDiarioSerializer):
     mis_horas_trabajadas = HoraHojaTrabajoSerializer(many=True, read_only=True)
 
 
-class HoraTrabajoColaboradorLiteralInicialSerializer(serializers.ModelSerializer):
+class HoraTrabajoColaboradorLiteralInicialSerializer(CustomSerializerMixin, serializers.ModelSerializer):
     literal_nombre = serializers.CharField(source='literal.id_literal', read_only=True)
     literal_descripcion = serializers.CharField(source='literal.descripcion', read_only=True)
     literal_abierto = serializers.BooleanField(source='literal.proyecto.abierto', read_only=True)

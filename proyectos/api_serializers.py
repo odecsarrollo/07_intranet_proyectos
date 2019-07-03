@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from cguno.api_serializers import ItemsLiteralBiableSerializer
-from mano_obra.api_serializers import HoraHojaTrabajoSerializer
+from mano_obra.api_serializers import HoraHojaTrabajoSerializer, HoraTrabajoColaboradorLiteralInicialSerializer
 from .models import Proyecto, Literal, MiembroLiteral, ArchivoLiteral, ArchivoProyecto
 
 
@@ -172,16 +172,24 @@ class LiteralSerializer(serializers.ModelSerializer):
             'cantidad_horas_mano_obra',
             'cantidad_horas_mano_obra_inicial',
             'proyecto',
-            'mis_horas_trabajadas',
             'orden_compra_nro',
             'orden_compra_fecha',
             'fecha_entrega_pactada',
+            'mis_documentos',
             'mis_materiales',
+            'mis_horas_trabajadas',
+            'mis_horas_trabajadas_iniciales',
             'valor_cliente',
             'cotizacion',
             'cotizacion_nro',
             'cotizacion_fecha_entrega',
         ]
+        extra_kwargs = {
+            'mis_materiales': {'read_only': True},
+            'mis_horas_trabajadas': {'read_only': True},
+            'mis_documentos': {'read_only': True},
+            'mis_horas_trabajadas_iniciales': {'read_only': True},
+        }
 
 
 class ProyectoSerializer(serializers.ModelSerializer):
@@ -230,14 +238,23 @@ class ProyectoSerializer(serializers.ModelSerializer):
             'orden_compra_fecha',
             'fecha_entrega_pactada',
             'mis_literales',
+            'mis_documentos',
             'valor_cliente',
             'nombre',
             'cliente_nombre',
             'to_string',
         ]
+        extra_kwargs = {
+            'mis_literales': {'read_only': True},
+            'mis_documentos': {'read_only': True},
+        }
 
 
 class LiteralConDetalleSerializer(LiteralSerializer):
+    mis_documentos = ArchivoLiteralSerializer(
+        many=True,
+        read_only=True
+    )
     mis_materiales = ItemsLiteralBiableSerializer(many=True, read_only=True)
     mis_horas_trabajadas = HoraHojaTrabajoSerializer(
         many=True,
@@ -252,7 +269,22 @@ class LiteralConDetalleSerializer(LiteralSerializer):
             ]
         }
     )
+    mis_horas_trabajadas_iniciales = HoraTrabajoColaboradorLiteralInicialSerializer(
+        many=True,
+        read_only=True,
+        context={
+            'quitar_campos': [
+                'literal_nombre',
+                'literal_descripcion',
+                'literal_abierto',
+                'creado_por',
+                'creado_por_username',
+                'proyecto',
+            ]
+        }
+    )
 
 
 class ProyectoConDetalleSerializer(ProyectoSerializer):
     mis_literales = LiteralConDetalleSerializer(many=True, read_only=True)
+    mis_documentos = ArchivoProyectoSerializer(many=True, read_only=True)

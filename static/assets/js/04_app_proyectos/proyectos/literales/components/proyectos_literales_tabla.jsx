@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 import {pesosColombianos} from '../../../../00_utilities/common';
 
 const style = {
@@ -39,7 +39,7 @@ const style = {
     }
 };
 
-const ItemTabla = (props) => {
+const ItemTabla = memo(props => {
     const {
         select_literal_id,
         onSelectItem,
@@ -73,18 +73,15 @@ const ItemTabla = (props) => {
             }
         </tr>
     )
-};
+});
 
 
-const TablaProyectosLiterales = (props) => {
+const TablaProyectosLiterales = memo(props => {
     const {
         lista_literales,
-        lista_literales2,
         proyecto,
         permisos
     } = props;
-    console.log(lista_literales2)
-    console.log(lista_literales)
     return (
         <table className="table table-responsive table-striped tabla-maestra" style={style.tabla}>
             <thead>
@@ -113,6 +110,6 @@ const TablaProyectosLiterales = (props) => {
             </tfoot>
         </table>
     )
-};
+});
 
 export default TablaProyectosLiterales;

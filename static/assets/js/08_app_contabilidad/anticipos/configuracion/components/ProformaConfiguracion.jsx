@@ -36,8 +36,8 @@ class ProformaConfiguracionForm extends Component {
     }
 
     onSubmit(v) {
-        const {item_seleccionado} = this.props;
-        this.props.updateProformaConfiguracion(item_seleccionado.id, v)
+        const {initialValues} = this.props;
+        this.props.updateProformaConfiguracion(initialValues.id, v)
     }
 
     render() {
@@ -46,8 +46,7 @@ class ProformaConfiguracionForm extends Component {
             submitting,
             reset,
             initialValues,
-            handleSubmit,
-            form_values
+            handleSubmit
         } = this.props;
         return (
             <form onSubmit={handleSubmit(v => this.onSubmit(this.submitObject(v)))}>
@@ -127,10 +126,8 @@ class ProformaConfiguracionForm extends Component {
 const selector = formValueSelector('proformaConfiguracionForm');
 
 function mapPropsToState(state, ownProps) {
-    const {item_seleccionado} = ownProps;
     const form_values = selector(state, 'pais', 'departamento');
     return {
-        initialValues: item_seleccionado,
         form_values
     }
 }

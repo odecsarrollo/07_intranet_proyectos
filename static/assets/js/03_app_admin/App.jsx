@@ -20,7 +20,7 @@ import ClientesDashboard from "./especificas/clientes/dashboard/containers/Clien
 import SistemaInformacionOrigenList
     from "./especificas/sistemas_informacion_origen/containers/SistemaInformacionOrigenContainer";
 import GeografiaList
-    from "./especificas/geografia/dashboard/containers/GeografiaDashboard";
+    from "./especificas/geografia/GeografiaDashboard";
 
 import ConfiguracionCostosDashboard from "./especificas/configuraciones/containers/CostoDashboard";
 import ItemsDashboard from "./especificas/items/dashboard/containers/ItemDashboard";

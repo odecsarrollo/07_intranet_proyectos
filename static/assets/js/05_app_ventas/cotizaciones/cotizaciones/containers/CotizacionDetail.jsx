@@ -16,8 +16,8 @@ import TareasList from '../../seguimientos/components/tareas_list';
 import CambioEstadoList from '../../seguimientos/components/cambios_estado_list';
 import CotizacionForm from '../../tuberia_ventas/components/forms/cotizacion_form_detail';
 import CotizacionInfo from '../../tuberia_ventas/components/cotizacion_info';
-import UploadDocumentoForm from '../../../../04_app_proyectos/proyectos/archivos/forms/upload_documento_form';
-import ArchivosCotizacionList from '../../../../04_app_proyectos/proyectos/archivos/components/archivos_list';
+import UploadDocumentoForm from '../../../../04_app_proyectos/proyectos/archivos/forms/UploadArchivoForm';
+import ArchivosCotizacionList from '../../../../04_app_proyectos/proyectos/archivos/components/ProyectoDocumentoList';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 class Detail extends Component {

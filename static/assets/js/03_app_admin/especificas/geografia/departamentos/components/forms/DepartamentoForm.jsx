@@ -16,7 +16,6 @@ let Form = memo((props) => {
         pristine,
         submitting,
         reset,
-        item_seleccionado,
         onSubmit,
         onCancel,
         handleSubmit,
@@ -36,7 +35,7 @@ let Form = memo((props) => {
             fullScreen={false}
             onSubmit={handleSubmit(onSubmit)}
             reset={reset}
-            initialValues={item_seleccionado}
+            initialValues={initialValues}
             submitting={submitting}
             modal_open={modal_open}
             pristine={pristine}

@@ -55,6 +55,15 @@ class Literal(models.Model):
         return self.id_literal
 
 
+class FacturaLiteral(models.Model):
+    literal = models.ForeignKey(Literal, on_delete=models.PROTECT, related_name='facturas')
+    fecha = models.DateField()
+    documento = models.CharField(max_length=15)
+    concepto = models.CharField(max_length=300)
+    valor_sin_impuesto = models.DecimalField(decimal_places=2, max_digits=12)
+    impuesto = models.DecimalField(decimal_places=2, max_digits=12)
+
+
 class MiembroLiteral(models.Model):
     literal = models.ForeignKey(Literal, on_delete=models.PROTECT, related_name='mis_miembros')
     usuario = models.ForeignKey(User, on_delete=models.PROTECT, related_name='mis_literales')

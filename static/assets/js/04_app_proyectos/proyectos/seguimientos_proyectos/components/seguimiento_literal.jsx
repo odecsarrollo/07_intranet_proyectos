@@ -67,11 +67,7 @@ class SeguimientoLiteral extends Component {
 
     componentDidMount() {
         const {id_literal} = this.props;
-        this.props.fetchMisPermisosxListado(
-            [
-                proyectos_permisos_view
-            ], {callback: () => this.cargarDatos(id_literal)}
-        );
+        this.cargarDatos(id_literal);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -185,10 +181,10 @@ class SeguimientoLiteral extends Component {
 
     render() {
         const {
-            mis_permisos,
             fases_literales_list,
             miembros_literales_list,
-            usuarios
+            usuarios,
+            proyecto_permisos
         } = this.props;
         const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
         let miembro = _.head(_.map(_.pickBy(miembros_literales_list, e => e.usuario === mi_cuenta.id), e => e));
@@ -234,8 +230,6 @@ class SeguimientoLiteral extends Component {
                 nro_dias_ano
             }
         });
-
-        const proyecto_permisos = permisosAdapterDos(mis_permisos, proyectos_permisos_view);
 
         const puede_administrar_miembros = (miembro && miembro.puede_administrar_miembros) || proyecto_permisos.admin_proyect_manager;
         const puede_administrar_fases = (miembro && miembro.puede_administrar_fases) || proyecto_permisos.admin_proyect_manager;
@@ -426,7 +420,6 @@ class SeguimientoLiteral extends Component {
 
 function mapPropsToState(state, ownProps) {
     return {
-        mis_permisos: state.mis_permisos,
         fases_list: state.fases,
         fases_literales_list: state.fases_literales,
         fases_tareas: state.fases_tareas,
