@@ -91,6 +91,7 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         self.queryset = self.queryset.prefetch_related(
             'mis_literales',
+            'mis_literales',
             'mis_documentos',
             'mis_documentos__creado_por',
             'mis_literales__mis_documentos',

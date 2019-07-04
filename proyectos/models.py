@@ -63,6 +63,9 @@ class FacturaLiteral(models.Model):
     valor_sin_impuesto = models.DecimalField(decimal_places=2, max_digits=12)
     impuesto = models.DecimalField(decimal_places=2, max_digits=12)
 
+    class Meta:
+        unique_together = [('literal', 'concepto', 'documento', 'fecha')]
+
 
 class MiembroLiteral(models.Model):
     literal = models.ForeignKey(Literal, on_delete=models.PROTECT, related_name='mis_miembros')

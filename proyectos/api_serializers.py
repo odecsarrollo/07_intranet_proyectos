@@ -2,7 +2,21 @@ from rest_framework import serializers
 
 from cguno.api_serializers import ItemsLiteralBiableSerializer
 from mano_obra.api_serializers import HoraHojaTrabajoSerializer, HoraTrabajoColaboradorLiteralInicialSerializer
-from .models import Proyecto, Literal, MiembroLiteral, ArchivoLiteral, ArchivoProyecto
+from .models import Proyecto, Literal, MiembroLiteral, ArchivoLiteral, ArchivoProyecto, FacturaLiteral
+
+
+class FacturaLiteralSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FacturaLiteral
+        fields = [
+            'id',
+            'literal',
+            'fecha',
+            'documento',
+            'concepto',
+            'valor_sin_impuesto',
+            'impuesto'
+        ]
 
 
 class ArchivoLiteralSerializer(serializers.ModelSerializer):
@@ -179,6 +193,7 @@ class LiteralSerializer(serializers.ModelSerializer):
             'mis_materiales',
             'mis_horas_trabajadas',
             'mis_horas_trabajadas_iniciales',
+            'facturas',
             'valor_cliente',
             'cotizacion',
             'cotizacion_nro',
@@ -189,6 +204,7 @@ class LiteralSerializer(serializers.ModelSerializer):
             'mis_horas_trabajadas': {'read_only': True},
             'mis_documentos': {'read_only': True},
             'mis_horas_trabajadas_iniciales': {'read_only': True},
+            'facturas': {'read_only': True},
         }
 
 
@@ -282,6 +298,10 @@ class LiteralConDetalleSerializer(LiteralSerializer):
                 'proyecto',
             ]
         }
+    )
+    facturas = FacturaLiteralSerializer(
+        many=True,
+        read_only=True
     )
 
 

@@ -4,8 +4,9 @@ import * as actions from "../../../../01_actions/01_index";
 import {SinObjeto} from "../../../../00_utilities/templates/fragmentos";
 import ValidarPermisos from "../../../../00_utilities/permisos/validar_permisos";
 import {permisosAdapterDos} from "../../../../00_utilities/common";
-import TablaProyectoLiterales from '../../literales/components/proyectos_literales_tabla';
+import TablaProyectoLiterales from '../../literales/components/ProyectoLiteralTabla';
 import FormProyecto from '../components/forms/ProyectoDetailForm';
+import FacturasProyecto from '../components/ProyectoFacturaList';
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import {
@@ -19,6 +20,44 @@ import LiteralDetail from '../../literales/components/LiteralDetail';
 import ProyectoInfo from '../../proyectos/components/proyecto_datos';
 import PanelArchivosProyecto from '../../archivos/proyectos/ProyectoDocumentoList';
 import useTengoPermisos from "../../../../00_utilities/hooks/useTengoPermisos";
+
+const style = {
+    tabla: {
+        fontSize: '9px',
+        tr: {
+            td: {
+                margin: 0,
+                paddingTop: 0,
+                paddingBottom: 0,
+                paddingLeft: 4,
+                paddingRight: 4,
+            },
+            td_numero: {
+                margin: 0,
+                paddingTop: 4,
+                paddingBottom: 4,
+                paddingLeft: 4,
+                paddingRight: 4,
+                textAlign: 'right',
+            },
+            th_numero: {
+                margin: 0,
+                textAlign: 'right',
+                paddingTop: 0,
+                paddingBottom: 0,
+                paddingLeft: 4,
+                paddingRight: 4,
+            },
+            th: {
+                margin: 0,
+                paddingTop: 0,
+                paddingBottom: 0,
+                paddingLeft: 4,
+                paddingRight: 4,
+            },
+        }
+    }
+};
 
 const Detail = memo((props) => {
     const dispatch = useDispatch();
@@ -45,6 +84,16 @@ const Detail = memo((props) => {
         return <SinObjeto/>
     }
     const literales = _.mapKeys(proyecto.mis_literales, 'id');
+
+    let facturas = [];
+    proyecto.mis_literales.map(l => {
+        if (l.facturas) {
+            l.facturas.map(f => {
+                facturas = [...facturas, {...f, literal_nombre: l.id_literal}];
+            })
+        }
+    });
+
     const literal_seleccionado = select_literal_id ? literales[select_literal_id] : null;
 
     const onLiteralSelect = (select_literal_id) => {
@@ -83,6 +132,10 @@ const Detail = memo((props) => {
                             permisos_archivos_proyecto.list &&
                             <Tab>Documentos</Tab>
                         }
+                        {
+                            facturas.length > 0 &&
+                            <Tab>Facturas</Tab>
+                        }
                     </TabList>
                     <TabPanel>
                         <div className="row">
@@ -106,6 +159,7 @@ const Detail = memo((props) => {
                                 {/*    />*/}
                                 {/*}*/}
                                 <TablaProyectoLiterales
+                                    style={style}
                                     lista_literales={literales}
                                     onSelectItem={onLiteralSelect}
                                     select_literal_id={select_literal_id}
@@ -144,6 +198,12 @@ const Detail = memo((props) => {
                                 permisos_archivos_proyecto={permisos_archivos_proyecto}
                                 cargarProyecto={cargarDatos}
                             />
+                        </TabPanel>
+                    }
+                    {
+                        facturas.length > 0 &&
+                        <TabPanel>
+                            <FacturasProyecto facturas={facturas} style={style}/>
                         </TabPanel>
                     }
                 </Tabs>
