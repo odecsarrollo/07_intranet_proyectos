@@ -3,32 +3,38 @@ import MyDialogButtonDelete from '../../../../00_utilities/components/ui/dialog/
 import IconButtonTableSee from '../../../../00_utilities/components/ui/icon/table_icon_button_detail';
 import {Link} from 'react-router-dom'
 
-import ReactTable from "react-table";
+import Table from "react-table";
+import selectTableHOC from "react-table/lib/hoc/selectTable";
 import {fechaFormatoUno, pesosColombianos} from "../../../../00_utilities/common";
-import Checkbox from "@material-ui/core/Checkbox";
+
+const SelectTable = selectTableHOC(Table);
 
 function areEqual(prevProps, nextProps) {
-    return prevProps.list === nextProps.list && prevProps.data_to_excel === nextProps.data_to_excel
+    return prevProps.list === nextProps.list && prevProps.selection === nextProps.selection
 }
 
+
 const Tabla = memo((props) => {
-    const {onSelectDataToExcel, data_to_excel} = props;
+    const {
+        selection,
+        getTrGroupProps,
+        isSelected,
+        toggleAll,
+        checkboxTable,
+        selectAll,
+        toggleSelection,
+        singular_name,
+        onDelete,
+        permisos_object,
+        rowFn
+    } = props;
     let data = _.map(_.orderBy(props.list, ['nro_cotizacion'], ['desc']));
-    const seleccionados_to_excel = _.map(data_to_excel, e => e.id);
 
     const [color, setColor] = useState(null);
     if (color) {
         data = _.orderBy(_.pickBy(props.list, e => e.color_tuberia_ventas === color), ['nro_cotizacion'], ['desc']);
     }
     const colores = _.uniq(_.map(props.list, e => e.color_tuberia_ventas).filter(h => h));
-    const {
-        updateItem,
-        singular_name,
-        onDelete,
-        onSelectItemEdit,
-        permisos_object,
-        proyectos_permisos
-    } = props;
 
     return (
         <div className='row'>
@@ -59,34 +65,33 @@ const Tabla = memo((props) => {
                 </div>
             </div>
             <div className="col-12">
-                <ReactTable
+                <SelectTable
+                    ref={r => checkboxTable.current = r}
+                    getTrGroupProps={getTrGroupProps}
+                    selection={selection}
+                    selectType="checkbox"
+                    isSelected={isSelected}
+                    selectAll={selectAll}
+                    toggleSelection={toggleSelection}
+                    toggleAll={toggleAll}
+                    keyField="id"
+                    previousText='Anterior'
+                    nextText='Siguiente'
+                    pageText='Página'
+                    ofText='de'
+                    rowsText='filas'
                     data={data}
+                    getTrProps={rowFn}
                     noDataText={`No hay elementos para mostrar tipo ${singular_name}`}
                     columns={[
-                        {
-                            Header: "Selec.",
-                            maxWidth:50,
-                            accessor: "id",
-                            Cell: row => {
-                                return (
-                                    <Checkbox
-                                        checked={seleccionados_to_excel.includes(row.value)}
-                                        style={{margin: 0, padding: 0}}
-                                        color='primary'
-                                        onClick={() => {
-                                            onSelectDataToExcel(row.original);
-                                        }}
-                                    />
-                                )
-                            }
-                        },
                         {
                             Header: "Caracteristicas",
                             columns: [
                                 {
                                     Header: "Nro. Coti",
                                     accessor: "nro_cotizacion",
-                                    maxWidth: 70
+                                    maxWidth: 70,
+                                    id: "nro_cotizacion"
                                 },
                                 {
                                     Header: "Uni. Nego",

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import Dashboard from './anticipos/dashboard/containers/AnticiposDashboard';
+import Dashboard from './anticipos/AnticiposDashboard';
 
 
 class App extends Component {

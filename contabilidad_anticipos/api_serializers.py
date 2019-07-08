@@ -47,6 +47,7 @@ class ProformaAnticipoItemSerializer(serializers.ModelSerializer):
             'id',
             'proforma_anticipo',
             'descripcion',
+            'referencia',
             'cantidad',
             'valor_unitario',
         ]
@@ -71,6 +72,12 @@ class ProformaAnticipoSerializer(serializers.ModelSerializer):
     porcentaje_a_verificacion = serializers.SerializerMethodField()
     documento = ProformaAnticipoEnvioSerializer(read_only=True)
     fecha_seguimiento = serializers.DateField(
+        format="%Y-%m-%d",
+        input_formats=['%Y-%m-%dT%H:%M:%S.%fZ', 'iso-8601'],
+        allow_null=True,
+        required=False
+    )
+    fecha_cobro = serializers.DateField(
         format="%Y-%m-%d",
         input_formats=['%Y-%m-%dT%H:%M:%S.%fZ', 'iso-8601'],
         allow_null=True,
@@ -159,9 +166,11 @@ class ProformaAnticipoSerializer(serializers.ModelSerializer):
         nit = validated_data.get('nit')
         nombre_cliente = validated_data.get('nombre_cliente')
         fecha = validated_data.get('fecha')
+        fecha_cobro = validated_data.get('fecha_cobro')
         nro_orden_compra = validated_data.get('nro_orden_compra')
         condicion_pago = validated_data.get('condicion_pago')
         anticipo = proforma_anticipo_crear_actualizar(
+            fecha_cobro=fecha_cobro,
             email_destinatario_dos=email_destinatario_dos,
             email_destinatario=email_destinatario,
             informacion_locatario=informacion_locatario,
@@ -194,6 +203,7 @@ class ProformaAnticipoSerializer(serializers.ModelSerializer):
             'editable',
             'envios',
             'documento',
+            'fecha_cobro',
             'items',
             'nombre_cliente',
             'estado_display',

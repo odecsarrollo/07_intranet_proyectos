@@ -112,6 +112,7 @@ def proforma_anticipo_crear_actualizar(
         email_destinatario: str = '',
         email_destinatario_dos: str = '',
         impuesto=float,
+        fecha_cobro: datetime.date = None,
         fecha_seguimiento: datetime.date = None,
         id: int = None
 ) -> ProformaAnticipo:
@@ -133,6 +134,7 @@ def proforma_anticipo_crear_actualizar(
         anticipo = ProformaAnticipo()
         anticipo.nro_consecutivo = consecutivo
 
+    anticipo.fecha_cobro = fecha_cobro
     anticipo.fecha_seguimiento = fecha_seguimiento
     anticipo.informacion_locatario = informacion_locatario
     anticipo.informacion_cliente = informacion_cliente

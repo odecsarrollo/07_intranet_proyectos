@@ -81,6 +81,7 @@ class ProformaAnticipo(TimeStampedModel):
     impuesto = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     fecha_cambio_estado = models.DateField(null=True)
     fecha_seguimiento = models.DateField(null=True)
+    fecha_cobro = models.DateField(null=True)
 
     @property
     def editable(self) -> bool:
@@ -118,6 +119,7 @@ class ProformaAnticipoItem(TimeStampedModel):
         related_name='items',
         on_delete=models.PROTECT
     )
+    referencia = models.PositiveIntegerField(default=0)
     descripcion = models.CharField(max_length=300)
     cantidad = models.DecimalField(decimal_places=2, max_digits=12)
     valor_unitario = models.DecimalField(decimal_places=2, max_digits=12)

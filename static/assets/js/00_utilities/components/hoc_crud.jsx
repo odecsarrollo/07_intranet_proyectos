@@ -5,6 +5,8 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import ExcelDownload from "../../00_utilities/components/system/ExcelDownload";
 import CargarDatos from "./system/cargar_datos";
+import {connect} from 'react-redux';
+import {notificarAction} from '../../01_actions/01_index';
 
 const style = {
     seleccionar_todo: {
@@ -73,7 +75,14 @@ function crudHOC(CreateForm, Tabla) {
         onSubmit(item, uno = null, dos = null, cerrar_modal = true) {
             const es_form_data = item instanceof FormData;
             const form_data_id = es_form_data ? item.get('id') : null;
-            const {method_pool, notificarAction, singular_name, posCreateMethod = null, posUpdateMethod = null} = this.props;
+            const {
+                method_pool,
+                notificarAction,
+                singular_name,
+                posCreateMethod = null,
+                posUpdateMethod = null,
+                posSummitMethod = null
+            } = this.props;
             const callback = (response) => {
                 const {to_string} = response;
                 const options = {
@@ -83,10 +92,13 @@ function crudHOC(CreateForm, Tabla) {
                 this.setState({modal_open: !cerrar_modal, item_seleccionado: cerrar_modal ? null : response});
 
                 if (item.id && posUpdateMethod) {
-                    return posUpdateMethod(response);
+                    posUpdateMethod(response);
                 }
                 if (!item.id && posCreateMethod) {
-                    return posCreateMethod(response);
+                    posCreateMethod(response);
+                }
+                if (posSummitMethod) {
+                    posSummitMethod(response)
                 }
             };
             if (item.id || (es_form_data && form_data_id)) {
@@ -187,15 +199,10 @@ function crudHOC(CreateForm, Tabla) {
                         />
                     }
                     <div>
-                        <span
-                            style={style.seleccionar_todo}
-                            className='puntero'
-                            onClick={onSeleccionarTodo}
-                        >
-                            {_.size(data_to_excel) === _.size(list) ? 'Quitar Selección' : 'Seleccionar Todo'}
-                        </span>
                         <Tabla
                             {...this.props}
+                            onSeleccionarTodo={onSeleccionarTodo}
+                            isAllSelected={_.size(data_to_excel) === _.size(list)}
                             data_to_excel={data_to_excel}
                             onSelectDataToExcel={this.onSelectDataToExcel}
                             data={list_array}
@@ -215,7 +222,7 @@ function crudHOC(CreateForm, Tabla) {
         }
     }
 
-    return CRUD;
+    return connect(null, {notificarAction})(CRUD);
 }
 
 

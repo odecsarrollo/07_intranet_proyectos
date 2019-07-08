@@ -2,7 +2,7 @@ import {PROFORMA_CONFIGURACION_TYPES as TYPES} from '../../../00_types';
 import {
     fetchListGet,
     updateObject,
-    deleteObject,
+    deleteObject, createObject,
 } from '../../../00_general_fuctions'
 
 const current_url_api = 'contabilidad_anticipos_proforma_anticipo_configuracion';

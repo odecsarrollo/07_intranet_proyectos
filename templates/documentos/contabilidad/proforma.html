@@ -33,6 +33,7 @@
 
     .tabla_concepto tr .numero {
         text-align: right;
+        padding-left: 10px;
     }
 
     .tabla_concepto table {
@@ -62,7 +63,7 @@
     }
 </style>
 <div>
-    <div>
+    <div style="margin-top: 2rem">
         <table style="width: 100%">
             <tr>
                 <td colspan="2" style="padding: 3px">
@@ -108,7 +109,7 @@
                 <tbody>
                 {% for item in anticipo.items.all %}
                     <tr>
-                        <td>{{ item.descripcion }}</td>
+                        <td style="max-width: 12cm">{{ item.descripcion }}</td>
                         <td class="numero">{{ item.cantidad|floatformat:2|intcomma }}</td>
                         <td class="numero">{{ item.valor_unitario|floatformat:2|intcomma }} {{ anticipo.divisa }}</td>
                         <td class="numero">{{ item.valor_total|floatformat:2|intcomma }} {{ anticipo.divisa }}</td>
@@ -117,18 +118,18 @@
                 </tbody>
                 <tfoot>
                 <tr>
-                    <td></td>
                     <td colspan="2">Valor Total Antes Impuestos</td>
+                    <td></td>
                     <td class="numero">{{ anticipo.valor_total_sin_impuesto|floatformat:2|intcomma }} {{ anticipo.divisa }}</td>
                 </tr>
                 <tr>
-                    <td></td>
                     <td colspan="2">Impuestos</td>
+                    <td></td>
                     <td class="numero">{{ anticipo.impuesto|floatformat:2|intcomma }} {{ anticipo.divisa }}</td>
                 </tr>
                 <tr>
-                    <td></td>
                     <td colspan="2">Valor Total</td>
+                    <td></td>
                     <td class="numero">{{ anticipo.valor_total_sin_impuesto|add:anticipo.impuesto|floatformat:2|intcomma }} {{ anticipo.divisa }}</td>
                 </tr>
                 </tfoot>

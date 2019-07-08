@@ -5,7 +5,6 @@ import {SubmissionError} from 'redux-form';
 
 const axios_instance = axios.create({
     baseURL: '/api/',
-    //contentType: 'application/json; charset=utf-8',
 });
 
 export function createRequest(request, options = {}) {
