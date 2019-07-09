@@ -1,13 +1,11 @@
-import React, {Component} from 'react';
+import React, {memo} from 'react';
 
-import TuberiaVentas from './cotizaciones/tuberia_ventas/containers/TuberiaVentasList';
+import TuberiaVentas from './cotizaciones/tuberia_ventas/TuberiaVentasCRUD';
 
-class App extends Component {
-    render() {
-        return (
-            <TuberiaVentas/>
-        )
-    }
-}
+const App = memo(props => {
+    return (
+        <TuberiaVentas/>
+    )
+})
 
 export default App;

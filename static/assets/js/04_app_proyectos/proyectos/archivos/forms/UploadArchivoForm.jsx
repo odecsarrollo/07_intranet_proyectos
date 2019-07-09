@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {memo} from 'react';
 import {reduxForm, formValueSelector} from 'redux-form';
 import {MyTextFieldSimple, MyFieldFileInput} from '../../../../00_utilities/components/ui/forms/fields';
 import {useSelector, useDispatch} from "react-redux";
@@ -7,7 +7,7 @@ import validate from './validate';
 
 const selector = formValueSelector('uploadArchivoForm');
 
-let Form = (props) => {
+let Form = memo(props => {
     const valores = useSelector(state => selector(state, 'archivo', 'nombre_archivo'));
     const onChangeFile = (f, v) => {
         const archivo = v[0];
@@ -49,7 +49,7 @@ let Form = (props) => {
             </Button>
         </form>
     )
-};
+});
 
 Form = reduxForm({
     form: "uploadArchivoForm",

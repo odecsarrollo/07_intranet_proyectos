@@ -24,7 +24,7 @@ const BotoneriaModalForm = (props) => {
                     className='ml-3'
                     disabled={submitting || pristine}
                 >
-                    {initialValues ? 'Editar ' : 'Crear '}
+                    {initialValues ? 'Guardar ' : 'Crear '}
                 </Button>
             }
             {

@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
+import React, {memo} from 'react';
 import MyDialogButtonDelete from '../../../../00_utilities/components/ui/dialog/delete_dialog';
 import {fechaFormatoUno, formatBytes} from "../../../../00_utilities/common";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import IconButton from '@material-ui/core/IconButton';
 
-const ListaArchivoItem = (props) => {
+const ListaArchivoItem = memo(props => {
     return (
         <tr>
             <td style={{padding: '4px'}}>{props.item.nombre_archivo}</td>
@@ -62,44 +62,45 @@ const ListaArchivoItem = (props) => {
             }
         </tr>
     )
-};
+});
 
-export default class ListaArchivosList extends Component {
-    constructor(props) {
-        super(props);
-    }
+const ListaArchivosList = memo(props => {
+    const {
+        lista,
+        onDeleteArchivo,
+        onSelectElemento,
+        permisos
+    } = props;
+    return (
+        <table className='table table-responsive table-striped' style={{fontSize: '11px'}}>
+            <thead>
+            <tr>
+                <th style={{padding: '2px'}}>Nombre</th>
+                <th style={{padding: '2px'}}>Extensión</th>
+                <th style={{padding: '2px'}}>Tamaño</th>
+                <th style={{padding: '2px'}}>Fecha</th>
+                <th style={{padding: '2px'}}>Usuario</th>
+                <th style={{padding: '2px'}}>Link</th>
+                {
+                    permisos.change &&
+                    <th style={{padding: '2px'}}>Editar</th>
+                }
+                {
+                    permisos.delete &&
+                    <th style={{padding: '2px'}}>Eliminar</th>
+                }
+            </tr>
+            </thead>
+            <tbody>
+            {_.map(lista, e => <ListaArchivoItem
+                item={e} key={e.id}
+                permisos={permisos}
+                onDeleteArchivo={onDeleteArchivo}
+                onSelectElemento={onSelectElemento}
+            />)}
+            </tbody>
+        </table>
+    )
+});
 
-    render() {
-        const {lista, onDeleteArchivo, onSelectElemento, permisos} = this.props;
-        return (
-            <table className='table table-responsive table-striped' style={{fontSize: '11px'}}>
-                <thead>
-                <tr>
-                    <th style={{padding: '2px'}}>Nombre</th>
-                    <th style={{padding: '2px'}}>Extensión</th>
-                    <th style={{padding: '2px'}}>Tamaño</th>
-                    <th style={{padding: '2px'}}>Fecha</th>
-                    <th style={{padding: '2px'}}>Usuario</th>
-                    <th style={{padding: '2px'}}>Link</th>
-                    {
-                        permisos.change &&
-                        <th style={{padding: '2px'}}>Editar</th>
-                    }
-                    {
-                        permisos.delete &&
-                        <th style={{padding: '2px'}}>Eliminar</th>
-                    }
-                </tr>
-                </thead>
-                <tbody>
-                {_.map(lista, e => <ListaArchivoItem
-                    item={e} key={e.id}
-                    permisos={permisos}
-                    onDeleteArchivo={onDeleteArchivo}
-                    onSelectElemento={onSelectElemento}
-                />)}
-                </tbody>
-            </table>
-        )
-    }
-};
+export default ListaArchivosList;
