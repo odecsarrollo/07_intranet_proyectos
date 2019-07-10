@@ -76,7 +76,8 @@ import {
     faMap,
     faExchangeAlt,
     faConveyorBelt,
-    faCloudUploadAlt
+    faLaptopCode,
+    faInfoCircle
 } from '@fortawesome/pro-solid-svg-icons';
 
 library.add(
@@ -124,6 +125,8 @@ library.add(
     faMap,
     faExchangeAlt,
     faConveyorBelt,
+    faLaptopCode,
+    faInfoCircle
 );
 
 const theme = createMuiTheme({

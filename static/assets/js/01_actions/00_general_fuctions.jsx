@@ -198,7 +198,7 @@ export function callApiMethodPost(url, id, method, options) {
     return createRequest(request, {...options, mensaje_cargando});
 }
 
-export function callApiMethodPostParameters(url, id, method, values, options) {
+export function callApiMethodPostParameters(url, id = null, method, values, options) {
     console.log(`%cAPI METODO ${method.toUpperCase()} CON PARMAETROS - %c${url.toUpperCase()} - %cID ${id}`, 'color:red', 'color:blue', 'color:green');
     const mensaje_cargando = `Ejecutando ${method.toUpperCase()} en ${url.toUpperCase()}`;
     axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
@@ -209,7 +209,12 @@ export function callApiMethodPostParameters(url, id, method, values, options) {
         headers["Content-Type"] = 'application/x-www-form-urlencoded;charset=UTF-8';
     }
     axios_instance.defaults.headers = headers;
-    const FULL_URL = `${url}/${id}/${method}/`;
+    var FULL_URL = null;
+    if(id){
+        FULL_URL = `${url}/${id}/${method}/`;
+    }else{
+        FULL_URL = `${url}/${method}/`;
+    }
     const request = axios_instance.post(FULL_URL, values);
     return createRequest(request, {...options, mensaje_cargando});
 }

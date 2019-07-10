@@ -21,7 +21,7 @@ class AdhesivoViewSet(viewsets.ModelViewSet):
     # instancia del serializador
     serializer_class = AdhesivoSerializer
 
-    # metodo que sobre escribe el
+    # metodo que sobre escribe el queryset
     def get_queryset(self):
         # consulta cual es el ultimo movimiento de los adhesivos
         disponible = AdhesivoMovimiento.objects.values('adhesivo_id').filter(

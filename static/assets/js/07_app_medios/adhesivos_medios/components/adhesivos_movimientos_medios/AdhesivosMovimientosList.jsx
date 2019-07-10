@@ -9,7 +9,6 @@ const CRUD = crudHOC(CreateForm, Tabla);
 class MovimientosEtiquetaMedios extends Component {
     constructor(props) {
         super(props);
-
         this.plural_name = 'Movimientos Adhesivos';
         this.singular_name = 'Movimiento Adhesivo';
         this.method_pool = {
