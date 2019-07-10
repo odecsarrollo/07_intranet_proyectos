@@ -76,7 +76,7 @@ class IndexApp extends Component {
                         <Boton
                             nombre='Sistemas'
                             link='/app/sistemas/'
-                            icono='cloud-upload-alt'
+                            icono='laptop-code'
                             classes={classes}
                         />
                         <div className='col-12'>

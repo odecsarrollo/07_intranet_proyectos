@@ -11,14 +11,25 @@ class EquipoComputador(models.Model):
         (3, 'LENOVO'),
         (4, 'ASUS'),
         (5, 'DELL'),
-        (6, 'MAC')
+        (6, 'MAC'),
+        (7, 'HP'),
+        (8, 'INTEL'),
+        (9, 'MICROSOFT'),
+        (10, 'SIEMMENS'),
+        (11, 'INTEL'),
     )
 
     PROCESADOR_CHOICES = (
         (1, 'CORE I3'),
         (2, 'CORE I5'),
         (3, 'CORE I7'),
-        (4, 'AMD')
+        (4, 'AMD E1'),
+        (5, 'CENTRINO'),
+        (6, 'PENTIUM'),
+        (7, 'XEON'),
+        (8, 'CORE 2 DUO'),
+        (9, 'CELERON'),
+        (10, 'CORE 2')
     )
 
     TIPO_PC_CHOICES = (

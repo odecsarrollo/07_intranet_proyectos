@@ -76,7 +76,8 @@ import {
     faMap,
     faExchangeAlt,
     faConveyorBelt,
-    faCloudUploadAlt
+    faLaptopCode,
+    faInfoCircle
 } from '@fortawesome/pro-solid-svg-icons';
 
 library.add(
@@ -124,7 +125,6 @@ library.add(
     faMap,
     faExchangeAlt,
     faConveyorBelt,
-    faCloudUploadAlt
 );
 
 const theme = createMuiTheme({
@@ -176,7 +176,7 @@ import AppVentas from './05_app_ventas/App';
 import AppBandas from './06_app_bandas/App';
 import AppMedios from './07_app_medios/App';
 import AppContabilidad from './08_app_contabilidad/App';
-import AppSistemas from './09_app_sistemas/App';
+import  AppSistemas from './09_app_sistemas/App';
 import Login from './authentication/login/containers/login';
 
 
