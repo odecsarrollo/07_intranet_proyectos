@@ -442,7 +442,10 @@ let Form = memo(props => {
                     }
                 </Fragment>
             }
-            <Literales cobro={initialValues}/>
+            {
+                initialValues &&
+                <Literales cobro={initialValues}/>
+            }
         </MyFormTagModal>
     )
 });
