@@ -12,12 +12,46 @@ from weasyprint import CSS, HTML
 from .models import ProformaAnticipo, ProformaConfiguracion, ProformaAnticipoItem, ProformaAnticipoEnvios
 
 
+def proforma_anticipo_relacionar_literal(
+        proforma_anticipo_id: int,
+        literal_id: int
+) -> ProformaAnticipo:
+    proforma_anticipo = ProformaAnticipo.objects.get(pk=proforma_anticipo_id)
+    if not proforma_anticipo.literales.filter(id=literal_id).exists():
+        proforma_anticipo.literales.add(literal_id)
+        proforma_anticipo = ProformaAnticipo.objects.get(pk=proforma_anticipo_id)
+    return proforma_anticipo
+
+
+def proforma_anticipo_quitar_relacion_literal(
+        proforma_anticipo_id: int,
+        literal_id: int
+) -> ProformaAnticipo:
+    proforma_anticipo = ProformaAnticipo.objects.get(pk=proforma_anticipo_id)
+    proforma_anticipo.literales.remove(literal_id)
+    proforma_anticipo = ProformaAnticipo.objects.get(pk=proforma_anticipo_id)
+    return proforma_anticipo
+
+
 def proforma_anticipo_enviar(
         proforma_anticipo_id: int,
         request
 ) -> ProformaAnticipo:
     configuracion = ProformaConfiguracion.objects.first()
     proforma_anticipo = ProformaAnticipo.objects.get(pk=proforma_anticipo_id)
+
+    if not proforma_anticipo.nro_consecutivo:
+        now = timezone.now()
+        year = now.year.__str__()[2:4]
+        month = now.month.__str__()
+        month = month if len(month) == 2 else '0%s' % month
+        consecutivo = int('%s%s0001' % (year, month))
+        qs_con_consecutivo = ProformaAnticipo.objects.filter(nro_consecutivo__gte=consecutivo)
+        if qs_con_consecutivo.exists():
+            consecutivo = int(qs_con_consecutivo.first().nro_consecutivo) + 1
+        proforma_anticipo.nro_consecutivo = consecutivo
+        proforma_anticipo.save()
+
     correos = []
     if proforma_anticipo.email_destinatario:
         correos.append(proforma_anticipo.email_destinatario)
@@ -43,9 +77,14 @@ def proforma_anticipo_enviar(
 
 def proforma_anticipo_cambiar_estado(
         estado: str,
-        proforma_anticipo_id: int
+        proforma_anticipo_id: int,
+        fecha_cobro: datetime.date = None
 ) -> ProformaAnticipo:
     anticipo = ProformaAnticipo.objects.get(pk=proforma_anticipo_id)
+    if estado == 'CERRADA' and not fecha_cobro:
+        raise ValidationError({'_error': 'Para cerrar este anticipo, se debe colocar una fecha de cobro'})
+    else:
+        anticipo.fecha_cobro = fecha_cobro
     if estado == 'EDICION' and anticipo.estado != estado:
         anticipo.version += 1
         anticipo.save()
@@ -72,11 +111,13 @@ def proforma_anticipo_item_adicionar(
         proforma_anticipo_id: int,
         descripcion: str,
         cantidad: float,
+        referencia: str,
         valor_unitario: float
 ) -> ProformaAnticipo:
     proforma = ProformaAnticipo.objects.get(pk=proforma_anticipo_id)
     if proforma.editable:
         item = ProformaAnticipoItem.objects.create(
+            referencia=referencia,
             descripcion=descripcion,
             cantidad=cantidad,
             valor_unitario=valor_unitario,
@@ -123,16 +164,7 @@ def proforma_anticipo_crear_actualizar(
                 raise ValidationError(
                     {'_error': 'Para poder editar una proforma debe de ponerla primero en estado de edición'})
     else:
-        now = timezone.now()
-        year = now.year.__str__()[2:4]
-        month = now.month.__str__()
-        month = month if len(month) == 2 else '1%s' % month
-        consecutivo = int('%s%s0000' % (year, month))
-        qs_con_consecutivo = ProformaAnticipo.objects.filter(nro_consecutivo__gte=consecutivo)
-        if qs_con_consecutivo.exists():
-            consecutivo = int(qs_con_consecutivo.first().nro_consecutivo) + 1
         anticipo = ProformaAnticipo()
-        anticipo.nro_consecutivo = consecutivo
 
     anticipo.fecha_cobro = fecha_cobro
     anticipo.fecha_seguimiento = fecha_seguimiento
@@ -239,6 +271,7 @@ def proforma_cobro_generar_pdf(
             random.randint(1000, 9999)
         )
         envio = ProformaAnticipoEnvios()
+        envio.creado_por = request.user
         envio.version = anticipo.version
         envio.proforma_anticipo = anticipo
         envio.archivo.save(filename, File(output))

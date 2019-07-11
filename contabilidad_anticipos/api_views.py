@@ -10,7 +10,8 @@ from rest_framework.response import Response
 from .models import (
     ProformaConfiguracion,
     ProformaAnticipoItem,
-    ProformaAnticipo
+    ProformaAnticipo,
+    ProformaAnticipoArchivo
 )
 
 from .api_serializers import (
@@ -45,7 +46,23 @@ class ProformaAnticipoItemViewSet(viewsets.ModelViewSet):
 
 class ProformaAnticipoViewSet(viewsets.ModelViewSet):
     queryset = ProformaAnticipo.objects.prefetch_related('items').all()
+    queryset_con_detalles = ProformaAnticipo.objects.prefetch_related('items', 'literales').all()
     serializer_class = ProformaAnticipoSerializer
+
+    @action(detail=True, methods=['post'])
+    def upload_archivo(self, request, pk=None):
+        nombre_archivo = self.request.POST.get('nombre')
+        literal = self.get_object()
+        archivo = self.request.FILES['archivo']
+        archivo_cobro = ProformaAnticipoArchivo()
+        archivo_cobro.archivo = archivo
+        archivo_cobro.literal = literal
+        archivo_cobro.nombre_archivo = nombre_archivo
+        archivo_cobro.creado_por = self.request.user
+        archivo_cobro.enviar_por_correo = False
+        archivo_cobro.save()
+        serializer = self.get_serializer(literal)
+        return Response(serializer.data)
 
     def destroy(self, request, *args, **kwargs):
         proforma = self.get_object()
@@ -65,29 +82,34 @@ class ProformaAnticipoViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def adicionar_item(self, request, pk=None):
         from .services import proforma_anticipo_item_adicionar
+        referencia = self.request.POST.get('referencia')
         cantidad = self.request.POST.get('cantidad')
         descripcion = self.request.POST.get('descripcion')
         valor_unitario = self.request.POST.get('valor_unitario')
         proforma_anticipo = proforma_anticipo_item_adicionar(
+            referencia=referencia,
             cantidad=cantidad,
             descripcion=descripcion,
             valor_unitario=valor_unitario,
             proforma_anticipo_id=self.get_object().id
         )
-        self.queryset = self.queryset.prefetch_related('items')
+        self.queryset = self.queryset_con_detalles
         self.serializer_class = ProformaAnticipoConDetalleSerializer
         serializer = self.get_serializer(proforma_anticipo)
         return Response(serializer.data)
+
 
     @action(detail=True, methods=['post'])
     def cambiar_estado(self, request, pk=None):
         from .services import proforma_anticipo_cambiar_estado
         estado = self.request.POST.get('estado')
+        fecha_cobro = self.request.POST.get('fecha_cobro', None)
         proforma_anticipo = proforma_anticipo_cambiar_estado(
             estado=estado,
-            proforma_anticipo_id=self.get_object().id
+            proforma_anticipo_id=self.get_object().id,
+            fecha_cobro=fecha_cobro
         )
-        self.queryset = self.queryset.prefetch_related('items')
+        self.queryset = self.queryset_con_detalles
         self.serializer_class = ProformaAnticipoConDetalleSerializer
         serializer = self.get_serializer(proforma_anticipo)
         return Response(serializer.data)
@@ -102,6 +124,7 @@ class ProformaAnticipoViewSet(viewsets.ModelViewSet):
             proforma_anticipo_item_id=item_id
         )
         proforma = self.get_object()
+        self.queryset = self.queryset_con_detalles
         self.serializer_class = ProformaAnticipoConDetalleSerializer
         serializer = self.get_serializer(proforma)
         return Response(serializer.data)
@@ -123,6 +146,34 @@ class ProformaAnticipoViewSet(viewsets.ModelViewSet):
         response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
         response['Content-Transfer-Encoding'] = 'binary'
         return response
+
+    @action(detail=True, methods=['post'])
+    def relacionar_literal(self, request, pk=None):
+        literal_id = int(self.request.POST.get('literal_id'))
+        from .services import proforma_anticipo_relacionar_literal
+        proforma = self.get_object()
+        proforma = proforma_anticipo_relacionar_literal(
+            proforma_anticipo_id=proforma.id,
+            literal_id=literal_id
+        )
+        self.queryset = self.queryset_con_detalles
+        self.serializer_class = ProformaAnticipoConDetalleSerializer
+        serializer = self.get_serializer(proforma)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def quitar_relacion_literal(self, request, pk=None):
+        literal_id = int(self.request.POST.get('literal_id'))
+        from .services import proforma_anticipo_quitar_relacion_literal
+        proforma = self.get_object()
+        proforma = proforma_anticipo_quitar_relacion_literal(
+            proforma_anticipo_id=proforma.id,
+            literal_id=literal_id
+        )
+        self.queryset = self.queryset_con_detalles
+        self.serializer_class = ProformaAnticipoConDetalleSerializer
+        serializer = self.get_serializer(proforma)
+        return Response(serializer.data)
 
     @action(detail=True, methods=['post'])
     def enviar_cobro(self, request, pk=None):

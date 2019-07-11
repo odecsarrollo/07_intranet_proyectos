@@ -11,10 +11,11 @@ import moment from "moment-timezone";
 import PrinJs from 'print-js';
 import Button from "@material-ui/core/Button";
 import NuevoItemModal from './NuevoItemModal';
+import PagoModal from './CobroCRUDFormPagoModal';
+import Literales from './CobroCRUDFormLiterales';
 import * as actions from '../../../../../01_actions/01_index';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {numeroFormato} from "../../../../../00_utilities/common";
-import TextField from "@material-ui/core/TextField";
+import {fechaFormatoUno, numeroFormato} from "../../../../../00_utilities/common";
 
 const style = {
     tabla: {
@@ -67,6 +68,9 @@ const style = {
 
 let Form = memo(props => {
     const [show_adicionar_item, setAdicionarItem] = useState(false);
+    const [show_cobrada_modal, setCobradaModal] = useState(false);
+    const [show_mas_opciones, setMostrarMasOpciones] = useState(false);
+    const [show_relacionar_literal, setMostrarRelacionar] = useState(false);
     const {
         pristine,
         submitting,
@@ -88,8 +92,8 @@ let Form = memo(props => {
     };
 
     const adicionarItem = (item) => {
-        const {cantidad, valor_unitario, descripcion} = item;
-        dispatch(actions.addItemProformaAnticipo(initialValues.id, cantidad, descripcion, valor_unitario, {callback: () => setAdicionarItem(false)}));
+        const {cantidad, valor_unitario, descripcion, referencia} = item;
+        dispatch(actions.addItemProformaAnticipo(initialValues.id, cantidad, descripcion, valor_unitario, referencia, {callback: () => setAdicionarItem(false)}));
     };
 
     const eliminarItem = (item_id) => {
@@ -101,25 +105,19 @@ let Form = memo(props => {
         dispatch(actions.enviarProformaAnticipo(initialValues.id, {callback: mensaje_exitoso}));
     };
 
-    const editar = () => {
-        dispatch(actions.cambiarEstadoProformaAnticipo(initialValues.id, 'EDICION'))
-    };
+    const editar = () => dispatch(actions.cambiarEstadoProformaAnticipo(initialValues.id, 'EDICION'));
 
-    const recibida = () => {
-        dispatch(actions.cambiarEstadoProformaAnticipo(initialValues.id, 'RECIBIDA'));
-    };
+    const recibida = () => dispatch(actions.cambiarEstadoProformaAnticipo(initialValues.id, 'RECIBIDA'));
 
-    const cobrada = () => {
-        dispatch(actions.cambiarEstadoProformaAnticipo(initialValues.id, 'CERRADA'));
-    };
+    const cobrada = (fecha_cobro) => dispatch(actions.cambiarEstadoProformaAnticipo(initialValues.id, 'CERRADA', fecha_cobro));
 
-    const anulada = () => {
-        dispatch(actions.cambiarEstadoProformaAnticipo(initialValues.id, 'ANULADA'));
-    };
+    const anulada = () => dispatch(actions.cambiarEstadoProformaAnticipo(initialValues.id, 'ANULADA'));
+
+
     const editable = initialValues ? initialValues.editable : true;
     const esta_cerrada = initialValues ? initialValues.estado === 'CERRADA' : false;
+    const fue_recibida = initialValues ? initialValues.estado === 'RECIBIDA' : false;
     const puede_enviar = !submitting && pristine && initialValues && initialValues.items.length > 0 && (initialValues.email_destinatario_dos || initialValues.email_destinatario);
-
     return (
         <MyFormTagModal
             fullScreen={true}
@@ -138,6 +136,16 @@ let Form = memo(props => {
             pristine={pristine}
             element_type={singular_name}
         >
+
+            {
+                show_cobrada_modal &&
+                <PagoModal
+                    onCobrada={cobrada}
+                    is_open={show_cobrada_modal}
+                    onCerrar={() => setCobradaModal(false)}
+                    fecha_minima={initialValues.fecha}
+                />
+            }
             <MyCombobox
                 className="col-12 col-md-6 col-lg-4"
                 data={[
@@ -190,22 +198,15 @@ let Form = memo(props => {
                 name='nro_orden_compra'
                 disabled={!editable}
             />
-            <MyTextFieldSimple
-                className="col-12 col-md-6 col-lg-3 pr-2"
-                nombre='Condición Pago'
-                name='condicion_pago'
-                multiline={true}
-                rows={4}
-                disabled={!editable}
-            />
             {
                 initialValues &&
+                !esta_cerrada &&
                 initialValues.id &&
                 <MyDateTimePickerField
                     max={new Date(2099, 11, 31)}
                     name='fecha_seguimiento'
                     nombre='Verificar el...'
-                    className="col-12 col-md-4"
+                    className="col-12 col-md-6 col-lg-2 col-md-3"
                 />
             }
             <div className='col-12'>
@@ -213,7 +214,7 @@ let Form = memo(props => {
                     <MyTextFieldSimple
                         multiline
                         rows={4}
-                        className="col-12 col-md-6  pr-3"
+                        className="col-12 col-md-5 pr-3"
                         nombre='Cliente'
                         name='informacion_cliente'
                         disabled={!editable}
@@ -221,11 +222,19 @@ let Form = memo(props => {
                     <MyTextFieldSimple
                         multiline
                         rows={4}
-                        className="col-12 col-md-6  pr-3"
+                        className="col-12 col-md-4 pr-3"
                         nombre='Locatario'
                         name='informacion_locatario'
                         disabled={!editable}
                         case='U'/>
+                    <MyTextFieldSimple
+                        className="col-12 col-md-3 pr-3"
+                        nombre='Condición Pago'
+                        name='condicion_pago'
+                        multiline={true}
+                        rows={4}
+                        disabled={!editable}
+                    />
                 </div>
             </div>
             {
@@ -262,6 +271,7 @@ let Form = memo(props => {
                             <table className='table table-responsive table-striped' style={style.tabla}>
                                 <thead>
                                 <tr style={style.tabla.tr}>
+                                    <th style={style.tabla.tr.th}>Referencia</th>
                                     <th style={style.tabla.tr.th}>Descripción</th>
                                     <th style={style.tabla.tr.th_numero}>Cantidad</th>
                                     <th style={style.tabla.tr.th_numero}>Valor Unitario</th>
@@ -273,6 +283,7 @@ let Form = memo(props => {
                                 {
                                     initialValues.items.map(
                                         e => <tr key={e.id} style={style.tabla.tr}>
+                                            <td style={style.tabla.tr.td}>{e.referencia}</td>
                                             <td style={style.tabla.tr.td}>{e.descripcion}</td>
                                             <td style={style.tabla.tr.td_numero}>{e.cantidad}</td>
                                             <td style={style.tabla.tr.td_numero}>{numeroFormato(e.valor_unitario, 2)} {initialValues.divisa}</td>
@@ -296,6 +307,7 @@ let Form = memo(props => {
                                     <td style={style.tabla.tr.td}>Valor Ant. Impuestos</td>
                                     <td style={style.tabla.tr.td}></td>
                                     <td style={style.tabla.tr.td}></td>
+                                    <td style={style.tabla.tr.td}></td>
                                     <td style={style.tabla.tr.td_numero}>{numeroFormato(initialValues.valor_total_sin_impuesto, 2)} {initialValues.divisa}</td>
                                     <td style={style.tabla.tr.td_icono}></td>
                                 </tr>
@@ -303,11 +315,13 @@ let Form = memo(props => {
                                     <td style={style.tabla.tr.td}>Impuesto</td>
                                     <td style={style.tabla.tr.td}></td>
                                     <td style={style.tabla.tr.td}></td>
+                                    <td style={style.tabla.tr.td}></td>
                                     <td style={style.tabla.tr.td_numero}>{numeroFormato(initialValues.impuesto, 2)} {initialValues.divisa}</td>
                                     <td style={style.tabla.tr.td_icono}></td>
                                 </tr>
                                 <tr style={style.tabla.tr}>
                                     <td style={style.tabla.tr.td}>Valor Total</td>
+                                    <td style={style.tabla.tr.td}></td>
                                     <td style={style.tabla.tr.td}></td>
                                     <td style={style.tabla.tr.td}></td>
                                     <td style={style.tabla.tr.td_numero}>{numeroFormato(parseFloat(initialValues.valor_total_sin_impuesto) + parseFloat(initialValues.impuesto), 2)} {initialValues.divisa}</td>
@@ -364,53 +378,71 @@ let Form = memo(props => {
                         >
                             Imprimir Comprobante
                         </Button>
-                        {
-                            !esta_cerrada &&
-                            <Button
-                                color="primary"
-                                onClick={() => enviarPorEmail()}
-                                disabled={!puede_enviar}
-                            >
-                                Enviar
-                            </Button>
-                        }
-                        {
-                            !editable &&
-                            !esta_cerrada &&
-                            <Button
-                                color="primary"
-                                onClick={() => editar()}
-                                disabled={!(submitting || pristine)}
-                            >
-                                Editar
-                            </Button>
-                        }
-                        {
-                            !editable &&
-                            !esta_cerrada &&
-                            initialValues.estado !== 'RECIBIDA' &&
-                            <Button
-                                color="primary"
-                                onClick={() => recibida()}
-                                disabled={!(submitting || pristine)}
-                            >
-                                Recibida
-                            </Button>
-                        }
-                        {
-                            !editable &&
-                            !esta_cerrada &&
-                            <Button
-                                color="primary"
-                                onClick={() => cobrada()}
-                                disabled={!(submitting || pristine)}
-                            >
-                                Cobrada
-                            </Button>
+                        <FontAwesomeIcon
+                            className='puntero'
+                            icon={`${show_mas_opciones ? 'minus' : 'plus'}-circle`}
+                            onClick={() => setMostrarMasOpciones(!show_mas_opciones)}
+                        />
+                        {show_mas_opciones &&
+                        <Fragment>
+                            {
+                                !esta_cerrada &&
+                                <Button
+                                    color="primary"
+                                    onClick={() => enviarPorEmail()}
+                                    disabled={!puede_enviar}
+                                >
+                                    Enviar
+                                </Button>
+                            }
+                            {
+                                !editable &&
+                                !esta_cerrada &&
+                                <Button
+                                    color="primary"
+                                    onClick={() => editar()}
+                                    disabled={!(submitting || pristine)}
+                                >
+                                    Editar
+                                </Button>
+                            }
+                            {
+                                !editable &&
+                                !esta_cerrada &&
+                                initialValues.estado !== 'RECIBIDA' &&
+                                <Button
+                                    color="primary"
+                                    onClick={() => recibida()}
+                                    disabled={!(submitting || pristine)}
+                                >
+                                    Recibida
+                                </Button>
+                            }
+                            {
+                                !editable &&
+                                fue_recibida &&
+                                !esta_cerrada &&
+                                <Button
+                                    style={{marginLeft: '90px'}}
+                                    color="secondary"
+                                    onClick={() => setCobradaModal(true)}
+                                    disabled={!(submitting || pristine)}
+                                >
+                                    Cobrada
+                                </Button>
+                            }
+                        </Fragment>
                         }
                     </div>
+                    {
+                        initialValues.fecha_cobro &&
+                        <div>
+                            Pagada en {fechaFormatoUno(initialValues.fecha_cobro)}
+                        </div>
+                    }
                 </Fragment>
             }
+            <Literales cobro={initialValues}/>
         </MyFormTagModal>
     )
 });

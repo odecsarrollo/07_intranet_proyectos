@@ -17,13 +17,12 @@ const NuevoItemModal = memo(props => {
             cantidad: 0,
             valor_unitario: 0,
             descripcion: '',
+            referencia: '',
         }
     });
-    const adicionarItem = () => {
-        const {adicionarItem} = props;
-        adicionarItem(item)
-    };
-    const {cantidad = 0, valor_unitario = 0, descripcion} = item;
+    const adicionarItem = () => props.adicionarItem(item);
+
+    const {cantidad = 0, valor_unitario = 0, descripcion, referencia} = item;
     return (
         <Dialog
             open={is_open}
@@ -33,6 +32,16 @@ const NuevoItemModal = memo(props => {
             </DialogTitle>
             <DialogContent>
                 <div className="row">
+                    <div className="col-4">
+                        <TextField
+                            fullWidth={true}
+                            label='Referencia'
+                            margin="normal"
+                            name='referencia'
+                            value={referencia}
+                            onChange={v => setItem({...item, [v.target.name]: v.target.value})}
+                        />
+                    </div>
                     <div className="col-12">
                         <TextField
                             fullWidth={true}

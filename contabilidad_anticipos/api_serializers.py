@@ -1,6 +1,7 @@
 from django.utils import timezone
 from rest_framework import serializers
 
+from proyectos.models import Literal
 from .models import (
     ProformaAnticipo,
     ProformaAnticipoItem,
@@ -54,11 +55,15 @@ class ProformaAnticipoItemSerializer(serializers.ModelSerializer):
 
 
 class ProformaAnticipoEnvioSerializer(serializers.ModelSerializer):
+    creado_por_username = serializers.CharField(source='creado_por.username', read_only=True)
+
     class Meta:
         model = ProformaAnticipoEnvios
         fields = [
             'id',
             'proforma_anticipo',
+            'creado_por',
+            'creado_por_username',
             'archivo',
             'version',
         ]
@@ -209,6 +214,7 @@ class ProformaAnticipoSerializer(serializers.ModelSerializer):
             'estado_display',
             'fecha_seguimiento',
             'estado',
+            'literales',
             'email_destinatario',
             'email_destinatario_dos',
             'cobrado',
@@ -234,10 +240,22 @@ class ProformaAnticipoSerializer(serializers.ModelSerializer):
             'version': {'read_only': True},
             'documento': {'read_only': True},
             'envios': {'read_only': True},
+            'literales': {'read_only': True},
         }
+
+
+class ProformaAnticipoLiteralSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Literal
+        fields = [
+            'id',
+            'id_literal',
+            'descripcion',
+        ]
 
 
 class ProformaAnticipoConDetalleSerializer(ProformaAnticipoSerializer):
     items = ProformaAnticipoItemSerializer(many=True, read_only=True)
     documento = ProformaAnticipoEnvioSerializer(read_only=True)
     envios = ProformaAnticipoEnvioSerializer(read_only=True, many=True)
+    literales = ProformaAnticipoLiteralSerializer(many=True, read_only=True)

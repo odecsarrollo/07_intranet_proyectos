@@ -1,12 +1,15 @@
 import datetime
 from decimal import Decimal
 
+from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Sum, F
 from model_utils.models import TimeStampedModel
 from cargues_catalogos.models import ClienteCatalogo
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFit
+
+from proyectos.models import Literal
 
 
 class ProformaConfiguracion(models.Model):
@@ -63,7 +66,7 @@ class ProformaAnticipo(TimeStampedModel):
         null=True,
         related_name='cobros_anticipos'
     )
-    nro_consecutivo = models.IntegerField()
+    nro_consecutivo = models.IntegerField(null=True)
     version = models.IntegerField(default=1)
     estado = models.CharField(max_length=20, choices=ESTADOS_CHOICES, default='CREADA')
     email_destinatario = models.EmailField(null=True)
@@ -82,6 +85,7 @@ class ProformaAnticipo(TimeStampedModel):
     fecha_cambio_estado = models.DateField(null=True)
     fecha_seguimiento = models.DateField(null=True)
     fecha_cobro = models.DateField(null=True)
+    literales = models.ManyToManyField(Literal, 'cobros')
 
     @property
     def editable(self) -> bool:
@@ -103,12 +107,29 @@ class ProformaAnticipo(TimeStampedModel):
         ]
 
 
+class ProformaAnticipoArchivo(TimeStampedModel):
+    def archivo_upload_to(instance, filename):
+        return "proforma/%s/archivos/%s" % (instance.id, filename)
+
+    enviar_por_correo = models.BooleanField(default=False)
+    nombre_archivo = models.CharField(max_length=300)
+    archivo = models.FileField(null=True, upload_to=archivo_upload_to)
+    cobro = models.ForeignKey(ProformaAnticipo, related_name='documentos', on_delete=models.PROTECT)
+    creado_por = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True)
+
+    class Meta:
+        permissions = [
+            ("list_proformaanticipoarchivo", "Can see list proforma anticipo archivos"),
+        ]
+
+
 class ProformaAnticipoEnvios(TimeStampedModel):
     proforma_anticipo = models.ForeignKey(
         ProformaAnticipo,
         related_name='envios',
         on_delete=models.PROTECT
     )
+    creado_por = models.ForeignKey(User, on_delete=models.PROTECT, related_name='cobros_enviados')
     archivo = models.FileField(null=True)
     version = models.PositiveIntegerField()
 
@@ -119,7 +140,7 @@ class ProformaAnticipoItem(TimeStampedModel):
         related_name='items',
         on_delete=models.PROTECT
     )
-    referencia = models.PositiveIntegerField(default=0)
+    referencia = models.CharField(max_length=120)
     descripcion = models.CharField(max_length=300)
     cantidad = models.DecimalField(decimal_places=2, max_digits=12)
     valor_unitario = models.DecimalField(decimal_places=2, max_digits=12)

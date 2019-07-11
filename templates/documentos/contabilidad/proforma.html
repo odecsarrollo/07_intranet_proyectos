@@ -37,6 +37,7 @@
     }
 
     .tabla_concepto table {
+        font-size: 0.8rem;
         border-collapse: collapse;
         width: 100%;
         margin-top: 10px;
@@ -86,7 +87,11 @@
                 <td colspan="2">
                     {% localize off %}
                         <span class="title">{{ anticipo.get_tipo_documento_display|upper }}:</span>
-                        {{ anticipo.nro_consecutivo }}
+                        {% if anticipo.nro_consecutivo %}
+                            {{ anticipo.nro_consecutivo }}
+                        {% else %}
+                            SÍN GENERAR CONSECUTIVO
+                        {% endif %}
                     {% endlocalize %}
                 </td>
             </tr>
@@ -98,41 +103,43 @@
         </table>
         <div class="tabla_concepto">
             <table class="table table-striped tabla">
-                <thead>
                 <tr>
+                    <th>Referencia</th>
                     <th>Descripción</th>
                     <th class="numero">Cantidad</th>
                     <th class="numero">Valor Unitario</th>
                     <th class="numero">Total</th>
                 </tr>
-                </thead>
-                <tbody>
                 {% for item in anticipo.items.all %}
                     <tr>
-                        <td style="max-width: 12cm">{{ item.descripcion }}</td>
+                        <td style="max-width: 4cm">{{ item.referencia }}</td>
+                        <td style="max-width: 8cm">{{ item.descripcion }}</td>
                         <td class="numero">{{ item.cantidad|floatformat:2|intcomma }}</td>
                         <td class="numero">{{ item.valor_unitario|floatformat:2|intcomma }} {{ anticipo.divisa }}</td>
                         <td class="numero">{{ item.valor_total|floatformat:2|intcomma }} {{ anticipo.divisa }}</td>
                     </tr>
                 {% endfor %}
-                </tbody>
-                <tfoot>
                 <tr>
-                    <td colspan="2">Valor Total Antes Impuestos</td>
-                    <td></td>
+                    <td colspan="4" style="height: 20px; border: none"></td>
+                </tr>
+                <tr>
+                    <td style="border: none" colspan="2">TOTAL</td>
+                    <td style="border: none"></td>
+                    <td style="border: none"></td>
                     <td class="numero">{{ anticipo.valor_total_sin_impuesto|floatformat:2|intcomma }} {{ anticipo.divisa }}</td>
                 </tr>
                 <tr>
-                    <td colspan="2">Impuestos</td>
-                    <td></td>
+                    <td style="border: none" colspan="2">IVA</td>
+                    <td style="border: none"></td>
+                    <td style="border: none"></td>
                     <td class="numero">{{ anticipo.impuesto|floatformat:2|intcomma }} {{ anticipo.divisa }}</td>
                 </tr>
                 <tr>
-                    <td colspan="2">Valor Total</td>
-                    <td></td>
+                    <td style="border: none" colspan="2">SUBTOTAL</td>
+                    <td style="border: none"></td>
+                    <td style="border: none"></td>
                     <td class="numero">{{ anticipo.valor_total_sin_impuesto|add:anticipo.impuesto|floatformat:2|intcomma }} {{ anticipo.divisa }}</td>
                 </tr>
-                </tfoot>
             </table>
         </div>
         <table style="width: 100%">

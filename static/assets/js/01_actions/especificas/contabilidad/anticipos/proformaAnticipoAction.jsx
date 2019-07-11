@@ -21,12 +21,13 @@ export const createProformaAnticipo = (values, options_action = {}) => {
     }
 };
 
-export const addItemProformaAnticipo = (id, cantidad, descripcion, valor_unitario, options_action = {}) => {
+export const addItemProformaAnticipo = (id, cantidad, descripcion, valor_unitario, referencia, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch, payload: response})
         };
         let params = new URLSearchParams();
+        params.append('referencia', referencia);
         params.append('cantidad', cantidad);
         params.append('descripcion', descripcion);
         params.append('valor_unitario', valor_unitario);
@@ -35,13 +36,40 @@ export const addItemProformaAnticipo = (id, cantidad, descripcion, valor_unitari
     }
 };
 
-export const cambiarEstadoProformaAnticipo = (id, estado, options_action = {}) => {
+export const relacionarLiteralProformaAnticipo = (id, literal_id, options_action = {}) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch, payload: response})
+        };
+        let params = new URLSearchParams();
+        params.append('literal_id', literal_id);
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'relacionar_literal', params, options)
+    }
+};
+
+export const quitarRelacionLiteralProformaAnticipo = (id, literal_id, options_action = {}) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch, payload: response})
+        };
+        let params = new URLSearchParams();
+        params.append('literal_id', literal_id);
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'quitar_relacion_literal', params, options)
+    }
+};
+
+export const cambiarEstadoProformaAnticipo = (id, estado, fecha_cobro = null, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch, payload: response})
         };
         let params = new URLSearchParams();
         params.append('estado', estado);
+        if (fecha_cobro) {
+            params.append('fecha_cobro', fecha_cobro);
+        }
         const options = {...options_action, dispatches, dispatch_method: dispatch};
         return callApiMethodPostParameters(current_url_api, id, 'cambiar_estado', params, options)
     }

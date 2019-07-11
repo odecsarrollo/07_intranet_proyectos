@@ -61,6 +61,12 @@ const Tabla = memo(props => {
                             Cell: row => fechaFormatoUno(row.value)
                         },
                         {
+                            Header: "Fecha Cobro",
+                            accessor: "fecha_cobro",
+                            maxWidth: 100,
+                            Cell: row => row.value && <div>{fechaFormatoUno(row.value)}</div>
+                        },
+                        {
                             Header: "Tipo",
                             accessor: "tipo_documento",
                             maxWidth: 100,
