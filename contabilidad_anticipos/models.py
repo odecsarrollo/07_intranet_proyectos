@@ -28,14 +28,14 @@ class ProformaConfiguracion(models.Model):
     email_copia_default = models.EmailField(null=True)
     firma = ProcessedImageField(
         processors=[ResizeToFit(width=400, height=300, upscale=False)],
-        format='JPEG',
+        format='PNG',
         options={'quality': 100},
         null=True,
         upload_to=firma_upload_to
     )
     encabezado = ProcessedImageField(
         processors=[ResizeToFit(1190, 228)],
-        format='JPEG',
+        format='PNG',
         options={'quality': 100},
         null=True,
         upload_to=encabezado_upload_to
