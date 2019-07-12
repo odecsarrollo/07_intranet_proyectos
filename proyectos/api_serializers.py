@@ -64,10 +64,10 @@ class ArchivoLiteralSerializer(serializers.ModelSerializer):
 
 
 class ArchivoProyectoSerializer(serializers.ModelSerializer):
+    creado_por_username = serializers.CharField(source='creado_por.username', read_only=True)
     archivo_url = serializers.SerializerMethodField()
     extension = serializers.SerializerMethodField()
     size = serializers.SerializerMethodField()
-    creado_por_username = serializers.CharField(source='creado_por.username', read_only=True)
 
     def get_size(self, obj):
         if obj.archivo:

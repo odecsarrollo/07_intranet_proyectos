@@ -56,15 +56,38 @@ class ProformaAnticipoItemSerializer(serializers.ModelSerializer):
 
 class ProformaAnticipoEnvioSerializer(serializers.ModelSerializer):
     creado_por_username = serializers.CharField(source='creado_por.username', read_only=True)
+    archivo_url = serializers.SerializerMethodField()
+    extension = serializers.SerializerMethodField()
+    size = serializers.SerializerMethodField()
+
+    def get_size(self, obj):
+        if obj.archivo:
+            return obj.archivo.size
+        return None
+
+    def get_archivo_url(self, obj):
+        if obj.archivo:
+            return obj.archivo.url
+        return None
+
+    def get_extension(self, obj):
+        extension = obj.archivo.url.split('.')[-1]
+        if obj.archivo:
+            return extension.title()
+        return None
 
     class Meta:
         model = ProformaAnticipoEnvios
         fields = [
             'id',
+            'created',
             'proforma_anticipo',
             'creado_por',
             'creado_por_username',
             'archivo',
+            'archivo_url',
+            'size',
+            'extension',
             'version',
         ]
 

@@ -46,7 +46,12 @@ class ProformaAnticipoItemViewSet(viewsets.ModelViewSet):
 
 class ProformaAnticipoViewSet(viewsets.ModelViewSet):
     queryset = ProformaAnticipo.objects.prefetch_related('items').all()
-    queryset_con_detalles = ProformaAnticipo.objects.prefetch_related('items', 'literales').all()
+    queryset_con_detalles = ProformaAnticipo.objects.prefetch_related(
+        'items',
+        'literales',
+        'envios',
+        'envios__creado_por'
+    ).all()
     serializer_class = ProformaAnticipoSerializer
 
     @action(detail=True, methods=['post'])
@@ -97,7 +102,6 @@ class ProformaAnticipoViewSet(viewsets.ModelViewSet):
         self.serializer_class = ProformaAnticipoConDetalleSerializer
         serializer = self.get_serializer(proforma_anticipo)
         return Response(serializer.data)
-
 
     @action(detail=True, methods=['post'])
     def cambiar_estado(self, request, pk=None):

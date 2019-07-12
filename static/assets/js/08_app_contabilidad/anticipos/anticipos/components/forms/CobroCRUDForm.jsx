@@ -12,6 +12,7 @@ import PrinJs from 'print-js';
 import Button from "@material-ui/core/Button";
 import NuevoItemModal from './NuevoItemModal';
 import PagoModal from './CobroCRUDFormPagoModal';
+import EnviosTabla from './CobroCRUDFormEnvioTabla';
 import Literales from './CobroCRUDFormLiterales';
 import * as actions from '../../../../../01_actions/01_index';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -445,6 +446,10 @@ let Form = memo(props => {
             {
                 initialValues &&
                 <Literales cobro={initialValues}/>
+            }
+            {
+                initialValues &&
+                <EnviosTabla envios={initialValues.envios} style={style}/>
             }
         </MyFormTagModal>
     )

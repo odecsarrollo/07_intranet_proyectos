@@ -11,7 +11,7 @@ const style = {
     }
 };
 
-const CobroCRUDFormLiteralesLi = memo(props => {
+const CobroCRUDFormLiteralesList = memo(props => {
     const {texto, cobro_id, literal_id} = props;
     const dispatch = useDispatch();
     const [mostra_eliminar, setMostarEliminar] = useState(false);
@@ -66,7 +66,7 @@ const CobroCRUDFormLiterales = memo(props => {
                 {
                     cobro.literales.length > 0 &&
                     <ol>
-                        {cobro.literales.map(li => <CobroCRUDFormLiteralesLi
+                        {cobro.literales.map(li => <CobroCRUDFormLiteralesList
                             texto={`${li.id_literal} - ${li.descripcion}`}
                             cobro_id={cobro.id}
                             literal_id={li.id}
