@@ -1,4 +1,4 @@
-{% load static l10n humanize %}
+{% load static l10n humanize static %}
 <style>
     @page {
         text-align: justify;
@@ -65,6 +65,10 @@
 </style>
 <div>
     <div style="margin-top: 2rem">
+        <div>
+            <img src="{% static 'img/logo.png' %}" alt="">
+            {% static 'img/logo.png' %}
+        </div>
         <table style="width: 100%">
             <tr>
                 <td colspan="2" style="padding: 3px">
