@@ -3,9 +3,11 @@ import random
 from io import BytesIO
 
 from django.core.files import File
-from django.template.loader import get_template
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import get_template, render_to_string
 from django.utils import timezone
 from PyPDF2 import PdfFileReader, PdfFileWriter
+from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from weasyprint import CSS, HTML
 
@@ -63,15 +65,31 @@ def proforma_anticipo_enviar(
     if configuracion.email_copia_default:
         correos.append(configuracion.email_copia_default)
 
-    print(proforma_anticipo.documento)
-    if proforma_anticipo.documento:
-        documento = proforma_cobro_generar_pdf(id=proforma_anticipo_id, request=request)
-    else:
-        documento = proforma_cobro_generar_pdf(id=proforma_anticipo_id, request=request, generar_archivo=True)
+    if proforma_anticipo.editable:
+        proforma_cobro_generar_pdf(id=proforma_anticipo_id, request=request, generar_archivo=True)
+
+    text_content = render_to_string('documentos/contabilidad/correo_base.html', {'algo': 'prueba'})
+
+    msg = EmailMultiAlternatives(
+        '%s - %s' % (proforma_anticipo.get_tipo_documento_display(), proforma_anticipo.version),
+        text_content,
+        bcc=[configuracion.email_copia_default],
+        from_email='Odecopack SAS <%s>' % configuracion.email_copia_default,
+        to=[proforma_anticipo.email_destinatario, proforma_anticipo.email_destinatario_dos]
+    )
+    msg.attach_alternative(text_content, "text/html")
+
     proforma_anticipo = proforma_anticipo_cambiar_estado(
         estado='ENVIADA',
         proforma_anticipo_id=proforma_anticipo_id
     )
+    msg.attach_file(proforma_anticipo.documento.archivo.path)
+
+    try:
+        msg.send()
+    except Exception as e:
+        raise serializers.ValidationError(
+            {'_error': 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e})
     return proforma_anticipo
 
 
@@ -275,4 +293,5 @@ def proforma_cobro_generar_pdf(
         envio.version = anticipo.version
         envio.proforma_anticipo = anticipo
         envio.archivo.save(filename, File(output))
+        envio.save()
     return output

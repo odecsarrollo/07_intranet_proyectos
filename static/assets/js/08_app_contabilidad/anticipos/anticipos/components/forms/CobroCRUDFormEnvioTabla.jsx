@@ -1,5 +1,5 @@
 import React, {memo, Fragment, useState} from 'react';
-import {fechaHoraFormatoUno} from "../../../../../00_utilities/common";
+import {fechaHoraFormatoUno, formatBytes} from "../../../../../00_utilities/common";
 import Typography from "@material-ui/core/Typography";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import IconButton from "@material-ui/core/IconButton";
@@ -18,7 +18,7 @@ const CobroCRUDFormEnvioTablaItem = memo(props => {
         <tr style={style.tabla.tr}>
             <td style={style.tabla.tr.td}>{fechaHoraFormatoUno(created)}</td>
             <td style={style.tabla.tr.td}>{extension}</td>
-            <td style={style.tabla.tr.td}>{tamano}</td>
+            <td style={style.tabla.tr.td}>{formatBytes(tamano, 1)}</td>
             <td style={style.tabla.tr.td}>{creado_por_username}</td>
             <td style={style.tabla.tr.td_numero}>{version}</td>
             <td style={{padding: '2px'}} className='text-center'>

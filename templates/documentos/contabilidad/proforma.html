@@ -88,7 +88,7 @@
                     {% localize off %}
                         <span class="title">{{ anticipo.get_tipo_documento_display|upper }}:</span>
                         {% if anticipo.nro_consecutivo %}
-                            {{ anticipo.nro_consecutivo }}
+                            {{ anticipo.nro_consecutivo }}{% if anticipo.version > 1 %} v.{{ anticipo.version }} {% endif %}
                         {% else %}
                             SÍN GENERAR CONSECUTIVO
                         {% endif %}
