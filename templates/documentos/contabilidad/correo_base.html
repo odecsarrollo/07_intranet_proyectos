@@ -19,6 +19,11 @@
         {{ cobro.version }}{% endif %} por un valor
     de {{ cobro.valor_total_sin_impuesto|add:cobro.impuesto|floatformat:2|intcomma }} {{ cobro.divisa }}.
 </p>
+{% if email_texto_adicional %}
+    <p>
+        {{ email_texto_adicional|linebreaksbr }}
+    </p>
+{% endif %}
 {% if cobro.documentos %}
     Se adjuntan los siguientes documentos:
     <ol>

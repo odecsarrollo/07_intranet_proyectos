@@ -37,7 +37,8 @@ def proforma_anticipo_quitar_relacion_literal(
 
 def proforma_anticipo_enviar(
         proforma_anticipo_id: int,
-        request
+        request,
+        email_texto_adicional: str = ''
 ) -> ProformaAnticipo:
     configuracion = ProformaConfiguracion.objects.first()
     proforma_anticipo = ProformaAnticipo.objects.get(pk=proforma_anticipo_id)
@@ -69,6 +70,7 @@ def proforma_anticipo_enviar(
         proforma_cobro_generar_pdf(id=proforma_anticipo_id, request=request, generar_archivo=True)
 
     context = {
+        "email_texto_adicional": email_texto_adicional,
         "cobro": proforma_anticipo,
         "documentos_adjuntos": proforma_anticipo.documentos.filter(enviar_por_correo=True).all()
     }

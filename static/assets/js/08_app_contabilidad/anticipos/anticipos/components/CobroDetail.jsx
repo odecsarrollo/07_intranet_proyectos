@@ -12,6 +12,11 @@ import PrinJs from "print-js";
 import moment from "moment-timezone";
 import PagoModal from "./forms/CobroCRUDFormPagoModal";
 import CobroDetailDocuento from './CobroDetailDocumentos';
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogActions from "@material-ui/core/DialogActions";
+import TextField from "@material-ui/core/TextField";
 
 const style = {
     tabla: {
@@ -62,12 +67,56 @@ const style = {
     }
 };
 
+const EnviarMensajeAdicional = memo(props => {
+    const {is_open, onCerrar, onEnviar} = props;
+    const [mensaje_adicional_email, setMensajeAdicionalEmail] = useState('');
+    return <Dialog
+        fullScreen={false}
+        open={is_open}
+    >
+        <DialogTitle id="responsive-dialog-title">
+            <TextField
+                style={{width: '600px'}}
+                label="Mensaje Adicional Email"
+                multiline={true}
+                rows={6}
+                fullWidth={true}
+                onChange={e => setMensajeAdicionalEmail(e.target.value)}
+                autoComplete="off"
+                value={mensaje_adicional_email}
+            />
+        </DialogTitle>
+        <DialogContent>
+
+        </DialogContent>
+        <DialogActions>
+            <Button
+                color="secondary"
+                variant="contained"
+                className='ml-3'
+                onClick={() => onEnviar(mensaje_adicional_email)}
+            >
+                Enviar
+            </Button>
+            <Button
+                color="secondary"
+                variant="contained"
+                className='ml-3'
+                onClick={() => onCerrar()}
+            >
+                Cancelar
+            </Button>
+        </DialogActions>
+    </Dialog>
+});
+
 const CobroDetail = memo(props => {
     const {id} = props.match.params;
     const dispatch = useDispatch();
     const cobro = useSelector(state => state.contabilidad_proforma_anticipos[id]);
     const [show_mas_opciones, setMostrarMasOpciones] = useState(false);
     const [show_cobrada_modal, setCobradaModal] = useState(false);
+    const [show_mensaje_adicional_email_modal, setShowMensajeAdicionalEmailModal] = useState(false);
     useEffect(() => {
         dispatch(actions.fetchProformaAnticipo(id));
         return () => {
@@ -75,9 +124,12 @@ const CobroDetail = memo(props => {
         };
     }, []);
 
-    const enviarPorEmail = () => {
-        const mensaje_exitoso = () => dispatch(actions.notificarAction('Se ha enviado correctamente', {'title': 'Envío de proforma'}));
-        dispatch(actions.enviarProformaAnticipo(cobro.id, {callback: mensaje_exitoso}));
+    const enviarPorEmail = (mensaje) => {
+        const mensaje_exitoso = () => {
+            setShowMensajeAdicionalEmailModal(false);
+            dispatch(actions.notificarAction('Se ha enviado correctamente', {'title': 'Envío de proforma'}));
+        };
+        dispatch(actions.enviarProformaAnticipo(cobro.id, mensaje, {callback: mensaje_exitoso}));
     };
 
     const editar = () => dispatch(actions.cambiarEstadoProformaAnticipo(cobro.id, 'EDICION'));
@@ -107,6 +159,14 @@ const CobroDetail = memo(props => {
     const editable = cobro.editable;
     return (
         <Fragment>
+            {
+                show_mensaje_adicional_email_modal &&
+                <EnviarMensajeAdicional
+                    onEnviar={enviarPorEmail}
+                    is_open={show_mensaje_adicional_email_modal}
+                    onCerrar={() => setShowMensajeAdicionalEmailModal(false)}
+                />
+            }
             {
                 show_cobrada_modal &&
                 <PagoModal
@@ -142,7 +202,7 @@ const CobroDetail = memo(props => {
                             color="primary"
                             className='ml-5'
                             variant="contained"
-                            onClick={() => enviarPorEmail()}
+                            onClick={() => setShowMensajeAdicionalEmailModal(true)}
                             disabled={!puede_enviar}
                         >
                             Enviar

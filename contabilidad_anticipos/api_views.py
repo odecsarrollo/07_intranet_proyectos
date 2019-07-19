@@ -185,10 +185,12 @@ class ProformaAnticipoViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def enviar_cobro(self, request, pk=None):
         from .services import proforma_anticipo_enviar
+        email_texto_adicional = self.request.POST.get('email_texto_adicional')
         proforma = self.get_object()
         proforma = proforma_anticipo_enviar(
             proforma_anticipo_id=proforma.id,
-            request=request
+            request=request,
+            email_texto_adicional=email_texto_adicional
         )
         self.serializer_class = ProformaAnticipoConDetalleSerializer
         serializer = self.get_serializer(proforma)

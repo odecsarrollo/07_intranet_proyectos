@@ -75,13 +75,15 @@ export const cambiarEstadoProformaAnticipo = (id, estado, fecha_cobro = null, op
     }
 };
 
-export const enviarProformaAnticipo = (id, options_action = {}) => {
+export const enviarProformaAnticipo = (id, email_texto_adicional, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch, payload: response})
         };
+        let params = new URLSearchParams();
+        params.append('email_texto_adicional', email_texto_adicional);
         const options = {...options_action, dispatches, dispatch_method: dispatch};
-        return callApiMethodPost(current_url_api, id, 'enviar_cobro', options)
+        return callApiMethodPostParameters(current_url_api, id, 'enviar_cobro', params, options)
     }
 };
 
