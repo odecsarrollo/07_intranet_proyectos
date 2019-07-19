@@ -75,6 +75,13 @@ let ProformaConfiguracionForm = memo(props => {
                 />
                 <MyTextFieldSimple
                     className="col-12 col-md-6 pr-3"
+                    nombre='Email Copia por defecto'
+                    name='email_from_default'
+                    case='U'
+                    type='email'
+                />
+                <MyTextFieldSimple
+                    className="col-12 col-md-6 pr-3"
                     nombre='Información Bancaria'
                     name='informacion_bancaria'
                     case='U'

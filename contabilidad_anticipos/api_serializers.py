@@ -7,7 +7,7 @@ from .models import (
     ProformaAnticipoItem,
     ProformaConfiguracion,
     ProformaAnticipoEnvios,
-)
+    ProformaAnticipoArchivo)
 
 
 class ProformaConfiguracionSerializer(serializers.ModelSerializer):
@@ -35,6 +35,7 @@ class ProformaConfiguracionSerializer(serializers.ModelSerializer):
             'borrar_encabezado',
             'informacion_bancaria',
             'email_copia_default',
+            'email_from_default',
             'firma',
             'encabezado',
         ]
@@ -98,7 +99,6 @@ class ProformaAnticipoSerializer(serializers.ModelSerializer):
     valor_total_sin_impuesto = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     color_estado = serializers.SerializerMethodField()
     porcentaje_a_verificacion = serializers.SerializerMethodField()
-    documento = ProformaAnticipoEnvioSerializer(read_only=True)
     fecha_seguimiento = serializers.DateField(
         format="%Y-%m-%d",
         input_formats=['%Y-%m-%dT%H:%M:%S.%fZ', 'iso-8601'],
@@ -111,6 +111,11 @@ class ProformaAnticipoSerializer(serializers.ModelSerializer):
         allow_null=True,
         required=False
     )
+
+    to_string = serializers.SerializerMethodField()
+
+    def get_to_string(self, instance):
+        return 'Cobro con Id %s' % instance.id
 
     def get_porcentaje_a_verificacion(self, obj):
         fecha_ini = obj.fecha_cambio_estado
@@ -191,6 +196,7 @@ class ProformaAnticipoSerializer(serializers.ModelSerializer):
         impuesto = validated_data.get('impuesto', 0)
         tipo_documento = validated_data.get('tipo_documento')
         divisa = validated_data.get('divisa')
+        observacion = validated_data.get('observacion')
         nit = validated_data.get('nit')
         nombre_cliente = validated_data.get('nombre_cliente')
         fecha = validated_data.get('fecha')
@@ -198,6 +204,7 @@ class ProformaAnticipoSerializer(serializers.ModelSerializer):
         nro_orden_compra = validated_data.get('nro_orden_compra')
         condicion_pago = validated_data.get('condicion_pago')
         anticipo = proforma_anticipo_crear_actualizar(
+            observacion=observacion,
             fecha_cobro=fecha_cobro,
             email_destinatario_dos=email_destinatario_dos,
             email_destinatario=email_destinatario,
@@ -230,10 +237,13 @@ class ProformaAnticipoSerializer(serializers.ModelSerializer):
             'nit',
             'editable',
             'envios',
-            'documento',
+            'to_string',
+            'documentos',
             'fecha_cobro',
             'items',
+            'observacion',
             'nombre_cliente',
+            'observacion',
             'estado_display',
             'fecha_seguimiento',
             'estado',
@@ -258,10 +268,11 @@ class ProformaAnticipoSerializer(serializers.ModelSerializer):
             'informacion_locatario': {'allow_blank': True},
             'email_destinatario': {'allow_blank': True},
             'email_destinatario_dos': {'allow_blank': True},
+            'observacion': {'allow_blank': True},
             'editable': {'read_only': True},
             'items': {'read_only': True},
             'version': {'read_only': True},
-            'documento': {'read_only': True},
+            'documentos': {'read_only': True},
             'envios': {'read_only': True},
             'literales': {'read_only': True},
         }
@@ -277,8 +288,44 @@ class ProformaAnticipoLiteralSerializer(serializers.ModelSerializer):
         ]
 
 
+class ProformaAnticipoArchivoSerializer(serializers.ModelSerializer):
+    archivo_url = serializers.SerializerMethodField()
+    extension = serializers.SerializerMethodField()
+    size = serializers.SerializerMethodField()
+
+    def get_size(self, obj):
+        if obj.archivo:
+            return obj.archivo.size if obj.archivo.size else None
+        return None
+
+    def get_archivo_url(self, obj):
+        if obj.archivo:
+            return obj.archivo.url
+        return None
+
+    def get_extension(self, obj):
+        extension = obj.archivo.url.split('.')[-1]
+        if obj.archivo:
+            return extension.title()
+        return None
+
+    class Meta:
+        model = ProformaAnticipoArchivo
+        fields = [
+            'id',
+            'enviar_por_correo',
+            'nombre_archivo',
+            'archivo_url',
+            'creado_por',
+            'extension',
+            'archivo',
+            'cobro',
+            'size',
+        ]
+
+
 class ProformaAnticipoConDetalleSerializer(ProformaAnticipoSerializer):
     items = ProformaAnticipoItemSerializer(many=True, read_only=True)
-    documento = ProformaAnticipoEnvioSerializer(read_only=True)
+    documentos = ProformaAnticipoArchivoSerializer(read_only=True, many=True)
     envios = ProformaAnticipoEnvioSerializer(read_only=True, many=True)
     literales = ProformaAnticipoLiteralSerializer(many=True, read_only=True)

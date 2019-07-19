@@ -88,7 +88,8 @@
                     {% localize off %}
                         <span class="title">{{ anticipo.get_tipo_documento_display|upper }}:</span>
                         {% if anticipo.nro_consecutivo %}
-                            {{ anticipo.nro_consecutivo }}{% if anticipo.version > 1 %} v.{{ anticipo.version }} {% endif %}
+                            {{ anticipo.nro_consecutivo }}{% if anticipo.version > 1 %} v.{{ anticipo.version }}
+                            {% endif %}
                         {% else %}
                             SÍN GENERAR CONSECUTIVO
                         {% endif %}
@@ -101,6 +102,11 @@
                 </td>
             </tr>
         </table>
+        <div style="text-align: center">
+            <p>
+                No somos grandes contribuyentes, sómos responsables de IVA, no somos autorretenedores
+            </p>
+        </div>
         <div class="tabla_concepto">
             <table class="table table-striped tabla">
                 <tr>
@@ -142,6 +148,12 @@
                 </tr>
             </table>
         </div>
+        {% if anticipo.observacion %}
+            <p style="padding:3px">
+                <span style="font-weight: bold">Observación:</span><br/>
+                {{ anticipo.observacion }}
+            </p>
+        {% endif %}
         <table style="width: 100%">
             <tbody>
             <tr>

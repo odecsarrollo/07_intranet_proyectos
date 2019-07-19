@@ -63,6 +63,8 @@ import contabilidadProformaConfiguracionReducer
     from './especificas/contabilidad/anticipos/proformaConfiguracionReducer';
 import contabilidadProformaAnticiposReducer
     from './especificas/contabilidad/anticipos/proformaAnticipoReducer';
+import contabilidadProformaAnticiposArchivosReducer
+    from './especificas/contabilidad/anticipos/proformaAnticipoArchivoReducer';
 
 
 import itemVentasCatalogosProductosReducer from './especificas/catalogos_productos/itemsVentasReducer';
@@ -135,6 +137,7 @@ const rootReducer = combineReducers({
     contabilidad_proforma_configuracion: contabilidadProformaConfiguracionReducer,
 
     contabilidad_proforma_anticipos: contabilidadProformaAnticiposReducer,
+    contabilidad_proforma_anticipos_archivos: contabilidadProformaAnticiposArchivosReducer,
 
     sistemas_equipos_computadores: sistemasEquiposComputadoresReducers
 });

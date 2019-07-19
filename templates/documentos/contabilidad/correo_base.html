@@ -1,4 +1,4 @@
-{% load static %}
+{% load static l10n humanize %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -11,8 +11,22 @@
 </head>
 <body>
 <p>
-    Le adjuntamos en el documento requerido.
+    Cordíal Saludo,
 </p>
+<p>
+    Adjuntamos el documento correspondiente a {{ cobro.get_tipo_documento_display }} número
+    {% localize off %}{{ cobro.nro_consecutivo }}{% endlocalize %}{% if cobro.version > 1 %} versión
+        {{ cobro.version }}{% endif %} por un valor
+    de {{ cobro.valor_total_sin_impuesto|add:cobro.impuesto|floatformat:2|intcomma }} {{ cobro.divisa }}.
+</p>
+{% if cobro.documentos %}
+    Se adjuntan los siguientes documentos:
+    <ol>
+        {% for documento in documentos_adjuntos %}
+            <li>{{ documento.nombre_archivo }}</li>
+        {% endfor %}
+    </ol>
+{% endif %}
 <div>
     <div style="padding: 5px; border-radius: 15px; border: solid black 1px">
         <h4 style="font-weight: bold">AVISO LEGAL:</h4>

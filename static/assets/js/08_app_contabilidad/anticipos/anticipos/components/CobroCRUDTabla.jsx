@@ -1,9 +1,10 @@
 import React, {memo} from "react";
 import MyDialogButtonDelete from '../../../../00_utilities/components/ui/dialog/delete_dialog';
-import IconButtonTableEdit from '../../../../00_utilities/components/ui/icon/table_icon_button_edit';
 
 import ReactTable from "react-table";
 import {fechaFormatoUno} from "../../../../00_utilities/common";
+import {Link} from "react-router-dom";
+import IconButtonTableSee from "../../../../00_utilities/components/ui/icon/table_icon_button_detail";
 
 function areEqual(prevProps, nextProps) {
     return prevProps.list === nextProps.list && prevProps.data_to_excel === nextProps.data_to_excel
@@ -173,16 +174,15 @@ const Tabla = memo(props => {
 
                         },
                         {
-                            Header: "Editar",
-                            show: permisos_object.change,
-                            maxWidth: 60,
+                            Header: "Ver.",
+                            show: permisos_object.detail,
+                            maxWidth: 50,
                             Cell: row =>
-                                <IconButtonTableEdit
-                                    onClick={() => {
-                                        onSelectItemEdit(row.original);
-                                    }}/>
+                                <Link to={`/app/contabilidad/cobros/detalle/${row.original.id}`}>
+                                    <IconButtonTableSee/>
+                                </Link>
 
-                        },
+                        }
                     ]
                 }
             ]}

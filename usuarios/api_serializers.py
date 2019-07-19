@@ -29,6 +29,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
             'to_string',
             'groups',
         ]
+        extra_kwargs = {'colaborador': {'read_only': True}}
 
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)

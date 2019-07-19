@@ -1,6 +1,3 @@
-from io import BytesIO
-
-from PyPDF2 import PdfFileReader
 from django.core.exceptions import ValidationError
 from django.http import HttpResponse
 from rest_framework import viewsets, status
@@ -18,6 +15,7 @@ from .api_serializers import (
     ProformaAnticipoItemSerializer,
     ProformaAnticipoSerializer,
     ProformaAnticipoConDetalleSerializer,
+    ProformaAnticipoArchivoSerializer,
     ProformaConfiguracionSerializer
 )
 
@@ -39,6 +37,11 @@ class ProformaConfiguracionViewSet(viewsets.ModelViewSet):
         raise ValidationError({'_error': 'Metodo eliminar no disponible'})
 
 
+class ProformaAnticipoArchivoViewSet(viewsets.ModelViewSet):
+    queryset = ProformaAnticipoArchivo.objects.all()
+    serializer_class = ProformaAnticipoArchivoSerializer
+
+
 class ProformaAnticipoItemViewSet(viewsets.ModelViewSet):
     queryset = ProformaAnticipoItem.objects.all()
     serializer_class = ProformaAnticipoItemSerializer
@@ -57,16 +60,16 @@ class ProformaAnticipoViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def upload_archivo(self, request, pk=None):
         nombre_archivo = self.request.POST.get('nombre')
-        literal = self.get_object()
+        cobro = self.get_object()
         archivo = self.request.FILES['archivo']
         archivo_cobro = ProformaAnticipoArchivo()
         archivo_cobro.archivo = archivo
-        archivo_cobro.literal = literal
+        archivo_cobro.cobro = cobro
         archivo_cobro.nombre_archivo = nombre_archivo
         archivo_cobro.creado_por = self.request.user
         archivo_cobro.enviar_por_correo = False
         archivo_cobro.save()
-        serializer = self.get_serializer(literal)
+        serializer = self.get_serializer(cobro)
         return Response(serializer.data)
 
     def destroy(self, request, *args, **kwargs):

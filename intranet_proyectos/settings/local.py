@@ -56,6 +56,7 @@ WEBPACK_LOADER = {
 }
 
 # 'EMAIL_IS_LOCAL'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 if not str_to_bool(get_secret("EMAIL_SERVER", "EMAIL_IS_LOCAL")):
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 

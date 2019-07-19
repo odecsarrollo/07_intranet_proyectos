@@ -68,13 +68,23 @@ def proforma_anticipo_enviar(
     if proforma_anticipo.editable:
         proforma_cobro_generar_pdf(id=proforma_anticipo_id, request=request, generar_archivo=True)
 
-    text_content = render_to_string('documentos/contabilidad/correo_base.html', {'algo': 'prueba'})
+    context = {
+        "cobro": proforma_anticipo,
+        "documentos_adjuntos": proforma_anticipo.documentos.filter(enviar_por_correo=True).all()
+    }
+    text_content = render_to_string('documentos/contabilidad/correo_base.html', context=context)
+
+    if not configuracion.email_from_default:
+        raise serializers.ValidationError({'_error': 'No ha definido un correo de origen en la configuración'})
 
     msg = EmailMultiAlternatives(
-        '%s - %s' % (proforma_anticipo.get_tipo_documento_display(), proforma_anticipo.version),
+        '%s - %s v%s' % (
+            proforma_anticipo.get_tipo_documento_display(), proforma_anticipo.nro_consecutivo,
+            proforma_anticipo.version
+        ),
         text_content,
         bcc=[configuracion.email_copia_default],
-        from_email='Odecopack SAS <%s>' % configuracion.email_copia_default,
+        from_email='Odecopack SAS <%s>' % configuracion.email_from_default,
         to=[proforma_anticipo.email_destinatario, proforma_anticipo.email_destinatario_dos]
     )
     msg.attach_alternative(text_content, "text/html")
@@ -84,6 +94,8 @@ def proforma_anticipo_enviar(
         proforma_anticipo_id=proforma_anticipo_id
     )
     msg.attach_file(proforma_anticipo.documento.archivo.path)
+    archivos_para_enviar = proforma_anticipo.documentos.filter(enviar_por_correo=True)
+    [msg.attach_file(archivo.archivo.path) for archivo in archivos_para_enviar]
 
     try:
         msg.send()
@@ -173,6 +185,7 @@ def proforma_anticipo_crear_actualizar(
         impuesto=float,
         fecha_cobro: datetime.date = None,
         fecha_seguimiento: datetime.date = None,
+        observacion: str = None,
         id: int = None
 ) -> ProformaAnticipo:
     if id:
@@ -192,6 +205,7 @@ def proforma_anticipo_crear_actualizar(
     anticipo.email_destinatario_dos = email_destinatario_dos
     anticipo.tipo_documento = tipo_documento
     anticipo.impuesto = impuesto
+    anticipo.observacion = observacion
     anticipo.divisa = divisa
     anticipo.nit = nit
     anticipo.nombre_cliente = nombre_cliente
@@ -217,9 +231,7 @@ def generar_base_pdf(request) -> BytesIO:
     )
     main_doc = html.render(stylesheets=[CSS('static/css/pdf_ordenes_resultado.css')])
     configuracion = ProformaConfiguracion.objects.first()
-    context = {
-        "configuracion": configuracion
-    }
+    context = {"configuracion": configuracion}
     html_get_template = get_template('documentos/contabilidad/encabezado.html').render(context)
     html = HTML(
         string=html_get_template,
@@ -284,8 +296,10 @@ def proforma_cobro_generar_pdf(
         writer_con_logo.addPage(page_object_documento)
     writer_con_logo.write(output)
     if generar_archivo:
-        filename = "%s_ALE%s.pdf" % (
-            'cosa',
+        filename = "proforma/envios/cobro_%s_%s_v%s_%s.pdf" % (
+            anticipo.get_tipo_documento_display(),
+            anticipo.nro_consecutivo,
+            anticipo.version,
             random.randint(1000, 9999)
         )
         envio = ProformaAnticipoEnvios()

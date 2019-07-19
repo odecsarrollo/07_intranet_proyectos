@@ -7,7 +7,7 @@ import {
     createObject,
     callApiMethodPostParametersPDF,
     callApiMethodPostParameters,
-    callApiMethodPost,
+    callApiMethodPost, uploadArchivo,
 } from '../../../00_general_fuctions'
 
 const current_url_api = 'contabilidad_anticipos_proformas_cobros';
@@ -149,5 +149,13 @@ export const updateProformaAnticipo = (id, values, options_action = {}) => {
         };
         const options = {dispatches, ...options_action, dispatch_method: dispatch};
         return updateObject(current_url_api, id, values, options);
+    }
+};
+
+
+export const uploadArchivoProformaAnticipo = (id, values, options_action = {}) => {
+    return (dispatch) => {
+        const options = {...options_action, dispatch_method: dispatch};
+        uploadArchivo(current_url_api, id, 'upload_archivo', values, options)
     }
 };

@@ -26,6 +26,7 @@ class ProformaConfiguracion(models.Model):
     informacion_odecopack = models.TextField(null=True)
     informacion_bancaria = models.TextField(null=True)
     email_copia_default = models.EmailField(null=True)
+    email_from_default = models.EmailField(null=True)
     firma = ProcessedImageField(
         processors=[ResizeToFit(width=400, height=300, upscale=False)],
         format='PNG',
@@ -85,6 +86,7 @@ class ProformaAnticipo(TimeStampedModel):
     fecha_cambio_estado = models.DateField(null=True)
     fecha_seguimiento = models.DateField(null=True)
     fecha_cobro = models.DateField(null=True)
+    observacion = models.TextField(null=True)
     literales = models.ManyToManyField(Literal, 'cobros')
 
     @property
@@ -109,7 +111,7 @@ class ProformaAnticipo(TimeStampedModel):
 
 class ProformaAnticipoArchivo(TimeStampedModel):
     def archivo_upload_to(instance, filename):
-        return "proforma/%s/archivos/%s" % (instance.id, filename)
+        return "proforma/%s/archivos/%s" % (instance.cobro.id, filename)
 
     enviar_por_correo = models.BooleanField(default=False)
     nombre_archivo = models.CharField(max_length=300)

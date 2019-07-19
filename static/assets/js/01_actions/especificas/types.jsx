@@ -1,3 +1,12 @@
+export const PROFORMA_ANTICIPO_ARCHIVO_TYPES = {
+    create: 'create_proforma_anticipo_archivo',
+    delete: 'delete_proforma_anticipo_archivo',
+    fetch_all: 'fetch_proformas_anticipos_archivos',
+    fetch: 'fetch_proforma_anticipo_archivo',
+    clear: 'clear_proformas_anticipos_archivos',
+    update: 'update_proforma_anticipo_archivo',
+};
+
 export const SISTEMAS_EQUIPO_COMPUTADOR_TYPES = {
     create: 'create_sistemas_equipo_computador',
     delete: 'delete_sistemas_equipo_computador',

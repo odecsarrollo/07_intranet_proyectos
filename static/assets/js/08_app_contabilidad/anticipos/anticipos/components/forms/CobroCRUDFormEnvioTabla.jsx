@@ -41,6 +41,12 @@ const CobroCRUDFormEnvioTablaItem = memo(props => {
     )
 });
 
+const styles = {
+    texto_ver: {
+        fontSize: '0.7rem',
+        color: 'black'
+    }
+};
 
 const CobroCRUDFormEnvioTabla = memo(props => {
     const {envios, style} = props;
@@ -51,12 +57,9 @@ const CobroCRUDFormEnvioTabla = memo(props => {
     return (
         <div className="col-12">
             <Typography variant="h5" gutterBottom color="primary">
-                Bitacora Envíos
-                <FontAwesomeIcon
-                    className='puntero'
-                    icon={`${mostrar ? 'minus' : 'plus'}-circle`}
-                    onClick={() => setMostrar(!mostrar)}
-                />
+                Bitacora Envíos <span className='puntero'
+                                      style={styles.texto_ver}
+                                      onClick={() => setMostrar(!mostrar)}>({!mostrar ? 'Ver' : 'Ocultar'})</span>
             </Typography>
             {
                 mostrar &&
@@ -72,16 +75,22 @@ const CobroCRUDFormEnvioTabla = memo(props => {
                     </tr>
                     </thead>
                     <tbody>
-                    {envios.map(e => <CobroCRUDFormEnvioTablaItem
-                        style={style}
-                        key={e.id}
-                        extension={e.extension.toUpperCase()}
-                        tamano={e.size}
-                        created={e.created}
-                        version={e.version}
-                        archivo_url={e.archivo_url}
-                        creado_por_username={e.creado_por_username}
-                    />)}
+                    {envios.map(e => {
+                        if (e.id) {
+                            return (
+                                <CobroCRUDFormEnvioTablaItem
+                                    style={style}
+                                    key={e.id}
+                                    extension={e.extension.toUpperCase()}
+                                    tamano={e.size}
+                                    created={e.created}
+                                    version={e.version}
+                                    archivo_url={e.archivo_url}
+                                    creado_por_username={e.creado_por_username}
+                                />
+                            )
+                        }
+                    })}
                     </tbody>
                 </table>
             }
