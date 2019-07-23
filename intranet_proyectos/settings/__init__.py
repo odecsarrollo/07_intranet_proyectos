@@ -1,6 +1,6 @@
-from .base import *
-try:
-    with open("secretsLocal.json") as f:
-        from .local import *
-except:
+import os
+
+if os.environ.get('DJANGO_CONFIGURATION') == 'Local':
+    from .local import *
+if os.environ.get('DJANGO_CONFIGURATION') == 'Production':
     from .production import *
