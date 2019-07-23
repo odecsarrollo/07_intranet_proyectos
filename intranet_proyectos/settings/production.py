@@ -12,9 +12,7 @@ class Production(Common):
 
     ALLOWED_HOSTS = ['*']
 
-    INSTALLED_APPS = Common.INSTALLED_APPS(
-        'storages',
-    )
+    INSTALLED_APPS = Common.INSTALLED_APPS + ['storages']
 
     SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
