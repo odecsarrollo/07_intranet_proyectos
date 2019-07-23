@@ -17,6 +17,8 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import TextField from "@material-ui/core/TextField";
+import useTengoPermisos from "../../../../00_utilities/hooks/useTengoPermisos";
+import {PROFORMAS_ANTICIPOS} from "../../../../permisos";
 
 const style = {
     tabla: {
@@ -117,12 +119,18 @@ const CobroDetail = memo(props => {
     const [show_mas_opciones, setMostrarMasOpciones] = useState(false);
     const [show_cobrada_modal, setCobradaModal] = useState(false);
     const [show_mensaje_adicional_email_modal, setShowMensajeAdicionalEmailModal] = useState(false);
+    const permisos = useTengoPermisos(PROFORMAS_ANTICIPOS);
+
     useEffect(() => {
         dispatch(actions.fetchProformaAnticipo(id));
         return () => {
             dispatch(actions.clearProformasAnticipos());
         };
     }, []);
+
+    if (!permisos.detail) {
+        return <div>No tiene permisos</div>
+    }
 
     const enviarPorEmail = (mensaje) => {
         const mensaje_exitoso = () => {
@@ -154,9 +162,9 @@ const CobroDetail = memo(props => {
     }
 
     const fue_recibida = cobro.estado === 'RECIBIDA';
-    const puede_enviar = cobro.items.length > 0 && (cobro.email_destinatario_dos || cobro.email_destinatario);
+    const puede_enviar = cobro.items.length > 0 && (cobro.email_destinatario_dos || cobro.email_destinatario) && permisos.send_email;
     const esta_cerrada = cobro.estado === 'CERRADA';
-    const editable = cobro.editable;
+    const editable = cobro.editable && permisos.change;
     return (
         <Fragment>
             {
@@ -216,7 +224,7 @@ const CobroDetail = memo(props => {
                             className='ml-2'
                             variant="contained"
                             onClick={() => editar()}
-                            //disabled={!(submitting || pristine)}
+                            disabled={!permisos.change}
                         >
                             Editar
                         </Button>

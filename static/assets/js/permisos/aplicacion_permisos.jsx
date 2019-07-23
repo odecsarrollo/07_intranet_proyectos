@@ -24,7 +24,8 @@ export const PROFORMAS_ANTICIPOS = {
     delete: 'delete_proformaanticipo',
     change: 'change_proformaanticipo',
     list: 'list_proformaanticipo',
-    view: 'view_proformaanticipo',
+    detail: 'view_proformaanticipo',
+    send_email: 'send_proformaanticipo',
 };
 
 export const ADHESIVOS_MOVIMIENTOS_MEDIOS = {

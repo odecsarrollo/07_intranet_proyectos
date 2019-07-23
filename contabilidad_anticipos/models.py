@@ -106,6 +106,7 @@ class ProformaAnticipo(TimeStampedModel):
     class Meta:
         permissions = [
             ("list_proformaanticipo", "Can list proformas anticipos"),
+            ("send_proformaanticipo", "Can enviar proforma anticipo"),
         ]
 
 
