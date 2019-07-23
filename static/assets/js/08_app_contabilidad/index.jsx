@@ -1,14 +1,7 @@
-import React, {Component} from 'react';
+import React, {memo} from 'react';
 import Dashboard from './anticipos/AnticiposDashboard';
 
 
-class App extends Component {
-
-    render() {
-        return (
-            <Dashboard/>
-        )
-    }
-}
+const App = memo(props => <Dashboard/>);
 
 export default App;

@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import ValidarPermisos from "../permisos/validar_permisos";
+import ValidarPermisos from "../../permisos/validar_permisos";
 import PropTypes from "prop-types";
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';

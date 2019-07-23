@@ -5,7 +5,7 @@ import CargarDatos from "../../../../00_utilities/components/system/cargar_datos
 import {
     PROYECTOS as permisos_view,
     COTIZACIONES as cotizaciones_permisos_view,
-} from "../../../../00_utilities/permisos/types";
+} from "../../../../permisos";
 import {permisosAdapterDos} from "../../../../00_utilities/common";
 import CreateForm from '../components/forms/proyectos_modal_form';
 import Tabla from '../components/proyectos_tabla';

@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import * as actions from "../../../../01_actions/01_index";
 import CargarDatos from "../../../../00_utilities/components/system/cargar_datos";
 import {Titulo} from "../../../../00_utilities/templates/fragmentos";
-import ValidarPermisos from "../../../../00_utilities/permisos/validar_permisos";
+import ValidarPermisos from "../../../../permisos/validar_permisos";
 import {permisosAdapterDos} from "../../../../00_utilities/common";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -14,7 +14,7 @@ import {
     BANDA_EUROBELT_SERIES as series_permisos_view,
     BANDA_EUROBELT_CATEGORIAS_DOS as categorias_dos_permisos_view,
     BANDA_EUROBELT_COMPONENTES as componentes_permisos_view,
-} from "../../../../00_utilities/permisos/types";
+} from "../../../../permisos";
 
 import BloqueTipos from "../../tipos/components/TipoBandaList";
 import BloqueMateriales from "../../materiales/components/MaterialList";

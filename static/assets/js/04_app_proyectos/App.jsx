@@ -8,8 +8,8 @@ import AppIndex from './index';
 import ItemsCGunoList from './cguno/items_cguno/containers/items_list';
 import ConcecutivoProyectosList
     from './literales_proyectos/consecutivo_proyectos/containers/consecutivo_proyectos_container';
-import HojasTrabajoList from './mano_obra/hojas_trabajo/containers/hojas_trabajos_list_container';
-import HojasTrabajoDetail from './mano_obra/hojas_trabajo/containers/hojas_trabajos_detail';
+import HojasTrabajoList from './mano_obra/hojas_trabajo/HojaTrabajoCRUD';
+import HojasTrabajoDetail from './mano_obra/hojas_trabajo/HojaTrabajoDetail';
 import VerificarHorasList from './mano_obra/verificar_horas/containers/horas_verificar_list_container';
 import HorasTrabajoColaboradorInicialesList from './mano_obra/horas_trabajo_iniciales/containers/horas_trabajo_iniciales_list_container';
 

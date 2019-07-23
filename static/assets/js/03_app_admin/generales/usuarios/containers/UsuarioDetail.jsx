@@ -2,14 +2,14 @@ import React, {Component, Fragment} from 'react';
 import {connect} from "react-redux";
 import * as actions from "../../../../01_actions/01_index";
 import CargarDatos from "../../../../00_utilities/components/system/cargar_datos";
-import ValidarPermisos from "../../../../00_utilities/permisos/validar_permisos";
+import ValidarPermisos from "../../../../permisos/validar_permisos";
 import {permisosAdapterDos} from "../../../../00_utilities/common";
 import {ListaBusqueda} from '../../../../00_utilities/utiles';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import {
     USUARIOS as permisos_view
-} from "../../../../00_utilities/permisos/types";
+} from "../../../../permisos";
 import Typography from '@material-ui/core/Typography';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import Badge from '@material-ui/core/Badge';

@@ -76,6 +76,7 @@ import {
     faMap,
     faExchangeAlt,
     faConveyorBelt,
+    faCoins,
     faLaptopCode,
     faInfoCircle
 } from '@fortawesome/pro-solid-svg-icons';
@@ -88,6 +89,7 @@ library.add(
     faSignOut,
     faSpinnerThird,
     faBars,
+    faCoins,
     faHome,
     faAlarmClock,
     faAngleLeft,

@@ -4,7 +4,7 @@ import {useSelector, useDispatch} from "react-redux";
 import CargarDatos from "../../../00_utilities/components/system/cargar_datos";
 import {pesosColombianos} from "../../../00_utilities/common";
 import Typography from '@material-ui/core/Typography';
-import {COTIZACIONES} from "../../../00_utilities/permisos/types";
+import {COTIZACIONES} from "../../../permisos";
 
 import FormTuberiaVentas from './forms/TuveriaVentaForm'
 import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";

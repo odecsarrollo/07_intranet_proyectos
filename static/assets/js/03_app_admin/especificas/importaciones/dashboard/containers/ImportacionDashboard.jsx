@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import * as actions from "../../../../../01_actions/01_index";
 import CargarDatos from "../../../../../00_utilities/components/system/cargar_datos";
 import {Titulo} from "../../../../../00_utilities/templates/fragmentos";
-import ValidarPermisos from "../../../../../00_utilities/permisos/validar_permisos";
+import ValidarPermisos from "../../../../../permisos/validar_permisos";
 import {permisosAdapterDos} from "../../../../../00_utilities/common";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -11,7 +11,7 @@ import {
     MONEDAS_CAMBIOS as monedas_cambios_permisos_view,
     PROVEEDORES_IMPORTACIONES as proveedores_permisos_view,
     MARGENES_PROVEEDORES as margenes_permisos_view,
-} from "../../../../../00_utilities/permisos/types";
+} from "../../../../../permisos";
 
 import BloqueMonedas from "../../monedas/components/MonedaList";
 import BloqueProveedores from "../../proveedores/components/ProveedorList";

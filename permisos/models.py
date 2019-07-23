@@ -21,3 +21,30 @@ class AditionalDefaultPermission(models.Model):
             ('make_user_staff', 'Can make user staff'),
             ('make_user_active', 'Can make user active'),
         )
+
+
+class MenuAdminPermission(models.Model):
+    class Meta:
+        managed = False
+        permissions = (
+            ('menu_admin_permisos', 'Menu Admin Permisos'),
+            ('menu_admin_permisos_grupos', 'Menu Admin Grupos Permisos'),
+            ('menu_admin_terceros_usuarios', 'Menu Admin Terceros Usuarios'),
+            ('menu_admin_terceros_clientes', 'Menu Admin Terceros Clientes'),
+            ('menu_admin_terceros_costos_nomina', 'Menu Admin Terceros Costos Nomina'),
+            ('menu_admin_terceros_colaboradores', 'Menu Admin Terceros Colaboradores'),
+            ('menu_admin_terceros_proveedores', 'Menu Admin Terceros Proveedores'),
+        )
+
+
+class ModuloPermission(models.Model):
+    class Meta:
+        managed = False
+        permissions = (
+            ('modulo_admin', 'Modulo Admin'),
+            ('modulo_proyectos', 'Modulo Proyectos'),
+            ('modulo_ventas', 'Modulo Ventas'),
+            ('modulo_medios', 'Modulo Medios'),
+            ('modulo_sistemas', 'Modulo Sistemas'),
+            ('modulo_contabilidad', 'Modulo Contabilidad'),
+        )

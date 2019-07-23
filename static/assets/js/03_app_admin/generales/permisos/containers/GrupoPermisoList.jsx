@@ -5,7 +5,7 @@ import CargarDatos from "../../../../00_utilities/components/system/cargar_datos
 import {
     CLIENTES as permisos_view,
     GROUPS as permisos_view_groups
-} from "../../../../00_utilities/permisos/types";
+} from "../../../../permisos";
 import {permisosAdapterDos} from "../../../../00_utilities/common";
 import CreateForm from '../components/forms/GrupoPermisoForm';
 import Tabla from '../components/GrupoPermisoTabla';

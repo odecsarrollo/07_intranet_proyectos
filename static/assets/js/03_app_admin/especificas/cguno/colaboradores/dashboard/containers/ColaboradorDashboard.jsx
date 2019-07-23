@@ -3,14 +3,14 @@ import {connect} from "react-redux";
 import * as actions from "../../../../../../01_actions/01_index";
 import CargarDatos from "../../../../../../00_utilities/components/system/cargar_datos";
 import {Titulo} from "../../../../../../00_utilities/templates/fragmentos";
-import ValidarPermisos from "../../../../../../00_utilities/permisos/validar_permisos";
+import ValidarPermisos from "../../../../../../permisos/validar_permisos";
 import {permisosAdapterDos} from "../../../../../../00_utilities/common";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import {
     COLABORADORES as bloque_1_permisos,
     CENTROS_COSTOS_COLABORADORES as bloque_2_permisos,
-} from "../../../../../../00_utilities/permisos/types";
+} from "../../../../../../permisos";
 
 import BloqueColaboradores from '../../colaboradores/components/ColaboradorList';
 import BloqueCentrosCostos from '../../centros_costos/components/CentroCostoList';

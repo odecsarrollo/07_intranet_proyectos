@@ -1,11 +1,11 @@
 import React, {useRef, useState} from 'react'
-import ValidarPermisos from "../permisos/validar_permisos";
+import ValidarPermisos from "../../permisos/validar_permisos";
 import PropTypes from "prop-types";
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import ExcelDownload from "../../00_utilities/components/system/ExcelDownload";
 import CargarDatos from "./system/cargar_datos";
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {notificarAction} from '../../01_actions/01_index';
 
 function crudHOC(CreateForm, Tabla) {
@@ -29,6 +29,7 @@ function crudHOC(CreateForm, Tabla) {
         const [modal_open, setModalOpen] = useState(false);
         const [selected_rows, setSelectedRows] = useState([]);
         const [are_select_all_rows, setSelectAllRows] = useState(false);
+        const proyectos_list = useSelector(state => state.proyectos);
 
 
         const isRowTableSelected = key => selected_rows.includes(key);

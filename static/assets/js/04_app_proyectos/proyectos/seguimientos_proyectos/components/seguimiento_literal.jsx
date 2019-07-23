@@ -7,7 +7,7 @@ import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import {permisosAdapterDos} from "../../../../00_utilities/common";
 import {
     PROYECTOS as proyectos_permisos_view,
-} from "../../../../00_utilities/permisos/types";
+} from "../../../../permisos";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 import MiembroLiteral from './adicionar_miembro';

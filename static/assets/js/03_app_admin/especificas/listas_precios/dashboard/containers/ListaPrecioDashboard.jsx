@@ -3,13 +3,13 @@ import {connect} from "react-redux";
 import * as actions from "../../../../../01_actions/01_index";
 import CargarDatos from "../../../../../00_utilities/components/system/cargar_datos";
 import {Titulo} from "../../../../../00_utilities/templates/fragmentos";
-import ValidarPermisos from "../../../../../00_utilities/permisos/validar_permisos";
+import ValidarPermisos from "../../../../../permisos/validar_permisos";
 import {permisosAdapterDos} from "../../../../../00_utilities/common";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import {
     FORMAS_PAGOS as formas_pagos_canales_permisos_view
-} from "../../../../../00_utilities/permisos/types";
+} from "../../../../../permisos";
 
 import BloqueFormasPagosCanal from "../../formas_pagos_canal/components/FormaPagoList";
 

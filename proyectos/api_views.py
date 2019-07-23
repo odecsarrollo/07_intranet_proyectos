@@ -85,11 +85,7 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
         'cliente',
         'cotizacion',
         'cotizacion__cliente',
-    ).all()
-    serializer_class = ProyectoSerializer
-
-    def retrieve(self, request, *args, **kwargs):
-        self.queryset = self.queryset.prefetch_related(
+    ).prefetch_related(
             'mis_literales',
             'mis_literales',
             'mis_documentos',
@@ -106,7 +102,10 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
             'mis_literales__mis_horas_trabajadas_iniciales__centro_costo',
             'mis_literales__mis_materiales',
             'mis_literales__mis_materiales__item_biable',
-        )
+        ).all()
+    serializer_class = ProyectoSerializer
+
+    def retrieve(self, request, *args, **kwargs):
         self.serializer_class = ProyectoConDetalleSerializer
         return super().retrieve(request, *args, **kwargs)
 

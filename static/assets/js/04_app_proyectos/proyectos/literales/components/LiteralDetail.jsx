@@ -13,7 +13,7 @@ import {
     LITERALES,
     PROYECTOS,
     ARCHIVOS_LITERALES
-} from "../../../../00_utilities/permisos/types";
+} from "../../../../permisos";
 import PanelArchivosLiteral from '../../archivos/literales/ProyectoLiteralDocumentoList';
 import useTengoPermisos from "../../../../00_utilities/hooks/useTengoPermisos";
 

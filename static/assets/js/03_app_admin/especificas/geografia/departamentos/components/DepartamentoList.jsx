@@ -5,7 +5,7 @@ import crudHOC from '../../../../../00_utilities/components/hoc_crud';
 import {useDispatch,useSelector} from "react-redux";
 import * as actions from "../../../../../01_actions/01_index";
 import useTengoPermisos from "../../../../../00_utilities/hooks/useTengoPermisos";
-import {DEPARTAMENTOS} from "../../../../../00_utilities/permisos/types";
+import {DEPARTAMENTOS} from "../../../../../permisos";
 
 
 const CRUD = crudHOC(CreateForm, Tabla);

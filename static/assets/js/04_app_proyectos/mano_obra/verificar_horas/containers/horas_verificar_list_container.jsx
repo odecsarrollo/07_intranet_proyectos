@@ -5,11 +5,11 @@ import CargarDatos from "../../../../00_utilities/components/system/cargar_datos
 import {
     MANOS_OBRAS_HORAS_HOJAS_TRABAJOS as permisos_view,
     MANOS_OBRAS_HOJAS_TRABAJOS as permisos_view_hoja,
-} from "../../../../00_utilities/permisos/types";
+} from "../../../../permisos";
 import {permisosAdapterDos} from "../../../../00_utilities/common";
 import RangoFechas from "../../../../00_utilities/calendariosRangosFiltro";
 
-import CreateForm from '../../hojas_trabajo/components/forms/hora_hoja_trabajo_form';
+import CreateForm from '../../hojas_trabajo/forms/HojaTrabajoDetailHoraCRUDForm';
 import Tabla from '../components/horas_verificar_tabla';
 import crudHOC from '../../../../00_utilities/components/hoc_crud';
 

@@ -5,7 +5,7 @@ import {useDispatch} from "react-redux/es/hooks/useDispatch";
 import * as actions from "../../../../../01_actions/01_index";
 import {useSelector} from "react-redux/es/hooks/useSelector";
 import useTengoPermisos from "../../../../../00_utilities/hooks/useTengoPermisos";
-import {CIUDADES_CARGUES_CATALOGOS} from "../../../../../00_utilities/permisos/types";
+import {CIUDADES_CARGUES_CATALOGOS} from "../../../../../permisos";
 
 
 const CRUD = crudHOC(null, Tabla);

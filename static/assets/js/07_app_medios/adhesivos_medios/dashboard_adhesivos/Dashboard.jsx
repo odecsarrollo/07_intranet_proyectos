@@ -14,8 +14,8 @@ import {permisosAdapterDos} from "../../../00_utilities/common";
 import {
     ADHESIVO_MEDIOS_CATALOGOS as adhesivo_permisos_view,
     ADHESIVOS_MOVIMIENTOS_MEDIOS as adhesivo_movimientos_permisos_view,
-} from '../../../00_utilities/permisos/types';
-import ValidarPermisos from "../../../00_utilities/permisos/validar_permisos";
+} from '../../../permisos';
+import ValidarPermisos from "../../../permisos/validar_permisos";
 import CargarDatos from "../../../00_utilities/components/system/cargar_datos";
 
 

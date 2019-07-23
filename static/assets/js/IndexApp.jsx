@@ -1,12 +1,16 @@
-import React, {Component} from 'react';
+import React, {memo} from 'react';
 import Loading from "./00_utilities/components/system/loading_overlay";
 import {Link} from 'react-router-dom'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {withStyles} from "@material-ui/core/styles/index";
 import Typography from '@material-ui/core/Typography';
 import classNames from 'classnames';
+import useTengoPermisos from "./00_utilities/hooks/useTengoPermisos";
+import {MODULO_PERMISSIONS} from "./permisos";
+import * as actions from './01_actions/01_index';
+import {useDispatch} from 'react-redux';
 
-const Boton = (props) => {
+const Boton = memo(props => {
     const {nombre, icono, link, classes} = props;
     return (
         <div className={'col-6 col-md-4 mt-3'}>
@@ -17,7 +21,7 @@ const Boton = (props) => {
                             <FontAwesomeIcon icon={icono} size='3x' className={classes.iconoBoton}/>
                         </div>
                         <div className="col-12">
-                            <Typography variant="h6" color="primary" noWrap >
+                            <Typography variant="h6" color="primary" noWrap>
                                 {nombre}
                             </Typography>
                         </div>
@@ -26,94 +30,112 @@ const Boton = (props) => {
             </Link>
         </div>
     )
-};
+});
 
-class IndexApp extends Component {
-    render() {
-        const {classes} = this.props;
-        const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
-        const {is_staff, is_superuser} = mi_cuenta;
-        return <Loading>
-            <div className="mt-3">
-                <div className="container text-center">
-                    <div className="row">
-                        <div className="col-12 p-5">
-                            <img className='img-fluid' src={`${img_static_url}/logo.png`} alt=""/>
-                        </div>
-                        {
-                            (is_staff || is_superuser) &&
-                            <Boton
-                                nombre='Admin'
-                                link='/app/admin/'
-                                icono='cogs'
-                                classes={classes}
-                            />
-                        }
-                        <Boton
-                            nombre='Proyectos'
-                            link='/app/proyectos/'
-                            icono='wrench'
-                            classes={classes}
-                        />
-                        <Boton
-                            nombre='Ventas'
-                            link='/app/ventas/'
-                            icono='shopping-cart'
-                            classes={classes}
-                        />
-                        <Boton
-                            nombre='Bandas Eurobelt'
-                            link='/app/bandas/'
-                            icono='puzzle-piece'
-                            classes={classes}
-                        />
-                        <Boton
-                            nombre='Medios'
-                            link='/app/medios/'
-                            icono='desktop'
-                            classes={classes}
-                        />
-                        <Boton
-                            nombre='Sistemas'
-                            link='/app/sistemas/'
-                            icono='laptop-code'
-                            classes={classes}
-                        />
-                        <div className='col-12'>
-                            <div className="row">
-                                <div className="col-4"></div>
-                                <div
-                                    className={classNames(classes.bordeBoton, 'col-4 mt-3')}
+const IndexApp = memo(props => {
+    const {classes} = props;
+    const dispatch = useDispatch();
+    const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
+    const {is_superuser} = mi_cuenta;
+    const permisos_modulos = useTengoPermisos(MODULO_PERMISSIONS);
+    const {
+        modulo_admin,
+        modulo_proyectos,
+        modulo_ventas,
+        modulo_medios,
+        modulo_sistemas,
+        modulo_contabilidad
+    } = permisos_modulos;
+    return <Loading>
+        <div className="mt-3">
+            <div className="container text-center">
+                <div className="row">
+                    <div className="col-12 p-5">
+                        <img className='img-fluid' src={`${img_static_url}/logo.png`} alt=""/>
+                    </div>
+                    {modulo_admin &&
+                    <Boton
+                        nombre='Admin'
+                        link='/app/admin/'
+                        icono='cogs'
+                        classes={classes}
+                    />}
+                    {modulo_proyectos &&
+                    <Boton
+                        nombre='Proyectos'
+                        link='/app/proyectos/'
+                        icono='wrench'
+                        classes={classes}
+                    />}
+                    {modulo_ventas &&
+                    <Boton
+                        nombre='Ventas'
+                        link='/app/ventas/'
+                        icono='shopping-cart'
+                        classes={classes}
+                    />}
+                    {is_superuser &&
+                    <Boton
+                        nombre='Bandas Eurobelt'
+                        link='/app/bandas/'
+                        icono='puzzle-piece'
+                        classes={classes}
+                    />}
+                    {modulo_medios &&
+                    <Boton
+                        nombre='Medios'
+                        link='/app/medios/'
+                        icono='desktop'
+                        classes={classes}
+                    />}
+                    {modulo_sistemas &&
+                    <Boton
+                        nombre='Sistemas'
+                        link='/app/sistemas/'
+                        icono='laptop-code'
+                        classes={classes}
+                    />}
+                    {modulo_contabilidad &&
+                    <Boton
+                        nombre='Contabilidad'
+                        link='/app/contabilidad/'
+                        icono='coins'
+                        classes={classes}
+                    />}
+                    <div className='col-12'>
+                        <div className="row">
+                            <div className="col-4"></div>
+                            <div
+                                className={classNames(classes.bordeBoton, 'col-4 mt-3')}
+                            >
+                                <div className='icono puntero'
+                                     onClick={() => {
+                                         dispatch(actions.logout());
+                                     }}
                                 >
-                                    <div className='icono puntero'
-                                         onClick={() => {
-                                             this.props.logout();
-                                         }}
-                                    >
-                                        <div className="row">
-                                            <div className="col-12">
-                                                <FontAwesomeIcon
-                                                    icon={'sign-out'}
-                                                    className={classes.iconoBoton}
-                                                />
-                                            </div>
-                                            <div className="col-12">
-                                                <Typography variant="h6" color="primary" noWrap>
-                                                    Salir
-                                                </Typography>
-                                            </div>
+                                    <div className="row">
+                                        <div className="col-12">
+                                            <FontAwesomeIcon
+                                                icon={'sign-out'}
+                                                className={classes.iconoBoton}
+                                            />
+                                        </div>
+                                        <div className="col-12">
+                                            <Typography variant="h6" color="primary" noWrap>
+                                                Salir
+                                            </Typography>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-4"></div>
                             </div>
+                            <div className="col-4"></div>
                         </div>
                     </div>
                 </div>
             </div>
-        </Loading>
-    }
-}
+        </div>
+    </Loading>
+});
 
 const styles = theme => (
     {
@@ -126,15 +148,15 @@ const styles = theme => (
             padding: '1rem',
             width: '100%'
         },
-        botonAnimado:{
+        botonAnimado: {
             transition: '0.3s',
-            '&:hover':{
+            '&:hover': {
                 textDecoration: 'none',
-                zIndex:  '100',
+                zIndex: '100',
                 webkitTransform: 'scale(1.1)',
                 msTransform: 'scale(1.1)',
                 transform: 'scale(1.1)'
-           }
+            }
         }
     })
 ;

@@ -1,7 +1,7 @@
 import React, {memo, useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../../01_actions/01_index";
-import {COTIZACIONES, PROYECTOS} from "../../../00_utilities/permisos/types";
+import {COTIZACIONES, PROYECTOS} from "../../../permisos";
 import Tabla from './CotizacionCRUDTabla';
 import crudHOC from '../../../00_utilities/components/HOC_CRUD2';
 import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";

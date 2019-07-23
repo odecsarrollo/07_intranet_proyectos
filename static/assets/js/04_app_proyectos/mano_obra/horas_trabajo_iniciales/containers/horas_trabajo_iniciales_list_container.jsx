@@ -4,7 +4,7 @@ import * as actions from "../../../../01_actions/01_index";
 import CargarDatos from "../../../../00_utilities/components/system/cargar_datos";
 import {
     HORAS_COLABORADORES_PROYECTOS_INICIALES as permisos_view
-} from "../../../../00_utilities/permisos/types";
+} from "../../../../permisos";
 import {permisosAdapterDos} from "../../../../00_utilities/common";
 import CreateForm from '../components/forms/base_form';
 import Tabla from '../components/hora_trabajo_iniciales_tabla';

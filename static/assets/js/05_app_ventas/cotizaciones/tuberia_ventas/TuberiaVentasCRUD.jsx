@@ -4,7 +4,7 @@ import * as actions from "../../../01_actions/01_index";
 import {
     COTIZACIONES,
     PROYECTOS
-} from "../../../00_utilities/permisos/types";
+} from "../../../permisos";
 
 import CreateForm from './forms/TuberiaVentasCRUDCotizacionForm';
 import Tabla from './TuberiaVentaCRUDTabla';

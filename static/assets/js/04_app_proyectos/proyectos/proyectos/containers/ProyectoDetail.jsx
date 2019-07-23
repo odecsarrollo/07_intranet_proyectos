@@ -2,7 +2,7 @@ import React, {Component, useState, useEffect, memo} from 'react';
 import {useSelector, useDispatch} from "react-redux";
 import * as actions from "../../../../01_actions/01_index";
 import {SinObjeto} from "../../../../00_utilities/templates/fragmentos";
-import ValidarPermisos from "../../../../00_utilities/permisos/validar_permisos";
+import ValidarPermisos from "../../../../permisos/validar_permisos";
 import {permisosAdapterDos} from "../../../../00_utilities/common";
 import TablaProyectoLiterales from '../../literales/components/ProyectoLiteralTabla';
 import FormProyecto from '../components/forms/ProyectoDetailForm';
@@ -14,7 +14,7 @@ import {
     LITERALES,
     COTIZACIONES,
     ARCHIVOS_PROYECTOS,
-} from "../../../../00_utilities/permisos/types";
+} from "../../../../permisos";
 import LiteralModalCreate from '../../literales/components/ProyectoLiteralModal';
 import LiteralDetail from '../../literales/components/LiteralDetail';
 import ProyectoInfo from '../../proyectos/components/proyecto_datos';

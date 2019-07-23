@@ -7,7 +7,7 @@ import crudHOC from '../../../00_utilities/components/hoc_crud';
 import UploadFile from '../../../00_utilities/components/ui/upload_file/uploadFile';
 import {
     SISTEMAS_EQUIPOS_COMPUTADORES as computadores_permisos_view,
-} from "../../../00_utilities/permisos/types";
+} from "../../../permisos";
 import {permisosAdapterDos} from "../../../00_utilities/common";
 import TipoDato from '../../../00_utilities/components/ui/upload_file/tiposDatos';
 

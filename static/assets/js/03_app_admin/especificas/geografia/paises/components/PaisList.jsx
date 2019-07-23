@@ -2,7 +2,7 @@ import React, {useEffect, memo} from 'react';
 import CreateForm from './forms/PaisForm';
 import Tabla from './PaisTabla';
 import crudHOC from '../../../../../00_utilities/components/hoc_crud';
-import {PAISES} from "../../../../../00_utilities/permisos/types";
+import {PAISES} from "../../../../../permisos";
 import * as actions from "../../../../../01_actions/01_index";
 import {useSelector, useDispatch} from "react-redux";
 import useTengoPermisos from "../../../../../00_utilities/hooks/useTengoPermisos";

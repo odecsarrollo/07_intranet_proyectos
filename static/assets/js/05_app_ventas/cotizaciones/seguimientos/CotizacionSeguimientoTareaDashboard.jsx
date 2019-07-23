@@ -6,7 +6,7 @@ import CargarDatos from "../../../00_utilities/components/system/cargar_datos";
 import moment from 'moment-timezone';
 import momentLocaliser from "react-widgets-moment";
 
-import {COTIZACIONES} from "../../../00_utilities/permisos/types";
+import {COTIZACIONES} from "../../../permisos";
 import {permisosAdapterDos} from "../../../00_utilities/common";
 
 moment.tz.setDefault("America/Bogota");

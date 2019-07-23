@@ -8,10 +8,10 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import CargarDatos from '../../../00_utilities/components/system/cargar_datos';
 import {permisosAdapterDos} from "../../../00_utilities/common";
-import ValidarPermisos from "../../../00_utilities/permisos/validar_permisos";
+import ValidarPermisos from "../../../permisos/validar_permisos";
 import {
     FASES_LITERALES as fases_literales_view
-} from '../../../00_utilities/permisos/types'
+} from '../../../permisos'
 
 
 const table_style = {

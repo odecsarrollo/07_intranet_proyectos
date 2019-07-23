@@ -5,7 +5,7 @@ import UploadDocumentoForm from '../forms/UploadArchivoForm';
 import ArchivosList from '../components/ProyectoDocumentoList';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import useTengoPermisos from "../../../../00_utilities/hooks/useTengoPermisos";
-import {ARCHIVOS_LITERALES} from "../../../../00_utilities/permisos/types";
+import {ARCHIVOS_LITERALES} from "../../../../permisos";
 
 const PanelArchivosLiterales = memo(props => {
     const {literal, cargarProyecto} = props;

@@ -4,13 +4,13 @@ import * as actions from "../../../../../../01_actions/01_index";
 import CargarDatos from "../../../../../../00_utilities/components/system/cargar_datos";
 import {
     COLABORADORES_COSTOS_MESES as permisos_view
-} from "../../../../../../00_utilities/permisos/types";
+} from "../../../../../../permisos";
 import {permisosAdapterDos, REGEX_SOLO_NUMEROS} from "../../../../../../00_utilities/common";
 import TextField from '@material-ui/core/TextField';
 import moment from 'moment';
 
 import Tabla from '../components/CostoNominaTabla';
-import ValidarPermisos from "../../../../../../00_utilities/permisos/validar_permisos";
+import ValidarPermisos from "../../../../../../permisos/validar_permisos";
 import {ListaBusqueda} from '../../../../../../00_utilities/utiles';
 
 class List extends Component {

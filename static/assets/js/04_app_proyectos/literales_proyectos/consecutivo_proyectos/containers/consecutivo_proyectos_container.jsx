@@ -4,7 +4,7 @@ import * as actions from "../../../../01_actions/01_index";
 import CargarDatos from "../../../../00_utilities/components/system/cargar_datos";
 import {
     LITERALES as permisos_view
-} from "../../../../00_utilities/permisos/types";
+} from "../../../../permisos";
 import {permisosAdapterDos} from "../../../../00_utilities/common";
 import Tabla from '../components/consecutivo_proyectos_tabla';
 
