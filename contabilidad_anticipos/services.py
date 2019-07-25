@@ -100,7 +100,8 @@ def proforma_anticipo_enviar(
     [msg.attach_file(archivo.archivo.path) for archivo in archivos_para_enviar]
 
     try:
-        msg.send()
+        pass
+        # msg.send()
     except Exception as e:
         raise serializers.ValidationError(
             {'_error': 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e})

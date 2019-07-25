@@ -10,7 +10,7 @@ import ReactSafeHtml from 'react-safe-html';
 
 
 const LoadingOverlay = (props) => {
-    const {esta_cargando: {cargando, mensaje, error, titulo}, classes, theme} = props;
+    const {esta_cargando: {cargando, mensaje, error, titulo}, classes} = props;
     let isActive = cargando ? 'block' : 'none';
     const style = {
         display: isActive
@@ -36,6 +36,8 @@ const LoadingOverlay = (props) => {
                             <ReactSafeHtml html={mensaje}/>
                         </Typography>
                     </div>
+                </div>
+                <div className={classes.overlay} style={style}>
                 </div>
                 {props.children}
             </div>
@@ -92,6 +94,18 @@ const styles = theme => (
             backgroundColor: theme.palette.error.dark,
             padding: '0.5rem',
             color: 'white'
+        },
+        overlay: {
+            position: 'fixed',
+            display: 'none',
+            width: '100%',
+            height: '100%',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            zIndex: 1399,
         }
     })
 ;
