@@ -95,14 +95,15 @@ def proforma_anticipo_enviar(
         estado='ENVIADA',
         proforma_anticipo_id=proforma_anticipo_id
     )
-    # print(proforma_anticipo.documento.archivo.file.__dict__)
-    msg.attach_file('/media/%s' % proforma_anticipo.documento.archivo.name)
+    print(proforma_anticipo.documento.archivo.file)
+    print(proforma_anticipo.documento.archivo.__dict__)
+    msg.attach_file('/media/%s' % proforma_anticipo.documento.archivo.file)
     archivos_para_enviar = proforma_anticipo.documentos.filter(enviar_por_correo=True)
     # [msg.attach_file(archivo.archivo.file.key) for archivo in archivos_para_enviar]
 
     try:
         pass
-        msg.send()
+        #msg.send()
     except Exception as e:
         raise serializers.ValidationError(
             {'_error': 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e})
