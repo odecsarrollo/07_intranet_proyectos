@@ -1,7 +1,9 @@
 import datetime
+import os
 import random
 from io import BytesIO
 
+from django.conf import settings
 from django.core.files import File
 from django.core.files.storage import default_storage
 from django.core.mail import EmailMultiAlternatives
@@ -98,12 +100,7 @@ def proforma_anticipo_enviar(
     )
     print(proforma_anticipo.documento.archivo.name)
     try:
-        docfile = default_storage.open(proforma_anticipo.documento.archivo.name, 'r')
-        if docfile:
-            print('entrooo')
-            print(docfile)
-            print('Nombre Archivo %s' % docfile.name)
-            msg.attach_file(docfile.name)
+        msg.attach_file(os.path.join(settings.MEDIA_ROOT, proforma_anticipo.documento.archivo.name))
     except:
         print('NOOOO entrooo a enviar')
         pass
