@@ -102,14 +102,16 @@ def proforma_anticipo_enviar(
         if docfile:
             print('entrooo')
             print(docfile)
+            print('Nombre Archivo %s' % docfile.name)
             msg.attach_file(docfile.name)
     except:
+        print('NOOOO entrooo a enviar')
         pass
     archivos_para_enviar = proforma_anticipo.documentos.filter(enviar_por_correo=True)
     # [msg.attach_file(archivo.archivo.file.key) for archivo in archivos_para_enviar]
 
     try:
-        pass
+        print('entrooo a enviar')
         msg.send()
     except Exception as e:
         raise serializers.ValidationError(
