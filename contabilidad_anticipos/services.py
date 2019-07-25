@@ -95,13 +95,9 @@ def proforma_anticipo_enviar(
         estado='ENVIADA',
         proforma_anticipo_id=proforma_anticipo_id
     )
-    print(proforma_anticipo.documento)
-    print(proforma_anticipo.documento.archivo)
-    print(proforma_anticipo.documento.archivo.__dict__)
-    print(type(proforma_anticipo.documento.archivo))
-    # msg.attach_file(proforma_anticipo.documento.archivo)
+    msg.attach_file(proforma_anticipo.documento.archivo.name)
     archivos_para_enviar = proforma_anticipo.documentos.filter(enviar_por_correo=True)
-    [msg.attach_file(archivo.archivo.path) for archivo in archivos_para_enviar]
+    [msg.attach_file(archivo.archivo.name) for archivo in archivos_para_enviar]
 
     try:
         pass
