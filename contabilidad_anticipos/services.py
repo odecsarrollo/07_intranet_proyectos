@@ -100,6 +100,7 @@ def proforma_anticipo_enviar(
     )
     print(proforma_anticipo.documento.archivo.name)
     try:
+        print(os.path.join(settings.MEDIA_ROOT, proforma_anticipo.documento.archivo.name))
         msg.attach_file(os.path.join(settings.MEDIA_ROOT, proforma_anticipo.documento.archivo.name))
     except:
         print('NOOOO entrooo a enviar')
