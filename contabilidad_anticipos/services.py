@@ -3,6 +3,7 @@ import random
 from io import BytesIO
 
 from django.core.files import File
+from django.core.files.storage import default_storage
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template, render_to_string
 from django.utils import timezone
@@ -95,15 +96,21 @@ def proforma_anticipo_enviar(
         estado='ENVIADA',
         proforma_anticipo_id=proforma_anticipo_id
     )
-    print(proforma_anticipo.documento.archivo.file)
-    print(proforma_anticipo.documento.archivo.__dict__)
-    msg.attach_file('/media/%s' % proforma_anticipo.documento.archivo.file)
+    print(proforma_anticipo.documento.archivo.name)
+    try:
+        docfile = default_storage.open(proforma_anticipo.documento.archivo.name, 'r')
+        if docfile:
+            print('entrooo')
+            print(docfile)
+            msg.attach_file(docfile.name)
+    except:
+        pass
     archivos_para_enviar = proforma_anticipo.documentos.filter(enviar_por_correo=True)
     # [msg.attach_file(archivo.archivo.file.key) for archivo in archivos_para_enviar]
 
     try:
         pass
-        #msg.send()
+        msg.send()
     except Exception as e:
         raise serializers.ValidationError(
             {'_error': 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e})
