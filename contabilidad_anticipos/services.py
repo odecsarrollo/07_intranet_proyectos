@@ -99,9 +99,10 @@ def proforma_anticipo_enviar(
     )
 
     msg.attach(proforma_anticipo.documento.archivo.name, proforma_anticipo.documento.archivo.read())
+    archivos_para_enviar = proforma_anticipo.documentos.filter(enviar_por_correo=True)
+    [msg.attach(archivo.archivo.name, archivo.archivo.read()) for archivo in archivos_para_enviar]
 
     # msg.attach_file(os.path.join(settings.MEDIA_ROOT, proforma_anticipo.documento.archivo.name))
-    # archivos_para_enviar = proforma_anticipo.documentos.filter(enviar_por_correo=True)
     # [msg.attach_file(archivo.archivo.file.key) for archivo in archivos_para_enviar]
     # print(proforma_anticipo.documento.archivo.name)
     msg.send()
