@@ -88,7 +88,8 @@ def proforma_anticipo_enviar(
             proforma_anticipo.version
         ),
         text_content,
-        from_email='prueba@odecopack.com',
+        bcc=[configuracion.email_copia_default],
+        from_email='Odecopack SAS <%s>' % configuracion.email_from_default,
         to=['desarrollo.odecopack@gmail.com']
     )
     msg.attach_alternative(text_content, "text/html")
@@ -101,17 +102,12 @@ def proforma_anticipo_enviar(
     msg.attach(proforma_anticipo.documento.archivo.name, proforma_anticipo.documento.archivo.read())
     archivos_para_enviar = proforma_anticipo.documentos.filter(enviar_por_correo=True)
     [msg.attach(archivo.archivo.name, archivo.archivo.read()) for archivo in archivos_para_enviar]
-
-    # msg.attach_file(os.path.join(settings.MEDIA_ROOT, proforma_anticipo.documento.archivo.name))
-    # [msg.attach_file(archivo.archivo.file.key) for archivo in archivos_para_enviar]
-    # print(proforma_anticipo.documento.archivo.name)
-    msg.send()
-    # try:
-    #     print('entrooo a enviar')
-    #     msg.send()
-    # except Exception as e:
-    #     raise serializers.ValidationError(
-    #         {'_error': 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e})
+    try:
+        print('entrooo a enviar')
+        msg.send()
+    except Exception as e:
+        raise serializers.ValidationError(
+            {'_error': 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e})
     return proforma_anticipo
 
 
