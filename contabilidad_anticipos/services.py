@@ -90,7 +90,7 @@ def proforma_anticipo_enviar(
         text_content,
         bcc=[configuracion.email_copia_default],
         from_email='Odecopack SAS <%s>' % configuracion.email_from_default,
-        to=['desarrollo.odecopack@gmail.com']
+        to=[proforma_anticipo.email_destinatario, proforma_anticipo.email_destinatario_dos]
     )
     msg.attach_alternative(text_content, "text/html")
 
