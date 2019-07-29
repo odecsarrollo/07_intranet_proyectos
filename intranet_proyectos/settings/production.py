@@ -21,8 +21,10 @@ class Production(Common):
     AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
     AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
     AWS_S3_HOST = 's3-us-west-2.amazonaws.com'
-    AWS_IS_GZIPPED = True
+    AWS_S3_FILE_OVERWRITE = False
+    AWS_QUERYSTRING_AUTH = False
 
+    AWS_IS_GZIPPED = True
     GZIP_CONTENT_TYPES = (
         "application/atom+xml",
         "application/javascript",

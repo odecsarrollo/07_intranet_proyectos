@@ -98,11 +98,16 @@ def proforma_anticipo_enviar(
         estado='ENVIADA',
         proforma_anticipo_id=proforma_anticipo_id
     )
-    print(proforma_anticipo.documento.archivo.name)
-    print(os.path.join(settings.MEDIA_ROOT, proforma_anticipo.documento.archivo.name))
-    msg.attach_file(os.path.join(settings.MEDIA_ROOT, proforma_anticipo.documento.archivo.name))
-    archivos_para_enviar = proforma_anticipo.documentos.filter(enviar_por_correo=True)
+
+    if hasattr(proforma_anticipo.documento.archivo, 'path'):
+        msg.attach_file(proforma_anticipo.documento.archivo.path)
+    else:
+        msg.attach(proforma_anticipo.documento.archivo.name, proforma_anticipo.documento.archivo.read())
+
+    # msg.attach_file(os.path.join(settings.MEDIA_ROOT, proforma_anticipo.documento.archivo.name))
+    # archivos_para_enviar = proforma_anticipo.documentos.filter(enviar_por_correo=True)
     # [msg.attach_file(archivo.archivo.file.key) for archivo in archivos_para_enviar]
+    # print(proforma_anticipo.documento.archivo.name)
 
     try:
         print('entrooo a enviar')
