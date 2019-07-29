@@ -99,19 +99,19 @@ def proforma_anticipo_enviar(
         proforma_anticipo_id=proforma_anticipo_id
     )
 
-    # msg.attach(proforma_anticipo.documento.archivo.name, proforma_anticipo.documento.archivo.read())
+    msg.attach(proforma_anticipo.documento.archivo.name, proforma_anticipo.documento.archivo.read())
 
     # msg.attach_file(os.path.join(settings.MEDIA_ROOT, proforma_anticipo.documento.archivo.name))
     # archivos_para_enviar = proforma_anticipo.documentos.filter(enviar_por_correo=True)
     # [msg.attach_file(archivo.archivo.file.key) for archivo in archivos_para_enviar]
     # print(proforma_anticipo.documento.archivo.name)
-
-    try:
-        print('entrooo a enviar')
-        msg.send()
-    except Exception as e:
-        raise serializers.ValidationError(
-            {'_error': 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e})
+    msg.send()
+    # try:
+    #     print('entrooo a enviar')
+    #     msg.send()
+    # except Exception as e:
+    #     raise serializers.ValidationError(
+    #         {'_error': 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e})
     return proforma_anticipo
 
 

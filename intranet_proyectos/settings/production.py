@@ -22,6 +22,7 @@ class Production(Common):
     AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
     AWS_S3_HOST = 's3-us-west-2.amazonaws.com'
     AWS_IS_GZIPPED = True
+    AWS_S3_FILE_OVERWRITE = False
 
     GZIP_CONTENT_TYPES = (
         "application/atom+xml",
