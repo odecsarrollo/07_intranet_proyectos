@@ -1,3 +1,15 @@
+export const COSTO_ENSAMBLADO_BANDA_EUROBELT_TYPES = {
+    fetch_all: 'fetch_costo_ensamblado_banda_eurobelt',
+    clear: 'clear_costos_ensamblados_bandas_eurobelt',
+    update: 'update_costo_ensamblado_banda_eurobelt',
+};
+
+export const CONFIGURACION_BANDA_EUROBELT_TYPES = {
+    fetch_all: 'fetch_configuracion_banda_eurobelt',
+    clear: 'clear_configuracion_banda_eurobelt',
+    update: 'update_configuracion_banda_eurobelt',
+};
+
 export const PROFORMA_ANTICIPO_ARCHIVO_TYPES = {
     create: 'create_proforma_anticipo_archivo',
     delete: 'delete_proforma_anticipo_archivo',

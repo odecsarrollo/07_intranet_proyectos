@@ -1,5 +1,6 @@
 from rest_framework import viewsets
 from rest_framework.decorators import action
+from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
 from .models import (
@@ -9,8 +10,11 @@ from .models import (
     SerieBandaEurobelt,
     ComponenteBandaEurobelt,
     GrupoEnsambladoBandaEurobelt,
-    ConfiguracionNombreAutomatico,
-    CategoriaDosComponenteBandaEurobelt
+    CategoriaDosComponenteBandaEurobelt,
+    BandaEurobelt,
+    BandaEurobeltCostoEnsamblado,
+    ConfiguracionBandaEurobelt,
+    EnsambladoBandaEurobelt
 )
 from .api_serializers import (
     TipoBandaSerializer,
@@ -19,10 +23,168 @@ from .api_serializers import (
     SerieSerializer,
     ComponenteSerializer,
     GrupoEnsambladoSerializer,
-    ConfiguracionNombreAutomaticoSerializer,
     CategoriaDosSerializer,
-    CategoriaDosConDetalleSerializer
+    CategoriaDosConDetalleSerializer,
+    BandaEurobeltCostoEnsambladoSerializer,
+    ConfiguracionBandaEurobeltSerializer,
+    EnsambladoBandaEurobeltSerializer,
+    BandaEurobeltSerializer,
+    BandaEurobeltConDetalleSerializer,
 )
+
+
+class EnsambladoBandaEurobeltViewSet(viewsets.ModelViewSet):
+    queryset = EnsambladoBandaEurobelt.objects.all()
+    serializer_class = EnsambladoBandaEurobeltSerializer
+
+
+class ConfiguracionBandaEurobeltViewSet(viewsets.ModelViewSet):
+    queryset = ConfiguracionBandaEurobelt.objects.all()
+    serializer_class = ConfiguracionBandaEurobeltSerializer
+
+    def list(self, request, *args, **kwargs):
+        configuracion = ConfiguracionBandaEurobelt.objects.first()
+        if not configuracion:
+            ConfiguracionBandaEurobelt.objects.create()
+        return super().list(request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        raise ValidationError({'_error': 'Metodo crear no disponible'})
+
+    def destroy(self, request, *args, **kwargs):
+        raise ValidationError({'_error': 'Metodo eliminar no disponible'})
+
+
+class BandaEurobeltCostoEnsambladoViewSet(viewsets.ModelViewSet):
+    queryset = BandaEurobeltCostoEnsamblado.objects.all()
+    serializer_class = BandaEurobeltCostoEnsambladoSerializer
+
+    def list(self, request, *args, **kwargs):
+        costo = BandaEurobeltCostoEnsamblado.objects.filter(
+            con_aleta=False,
+            con_empujador=False,
+            con_torneado=False
+        )
+
+        if not costo.exists():
+            BandaEurobeltCostoEnsamblado.objects.create(
+                con_aleta=False,
+                con_empujador=False,
+                con_torneado=False
+            )
+
+        costo = BandaEurobeltCostoEnsamblado.objects.filter(
+            con_aleta=True,
+            con_empujador=False,
+            con_torneado=False
+        )
+
+        if not costo.exists():
+            BandaEurobeltCostoEnsamblado.objects.create(
+                con_aleta=True,
+                con_empujador=False,
+                con_torneado=False
+            )
+
+        costo = BandaEurobeltCostoEnsamblado.objects.filter(
+            con_aleta=True,
+            con_empujador=True,
+            con_torneado=False
+        )
+
+        if not costo.exists():
+            BandaEurobeltCostoEnsamblado.objects.create(
+                con_aleta=True,
+                con_empujador=True,
+                con_torneado=False
+            )
+
+        costo = BandaEurobeltCostoEnsamblado.objects.filter(
+            con_aleta=True,
+            con_empujador=True,
+            con_torneado=True
+        )
+
+        if not costo.exists():
+            BandaEurobeltCostoEnsamblado.objects.create(
+                con_aleta=True,
+                con_empujador=True,
+                con_torneado=True
+            )
+
+        costo = BandaEurobeltCostoEnsamblado.objects.filter(
+            con_aleta=True,
+            con_empujador=False,
+            con_torneado=True
+        )
+
+        if not costo.exists():
+            BandaEurobeltCostoEnsamblado.objects.create(
+                con_aleta=True,
+                con_empujador=False,
+                con_torneado=True
+            )
+
+        costo = BandaEurobeltCostoEnsamblado.objects.filter(
+            con_aleta=False,
+            con_empujador=True,
+            con_torneado=False
+        )
+
+        if not costo.exists():
+            BandaEurobeltCostoEnsamblado.objects.create(
+                con_aleta=False,
+                con_empujador=True,
+                con_torneado=False
+            )
+
+        costo = BandaEurobeltCostoEnsamblado.objects.filter(
+            con_aleta=False,
+            con_empujador=True,
+            con_torneado=True
+        )
+
+        if not costo.exists():
+            BandaEurobeltCostoEnsamblado.objects.create(
+                con_aleta=False,
+                con_empujador=True,
+                con_torneado=True
+            )
+
+        costo = BandaEurobeltCostoEnsamblado.objects.filter(
+            con_aleta=False,
+            con_empujador=False,
+            con_torneado=True
+        )
+
+        if not costo.exists():
+            BandaEurobeltCostoEnsamblado.objects.create(
+                con_aleta=False,
+                con_empujador=False,
+                con_torneado=True
+            )
+        return super().list(request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        raise ValidationError({'_error': 'Metodo crear no disponible'})
+
+    def destroy(self, request, *args, **kwargs):
+        raise ValidationError({'_error': 'Metodo eliminar no disponible'})
+
+
+class BandaEurobeltViewSet(viewsets.ModelViewSet):
+    queryset = BandaEurobelt.objects.prefetch_related(
+        'ensamblado'
+    ).all()
+    serializer_class = BandaEurobeltSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        self.serializer_class = BandaEurobeltConDetalleSerializer
+        return super().retrieve(request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        self.serializer_class = BandaEurobeltConDetalleSerializer
+        return super().update(request, *args, **kwargs)
 
 
 class CategoriaDosViewSet(viewsets.ModelViewSet):
@@ -49,11 +211,6 @@ class CategoriaDosViewSet(viewsets.ModelViewSet):
         self.serializer_class = CategoriaDosConDetalleSerializer
         serializer = self.get_serializer(categoria_dos)
         return Response(serializer.data)
-
-
-class ConfiguracionNombreAutomaticoViewSet(viewsets.ModelViewSet):
-    queryset = ConfiguracionNombreAutomatico.objects.all()
-    serializer_class = ConfiguracionNombreAutomaticoSerializer
 
 
 class TipoBandaViewSet(viewsets.ModelViewSet):
@@ -100,13 +257,29 @@ class SerieViewSet(viewsets.ModelViewSet):
 class ComponenteViewSet(viewsets.ModelViewSet):
     queryset = ComponenteBandaEurobelt.objects.select_related(
         'tipo_banda',
+        'categoria',
         'categoria_dos',
         'color',
-        'material'
+        'material',
+        'margen',
+        'margen__proveedor',
+        'margen__proveedor__moneda',
     ).prefetch_related(
         'series_compatibles'
     ).all()
     serializer_class = ComponenteSerializer
+
+    @action(detail=True, methods=['post'])
+    def adicionar_quitar_serie_compatible(self, request, pk=None):
+        from .services import componente_banda_eurobelt_adicionar_quitar_serie_compatible
+        componente = self.get_object()
+        serie_id = self.request.POST.get('serie_id', None)
+        componente = componente_banda_eurobelt_adicionar_quitar_serie_compatible(
+            componente_id=componente.id,
+            serie_id=serie_id
+        )
+        serializer = self.get_serializer(componente)
+        return Response(serializer.data)
 
 
 class GrupoEnsambladoViewSet(viewsets.ModelViewSet):

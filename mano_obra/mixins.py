@@ -75,8 +75,6 @@ class HoraHojaTrabajoPDFMixin(object):
                 hoja__fecha__gte=fecha_inicial
             )
 
-        print(mano_obra)
-
         context = {
             'user': request.user,
             'con_literal': request.user,

@@ -1,11 +1,8 @@
 import datetime
-import os
 import random
 from io import BytesIO
 
-from django.conf import settings
 from django.core.files import File
-from django.core.files.storage import default_storage
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template, render_to_string
 from django.utils import timezone
@@ -103,7 +100,6 @@ def proforma_anticipo_enviar(
     archivos_para_enviar = proforma_anticipo.documentos.filter(enviar_por_correo=True)
     [msg.attach(archivo.archivo.name, archivo.archivo.read()) for archivo in archivos_para_enviar]
     try:
-        print('entrooo a enviar')
         msg.send()
     except Exception as e:
         raise serializers.ValidationError(

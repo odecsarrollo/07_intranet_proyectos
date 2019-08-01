@@ -4,7 +4,7 @@ import {
     updateObject,
     fetchObject,
     deleteObject,
-    createObject,
+    createObject, callApiMethodPostParameters,
 } from '../../00_general_fuctions'
 
 const current_url_api = 'banda_eurobelt_componentes';
@@ -62,5 +62,17 @@ export const updateBandaEurobeltComponente = (id, values, options_action = {}) =
         };
         const options = {dispatches, ...options_action, dispatch_method: dispatch};
         return updateObject(current_url_api, id, values, options);
+    }
+};
+
+export const adicionarQuitarSerieCompatibleComponente = (id, serie_id, options_action = {}) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        params.append('serie_id', serie_id);
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: response})
+        };
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'adicionar_quitar_serie_compatible', params, options)
     }
 };

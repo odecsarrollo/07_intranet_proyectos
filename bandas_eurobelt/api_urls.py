@@ -7,7 +7,10 @@ from .api_views import (
     ComponenteViewSet,
     GrupoEnsambladoViewSet,
     CategoriaDosViewSet,
-    ConfiguracionNombreAutomaticoViewSet
+    BandaEurobeltCostoEnsambladoViewSet,
+    BandaEurobeltViewSet,
+    ConfiguracionBandaEurobeltViewSet,
+    EnsambladoBandaEurobeltViewSet,
 )
 
 router = routers.DefaultRouter()
@@ -18,4 +21,7 @@ router.register(r'banda_eurobelt_series', SerieViewSet)
 router.register(r'banda_eurobelt_categorias_dos', CategoriaDosViewSet)
 router.register(r'banda_eurobelt_componentes', ComponenteViewSet)
 router.register(r'banda_eurobelt_grupos_ensamblados', GrupoEnsambladoViewSet)
-router.register(r'banda_eurobelt_configuraciones_nombres_automaticos', ConfiguracionNombreAutomaticoViewSet)
+router.register(r'banda_eurobelt_bandas', BandaEurobeltViewSet)
+router.register(r'banda_eurobelt_bandas_ensamblados', EnsambladoBandaEurobeltViewSet)
+router.register(r'banda_eurobelt_configuracion', ConfiguracionBandaEurobeltViewSet)
+router.register(r'banda_eurobelt_costos_ensamblados', BandaEurobeltCostoEnsambladoViewSet)

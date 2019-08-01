@@ -1,3 +1,8 @@
+export const CONFIGURACION_BANDA_EUROBELT = {
+    change: 'change_configuracionbandaeurobelt',
+    detail: 'view_configuracionbandaeurobelt',
+};
+
 export const SISTEMAS_EQUIPOS_COMPUTADORES = {
     add: 'add_equipocomputador',
     delete: 'delete_equipocomputador',

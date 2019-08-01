@@ -38,6 +38,8 @@ export * from './bandas_eurobelt/seriesAction';
 export * from './bandas_eurobelt/materialesAction';
 export * from './bandas_eurobelt/categoriasDosAction';
 export * from './bandas_eurobelt/componentesAction';
+export * from './bandas_eurobelt/configuracionAction';
+export * from './bandas_eurobelt/costoEnsambladoAction';
 
 export * from './catalogos_productos/itemsVentasAction';
 export * from './medios/adhesivosActions';
