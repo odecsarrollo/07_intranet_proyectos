@@ -95,10 +95,14 @@ def proforma_anticipo_enviar(
         estado='ENVIADA',
         proforma_anticipo_id=proforma_anticipo_id
     )
-
-    msg.attach(proforma_anticipo.documento.archivo.name, proforma_anticipo.documento.archivo.read())
+    nombre_documento = '%s_%s_v%s.pdf' % (
+        proforma_anticipo.get_tipo_documento_display(), proforma_anticipo.nro_consecutivo,
+        proforma_anticipo.version
+    )
+    msg.attach(nombre_documento, proforma_anticipo.documento.archivo.read())
     archivos_para_enviar = proforma_anticipo.documentos.filter(enviar_por_correo=True)
-    [msg.attach(archivo.archivo.name, archivo.archivo.read()) for archivo in archivos_para_enviar]
+    [msg.attach('%s.%s' % (archivo.nombre_archivo, archivo.archivo.name.split('.')[-1]), archivo.archivo.read()) for
+     archivo in archivos_para_enviar]
     try:
         msg.send()
     except Exception as e:

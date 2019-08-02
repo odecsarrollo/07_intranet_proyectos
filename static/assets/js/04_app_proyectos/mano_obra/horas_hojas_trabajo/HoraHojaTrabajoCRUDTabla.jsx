@@ -1,5 +1,5 @@
 import React, {memo} from "react";
-import {fechaFormatoUno, pesosColombianos} from '../../../00_utilities/common';
+import {fechaFormatoUno} from '../../../00_utilities/common';
 
 import selectTableHOC from "react-table/lib/hoc/selectTable";
 import Table from "react-table";

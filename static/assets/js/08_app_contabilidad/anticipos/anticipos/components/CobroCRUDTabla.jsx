@@ -1,27 +1,51 @@
 import React, {memo} from "react";
 import MyDialogButtonDelete from '../../../../00_utilities/components/ui/dialog/delete_dialog';
 
-import ReactTable from "react-table";
+import selectTableHOC from "react-table/lib/hoc/selectTable";
+import Table from "react-table";
+
+const SelectTable = selectTableHOC(Table);
 import {fechaFormatoUno} from "../../../../00_utilities/common";
 import {Link} from "react-router-dom";
 import IconButtonTableSee from "../../../../00_utilities/components/ui/icon/table_icon_button_detail";
 
 function areEqual(prevProps, nextProps) {
-    return prevProps.list === nextProps.list && prevProps.data_to_excel === nextProps.data_to_excel
+    return prevProps.list === nextProps.list && prevProps.selection === nextProps.selection
 }
 
 const Tabla = memo(props => {
     const data = _.map(props.list);
     const {
-        updateItem,
+        selection,
+        getTrGroupProps,
+        isSelected,
+        toggleAll,
+        checkboxTable,
+        selectAll,
+        toggleSelection,
+        rowFn,
         singular_name,
         onDelete,
-        onSelectItemEdit,
         permisos_object
     } = props;
 
     return (
-        <ReactTable
+        <SelectTable
+            ref={r => checkboxTable.current = r}
+            getTrGroupProps={getTrGroupProps}
+            selection={selection}
+            selectType="checkbox"
+            isSelected={isSelected}
+            selectAll={selectAll}
+            toggleSelection={toggleSelection}
+            toggleAll={toggleAll}
+            keyField="id"
+            previousText='Anterior'
+            nextText='Siguiente'
+            pageText='Página'
+            ofText='de'
+            rowsText='filas'
+            getTrProps={rowFn}
             data={data}
             noDataText={`No hay elementos para mostrar tipo ${singular_name}`}
             columns={[

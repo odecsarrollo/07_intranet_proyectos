@@ -24,7 +24,6 @@ const PagoModal = memo(props => {
                 <DateTimePicker
                     onChange={(e, s) => {
                         setFechaCobro(s);
-                        onCerrar();
                     }}
                     format="YYYY-MM-DD"
                     time={false}

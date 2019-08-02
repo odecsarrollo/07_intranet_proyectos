@@ -143,7 +143,10 @@ const CobroDetail = memo(props => {
     const editar = () => dispatch(actions.cambiarEstadoProformaAnticipo(cobro.id, 'EDICION'));
 
     const recibida = () => dispatch(actions.cambiarEstadoProformaAnticipo(cobro.id, 'RECIBIDA'));
-    const cobrada = (fecha_cobro) => dispatch(actions.cambiarEstadoProformaAnticipo(cobro.id, 'CERRADA', fecha_cobro));
+    const cobrada = (fecha_cobro) => {
+        setCobradaModal(false);
+        dispatch(actions.cambiarEstadoProformaAnticipo(cobro.id, 'CERRADA', fecha_cobro));
+    };
 
     const imprimirCobro = () => {
         const imprimir_liquidacion = (response) => {
