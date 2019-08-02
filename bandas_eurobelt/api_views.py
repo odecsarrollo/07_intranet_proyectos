@@ -265,7 +265,7 @@ class ComponenteViewSet(viewsets.ModelViewSet):
         'margen__proveedor',
         'margen__proveedor__moneda',
     ).prefetch_related(
-        'series_compatibles'
+        'series_compatibles',
     ).all()
     serializer_class = ComponenteSerializer
 

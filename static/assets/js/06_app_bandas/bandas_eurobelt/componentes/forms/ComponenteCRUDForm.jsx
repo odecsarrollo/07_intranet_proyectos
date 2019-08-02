@@ -1,6 +1,5 @@
 import React, {memo, useEffect, Fragment} from 'react';
-import {formValueSelector} from 'redux-form';
-import {reduxForm} from 'redux-form';
+import {reduxForm, formValueSelector} from 'redux-form';
 import Checkbox from '@material-ui/core/Checkbox';
 import {MyCombobox, MyTextFieldSimple} from '../../../../00_utilities/components/ui/forms/fields';
 import {useDispatch, useSelector} from "react-redux";

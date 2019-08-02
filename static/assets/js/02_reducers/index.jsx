@@ -51,6 +51,7 @@ import proveedoresImportacionesReducer from './especificas/importaciones/proveed
 import margenesProveedoresReducer from './especificas/importaciones/margenesProveedoresReducer';
 import formaPagoCanalReducer from './especificas/listas_precios/formasPagosReducer';
 
+import bandaEurobelt from './especificas/bandas_eurobelt/bandasReducer';
 import bandaEurobeltConfiguracion from './especificas/bandas_eurobelt/configuracionReducer';
 import bandaEurobeltCostosEnsamblados from './especificas/bandas_eurobelt/costoEnsambladoReducer';
 import bandaEurobeltColorReducer from './especificas/bandas_eurobelt/coloresReducer';
@@ -133,6 +134,7 @@ const rootReducer = combineReducers({
     banda_eurobelt_colores: bandaEurobeltColorReducer,
     banda_eurobelt_categorias_dos: categoriasDosReducer,
     banda_eurobelt_componentes: componentesReducer,
+    banda_eurobelt_bandas: bandaEurobelt,
     banda_eurobelt_configuracion: bandaEurobeltConfiguracion,
 
     catalogos_productos_items_ventas: itemVentasCatalogosProductosReducer,

@@ -158,15 +158,16 @@ class ComponenteSerializer(serializers.ModelSerializer):
         alto = validated_data.get('alto', None)
         largo = validated_data.get('largo', None)
         diametro = validated_data.get('diametro', None)
-        costo = validated_data.get('costo', None)
+        costo = validated_data.get('costo', 0)
         descripcion_adicional = validated_data.get('descripcion_adicional', None)
+        print(validated_data)
         componente = componente_banda_eurobelt_crear_actualizar(
             descripcion_adicional=descripcion_adicional,
             referencia=referencia,
             categoria_id=categoria.id,
             categoria_dos_id=categoria_dos.id,
             material_id=material.id,
-            color_id=color.id,
+            color_id=color.id is color if not None else None,
             tipo_banda_id=tipo_banda.id,
             ancho=ancho,
             alto=alto,
@@ -188,7 +189,7 @@ class ComponenteSerializer(serializers.ModelSerializer):
         alto = validated_data.get('alto', None)
         largo = validated_data.get('largo', None)
         diametro = validated_data.get('diametro', None)
-        costo = validated_data.get('costo', None)
+        costo = validated_data.get('costo', 0)
         descripcion_adicional = validated_data.get('descripcion_adicional', None)
         componente = componente_banda_eurobelt_crear_actualizar(
             descripcion_adicional=descripcion_adicional,
@@ -197,7 +198,7 @@ class ComponenteSerializer(serializers.ModelSerializer):
             categoria_id=categoria.id,
             categoria_dos_id=categoria_dos.id,
             material_id=material.id,
-            color_id=color.id,
+            color_id=color.id if color is not None else None,
             tipo_banda_id=tipo_banda.id,
             ancho=ancho,
             alto=alto,
@@ -243,6 +244,7 @@ class ComponenteSerializer(serializers.ModelSerializer):
         ]
         extra_kwargs = {
             'nombre': {'read_only': True},
+            'series_compatibles': {'read_only': True},
             'item_cguno': {'allow_null': True},
             'descripcion_adicional': {'allow_null': True, 'allow_blank': True}
         }
@@ -312,11 +314,16 @@ class BandaEurobeltSerializer(serializers.ModelSerializer):
         fields = [
             'url',
             'id',
+            'con_empujador',
+            'con_aleta',
+            'con_torneado_varilla',
             'costo_ensamblado',
             'serie',
             'color',
+            'material',
             'ancho',
             'largo',
+            'tipo',
             'ensamblado',
             'con_torneado_varilla',
             'empujador_tipo',
@@ -329,6 +336,94 @@ class BandaEurobeltSerializer(serializers.ModelSerializer):
             'aleta_alto',
             'aleta_identacion',
         ]
+        extra_kwargs = {
+            'costo_ensamblado': {'read_only': True}
+        }
+
+    def create(self, validated_data):
+        from .services import banda_eurobelt_crear_actualizar
+        aleta_alto = validated_data.get('aleta_alto', None)
+        aleta_identacion = validated_data.get('aleta_identacion', None)
+        con_aleta = validated_data.get('con_aleta', False)
+        con_empujador = validated_data.get('con_empujador', False)
+        con_torneado_varilla = validated_data.get('con_torneado_varilla', False)
+        serie = validated_data.get('serie', None)
+        color = validated_data.get('color', None)
+        tipo = validated_data.get('tipo', None)
+        material = validated_data.get('material', None)
+        ancho = validated_data.get('ancho', None)
+        largo = validated_data.get('largo', None)
+        empujador_filas_entre_empujador = validated_data.get('empujador_filas_entre_empujador', None)
+        empujador_filas_empujador = validated_data.get('empujador_filas_empujador', None)
+        empujador_alto = validated_data.get('empujador_alto', None)
+        empujador_tipo = validated_data.get('empujador_tipo', None)
+        empujador_ancho = validated_data.get('empujador_ancho', None)
+        empujador_distanciado = validated_data.get('empujador_distanciado', None)
+        empujador_identacion = validated_data.get('empujador_identacion', None)
+        banda_eurobelt = banda_eurobelt_crear_actualizar(
+            empujador_filas_entre_empujador=empujador_filas_entre_empujador,
+            empujador_filas_empujador=empujador_filas_empujador,
+            empujador_tipo_id=empujador_tipo.id if empujador_tipo is not None else None,
+            empujador_alto=empujador_alto,
+            empujador_ancho=empujador_ancho,
+            empujador_distanciado=empujador_distanciado,
+            empujador_identacion=empujador_identacion,
+            aleta_identacion=aleta_identacion,
+            aleta_alto=aleta_alto,
+            tipo_id=tipo.id,
+            con_empujador=con_empujador,
+            con_aleta=con_aleta,
+            con_torneado_varilla=con_torneado_varilla,
+            serie_id=serie.id,
+            color_id=color.id,
+            material_id=material.id,
+            ancho=ancho,
+            largo=largo
+        )
+        return banda_eurobelt
+
+    def update(self, instance, validated_data):
+        from .services import banda_eurobelt_crear_actualizar
+        aleta_alto = validated_data.get('aleta_alto', None)
+        aleta_identacion = validated_data.get('aleta_identacion', None)
+        con_aleta = validated_data.get('con_aleta', False)
+        con_empujador = validated_data.get('con_empujador', False)
+        con_torneado_varilla = validated_data.get('con_torneado_varilla', False)
+        serie = validated_data.get('serie', None)
+        color = validated_data.get('color', None)
+        tipo = validated_data.get('tipo', None)
+        material = validated_data.get('material', None)
+        ancho = validated_data.get('ancho', None)
+        largo = validated_data.get('largo', None)
+        empujador_filas_entre_empujador = validated_data.get('empujador_filas_entre_empujador', None)
+        empujador_filas_empujador = validated_data.get('empujador_filas_empujador', None)
+        empujador_alto = validated_data.get('empujador_alto', None)
+        empujador_tipo = validated_data.get('empujador_tipo', None)
+        empujador_ancho = validated_data.get('empujador_ancho', None)
+        empujador_distanciado = validated_data.get('empujador_distanciado', None)
+        empujador_identacion = validated_data.get('empujador_identacion', None)
+        banda_eurobelt = banda_eurobelt_crear_actualizar(
+            empujador_filas_entre_empujador=empujador_filas_entre_empujador,
+            empujador_filas_empujador=empujador_filas_empujador,
+            empujador_tipo_id=empujador_tipo.id if empujador_tipo is not None else None,
+            empujador_alto=empujador_alto,
+            empujador_ancho=empujador_ancho,
+            empujador_distanciado=empujador_distanciado,
+            empujador_identacion=empujador_identacion,
+            aleta_identacion=aleta_identacion,
+            aleta_alto=aleta_alto,
+            banda_eurobelt_id=instance.id,
+            tipo_id=tipo.id,
+            con_empujador=con_empujador,
+            con_aleta=con_aleta,
+            con_torneado_varilla=con_torneado_varilla,
+            serie_id=serie.id,
+            color_id=color.id,
+            material_id=material.id,
+            ancho=ancho,
+            largo=largo
+        )
+        return banda_eurobelt
 
 
 class BandaEurobeltConDetalleSerializer(BandaEurobeltSerializer):

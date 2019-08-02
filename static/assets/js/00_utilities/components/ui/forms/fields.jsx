@@ -173,7 +173,7 @@ const renderCombobox = ({input, data, valueField, textField, placeholder, onSele
 };
 
 export const MyCombobox = (props) => {
-    const {busy = false, textField = 'name', valuesField = 'id', autoFocus = false, onSelect, className, readOnly = false} = props;
+    const {busy = false, textField = 'name', valuesField = 'id', autoFocus = false, onSelect, className, readOnly = false, label = null} = props;
     return (
         <div className={`${className} mt-4`}>
             <Field

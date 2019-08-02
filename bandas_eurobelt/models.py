@@ -180,6 +180,20 @@ class ComponenteBandaEurobelt(models.Model):
             nombre = '%s %s' % (nombre, self.color.nombre)
         if self.descripcion_adicional:
             nombre = '%s %s' % (nombre, self.descripcion_adicional)
+        if self.ancho > 0:
+            nombre = '%s W%s' % (nombre, round(self.ancho))
+        if self.alto > 0:
+            nombre = '%s H%s' % (nombre, round(self.alto))
+        if self.largo > 0:
+            nombre = '%s L%s' % (nombre, round(self.largo))
+        if self.series_compatibles.count() > 0:
+            nombre = '%s ' % nombre
+            ultima_serie = self.series_compatibles.last()
+            for serie in self.series_compatibles.all():
+                if serie == ultima_serie:
+                    nombre = '%s%s' % (nombre, serie.nomenclatura)
+                else:
+                    nombre = '%s%s/' % (nombre, serie.nomenclatura)
         return nombre
 
     class Meta:
@@ -215,12 +229,21 @@ class BandaEurobelt(models.Model):
         through='EnsambladoBandaEurobelt',
         through_fields=('banda', 'componente'),
     )
+    con_empujador = models.BooleanField(default=False)
+    con_aleta = models.BooleanField(default=False)
+    con_torneado_varilla = models.BooleanField(default=False)
     costo_ensamblado = models.ForeignKey(BandaEurobeltCostoEnsamblado, on_delete=models.PROTECT)
     serie = models.ForeignKey(SerieBandaEurobelt, on_delete=models.PROTECT, related_name='bandas')
     color = models.ForeignKey(ColorBandaEurobelt, on_delete=models.PROTECT, related_name='bandas')
+    material = models.ForeignKey(MaterialBandaEurobelt, on_delete=models.PROTECT, related_name='bandas')
     ancho = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     largo = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    con_torneado_varilla = models.BooleanField(default=False)
+    tipo = models.ForeignKey(
+        TipoBandaBandaEurobelt,
+        on_delete=models.PROTECT,
+        related_name='bandas',
+        null=True
+    )
     empujador_tipo = models.ForeignKey(
         TipoBandaBandaEurobelt,
         on_delete=models.PROTECT,
@@ -235,6 +258,11 @@ class BandaEurobelt(models.Model):
     empujador_filas_empujador = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     aleta_alto = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     aleta_identacion = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    class Meta:
+        permissions = [
+            ("list_bandaeurobelt", "Can see list bandas eurobelt"),
+        ]
 
 
 class EnsambladoBandaEurobelt(TimeStampedModel):

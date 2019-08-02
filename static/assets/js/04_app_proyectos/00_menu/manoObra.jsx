@@ -12,6 +12,12 @@ const MenuManoObra = () => (
         />
         <DrawerListItem
             size='1x'
+            link='/app/proyectos/mano_obra/horas_hojas_trabajo/list'
+            texto='Horas Hojas de Trabajo'
+            type='main'
+        />
+        <DrawerListItem
+            size='1x'
             link='/app/proyectos/mano_obra/hojas_trabajo/list'
             texto='Hojas de Trabajo'
             type='main'

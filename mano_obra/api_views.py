@@ -143,6 +143,21 @@ class HoraHojaTrabajoViewSet(HoraHojaTrabajoPDFMixin, viewsets.ModelViewSet):
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
+    @action(detail=False, http_method_names=['get', ])
+    def listar_x_parametros(self, request):
+        fecha_inicial = request.GET.get('fecha_inicial')
+        fecha_final = request.GET.get('fecha_final')
+        colaborador_id = request.GET.get('colaborador_id')
+        qs = self.queryset
+
+        if fecha_final and fecha_final and qs:
+            qs = qs.filter(hoja__fecha__gte=fecha_inicial, hoja__fecha__lte=fecha_final)
+        if colaborador_id:
+            qs = qs.filter(hoja__colaborador_id=colaborador_id)
+
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)
+
     @action(detail=False, methods=['get'])
     def print_costos_tres(self, request, pk=None):
         fecha_inicial = request.GET.get('fecha_inicial', None)

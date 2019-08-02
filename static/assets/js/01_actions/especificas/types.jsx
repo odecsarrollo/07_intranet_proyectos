@@ -1,3 +1,12 @@
+export const BANDA_EUROBELT_TYPES = {
+    create: 'create_banda_eurobelt',
+    delete: 'delete_banda_eurobelt',
+    fetch_all: 'fetch_bandas_eurobelt',
+    fetch: 'fetch_banda_eurobelt',
+    clear: 'clear_bandas_eurobelt',
+    update: 'update_banda_eurobelt',
+};
+
 export const COSTO_ENSAMBLADO_BANDA_EUROBELT_TYPES = {
     fetch_all: 'fetch_costo_ensamblado_banda_eurobelt',
     clear: 'clear_costos_ensamblados_bandas_eurobelt',

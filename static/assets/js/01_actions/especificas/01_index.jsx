@@ -40,6 +40,7 @@ export * from './bandas_eurobelt/categoriasDosAction';
 export * from './bandas_eurobelt/componentesAction';
 export * from './bandas_eurobelt/configuracionAction';
 export * from './bandas_eurobelt/costoEnsambladoAction';
+export * from './bandas_eurobelt/bandasAction';
 
 export * from './catalogos_productos/itemsVentasAction';
 export * from './medios/adhesivosActions';

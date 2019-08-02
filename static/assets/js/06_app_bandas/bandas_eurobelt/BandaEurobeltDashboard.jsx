@@ -2,6 +2,7 @@ import React, {memo, Fragment, useState} from 'react';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
+import BloqueBandas from "./bandas/BandaEurobeltCRUD";
 import BloqueComponentes from "./componentes/ComponenteCRUD";
 import BloqueTipos from "./tipos/TipoBandaCRUD";
 import BloqueMateriales from "./materiales/MaterialCRUD";
@@ -24,6 +25,7 @@ const ItemsDashboard = memo(() => {
                   onChange={(event, index) => setSlideIndex(index)}
                   value={slideIndex}
             >
+                <Tab label="Bandas"/>
                 <Tab label="Componentes"/>
                 <Tab label="Tipos"/>
                 <Tab label="Materiales"/>
@@ -32,13 +34,14 @@ const ItemsDashboard = memo(() => {
                 <Tab label="Categorias Dos"/>
                 <Tab label="Configuración"/>
             </Tabs>
-            {slideIndex === 0 && <BloqueComponentes/>}
-            {slideIndex === 1 && <BloqueTipos/>}
-            {slideIndex === 2 && <BloqueMateriales/>}
-            {slideIndex === 3 && <BloqueColores/>}
-            {slideIndex === 4 && <BloqueSeries/>}
-            {slideIndex === 5 && <BloqueCategorias/>}
-            {slideIndex === 6 && <Configuracion/>}
+            {slideIndex === 0 && <BloqueBandas/>}
+            {slideIndex === 1 && <BloqueComponentes/>}
+            {slideIndex === 2 && <BloqueTipos/>}
+            {slideIndex === 3 && <BloqueMateriales/>}
+            {slideIndex === 4 && <BloqueColores/>}
+            {slideIndex === 5 && <BloqueSeries/>}
+            {slideIndex === 6 && <BloqueCategorias/>}
+            {slideIndex === 7 && <Configuracion/>}
         </Fragment>
     )
 });

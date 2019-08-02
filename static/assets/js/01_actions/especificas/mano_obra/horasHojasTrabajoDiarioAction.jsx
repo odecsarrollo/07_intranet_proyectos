@@ -27,6 +27,27 @@ export function printReporteCostoTresProyecto(valores, options_action = {}) {
     }
 }
 
+export function fetchHorasHojasTrabajosxParametros(parametros = {}, options_action = {}) {
+    return function (dispatch) {
+        let parametros_get = '?';
+        _.map(parametros, p => {
+            parametros_get = `${parametros_get}&${p.llave}=${p.valor}`
+        });
+        const FULL_URL = `${current_url_api}/listar_x_parametros/${parametros_get}`;
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch_all, payload: response})
+        };
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        return fetchListGetURLParameters(FULL_URL, options);
+    }
+}
+
 export const fetchHorasHojasTrabajosAutogestionadas = (options_action = {}) => {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/autogestionadas_x_fechas`;

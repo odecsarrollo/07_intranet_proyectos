@@ -1,3 +1,11 @@
+export const BANDAS_EUROBELT = {
+    add: 'add_bandaeurobelt',
+    delete: 'delete_bandaeurobelt',
+    change: 'change_bandaeurobelt',
+    list: 'list_bandaeurobelt',
+    detail: 'view_bandaeurobelt',
+};
+
 export const CONFIGURACION_BANDA_EUROBELT = {
     change: 'change_configuracionbandaeurobelt',
     detail: 'view_configuracionbandaeurobelt',

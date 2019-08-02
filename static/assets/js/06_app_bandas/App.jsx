@@ -5,6 +5,7 @@ import DrawerMenu from '../00_utilities/components/ui/drawer/drawer_menu';
 
 import Menu from './00_menu/Menu';
 import AppIndex from './index';
+import BandaEurobeltDetail from './bandas_eurobelt/bandas/BandaEurobeltDetail';
 
 const App = () => {
     return (
@@ -12,6 +13,7 @@ const App = () => {
             <DrawerMenu lista_menu={<Menu/>} titulo='Ventas'>
                 <Switch>
                     <Route exact path='/app/bandas/' component={AppIndex}/>
+                    <Route exact path='/app/bandas/banda/:id' component={BandaEurobeltDetail}/>
                 </Switch>
             </DrawerMenu>
         </Loading>
