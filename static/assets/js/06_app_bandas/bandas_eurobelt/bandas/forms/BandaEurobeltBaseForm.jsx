@@ -6,7 +6,6 @@ import Divider from '@material-ui/core/Divider';
 import {MyCombobox, MyTextFieldSimple, MyCheckboxSimple} from '../../../../00_utilities/components/ui/forms/fields';
 import validate from './validate';
 import Typography from "@material-ui/core/Typography";
-import BandaEurobeltEnsamblado from './BandaEurobeltEnsamblado';
 import BotoneriaModalForm from "../../../../00_utilities/components/ui/forms/botoneria_modal_form";
 
 const selector = formValueSelector('bandaEurobeltForm');
@@ -27,21 +26,17 @@ let Form = memo(props => {
     const series = useSelector(state => state.banda_eurobelt_series);
     const materiales = useSelector(state => state.banda_eurobelt_materiales);
     const colores = useSelector(state => state.banda_eurobelt_colores);
-    const componentes = useSelector(state => state.banda_eurobelt_componentes);
     const tipos = useSelector(state => state.banda_eurobelt_tipos);
     const configuracion = useSelector(state => _.map(state.banda_eurobelt_configuracion)[0]);
-    const empujador_tipo = valores['empujador_tipo'] ? valores['empujador_tipo'] : null;
-    const series_seleccionada = valores['serie'] ? valores['serie'] : 0;
     const con_aleta = valores['con_aleta'] ? valores['con_aleta'] : false;
     const con_empujador = valores['con_empujador'] ? valores['con_empujador'] : false;
     const id_categoria_banda = configuracion ? configuracion.categoria_banda : null;
     const id_categoria_empujador = configuracion ? configuracion.categoria_empujador : null;
-    const componentes_para_serie = initialValues ? _.pickBy(componentes, c => c.series_compatibles.includes(series_seleccionada)) : null;
+
     const tipos_bandas = id_categoria_banda ? _.pickBy(tipos, t => t.categorias.includes(id_categoria_banda)) : {};
     const tipos_empujadores = id_categoria_empujador ? _.pickBy(tipos, t => t.categorias.includes(id_categoria_empujador)) : {};
     useEffect(() => {
-        const cargarComponentes = () => initialValues ? dispatch(actions.fetchBandaEurobeltComponentes()) : null;
-        const cargarTipos = () => dispatch(actions.fetchBandaEurobeltTipos({callback: cargarComponentes}));
+        const cargarTipos = () => dispatch(actions.fetchBandaEurobeltTipos());
         const cargarMateriales = () => dispatch(actions.fetchBandaEurobeltMateriales({callback: cargarTipos}));
         const cargarColores = () => dispatch(actions.fetchBandaEurobeltColores({callback: cargarMateriales}));
         const cargarConfiguracion = () => dispatch(actions.fetchConfiguracionBandaEurobelt({callback: cargarColores}));
@@ -241,14 +236,7 @@ let Form = memo(props => {
                     initialValues={initialValues}
                 />
             </div>
-            {initialValues &&
-            <BandaEurobeltEnsamblado
-                componentes={componentes_para_serie}
-                configuracion={configuracion}
-                empujador_tipo={empujador_tipo}
-                con_aleta={con_aleta}
-                con_empujador={con_empujador}
-            />}
+
         </form>
     )
 });

@@ -7,6 +7,7 @@ import thunk from 'redux-thunk';
 import reducers from './02_reducers/index';
 import {connect} from "react-redux";
 import {hot} from 'react-hot-loader';
+import StylesContextProvider from './00_utilities/contexts/StylesContextProvider';
 import Notification from './00_utilities/components/system/Notifications';
 
 import * as actions from "./01_actions/01_index";
@@ -238,7 +239,9 @@ export default class App extends Component {
         return (
             <Provider store={store}>
                 <MuiThemeProvider theme={theme}>
-                    <RootContainer/>
+                    <StylesContextProvider>
+                        <RootContainer/>
+                    </StylesContextProvider>
                 </MuiThemeProvider>
             </Provider>
         )

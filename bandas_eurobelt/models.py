@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from model_utils.models import TimeStampedModel
 
+from bandas_eurobelt.managers import ComponenteManager, BandaEurobeltManager
 from cguno.models import ItemsBiable
 from items.models import CategoriaProducto
 from importaciones.models import ProveedorImportacion, MargenProvedor
@@ -133,42 +134,10 @@ class ComponenteBandaEurobelt(models.Model):
     diametro = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     item_cguno = models.ForeignKey(ItemsBiable, null=True, on_delete=models.PROTECT, related_name='componente_banda')
     costo = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    nombre = models.CharField(max_length=400, null=True)
+    objects = ComponenteManager()
 
-    @property
-    def costo_cop(self):
-        if self.margen:
-            return round(self.margen.proveedor.moneda.cambio * self.margen.proveedor.factor_importacion * self.costo, 0)
-        return 0
-
-    @property
-    def costo_cop_aereo(self):
-        if self.margen:
-            if self.margen.proveedor.factor_importacion_aereo > self.margen.proveedor.factor_importacion:
-                return round(
-                    self.margen.proveedor.moneda.cambio * self.margen.proveedor.factor_importacion_aereo * self.costo,
-                    0)
-        return 0
-
-    @property
-    def precio_base(self):
-        if self.margen:
-            return round(float(self.costo_cop) / float((1 - (self.margen.margen_deseado / 100))), 0)
-        return 0
-
-    @property
-    def precio_base_aereo(self):
-        if self.margen:
-            return round(float(self.costo_cop_aereo) / float((1 - (self.margen.margen_deseado / 100))), 0)
-        return 0
-
-    @property
-    def rentabilidad(self):
-        if self.margen:
-            return round(float(self.precio_base) - float(self.costo_cop), 0)
-        return 0
-
-    @property
-    def nombre(self):
+    def set_nombre(self):
         nombre = self.categoria.nombre
         if self.categoria_dos:
             nombre = '%s %s' % (nombre, self.categoria_dos.nombre)
@@ -194,7 +163,8 @@ class ComponenteBandaEurobelt(models.Model):
                     nombre = '%s%s' % (nombre, serie.nomenclatura)
                 else:
                     nombre = '%s%s/' % (nombre, serie.nomenclatura)
-        return nombre
+        self.nombre = nombre.title()
+        self.save()
 
     class Meta:
         permissions = [
@@ -224,11 +194,13 @@ class BandaEurobeltCostoEnsamblado(models.Model):
 
 
 class BandaEurobelt(models.Model):
-    ensamblado = models.ManyToManyField(
+    componentes = models.ManyToManyField(
         ComponenteBandaEurobelt,
         through='EnsambladoBandaEurobelt',
         through_fields=('banda', 'componente'),
     )
+    referencia = models.CharField(max_length=100, null=True)
+    nombre = models.CharField(max_length=300, null=True)
     con_empujador = models.BooleanField(default=False)
     con_aleta = models.BooleanField(default=False)
     con_torneado_varilla = models.BooleanField(default=False)
@@ -258,6 +230,54 @@ class BandaEurobelt(models.Model):
     empujador_filas_empujador = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     aleta_alto = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     aleta_identacion = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    objects = BandaEurobeltManager()
+
+    def set_referencia_nombre(self):
+        referencia = 'BEU-%s%s%s%s(V)W%s' % (
+            self.serie.nomenclatura,
+            self.tipo.nomenclatura,
+            self.material.nomenclatura,
+            self.color.nomenclatura,
+            int(self.ancho)
+        )
+
+        nombre = 'Banda %s %s %s %s (V) W%s' % (
+            self.serie.nombre,
+            self.tipo.nombre,
+            self.material.nombre,
+            self.color.nombre,
+            int(self.ancho)
+        )
+
+        if self.con_empujador:
+            referencia += '/E%sH%sW%sD%sI%s' % (
+                self.empujador_tipo.nombre,
+                int(self.empujador_alto),
+                int(self.empujador_ancho),
+                int(self.empujador_distanciado),
+                int(self.empujador_identacion)
+            )
+
+            nombre += ' con Empujador %s H%s W%s D%s I%s' % (
+                self.empujador_tipo.nombre,
+                int(self.empujador_alto),
+                int(self.empujador_ancho),
+                int(self.empujador_distanciado),
+                int(self.empujador_identacion)
+            )
+        if self.con_aleta:
+            referencia += '/AH%sI%s' % (
+                int(self.aleta_alto),
+                int(self.aleta_identacion)
+            )
+            nombre += ' con Aleta H%s I%s' % (
+                int(self.aleta_alto),
+                int(self.aleta_identacion)
+            )
+
+        self.referencia = referencia
+        self.nombre = nombre.strip().title()
+        self.save()
 
     class Meta:
         permissions = [
@@ -266,8 +286,8 @@ class BandaEurobelt(models.Model):
 
 
 class EnsambladoBandaEurobelt(TimeStampedModel):
-    banda = models.ForeignKey(BandaEurobelt, on_delete=models.CASCADE)
-    componente = models.ForeignKey(ComponenteBandaEurobelt, on_delete=models.CASCADE)
+    banda = models.ForeignKey(BandaEurobelt, on_delete=models.CASCADE, related_name='ensamblado')
+    componente = models.ForeignKey(ComponenteBandaEurobelt, on_delete=models.CASCADE, related_name='bandas')
     cortado_a = models.CharField(max_length=10, default="COMPLETA")
     cantidad = models.PositiveIntegerField()
     created_by = models.ForeignKey(User, null=True, related_name="ensamblado_created_by", on_delete=models.PROTECT)

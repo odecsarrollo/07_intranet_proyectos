@@ -8,8 +8,8 @@ from .models import (
     ComponenteBandaEurobelt,
     ConfiguracionBandaEurobelt,
     BandaEurobelt,
-    BandaEurobeltCostoEnsamblado
-)
+    BandaEurobeltCostoEnsamblado,
+    EnsambladoBandaEurobelt)
 
 
 def categoria_dos_adicionar_quitar_relacion_categoria_producto(
@@ -47,6 +47,7 @@ def componente_banda_eurobelt_adicionar_quitar_serie_compatible(
     else:
         componente.series_compatibles.add(serie_id)
     componente = ComponenteBandaEurobelt.objects.get(pk=componente_id)
+    componente.set_nombre()
     return componente
 
 
@@ -65,10 +66,10 @@ def componente_banda_eurobelt_crear_actualizar(
         descripcion_adicional: str = None,
         componente_id: int = None,
 ) -> ComponenteBandaEurobelt:
-    if componente_id:
-        componente = ComponenteBandaEurobelt.objects.get(pk=componente_id)
-    else:
+    if componente_id is None:
         componente = ComponenteBandaEurobelt()
+    else:
+        componente = ComponenteBandaEurobelt.objects.get(pk=componente_id)
 
     configuracion_banda_eurobelt = ConfiguracionBandaEurobelt.objects.first()
     margenes = MargenProvedor.objects.filter(
@@ -82,20 +83,21 @@ def componente_banda_eurobelt_crear_actualizar(
             {'_error': 'No existe margenes para la categoría %s con el proveedor %s' % (
                 categoria.nombre, configuracion_banda_eurobelt.fabricante.nombre)})
 
-    componente.margen = margenes.first()
-    componente.referencia = referencia
+    componente.alto = alto
+    componente.ancho = ancho
     componente.categoria_id = categoria_id
-    componente.material_id = material_id
     componente.categoria_dos_id = categoria_dos_id
     componente.color_id = color_id
-    componente.tipo_banda_id = tipo_banda_id
-    componente.ancho = ancho
-    componente.alto = alto
-    componente.largo = largo
-    componente.diametro = diametro
     componente.costo = costo
     componente.descripcion_adicional = descripcion_adicional
+    componente.diametro = diametro
+    componente.largo = largo
+    componente.material_id = material_id
+    componente.referencia = referencia
+    componente.tipo_banda_id = tipo_banda_id
+    componente.margen = margenes.first()
     componente.save()
+    componente.set_nombre()
     return componente
 
 
@@ -180,4 +182,31 @@ def banda_eurobelt_crear_actualizar(
         banda_eurobelt.empujador_filas_entre_empujador = 0
         banda_eurobelt.empujador_filas_empujador = 0
     banda_eurobelt.save()
+    banda_eurobelt.set_referencia_nombre()
     return banda_eurobelt
+
+
+def banda_eurobelt_adicionar_componente(
+        banda_id: int,
+        componente_id: int,
+        cantidad: float,
+        cortado_a: str,
+) -> BandaEurobelt:
+    banda = BandaEurobelt.objects.get(pk=banda_id)
+    componente = EnsambladoBandaEurobelt()
+    componente.cortado_a = cortado_a
+    componente.cantidad = cantidad
+    componente.componente_id = componente_id
+    componente.banda = banda
+    componente.save()
+    banda = BandaEurobelt.objects.get(pk=banda_id)
+    return banda
+
+
+def banda_eurobelt_quitar_componente(
+        banda_id: int,
+        ensamblado_id: int
+) -> BandaEurobelt:
+    EnsambladoBandaEurobelt.objects.filter(pk=ensamblado_id).delete()
+    banda = BandaEurobelt.objects.get(pk=banda_id)
+    return banda

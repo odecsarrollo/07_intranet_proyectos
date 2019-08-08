@@ -6,6 +6,11 @@ from .models import (
 
 
 class ItemVentaCatalogoSerializer(serializers.ModelSerializer):
+    costo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    costo_cop = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    precio_base = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    costo_cop_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    precio_base_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     margen_deseado = serializers.DecimalField(
         source='margen.margen_deseado',
         read_only=True,
@@ -81,7 +86,7 @@ class ItemVentaCatalogoSerializer(serializers.ModelSerializer):
             'item_sistema_informacion',
             'referencia',
             'nombre',
-            'costo',
+            # 'costo',
             'costo_catalogo',
             'moneda_nombre',
             'moneda_tasa',
@@ -97,10 +102,11 @@ class ItemVentaCatalogoSerializer(serializers.ModelSerializer):
             'margen',
             'activo',
             'origen',
-            'get_costo_cop',
             'margen_deseado',
-            'get_costo_cop_aereo',
-            'get_precio_base',
-            'get_precio_base_aereo',
+            'costo',
+            'costo_cop',
+            'costo_cop_aereo',
+            'precio_base',
+            'precio_base_aereo',
         ]
         # extra_kwargs = {'literales_autorizados': {'read_only': True}}

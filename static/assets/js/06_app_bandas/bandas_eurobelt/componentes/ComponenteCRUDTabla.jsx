@@ -40,13 +40,13 @@ const Tabla = memo(props => {
                         {
                             Header: "Nombre",
                             accessor: "nombre",
-                            maxWidth: 200,
-                            minWidth: 200,
+                            maxWidth: 300,
+                            minWidth: 300,
                             filterable: true,
                             Cell: row => {
                                 return (
                                     <div style={{
-                                        fontSize: '0.6rem',
+                                        fontSize: '0.8rem',
                                         whiteSpace: 'normal'
                                     }}>{row.value}</div>
                                 )

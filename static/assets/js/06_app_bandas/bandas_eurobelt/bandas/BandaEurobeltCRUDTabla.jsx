@@ -4,6 +4,7 @@ import IconButtonTableSee from '../../../00_utilities/components/ui/icon/table_i
 
 import ReactTable from "react-table";
 import {Link} from "react-router-dom";
+import {pesosColombianos} from "../../../00_utilities/common";
 
 function areEqual(prevProps, nextProps) {
     return prevProps.list === nextProps.list
@@ -30,11 +31,59 @@ const Tabla = memo(props => {
                             maxWidth: 40
                         },
                         {
+                            Header: "Referencia",
+                            accessor: "referencia",
+                            maxWidth: 350,
+                            minWidth: 350,
+                            filterable: true,
+                            filterMethod: (filter, row) => row._original.to_string.includes(filter.value.toUpperCase())
+                        },
+                        {
                             Header: "Nombre",
-                            maxWidth: 220,
+                            accessor: "to_string",
+                            minWidth: 400,
+                            maxWidth: 400,
                             filterable: true,
                             filterMethod: (filter, row) => row._original.to_string.includes(filter.value.toUpperCase()),
-                            Cell: row => `${row.original.to_string}`
+                            Cell: row => <div style={{
+                                fontSize: '0.8rem',
+                                whiteSpace: 'normal'
+                            }}>{row.value}</div>
+                        },
+                        {
+                            Header: "Costo",
+                            accessor: "costo_cop",
+                            minWidth: 80,
+                            maxWidth: 80,
+                            Cell: row => `${pesosColombianos(row.value)}`
+                        },
+                        {
+                            Header: "Precio",
+                            accessor: "precio_base",
+                            minWidth: 80,
+                            maxWidth: 80,
+                            Cell: row => `${pesosColombianos(row.value)}`
+                        },
+                        {
+                            Header: "Vlr. Mano Obra",
+                            accessor: "precio_mano_obra",
+                            minWidth: 80,
+                            maxWidth: 80,
+                            Cell: row => `${pesosColombianos(row.value)}`
+                        },
+                        {
+                            Header: "Precio con Mano Obra",
+                            accessor: "precio_con_mano_obra",
+                            minWidth: 80,
+                            maxWidth: 80,
+                            Cell: row => `${pesosColombianos(row.value)}`
+                        },
+                        {
+                            Header: "Rentabilidad",
+                            accessor: "rentabilidad",
+                            minWidth: 80,
+                            maxWidth: 80,
+                            Cell: row => `${pesosColombianos(row.value)}`
                         }
                     ]
                 },

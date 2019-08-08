@@ -16,18 +16,18 @@ import ColaboradoresCostosNominaList
     from "./especificas/cguno/colaboradores/costos_nomina/containers/CostoNominaListContainer";
 import UsuariosDetail from "./generales/usuarios/containers/UsuarioDetail";
 import ClientesList from "./especificas/clientes/clientes/containers/ClienteContainer";
-import ClientesDashboard from "./especificas/clientes/dashboard/containers/ClienteDashboard";
+import ClientesDashboard from "./especificas/clientes/ClienteDashboard";
 import SistemaInformacionOrigenList
-    from "./especificas/sistemas_informacion_origen/containers/SistemaInformacionOrigenContainer";
+    from "./especificas/sistemas_informacion_origen/SistemaInformacionOrigenCRUD";
 import GeografiaList
     from "./especificas/geografia/GeografiaDashboard";
 
 import ConfiguracionCostosDashboard from "./especificas/configuraciones/containers/CostoDashboard";
-import ItemsDashboard from "./especificas/items/dashboard/containers/ItemDashboard";
+import ItemsDashboard from "./especificas/items/ItemDashboard";
 import ImportacionesDashboard
-    from "./especificas/importaciones/dashboard/containers/ImportacionDashboard";
+    from "./especificas/importaciones/ImportacionDashboard";
 import ListasPreciosDashboard
-    from "./especificas/listas_precios/dashboard/containers/ListaPrecioDashboard";
+    from "./especificas/listas_precios/ListaPrecioDashboard";
 import useTengoPermisos from "../00_utilities/hooks/useTengoPermisos";
 import {MODULO_PERMISSIONS} from "../permisos";
 

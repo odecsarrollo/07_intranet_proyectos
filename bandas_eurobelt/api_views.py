@@ -1,3 +1,4 @@
+from django.db.models import Sum, OuterRef, Subquery, F, DecimalField, ExpressionWrapper
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
@@ -173,9 +174,7 @@ class BandaEurobeltCostoEnsambladoViewSet(viewsets.ModelViewSet):
 
 
 class BandaEurobeltViewSet(viewsets.ModelViewSet):
-    queryset = BandaEurobelt.objects.prefetch_related(
-        'ensamblado'
-    ).all()
+    queryset = BandaEurobelt.objects.all()
     serializer_class = BandaEurobeltSerializer
 
     def retrieve(self, request, *args, **kwargs):
@@ -185,6 +184,33 @@ class BandaEurobeltViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         self.serializer_class = BandaEurobeltConDetalleSerializer
         return super().update(request, *args, **kwargs)
+
+    @action(detail=True, methods=['post'])
+    def adicionar_componente(self, request, pk=None):
+        from .services import banda_eurobelt_adicionar_componente
+        banda = self.get_object()
+        componente_id = self.request.POST.get('componente_id')
+        cantidad = int(self.request.POST.get('cantidad'))
+        cortado_a = self.request.POST.get('cortado_a')
+        banda = banda_eurobelt_adicionar_componente(
+            banda_id=banda.id,
+            componente_id=componente_id,
+            cantidad=cantidad,
+            cortado_a=cortado_a
+        )
+        self.serializer_class = BandaEurobeltConDetalleSerializer
+        serializer = self.get_serializer(banda)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def quitar_componente(self, request, pk=None):
+        banda = self.get_object()
+        from .services import banda_eurobelt_quitar_componente
+        ensamblado_id = self.request.POST.get('ensamblado_id')
+        banda = banda_eurobelt_quitar_componente(banda_id=banda.id, ensamblado_id=ensamblado_id)
+        self.serializer_class = BandaEurobeltConDetalleSerializer
+        serializer = self.get_serializer(banda)
+        return Response(serializer.data)
 
 
 class CategoriaDosViewSet(viewsets.ModelViewSet):
@@ -255,18 +281,7 @@ class SerieViewSet(viewsets.ModelViewSet):
 
 
 class ComponenteViewSet(viewsets.ModelViewSet):
-    queryset = ComponenteBandaEurobelt.objects.select_related(
-        'tipo_banda',
-        'categoria',
-        'categoria_dos',
-        'color',
-        'material',
-        'margen',
-        'margen__proveedor',
-        'margen__proveedor__moneda',
-    ).prefetch_related(
-        'series_compatibles',
-    ).all()
+    queryset = ComponenteBandaEurobelt.objects.all()
     serializer_class = ComponenteSerializer
 
     @action(detail=True, methods=['post'])

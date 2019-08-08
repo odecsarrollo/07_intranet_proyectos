@@ -7,68 +7,26 @@ import BandaEurobeltBaseForm from "./forms/BandaEurobeltBaseForm";
 import BandaEurobeltEnsamblado from "./forms/BandaEurobeltEnsamblado";
 import CargarDatos from "../../../00_utilities/components/system/cargar_datos";
 
-const style = {
-    tabla: {
-        fontSize: '0.7rem',
-        tr: {
-            td: {
-                margin: 0,
-                paddingTop: 0,
-                paddingBottom: 0,
-                paddingLeft: 4,
-                paddingRight: 4,
-                minWidth: '120px'
-            },
-            td_icono: {
-                margin: 0,
-                paddingTop: 0,
-                paddingBottom: 0,
-                paddingLeft: 4,
-                paddingRight: 4,
-            },
-            td_numero: {
-                margin: 0,
-                paddingTop: 4,
-                paddingBottom: 4,
-                paddingLeft: 4,
-                paddingRight: 4,
-                textAlign: 'right',
-                minWidth: '120px'
-            },
-            th_numero: {
-                margin: 0,
-                textAlign: 'right',
-                paddingTop: 0,
-                paddingBottom: 0,
-                paddingLeft: 4,
-                paddingRight: 4,
-                minWidth: '120px'
-            },
-            th: {
-                margin: 0,
-                paddingTop: 0,
-                paddingBottom: 0,
-                paddingLeft: 4,
-                paddingRight: 4,
-                minWidth: '120px'
-            },
-        }
-    }
-};
-
 
 const BandaEurobeltDetail = memo(props => {
     const {id} = props.match.params;
     const dispatch = useDispatch();
     const banda = useSelector(state => state.banda_eurobelt_bandas[id]);
+    const componentes = useSelector(state => state.banda_eurobelt_componentes);
+    const configuracion = useSelector(state => _.map(state.banda_eurobelt_configuracion)[0]);
     const permisos = useTengoPermisos(BANDAS_EUROBELT);
-
-    const cargarDatos = () => dispatch(actions.fetchBandaEurobelt(id));
+    const cargarDatos = () => {
+        const cargarConfiguracion = () => dispatch(actions.fetchConfiguracionBandaEurobelt());
+        const cargarComponentes = () => dispatch(actions.fetchBandaEurobeltComponentes({callback: cargarConfiguracion}));
+        dispatch(actions.fetchBandaEurobelt(id, {callback: cargarComponentes}))
+    };
 
     useEffect(() => {
         cargarDatos();
         return () => {
             dispatch(actions.clearBandasEurobelt());
+            dispatch(actions.clearBandaEurobeltComponentes());
+            dispatch(actions.clearConfiguracionBandaEurobelt());
         };
     }, []);
 
@@ -85,11 +43,16 @@ const BandaEurobeltDetail = memo(props => {
     }
     return (
         <Fragment>
-            Hola
+            {banda.referencia} - {banda.nombre}
             <BandaEurobeltBaseForm
                 initialValues={banda}
                 mostrar_cancelar={false}
                 onSubmit={onSubmit}
+            />
+            <BandaEurobeltEnsamblado
+                banda={banda}
+                componentes={componentes}
+                configuracion={configuracion}
             />
             <CargarDatos
                 cargarDatos={cargarDatos}

@@ -1,10 +1,10 @@
 import React, {useState, Fragment} from 'react';
 import Tabs from '@material-ui/core/Tabs/index';
 import Tab from '@material-ui/core/Tab/index';
-import BloquePaises from "./paises/components/PaisList";
-import BloqueDepartamentos from "./departamentos/components/DepartamentoList";
-import BloqueCiudades from "./ciudades/components/CiudadList";
-import BloqueCiudadesCatalogos from "./ciudades_cargue_catalogo/components/CiudadCargueCatalogoList";
+import BloquePaises from "./paises/PaisCRUD";
+import BloqueDepartamentos from "./departamentos/DepartamentoCRUD";
+import BloqueCiudades from "./ciudades/CiudadCRUD";
+import BloqueCiudadesCatalogos from "./ciudades_cargue_catalogo/CiudadCargueCatalogoCRUD";
 import Typography from '@material-ui/core/Typography/index';
 
 const GeografiaDashboard = () => {

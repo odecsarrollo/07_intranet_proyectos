@@ -13,3 +13,4 @@ class FormaPagoCanal(models.Model):
         permissions = [
             ['list_formapagocanal', 'Puede listar formas de pago'],
         ]
+

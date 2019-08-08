@@ -123,6 +123,11 @@ class SerieSerializer(serializers.ModelSerializer):
 
 
 class ComponenteSerializer(serializers.ModelSerializer):
+    costo_cop = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    costo_cop_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    rentabilidad = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    precio_base = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    precio_base_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     material_nombre = serializers.CharField(source='material.nombre', read_only=True)
     moneda_nombre = serializers.CharField(source='margen.proveedor.moneda.nombre', read_only=True)
     moneda_tasa = serializers.CharField(source='margen.proveedor.moneda.cambio', read_only=True)
@@ -160,14 +165,13 @@ class ComponenteSerializer(serializers.ModelSerializer):
         diametro = validated_data.get('diametro', None)
         costo = validated_data.get('costo', 0)
         descripcion_adicional = validated_data.get('descripcion_adicional', None)
-        print(validated_data)
         componente = componente_banda_eurobelt_crear_actualizar(
             descripcion_adicional=descripcion_adicional,
             referencia=referencia,
             categoria_id=categoria.id,
             categoria_dos_id=categoria_dos.id,
             material_id=material.id,
-            color_id=color.id is color if not None else None,
+            color_id=color.id if color is not None else None,
             tipo_banda_id=tipo_banda.id,
             ancho=ancho,
             alto=alto,
@@ -297,24 +301,38 @@ class EnsambladoBandaEurobeltSerializer(serializers.ModelSerializer):
     class Meta:
         model = EnsambladoBandaEurobelt
         fields = [
-            'url',
             'id',
-            'banda',
             'componente',
             'cortado_a',
             'cantidad',
-            'created_by',
-            'updated_by',
         ]
 
 
 class BandaEurobeltSerializer(serializers.ModelSerializer):
+    rentabilidad = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    costo_cop = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    precio_base = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    cantidad_componentes = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    precio_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    precio_con_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    to_string = serializers.SerializerMethodField()
+
+    def get_to_string(self, instance):
+        return instance.nombre
+
     class Meta:
         model = BandaEurobelt
         fields = [
             'url',
+            'to_string',
             'id',
             'con_empujador',
+            'costo_cop',
+            'precio_base',
+            'rentabilidad',
+            'precio_mano_obra',
+            'precio_con_mano_obra',
+            'cantidad_componentes',
             'con_aleta',
             'con_torneado_varilla',
             'costo_ensamblado',
@@ -335,6 +353,8 @@ class BandaEurobeltSerializer(serializers.ModelSerializer):
             'empujador_filas_empujador',
             'aleta_alto',
             'aleta_identacion',
+            'nombre',
+            'referencia',
         ]
         extra_kwargs = {
             'costo_ensamblado': {'read_only': True}

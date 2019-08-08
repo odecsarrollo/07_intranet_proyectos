@@ -1,5 +1,6 @@
 from django.db import models
 from cargues_catalogos.models import ItemsCatalogo
+from catalogo_productos.managers import ItemVentaCatalogoManager
 from importaciones.models import MargenProvedor, ProveedorImportacion
 from sistema_informacion_origen.models import SistemaInformacionOrigen
 
@@ -36,42 +37,9 @@ class ItemVentaCatalogo(models.Model):
     activo = models.BooleanField(default=True)
     origen = models.CharField(max_length=20, default='LP_INTRANET')
 
+    objects = ItemVentaCatalogoManager()
+
     class Meta:
         permissions = [
             ("list_itemventacatalogo", "Puede Listar Items Venta Catalogo")
         ]
-
-    @property
-    def costo(self):
-        if self.origen == 'LP_INTRANET':
-            costo = self.costo_catalogo
-        else:
-            costo = self.item_sistema_informacion.ultimo_costo
-        return costo
-
-    def get_costo_cop(self):
-        if self.margen:
-            return round(self.margen.proveedor.moneda.cambio * self.margen.proveedor.factor_importacion * self.costo, 0)
-        return 0
-
-    def get_costo_cop_aereo(self):
-        if self.margen:
-            return round(
-                self.margen.proveedor.moneda.cambio * self.margen.proveedor.factor_importacion_aereo * self.costo, 0)
-        return 0
-
-    def get_precio_base(self):
-        if self.margen:
-            return round(self.get_costo_cop() / (1 - (self.margen.margen_deseado / 100)), 0)
-        return 0
-
-    def get_precio_base_aereo(self):
-        if self.margen:
-            if self.margen.proveedor.factor_importacion_aereo > self.margen.proveedor.factor_importacion:
-                return round(self.get_costo_cop_aereo() / (1 - (self.margen.margen_deseado / 100)), 0)
-        return 0
-
-    def get_rentabilidad(self):
-        if self.margen:
-            return round(self.get_precio_base() - self.get_costo_cop(), 0)
-        return 0
