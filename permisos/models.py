@@ -44,6 +44,7 @@ class ModuloPermission(models.Model):
             ('modulo_admin', 'Modulo Admin'),
             ('modulo_proyectos', 'Modulo Proyectos'),
             ('modulo_ventas', 'Modulo Ventas'),
+            ('modulo_ventas_componentes', 'Modulo Ventas Componentes'),
             ('modulo_medios', 'Modulo Medios'),
             ('modulo_sistemas', 'Modulo Sistemas'),
             ('modulo_contabilidad', 'Modulo Contabilidad'),

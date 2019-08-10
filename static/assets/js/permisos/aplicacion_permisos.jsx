@@ -1,3 +1,11 @@
+export const COTIZACIONES_COMPONENTES = {
+    add: 'add_cotizacioncomponente',
+    delete: 'delete_cotizacioncomponente',
+    change: 'change_cotizacioncomponente',
+    list: 'list_cotizacioncomponente',
+    detail: 'view_cotizacioncomponente',
+};
+
 export const BANDAS_EUROBELT = {
     add: 'add_bandaeurobelt',
     delete: 'delete_bandaeurobelt',

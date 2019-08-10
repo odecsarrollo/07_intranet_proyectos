@@ -61,7 +61,8 @@ class Common(Configuration):
         'catalogo_productos.apps.CatalogoProductosConfig',
         'medios_adhesivos.apps.MediosAdhesivosConfig',
         'contabilidad_anticipos.apps.ContabilidadAnticiposConfig',
-        'sistemas_equipos.apps.SistemasEquiposConfig'
+        'sistemas_equipos.apps.SistemasEquiposConfig',
+        'cotizaciones_componentes.apps.CotizacionesComponentesConfig'
     ]
 
     THIRD_PART_APPS = [

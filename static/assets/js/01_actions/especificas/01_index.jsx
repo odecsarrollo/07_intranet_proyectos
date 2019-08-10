@@ -53,3 +53,5 @@ export * from './medios/adhesivosMovimientosActions';
 export * from './sistemas/computadoresActions';
 export * from './contabilidad/anticipos/proformaAnticipoItemAction';
 export * from './contabilidad/anticipos/proformaAnticipoArchivoAction';
+
+export * from './cotizaciones_componentes/cotizacionComponenteAction';

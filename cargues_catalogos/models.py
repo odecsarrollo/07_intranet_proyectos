@@ -3,7 +3,7 @@ from django.db import models
 
 from model_utils.models import TimeStampedModel
 
-from clientes.models import GrupoCliente, CanalDistribucion, TipoIndustria
+from clientes.models import ClienteBiable
 from geografia.models import Ciudad
 from sistema_informacion_origen.models import SistemaInformacionOrigen
 
@@ -147,18 +147,18 @@ class ColaboradorCatalogo(models.Model):
 
 
 class ClienteCatalogo(TimeStampedModel):
+    sistema_informacion = models.ForeignKey(SistemaInformacionOrigen, on_delete=models.PROTECT)
     nit = models.CharField(max_length=20, unique=True)
     nombre = models.CharField(max_length=120)
-    forma_pago = models.PositiveIntegerField(null=True)
-    grupo = models.ForeignKey(GrupoCliente, null=True, related_name='empresas', on_delete=models.PROTECT)
-    canal = models.ForeignKey(CanalDistribucion, related_name='empresas', null=True, on_delete=models.PROTECT)
-    industria = models.ForeignKey(TipoIndustria, related_name='empresas', null=True, on_delete=models.PROTECT)
-    es_competencia = models.BooleanField(default=False)
-    esta_cerrado = models.BooleanField(default=False)
-    no_vender = models.BooleanField(default=False)
-    cliente_nuevo_nit = models.ForeignKey('self', null=True, on_delete=models.PROTECT)
+    cliente_contacto = models.ForeignKey(
+        ClienteBiable,
+        on_delete=models.PROTECT,
+        related_name='clientes_sistemas_informacion',
+        null=True
+    )
 
     class Meta:
+        unique_together = [('sistema_informacion', 'nit')]
         permissions = [
             ("list_clientecatalogo", "Can see list clientes catalogos")
         ]

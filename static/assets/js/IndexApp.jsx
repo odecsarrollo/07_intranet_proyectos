@@ -42,6 +42,7 @@ const IndexApp = memo(props => {
         modulo_admin,
         modulo_proyectos,
         modulo_ventas,
+        modulo_ventas_componentes,
         modulo_medios,
         modulo_sistemas,
         modulo_contabilidad
@@ -69,8 +70,15 @@ const IndexApp = memo(props => {
                     />}
                     {modulo_ventas &&
                     <Boton
-                        nombre='Ventas'
-                        link='/app/ventas/'
+                        nombre='Ventas Proyectos'
+                        link='/app/ventas_proyectos/'
+                        icono='shopping-cart'
+                        classes={classes}
+                    />}
+                    {modulo_ventas_componentes &&
+                    <Boton
+                        nombre='Ventas Componentes'
+                        link='/app/ventas_componentes/'
                         icono='shopping-cart'
                         classes={classes}
                     />}

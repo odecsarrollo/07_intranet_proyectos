@@ -20,7 +20,8 @@ let Form = memo((props) => {
         onCancel,
         handleSubmit,
         modal_open,
-        singular_name
+        singular_name,
+        initialValues
     } = props;
     useEffect(() => {
         dispatch(actions.fetchPaises());

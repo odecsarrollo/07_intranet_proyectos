@@ -1,3 +1,12 @@
+export const COTIZACION_COMPONENTE_TYPES = {
+    create: 'create_cotizacion_componente',
+    delete: 'delete_cotizacion_componente',
+    fetch_all: 'fetch_cotizaciones_componentes',
+    fetch: 'fetch_cotizacion_componente',
+    clear: 'clear_cotizaciones_componentes',
+    update: 'update_cotizacion_componente',
+};
+
 export const BANDA_EUROBELT_TYPES = {
     create: 'create_banda_eurobelt',
     delete: 'delete_banda_eurobelt',

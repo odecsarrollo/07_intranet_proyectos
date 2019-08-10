@@ -5,9 +5,25 @@ import {
     fetchObject,
     deleteObject,
     createObject,
+    callApiMethodPostParameters
 } from '../../00_general_fuctions'
 
 const current_url_api = 'geografia_ciudades';
+export const createCiudadCotizacion = (values, options_action = {}) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        _.mapKeys(values, (v, k) => {
+            params.append(k, v);
+        });
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: response})
+        };
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, null, 'crear_ciudad_desde_cotizacion', params, options)
+    }
+};
+
+
 export const createCiudad = (values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {

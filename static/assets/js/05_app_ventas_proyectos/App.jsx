@@ -14,16 +14,16 @@ import ClienteDetail from "../03_app_admin/especificas/clientes/clientes/contain
 const App = () => {
     return (
         <Loading>
-            <DrawerMenu lista_menu={<Menu/>} titulo='Ventas'>
+            <DrawerMenu lista_menu={<Menu/>} titulo='Ventas Proyectos'>
                 <Switch>
-                    <Route exact path='/app/ventas/' component={AppIndex}/>
-                    <Route exact path='/app/ventas/clientes/clientes/list' component={ClientesList}/>
-                    <Route exact path='/app/ventas/clientes/clientes/detail/:id' component={ClienteDetail}/>
-                    <Route exact path='/app/ventas/cotizaciones/cotizaciones/list'
+                    <Route exact path='/app/ventas_proyectos/' component={AppIndex}/>
+                    <Route exact path='/app/ventas_proyectos/clientes/clientes/list' component={ClientesList}/>
+                    <Route exact path='/app/ventas_proyectos/clientes/clientes/detail/:id' component={ClienteDetail}/>
+                    <Route exact path='/app/ventas_proyectos/cotizaciones/cotizaciones/list'
                            component={CotizacionesList}/>
-                    <Route exact path='/app/ventas/cotizaciones/cotizaciones/detail/:id'
+                    <Route exact path='/app/ventas_proyectos/cotizaciones/cotizaciones/detail/:id'
                            component={CotizacionesDetail}/>
-                    <Route exact path='/app/ventas/informes/cuadro_tuberia_ventas'
+                    <Route exact path='/app/ventas_proyectos/informes/cuadro_tuberia_ventas'
                            component={InformeTunelVentas}/>
                 </Switch>
             </DrawerMenu>

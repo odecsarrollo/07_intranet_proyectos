@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import ExcelDownload from "../../00_utilities/components/system/ExcelDownload";
 import CargarDatos from "./system/cargar_datos";
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {notificarAction} from '../../01_actions/01_index';
 
 function crudHOC(CreateForm, Tabla) {
@@ -29,8 +29,6 @@ function crudHOC(CreateForm, Tabla) {
         const [modal_open, setModalOpen] = useState(false);
         const [selected_rows, setSelectedRows] = useState([]);
         const [are_select_all_rows, setSelectAllRows] = useState(false);
-        const proyectos_list = useSelector(state => state.proyectos);
-
 
         const isRowTableSelected = key => selected_rows.includes(key);
 
@@ -65,7 +63,6 @@ function crudHOC(CreateForm, Tabla) {
         };
 
         const rowFn = (state, rowInfo, column, instance) => {
-            console.log('renderizó')
             return {
                 onClick: (e, handleOriginal) => {
                     if (handleOriginal) {
@@ -217,23 +214,26 @@ function crudHOC(CreateForm, Tabla) {
                         setSelectItem={setSelectItem}
                     />
                 }
-                <div>
-                    <Tabla
-                        {...props}
-                        getTrGroupProps={getTrGroupProps}
-                        rowFn={rowFn}
-                        isSelected={isRowTableSelected}
-                        toggleSelection={toggleRowSelection}
-                        toggleAll={toggleAllRows}
-                        selection={selected_rows}
-                        selectAll={are_select_all_rows}
-                        checkboxTable={checkboxTable}
-                        updateItem={onSubmit}
-                        onDelete={onDelete}
-                        onSelectForDelete={onSelectForDelete}
-                        onSelectItemEdit={onSelectItemEdit}
-                    />
-                </div>
+                {
+                    Tabla &&
+                    <div>
+                        <Tabla
+                            {...props}
+                            getTrGroupProps={getTrGroupProps}
+                            rowFn={rowFn}
+                            isSelected={isRowTableSelected}
+                            toggleSelection={toggleRowSelection}
+                            toggleAll={toggleAllRows}
+                            selection={selected_rows}
+                            selectAll={are_select_all_rows}
+                            checkboxTable={checkboxTable}
+                            updateItem={onSubmit}
+                            onDelete={onDelete}
+                            onSelectForDelete={onSelectForDelete}
+                            onSelectItemEdit={onSelectItemEdit}
+                        />
+                    </div>
+                }
                 {
                     cargarDatos && <CargarDatos
                         cargarDatos={cargarDatos}

@@ -3,8 +3,6 @@ from django.contrib.auth.models import User
 
 from model_utils.models import TimeStampedModel
 
-from sistema_informacion_origen.models import SistemaInformacionOrigen
-
 
 class CanalDistribucion(TimeStampedModel):
     nombre = models.CharField(max_length=100, unique=True)
@@ -36,9 +34,17 @@ class GrupoCliente(models.Model):
 
 # Realmente cliente contacto
 class ClienteBiable(models.Model):
-    sistema_informacion = models.ForeignKey(SistemaInformacionOrigen, on_delete=models.PROTECT, null=True)
     nit = models.CharField(max_length=20, null=True)
     nombre = models.CharField(max_length=200)
+    forma_pago = models.CharField(max_length=120, null=True)
+
+    grupo = models.ForeignKey(GrupoCliente, null=True, related_name='empresas', on_delete=models.PROTECT)
+    fecha_creacion = models.DateField(null=True)
+    canal = models.ForeignKey(CanalDistribucion, related_name='empresas', null=True, on_delete=models.PROTECT)
+    industria = models.ForeignKey(TipoIndustria, related_name='empresas', null=True, on_delete=models.PROTECT)
+    es_competencia = models.BooleanField(default=False)
+    cliente_nuevo_nit = models.ForeignKey('self', null=True, related_name='cliente_viejo_nit', on_delete=models.PROTECT)
+    nueva_desde_cotizacion = models.BooleanField(default=False)
 
     class Meta:
         permissions = [
@@ -59,6 +65,7 @@ class ContactoCliente(TimeStampedModel):
     telefono = models.CharField(max_length=120, null=True)
     telefono_2 = models.CharField(max_length=120, null=True)
     cargo = models.CharField(max_length=200, null=True)
+    nueva_desde_cotizacion = models.BooleanField(default=False)
 
     @property
     def full_nombre(self):

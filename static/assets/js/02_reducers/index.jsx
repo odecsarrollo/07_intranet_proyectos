@@ -76,6 +76,8 @@ import mediosAdhesivosReducers from './especificas/medios/adhesivosReducers';
 import mediosAdhesivosMovimientosReducers from './especificas/medios/adhesivosMovimientosReducers';
 import sistemasEquiposComputadoresReducers from './especificas/sistemas/computadoresReducers';
 
+import cotizacionesComponentes from './especificas/cotizaciones_componentes/cotizacionComponenteReducer';
+
 import {reducer as notificationsReducers} from 'react-notification-system-redux';
 
 const rootReducer = combineReducers({
@@ -145,7 +147,9 @@ const rootReducer = combineReducers({
     contabilidad_proforma_anticipos: contabilidadProformaAnticiposReducer,
     contabilidad_proforma_anticipos_archivos: contabilidadProformaAnticiposArchivosReducer,
 
-    sistemas_equipos_computadores: sistemasEquiposComputadoresReducers
+    sistemas_equipos_computadores: sistemasEquiposComputadoresReducers,
+
+    cotizaciones_componentes: cotizacionesComponentes
 });
 
 export default rootReducer;

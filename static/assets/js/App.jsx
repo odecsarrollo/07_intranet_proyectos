@@ -177,7 +177,8 @@ import AppIndex from './IndexApp';
 import AppAdmin from './03_app_admin/App';
 
 import AppProyectos from './04_app_proyectos/App';
-import AppVentas from './05_app_ventas/App';
+import AppVentasProyectos from './05_app_ventas_proyectos/App';
+import AppVentasComponentes from './10_app_ventas_componentes/App';
 import AppBandas from './06_app_bandas/App';
 import AppMedios from './07_app_medios/App';
 import AppContabilidad from './08_app_contabilidad/App';
@@ -214,7 +215,8 @@ class RootContainerComponent extends Component {
                         <Route path='/app/login' component={Login}/>
                         <PrivateRoute path='/app/admin' component={AppAdmin}/>
                         <PrivateRoute path='/app/proyectos' component={AppProyectos}/>
-                        <PrivateRoute path='/app/ventas' component={AppVentas}/>
+                        <PrivateRoute path='/app/ventas_proyectos' component={AppVentasProyectos}/>
+                        <PrivateRoute path='/app/ventas_componentes' component={AppVentasComponentes}/>
                         <PrivateRoute path='/app/bandas' component={AppBandas}/>
                         <PrivateRoute path='/app/medios' component={AppMedios}/>
                         <PrivateRoute path='/app/contabilidad' component={AppContabilidad}/>

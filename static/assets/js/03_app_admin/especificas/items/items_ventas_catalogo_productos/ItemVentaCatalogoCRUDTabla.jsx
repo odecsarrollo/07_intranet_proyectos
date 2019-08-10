@@ -31,13 +31,13 @@ const Tabla = memo(props => {
                         },
                         {
                             Header: "Nombre",
-                            maxWidth: 120,
-                            minWidth: 120,
+                            maxWidth: 300,
+                            minWidth: 300,
                             accessor: "to_string",
                             filterable: true,
                             filterMethod: (filter, row) => row._original.to_string.includes(filter.value.toUpperCase()),
                             Cell: row => <div style={{
-                                fontSize: '0.6rem',
+                                fontSize: '0.8rem',
                                 whiteSpace: 'normal'
                             }}>{row.value}</div>
                         },
@@ -56,7 +56,8 @@ const Tabla = memo(props => {
                         },
                         {
                             Header: "Costo MO",
-                            maxWidth: 80,
+                            minWidth: 70,
+                            maxWidth: 70,
                             accessor: "costo",
                             Cell: row => <div className='text-right'>
                                 {row.value} {row.original.moneda_nombre}
