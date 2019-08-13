@@ -5,9 +5,56 @@ import {
     fetchObject,
     deleteObject,
     createObject,
+    callApiMethodPostParameters,
 } from '../../00_general_fuctions'
 
 const current_url_api = 'cotizaciones_componentes';
+
+export const eliminarItemCotizacionComponente = (id, id_item_cotizacion, options_action = {}) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        params.append('id_item_cotizacion', id_item_cotizacion);
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: response})
+        };
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'eliminar_item', params, options)
+    }
+};
+
+
+export const adicionarItemCotizacionComponente = (
+    id,
+    tipo_item,
+    precio_unitario,
+    item_descripcion,
+    item_referencia,
+    item_unidad_medida,
+    id_item = null,
+    forma_pago_id = null,
+    options_action = {},
+) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        params.append('tipo_item', tipo_item);
+        params.append('precio_unitario', precio_unitario);
+        params.append('item_descripcion', item_descripcion);
+        params.append('item_referencia', item_referencia);
+        params.append('item_unidad_medida', item_unidad_medida);
+        if (id_item) {
+            params.append('id_item', id_item);
+        }
+        if (forma_pago_id) {
+            params.append('forma_pago_id', forma_pago_id);
+        }
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: response})
+        };
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'adicionar_item', params, options)
+    }
+};
+
 export const createCotizacionComponente = (values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {

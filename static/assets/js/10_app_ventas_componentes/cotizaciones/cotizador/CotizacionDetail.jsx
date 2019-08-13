@@ -1,4 +1,4 @@
-import React, {memo, useEffect, useState, Fragment} from "react";
+import React, {memo, useEffect, useState, Fragment, useContext} from "react";
 import {useDispatch, useSelector} from 'react-redux';
 import * as actions from '../../../01_actions/01_index';
 import {SinObjeto} from "../../../00_utilities/templates/fragmentos";
@@ -8,10 +8,12 @@ import {COTIZACIONES_COMPONENTES} from "../../../permisos";
 import Typography from "@material-ui/core/Typography";
 import CotizacionCRUDFormDialog from './forms/CotizacionCRUDFormDialog.jsx'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import CotizacionDetailAddItemNoListaPrecio from "./CotizacionDetailAddItemNoListaPrecio";
+import CotizacionDetailItemsTabla from "./CotizacionDetailItemsTabla";
 
 const Detail = memo(props => {
     const [show_cotizacion_informacion_dialog, setShowCotizacionInformacionDialog] = useState(false);
-    const [show_lista_precios_dialog, setShowListaPreciosDialog] = useState(false);
+    const [show_adicionar_item, setShowAdicionarItem] = useState(false);
     const dispatch = useDispatch();
     const {id} = props.match.params;
     const object = useSelector(state => state.cotizaciones_componentes[id]);
@@ -21,11 +23,47 @@ const Detail = memo(props => {
         const cargarContacto = (contacto_id) => dispatch(actions.fetchContactoCliente(contacto_id));
         dispatch(actions.fetchCotizacionComponente(id, {callback: coti => cargarContacto(coti.contacto)}));
     };
+
+    const adicionarItem = (
+        tipo_item,
+        precio_unitario,
+        item_descripcion,
+        item_referencia,
+        item_unidad_medida,
+        item_id = null,
+        forma_pago_id = null,
+        callback = null
+    ) => {
+        dispatch(
+            actions.adicionarItemCotizacionComponente(
+                id,
+                tipo_item,
+                precio_unitario,
+                item_descripcion,
+                item_referencia,
+                item_unidad_medida,
+                item_id,
+                forma_pago_id,
+                {callback}
+            )
+        )
+    };
+
+    const eliminarItem = (id_item_cotizacion) => dispatch(actions.eliminarItemCotizacionComponente(id, id_item_cotizacion));
+    const cambiarItem = (item) => dispatch(actions.updateItemCotizacionComponente(
+        id,
+        item,
+        {
+            callback: () => dispatch(actions.fetchCotizacionComponente(id))
+        })
+    );
+
     useEffect(() => {
         cargarDatos();
         return () => {
             dispatch(actions.clearContactosClientes());
             dispatch(actions.clearCotizacionesComponentes());
+            dispatch(actions.clearItemsCotizacionesComponentes());
         }
     }, []);
 
@@ -45,7 +83,6 @@ const Detail = memo(props => {
             }
         )
     );
-
     return (
         <ValidarPermisos can_see={permisos.detail} nombre='detalles de cotización'>
             {show_cotizacion_informacion_dialog &&
@@ -68,6 +105,12 @@ const Detail = memo(props => {
                         <Typography variant="h5" gutterBottom color="primary">
                             Items Cotización
                         </Typography>
+                        <CotizacionDetailItemsTabla
+                            items={object.items}
+                            eliminarItem={eliminarItem}
+                            cambiarItem={cambiarItem}
+                        />
+                        <CotizacionDetailAddItemNoListaPrecio adicionarItem={adicionarItem}/>
                     </div>
                 </div>
                 <div className="col-4">
@@ -93,19 +136,19 @@ const Detail = memo(props => {
                         {contacto_cotizacion.telefono &&
                         <Typography variant="overline" color="inherit" gutterBottom>
                             Teléfono: {contacto_cotizacion.telefono}
-                        </Typography>}
+                        </Typography>}<br/>
                         {contacto_cotizacion.telefono_2 &&
                         <Typography variant="overline" color="inherit" gutterBottom>
                             Teléfono 2: {contacto_cotizacion.telefono_2}
-                        </Typography>}
+                        </Typography>}<br/>
                         {contacto_cotizacion.correo_electronico &&
                         <Typography variant="overline" color="inherit" gutterBottom>
                             Email: {contacto_cotizacion.correo_electronico}
-                        </Typography>}
+                        </Typography>}<br/>
                         {contacto_cotizacion.correo_electronico_2 &&
                         <Typography variant="overline" color="inherit" gutterBottom>
                             Email 2: {contacto_cotizacion.correo_electronico_2}
-                        </Typography>}
+                        </Typography>}<br/>
                     </Fragment>
                     }
                 </div>

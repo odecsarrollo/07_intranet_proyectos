@@ -55,3 +55,4 @@ export * from './contabilidad/anticipos/proformaAnticipoItemAction';
 export * from './contabilidad/anticipos/proformaAnticipoArchivoAction';
 
 export * from './cotizaciones_componentes/cotizacionComponenteAction';
+export * from './cotizaciones_componentes/cotizacionComponenteItemAction';

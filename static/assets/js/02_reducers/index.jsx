@@ -77,6 +77,7 @@ import mediosAdhesivosMovimientosReducers from './especificas/medios/adhesivosMo
 import sistemasEquiposComputadoresReducers from './especificas/sistemas/computadoresReducers';
 
 import cotizacionesComponentes from './especificas/cotizaciones_componentes/cotizacionComponenteReducer';
+import cotizacionesComponentesItems from './especificas/cotizaciones_componentes/cotizacionComponenteItemReducer';
 
 import {reducer as notificationsReducers} from 'react-notification-system-redux';
 
@@ -149,7 +150,8 @@ const rootReducer = combineReducers({
 
     sistemas_equipos_computadores: sistemasEquiposComputadoresReducers,
 
-    cotizaciones_componentes: cotizacionesComponentes
+    cotizaciones_componentes: cotizacionesComponentes,
+    cotizaciones_componentes_items: cotizacionesComponentesItems,
 });
 
 export default rootReducer;

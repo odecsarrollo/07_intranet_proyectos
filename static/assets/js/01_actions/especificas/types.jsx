@@ -1,3 +1,12 @@
+export const ITEM_COTIZACION_COMPONENTE_TYPES = {
+    create: 'create_item_cotizacion_componente',
+    delete: 'delete_item_cotizacion_componente',
+    fetch_all: 'fetch_items_cotizaciones_componentes',
+    fetch: 'fetch_item_cotizacion_componente',
+    clear: 'clear_items_cotizaciones_componentes',
+    update: 'update_item_cotizacion_componente',
+};
+
 export const COTIZACION_COMPONENTE_TYPES = {
     create: 'create_cotizacion_componente',
     delete: 'delete_cotizacion_componente',

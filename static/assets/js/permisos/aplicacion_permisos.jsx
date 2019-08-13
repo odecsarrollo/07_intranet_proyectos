@@ -1,3 +1,10 @@
+export const ITEMS_COTIZACIONES_COMPONENTES = {
+    add: 'add_itemcotizacioncomponente',
+    delete: 'delete_itemcotizacioncomponente',
+    change: 'change_itemcotizacioncomponente',
+    list: 'list_itemcotizacioncomponente',
+    detail: 'view_itemcotizacioncomponente',
+};
 export const COTIZACIONES_COMPONENTES = {
     add: 'add_cotizacioncomponente',
     delete: 'delete_cotizacioncomponente',

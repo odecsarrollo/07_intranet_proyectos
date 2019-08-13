@@ -23,10 +23,12 @@ def contizacion_componentes_asignar_nro_consecutivo(
 def contizacion_componentes_adicionar_item(
         tipo_item: str,
         cotizacion_componente_id: int,
+        precio_unitario: float,
+        item_descripcion: str,
+        item_referencia: str,
+        item_unidad_medida: str,
+        forma_pago_id: int = None,
         id_item: int = None,
-        item_descripcion: str = None,
-        item_referencia: str = None,
-        item_unidad_medida: str = None,
 ) -> CotizacionComponente:
     if (
             id_item is None or tipo_item == 'Otro') and item_descripcion is None and item_referencia is None and item_unidad_medida is None:
@@ -35,35 +37,34 @@ def contizacion_componentes_adicionar_item(
         })
     cotizacion_componente = CotizacionComponente.objects.get(pk=cotizacion_componente_id)
     item = ItemCotizacionComponente()
-    descripcion = ''
-    referencia = ''
-    unidad_medida = ''
     if tipo_item == 'BandaEurobelt':
         banda_eurobelt = BandaEurobelt.objects.get(pk=id_item)
         item.banda_eurobelt = banda_eurobelt
-        descripcion = banda_eurobelt.nombre
-        referencia = banda_eurobelt.referencia
     if tipo_item == 'ArticuloCatalogo':
         articulo_catalogo = ItemVentaCatalogo.objects.get(pk=id_item)
         item.articulo_catalogo = articulo_catalogo
-        descripcion = articulo_catalogo.nombre_catalogo
-        referencia = articulo_catalogo.referencia_catalogo
-        unidad_medida = articulo_catalogo.unidad_medida_catalogo
     if tipo_item == 'ComponenteEurobelt':
         componente_eurobelt = ComponenteBandaEurobelt.objects.get(pk=id_item)
         item.componente_eurobelt = componente_eurobelt
-        descripcion = componente_eurobelt.nombre
-    if tipo_item == 'Otro':
-        descripcion = item_descripcion
-        referencia = item_referencia
-        unidad_medida = item_unidad_medida
 
-    item.descripcion = descripcion
-    item.unidad_medida = unidad_medida
-    item.referencia = referencia
+    item.descripcion = item_descripcion
+    item.referencia = item_referencia
+    item.unidad_medida = item_unidad_medida
     item.cotizacion = cotizacion_componente
-    item.cantidad = 0
-    item.precio_unitario = 0
-    item.valor_total = 0
+    item.cantidad = 1
+    item.precio_unitario = precio_unitario
+    item.valor_total = precio_unitario
+    item.forma_pago_id = forma_pago_id
     item.save()
     return cotizacion_componente
+
+
+def cotizacion_componentes_item_actualizar_item(
+        item_componente_id: int,
+        cantidad: float
+) -> ItemCotizacionComponente:
+    item = ItemCotizacionComponente.objects.get(pk=item_componente_id)
+    item.cantidad = cantidad
+    item.valor_total = cantidad * item.precio_unitario
+    item.save()
+    return item

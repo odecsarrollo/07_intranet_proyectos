@@ -1,15 +1,13 @@
-import React, {Component} from 'react';
+import React, {memo} from 'react';
 import {Link} from 'react-router-dom'
-import {withStyles} from "@material-ui/core/styles/index";
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import Tooltip from '@material-ui/core/Tooltip';
-import {connect} from "react-redux";
-import * as actions from "../../../../01_actions/01_index";
+import {makeStyles} from '@material-ui/core/styles';
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
     main: {
         paddingLeft: theme.spacing.unit * 2,
     },
@@ -19,33 +17,26 @@ const styles = theme => ({
     iconColor: {
         color: theme.palette.primary.dark
     }
+}));
+
+const DrawerListItem = memo(props => {
+    const classes = useStyles();
+    const {link, texto, icono, type = 'main', size = null} = props;
+    return (
+        <Link to={link}>
+            <ListItem className={type === 'main' ? classes.main : classes.nested}>
+                {
+                    icono &&
+                    <Tooltip title={texto}>
+                        <ListItemIcon>
+                            <FontAwesomeIcon className={classes.iconColor} icon={icono} size={size}/>
+                        </ListItemIcon>
+                    </Tooltip>
+                }
+                <ListItemText primary={texto}/>
+            </ListItem>
+        </Link>
+    )
 });
 
-class DrawerListItem extends Component {
-    render() {
-        const {link, texto, icono, classes, type = 'main', theme, size = null} = this.props;
-        return (
-            <Link to={link}>
-                <ListItem button className={type === 'main' ? classes.main : classes.nested}>
-                    {
-                        icono &&
-                        <Tooltip title={texto}>
-                            <ListItemIcon>
-                                <FontAwesomeIcon className={classes.iconColor} icon={icono} size={size}/>
-                            </ListItemIcon>
-                        </Tooltip>
-                    }
-                    <ListItemText inset primary={texto}/>
-                </ListItem>
-            </Link>
-        )
-    }
-}
-
-function mapPropsToState(state, ownProps) {
-    return {
-        menu_status: state.menu_status
-    }
-}
-
-export default withStyles(styles, {withTheme: true})(connect(mapPropsToState, actions)(DrawerListItem));
+export default DrawerListItem;

@@ -4,6 +4,15 @@ from .models import CotizacionComponente, ItemCotizacionComponente
 
 
 class ItemCotizacionComponenteSerializer(serializers.ModelSerializer):
+    def update(self, instance, validated_data):
+        cantidad = validated_data.get('cantidad')
+        from .services import cotizacion_componentes_item_actualizar_item
+        item = cotizacion_componentes_item_actualizar_item(
+            item_componente_id=instance.id,
+            cantidad=cantidad
+        )
+        return item
+
     class Meta:
         model = ItemCotizacionComponente
         fields = [
@@ -48,4 +57,10 @@ class CotizacionComponenteSerializer(serializers.ModelSerializer):
             'pais_nombre',
             'estado',
             'version',
+            'items',
         ]
+        extra_kwargs = {'items': {'read_only': True}}
+
+
+class CotizacionComponenteConDetalleSerializer(CotizacionComponenteSerializer):
+    items = ItemCotizacionComponenteSerializer(many=True, read_only=True)
