@@ -4,10 +4,28 @@ import {
     updateObject,
     fetchObject,
     deleteObject,
-    createObject, callApiMethodPostParameters,
+    createObject, callApiMethodPostParameters, fetchListGetURLParameters,
 } from '../../00_general_fuctions'
 
 const current_url_api = 'banda_eurobelt_componentes';
+
+export function fetchBandaEurobeltComponentesxParametro(parametro, options_action = {}) {
+    return function (dispatch) {
+        const FULL_URL = `${current_url_api}/listar_x_parametro/?parametro=${parametro}`;
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch_all, payload: response})
+        };
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        return fetchListGetURLParameters(FULL_URL, options);
+    }
+}
+
 export const createBandaEurobeltComponente = (values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {

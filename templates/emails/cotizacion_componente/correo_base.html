@@ -1,0 +1,48 @@
+{% load static l10n humanize %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+<p>
+    Cordíal Saludo,
+</p>
+<p>
+    Prueba Cotizacion
+</p>
+{% if email_texto_adicional %}
+    <p>
+        {{ email_texto_adicional|linebreaksbr }}
+    </p>
+{% endif %}
+<div>
+    <div style="padding: 5px; border-radius: 15px; border: solid black 1px">
+        <h4 style="font-weight: bold">AVISO LEGAL:</h4>
+        <p style="text-align: justify; font-style: italic">
+            Odecopack le informa que cualquier uso indebido, retención, revisión no autorizada,
+            distribución,
+            divulgación, reenvío, copia, impresión y reproducción
+            de este mensaje y/o sus anexos, está estrictamente prohibido y sancionado legalmente, como lo establece la
+            ley
+            1273
+            de enero de 2009.
+        </p>
+        <p style="text-align: justify; font-style: italic">
+            Este mensaje y/o sus anexos son para uso exclusivo del destinatario final; su contenido puede contener
+            información protegida y confidencial de carácter legal. Si usted no es el destinatario del mensaje, por
+            favor
+            infórmelo y elimínelo de su dispositivo, junto con sus anexos.
+        </p>
+    </div>
+</div>
+<p style="font-weight: bold">
+    Apoyamos el desarrollo sostenible, evite imprimir este correo.
+</p>
+</body>
+</html>

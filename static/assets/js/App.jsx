@@ -79,7 +79,12 @@ import {
     faConveyorBelt,
     faCoins,
     faLaptopCode,
-    faInfoCircle
+    faInfoCircle,
+    faPhone,
+    faAt,
+    faArrowCircleUp,
+    faArrowCircleDown,
+    faFileImage
 } from '@fortawesome/pro-solid-svg-icons';
 
 library.add(
@@ -129,7 +134,12 @@ library.add(
     faExchangeAlt,
     faConveyorBelt,
     faLaptopCode,
-    faInfoCircle
+    faInfoCircle,
+    faPhone,
+    faAt,
+    faArrowCircleUp,
+    faArrowCircleDown,
+    faFileImage
 );
 
 const theme = createMuiTheme({

@@ -1,91 +1,82 @@
-import React, {memo, useState, Fragment} from "react";
-import TextField from '@material-ui/core/TextField';
-import Button from "@material-ui/core/Button";
+import React, {memo} from "react";
+import Typography from "@material-ui/core/Typography";
 
-const CotizacionDetailAddItemNoListaPrecio = memo(props => {
-    const {adicionarItem} = props;
-    const [item_descripcion, setDescripcion] = useState('');
-    const [item_referencia, setReferencia] = useState('');
-    const [item_unidad_medida, setUnidadMedida] = useState('');
-    const [precio_unitario, setPrecioUnitario] = useState('');
-    const clearFormulario = () => {
-        setDescripcion('');
-        setReferencia('');
-        setUnidadMedida('');
-        setPrecioUnitario('');
-    };
+import {reduxForm} from 'redux-form';
+import {MyTextFieldSimple} from '../../../00_utilities/components/ui/forms/fields';
+import BotoneriaModalForm from "../../../00_utilities/components/ui/forms/botoneria_modal_form";
+import validate from "./validate_add_item_no_lista_precios";
+
+let Form = memo(props => {
+    const {
+        handleSubmit,
+        pristine,
+        submitting,
+        reset,
+        initialValues,
+        adicionarItem,
+        cerrarDialog
+    } = props;
     return (
-        <div className="row">
-            <div className="col-12">
-                <TextField
-                    fullWidth={true}
-                    label='Descripción'
-                    value={item_descripcion}
-                    onChange={e => setDescripcion(e.target.value.toUpperCase())}
-                />
-            </div>
-            <div className="col-12">
+        <div className="col-12">
+            <form onSubmit={handleSubmit((v) => {
+                adicionarItem(
+                    'Otro',
+                    v.precio_unitario,
+                    v.item_descripcion,
+                    v.item_referencia,
+                    v.item_unidad_medida,
+                    null,
+                    null,
+                    cerrarDialog
+                );
+            })}>
                 <div className="row">
-                    <div className="col-4">
-                        <TextField
-                            fullWidth={true}
-                            label='Referencia'
-                            value={item_referencia}
-                            onChange={e => setReferencia(e.target.value.toUpperCase())}
+                    <div className="col-12">
+                        <MyTextFieldSimple
+                            case='U'
+                            nombre='Referencia'
+                            name='item_referencia'
+                            className='col-3 pl-3'
                         />
-                    </div>
-                    <div className="col-4">
-                        <TextField
-                            fullWidth={true}
-                            label='Unidad de Medida'
-                            value={item_unidad_medida}
-                            onChange={e => setUnidadMedida(e.target.value.toUpperCase())}
+                        <MyTextFieldSimple
+                            case='U'
+                            nombre='Descripción'
+                            name='item_descripcion'
+                            className='col-9 pl-3'
                         />
-                    </div>
-                    <div className="col-4">
-                        <TextField
-                            fullWidth={true}
-                            label='Precio Unitario'
-                            value={precio_unitario}
-                            onChange={e => setPrecioUnitario(e.target.value)}
+                        <MyTextFieldSimple
+                            case='U'
+                            nombre='Unidad Medida'
+                            name='item_unidad_medida'
+                            className='col-4 pl-3'
+                        />
+                        <MyTextFieldSimple
                             type='number'
+                            nombre='Precio Unitario'
+                            name='precio_unitario'
+                            className='col-4 pl-3'
                         />
                     </div>
                 </div>
-            </div>
-            {
-                precio_unitario !== '' &&
-                item_unidad_medida !== '' &&
-                item_referencia !== '' &&
-                item_descripcion !== '' &&
-                <Fragment>
-                    <Button
-                        color="primary"
-                        variant="contained"
-                        className='ml-3'
-                        onClick={() => adicionarItem(
-                            'Otro',
-                            precio_unitario,
-                            item_descripcion,
-                            item_referencia,
-                            item_unidad_medida,
-                            clearFormulario
-                        )}
-                    >
-                        Adicionar
-                    </Button>
-                    <Button
-                        color="secondary"
-                        variant="contained"
-                        className='ml-3'
-                        onClick={clearFormulario}
-                    >
-                        Limpiar
-                    </Button>
-                </Fragment>
-            }
+                <BotoneriaModalForm
+                    mostrar_submit={true}
+                    mostrar_limpiar={true}
+                    mostrar_cancelar={false}
+                    pristine={pristine}
+                    reset={reset}
+                    submitting={submitting}
+                    initialValues={initialValues}
+                />
+            </form>
         </div>
     )
 });
 
-export default CotizacionDetailAddItemNoListaPrecio;
+
+Form = reduxForm({
+    form: "adicionarItemPersonalizadoForm",
+    validate,
+    enableReinitialize: true
+})(Form);
+
+export default Form;

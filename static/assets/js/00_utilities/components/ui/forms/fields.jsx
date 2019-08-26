@@ -218,7 +218,7 @@ const renderCheckbox = ({input, label}) => (
     <FormControlLabel
         control={
             <Checkbox
-                checked={input.value}
+                checked={typeof input.value === 'string' ? false : input.value}
                 color='primary'
                 onChange={(event, value) => input.onChange(value)}
             />
@@ -228,20 +228,22 @@ const renderCheckbox = ({input, label}) => (
 );
 
 export const MyCheckboxSimple = (props) => {
-    const {onClick} = props;
+    const {onClick, className = null} = props;
     return (
-        <Field
-            onClick={() => {
-                if (onClick) {
-                    onClick()
-                }
-            }}
-            {...props}
-            name={props.name}
-            component={renderCheckbox}
-            label={props.nombre}
-            normalize={v => !!v}
-        />
+        <div className={className}>
+            <Field
+                onClick={() => {
+                    if (onClick) {
+                        onClick()
+                    }
+                }}
+                {...props}
+                name={props.name}
+                component={renderCheckbox}
+                label={props.nombre}
+                normalize={v => !!v}
+            />
+        </div>
     )
 };
 MyCheckboxSimple.propTypes = {

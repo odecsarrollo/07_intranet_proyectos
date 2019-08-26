@@ -5,7 +5,6 @@ import {
     MyCheckboxSimple,
     MyCombobox
 } from '../../../../../../../00_utilities/components/ui/forms/fields';
-import {connect} from "react-redux";
 import {MyFormTagModal} from '../../../../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import validate from './validate';
 

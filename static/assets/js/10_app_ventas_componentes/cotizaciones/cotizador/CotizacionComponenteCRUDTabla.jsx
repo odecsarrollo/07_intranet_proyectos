@@ -38,6 +38,13 @@ const Tabla = memo(props => {
                             filterable: true
                         },
                         {
+                            Header: "Estado",
+                            accessor: "estado_display",
+                            maxWidth: 80,
+                            minWidth: 80,
+                            filterable: true
+                        },
+                        {
                             Header: "Ciudad",
                             maxWidth: 350,
                             minWidth: 350,

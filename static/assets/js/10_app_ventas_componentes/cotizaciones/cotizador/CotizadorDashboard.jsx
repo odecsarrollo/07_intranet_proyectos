@@ -1,4 +1,4 @@
-import React, {memo, useEffect} from 'react';
+import React, {memo, useEffect, Fragment} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../../01_actions/01_index";
 import {COTIZACIONES_COMPONENTES} from "../../../permisos";
@@ -6,9 +6,11 @@ import CreateForm from './forms/CotizacionCRUDFormDialog';
 import Tabla from './CotizacionComponenteCRUDTabla';
 import crudHOC from '../../../00_utilities/components/HOC_CRUD2';
 import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
+import CotizacionEdicionList from "./CotizacionEdicionList";
 
 const CRUD = crudHOC(CreateForm, Tabla);
 const Cotizaciones = memo(props => {
+    const {history} = props;
     const dispatch = useDispatch();
     const cargarDatos = () => {
         dispatch(actions.fetchCotizacionesComponentes());
@@ -28,15 +30,18 @@ const Cotizaciones = memo(props => {
         updateObjectMethod: (id, item, options) => dispatch(actions.updateCotizacionComponente(id, item, options)),
     };
     return (
-        <CRUD
-            posSummitMethod={() => cargarDatos()}
-            method_pool={method_pool}
-            list={list}
-            permisos_object={permisos}
-            plural_name='Cotizaciones'
-            singular_name='Cotización'
-            cargarDatos={cargarDatos}
-        />
+        <Fragment>
+            <CotizacionEdicionList/>
+            <CRUD
+                posSummitMethod={(cot) => history.push(`/app/ventas_componentes/cotizaciones/detail/${cot.id}`)}
+                method_pool={method_pool}
+                list={list}
+                permisos_object={permisos}
+                plural_name='Cotizaciones'
+                singular_name='Cotización'
+                cargarDatos={cargarDatos}
+            />
+        </Fragment>
     )
 });
 

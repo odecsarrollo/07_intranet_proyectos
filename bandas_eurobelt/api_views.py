@@ -4,6 +4,7 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
+from intranet_proyectos.utils_queryset import query_varios_campos
 from .models import (
     TipoBandaBandaEurobelt,
     MaterialBandaEurobelt,
@@ -185,6 +186,14 @@ class BandaEurobeltViewSet(viewsets.ModelViewSet):
         self.serializer_class = BandaEurobeltConDetalleSerializer
         return super().update(request, *args, **kwargs)
 
+    @action(detail=False, http_method_names=['get', ])
+    def listar_x_parametro(self, request):
+        parametro = request.GET.get('parametro')
+        search_fields = ['nombre', 'referencia']
+        qs = query_varios_campos(self.queryset, search_fields, parametro)
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)
+
     @action(detail=True, methods=['post'])
     def adicionar_componente(self, request, pk=None):
         from .services import banda_eurobelt_adicionar_componente
@@ -294,6 +303,14 @@ class ComponenteViewSet(viewsets.ModelViewSet):
             serie_id=serie_id
         )
         serializer = self.get_serializer(componente)
+        return Response(serializer.data)
+
+    @action(detail=False, http_method_names=['get', ])
+    def listar_x_parametro(self, request):
+        parametro = request.GET.get('parametro')
+        search_fields = ['nombre', 'referencia']
+        qs = query_varios_campos(self.queryset, search_fields, parametro)
+        serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
 

@@ -62,7 +62,8 @@ class Common(Configuration):
         'medios_adhesivos.apps.MediosAdhesivosConfig',
         'contabilidad_anticipos.apps.ContabilidadAnticiposConfig',
         'sistemas_equipos.apps.SistemasEquiposConfig',
-        'cotizaciones_componentes.apps.CotizacionesComponentesConfig'
+        'cotizaciones_componentes.apps.CotizacionesComponentesConfig',
+        'envios_emails.apps.EnviosEmailsConfig',
     ]
 
     THIRD_PART_APPS = [

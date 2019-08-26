@@ -2,7 +2,7 @@ import React, {memo, useEffect, useState} from 'react';
 import * as actions from '../../../../01_actions/01_index';
 import {useDispatch, useSelector} from 'react-redux';
 import {formValueSelector, reduxForm} from 'redux-form';
-import {MyCombobox} from '../../../../00_utilities/components/ui/forms/fields';
+import {MyCheckboxSimple, MyCombobox, MyTextFieldSimple} from '../../../../00_utilities/components/ui/forms/fields';
 import validate from './validate';
 import {MyFormTagModal} from '../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import CrearUbicacionForm from './CrearUbicacionForm';
@@ -87,6 +87,13 @@ let CotizacionCRUDFormDialog = memo(props => {
                 filter='contains'
                 valuesField='id'
                 placeholder='Cliente'
+            />
+            <MyTextFieldSimple
+                multiline
+                rows={4}
+                className='col-12'
+                name='observaciones'
+                nombre='Observaciones'
             />
             <MyCombobox
                 label='Contacto'

@@ -74,7 +74,7 @@ const useStyles = makeStyles(theme => ({
         marginLeft: 0,
     },
     nested: {
-        paddingLeft: theme.spacing.unit * 4,
+        paddingLeft: theme.spacing(4),
     },
     iconColor: {
         color: theme.palette.primary.dark

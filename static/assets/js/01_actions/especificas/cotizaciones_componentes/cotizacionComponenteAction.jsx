@@ -6,6 +6,9 @@ import {
     deleteObject,
     createObject,
     callApiMethodPostParameters,
+    callApiMethodPostParametersPDF,
+    callApiMethodPost,
+    uploadArchivo
 } from '../../00_general_fuctions'
 
 const current_url_api = 'cotizaciones_componentes';
@@ -19,6 +22,19 @@ export const eliminarItemCotizacionComponente = (id, id_item_cotizacion, options
         };
         const options = {...options_action, dispatches, dispatch_method: dispatch};
         return callApiMethodPostParameters(current_url_api, id, 'eliminar_item', params, options)
+    }
+};
+
+export const cambiarPosicionItemCotizacionComponente = (id, id_item_cotizacion, direccion, options_action = {}) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        params.append('id_item_cotizacion', id_item_cotizacion);
+        params.append('direccion', direccion);
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: response})
+        };
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'cambiar_posicion_item', params, options)
     }
 };
 
@@ -87,6 +103,20 @@ export const fetchCotizacionesComponentes = (options_action = {}) => {
         return fetchListGet(current_url_api, options);
     }
 };
+export const fetchCotizacionesComponentesEdicionAsesor = (options_action = {}) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch_all, payload: response})
+        };
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches, ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        return fetchListGet(`${current_url_api}/cotizaciones_en_edicion_asesor`, options);
+    }
+};
 export const fetchCotizacionComponente = (id, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
@@ -102,6 +132,57 @@ export const clearCotizacionesComponentes = () => {
 
     }
 };
+
+export const printCotizacionComponente = (id, options_action) => {
+    return function (dispatch) {
+        const options = {...options_action, dispatch_method: dispatch};
+        return callApiMethodPostParametersPDF(current_url_api, id, 'imprimir', null, options)
+    }
+};
+
+export const uploadCotizacionComponente = (id, values, options_action = {}) => {
+    return (dispatch) => {
+        const options = {...options_action, dispatch_method: dispatch};
+        uploadArchivo(current_url_api, id, 'upload_archivo', values, options)
+    }
+};
+
+export const cambiarEstadoCotizacionComponente = (id, nuevo_estado, options_action) => {
+    return function (dispatch) {
+        let params = new URLSearchParams();
+        params.append('nuevo_estado', nuevo_estado);
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch, payload: response})
+        };
+        const options = {...options_action, dispatch_method: dispatch, dispatches};
+        return callApiMethodPostParameters(current_url_api, id, 'cambiar_estado', params, options)
+    }
+};
+
+export const enviarCotizacionComponente = (id, valores, options_action) => {
+    return function (dispatch) {
+        let params = new URLSearchParams();
+        _.mapKeys(valores, (v, k) => {
+            params.append(k, v);
+        });
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch, payload: response})
+        };
+        const options = {...options_action, dispatch_method: dispatch, dispatches};
+        return callApiMethodPostParameters(current_url_api, id, 'enviar', params, options)
+    }
+};
+
+export const asignarNroConsecutivoCotizacionComponente = (id, options_action) => {
+    return function (dispatch) {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch, payload: response})
+        };
+        const options = {...options_action, dispatch_method: dispatch, dispatches};
+        return callApiMethodPost(current_url_api, id, 'asignar_consecutivo', options)
+    }
+};
+
 export const updateCotizacionComponente = (id, values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
@@ -109,5 +190,12 @@ export const updateCotizacionComponente = (id, values, options_action = {}) => {
         };
         const options = {dispatches, ...options_action, dispatch_method: dispatch};
         return updateObject(current_url_api, id, values, options);
+    }
+};
+
+export const uploadAdjuntoCotizacionComponente = (id, values, options_action = {}) => {
+    return (dispatch) => {
+        const options = {...options_action, dispatch_method: dispatch};
+        uploadArchivo(current_url_api, id, 'upload_archivo', values, options)
     }
 };

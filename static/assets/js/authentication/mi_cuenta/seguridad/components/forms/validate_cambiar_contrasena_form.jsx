@@ -1,4 +1,3 @@
-import {REGEX_SOLO_NUMEROS} from "../../../../../00_utilities/common";
 import momentLocaliser from 'react-widgets-moment';
 import moment from 'moment-timezone';
 
