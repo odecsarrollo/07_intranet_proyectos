@@ -66,43 +66,50 @@ const CotizacionDetailInfo = memo(props => {
                     {contacto_cotizacion.full_nombre}
                 </Typography>
                 {contacto_cotizacion.telefono &&
-                <Typography variant="overline" color="inherit" gutterBottom style={styles.texto_secondario}>
-                    <FontAwesomeIcon
-                        icon={'phone'}
-                        style={{color: 'green'}}
-                    /> {contacto_cotizacion.telefono}
-                </Typography>}<br/>
+                <div>
+                    <Typography variant="overline" color="inherit" gutterBottom style={styles.texto_secondario}>
+                        <FontAwesomeIcon
+                            icon={'phone'}
+                            style={{color: 'green'}}
+                        /> {contacto_cotizacion.telefono}
+                    </Typography>
+                </div>}
                 {contacto_cotizacion.telefono_2 &&
-                <Typography variant="overline" color="inherit" gutterBottom style={styles.texto_secondario}>
-                    <FontAwesomeIcon
-                        icon={'phone'}
-                        style={{color: 'green'}}
-                    /> {contacto_cotizacion.telefono_2}
-                </Typography>}<br/>
+                <div>
+                    <Typography variant="overline" color="inherit" gutterBottom style={styles.texto_secondario}>
+                        <FontAwesomeIcon
+                            icon={'phone'}
+                            style={{color: 'green'}}
+                        /> {contacto_cotizacion.telefono_2}
+                    </Typography>
+                </div>}
                 {contacto_cotizacion.correo_electronico &&
-                <Typography variant="overline" color="inherit" gutterBottom style={styles.texto_secondario}>
-                    <FontAwesomeIcon
-                        icon={'at'}
-                        style={{color: 'green'}}
-                    /> {contacto_cotizacion.correo_electronico.toString().toLowerCase()}
-                </Typography>}<br/>
+                <div>
+                    <Typography variant="overline" color="inherit" gutterBottom style={styles.texto_secondario}>
+                        <FontAwesomeIcon
+                            icon={'at'}
+                            style={{color: 'green'}}
+                        /> {contacto_cotizacion.correo_electronico.toString().toLowerCase()}
+                    </Typography>
+                </div>}
                 {contacto_cotizacion.correo_electronico_2 &&
-                <Typography variant="overline" color="inherit" gutterBottom style={styles.texto_secondario}>
-                    <FontAwesomeIcon
-                        icon={'at'}
-                        style={{color: 'green'}}
-                    /> {contacto_cotizacion.correo_electronico_2.toString().toLowerCase()}
-                </Typography>}<br/>
+                <div>
+                    <Typography variant="overline" color="inherit" gutterBottom style={styles.texto_secondario}>
+                        <FontAwesomeIcon
+                            icon={'at'}
+                            style={{color: 'green'}}
+                        /> {contacto_cotizacion.correo_electronico_2.toString().toLowerCase()}
+                    </Typography>
+                </div>}
                 {cotizacion.observaciones &&
-                <Fragment>
+                <div>
                     <Typography variant="body1" gutterBottom color="primary" style={styles.texto_principal}>
                         Observaciones:
                     </Typography>
                     <Typography variant="body2" gutterBottom color="secondary" style={styles.texto_principal}>
                         {cotizacion.observaciones}
                     </Typography>
-                </Fragment>
-                }
+                </div>}
             </Fragment>
             }
             {editable && !cotizacion.nro_consecutivo &&

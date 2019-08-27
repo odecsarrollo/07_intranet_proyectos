@@ -1,6 +1,5 @@
 import React, {Fragment, memo} from 'react';
 import DrawerListItem from '../../00_utilities/components/ui/drawer/drawer_list_item';
-import MenuCotizacion from './MenuCotizacion';
 
 const Menu = memo(props => <Fragment>
     <DrawerListItem
@@ -9,7 +8,12 @@ const Menu = memo(props => <Fragment>
         texto='Principal'
         icono='home'
     />
-    <MenuCotizacion/>
+    <DrawerListItem
+        size='lg'
+        link='/app/ventas_componentes/cotizaciones/list'
+        texto='Cotizaciones'
+        icono='coins'
+    />
 </Fragment>);
 
 export default Menu;

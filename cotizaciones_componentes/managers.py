@@ -15,6 +15,9 @@ class CotizacionComponenteManager(models.Manager):
             'items',
             'items__forma_pago',
             'items__forma_pago__canal',
+            'adjuntos',
+            'envios_emails',
+            'envios_emails__archivo',
         ).annotate(
             valor_total=Sum('items__valor_total'),
             cantidad_items=Sum('items__cantidad')

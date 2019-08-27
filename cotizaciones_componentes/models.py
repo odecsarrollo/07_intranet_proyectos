@@ -39,6 +39,7 @@ class CotizacionComponente(TimeStampedModel):
     ciudad = models.ForeignKey(Ciudad, related_name='cotizaciones_componentes', on_delete=models.PROTECT)
     estado = models.CharField(max_length=10, choices=ESTADOS, default='INI')
     observaciones = models.TextField(null=True)
+    razon_rechazo = models.TextField(null=True)
     objects = CotizacionComponenteManager()
 
     @property

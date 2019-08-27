@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button';
 
 const BotoneriaModalForm = (props) => {
     const {
+        submit_text_boton = null,
         pristine,
         submitting,
         reset,
@@ -24,7 +25,7 @@ const BotoneriaModalForm = (props) => {
                     className='ml-3'
                     disabled={submitting || pristine}
                 >
-                    {initialValues ? 'Guardar ' : 'Crear '}
+                    {submit_text_boton ? submit_text_boton : initialValues ? 'Guardar ' : 'Crear '}
                 </Button>
             }
             {

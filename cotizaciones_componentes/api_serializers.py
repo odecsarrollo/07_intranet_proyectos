@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from envios_emails.api_serializers import CotizacionComponenteEnvioSerializer
 from .models import CotizacionComponente, ItemCotizacionComponente, CotizacionComponenteAdjunto
 
 
@@ -118,16 +119,21 @@ class CotizacionComponenteSerializer(serializers.ModelSerializer):
             'departamento_nombre',
             'pais_nombre',
             'estado',
+            'razon_rechazo',
             'estado_display',
+            'envios_emails',
             'items',
         ]
         extra_kwargs = {
+            'envios_emails': {'read_only': True},
             'items': {'read_only': True},
             'adjuntos': {'read_only': True},
             'observaciones': {'allow_blank': True},
+            'razon_rechazo': {'allow_blank': True},
         }
 
 
 class CotizacionComponenteConDetalleSerializer(CotizacionComponenteSerializer):
     items = ItemCotizacionComponenteSerializer(many=True, read_only=True)
     adjuntos = CotizacionComponenteAdjuntoSerializer(many=True, read_only=True)
+    envios_emails = CotizacionComponenteEnvioSerializer(many=True, read_only=True)

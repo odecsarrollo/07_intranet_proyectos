@@ -18,10 +18,11 @@ export const MyFormTagModal = (props) => {
         mostrar_submit = true,
         mostrar_limpiar = true,
         mostrar_cancelar = true,
+        submit_text_boton = null,
     } = props;
     return (
         <MyDialogCreate
-            element_type={`${initialValues ? 'Editar ' : 'Crear '} ${element_type}`}
+            element_type={`${submit_text_boton ? submit_text_boton : initialValues ? 'Editar ' : 'Crear '} ${element_type}`}
             is_open={modal_open}
             fullScreen={fullScreen}
             modelStyle={modelStyle}
@@ -32,6 +33,7 @@ export const MyFormTagModal = (props) => {
                 </div>
                 <div className='p-3'>
                     <BotoneriaModalForm
+                        submit_text_boton={submit_text_boton}
                         mostrar_submit={mostrar_submit}
                         mostrar_limpiar={mostrar_limpiar}
                         mostrar_cancelar={mostrar_cancelar}

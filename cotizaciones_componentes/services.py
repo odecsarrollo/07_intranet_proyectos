@@ -2,7 +2,7 @@ from io import BytesIO
 
 from django.core.files import File
 from django.core.mail import EmailMultiAlternatives
-from django.db.models import Max
+from django.db.models import Max, Q
 from django.template.loader import render_to_string
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError
@@ -18,7 +18,7 @@ from bandas_eurobelt.models import BandaEurobelt, ComponenteBandaEurobelt
 def cotizacion_componentes_cambiar_estado(
         cotizacion_componente_id: int,
         nuevo_estado: str,
-        request
+        razon_rechazo: str = None
 ) -> CotizacionComponente:
     cotizacion_componente = CotizacionComponente.objects.get(pk=cotizacion_componente_id)
     estado_actual = cotizacion_componente.estado
@@ -42,6 +42,10 @@ def cotizacion_componentes_cambiar_estado(
             {'_error': 'No se puede cambiar una cotización en estado %s a %s' % (estado_actual, nuevo_estado)})
 
     cotizacion_componente.estado = nuevo_estado
+    if estado_actual == 'ELI':
+        cotizacion_componente.razon_rechazo = razon_rechazo
+    if estado_actual != 'ELI':
+        cotizacion_componente.razon_rechazo = None
     cotizacion_componente.save()
     return cotizacion_componente
 
@@ -231,6 +235,12 @@ def cotizacion_componentes_enviar(
     )
     msg.attach_alternative(text_content, "text/html")
     msg.attach('%s.pdf' % nombre_cotizacion, cotizacion.pdf.pdf_cotizacion.read())
+    archivos_para_enviar = cotizacion.adjuntos.filter(Q(imagen='') | Q(imagen=None)).all()
+    imagenes_para_enviar = cotizacion.adjuntos.filter(Q(adjunto='') | Q(adjunto=None)).all()
+    [msg.attach('%s.%s' % (adjunto.nombre_adjunto, adjunto.adjunto.name.split('.')[-1]), adjunto.adjunto.read()) for
+     adjunto in archivos_para_enviar]
+    [msg.attach('%s.%s' % (adjunto.nombre_adjunto, adjunto.imagen.name.split('.')[-1]), adjunto.imagen.read()) for
+     adjunto in imagenes_para_enviar]
     try:
         msg.send()
     except Exception as e:

@@ -59,11 +59,12 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
     def cambiar_estado(self, request, pk=None):
         from .services import cotizacion_componentes_cambiar_estado
         cotizacion_componente = self.get_object()
-        nuevo_estado = request.POST.get('nuevo_estado')
+        nuevo_estado = request.POST.get('nuevo_estado', None)
+        razon_rechazo = request.POST.get('razon_rechazo', None)
         cotizacion_componente = cotizacion_componentes_cambiar_estado(
             cotizacion_componente_id=cotizacion_componente.id,
             nuevo_estado=nuevo_estado,
-            request=request
+            razon_rechazo=razon_rechazo
         )
         self.serializer_class = CotizacionComponenteConDetalleSerializer
         serializer = self.get_serializer(cotizacion_componente)
@@ -195,6 +196,15 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
         adjunto_cotizacion.nombre_adjunto = nombre_archivo
         adjunto_cotizacion.creado_por = self.request.user
         adjunto_cotizacion.save()
+        serializer = self.get_serializer(cotizacion_componente)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def delete_archivo(self, request, pk=None):
+        cotizacion_componente = self.get_object()
+        adjunto_id = self.request.POST.get('adjunto_id')
+        adjunto = CotizacionComponenteAdjunto.objects.get(pk=adjunto_id)
+        adjunto.delete()
         serializer = self.get_serializer(cotizacion_componente)
         return Response(serializer.data)
 

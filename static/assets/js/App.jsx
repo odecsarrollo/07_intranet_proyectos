@@ -64,6 +64,7 @@ import {
     faDownload,
     faSyncAlt,
     faTimes,
+    faTimesCircle,
     faCheck,
     faSquare,
     faCheckSquare,
@@ -84,7 +85,11 @@ import {
     faAt,
     faArrowCircleUp,
     faArrowCircleDown,
-    faFileImage
+    faFileImage,
+    faInboxOut,
+    faThumbsDown,
+    faThumbsUp,
+    faHistory
 } from '@fortawesome/pro-solid-svg-icons';
 
 library.add(
@@ -120,6 +125,7 @@ library.add(
     faDownload,
     faSyncAlt,
     faTimes,
+    faTimesCircle,
     faCheck,
     faSquare,
     faCheckSquare,
@@ -139,7 +145,11 @@ library.add(
     faAt,
     faArrowCircleUp,
     faArrowCircleDown,
-    faFileImage
+    faFileImage,
+    faInboxOut,
+    faThumbsDown,
+    faThumbsUp,
+    faHistory
 );
 
 const theme = createMuiTheme({

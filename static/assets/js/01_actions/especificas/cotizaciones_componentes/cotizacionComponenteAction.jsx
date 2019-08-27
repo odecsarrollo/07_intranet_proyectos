@@ -147,10 +147,13 @@ export const uploadCotizacionComponente = (id, values, options_action = {}) => {
     }
 };
 
-export const cambiarEstadoCotizacionComponente = (id, nuevo_estado, options_action) => {
+export const cambiarEstadoCotizacionComponente = (id, nuevo_estado, razon_rechazo = null, options_action) => {
     return function (dispatch) {
         let params = new URLSearchParams();
         params.append('nuevo_estado', nuevo_estado);
+        if (razon_rechazo) {
+            params.append('razon_rechazo', razon_rechazo);
+        }
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch, payload: response})
         };
@@ -197,5 +200,14 @@ export const uploadAdjuntoCotizacionComponente = (id, values, options_action = {
     return (dispatch) => {
         const options = {...options_action, dispatch_method: dispatch};
         uploadArchivo(current_url_api, id, 'upload_archivo', values, options)
+    }
+};
+
+export const deleteAdjuntoCotizacionComponente = (id, adjunto_id, options_action = {}) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        params.append('adjunto_id', adjunto_id);
+        const options = {...options_action, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'delete_archivo', params, options)
     }
 };

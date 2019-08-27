@@ -1,4 +1,4 @@
-import React, {memo, useEffect, useState} from "react";
+import React, {memo, useEffect, useState, Fragment} from "react";
 import {useDispatch, useSelector} from 'react-redux';
 import * as actions from '../../../01_actions/01_index';
 import {SinObjeto} from "../../../00_utilities/templates/fragmentos";
@@ -12,30 +12,57 @@ import CotizacionDetailInfo from './CotizacionDetailInfo.jsx'
 import CotizacionDetailItemsTabla from "./CotizacionDetailItemsTabla";
 import CotizadorAdicionarItem from './CotizadorAdicionarItem'
 import CotizacionEnviarFormDialog from './forms/CotizacionEnviarFormDialog'
+import CotizacionRechazadaFormDialog from './forms/CotizacionRechazadaFormDialog'
+import CotizacionDetailEnvioListItem from './CotizacionDetailEnvioList'
 import UploadFileDialogForm from '../../../00_utilities/components/ui/UploadFileDialogForm';
 import PrinJs from "print-js";
 import Button from "@material-ui/core/Button";
 import {notificarAction} from "../../../01_actions/01_index";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {makeStyles} from '@material-ui/core/styles';
+import clsx from 'clsx';
 
-const BotonNuevoEstado = memo(props => {
-    const {setEstado, nuevo_estado, nombre} = props;
+const useStyles = makeStyles(theme => ({
+    button: {
+        margin: theme.spacing(1),
+    },
+    leftIcon: {
+        marginRight: theme.spacing(1),
+    },
+    rightIcon: {
+        marginLeft: theme.spacing(1),
+    },
+    iconSmall: {
+        fontSize: 20,
+    },
+}));
+
+const BotonCotizacion = memo(props => {
+    const classes = useStyles();
+    const {onClick, nombre, icono = null, color = 'primary'} = props;
     return (
-        <div className='p-1'>
-            <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => setEstado(nuevo_estado)}
-            >
-                {nombre}
-            </Button>
-        </div>
+        <Button
+            className={classes.button}
+            variant="contained"
+            color={color}
+            onClick={onClick}
+        >
+            {nombre}
+            {icono &&
+            <FontAwesomeIcon
+                className={clsx(classes.rightIcon, classes.iconSmall)}
+                icon={icono}
+                size='lg'
+            />}
+        </Button>
     )
 });
 
 const Detail = memo(props => {
     const dispatch = useDispatch();
     const [show_enviar, setShowEnviar] = useState(false);
+    const [show_rechazada, setShowRechazada] = useState(false);
+    const [show_envios_cotizacion, setShowEnviosCotizacion] = useState(false);
     const [show_adicionar_ajunto, setShowAdicionarAdjunto] = useState(false);
     const [tipo_adjunto, setTipoAdjunto] = useState(null);
     const {id} = props.match.params;
@@ -139,8 +166,8 @@ const Detail = memo(props => {
     };
     const generarNroConsecutivo = () => dispatch(actions.asignarNroConsecutivoCotizacionComponente(id));
     const onDeleteCotizacion = () => dispatch(actions.deleteCotizacionComponente(id, {callback: () => history.push('/app/ventas_componentes/cotizaciones/list')}));
-
-    const setEstado = estado_nuevo => dispatch(actions.cambiarEstadoCotizacionComponente(id, estado_nuevo));
+    const onDeleteArchivo = (adjunto_id) => dispatch(actions.deleteAdjuntoCotizacionComponente(id, adjunto_id, {callback: () => dispatch(actions.fetchCotizacionComponente(id))}));
+    const setEstado = (estado_nuevo, razon_rechazo = null, callback = null) => dispatch(actions.cambiarEstadoCotizacionComponente(id, estado_nuevo, razon_rechazo, {callback}));
     const enviarCotizacion = (valores) => {
         dispatch(actions.enviarCotizacionComponente(
             id,
@@ -179,12 +206,16 @@ const Detail = memo(props => {
     };
 
     const editable = object.estado === 'INI';
-
-    console.log(object)
-
     return (
         <ValidarPermisos can_see={permisos.detail} nombre='detalles de cotización'>
             <div className="row">
+                {show_rechazada &&
+                <CotizacionRechazadaFormDialog
+                    singular_name='Cotización Rechazada'
+                    modal_open={show_rechazada}
+                    onCancel={() => setShowRechazada(false)}
+                    onSubmit={(v) => setEstado('ELI', v.razon_rechazada, () => setShowRechazada(false))}
+                />}
                 {show_adicionar_ajunto &&
                 <UploadFileDialogForm
                     accept={getTiposDocumentos()}
@@ -200,7 +231,7 @@ const Detail = memo(props => {
                 {show_enviar &&
                 <CotizacionEnviarFormDialog
                     auth={auth}
-                    singular_name='Enviar Cotización'
+                    singular_name='Cotización'
                     contacto={contacto_cotizacion}
                     modal_open={show_enviar}
                     onCancel={() => setShowEnviar(false)}
@@ -230,47 +261,68 @@ const Detail = memo(props => {
                             </div>
                             <div className="col-12">
                                 <div className="row">
-                                    <div
-                                        className='puntero'
-                                        onClick={() => {
-                                            setShowAdicionarAdjunto(true);
-                                            setTipoAdjunto('archivo');
-                                        }}
-                                    >
+                                    {object.estado === 'INI' &&
+                                    <Fragment>
+                                        <div
+                                            className='puntero'
+                                            onClick={() => {
+                                                setShowAdicionarAdjunto(true);
+                                                setTipoAdjunto('archivo');
+                                            }}
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={'file'}
+                                                size='3x'
+                                            />
+                                            <FontAwesomeIcon
+                                                icon={'arrow-circle-up'}
+                                                style={{color: "green", marginLeft: '-10px', marginBottom: '-13px'}}
+                                                size='lg'
+                                            />
+                                        </div>
+                                        <div
+                                            className='puntero ml-3'
+                                            onClick={() => {
+                                                setShowAdicionarAdjunto(true);
+                                                setTipoAdjunto('imagen');
+                                            }}
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={'file-image'}
+                                                size='3x'
+                                            />
+                                            <FontAwesomeIcon
+                                                icon={'arrow-circle-up'}
+                                                style={{color: "green", marginLeft: '-10px', marginBottom: '-13px'}}
+                                                size='lg'
+                                            />
+                                        </div>
+                                    </Fragment>}
+                                    <div className="puntero ml-3">
                                         <FontAwesomeIcon
-                                            icon={'file'}
+                                            icon={'history'}
+                                            onClick={() => setShowEnviosCotizacion(true)}
                                             size='3x'
-                                        />
-                                        <FontAwesomeIcon
-                                            icon={'arrow-circle-up'}
-                                            style={{color: "green", marginLeft: '-10px', marginBottom: '-13px'}}
-                                            size='lg'
-                                        />
-                                    </div>
-                                    <div
-                                        className='puntero ml-3'
-                                        onClick={() => {
-                                            setShowAdicionarAdjunto(true);
-                                            setTipoAdjunto('imagen');
-                                        }}
-                                    >
-                                        <FontAwesomeIcon
-                                            icon={'file-image'}
-                                            size='3x'
-                                        />
-                                        <FontAwesomeIcon
-                                            icon={'arrow-circle-up'}
-                                            style={{color: "green", marginLeft: '-10px', marginBottom: '-13px'}}
-                                            size='lg'
                                         />
                                     </div>
                                 </div>
                             </div>
                             <div className="col-12 mt-3">
                                 <CotizacionDetailAdjuntoList
+                                    en_edicion={object.estado === 'INI'}
+                                    onDeleteArchivo={onDeleteArchivo}
                                     adjuntos={object.adjuntos}
                                 />
                             </div>
+                            {show_envios_cotizacion &&
+                            <div className="col-12">
+                                <CotizacionDetailEnvioListItem
+                                    onClose={() => setShowEnviosCotizacion(false)}
+                                    lista={object.envios_emails}
+                                    modal_open={show_envios_cotizacion}
+                                />
+                            </div>
+                            }
                         </div>
                         <div className="col-3">
                             <div className="row">
@@ -287,29 +339,43 @@ const Detail = memo(props => {
                             </div>
                             <div className="col-12">
                                 <div className="row">
-                                    {object.estado !== 'INI' && object.estado !== 'ELI' && object.estado !== 'FIN' &&
-                                    <BotonNuevoEstado nuevo_estado='INI' setEstado={setEstado} nombre='Editar'/>}
-                                    {object.estado === 'ENV' &&
-                                    <BotonNuevoEstado nuevo_estado='REC' setEstado={setEstado} nombre='Recibida'/>}
                                     {object.estado === 'REC' &&
-                                    <BotonNuevoEstado nuevo_estado='PRO' setEstado={setEstado} nombre='Proceso'/>}
-                                    {object.estado === 'REC' || object.estado === 'PRO' &&
-                                    <BotonNuevoEstado nuevo_estado='ELI' setEstado={setEstado} nombre='Rechazada'/>}
+                                    <BotonCotizacion
+                                        onClick={() => setEstado('PRO')}
+                                        icono='thumbs-up'
+                                        nombre='En Proceso'
+                                    />}
+                                    {(object.estado === 'REC' || object.estado === 'PRO') &&
+                                    <BotonCotizacion
+                                        icono='thumbs-down'
+                                        onClick={() => setShowRechazada(true)}
+                                        color='secondary'
+                                        nombre='Rechazada'
+                                    />}
+                                    {object.estado !== 'INI' && object.estado !== 'ELI' && object.estado !== 'FIN' &&
+                                    <BotonCotizacion
+                                        onClick={() => setEstado('INI')}
+                                        nombre='Editar'
+                                        icono='edit'/>}
+                                    {object.estado === 'ENV' &&
+                                    <BotonCotizacion
+                                        onClick={() => setEstado('REC')}
+                                        nombre='Recibida'
+                                    />}
                                     {object.estado === 'PRO' &&
-                                    <BotonNuevoEstado nuevo_estado='FIN' setEstado={setEstado} nombre='Terminada'/>}
+                                    <BotonCotizacion
+                                        onClick={() => setEstado('FIN')}
+                                        nombre='Terminada'
+                                    />}
                                 </div>
                             </div>
                             {object.items.length > 0 && object.estado !== 'ELI' && object.estado !== 'FIN' &&
                             <div className="col-12 text-center">
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={() => {
-                                        setShowEnviar(true)
-                                    }}
-                                >
-                                    Enviar
-                                </Button>
+                                <BotonCotizacion
+                                    icono='inbox-out'
+                                    onClick={() => setShowEnviar(true)}
+                                    nombre='Enviar'
+                                />
                             </div>}
                         </div>
                     </div>

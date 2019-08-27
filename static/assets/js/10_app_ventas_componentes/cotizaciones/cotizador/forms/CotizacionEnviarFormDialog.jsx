@@ -25,6 +25,7 @@ let CotizacionEnviarFormDialog = memo(props => {
     const {mi_cuenta: {email}} = auth;
     return (
         <MyFormTagModal
+            submit_text_boton='Enviar'
             onCancel={onCancel}
             onSubmit={handleSubmit((v) => {
                 let envio = v.email_uno ? {...v, email_uno: correo_electronico} : _.omit(v, 'email_uno');
