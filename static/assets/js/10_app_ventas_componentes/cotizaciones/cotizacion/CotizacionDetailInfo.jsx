@@ -13,7 +13,8 @@ const styles = {
         fontSize: '0.7rem',
         paddingLeft: '10px',
         margin: 0,
-        wordBreak: 'break-all'
+        wordBreak: 'break-all',
+        whiteSpace: 'pre-line'
     },
 };
 
@@ -44,6 +45,9 @@ const CotizacionDetailInfo = memo(props => {
             </Typography>
             <Typography variant="h4" gutterBottom color="secondary">
                 {cotizacion.estado_display}
+            </Typography>
+            <Typography variant="body1" gutterBottom color="secondary" style={styles.texto_secondario} >
+                {cotizacion.razon_rechazo}
             </Typography>
             <Typography variant="body1" gutterBottom color="primary" style={styles.texto_principal}>
                 Cliente:

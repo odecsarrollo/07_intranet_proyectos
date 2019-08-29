@@ -1,5 +1,6 @@
 from django.db.models import Q
 from django.http import HttpResponse
+from django.utils import timezone
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
@@ -64,7 +65,8 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
         cotizacion_componente = cotizacion_componentes_cambiar_estado(
             cotizacion_componente_id=cotizacion_componente.id,
             nuevo_estado=nuevo_estado,
-            razon_rechazo=razon_rechazo
+            razon_rechazo=razon_rechazo,
+            usuario=self.request.user
         )
         self.serializer_class = CotizacionComponenteConDetalleSerializer
         serializer = self.get_serializer(cotizacion_componente)
@@ -115,6 +117,39 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
         response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
         response['Content-Transfer-Encoding'] = 'binary'
         return response
+
+    @action(detail=True, methods=['post'])
+    def adicionar_seguimiento(self, request, pk=None):
+        cotizacion_componente = self.get_object()
+        tipo_seguimiento = request.POST.get('tipo_seguimiento')
+        descripcion = request.POST.get('descripcion')
+        fecha = request.POST.get('fecha', None)
+        # ['%Y-%m-%dT%H:%M:%S.%fZ', 'iso-8601']
+        from .services import cotizacion_componentes_add_seguimiento
+        cotizacion_componentes_add_seguimiento(
+            cotizacion_componente_id=cotizacion_componente.id,
+            tipo_seguimiento=tipo_seguimiento,
+            descripcion=descripcion,
+            creado_por=self.request.user,
+            fecha=fecha
+        )
+        self.serializer_class = CotizacionComponenteConDetalleSerializer
+        serializer = self.get_serializer(cotizacion_componente)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def eliminar_seguimiento(self, request, pk=None):
+        cotizacion_componente = self.get_object()
+        seguimiento_id = request.POST.get('seguimiento_id')
+        from .services import cotizacion_componentes_delete_seguimiento
+        cotizacion_componentes_delete_seguimiento(
+            cotizacion_componente_id=cotizacion_componente.id,
+            cotizacion_componente_seguimiento_id=seguimiento_id,
+            eliminado_por=self.request.user
+        )
+        self.serializer_class = CotizacionComponenteConDetalleSerializer
+        serializer = self.get_serializer(cotizacion_componente)
+        return Response(serializer.data)
 
     @action(detail=True, methods=['post'])
     def adicionar_item(self, request, pk=None):

@@ -71,6 +71,47 @@ export const adicionarItemCotizacionComponente = (
     }
 };
 
+
+export const adicionarSeguimientoCotizacionComponente = (
+    id,
+    tipo_seguimiento,
+    descripcion,
+    fecha = null,
+    options_action = {},
+) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        params.append('descripcion', descripcion);
+        params.append('tipo_seguimiento', tipo_seguimiento);
+        if (fecha) {
+            console.log(typeof fecha)
+            params.append('fecha', fecha);
+        }
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: response})
+        };
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'adicionar_seguimiento', params, options)
+    }
+};
+
+
+export const eliminarSeguimientoCotizacionComponente = (
+    id,
+    seguimiento_id,
+    options_action = {},
+) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        params.append('seguimiento_id', seguimiento_id);
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: response})
+        };
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'eliminar_seguimiento', params, options)
+    }
+};
+
 export const createCotizacionComponente = (values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {

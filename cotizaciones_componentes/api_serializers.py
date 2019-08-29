@@ -1,7 +1,8 @@
 from rest_framework import serializers
 
 from envios_emails.api_serializers import CotizacionComponenteEnvioSerializer
-from .models import CotizacionComponente, ItemCotizacionComponente, CotizacionComponenteAdjunto
+from .models import CotizacionComponente, ItemCotizacionComponente, CotizacionComponenteAdjunto, \
+    CotizacionComponenteSeguimiento
 
 
 class CotizacionComponenteAdjuntoSerializer(serializers.ModelSerializer):
@@ -85,6 +86,27 @@ class ItemCotizacionComponenteSerializer(serializers.ModelSerializer):
         ]
 
 
+class CotizacionComponenteSeguimientoSerializer(serializers.ModelSerializer):
+    creado_por_username = serializers.CharField(source='creado_por.username', read_only=True)
+    tipo_seguimiento_nombre = serializers.SerializerMethodField()
+
+    def get_tipo_seguimiento_nombre(self,obj):
+        return obj.get_tipo_seguimiento_display()
+
+    class Meta:
+        model = CotizacionComponenteSeguimiento
+        fields = [
+            'id',
+            'cotizacion_componente',
+            'tipo_seguimiento_nombre',
+            'tipo_seguimiento',
+            'descripcion',
+            'creado_por',
+            'creado_por_username',
+            'fecha',
+        ]
+
+
 class CotizacionComponenteSerializer(serializers.ModelSerializer):
     cantidad_items = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     valor_total = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
@@ -104,6 +126,7 @@ class CotizacionComponenteSerializer(serializers.ModelSerializer):
         fields = [
             'url',
             'id',
+            'created',
             'valor_total',
             'observaciones',
             'cantidad_items',
@@ -122,11 +145,14 @@ class CotizacionComponenteSerializer(serializers.ModelSerializer):
             'razon_rechazo',
             'estado_display',
             'envios_emails',
+            'seguimientos',
             'items',
         ]
         extra_kwargs = {
             'envios_emails': {'read_only': True},
             'items': {'read_only': True},
+            'seguimientos': {'read_only': True},
+            'created': {'read_only': True},
             'adjuntos': {'read_only': True},
             'observaciones': {'allow_blank': True},
             'razon_rechazo': {'allow_blank': True},
@@ -137,3 +163,4 @@ class CotizacionComponenteConDetalleSerializer(CotizacionComponenteSerializer):
     items = ItemCotizacionComponenteSerializer(many=True, read_only=True)
     adjuntos = CotizacionComponenteAdjuntoSerializer(many=True, read_only=True)
     envios_emails = CotizacionComponenteEnvioSerializer(many=True, read_only=True)
+    seguimientos = CotizacionComponenteSeguimientoSerializer(many=True, read_only=True)

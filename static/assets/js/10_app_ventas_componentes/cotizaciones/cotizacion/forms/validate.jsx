@@ -8,6 +8,16 @@ const validate = values => {
     if (values.email_cuatro && !REGEX_CORREO_ELECTRONICO.test(values.email_cuatro)) {
         errors.email_cuatro = 'Correo Electrónico Inválido';
     }
+    const requiredFields = [
+        'razon_rechazada',
+        'fecha',
+        'descripcion',
+    ];
+    requiredFields.map(field => {
+        if (!values[field]) {
+            errors[field] = 'Requerido'
+        }
+    });
     return errors;
 };
 

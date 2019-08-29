@@ -7,14 +7,16 @@ import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
 import {COTIZACIONES_COMPONENTES} from "../../../permisos";
 import Typography from "@material-ui/core/Typography";
 import CotizacionDetailAdjuntoList from './CotizacionDetailAdjuntoList.jsx'
-import CotizacionEdicionList from './CotizacionEdicionList.jsx'
+import CotizacionEdicionList from '../CotizacionEdicionList.jsx'
 import CotizacionDetailInfo from './CotizacionDetailInfo.jsx'
 import CotizacionDetailItemsTabla from "./CotizacionDetailItemsTabla";
 import CotizadorAdicionarItem from './CotizadorAdicionarItem'
 import CotizacionEnviarFormDialog from './forms/CotizacionEnviarFormDialog'
 import CotizacionRechazadaFormDialog from './forms/CotizacionRechazadaFormDialog'
 import CotizacionDetailEnvioListItem from './CotizacionDetailEnvioList'
+import CotizacionDetailSeguimiento from './CotizacionDetailSeguimiento'
 import UploadFileDialogForm from '../../../00_utilities/components/ui/UploadFileDialogForm';
+import SiNoDialog from '../../../00_utilities/components/ui/dialog/SiNoDialog';
 import PrinJs from "print-js";
 import Button from "@material-ui/core/Button";
 import {notificarAction} from "../../../01_actions/01_index";
@@ -62,6 +64,9 @@ const Detail = memo(props => {
     const dispatch = useDispatch();
     const [show_enviar, setShowEnviar] = useState(false);
     const [show_rechazada, setShowRechazada] = useState(false);
+    const [show_en_proceso, setShowEnProceso] = useState(false);
+    const [show_terminar, setShowTerminar] = useState(false);
+    const [show_editar_confirmacion, setShowEditarConfirmacion] = useState(false);
     const [show_envios_cotizacion, setShowEnviosCotizacion] = useState(false);
     const [show_adicionar_ajunto, setShowAdicionarAdjunto] = useState(false);
     const [tipo_adjunto, setTipoAdjunto] = useState(null);
@@ -209,12 +214,73 @@ const Detail = memo(props => {
     return (
         <ValidarPermisos can_see={permisos.detail} nombre='detalles de cotización'>
             <div className="row">
+                {show_terminar &&
+                <SiNoDialog
+                    onSi={() => {
+                        setEstado(
+                            'FIN',
+                            null,
+                            () => {
+                                cargarDatos();
+                                setShowTerminar(false);
+                            }
+                        )
+                    }}
+                    onNo={() => setShowTerminar(false)}
+                    is_open={show_terminar}
+                    titulo='Terminar Cotización'
+                >
+                    Deséa TERMINAR esta cotización?
+                </SiNoDialog>}
+                {show_editar_confirmacion &&
+                <SiNoDialog
+                    onSi={() => {
+                        setEstado(
+                            'INI',
+                            null,
+                            () => {
+                                cargarDatos();
+                                setShowEditarConfirmacion(false);
+                            }
+                        )
+                    }}
+                    onNo={() => setShowEditarConfirmacion(false)}
+                    is_open={show_editar_confirmacion}
+                    titulo='Editar Cotización?'
+                >
+                    Deséa EDITAR esta cotización?
+                </SiNoDialog>}
+                {show_en_proceso &&
+                <SiNoDialog
+                    onSi={() => {
+                        setEstado(
+                            'PRO',
+                            null,
+                            () => {
+                                cargarDatos();
+                                setShowEnProceso(false);
+                            }
+                        )
+                    }}
+                    onNo={() => setShowEnProceso(false)}
+                    is_open={show_en_proceso}
+                    titulo='Cambiar a estado en proceso'
+                >
+                    Deséa pasar esta cotización a estado EN PROCESO?
+                </SiNoDialog>}
                 {show_rechazada &&
                 <CotizacionRechazadaFormDialog
                     singular_name='Cotización Rechazada'
                     modal_open={show_rechazada}
                     onCancel={() => setShowRechazada(false)}
-                    onSubmit={(v) => setEstado('ELI', v.razon_rechazada, () => setShowRechazada(false))}
+                    onSubmit={(v) => setEstado(
+                        'ELI',
+                        v.razon_rechazada,
+                        () => {
+                            cargarDatos();
+                            setShowRechazada(false);
+                        }
+                    )}
                 />}
                 {show_adicionar_ajunto &&
                 <UploadFileDialogForm
@@ -321,8 +387,16 @@ const Detail = memo(props => {
                                     lista={object.envios_emails}
                                     modal_open={show_envios_cotizacion}
                                 />
-                            </div>
-                            }
+                            </div>}
+                            {object.estado !== 'INI' &&
+                            object.estado !== 'ELI' &&
+                            <div className="col-12">
+                                <CotizacionDetailSeguimiento
+                                    seguimientos={object.seguimientos}
+                                    cargarDatos={cargarDatos}
+                                    cotizacion_componente={object}
+                                />
+                            </div>}
                         </div>
                         <div className="col-3">
                             <div className="row">
@@ -341,7 +415,7 @@ const Detail = memo(props => {
                                 <div className="row">
                                     {object.estado === 'REC' &&
                                     <BotonCotizacion
-                                        onClick={() => setEstado('PRO')}
+                                        onClick={() => setShowEnProceso(true)}
                                         icono='thumbs-up'
                                         nombre='En Proceso'
                                     />}
@@ -352,19 +426,19 @@ const Detail = memo(props => {
                                         color='secondary'
                                         nombre='Rechazada'
                                     />}
-                                    {object.estado !== 'INI' && object.estado !== 'ELI' && object.estado !== 'FIN' &&
+                                    {object.estado === 'REC' &&
                                     <BotonCotizacion
-                                        onClick={() => setEstado('INI')}
+                                        onClick={() => setShowEditarConfirmacion(true)}
                                         nombre='Editar'
                                         icono='edit'/>}
                                     {object.estado === 'ENV' &&
                                     <BotonCotizacion
-                                        onClick={() => setEstado('REC')}
+                                        onClick={() => setEstado('REC', null, () => cargarDatos())}
                                         nombre='Recibida'
                                     />}
                                     {object.estado === 'PRO' &&
                                     <BotonCotizacion
-                                        onClick={() => setEstado('FIN')}
+                                        onClick={() => setShowTerminar(true)}
                                         nombre='Terminada'
                                     />}
                                 </div>

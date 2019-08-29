@@ -1,6 +1,6 @@
 import React, {memo, useEffect, Fragment} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import * as actions from "../../../01_actions/01_index";
+import * as actions from "../../01_actions/01_index";
 import {Link} from "react-router-dom";
 import {makeStyles} from "@material-ui/core";
 

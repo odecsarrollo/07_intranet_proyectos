@@ -143,3 +143,26 @@ class ItemCotizacionComponente(TimeStampedModel):
         elif dias == 1:
             return '1 día'
         return '%s días' % dias
+
+
+class CotizacionComponenteSeguimiento(TimeStampedModel):
+    TIPOS = (
+        ('TEL', 'Llamada'),
+        ('VIS', 'Visíta'),
+        ('COM', 'Comentario'),
+        ('EST', 'Cambio Estado'),
+        ('ENV', 'Envio Correo'),
+    )
+    cotizacion_componente = models.ForeignKey(
+        CotizacionComponente,
+        on_delete=models.PROTECT,
+        related_name='seguimientos'
+    )
+    tipo_seguimiento = models.CharField(max_length=3, choices=TIPOS)
+    descripcion = models.TextField()
+    fecha = models.DateTimeField()
+    creado_por = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        related_name='cotizaciones_componentes_seguimientos'
+    )

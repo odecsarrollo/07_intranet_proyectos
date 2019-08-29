@@ -1,11 +1,11 @@
 import React, {memo, useEffect, Fragment} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import * as actions from "../../../01_actions/01_index";
-import {COTIZACIONES_COMPONENTES} from "../../../permisos";
-import CreateForm from './forms/CotizacionCRUDFormDialog';
+import * as actions from "../../01_actions/01_index";
+import {COTIZACIONES_COMPONENTES} from "../../permisos";
+import CreateForm from './cotizacion/forms/CotizacionCRUDFormDialog';
 import Tabla from './CotizacionComponenteCRUDTabla';
-import crudHOC from '../../../00_utilities/components/HOC_CRUD2';
-import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
+import crudHOC from '../../00_utilities/components/HOC_CRUD2';
+import useTengoPermisos from "../../00_utilities/hooks/useTengoPermisos";
 import CotizacionEdicionList from "./CotizacionEdicionList";
 
 const CRUD = crudHOC(CreateForm, Tabla);

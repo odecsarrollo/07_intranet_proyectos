@@ -1,5 +1,7 @@
+import datetime
 from io import BytesIO
 
+from django.contrib.auth.models import User
 from django.core.files import File
 from django.core.mail import EmailMultiAlternatives
 from django.db.models import Max, Q
@@ -10,7 +12,12 @@ from rest_framework.exceptions import ValidationError
 from contabilidad_anticipos.models import ProformaConfiguracion
 from envios_emails.models import CotizacionComponenteEnvio
 from envios_emails.services import generar_base_pdf
-from .models import CotizacionComponente, ItemCotizacionComponente, CotizacionComponenteDocumento
+from .models import (
+    CotizacionComponente,
+    ItemCotizacionComponente,
+    CotizacionComponenteDocumento,
+    CotizacionComponenteSeguimiento
+)
 from catalogo_productos.models import ItemVentaCatalogo
 from bandas_eurobelt.models import BandaEurobelt, ComponenteBandaEurobelt
 
@@ -18,7 +25,8 @@ from bandas_eurobelt.models import BandaEurobelt, ComponenteBandaEurobelt
 def cotizacion_componentes_cambiar_estado(
         cotizacion_componente_id: int,
         nuevo_estado: str,
-        razon_rechazo: str = None
+        usuario: User,
+        razon_rechazo: str = None,
 ) -> CotizacionComponente:
     cotizacion_componente = CotizacionComponente.objects.get(pk=cotizacion_componente_id)
     estado_actual = cotizacion_componente.estado
@@ -42,11 +50,17 @@ def cotizacion_componentes_cambiar_estado(
             {'_error': 'No se puede cambiar una cotización en estado %s a %s' % (estado_actual, nuevo_estado)})
 
     cotizacion_componente.estado = nuevo_estado
-    if estado_actual == 'ELI':
+    if nuevo_estado == 'ELI':
         cotizacion_componente.razon_rechazo = razon_rechazo
-    if estado_actual != 'ELI':
+    if nuevo_estado != 'ELI':
         cotizacion_componente.razon_rechazo = None
     cotizacion_componente.save()
+    cotizacion_componentes_add_seguimiento(
+        cotizacion_componente_id=cotizacion_componente_id,
+        tipo_seguimiento='EST',
+        descripcion='Cambio a estado %s' % (cotizacion_componente.get_estado_display()),
+        creado_por=usuario
+    )
     return cotizacion_componente
 
 
@@ -243,6 +257,12 @@ def cotizacion_componentes_enviar(
      adjunto in imagenes_para_enviar]
     try:
         msg.send()
+        cotizacion_componentes_add_seguimiento(
+            cotizacion_componente_id=cotizacion_componente_id,
+            tipo_seguimiento='ENV',
+            descripcion='Envío de correo para %s desde %s' % (emails_destino, email_from),
+            creado_por=request.user
+        )
     except Exception as e:
         raise ValidationError(
             {'_error': 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e})
@@ -266,3 +286,51 @@ def cotizacion_componentes_generar_pdf(
         'emails/cotizacion_componente/cotizacion_componente.html'
     )
     return output_anticipo
+
+
+def cotizacion_componentes_add_seguimiento(
+        cotizacion_componente_id: int,
+        tipo_seguimiento: str,
+        descripcion: str,
+        creado_por: User,
+        fecha: datetime = timezone.now(),
+) -> CotizacionComponenteSeguimiento:
+    cotizacion_componente = CotizacionComponente.objects.get(pk=cotizacion_componente_id)
+    if cotizacion_componente.estado not in ['ENV', 'REC', 'ELI', 'PRO']:
+        raise ValidationError({
+            '_error': 'No se puede realizar seguimiento a una cotización en estado %s' % cotizacion_componente.get_estado_display()})
+    seguimiento = CotizacionComponenteSeguimiento()
+    seguimiento.cotizacion_componente_id = cotizacion_componente_id
+    seguimiento.tipo_seguimiento = tipo_seguimiento
+    seguimiento.descripcion = descripcion
+    seguimiento.fecha = fecha
+    seguimiento.creado_por = creado_por
+    seguimiento.save()
+    return seguimiento
+
+
+def cotizacion_componentes_delete_seguimiento(
+        cotizacion_componente_seguimiento_id: int,
+        cotizacion_componente_id: int,
+        eliminado_por: User
+):
+    cotizacion_componente = CotizacionComponente.objects.get(pk=cotizacion_componente_id)
+    if cotizacion_componente.seguimientos.filter(pk=cotizacion_componente_seguimiento_id).exists():
+        cotizacion_componente_seguimiento = CotizacionComponenteSeguimiento.objects.get(
+            pk=cotizacion_componente_seguimiento_id)
+        cotizacion_componente = cotizacion_componente_seguimiento.cotizacion_componente
+        if cotizacion_componente.estado not in ['ENV', 'REC', 'PRO']:
+            raise ValidationError({
+                '_error': 'No se puede eliminar seguimiento a una cotización en estado %s' % cotizacion_componente.get_estado_display()})
+        if cotizacion_componente_seguimiento.tipo_seguimiento not in ['EST', 'ENV']:
+            if cotizacion_componente_seguimiento.creado_por == eliminado_por:
+                cotizacion_componente_seguimiento.delete()
+            else:
+                raise ValidationError(
+                    {'_error': 'No se puede eliminar seguimiento realizado por otro usuario'})
+        else:
+            raise ValidationError(
+                {'_error': 'No se puede eliminar seguimiento tipo Cambio de Estado, ni Envio de Correo'})
+    else:
+        raise ValidationError(
+            {'_error': 'Esta cotización ya no tiene este seguimiento'})
