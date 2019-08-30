@@ -191,15 +191,18 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def cambiar_posicion_item(self, request, pk=None):
         from .services import cotizacion_componentes_item_cambiar_posicion
-        cotizacion = self.get_object()
-        id_item_cotizacion = request.POST.get('id_item_cotizacion')
-        direccion = request.POST.get('direccion')
+        # print(request.META.get('HTTP_X_FORWARDED_FOR'))
+        # print(request.META.get('REMOTE_ADDR'))
+        cotizacion_componente = self.get_object()
+        item_uno_id = request.POST.get('item_uno_id')
+        item_dos_id = request.POST.get('item_dos_id')
         cotizacion_componentes_item_cambiar_posicion(
-            item_componente_id=id_item_cotizacion,
-            direccion=direccion
+            cotizacion_componente_id=cotizacion_componente.id,
+            item_uno_id=item_uno_id,
+            item_dos_id=item_dos_id
         )
         self.serializer_class = CotizacionComponenteConDetalleSerializer
-        serializer = self.get_serializer(cotizacion)
+        serializer = self.get_serializer(cotizacion_componente)
         return Response(serializer.data)
 
     @action(detail=False, http_method_names=['get', ])

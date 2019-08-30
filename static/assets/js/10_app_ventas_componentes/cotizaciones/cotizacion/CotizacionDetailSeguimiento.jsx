@@ -11,7 +11,7 @@ import CotizacionSeguimientoFormDialog from "./forms/CotizacionSeguimientoFormDi
 import Typography from '@material-ui/core/Typography';
 import clsx from "clsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {fechaHoraFormatoUno, formatBytes} from "../../../00_utilities/common";
+import {fechaHoraFormatoUno} from "../../../00_utilities/common";
 import * as actions from '../../../01_actions/01_index';
 import moment from "moment-timezone";
 
@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
             backgroundColor: theme.palette.background.paper,
         },
         inline: {
-            display: 'inline',
+            display: 'inline'
         },
     }
 }));
@@ -78,7 +78,7 @@ const CotizacionDetailSeguimientoItem = memo(props => {
     const puede_eliminar = tipo_seguimiento !== 'ENV' && tipo_seguimiento !== 'EST';
     return (
         <Fragment>
-            <ListItem alignItems="flex-start">
+            <ListItem alignItems="flex-start" style={{margin: 0, padding: 0}}>
                 <ListItemAvatar>
                     <FontAwesomeIcon
                         className={clsx(classes.rightIcon, classes.iconSmall)}
@@ -87,6 +87,7 @@ const CotizacionDetailSeguimientoItem = memo(props => {
                     />
                 </ListItemAvatar>
                 <ListItemText
+                    style={{margin: 0, padding: 0}}
                     primary={`${tipo_seguimiento_nombre}`}
                     secondary={
                         <Fragment>
@@ -119,21 +120,22 @@ const CotizacionDetailSeguimientoItem = memo(props => {
                     />
                 }
             </ListItem>
-            <Divider variant="inset" component="li"/>
+            <Divider variant="middle" component="li"/>
         </Fragment>
     )
 });
 
 const CotizacionDetailSeguimiento = memo(props => {
     const classes = useStyles();
-    const {seguimientos, cargarDatos, cotizacion_componente} = props;
+    const {seguimientos, cargarDatos, cotizacion_componente, cotizacion_componente: {estado, id}} = props;
     const [tipo_seguimiento, setTipoSeguimiento] = useState(null);
+    const [ver_todo, setVerTodo] = useState(null);
     const [show_add_seguimiento, setShowAddSeguimiento] = useState(false);
     const dispatch = useDispatch();
     const adicionarSeguimiento = (v) =>
         dispatch(
             actions.adicionarSeguimientoCotizacionComponente(
-                cotizacion_componente.id,
+                id,
                 tipo_seguimiento,
                 v.descripcion,
                 moment(v.fecha).format('YYYY-MM-DDTHH:mm:00Z'),
@@ -150,7 +152,7 @@ const CotizacionDetailSeguimiento = memo(props => {
     const eliminarSeguimiento = (seguimiento_id) =>
         dispatch(
             actions.eliminarSeguimientoCotizacionComponente(
-                cotizacion_componente.id,
+                id,
                 seguimiento_id,
                 {
                     callback: () => {
@@ -160,10 +162,7 @@ const CotizacionDetailSeguimiento = memo(props => {
             )
         );
     return (
-        <Fragment>
-            <Typography variant="h5" gutterBottom color="primary">
-                Seguimiento
-            </Typography>
+        <div className='row'>
             {show_add_seguimiento &&
             <CotizacionSeguimientoFormDialog
                 initialValues={{fecha: new Date()}}
@@ -174,7 +173,14 @@ const CotizacionDetailSeguimiento = memo(props => {
                 onSubmit={(v) => adicionarSeguimiento(v)}
                 singular_name='Seguimiento Cotización'
             />}
-            <div>
+            <div className="col-12">
+                <Typography variant="h5" gutterBottom color="primary">
+                    Seguimiento
+                </Typography>
+            </div>
+            {estado !== 'INI' &&
+            estado !== 'ELI' &&
+            <div className='mb-3 col-12'>
                 <FontAwesomeIcon
                     icon='comments'
                     size='3x'
@@ -202,18 +208,24 @@ const CotizacionDetailSeguimiento = memo(props => {
                         setShowAddSeguimiento(true);
                     }}
                 />
+            </div>}
+            <div style={{height: ver_todo ? '100%' : '300px', overflow: ver_todo ? null : 'scroll'}} className='col-12'>
+                <List className={classes.list.root}>
+                    {_.orderBy(
+                        seguimientos, ['fecha'], ['desc']).map(
+                        item =>
+                            <CotizacionDetailSeguimientoItem
+                                eliminarSeguimiento={eliminarSeguimiento}
+                                key={item.id}
+                                item={item}
+                            />)}
+                </List>
             </div>
-            <List className={classes.list.root}>
-                {_.orderBy(
-                    seguimientos, ['fecha'], ['desc']).map(
-                    item =>
-                        <CotizacionDetailSeguimientoItem
-                            eliminarSeguimiento={eliminarSeguimiento}
-                            key={item.id}
-                            item={item}
-                        />)}
-            </List>
-        </Fragment>
+            <div className="col-12 text-right">
+                <span onClick={() => setVerTodo(!ver_todo)}
+                      className='puntero'>{ver_todo ? 'Ver Menos...' : 'Ver Mas...'}</span>
+            </div>
+        </div>
     )
 
 });

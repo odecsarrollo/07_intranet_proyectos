@@ -1,10 +1,20 @@
 import React, {memo, useContext, useState} from "react";
+import {useDispatch} from 'react-redux';
 import StylesContext from "../../../00_utilities/contexts/StylesContext";
 import {pesosColombianos} from "../../../00_utilities/common";
 import TextField from "@material-ui/core/TextField";
 import {makeStyles} from '@material-ui/core/styles';
 import MyDialogButtonDelete from "../../../00_utilities/components/ui/dialog/delete_dialog";
+import * as actions from "../../../01_actions/01_index";
+
+import {SortableContainer, SortableElement, SortableHandle} from 'react-sortable-hoc';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+
+const DragHandle = SortableHandle(() => <FontAwesomeIcon
+    icon={'arrows-alt'}
+    className={'puntero'}
+    size='lg'
+/>);
 
 const useStyles = makeStyles(theme => ({
     textField: {
@@ -20,7 +30,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const CotizacionDetailItemsTablaItem = memo(props => {
-    const {item, eliminarItem, cambiarItem, cambiarPosicionItem, max_posicion, editable} = props;
+    const {item, editable, cargarDatos} = props;
+    const dispatch = useDispatch();
     const [cantidad, setCantidad] = useState(item.cantidad);
     const [dias_entrega, setDiasEntrega] = useState(item.dias_entrega);
     const {table} = useContext(StylesContext);
@@ -39,31 +50,27 @@ const CotizacionDetailItemsTablaItem = memo(props => {
             return 'Otro'
         }
     };
+
+    const eliminarItem = (cotizacion_componente_id, id_item_cotizacion) => dispatch(actions.eliminarItemCotizacionComponente(
+        cotizacion_componente_id,
+        id_item_cotizacion,
+        {
+            callback: () => cargarDatos()
+        }
+    ));
+    const cambiarItem = (id_item_cotizacion, item) => dispatch(actions.updateItemCotizacionComponente(
+        id_item_cotizacion,
+        item,
+        {
+            callback: () => cargarDatos()
+        }
+    ));
+
     return (
         <tr style={{...table.tr}}>
             <td style={table.td}>
-                <div className="row">
-                    {editable &&
-                    <div className="col-2 text-center">
-                        {item.posicion !== 1 &&
-                        <FontAwesomeIcon
-                            onClick={() => cambiarPosicionItem(item.id, 'SUBE')}
-                            className='puntero p-0 m-0'
-                            icon='arrow-circle-up'
-                            size='sm'
-                        />}
-                        {item.posicion !== max_posicion &&
-                        <FontAwesomeIcon
-                            onClick={() => cambiarPosicionItem(item.id, 'BAJA')}
-                            className='puntero p-0 m-0'
-                            icon='arrow-circle-down'
-                            size='sm'
-                        />
-                        }
-                    </div>}
-                    <div className="col-3">
-                        {item.posicion}
-                    </div>
+                <div style={{marginTop: '7px'}}>
+                    {editable && <DragHandle/>} {item.posicion}
                 </div>
             </td>
             <td style={{...table.td, fontSize: '0.5rem'}}>{item.canal_nombre} {item.forma_pago_nombre}</td>
@@ -110,7 +117,7 @@ const CotizacionDetailItemsTablaItem = memo(props => {
             {editable &&
             <td style={table.td}>
                 <MyDialogButtonDelete
-                    onDelete={() => eliminarItem(item.id)}
+                    onDelete={() => eliminarItem(item.cotizacion, item.id)}
                     element_name={item.referencia}
                     element_type='Item Cotización'
                 />
@@ -120,22 +127,64 @@ const CotizacionDetailItemsTablaItem = memo(props => {
     )
 });
 
+const SortableItem = SortableElement(({item, cargarDatos, editable}) =>
+    <CotizacionDetailItemsTablaItem
+        item={item}
+        editable={editable}
+        cargarDatos={cargarDatos}
+    />
+);
+
+
+const SortableList = SortableContainer(({items, editable, cargarDatos}) => {
+    return (
+        <tbody>
+        {_.orderBy(items, ['posicion'], ['asc']).map((item) => (
+            <SortableItem
+                disabled={!editable}
+                useDragHandle
+                key={item.id}
+                index={item.posicion}
+                cargarDatos={cargarDatos}
+                editable={editable}
+                item={item}
+            />
+        ))}
+        </tbody>
+    );
+});
+
 function areEqual(prevProps, nextProps) {
     return _.isEqual(prevProps.items, nextProps.items) && prevProps.editable === nextProps.editable
 }
 
 const CotizacionDetailItemsTabla = memo(props => {
     const {table} = useContext(StylesContext);
+    const dispatch = useDispatch();
     const {
-        items,
-        eliminarItem,
-        cambiarItem,
-        cambiarPosicionItem,
+        cotizacion_componente,
+        cotizacion_componente: {items},
+        cargarDatos,
         valor_total,
         cantidad_items,
         editable
     } = props;
-    const max_posicion = items.length;
+
+    const onSortEnd = ({oldIndex, newIndex}) => {
+        const item_uno = items.filter(e => e.posicion === oldIndex)[0];
+        const item_dos = items.filter(e => e.posicion === newIndex)[0];
+        if (oldIndex !== newIndex) {
+            dispatch(actions.cambiarPosicionItemCotizacionComponente(
+                cotizacion_componente.id,
+                item_uno.id,
+                item_dos.id,
+                {
+                    callback: () => cargarDatos()
+                }
+            ))
+        }
+    };
+
     return (
         <table className='table table-striped table-responsive' style={table}>
             <thead>
@@ -155,17 +204,13 @@ const CotizacionDetailItemsTabla = memo(props => {
                 }
             </tr>
             </thead>
-            <tbody>
-            {_.orderBy(items, ['posicion'], ['asc']).map(item => <CotizacionDetailItemsTablaItem
+            <SortableList
+                useDragHandle
+                onSortEnd={onSortEnd}
+                cargarDatos={cargarDatos}
                 editable={editable}
-                max_posicion={max_posicion}
-                key={item.id}
-                item={item}
-                eliminarItem={eliminarItem}
-                cambiarItem={cambiarItem}
-                cambiarPosicionItem={cambiarPosicionItem}
-            />)}
-            </tbody>
+                items={items}
+            />
             <tfoot>
             <tr style={table.tr}>
                 <td style={table.td}>Total</td>
@@ -186,6 +231,6 @@ const CotizacionDetailItemsTabla = memo(props => {
         </table>
     )
 
-}, areEqual);
+});
 
 export default CotizacionDetailItemsTabla;

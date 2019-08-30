@@ -25,11 +25,13 @@ export const eliminarItemCotizacionComponente = (id, id_item_cotizacion, options
     }
 };
 
-export const cambiarPosicionItemCotizacionComponente = (id, id_item_cotizacion, direccion, options_action = {}) => {
+export const cambiarPosicionItemCotizacionComponente = (id, item_uno_id, item_dos_id, options_action = {}) => {
     return (dispatch) => {
+        console.log(item_uno_id)
+        console.log(item_dos_id)
         let params = new URLSearchParams();
-        params.append('id_item_cotizacion', id_item_cotizacion);
-        params.append('direccion', direccion);
+        params.append('item_uno_id', item_uno_id);
+        params.append('item_dos_id', item_dos_id);
         const dispatches = (response) => {
             dispatch({type: TYPES.update, payload: response})
         };

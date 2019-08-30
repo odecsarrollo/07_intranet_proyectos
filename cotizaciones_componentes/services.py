@@ -159,29 +159,19 @@ def cotizacion_componentes_item_eliminar(
 
 
 def cotizacion_componentes_item_cambiar_posicion(
-        item_componente_id: int,
-        direccion: str
+        cotizacion_componente_id: int,
+        item_uno_id: int,
+        item_dos_id: int
 ) -> ItemCotizacionComponente:
-    item = ItemCotizacionComponente.objects.get(pk=item_componente_id)
-    posicion_maxima = item.cotizacion.items.aggregate(max=Max('posicion'))['max']
-    if (item.posicion >= 1 and direccion == 'BAJA') or (item.posicion > 1 and direccion == 'SUBE'):
-        nueva_posicion = item.posicion - 1 if direccion == 'SUBE' else item.posicion + 1
-        if nueva_posicion <= posicion_maxima:
-            item.posicion = nueva_posicion
-            item.save()
-            items_cotizacion = ItemCotizacionComponente.objects.exclude(pk=item_componente_id).filter(
-                cotizacion=item.cotizacion
-            ).order_by(
-                'posicion'
-            )
-            index = 0
-            for elemento in items_cotizacion:
-                index += 1
-                if item.posicion == index:
-                    index += 1
-                elemento.posicion = index
-                elemento.save()
-    return item
+    item_uno = ItemCotizacionComponente.objects.get(pk=item_uno_id)
+    item_dos = ItemCotizacionComponente.objects.get(pk=item_dos_id)
+    item_uno_posicion = item_uno.posicion
+    item_dos_posicion = item_dos.posicion
+    item_uno.posicion = item_dos_posicion
+    item_dos.posicion = item_uno_posicion
+    item_uno.save()
+    item_dos.save()
+    return item_uno
 
 
 def cotizacion_componentes_enviar(
@@ -296,9 +286,9 @@ def cotizacion_componentes_add_seguimiento(
         fecha: datetime = timezone.now(),
 ) -> CotizacionComponenteSeguimiento:
     cotizacion_componente = CotizacionComponente.objects.get(pk=cotizacion_componente_id)
-    if cotizacion_componente.estado not in ['ENV', 'REC', 'ELI', 'PRO']:
-        raise ValidationError({
-            '_error': 'No se puede realizar seguimiento a una cotización en estado %s' % cotizacion_componente.get_estado_display()})
+    # if cotizacion_componente.estado not in ['ENV', 'REC', 'ELI', 'PRO']:
+    #     raise ValidationError({
+    #         '_error': 'No se puede realizar seguimiento a una cotización en estado %s' % cotizacion_componente.get_estado_display()})
     seguimiento = CotizacionComponenteSeguimiento()
     seguimiento.cotizacion_componente_id = cotizacion_componente_id
     seguimiento.tipo_seguimiento = tipo_seguimiento

@@ -1,8 +1,12 @@
 from rest_framework import serializers
 
 from envios_emails.api_serializers import CotizacionComponenteEnvioSerializer
-from .models import CotizacionComponente, ItemCotizacionComponente, CotizacionComponenteAdjunto, \
+from .models import (
+    CotizacionComponente,
+    ItemCotizacionComponente,
+    CotizacionComponenteAdjunto,
     CotizacionComponenteSeguimiento
+)
 
 
 class CotizacionComponenteAdjuntoSerializer(serializers.ModelSerializer):
@@ -72,6 +76,7 @@ class ItemCotizacionComponenteSerializer(serializers.ModelSerializer):
             'componente_eurobelt',
             'posicion',
             'banda_eurobelt',
+            'cotizacion',
             'articulo_catalogo',
             'forma_pago',
             'forma_pago_nombre',
@@ -90,7 +95,7 @@ class CotizacionComponenteSeguimientoSerializer(serializers.ModelSerializer):
     creado_por_username = serializers.CharField(source='creado_por.username', read_only=True)
     tipo_seguimiento_nombre = serializers.SerializerMethodField()
 
-    def get_tipo_seguimiento_nombre(self,obj):
+    def get_tipo_seguimiento_nombre(self, obj):
         return obj.get_tipo_seguimiento_display()
 
     class Meta:

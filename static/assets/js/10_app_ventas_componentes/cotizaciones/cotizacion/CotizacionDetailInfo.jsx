@@ -20,7 +20,7 @@ const styles = {
 
 const CotizacionDetailInfo = memo(props => {
     const [show_cotizacion_informacion_dialog, setShowCotizacionInformacionDialog] = useState(false);
-    const {cotizacion, contacto_cotizacion, onSubmitCotizacion, cargarDatos, editable, onDelete} = props;
+    const {cotizacion, contacto, onSubmitCotizacion, cargarDatos, editable, onDelete} = props;
     return (
         <Fragment>
             {show_cotizacion_informacion_dialog &&
@@ -46,7 +46,7 @@ const CotizacionDetailInfo = memo(props => {
             <Typography variant="h4" gutterBottom color="secondary">
                 {cotizacion.estado_display}
             </Typography>
-            <Typography variant="body1" gutterBottom color="secondary" style={styles.texto_secondario} >
+            <Typography variant="body1" gutterBottom color="secondary" style={styles.texto_secondario}>
                 {cotizacion.razon_rechazo}
             </Typography>
             <Typography variant="body1" gutterBottom color="primary" style={styles.texto_principal}>
@@ -61,48 +61,48 @@ const CotizacionDetailInfo = memo(props => {
             <Typography variant="body1" style={styles.texto_secondario} gutterBottom color="secondary">
                 {`${cotizacion.ciudad_nombre} - ${cotizacion.departamento_nombre} - ${cotizacion.pais_nombre}`}
             </Typography>
-            {contacto_cotizacion &&
+            {contacto &&
             <Fragment>
                 <Typography variant="body1" gutterBottom color="primary" style={styles.texto_principal}>
                     Contacto:
                 </Typography>
                 <Typography variant="body1" style={styles.texto_secondario} gutterBottom color="secondary">
-                    {contacto_cotizacion.full_nombre}
+                    {contacto.full_nombre}
                 </Typography>
-                {contacto_cotizacion.telefono &&
+                {contacto.telefono &&
                 <div>
                     <Typography variant="overline" color="inherit" gutterBottom style={styles.texto_secondario}>
                         <FontAwesomeIcon
                             icon={'phone'}
                             style={{color: 'green'}}
-                        /> {contacto_cotizacion.telefono}
+                        /> {contacto.telefono}
                     </Typography>
                 </div>}
-                {contacto_cotizacion.telefono_2 &&
+                {contacto.telefono_2 &&
                 <div>
                     <Typography variant="overline" color="inherit" gutterBottom style={styles.texto_secondario}>
                         <FontAwesomeIcon
                             icon={'phone'}
                             style={{color: 'green'}}
-                        /> {contacto_cotizacion.telefono_2}
+                        /> {contacto.telefono_2}
                     </Typography>
                 </div>}
-                {contacto_cotizacion.correo_electronico &&
+                {contacto.correo_electronico &&
                 <div>
                     <Typography variant="overline" color="inherit" gutterBottom style={styles.texto_secondario}>
                         <FontAwesomeIcon
                             icon={'at'}
                             style={{color: 'green'}}
-                        /> {contacto_cotizacion.correo_electronico.toString().toLowerCase()}
+                        /> {contacto.correo_electronico.toString().toLowerCase()}
                     </Typography>
                 </div>}
-                {contacto_cotizacion.correo_electronico_2 &&
+                {contacto.correo_electronico_2 &&
                 <div>
                     <Typography variant="overline" color="inherit" gutterBottom style={styles.texto_secondario}>
                         <FontAwesomeIcon
                             icon={'at'}
                             style={{color: 'green'}}
-                        /> {contacto_cotizacion.correo_electronico_2.toString().toLowerCase()}
+                        /> {contacto.correo_electronico_2.toString().toLowerCase()}
                     </Typography>
                 </div>}
                 {cotizacion.observaciones &&

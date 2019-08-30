@@ -3,6 +3,7 @@ import {reduxForm} from 'redux-form';
 import {MyCheckboxSimple, MyTextFieldSimple} from '../../../../00_utilities/components/ui/forms/fields';
 import validate from './validate';
 import {MyFormTagModal} from '../../../../00_utilities/components/ui/forms/MyFormTagModal';
+import {useSelector} from "react-redux/es/hooks/useSelector";
 
 let CotizacionEnviarFormDialog = memo(props => {
     const {
@@ -16,12 +17,12 @@ let CotizacionEnviarFormDialog = memo(props => {
         modal_open,
         singular_name,
         contacto,
-        auth
     } = props;
     const {
         correo_electronico,
         correo_electronico_2
     } = contacto;
+    const auth = useSelector(state => state.auth);
     const {mi_cuenta: {email}} = auth;
     return (
         <MyFormTagModal

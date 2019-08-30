@@ -8,11 +8,38 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Dialog from "@material-ui/core/Dialog";
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import Button from '@material-ui/core/Button';
+import * as actions from "../../../01_actions/01_index";
+import {useDispatch} from "react-redux";
 
 const CotizadorAdicionarItem = memo(props => {
     const [show_adicionar_item, setShowAdicionarItem] = useState(false);
-    const {adicionarItem} = props;
+    const {cotizacion_componente} = props;
+    const dispatch = useDispatch();
     const cerrarDialog = () => setShowAdicionarItem(false);
+    const adicionarItem = (
+        tipo_item,
+        precio_unitario,
+        item_descripcion,
+        item_referencia,
+        item_unidad_medida,
+        item_id = null,
+        forma_pago_id = null,
+        callback = null
+    ) => {
+        dispatch(
+            actions.adicionarItemCotizacionComponente(
+                cotizacion_componente.id,
+                tipo_item,
+                precio_unitario,
+                item_descripcion,
+                item_referencia,
+                item_unidad_medida,
+                item_id,
+                forma_pago_id,
+                {callback}
+            )
+        )
+    };
     return (
         <Fragment>
             <FontAwesomeIcon

@@ -16,7 +16,7 @@ export const createContactoClienteCotizacion = (values, options_action = {}) => 
             params.append(k, v);
         });
         const dispatches = (response) => {
-            dispatch({type: TYPES.update, payload: response})
+            dispatch({type: TYPES.create, payload: response})
         };
         const options = {...options_action, dispatches, dispatch_method: dispatch};
         return callApiMethodPostParameters(current_url_api, null, 'contacto_cliente_crear_desde_cotizacion', params, options)

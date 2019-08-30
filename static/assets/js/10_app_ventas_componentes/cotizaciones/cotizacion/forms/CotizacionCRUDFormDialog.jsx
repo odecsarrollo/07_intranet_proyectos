@@ -1,4 +1,4 @@
-import React, {memo, useEffect, useState} from 'react';
+import React, {memo, useEffect, useState, Fragment} from 'react';
 import * as actions from '../../../../01_actions/01_index';
 import {useDispatch, useSelector} from 'react-redux';
 import {formValueSelector, reduxForm} from 'redux-form';
@@ -23,6 +23,7 @@ let CotizacionCRUDFormDialog = memo(props => {
         modal_open,
         singular_name
     } = props;
+
     const [crear_contacto, setCrearContacto] = useState(false);
     const [crear_ubicacion, setCrearUbicacion] = useState(false);
     const myValues = useSelector(state => selector(state, 'cliente', ''));
@@ -40,22 +41,32 @@ let CotizacionCRUDFormDialog = memo(props => {
     const ciudades = useSelector(state => state.geografia_ciudades);
     const clientes = useSelector(state => state.clientes);
     const clientes_contactos = useSelector(state => state.clientes_contactos);
-    const onSubmitCiudad = (v) => dispatch(actions.createCiudadCotizacion(v, {callback: () => setCrearUbicacion(false)}));
+    const onSubmitCiudad = (v) => dispatch(
+        actions.createCiudadCotizacion(
+            v,
+            {
+                callback: (res) => {
+                    setCrearUbicacion(false);
+                    props.change('ciudad', res.id);
+                }
+            })
+    );
     const onSubmitContacto = (v) =>
         dispatch(actions.createContactoClienteCotizacion(v, {
-            callback: (res) => dispatch(actions.fetchCliente(res.cliente, {callback: () => setCrearContacto(false)}))
+            callback: (res) => dispatch(
+                actions.fetchCliente(
+                    res.cliente,
+                    {
+                        callback: () => {
+                            props.change('contacto', res.id);
+                            setCrearContacto(false);
+                        }
+                    }
+                )
+            )
         }));
     return (
-        <MyFormTagModal
-            onCancel={onCancel}
-            onSubmit={handleSubmit(onSubmit)}
-            reset={reset}
-            initialValues={initialValues}
-            submitting={submitting}
-            modal_open={modal_open}
-            pristine={pristine}
-            element_type={singular_name}
-        >
+        <Fragment>
             {crear_ubicacion &&
             <CrearUbicacionForm
                 modal_open={crear_ubicacion}
@@ -65,77 +76,89 @@ let CotizacionCRUDFormDialog = memo(props => {
             />}
             {crear_contacto &&
             <CrearContactoForm
+                initialValues={{cliente}}
                 modal_open={crear_contacto}
                 onCancel={() => setCrearContacto(false)}
                 onSubmit={onSubmitContacto}
                 singular_name='Contacto'
                 clientes={clientes}
             />}
-            <MyCombobox
-                label='Cliente'
-                className="col-12"
-                name='cliente'
-                busy={false}
-                autoFocus={false}
-                data={_.map(_.orderBy(clientes, ['nombre'], ['asc']), e => {
-                    return {
-                        'name': e.nombre,
-                        'id': e.id
-                    }
-                })}
-                textField='name'
-                filter='contains'
-                valuesField='id'
-                placeholder='Cliente'
-            />
-            <MyTextFieldSimple
-                multiline
-                rows={4}
-                className='col-12'
-                name='observaciones'
-                nombre='Observaciones'
-            />
-            <MyCombobox
-                label='Contacto'
-                className="col-12"
-                name='contacto'
-                busy={false}
-                autoFocus={false}
-                data={_.map(_.orderBy(_.pickBy(clientes_contactos, c => c.cliente === cliente), ['nombres', 'apellidos'], ['asc', 'asc']), e => {
-                    return {
-                        'name': `${e.nombres} ${e.apellidos}`,
-                        'id': e.id
-                    }
-                })}
-                textField='name'
-                filter='contains'
-                valuesField='id'
-                placeholder='Contacto'
-            />
-            <div className="col-12 text-right">
-                <span className='puntero' onClick={() => setCrearContacto(true)}>Crear Contacto...</span>
-            </div>
-            <MyCombobox
-                label='Ciudad'
-                className="col-12"
-                name='ciudad'
-                busy={false}
-                autoFocus={false}
-                data={_.map(_.orderBy(ciudades, ['nombre'], ['asc']), e => {
-                    return {
-                        'name': `${e.nombre} - ${e.departamento_nombre} - ${e.pais_nombre}`,
-                        'id': e.id
-                    }
-                })}
-                textField='name'
-                filter='contains'
-                valuesField='id'
-                placeholder='Ciudad'
-            />
-            <div className="col-12 text-right">
-                <span className='puntero' onClick={() => setCrearUbicacion(true)}>Crear Ciudad...</span>
-            </div>
-        </MyFormTagModal>
+            <MyFormTagModal
+                onCancel={onCancel}
+                onSubmit={handleSubmit(onSubmit)}
+                reset={reset}
+                initialValues={initialValues}
+                submitting={submitting}
+                modal_open={modal_open}
+                pristine={pristine}
+                element_type={singular_name}
+            >
+                <MyCombobox
+                    label='Cliente'
+                    className="col-12"
+                    name='cliente'
+                    busy={false}
+                    autoFocus={false}
+                    data={_.map(_.orderBy(clientes, ['nombre'], ['asc']), e => {
+                        return {
+                            'name': e.nombre,
+                            'id': e.id
+                        }
+                    })}
+                    textField='name'
+                    filter='contains'
+                    valuesField='id'
+                    placeholder='Cliente'
+                />
+                <MyTextFieldSimple
+                    multiline
+                    rows={4}
+                    className='col-12'
+                    name='observaciones'
+                    nombre='Observaciones'
+                />
+                <MyCombobox
+                    label='Contacto'
+                    className="col-12"
+                    name='contacto'
+                    busy={false}
+                    autoFocus={false}
+                    data={_.map(_.orderBy(_.pickBy(clientes_contactos, c => c.cliente === cliente), ['nombres', 'apellidos'], ['asc', 'asc']), e => {
+                        return {
+                            'name': `${e.nombres} ${e.apellidos}`,
+                            'id': e.id
+                        }
+                    })}
+                    textField='name'
+                    filter='contains'
+                    valuesField='id'
+                    placeholder='Contacto'
+                />
+                <div className="col-12 text-right">
+                    <span className='puntero' onClick={() => setCrearContacto(true)}>Crear Contacto...</span>
+                </div>
+                <MyCombobox
+                    label='Ciudad'
+                    className="col-12"
+                    name='ciudad'
+                    busy={false}
+                    autoFocus={false}
+                    data={_.map(_.orderBy(ciudades, ['nombre'], ['asc']), e => {
+                        return {
+                            'name': `${e.nombre} - ${e.departamento_nombre} - ${e.pais_nombre}`,
+                            'id': e.id
+                        }
+                    })}
+                    textField='name'
+                    filter='contains'
+                    valuesField='id'
+                    placeholder='Ciudad'
+                />
+                <div className="col-12 text-right">
+                    <span className='puntero' onClick={() => setCrearUbicacion(true)}>Crear Ciudad...</span>
+                </div>
+            </MyFormTagModal>
+        </Fragment>
     )
 });
 
