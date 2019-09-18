@@ -76,7 +76,6 @@ class CotizacionSerializer(serializers.ModelSerializer):
         fecha_ini = obj.fecha_cambio_estado
         fecha_seg = obj.fecha_limite_segumiento_estado
         fecha_act = timezone.datetime.now().date()
-        print('entrooo')
         if obj.estado in ['Cierre (Aprobado)', 'Cancelado', 'Aplazado']:
             return None
         if fecha_ini and fecha_seg:
