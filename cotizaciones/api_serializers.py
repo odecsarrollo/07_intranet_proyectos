@@ -43,6 +43,11 @@ class CotizacionSerializer(serializers.ModelSerializer):
     porcentaje_tuberia_ventas = serializers.SerializerMethodField()
 
     to_string = serializers.SerializerMethodField()
+    creado = serializers.DateTimeField(
+        source='created',
+        format="%Y-%m-%d",
+        read_only=True
+    )
 
     def get_to_string(self, instance):
         nro_cotizacion = ''
@@ -71,6 +76,7 @@ class CotizacionSerializer(serializers.ModelSerializer):
         fecha_ini = obj.fecha_cambio_estado
         fecha_seg = obj.fecha_limite_segumiento_estado
         fecha_act = timezone.datetime.now().date()
+        print('entrooo')
         if obj.estado in ['Cierre (Aprobado)', 'Cancelado', 'Aplazado']:
             return None
         if fecha_ini and fecha_seg:
@@ -94,6 +100,7 @@ class CotizacionSerializer(serializers.ModelSerializer):
         fields = [
             'url',
             'id',
+            'creado',
             'responsable',
             'origen_cotizacion',
             'responsable_actual',
