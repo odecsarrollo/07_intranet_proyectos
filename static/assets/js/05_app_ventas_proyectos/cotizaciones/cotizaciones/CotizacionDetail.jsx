@@ -36,7 +36,7 @@ const Detail = memo(props => {
 
     const guardarCambiosCotizacion = (cotizacion) => {
         const callback = () => {
-            history.push('/app/ventas')
+            history.push('/app/ventas_proyectos')
         };
         dispatch(actions.updateCotizacion(id, cotizacion, {callback}));
     };
