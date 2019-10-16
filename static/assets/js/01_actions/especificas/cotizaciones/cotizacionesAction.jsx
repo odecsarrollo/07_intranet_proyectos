@@ -6,7 +6,9 @@ import {
     deleteObject,
     createObject,
     uploadArchivo,
-    fetchListGetURLParameters
+    fetchListGetURLParameters,
+    callApiMethodPostParameters,
+    callApiMethodPost
 } from '../../00_general_fuctions'
 
 const current_url_api = 'cotizaciones';
@@ -59,6 +61,46 @@ export const fetchCotizacionesAgendadas = (options_action = {}) => {
         return fetchListGet(`${current_url_api}/listar_cotizaciones_agendadas`, options);
     }
 };
+
+export const relacionarQuitarProyectoaCotizacion = (id, proyecto_id, options_action = {}) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        params.append('proyecto_id', proyecto_id);
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: response})
+        };
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'relacionar_quitar_proyecto', params, options)
+    }
+};
+
+export const setRevisadoCotizacion = (id, options_action = {}) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: response})
+        };
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPost(current_url_api, id, 'set_revisado', options)
+    }
+};
+
+export function fetchCotizacionesxParametro(parametro, options_action = {}) {
+    return function (dispatch) {
+        const FULL_URL = `${current_url_api}/listar_cotizaciones_x_parametro/?parametro=${parametro}`;
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch_all, payload: response})
+        };
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        return fetchListGetURLParameters(FULL_URL, options);
+    }
+}
+
 
 export const fetchCotizacionesPidiendoCarpeta = (options_action = {}) => {
     return function (dispatch) {

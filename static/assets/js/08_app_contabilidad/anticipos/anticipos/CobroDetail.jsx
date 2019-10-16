@@ -1,13 +1,13 @@
 import React, {useEffect, useState, memo, Fragment} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import * as actions from '../../../../01_actions/01_index';
+import * as actions from '../../../01_actions/01_index';
 import CobroFormBase from "./forms/CobroFormBase";
 import CobroDetailTablaItems from "./CobroDetailTablaItems";
 import Literales from "./CobroCRUDLiterales";
 import EnviosTabla from "./forms/CobroCRUDFormEnvioTabla";
 import Button from "@material-ui/core/Button";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {fechaFormatoUno} from "../../../../00_utilities/common";
+import {fechaFormatoUno} from "../../../00_utilities/common";
 import PrinJs from "print-js";
 import moment from "moment-timezone";
 import PagoModal from "./forms/CobroCRUDFormPagoModal";
@@ -17,8 +17,8 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import TextField from "@material-ui/core/TextField";
-import useTengoPermisos from "../../../../00_utilities/hooks/useTengoPermisos";
-import {PROFORMAS_ANTICIPOS} from "../../../../permisos";
+import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
+import {PROFORMAS_ANTICIPOS} from "../../../permisos";
 
 const style = {
     tabla: {

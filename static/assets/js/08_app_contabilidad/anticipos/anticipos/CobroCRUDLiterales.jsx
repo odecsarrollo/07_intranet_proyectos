@@ -3,7 +3,7 @@ import Typography from "@material-ui/core/Typography/index";
 import {useDispatch} from 'react-redux';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome/index";
 import PanelRelacionarLiteral from "./forms/CobroCRUDFormLiteralesRelacionarLiteral";
-import * as actions from "../../../../01_actions/01_index";
+import * as actions from "../../../01_actions/01_index";
 
 const style = {
     li: {

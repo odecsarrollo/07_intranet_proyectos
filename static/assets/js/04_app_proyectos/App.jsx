@@ -15,8 +15,8 @@ import VerificarHorasList from './mano_obra/verificar_horas/containers/horas_ver
 import HorasTrabajoColaboradorInicialesList
     from './mano_obra/horas_trabajo_iniciales/containers/horas_trabajo_iniciales_list_container';
 
-import ProyectosCGUnoList from "./proyectos/proyectos/containers/proyectos_list_container";
-import ProyectosCGUnoDetail from "./proyectos/proyectos/containers/ProyectoDetail";
+import ProyectosCGUnoList from "./proyectos/proyectos/ProyectoCRUD";
+import ProyectosCGUnoDetail from "./proyectos/proyectos/ProyectoDetail";
 
 import FasesProyectosList from "./proyectos/fases/containers/fases_list_container";
 

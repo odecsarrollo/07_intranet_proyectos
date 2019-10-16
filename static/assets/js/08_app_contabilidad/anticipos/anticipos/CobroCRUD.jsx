@@ -1,12 +1,12 @@
 import React, {memo, useEffect} from 'react';
 import CreateForm from './forms/CobroCRUDForm';
 import Tabla from './CobroCRUDTabla';
-import crudHOC from '../../../../00_utilities/components/HOC_CRUD2';
+import crudHOC from '../../../00_utilities/components/HOC_CRUD2';
 import {useDispatch} from "react-redux/es/hooks/useDispatch";
-import * as actions from "../../../../01_actions/01_index";
+import * as actions from "../../../01_actions/01_index";
 import {useSelector} from "react-redux/es/hooks/useSelector";
-import useTengoPermisos from "../../../../00_utilities/hooks/useTengoPermisos";
-import {PROFORMAS_ANTICIPOS} from "../../../../permisos";
+import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
+import {PROFORMAS_ANTICIPOS} from "../../../permisos";
 import {withRouter} from 'react-router-dom'
 
 

@@ -1,12 +1,12 @@
 import React, {Component, useState, useEffect, memo} from 'react';
 import {useSelector, useDispatch} from "react-redux";
-import * as actions from "../../../../01_actions/01_index";
-import {SinObjeto} from "../../../../00_utilities/templates/fragmentos";
-import ValidarPermisos from "../../../../permisos/validar_permisos";
-import {permisosAdapterDos} from "../../../../00_utilities/common";
-import TablaProyectoLiterales from '../../literales/components/ProyectoLiteralTabla';
-import FormProyecto from '../components/forms/ProyectoDetailForm';
-import FacturasProyecto from '../components/ProyectoFacturaList';
+import * as actions from "../../../01_actions/01_index";
+import {SinObjeto} from "../../../00_utilities/templates/fragmentos";
+import ValidarPermisos from "../../../permisos/validar_permisos";
+import {permisosAdapterDos} from "../../../00_utilities/common";
+import TablaProyectoLiterales from '../literales/components/ProyectoLiteralTabla';
+import FormProyecto from './forms/ProyectoDetailForm';
+import FacturasProyecto from './components/ProyectoFacturaList';
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import {
@@ -14,12 +14,13 @@ import {
     LITERALES,
     COTIZACIONES,
     ARCHIVOS_PROYECTOS,
-} from "../../../../permisos";
-import LiteralModalCreate from '../../literales/components/ProyectoLiteralModal';
-import LiteralDetail from '../../literales/components/LiteralDetail';
-import ProyectoInfo from '../../proyectos/components/proyecto_datos';
-import PanelArchivosProyecto from '../../archivos/proyectos/ProyectoDocumentoList';
-import useTengoPermisos from "../../../../00_utilities/hooks/useTengoPermisos";
+} from "../../../permisos";
+import LiteralModalCreate from '../literales/components/ProyectoLiteralModal';
+import LiteralDetail from '../literales/components/LiteralDetail';
+import ProyectoInfo from './components/ProyectoDetailInfo';
+import PanelArchivosProyecto from '../archivos/proyectos/ProyectoDocumentoList';
+import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
+import {object} from "prop-types";
 
 const style = {
     tabla: {
@@ -75,8 +76,7 @@ const Detail = memo((props) => {
     const cotizacion_permisos = useTengoPermisos(COTIZACIONES);
     const permisos_archivos_proyecto = useTengoPermisos(ARCHIVOS_PROYECTOS);
     const cargarDatos = () => {
-        const cargarCotizacioneParaCrearLiterales = () => dispatch(actions.fetchCotizacionesPidiendoCarpeta());
-        dispatch(actions.fetchProyecto(id, {callback: cargarCotizacioneParaCrearLiterales}));
+        dispatch(actions.fetchProyecto(id));
     };
 
     const proyecto = useSelector(state => state.proyectos[id]);
@@ -110,16 +110,16 @@ const Detail = memo((props) => {
         dispatch(actions.updateProyecto(proyecto.id, proyecto));
     };
 
+    console.log(proyecto)
+
 
     return (
         <div className="row">
-            <div className="col-12">
-                <ProyectoInfo
-                    cotizaciones_proyecto_list={cotizaciones}
-                    proyecto={proyecto}
-                    cotizaciones_permisos={cotizacion_permisos}
-                />
-            </div>
+            <ProyectoInfo
+                cotizaciones_proyecto_list={cotizaciones}
+                proyecto={proyecto}
+                cotizaciones_permisos={cotizacion_permisos}
+            />
             <div className="col-12">
                 <Tabs>
                     <TabList>

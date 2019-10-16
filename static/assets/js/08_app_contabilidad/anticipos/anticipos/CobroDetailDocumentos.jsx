@@ -1,7 +1,7 @@
 import React, {memo, useState} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Typography from "@material-ui/core/Typography";
-import * as actions from "../../../../01_actions/01_index";
+import * as actions from "../../../01_actions/01_index";
 import {useDispatch} from "react-redux/es/hooks/useDispatch";
 import CobroDetailDocumentoUploadForm from './CobroDetailDocumentoUploadForm';
 import CobroDetailDocumentoList from './CobroDetailDocumentoList';

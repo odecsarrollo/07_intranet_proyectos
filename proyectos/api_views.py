@@ -81,28 +81,7 @@ class MiembroLiteralViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
 
 
 class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
-    queryset = Proyecto.objects.select_related(
-        'cliente',
-        'cotizacion',
-        'cotizacion__cliente',
-    ).prefetch_related(
-            'mis_literales',
-            'mis_literales',
-            'mis_documentos',
-            'mis_documentos__creado_por',
-            'mis_literales__mis_documentos',
-            'mis_literales__mis_documentos__creado_por',
-            'mis_literales__mis_horas_trabajadas',
-            'mis_literales__mis_horas_trabajadas__hoja',
-            'mis_literales__mis_horas_trabajadas__hoja__tasa',
-            'mis_literales__mis_horas_trabajadas__hoja__colaborador',
-            'mis_literales__mis_horas_trabajadas__hoja__tasa__centro_costo',
-            'mis_literales__mis_horas_trabajadas_iniciales',
-            'mis_literales__mis_horas_trabajadas_iniciales__colaborador',
-            'mis_literales__mis_horas_trabajadas_iniciales__centro_costo',
-            'mis_literales__mis_materiales',
-            'mis_literales__mis_materiales__item_biable',
-        ).all()
+    queryset = Proyecto.sumatorias.prefetch_related('cotizaciones', 'mis_literales').all()
     serializer_class = ProyectoSerializer
 
     def retrieve(self, request, *args, **kwargs):
@@ -116,7 +95,7 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
         search_fields = ['id_proyecto', 'nombre']
         if search_fields:
             qs = query_varios_campos(self.queryset, search_fields, parametro)
-        qs = qs.filter(cotizacion__isnull=True)
+        self.serializer_class = ProyectoConDetalleSerializer
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
@@ -268,8 +247,7 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
 class LiteralViewSet(viewsets.ModelViewSet):
     queryset = Literal.objects.select_related(
         'proyecto',
-        'proyecto__cotizacion__cliente',
-        'cotizacion',
+        'proyecto__cotizacion__cliente'
     ).all()
     serializer_class = LiteralSerializer
 

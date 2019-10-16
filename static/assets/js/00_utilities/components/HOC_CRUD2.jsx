@@ -118,8 +118,8 @@ function crudHOC(CreateForm, Tabla) {
 
         const onSelectItemEdit = (item) => {
             const callback = (response) => {
-                setModalOpen(true);
                 setItemSeleccionado(response);
+                setModalOpen(true);
             };
             if (method_pool.fetchObjectMethod === null) {
                 console.log('No se ha asignado ningún método para FETCH OBJECT')

@@ -1,28 +1,23 @@
-import React, {memo, useEffect} from 'react';
+import React, {memo} from 'react';
 import {reduxForm} from 'redux-form';
-import {useDispatch, useSelector} from "react-redux";
 import {MyFormTagModal} from '../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import validate from './validate';
-import FormBaseCotizacion from '../../cotizaciones/forms/CotizacionFormBase';
-import {formValueSelector} from 'redux-form';
+import BaseForm from './BaseProyectoForm';
 
-const selector = formValueSelector('cotizacionForm');
-
-let Form = memo(props => {
+let ProyectosCRUDForm = memo(props => {
     const {
-        initialValues,
         pristine,
         submitting,
         reset,
+        initialValues,
         onSubmit,
         onCancel,
         handleSubmit,
         modal_open,
         singular_name,
-        change
+        permisos_object,
+        clientes_list
     } = props;
-    const myValues = useSelector(state => selector(state, 'estado', 'valor_ofertado', 'cliente', 'unidad_negocio', 'subir_anterior', 'cotizacion_inicial'));
-
     return (
         <MyFormTagModal
             onCancel={onCancel}
@@ -34,22 +29,21 @@ let Form = memo(props => {
             pristine={pristine}
             element_type={singular_name}
         >
-            <FormBaseCotizacion
-                change={change}
-                item={initialValues}
-                myValues={myValues}
-            />
-            <div style={{height: '300px'}}>
-
+            <div className="m-2">
+                <BaseForm
+                    clientes_list={clientes_list}
+                    permisos_object={permisos_object}
+                    initialValues={initialValues}
+                />
             </div>
         </MyFormTagModal>
     )
 });
 
-Form = reduxForm({
-    form: "cotizacionForm",
+ProyectosCRUDForm = reduxForm({
+    form: "proyectosCRUDForm",
     validate,
     enableReinitialize: true
-})(Form);
+})(ProyectosCRUDForm);
 
-export default Form;
+export default ProyectosCRUDForm;

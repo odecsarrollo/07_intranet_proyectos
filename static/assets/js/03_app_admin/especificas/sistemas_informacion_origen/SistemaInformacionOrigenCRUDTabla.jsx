@@ -3,6 +3,10 @@ import MyDialogButtonDelete from '../../../00_utilities/components/ui/dialog/del
 import IconButtonTableEdit from '../../../00_utilities/components/ui/icon/table_icon_button_edit';
 import ReactTable from "react-table";
 
+function areEqual(prevProps, nextProps) {
+    return prevProps.list === nextProps.list
+}
+
 const Tabla = memo(props => {
     const data = _.orderBy(props.list, ['nombre'], ['asc']);
     const {
@@ -71,6 +75,6 @@ const Tabla = memo(props => {
             className="-striped -highlight tabla-maestra"
         />
     );
-});
+}, areEqual);
 
 export default Tabla;

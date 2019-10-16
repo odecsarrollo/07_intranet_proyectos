@@ -1,6 +1,6 @@
 import React, {memo} from 'react';
 import {reduxForm, formValueSelector} from 'redux-form';
-import {MyTextFieldSimple, MyFieldFileInput} from '../../../../00_utilities/components/ui/forms/fields';
+import {MyTextFieldSimple, MyFieldFileInput} from '../../../00_utilities/components/ui/forms/fields';
 import {useSelector} from "react-redux";
 import Button from '@material-ui/core/Button';
 

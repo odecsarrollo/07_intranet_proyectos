@@ -1,7 +1,7 @@
 import React, {memo, Fragment, useState} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {numeroFormato} from "../../../../00_utilities/common";
-import * as actions from "../../../../01_actions/01_index";
+import {numeroFormato} from "../../../00_utilities/common";
+import * as actions from "../../../01_actions/01_index";
 import NuevoItemModal from "./forms/NuevoItemModal";
 import {useDispatch} from "react-redux/es/hooks/useDispatch";
 

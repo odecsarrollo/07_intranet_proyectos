@@ -2,7 +2,7 @@ import React, {Fragment, memo, useState} from "react";
 import {useDispatch, useSelector} from 'react-redux';
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import * as actions from "../../../../../01_actions/01_index";
+import * as actions from "../../../../01_actions/01_index";
 
 const Item = memo(props => {
     const [literal_id_seleccionado, setLiteralIdSeleccionado] = useState(false);

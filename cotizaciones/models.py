@@ -3,37 +3,61 @@ from django.contrib.auth.models import User
 from model_utils.models import TimeStampedModel
 
 from clientes.models import ClienteBiable, ContactoCliente
+from cotizaciones.managers import CotizacionManager
 
 
 class Cotizacion(TimeStampedModel):
-    created_by = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True,
-                                   related_name='cotizaciones_creadas')
-    nro_cotizacion = models.PositiveIntegerField(null=True, blank=True, unique=True)
+    UNIDADES_NEGOCIOS_CHOICES = (
+        ('TRP', 'TRP - TRANSPORTADOR'),
+        ('EQR', 'EQR - EQUIPOS REPRESENTADOS'),
+        ('SER', 'SER - SERVICIOS'),
+        ('EQO', 'EQO - EQUIPO ODECOPACK'),
+        ('SOL', 'SOL - SOLUCIONES'),
+        ('ADI', 'ADI - ADICIONAL'),
+    )
+    created_by = models.ForeignKey(
+        User, on_delete=models.PROTECT,
+        null=True,
+        related_name='cotizaciones_creadas'
+    )
+    nro_cotizacion = models.PositiveIntegerField(null=True, unique=True)
     unidad_negocio = models.CharField(max_length=10)
-    cliente = models.ForeignKey(ClienteBiable, on_delete=models.PROTECT, null=True, blank=True)
+    cotizacion_inicial = models.ForeignKey(
+        'self',
+        null=True,
+        on_delete=models.PROTECT,
+        related_name='cotizaciones_adicionales'
+    )
+    cliente = models.ForeignKey(ClienteBiable, on_delete=models.PROTECT, null=True)
     descripcion_cotizacion = models.CharField(max_length=500)
-    contacto_cliente = models.ForeignKey(ContactoCliente, null=True, blank=True, related_name='mis_contizaciones',
-                                         on_delete=models.PROTECT)
-    contacto = models.CharField(max_length=400, null=True, blank=True)
-    observacion = models.TextField(null=True, blank=True)
+    contacto_cliente = models.ForeignKey(
+        ContactoCliente,
+        null=True,
+        related_name='mis_contizaciones',
+        on_delete=models.PROTECT
+    )
+    contacto = models.CharField(max_length=400, null=True)
+    observacion = models.TextField(null=True)
     valor_ofertado = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     valor_orden_compra = models.DecimalField(max_digits=20, decimal_places=2, default=0)
-    orden_compra_nro = models.CharField(max_length=100, null=True, blank=True)
-    orden_compra_fecha = models.DateField(null=True, blank=True)
-    fecha_entrega_pactada_cotizacion = models.DateField(null=True, blank=True)
-    fecha_entrega_pactada = models.DateField(null=True, blank=True)
+    orden_compra_nro = models.CharField(max_length=100, null=True)
+    orden_compra_fecha = models.DateField(null=True)
+    fecha_entrega_pactada_cotizacion = models.DateField(null=True)
+    fecha_entrega_pactada = models.DateField(null=True)
     costo_presupuestado = models.DecimalField(max_digits=20, decimal_places=2, default=0)
-    responsable = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True)
-    abrir_carpeta = models.BooleanField(default=False)
-    crear_literal = models.BooleanField(default=False)
-    crear_literal_id_proyecto = models.CharField(max_length=10, null=True, blank=True)
+    responsable = models.ForeignKey(User, on_delete=models.PROTECT, null=True)
 
-    estado = models.CharField(max_length=200, null=True, blank=True)
-    origen_cotizacion = models.CharField(max_length=100, null=True, blank=True)
-    estado_observacion_adicional = models.CharField(max_length=400, null=True, blank=True)
-    fecha_cambio_estado = models.DateField(null=True, blank=True)
-    fecha_cambio_estado_cerrado = models.DateField(null=True, blank=True)
-    fecha_limite_segumiento_estado = models.DateField(null=True, blank=True)
+    relacionada = models.BooleanField(default=False)
+    revisada = models.BooleanField(default=False)
+    estado = models.CharField(max_length=200, null=True)
+    origen_cotizacion = models.CharField(max_length=100, null=True)
+    estado_observacion_adicional = models.CharField(max_length=400, null=True)
+    fecha_cambio_estado = models.DateField(null=True)
+    fecha_cambio_estado_cerrado = models.DateField(null=True)
+    fecha_limite_segumiento_estado = models.DateField(null=True)
+
+    objects = models.Manager()
+    sumatorias = CotizacionManager()
 
     class Meta:
         permissions = [
@@ -45,6 +69,28 @@ class Cotizacion(TimeStampedModel):
             ['list_tuberia_ventas', 'Puede ver la tuberia de bentas'],
             ['list_tuberia_informe_uno', 'Puede Ver informe de tuberia de ventas'],
         ]
+
+    @property
+    def abrir_carpeta(self) -> bool:
+        return not self.relacionada and self.orden_compra_nro is not None and self.estado == 'Cierre (Aprobado)' and self.unidad_negocio != 'ADI'
+
+    @property
+    def revisar(self) -> bool:
+        if not self.revisada and self.unidad_negocio == 'ADI':
+            return True
+        return False
+
+    @property
+    def cliente_cotizacion(self) -> ClienteBiable:
+        if self.cotizacion_inicial is None:
+            return self.cliente
+        return self.cotizacion_inicial.cliente_cotizacion
+
+    @property
+    def contacto_cotizacion(self) -> ContactoCliente:
+        if self.cotizacion_inicial is None:
+            return self.contacto_cliente
+        return self.cotizacion_inicial.contacto_cotizacion
 
 
 class SeguimientoCotizacion(TimeStampedModel):

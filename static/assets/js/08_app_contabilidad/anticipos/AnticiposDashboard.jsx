@@ -7,7 +7,7 @@ import Tab from '@material-ui/core/Tab/index';
 
 
 import BloqueProformaConfiguracion from "./configuracion/ProformaConfiguracion";
-import BloqueProformaCobros from "./anticipos/components/CobroCRUD";
+import BloqueProformaCobros from "./anticipos/CobroCRUD";
 
 const ItemsDashboard = memo(props => {
     const {contabilidad_proforma_configuracion} = props;

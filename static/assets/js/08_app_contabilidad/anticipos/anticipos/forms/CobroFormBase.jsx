@@ -3,9 +3,9 @@ import {
     MyTextFieldSimple,
     MyCombobox,
     MyDateTimePickerField
-} from '../../../../../00_utilities/components/ui/forms/fields';
+} from '../../../../00_utilities/components/ui/forms/fields';
 import {reduxForm} from "redux-form";
-import BotoneriaModalForm from "../../../../../00_utilities/components/ui/forms/botoneria_modal_form";
+import BotoneriaModalForm from "../../../../00_utilities/components/ui/forms/botoneria_modal_form";
 
 let Form = memo(props => {
     const {

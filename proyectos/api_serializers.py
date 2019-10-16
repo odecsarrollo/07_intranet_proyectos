@@ -1,6 +1,8 @@
 from rest_framework import serializers
 
 from cguno.api_serializers import ItemsLiteralBiableSerializer
+from cotizaciones.models import Cotizacion
+from intranet_proyectos.general_mixins.custom_serializer_mixins import CustomSerializerMixin
 from mano_obra.api_serializers import HoraHojaTrabajoSerializer, HoraTrabajoColaboradorLiteralInicialSerializer
 from .models import Proyecto, Literal, MiembroLiteral, ArchivoLiteral, ArchivoProyecto, FacturaLiteral
 
@@ -152,13 +154,6 @@ class LiteralSerializer(serializers.ModelSerializer):
     fecha_entrega_pactada = serializers.DateField(source='cotizacion.fecha_entrega_pactada', read_only=True)
     valor_cliente = serializers.DecimalField(source='cotizacion.valor_orden_compra', read_only=True,
                                              max_digits=20, decimal_places=2)
-    cotizacion_nro = serializers.SerializerMethodField()
-    cotizacion_fecha_entrega = serializers.DateField(source='cotizacion.fecha_entrega_pactada', read_only=True)
-
-    def get_cotizacion_nro(self, obj):
-        if obj.cotizacion:
-            return '%s-%s' % (obj.cotizacion.unidad_negocio, obj.cotizacion.nro_cotizacion)
-        return None
 
     class Meta:
         model = Literal
@@ -195,9 +190,6 @@ class LiteralSerializer(serializers.ModelSerializer):
             'mis_horas_trabajadas_iniciales',
             'facturas',
             'valor_cliente',
-            'cotizacion',
-            'cotizacion_nro',
-            'cotizacion_fecha_entrega',
         ]
         extra_kwargs = {
             'mis_materiales': {'read_only': True},
@@ -208,31 +200,52 @@ class LiteralSerializer(serializers.ModelSerializer):
         }
 
 
-class ProyectoSerializer(serializers.ModelSerializer):
-    cliente_nombre = serializers.CharField(source='cotizacion.cliente.nombre', read_only=True)
+class ProyectoSerializer(CustomSerializerMixin, serializers.ModelSerializer):
+    # cliente_nombre = serializers.CharField(source='cotizacion.cliente.nombre', read_only=True)
+    # orden_compra_nro = serializers.CharField(source='cotizacion.orden_compra_nro', read_only=True)
+    # orden_compra_fecha = serializers.DateField(source='cotizacion.orden_compra_fecha', read_only=True)
+    # fecha_entrega_pactada = serializers.DateField(source='cotizacion.fecha_entrega_pactada', read_only=True)
+    # costo_presupuestado = serializers.DecimalField(source='cotizacion.costo_presupuestado', read_only=True,
+    #                                                max_digits=20, decimal_places=2)
+    # valor_cliente = serializers.DecimalField(source='cotizacion.valor_orden_compra', read_only=True,
+    #                                          max_digits=20, decimal_places=2)
 
-    orden_compra_nro = serializers.CharField(source='cotizacion.orden_compra_nro', read_only=True)
-    orden_compra_fecha = serializers.DateField(source='cotizacion.orden_compra_fecha', read_only=True)
-    fecha_entrega_pactada = serializers.DateField(source='cotizacion.fecha_entrega_pactada', read_only=True)
-
+    cotizacion_relacionada_id = serializers.IntegerField(write_only=True, allow_null=True)
     costo_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     cantidad_horas_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     costo_mano_obra_inicial = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     cantidad_horas_mano_obra_inicial = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
-    cotizacion_nro = serializers.SerializerMethodField()
-    costo_presupuestado = serializers.DecimalField(source='cotizacion.costo_presupuestado', read_only=True,
-                                                   max_digits=20, decimal_places=2)
-    valor_cliente = serializers.DecimalField(source='cotizacion.valor_orden_compra', read_only=True,
-                                             max_digits=20, decimal_places=2)
+    costo_presupuestado_cotizaciones = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    valor_orden_compra_cotizaciones = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    costo_presupuestado_cotizaciones_adicional = serializers.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        read_only=True
+    )
+    valor_orden_compra_cotizaciones_adicional = serializers.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        read_only=True
+    )
+    cotizaciones_nro = serializers.SerializerMethodField()
     to_string = serializers.SerializerMethodField()
 
     def get_to_string(self, instance):
         return '%s - %s' % (instance.id_proyecto, instance.nombre)
 
-    def get_cotizacion_nro(self, obj):
-        if obj.cotizacion:
-            return '%s-%s' % (obj.cotizacion.unidad_negocio, obj.cotizacion.nro_cotizacion)
-        return None
+    def get_cotizaciones_nro(self, obj):
+        return 'COLOCAR EN CODIGO SERIALIZER'
+
+    def create(self, validated_data):
+        cotizacion_relacionada_id = validated_data.pop('cotizacion_relacionada_id')
+        proyecto = super().create(validated_data)
+        from cotizaciones.services import cotizacion_quitar_relacionar_proyecto
+        if cotizacion_relacionada_id is not None:
+            cotizacion_quitar_relacionar_proyecto(
+                cotizacion_id=cotizacion_relacionada_id,
+                proyecto_id=proyecto.id
+            )
+        return proyecto
 
     class Meta:
         model = Proyecto
@@ -243,26 +256,32 @@ class ProyectoSerializer(serializers.ModelSerializer):
             'abierto',
             'costo_materiales',
             'en_cguno',
-            'costo_presupuestado',
+            'costo_presupuestado_cotizaciones',
+            'valor_orden_compra_cotizaciones',
+            'costo_presupuestado_cotizaciones_adicional',
+            'valor_orden_compra_cotizaciones_adicional',
             'costo_mano_obra',
             'costo_mano_obra_inicial',
             'cantidad_horas_mano_obra',
             'cantidad_horas_mano_obra_inicial',
-            'cotizacion',
-            'cotizacion_nro',
-            'orden_compra_nro',
-            'orden_compra_fecha',
-            'fecha_entrega_pactada',
+            'cotizaciones',
+            'cotizacion_relacionada_id',
+            'cotizaciones_nro',
+            # 'costo_presupuestado',
+            # 'orden_compra_nro',
+            # 'orden_compra_fecha',
+            # 'fecha_entrega_pactada',
             'mis_literales',
             'mis_documentos',
-            'valor_cliente',
+            # 'valor_cliente',
             'nombre',
-            'cliente_nombre',
+            # 'cliente_nombre',
             'to_string',
         ]
         extra_kwargs = {
             'mis_literales': {'read_only': True},
             'mis_documentos': {'read_only': True},
+            'cotizaciones': {'read_only': True},
         }
 
 
@@ -305,6 +324,38 @@ class LiteralConDetalleSerializer(LiteralSerializer):
     )
 
 
+class CotizacionAdicionalProyectoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cotizacion
+        fields = [
+            'id',
+            'nro_cotizacion',
+            'unidad_negocio',
+            'estado',
+            'descripcion_cotizacion'
+        ]
+
+
+class CotizacionProyectoSerializer(serializers.ModelSerializer):
+    cotizaciones_adicionales = CotizacionAdicionalProyectoSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Cotizacion
+        fields = [
+            'id',
+            'nro_cotizacion',
+            'valor_orden_compra',
+            'costo_presupuestado',
+            'unidad_negocio',
+            'descripcion_cotizacion',
+            'cotizaciones_adicionales'
+        ]
+
+
 class ProyectoConDetalleSerializer(ProyectoSerializer):
     mis_literales = LiteralConDetalleSerializer(many=True, read_only=True)
     mis_documentos = ArchivoProyectoSerializer(many=True, read_only=True)
+    cotizaciones = CotizacionProyectoSerializer(
+        many=True,
+        read_only=True
+    )

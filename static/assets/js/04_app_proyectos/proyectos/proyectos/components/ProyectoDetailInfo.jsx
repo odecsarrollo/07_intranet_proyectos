@@ -4,15 +4,49 @@ import {Link} from 'react-router-dom'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 const InfoProyecto = (props) => {
-    const {proyecto, cotizaciones_permisos, cotizaciones_proyecto_list} = props;
+    const {proyecto, proyecto: {cotizaciones}, cotizaciones_permisos, cotizaciones_proyecto_list} = props;
+    let cotizaciones_proyecto = cotizaciones.map(c => ({
+        tipo: 1,
+        id: c.id,
+        codigo: `${c.unidad_negocio}-${c.nro_cotizacion}`,
+        estado: c.estado
+    }));
+    cotizaciones.map(c => c.cotizaciones_adicionales.filter(e => e.estado === 'Cierre (Aprobado)').map(a => {
+        cotizaciones_proyecto = [...cotizaciones_proyecto, {
+            tipo: 2,
+            id: a.id,
+            codigo: `${a.unidad_negocio}-${a.nro_cotizacion}`,
+            estado: a.estado
+        }]
+    }));
+    console.log(cotizaciones_proyecto)
+    cotizaciones_proyecto = _.orderBy(cotizaciones_proyecto, ['tipo'], ['asc']);
     return (
-        <div className="row">
+        <Fragment>
             <div className="col-12 col-md-6 col-lg-3">
                 <span><strong>Proyecto: </strong><small>{proyecto.id_proyecto}</small></span>
             </div>
             <div className="col-12 col-md-6">
                 <span><strong>Nombre: </strong><small>{proyecto.nombre}</small></span>
             </div>
+            {cotizaciones_proyecto.length > 0 &&
+            <div
+                className="col-12"
+            >
+                <strong>Cotizaciones Relacionadas: </strong>
+                <div className="row pl-2">
+                    {cotizaciones_proyecto.map(coti =>
+                        <div className='col-6 col-md-3' key={coti.id}>
+                            <Link to={`/app/ventas_proyectos/cotizaciones/cotizaciones/detail/${coti.id}`}
+                                  target="_blank">
+                                {coti.codigo}
+                            </Link>
+                        </div>
+                    )}
+                </div>
+            </div>
+            }
+
             <div className="col-12 col-md-6 col-lg-3">
                     <span><strong>Sincronizado: </strong>
                         <FontAwesomeIcon
@@ -79,7 +113,7 @@ const InfoProyecto = (props) => {
                 </div>
             }
 
-        </div>
+        </Fragment>
     )
 };
 

@@ -1,13 +1,13 @@
 import React, {memo} from "react";
-import MyDialogButtonDelete from '../../../../00_utilities/components/ui/dialog/delete_dialog';
+import MyDialogButtonDelete from '../../../00_utilities/components/ui/dialog/delete_dialog';
 
 import selectTableHOC from "react-table/lib/hoc/selectTable";
 import Table from "react-table";
 
 const SelectTable = selectTableHOC(Table);
-import {fechaFormatoUno} from "../../../../00_utilities/common";
+import {fechaFormatoUno} from "../../../00_utilities/common";
 import {Link} from "react-router-dom";
-import IconButtonTableSee from "../../../../00_utilities/components/ui/icon/table_icon_button_detail";
+import IconButtonTableSee from "../../../00_utilities/components/ui/icon/table_icon_button_detail";
 
 function areEqual(prevProps, nextProps) {
     return prevProps.list === nextProps.list && prevProps.selection === nextProps.selection

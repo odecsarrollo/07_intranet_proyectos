@@ -1,6 +1,6 @@
 import React, {memo} from 'react';
-import MyDialogButtonDelete from '../../../../00_utilities/components/ui/dialog/delete_dialog';
-import {fechaFormatoUno, formatBytes} from "../../../../00_utilities/common";
+import MyDialogButtonDelete from '../../../00_utilities/components/ui/dialog/delete_dialog';
+import {fechaFormatoUno, formatBytes} from "../../../00_utilities/common";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import IconButton from '@material-ui/core/IconButton';
 import Checkbox from "@material-ui/core/Checkbox";

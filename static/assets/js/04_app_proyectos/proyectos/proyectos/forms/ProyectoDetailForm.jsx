@@ -1,7 +1,7 @@
 import React, {memo} from 'react';
 import {reduxForm} from 'redux-form';
-import BotoneriaModalForm from '../../../../../00_utilities/components/ui/forms/botoneria_modal_form';
-import BaseFormProyecto from './base_form';
+import BotoneriaModalForm from '../../../../00_utilities/components/ui/forms/botoneria_modal_form';
+import BaseFormProyecto from './BaseProyectoForm';
 import validate from './validate';
 
 let Form = memo((props) => {

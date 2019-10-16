@@ -52,11 +52,12 @@ class MyDialogButtonDelete extends Component {
             element_name,
             classes,
             className = 'text-center',
-            tamano_icono = 'xs'
+            tamano_icono = 'xs',
+            style = {}
         } = this.props;
         return (
             <Fragment>
-                <div className={className}>
+                <div className={className} style={style}>
                     <IconButton
                         style={{
                             margin: 0,

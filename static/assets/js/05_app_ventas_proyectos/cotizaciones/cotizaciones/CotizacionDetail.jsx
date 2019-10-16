@@ -15,6 +15,8 @@ import UploadDocumentoForm from '../../../04_app_proyectos/proyectos/archivos/fo
 import ArchivosCotizacionList from '../../../04_app_proyectos/proyectos/archivos/components/ProyectoDocumentoList';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome/index';
 import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
+import Typography from "@material-ui/core/Typography";
+import Toolbar from "@material-ui/core/Toolbar";
 
 const Detail = memo(props => {
     const dispatch = useDispatch();
@@ -128,7 +130,7 @@ const Detail = memo(props => {
             dispatch(actions.clearCotizaciones());
             dispatch(actions.clearSeguimientosCotizaciones());
         }
-    }, []);
+    }, [id]);
 
     if (!object) {
         return <SinObjeto/>
@@ -136,11 +138,19 @@ const Detail = memo(props => {
 
     return (
         <ValidarPermisos can_see={permisos.detail} nombre='detalles de cotización'>
-            <Titulo>Detalle de
-                Cotización {object.nro_cotizacion && `Nro. ${object.unidad_negocio}-${object.nro_cotizacion}`}</Titulo>
             <div className="row">
-                <CotizacionInfo object={object} permisos_proyecto={permisos_proyecto}
-                                permisos_cotizacion={permisos} {...props}/>
+                <div className="col-12">
+                    <Typography variant="h3" color="inherit" noWrap>
+                        Detalle de
+                        Cotización {object.nro_cotizacion && `Nro. ${object.unidad_negocio}-${object.nro_cotizacion}`}
+                    </Typography>
+                </div>
+                <CotizacionInfo
+                    object={object}
+                    permisos_proyecto={permisos_proyecto}
+                    permisos_cotizacion={permisos}
+                    {...props}
+                />
                 <div className="col-12 mt-3">
                     <Tabs>
                         <TabList>

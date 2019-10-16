@@ -3,18 +3,24 @@ from django.utils import timezone
 from rest_framework import serializers
 
 from .models import Cotizacion, SeguimientoCotizacion, ArchivoCotizacion
+from proyectos.api_serializers import ProyectoSerializer
 
 
 class CotizacionSerializer(serializers.ModelSerializer):
-    cliente_nombre = serializers.CharField(source='cliente.nombre', read_only=True)
+    cliente_nombre = serializers.CharField(source='cliente_cotizacion.nombre', read_only=True)
+    cliente_id = serializers.CharField(source='cliente_cotizacion.id', read_only=True)
+    cotizacion_inicial_nro = serializers.CharField(source='cotizacion_inicial.nro_cotizacion', read_only=True)
+    cotizacion_inicial_unidad_negocio = serializers.CharField(
+        source='cotizacion_inicial.unidad_negocio',
+        read_only=True
+    )
+    contacto_cliente_nombre = serializers.CharField(source='contacto_cotizacion.full_nombre', read_only=True)
     valor_orden_compra_mes = serializers.DecimalField(decimal_places=2, max_digits=20, read_only=True)
+    valor_orden_compra_adicionales = serializers.DecimalField(decimal_places=2, max_digits=20, read_only=True)
+    valor_total_orden_compra_cotizaciones = serializers.DecimalField(decimal_places=2, max_digits=20, read_only=True)
+    costo_presupuestado_adicionales = serializers.DecimalField(decimal_places=2, max_digits=20, read_only=True)
     responsable_actual = serializers.CharField(source='responsable.username', read_only=True)
     responsable_actual_nombre = serializers.CharField(source='responsable.get_full_name', read_only=True)
-    contacto_cliente_nombre = serializers.CharField(source='contacto_cliente.full_nombre', read_only=True)
-    id_proyecto = serializers.CharField(source='mi_proyecto.id_proyecto', read_only=True)
-    mi_literal_id_literal = serializers.CharField(source='mi_literal.id_literal', read_only=True)
-    mi_literal_id_proyecto = serializers.CharField(source='mi_literal.proyecto.id_proyecto', read_only=True)
-    mi_literal_proyecto_id = serializers.CharField(source='mi_literal.proyecto.id', read_only=True)
     orden_compra_fecha = serializers.DateField(
         format="%Y-%m-%d",
         input_formats=['%Y-%m-%dT%H:%M:%S.%fZ', 'iso-8601'],
@@ -100,15 +106,21 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'url',
             'id',
             'creado',
+            'cotizacion_inicial',
+            'cotizacion_inicial_nro',
+            'cotizacion_inicial_unidad_negocio',
             'responsable',
+            'revisar',
             'origen_cotizacion',
             'responsable_actual',
             'responsable_actual_nombre',
             'nro_cotizacion',
             'unidad_negocio',
+            'descripcion_cotizacion',
             'cliente',
             'cliente_nombre',
-            'descripcion_cotizacion',
+            'cliente_id',
+            'relacionada',
             'contacto_cliente',
             'contacto_cliente_nombre',
             'contacto',
@@ -118,29 +130,30 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'valor_ofertado',
             'valor_orden_compra',
             'valor_orden_compra_mes',
-            'orden_compra_nro',
+            'valor_orden_compra_adicionales',
             'costo_presupuestado',
+            'costo_presupuestado_adicionales',
+            'valor_total_orden_compra_cotizaciones',
+            'orden_compra_nro',
+            'proyectos',
+            'cotizaciones_adicionales',
             'abrir_carpeta',
-            'mi_proyecto',
-            'mi_literal',
-            'mi_literal_id_literal',
-            'mi_literal_id_proyecto',
-            'mi_literal_proyecto_id',
-            'id_proyecto',
             'orden_compra_fecha',
             'fecha_cambio_estado',
             'fecha_entrega_pactada',
             'fecha_entrega_pactada_cotizacion',
             'fecha_limite_segumiento_estado',
-            'crear_literal',
-            'crear_literal_id_proyecto',
             'color_tuberia_ventas',
             'porcentaje_tuberia_ventas',
             'to_string',
         ]
         extra_kwargs = {
-            'mi_proyecto': {'read_only': True},
-            'mi_literal': {'read_only': True},
+            'cliente_id': {'read_only': True},
+            'cotizacion_inicial': {'allow_null': True},
+            'revisar': {'read_only': True},
+            'relacionada': {'read_only': True},
+            'cotizaciones_adicionales': {'read_only': True},
+            'proyectos': {'read_only': True},
             'responsable_actual': {'read_only': True},
             'fecha_cambio_estado': {'read_only': True},
             'contacto': {'allow_null': True},
@@ -148,6 +161,36 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'estado_observacion_adicional': {'allow_null': True},
             'fecha_limite_segumiento_estado': {'allow_null': True},
         }
+
+
+class CotizacionConDetalleSerializer(CotizacionSerializer):
+    cotizaciones_adicionales = CotizacionSerializer(
+        many=True,
+        context={'quitar_campos': [
+            'cliente_nombre',
+            'cliente_id',
+            'contacto_cliente_nombre',
+            'valor_orden_compra_mes',
+            'responsable_actual',
+            'responsable_actual_nombre',
+            'proyectos',
+        ]}
+    )
+    cotizacion_inicial = CotizacionSerializer(
+        context={'quitar_campos': [
+            'cliente_nombre',
+            'cliente_id',
+            'contacto_cliente_nombre',
+            'valor_orden_compra_mes',
+            'responsable_actual',
+            'responsable_actual_nombre',
+            'proyectos',
+        ]}
+    )
+    proyectos = ProyectoSerializer(
+        many=True,
+        context={'quitar_campos': ['cotizaciones']}
+    )
 
 
 class SeguimientoCotizacionSerializer(serializers.ModelSerializer):

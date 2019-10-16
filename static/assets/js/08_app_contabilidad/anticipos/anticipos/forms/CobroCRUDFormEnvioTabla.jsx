@@ -1,5 +1,5 @@
 import React, {memo, Fragment, useState} from 'react';
-import {fechaHoraFormatoUno, formatBytes} from "../../../../../00_utilities/common";
+import {fechaHoraFormatoUno, formatBytes} from "../../../../00_utilities/common";
 import Typography from "@material-ui/core/Typography";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import IconButton from "@material-ui/core/IconButton";

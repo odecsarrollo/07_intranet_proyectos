@@ -2,11 +2,11 @@ import React, {Fragment} from 'react';
 import {
     MyTextFieldSimple,
     MyCheckboxSimple
-} from '../../../../../00_utilities/components/ui/forms/fields';
-import {pesosColombianos, fechaFormatoUno} from '../../../../../00_utilities/common';
+} from '../../../../00_utilities/components/ui/forms/fields';
+import {pesosColombianos, fechaFormatoUno} from '../../../../00_utilities/common';
 
 
-const BaseFormProyecto = (props) => {
+const BaseProyectoForm = (props) => {
     const {initialValues = null, permisos_object} = props;
     return (
         <div className="row">
@@ -75,4 +75,4 @@ const BaseFormProyecto = (props) => {
     )
 };
 
-export default BaseFormProyecto;
+export default BaseProyectoForm;

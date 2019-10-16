@@ -1,25 +1,28 @@
 import datetime
 from math import ceil
-from django.db.models import Max, Q, When, Case, DecimalField, Value, F
+from django.db.models import Q, When, Case, DecimalField, Value, F
 from django.db.models.functions import Coalesce
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from intranet_proyectos.utils_queryset import query_varios_campos
 from .models import Cotizacion, SeguimientoCotizacion, ArchivoCotizacion
-from .api_serializers import CotizacionSerializer, SeguimientoCotizacionSerializer, ArchivoCotizacionSerializer
+from .api_serializers import (
+    CotizacionSerializer,
+    SeguimientoCotizacionSerializer,
+    ArchivoCotizacionSerializer,
+    CotizacionConDetalleSerializer
+)
 
 
 class CotizacionViewSet(viewsets.ModelViewSet):
-    queryset = Cotizacion.objects.select_related(
-        'responsable',
-        'created_by',
-        'cliente',
-        'mi_proyecto',
-        'mi_literal',
-        'contacto_cliente'
-    ).all()
+    queryset = Cotizacion.sumatorias.all()
     serializer_class = CotizacionSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        self.serializer_class = CotizacionConDetalleSerializer
+        return super().retrieve(request, *args, **kwargs)
 
     def perform_update(self, serializer):
         old_obj = self.get_object()
@@ -58,54 +61,79 @@ class CotizacionViewSet(viewsets.ModelViewSet):
                     editado.fecha_cambio_estado_cerrado = datetime.datetime.now()
             else:
                 editado.fecha_cambio_estado_cerrado = None
-
             if editado.nro_cotizacion is None:
-                now = datetime.datetime.now()
-                base_nro_cotizacion = (abs(int(now.year)) % 100) * 1000
-                qs = Cotizacion.objects.filter(
-                    nro_cotizacion__isnull=False,
-                    nro_cotizacion__gte=base_nro_cotizacion
-                ).aggregate(
-                    ultimo_indice=Max('nro_cotizacion')
-                )
-                ultimo_indice = qs['ultimo_indice']
-                if ultimo_indice is None:
-                    editado.nro_cotizacion = base_nro_cotizacion
-                else:
-                    editado.nro_cotizacion = int(ultimo_indice) + 1
+                from .services import cotizacion_generar_numero_cotizacion
+                editado.nro_cotizacion = cotizacion_generar_numero_cotizacion()
                 guardar_nuevamente = True
         if guardar_nuevamente:
             editado.save()
 
     def perform_create(self, serializer):
-        editado = serializer.save(
+        nuevo = serializer.save(
             estado='Cita/Generación Interés',
             created_by=self.request.user,
             fecha_cambio_estado=datetime.datetime.now().date(),
             responsable=self.request.user,
         )
-        if editado.fecha_limite_segumiento_estado:
-            editado.fecha_limite_segumiento_estado = editado.fecha_limite_segumiento_estado
+        if nuevo.fecha_limite_segumiento_estado:
+            nuevo.fecha_limite_segumiento_estado = nuevo.fecha_limite_segumiento_estado
         SeguimientoCotizacion.objects.create(
-            cotizacion=editado,
+            cotizacion=nuevo,
             tipo_seguimiento=1,
             creado_por=self.request.user,
-            estado=editado.estado
+            estado=nuevo.estado
         )
 
     @action(detail=False, http_method_names=['get', ])
     def listar_cotizacion_abrir_carpeta(self, request):
         qs = self.get_queryset().filter(
             (
-                    Q(abrir_carpeta=True) &
-                    Q(mi_proyecto__isnull=True)
+                    Q(orden_compra_nro__isnull=False) &
+                    Q(estado='Cierre (Aprobado)') &
+                    Q(relacionada=False)
             ) |
             (
-                    Q(crear_literal=True) &
-                    Q(mi_literal__isnull=True)
+                    Q(cotizacion_inicial__isnull=False) &
+                    Q(estado='Cierre (Aprobado)') &
+                    Q(relacionada=False)
             )
         )
         serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, http_method_names=['get', ])
+    def listar_cotizaciones_x_parametro(self, request):
+        parametro = request.GET.get('parametro')
+        qs = None
+        search_fields = ['nro_cotizacion', 'unidad_negocio']
+        if search_fields:
+            qs = query_varios_campos(self.queryset, search_fields, parametro)
+        self.serializer_class = CotizacionSerializer
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def relacionar_quitar_proyecto(self, request, pk=None):
+        cotizacion = self.get_object()
+        self.serializer_class = CotizacionConDetalleSerializer
+        proyecto_id = int(request.POST.get('proyecto_id'))
+        from .services import cotizacion_quitar_relacionar_proyecto
+        cotizacion = cotizacion_quitar_relacionar_proyecto(
+            proyecto_id=proyecto_id,
+            cotizacion_id=cotizacion.id
+        )
+        serializer = self.get_serializer(cotizacion)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def set_revisado(self, request, pk=None):
+        cotizacion = self.get_object()
+        self.serializer_class = CotizacionConDetalleSerializer
+        from .services import cotizacion_set_revisado
+        cotizacion = cotizacion_set_revisado(
+            cotizacion_id=cotizacion.id
+        )
+        serializer = self.get_serializer(cotizacion)
         return Response(serializer.data)
 
     @action(detail=False, http_method_names=['get', ])

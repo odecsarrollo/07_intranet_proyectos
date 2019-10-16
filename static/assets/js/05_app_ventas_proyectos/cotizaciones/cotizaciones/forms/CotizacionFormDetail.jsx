@@ -1,4 +1,4 @@
-import React, {useEffect, memo} from 'react';
+import React, {useEffect, memo, useState} from 'react';
 import {reduxForm, formValueSelector} from 'redux-form';
 import {useDispatch, useSelector} from "react-redux";
 import validate from '../../tuberia_ventas/forms/validate';
@@ -19,15 +19,8 @@ let Form = memo(props => {
         handleSubmit,
     } = props;
     const dispatch = useDispatch();
-    const myValues = useSelector(state => selector(state, 'estado', 'valor_ofertado', 'cliente'));
+    const myValues = useSelector(state => selector(state, 'estado', 'valor_ofertado', 'cliente', 'unidad_negocio', 'cotizacion_inicial'));
     const usuarios_list = useSelector(state => state.usuarios);
-    const clientes_list = useSelector(state => state.clientes);
-    const contactos_list = useSelector(state => state.clientes_contactos);
-
-
-    const cargarContactosCliente = (cliente_id) => {
-        dispatch(actions.fetchContactosClientes_por_cliente(cliente_id));
-    };
 
     useEffect(() => {
         dispatch(actions.fetchUsuariosxPermiso('gestionar_cotizacion'));
@@ -35,28 +28,13 @@ let Form = memo(props => {
         return () => dispatch(actions.clearUsuarios());
     }, []);
 
-    useEffect(() => {
-        dispatch(actions.fetchClientes());
-        return () => {
-            dispatch(actions.clearClientes());
-        }
-    }, []);
-
-
-    useEffect(() => {
-        dispatch(actions.fetchContactosClientes_por_cliente(initialValues.cliente));
-        return () => {
-            dispatch(actions.clearContactosClientes());
-        }
-    }, []);
-
     return (
-        <form className="card" onSubmit={handleSubmit(onSubmit)}>
+        <form className="card" onSubmit={handleSubmit((v) => onSubmit({
+            ...v,
+            cotizacion_inicial: v.cotizacion_inicial ? v.cotizacion_inicial.id : null
+        }))}>
             <div className="row pl-3 pr-5">
                 <FormBaseCotizacion
-                    contactos_list={contactos_list}
-                    cargarContactosCliente={cargarContactosCliente}
-                    clientes_list={clientes_list}
                     item={initialValues}
                     myValues={myValues}
                 />

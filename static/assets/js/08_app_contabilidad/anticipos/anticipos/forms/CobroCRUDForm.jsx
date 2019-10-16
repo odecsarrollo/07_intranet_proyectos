@@ -2,9 +2,9 @@ import React, {memo, useState} from 'react';
 import {reduxForm} from 'redux-form';
 import {useDispatch} from "react-redux";
 import moment from "moment-timezone";
-import * as actions from '../../../../../01_actions/01_index';
+import * as actions from '../../../../01_actions/01_index';
 import CobroFormBase from './CobroFormBase';
-import MyDialogCreate from "../../../../../00_utilities/components/ui/dialog/create_dialog";
+import MyDialogCreate from "../../../../00_utilities/components/ui/dialog/create_dialog";
 
 const style = {
     tabla: {
