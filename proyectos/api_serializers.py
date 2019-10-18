@@ -201,16 +201,7 @@ class LiteralSerializer(serializers.ModelSerializer):
 
 
 class ProyectoSerializer(CustomSerializerMixin, serializers.ModelSerializer):
-    # cliente_nombre = serializers.CharField(source='cotizacion.cliente.nombre', read_only=True)
-    # orden_compra_nro = serializers.CharField(source='cotizacion.orden_compra_nro', read_only=True)
-    # orden_compra_fecha = serializers.DateField(source='cotizacion.orden_compra_fecha', read_only=True)
-    # fecha_entrega_pactada = serializers.DateField(source='cotizacion.fecha_entrega_pactada', read_only=True)
-    # costo_presupuestado = serializers.DecimalField(source='cotizacion.costo_presupuestado', read_only=True,
-    #                                                max_digits=20, decimal_places=2)
-    # valor_cliente = serializers.DecimalField(source='cotizacion.valor_orden_compra', read_only=True,
-    #                                          max_digits=20, decimal_places=2)
-
-    cotizacion_relacionada_id = serializers.IntegerField(write_only=True, allow_null=True)
+    cotizacion_relacionada_id = serializers.IntegerField(write_only=True, allow_null=True, required=False)
     costo_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     cantidad_horas_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     costo_mano_obra_inicial = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
@@ -267,15 +258,9 @@ class ProyectoSerializer(CustomSerializerMixin, serializers.ModelSerializer):
             'cotizaciones',
             'cotizacion_relacionada_id',
             'cotizaciones_nro',
-            # 'costo_presupuestado',
-            # 'orden_compra_nro',
-            # 'orden_compra_fecha',
-            # 'fecha_entrega_pactada',
             'mis_literales',
             'mis_documentos',
-            # 'valor_cliente',
             'nombre',
-            # 'cliente_nombre',
             'to_string',
         ]
         extra_kwargs = {
@@ -329,9 +314,14 @@ class CotizacionAdicionalProyectoSerializer(serializers.ModelSerializer):
         model = Cotizacion
         fields = [
             'id',
+            'created',
             'nro_cotizacion',
             'unidad_negocio',
+            'fecha_entrega_pactada',
+            'costo_presupuestado',
+            'valor_orden_compra',
             'estado',
+            'orden_compra_nro'
             'descripcion_cotizacion'
         ]
 
@@ -343,11 +333,14 @@ class CotizacionProyectoSerializer(serializers.ModelSerializer):
         model = Cotizacion
         fields = [
             'id',
+            'created',
             'nro_cotizacion',
+            'fecha_entrega_pactada',
             'valor_orden_compra',
             'costo_presupuestado',
             'unidad_negocio',
             'descripcion_cotizacion',
+            'orden_compra_nro',
             'cotizaciones_adicionales'
         ]
 

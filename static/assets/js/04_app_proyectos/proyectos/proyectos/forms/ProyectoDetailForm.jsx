@@ -29,7 +29,7 @@ let Form = memo((props) => {
                 reset={reset}
                 submitting={submitting}
                 initialValues={initialValues}
-                conCerrar={false}
+                mostrar_cancelar={false}
             />
         </form>
     )

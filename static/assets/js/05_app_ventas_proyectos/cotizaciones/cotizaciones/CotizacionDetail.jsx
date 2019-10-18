@@ -141,16 +141,17 @@ const Detail = memo(props => {
             <div className="row">
                 <div className="col-12">
                     <Typography variant="h3" color="inherit" noWrap>
-                        Detalle de
-                        Cotización {object.nro_cotizacion && `Nro. ${object.unidad_negocio}-${object.nro_cotizacion}`}
+                        Cotización {object.nro_cotizacion && `${object.unidad_negocio}-${object.nro_cotizacion}`} <small> - {object.estado}</small>
                     </Typography>
                 </div>
-                <CotizacionInfo
-                    object={object}
-                    permisos_proyecto={permisos_proyecto}
-                    permisos_cotizacion={permisos}
-                    {...props}
-                />
+                <div className="col-12">
+                    <CotizacionInfo
+                        object={object}
+                        permisos_proyecto={permisos_proyecto}
+                        permisos_cotizacion={permisos}
+                        {...props}
+                    />
+                </div>
                 <div className="col-12 mt-3">
                     <Tabs>
                         <TabList>
