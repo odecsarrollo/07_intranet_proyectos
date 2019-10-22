@@ -24,9 +24,10 @@ class CotizacionManager(models.Manager):
             'created_by',
             'cliente',
             'contacto_cliente',
-            'cotizacion_inicial'
+            'cotizacion_inicial',
         ).prefetch_related(
             'proyectos',
+            'cotizaciones_adicionales'
         ).annotate(
             # costo_presupuestado_adicionales=Coalesce(Sum('cotizaciones_adicionales__costo_presupuestado'), 0),
             valor_orden_compra_adicionales=Coalesce(

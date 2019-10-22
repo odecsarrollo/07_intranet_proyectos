@@ -2,10 +2,11 @@ from django.utils import timezone
 
 from rest_framework import serializers
 
+from proyectos.models import Proyecto
 from .models import Cotizacion, SeguimientoCotizacion, ArchivoCotizacion
-from proyectos.api_serializers import ProyectoSerializer
 
 
+# region Serializadores Cotizacion
 class CotizacionSerializer(serializers.ModelSerializer):
     cliente_nombre = serializers.CharField(source='cliente_cotizacion.nombre', read_only=True)
     cliente_id = serializers.CharField(source='cliente_cotizacion.id', read_only=True)
@@ -236,35 +237,38 @@ class CotizacionSerializer(serializers.ModelSerializer):
         }
 
 
-class CotizacionConDetalleSerializer(CotizacionSerializer):
-    cotizaciones_adicionales = CotizacionSerializer(
-        many=True,
-        context={'quitar_campos': [
-            'cliente_nombre',
-            'cliente_id',
-            'contacto_cliente_nombre',
-            'valor_orden_compra_mes',
-            'responsable_actual',
-            'responsable_actual_nombre',
-            'proyectos',
-        ]}
-    )
-    cotizacion_inicial = CotizacionSerializer(
-        context={'quitar_campos': [
-            'cliente_nombre',
-            'cliente_id',
-            'contacto_cliente_nombre',
-            'valor_orden_compra_mes',
-            'responsable_actual',
-            'responsable_actual_nombre',
-            'proyectos',
-        ]}
-    )
-    proyectos = ProyectoSerializer(
-        many=True,
-        context={'quitar_campos': ['cotizaciones']}
-    )
+class ProyectoCotizacionConDetalleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Proyecto
+        fields = [
+            'id',
+            'id_proyecto'
+        ]
+        read_only_fields = fields
 
+
+class CotizacionCotizacionConDetalleSerializer(serializers.ModelSerializer):
+    contacto_cliente_nombre = serializers.CharField(source='contacto_cotizacion.full_nombre', read_only=True)
+
+    class Meta:
+        model = Cotizacion
+        fields = [
+            'id',
+            'nro_cotizacion',
+            'estado',
+            'unidad_negocio',
+            'contacto_cliente_nombre',
+        ]
+        read_only_fields = fields
+
+
+class CotizacionConDetalleSerializer(CotizacionSerializer):
+    proyectos = ProyectoCotizacionConDetalleSerializer(many=True, read_only=True)
+    cotizaciones_adicionales = CotizacionCotizacionConDetalleSerializer(many=True, read_only=True)
+    cotizacion_inicial = CotizacionCotizacionConDetalleSerializer(read_only=True)
+
+
+# endregion
 
 class SeguimientoCotizacionSerializer(serializers.ModelSerializer):
     cliente_nombre = serializers.CharField(source='cotizacion.cliente.nombre', read_only=True)

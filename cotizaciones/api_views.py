@@ -18,11 +18,11 @@ from .api_serializers import (
 
 class CotizacionViewSet(viewsets.ModelViewSet):
     queryset = Cotizacion.sumatorias.all()
-    serializer_class = CotizacionSerializer
+    serializer_class = CotizacionConDetalleSerializer
 
-    def retrieve(self, request, *args, **kwargs):
-        self.serializer_class = CotizacionConDetalleSerializer
-        return super().retrieve(request, *args, **kwargs)
+    # def list(self, request, *args, **kwargs):
+    #     self.serializer_class = CotizacionSerializer
+    #     return super().list(request, *args, **kwargs)
 
     @action(detail=False, http_method_names=['get', ])
     def listar_cotizacion_abrir_carpeta(self, request):
@@ -167,7 +167,10 @@ class CotizacionViewSet(viewsets.ModelViewSet):
 
 
 class SeguimientoCotizacionViewSet(viewsets.ModelViewSet):
-    queryset = SeguimientoCotizacion.objects.select_related('creado_por', 'cotizacion__cliente').all()
+    queryset = SeguimientoCotizacion.objects.select_related(
+        'creado_por',
+        'cotizacion__cliente'
+    ).all()
     serializer_class = SeguimientoCotizacionSerializer
 
     def perform_create(self, serializer):

@@ -29,14 +29,12 @@ const CotizacionInfo = memo(props => {
             </div>
             <div className="col-12 col-md-6 col-lg-3">
                 <strong>Contacto: </strong>
-                {
-                    object.contacto_cliente &&
-                    <Fragment>
-                        <Link
-                            to={`/app/ventas_proyectos/clientes/clientes/detail/${object.cliente}`}>{object.contacto_cliente_nombre}
-                        </Link><br/>
-                    </Fragment>
-                }
+                {object.contacto_cliente_nombre &&
+                <Fragment>
+                    <Link
+                        to={`/app/ventas_proyectos/clientes/clientes/detail/${object.cliente}`}>{object.contacto_cliente_nombre}
+                    </Link><br/>
+                </Fragment>}
             </div>
             <div className="col-12">
                 <div className="row">

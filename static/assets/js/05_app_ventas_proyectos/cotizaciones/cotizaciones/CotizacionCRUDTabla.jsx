@@ -76,18 +76,52 @@ const Tabla = memo((props) => {
                                     return row[filter.id] && row[filter.id].includes(filter.value.toUpperCase())
                                 },
                                 Cell: row => {
-                                    const id_proyecto = row.original.mi_proyecto;
-                                    const id_literal = row.original.mi_literal;
-                                    const id_proyecto_mostrar = id_proyecto ? row.original.id_proyecto : row.original.mi_literal_id_literal;
-                                    const id_proyecto_url = id_literal ? row.original.mi_literal_proyecto_id : row.original.mi_proyecto;
+                                    const proyectos = row.original.proyectos;
                                     return (
-                                        proyectos_permisos.detail ?
-                                            <Link
-                                                to={`/app/proyectos/proyectos/detail/${id_proyecto_url}`}>
-                                                <span>{id_proyecto_mostrar}</span>
-                                            </Link> :
-                                            <span>{id_proyecto_mostrar}</span>
+                                        <div>{proyectos.map(p =>
+                                            <div key={p.id}>
+                                                <Link
+                                                    to={`/app/proyectos/proyectos/detail/${p.id}`}>
+                                                    {p.id_proyecto}
+                                                </Link>
+                                            </div>
+                                        )}</div>
                                     )
+                                }
+                            },
+                            {
+                                Header: "Cot. Ini",
+                                accessor: "cotizacion_inicial",
+                                maxWidth: 70,
+                                filterable: true,
+                                filterMethod: (filter, row) => {
+                                    return row[filter.id].includes(filter.value.toUpperCase())
+                                },
+                                Cell: row => {
+                                    const cotizacion_inicial = row.original.cotizacion_inicial;
+                                    const cotizaciones_adicionales = row.original.cotizaciones_adicionales;
+                                    return (
+                                        <div>
+                                            {cotizacion_inicial &&
+                                            <div>
+                                                <Link
+                                                    to={`/app/ventas_proyectos/cotizaciones/cotizaciones/detail/${cotizacion_inicial.id}`}>
+                                                    {cotizacion_inicial.unidad_negocio}-{cotizacion_inicial.nro_cotizacion}
+                                                </Link>
+                                            </div>}
+                                            {cotizaciones_adicionales.length > 0 &&
+                                            cotizaciones_adicionales.map(c =>
+                                                <div>
+                                                    <Link
+                                                        to={`/app/ventas_proyectos/cotizaciones/cotizaciones/detail/${c.id}`}>
+                                                        {c.unidad_negocio}-{c.nro_cotizacion}
+                                                    </Link>
+                                                </div>
+                                            )
+                                            }
+                                        </div>
+                                    )
+                                    return <div></div>
                                 }
                             },
                             {
@@ -267,7 +301,8 @@ const Tabla = memo((props) => {
                                 show: permisos_object.detail,
                                 maxWidth: 60,
                                 Cell: row =>
-                                    <Link to={`/app/ventas_proyectos/cotizaciones/cotizaciones/detail/${row.original.id}`}>
+                                    <Link
+                                        to={`/app/ventas_proyectos/cotizaciones/cotizaciones/detail/${row.original.id}`}>
                                         <IconButtonTableSee/>
                                     </Link>
 
