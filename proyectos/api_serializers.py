@@ -321,7 +321,7 @@ class CotizacionAdicionalProyectoSerializer(serializers.ModelSerializer):
             'costo_presupuestado',
             'valor_orden_compra',
             'estado',
-            'orden_compra_nro'
+            'orden_compra_nro',
             'descripcion_cotizacion'
         ]
 
@@ -352,3 +352,61 @@ class ProyectoConDetalleSerializer(ProyectoSerializer):
         many=True,
         read_only=True
     )
+
+
+# Indice de proyecto
+class IndiceProyectoCotizacionAdicionalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cotizacion
+        fields = [
+            'orden_compra_nro',
+            'orden_compra_fecha',
+            'fecha_entrega_pactada',
+            'valor_orden_compra',
+            'unidad_negocio',
+            'nro_cotizacion',
+        ]
+
+
+class IndiceProyectoCotizacionSerializer(serializers.ModelSerializer):
+    cotizaciones_adicionales = IndiceProyectoCotizacionAdicionalSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Cotizacion
+        fields = [
+            'orden_compra_nro',
+            'orden_compra_fecha',
+            'fecha_entrega_pactada',
+            'valor_orden_compra',
+            'unidad_negocio',
+            'nro_cotizacion',
+            'cotizaciones_adicionales'
+        ]
+
+
+class IndiceProyectoLiteralSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Proyecto
+        fields = [
+            'id_proyecto',
+            'nombre',
+            'mis_literales',
+            'cliente_nombre',
+            'cotizaciones'
+        ]
+
+
+class IndiceProyectoProyectoSerializer(serializers.ModelSerializer):
+    cotizaciones = IndiceProyectoCotizacionSerializer(many=True, read_only=True)
+    mis_literales = IndiceProyectoLiteralSerializer(many=True, read_only=True)
+    cliente_nombre = serializers.CharField(source='cliente.nombre', read_only=True)
+
+    class Meta:
+        model = Proyecto
+        fields = [
+            'id_proyecto',
+            'nombre',
+            'mis_literales',
+            'cliente_nombre',
+            'cotizaciones'
+        ]

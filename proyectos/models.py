@@ -41,7 +41,7 @@ class Proyecto(models.Model):
 
 class Literal(models.Model):
     id_literal = models.CharField(max_length=15, unique=True)
-    proyecto = models.ForeignKey(Proyecto, related_name='mis_literales', on_delete=models.CASCADE)
+    proyecto = models.ForeignKey(Proyecto, related_name=' ', on_delete=models.CASCADE)
     descripcion = models.CharField(max_length=300, null=True, blank=True)
     costo_materiales = models.DecimalField(decimal_places=2, max_digits=12, default=0, null=True, blank=True)
     en_cguno = models.BooleanField(default=True)

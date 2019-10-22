@@ -99,65 +99,6 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
-    def get_queryset(self):
-        mano_obra = HoraHojaTrabajo.objects.values('literal__proyecto__id_proyecto').annotate(
-            cantidad_horas=ExpressionWrapper(Sum((F('cantidad_minutos') / 60)),
-                                             output_field=DecimalField(max_digits=4)),
-            costo_total=ExpressionWrapper(
-                Sum((F('cantidad_minutos') / 60) * (
-                        (F('hoja__tasa__costo') + F('hoja__tasa__otro_costo')) / F(
-                    'hoja__tasa__nro_horas_mes_trabajadas'))),
-                output_field=DecimalField(max_digits=4))
-        ).filter(
-            literal__proyecto__id_proyecto=OuterRef('id_proyecto'),
-            verificado=True
-        )
-
-        mano_obra_inicial = HoraTrabajoColaboradorLiteralInicial.objects.values(
-            'literal__proyecto__id_proyecto').annotate(
-            cantidad_horas=
-            ExpressionWrapper(
-                Sum((F('cantidad_minutos') / 60)),
-                output_field=DecimalField(max_digits=4)
-            ),
-            costo_total=
-            ExpressionWrapper(
-                Sum('valor'),
-                output_field=DecimalField(max_digits=4))
-        ).filter(
-            literal__proyecto__id_proyecto=OuterRef('id_proyecto')
-        )
-
-        qs = self.queryset.prefetch_related(
-            'mis_literales'
-        ).annotate(
-            costo_mano_obra=Coalesce(
-                ExpressionWrapper(
-                    Subquery(mano_obra.values('costo_total')),
-                    output_field=DecimalField(max_digits=4)
-                ), 0
-            ),
-            costo_mano_obra_inicial=Coalesce(
-                ExpressionWrapper(
-                    Subquery(mano_obra_inicial.values('costo_total')),
-                    output_field=DecimalField(max_digits=4)
-                ), 0
-            ),
-            cantidad_horas_mano_obra=Coalesce(
-                ExpressionWrapper(
-                    Subquery(mano_obra.values('cantidad_horas')),
-                    output_field=DecimalField(max_digits=4)
-                ), 0
-            ),
-            cantidad_horas_mano_obra_inicial=Coalesce(
-                ExpressionWrapper(
-                    Subquery(mano_obra_inicial.values('cantidad_horas')),
-                    output_field=DecimalField(max_digits=4)
-                ), 0
-            )
-        )
-        return qs
-
     @action(detail=True, methods=['post'])
     def upload_archivo(self, request, pk=None):
         nombre_archivo = self.request.POST.get('nombre')

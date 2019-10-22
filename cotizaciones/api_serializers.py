@@ -54,6 +54,78 @@ class CotizacionSerializer(serializers.ModelSerializer):
         format="%Y-%m-%d",
         read_only=True
     )
+    created_by = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    def create(self, validated_data):
+        from .services import cotizacion_crear
+        created_by = validated_data.get('created_by', None)
+        unidad_negocio = validated_data.get('unidad_negocio', None)
+        descripcion_cotizacion = validated_data.get('descripcion_cotizacion', None)
+        origen_cotizacion = validated_data.get('origen_cotizacion', None)
+        observacion = validated_data.get('observacion', None)
+        cliente = validated_data.get('cliente', None)
+        contacto_cliente = validated_data.get('contacto_cliente', None)
+        cotizacion_inicial = validated_data.get('cotizacion_inicial', None)
+        fecha_entrega_pactada_cotizacion = validated_data.get('fecha_entrega_pactada_cotizacion', None)
+        fecha_limite_segumiento_estado = validated_data.get('fecha_limite_segumiento_estado', None)
+        cotizacion = cotizacion_crear(
+            created_by_id=created_by.id,
+            unidad_negocio=unidad_negocio,
+            descripcion_cotizacion=descripcion_cotizacion,
+            observacion=observacion,
+            origen_cotizacion=origen_cotizacion,
+            cliente_id=None if cliente is None else cliente.id,
+            contacto_cliente_id=None if contacto_cliente is None else contacto_cliente.id,
+            fecha_entrega_pactada_cotizacion=fecha_entrega_pactada_cotizacion,
+            fecha_limite_segumiento_estado=fecha_limite_segumiento_estado,
+            cotizacion_inicial_id=None if cotizacion_inicial is None else cotizacion_inicial.id
+        )
+        return cotizacion
+
+    def update(self, cotizacion, validated_data):
+        from .services import cotizacion_actualizar
+        created_by = validated_data.get('created_by', None)
+        estado = validated_data.get('estado', None)
+        responsable = validated_data.get('responsable', None)
+        unidad_negocio = validated_data.get('unidad_negocio', None)
+        descripcion_cotizacion = validated_data.get('descripcion_cotizacion', None)
+        origen_cotizacion = validated_data.get('origen_cotizacion', None)
+        fecha_entrega_pactada_cotizacion = validated_data.get('fecha_entrega_pactada_cotizacion', None)
+        fecha_limite_segumiento_estado = validated_data.get('fecha_limite_segumiento_estado', None)
+        cotizacion_inicial = validated_data.get('cotizacion_inicial', None)
+        observacion = validated_data.get('observacion', None)
+        cliente = validated_data.get('cliente', None)
+        contacto_cliente = validated_data.get('contacto_cliente', None)
+        costo_presupuestado = validated_data.get('costo_presupuestado', 0)
+        orden_compra_nro = validated_data.get('orden_compra_nro', None)
+        fecha_entrega_pactada = validated_data.get('fecha_entrega_pactada', None)
+        orden_compra_fecha = validated_data.get('orden_compra_fecha', None)
+        valor_ofertado = validated_data.get('valor_ofertado', 0)
+        valor_orden_compra = validated_data.get('valor_orden_compra', 0)
+        estado_observacion_adicional = validated_data.get('estado_observacion_adicional', None)
+        cotizacion = cotizacion_actualizar(
+            cotizacion_id=cotizacion.id,
+            modified_by_id=created_by.id,
+            estado=estado,
+            unidad_negocio=unidad_negocio,
+            responsable_id=responsable.id,
+            descripcion_cotizacion=descripcion_cotizacion,
+            origen_cotizacion=origen_cotizacion,
+            fecha_entrega_pactada_cotizacion=fecha_entrega_pactada_cotizacion,
+            fecha_limite_segumiento_estado=fecha_limite_segumiento_estado,
+            cotizacion_inicial_id=None if cotizacion_inicial is None else cotizacion_inicial.id,
+            observacion=observacion,
+            cliente_id=None if cliente is None else cliente.id,
+            contacto_cliente_id=None if contacto_cliente is None else contacto_cliente.id,
+            valor_ofertado=valor_ofertado,
+            costo_presupuestado=costo_presupuestado,
+            orden_compra_nro=orden_compra_nro,
+            fecha_entrega_pactada=fecha_entrega_pactada,
+            orden_compra_fecha=orden_compra_fecha,
+            valor_orden_compra=valor_orden_compra,
+            estado_observacion_adicional=estado_observacion_adicional,
+        )
+        return cotizacion
 
     def get_to_string(self, instance):
         nro_cotizacion = ''
@@ -105,6 +177,7 @@ class CotizacionSerializer(serializers.ModelSerializer):
         fields = [
             'url',
             'id',
+            'created_by',
             'creado',
             'cotizacion_inicial',
             'cotizacion_inicial_nro',

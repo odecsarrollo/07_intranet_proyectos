@@ -107,7 +107,7 @@ const FormBaseCotizacion = (props) => {
                 selected_item_text='nro_cotizacion'
                 onSearch={buscarCotizacion}
                 onSelect={(id) => change('cotizacion_inicial', id)}
-                listado={_.map(_.pickBy(cotizaciones_encontradas, e => e.estado === 'Cierre (Aprobado)'), c => ({
+                listado={_.map(_.pickBy(cotizaciones_encontradas, e => e.estado === 'Cierre (Aprobado)' && e.unidad_negocio !== 'ADI'), c => ({
                     id: c.id,
                     nro_cotizacion: `${c.unidad_negocio}-${c.nro_cotizacion}`
                 }))}

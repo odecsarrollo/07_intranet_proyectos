@@ -7,6 +7,16 @@ from cotizaciones.managers import CotizacionManager
 
 
 class Cotizacion(TimeStampedModel):
+    ESTADOS_CHOICES = (
+        ('Cita/Generación Interés', 'Cita/Generación Interés'),
+        ('Configurando Propuesta', 'Configurando Propuesta'),
+        ('Cotización Enviada', 'Cotización Enviada'),
+        ('Evaluación Técnica y Económica', 'Evaluación Técnica y Económica'),
+        ('Aceptación de Terminos y Condiciones', 'Aceptación de Terminos y Condiciones'),
+        ('Cierre (Aprobado)', 'Cierre (Aprobado)'),
+        ('Aplazado', 'Aplazado'),
+        ('Cancelado', 'Cancelado'),
+    )
     UNIDADES_NEGOCIOS_CHOICES = (
         ('TRP', 'TRP - TRANSPORTADOR'),
         ('EQR', 'EQR - EQUIPOS REPRESENTADOS'),
@@ -49,7 +59,7 @@ class Cotizacion(TimeStampedModel):
 
     relacionada = models.BooleanField(default=False)
     revisada = models.BooleanField(default=False)
-    estado = models.CharField(max_length=200, null=True)
+    estado = models.CharField(max_length=200, null=True, choices=ESTADOS_CHOICES)
     origen_cotizacion = models.CharField(max_length=100, null=True)
     estado_observacion_adicional = models.CharField(max_length=400, null=True)
     fecha_cambio_estado = models.DateField(null=True)

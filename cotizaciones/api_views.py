@@ -24,66 +24,6 @@ class CotizacionViewSet(viewsets.ModelViewSet):
         self.serializer_class = CotizacionConDetalleSerializer
         return super().retrieve(request, *args, **kwargs)
 
-    def perform_update(self, serializer):
-        old_obj = self.get_object()
-        editado = serializer.save()
-        guardar_nuevamente = False
-        if editado.fecha_limite_segumiento_estado:
-            editado.fecha_limite_segumiento_estado = editado.fecha_limite_segumiento_estado
-        if old_obj.estado != editado.estado:
-            editado.fecha_cambio_estado = datetime.datetime.now().date()
-            guardar_nuevamente = True
-
-        if editado.estado != old_obj.estado:
-            SeguimientoCotizacion.objects.create(
-                cotizacion=editado,
-                tipo_seguimiento=1,
-                creado_por=self.request.user,
-                estado=editado.estado
-            )
-
-        if editado.abrir_carpeta != old_obj.abrir_carpeta:
-            if editado.abrir_carpeta == True:
-                estado = 'Solicitó Abrir Carpeta'
-            elif editado.abrir_carpeta == False:
-                estado = 'Canceló Abrir Carpeta'
-            SeguimientoCotizacion.objects.create(
-                cotizacion=editado,
-                tipo_seguimiento=1,
-                creado_por=self.request.user,
-                estado=estado
-            )
-            guardar_nuevamente = True
-
-        if editado.estado not in ['Aplazado', 'Cancelado', 'Cita/Generación Interés']:
-            if editado.estado == 'Cierre (Aprobado)':
-                if not editado.fecha_cambio_estado_cerrado:
-                    editado.fecha_cambio_estado_cerrado = datetime.datetime.now()
-            else:
-                editado.fecha_cambio_estado_cerrado = None
-            if editado.nro_cotizacion is None:
-                from .services import cotizacion_generar_numero_cotizacion
-                editado.nro_cotizacion = cotizacion_generar_numero_cotizacion()
-                guardar_nuevamente = True
-        if guardar_nuevamente:
-            editado.save()
-
-    def perform_create(self, serializer):
-        nuevo = serializer.save(
-            estado='Cita/Generación Interés',
-            created_by=self.request.user,
-            fecha_cambio_estado=datetime.datetime.now().date(),
-            responsable=self.request.user,
-        )
-        if nuevo.fecha_limite_segumiento_estado:
-            nuevo.fecha_limite_segumiento_estado = nuevo.fecha_limite_segumiento_estado
-        SeguimientoCotizacion.objects.create(
-            cotizacion=nuevo,
-            tipo_seguimiento=1,
-            creado_por=self.request.user,
-            estado=nuevo.estado
-        )
-
     @action(detail=False, http_method_names=['get', ])
     def listar_cotizacion_abrir_carpeta(self, request):
         qs = self.get_queryset().filter(
