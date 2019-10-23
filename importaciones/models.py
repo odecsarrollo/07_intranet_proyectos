@@ -3,8 +3,10 @@ from django.db import models
 from model_utils.models import TimeStampedModel
 
 from items.models import CategoriaProducto
+import reversion
 
 
+@reversion.register()
 class MonedaCambio(models.Model):
     nombre = models.CharField(max_length=20, unique=True)
     cambio = models.DecimalField(max_digits=18, decimal_places=4, default=0)
@@ -15,6 +17,7 @@ class MonedaCambio(models.Model):
         ]
 
 
+@reversion.register()
 class ProveedorImportacion(TimeStampedModel):
     nombre = models.CharField(max_length=120, unique=True)
     moneda = models.ForeignKey(MonedaCambio, on_delete=models.PROTECT, related_name="provedores_con_moneda")
@@ -32,6 +35,7 @@ class ProveedorImportacion(TimeStampedModel):
         ]
 
 
+@reversion.register()
 class MargenProvedor(TimeStampedModel):
     categoria = models.ForeignKey(
         CategoriaProducto,

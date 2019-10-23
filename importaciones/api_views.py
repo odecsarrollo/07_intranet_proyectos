@@ -10,17 +10,19 @@ from .api_serializers import (
     MargenProvedorSerializer
 )
 
+from reversion.views import RevisionMixin
 
-class MonedaCambioViewSet(viewsets.ModelViewSet):
+
+class MonedaCambioViewSet(RevisionMixin, viewsets.ModelViewSet):
     queryset = MonedaCambio.objects.all()
     serializer_class = MonedaCambioSerializer
 
 
-class ProveedorImportacionViewSet(viewsets.ModelViewSet):
+class ProveedorImportacionViewSet(RevisionMixin, viewsets.ModelViewSet):
     queryset = ProveedorImportacion.objects.select_related('moneda').all()
     serializer_class = ProveedorImportacionSerializer
 
 
-class MargenProvedorViewSet(viewsets.ModelViewSet):
+class MargenProvedorViewSet(RevisionMixin, viewsets.ModelViewSet):
     queryset = MargenProvedor.objects.select_related('proveedor', 'categoria').all()
     serializer_class = MargenProvedorSerializer

@@ -74,6 +74,7 @@ class Common(Configuration):
         'knox',
         'webpack_loader',
         'corsheaders',
+        'reversion',
     ]
 
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

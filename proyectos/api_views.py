@@ -28,7 +28,7 @@ from .api_serializers import (
     MiembroLiteralSerializer,
     ArchivoLiteralSerializer,
     ArchivoProyectoSerializer,
-    ProyectoConDetalleSerializer)
+    ProyectoConDetalleSerializer, ProyectoMaestraSerializer)
 from mano_obra.models import HoraHojaTrabajo, HoraTrabajoColaboradorLiteralInicial
 from .mixins import LiteralesPDFMixin
 
@@ -115,16 +115,19 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
 
     @action(detail=False, http_method_names=['get', ])
     def abiertos(self, request):
+        self.serializer_class = ProyectoSerializer
         lista = self.get_queryset().filter(abierto=True).all()
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
     @action(detail=False, http_method_names=['get', ])
     def con_literales_abiertos(self, request):
+        self.queryset = Proyecto.objects.all()
+        self.serializer_class = ProyectoMaestraSerializer
         lista = self.queryset.filter(
             Q(abierto=True) &
             Q(mis_literales__abierto=True)
-        )
+        ).distinct()
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 

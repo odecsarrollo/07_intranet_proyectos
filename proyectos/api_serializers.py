@@ -200,6 +200,23 @@ class LiteralSerializer(serializers.ModelSerializer):
         }
 
 
+class ProyectoMaestraSerializer(CustomSerializerMixin, serializers.ModelSerializer):
+    to_string = serializers.SerializerMethodField()
+
+    def get_to_string(self, instance):
+        return '%s - %s' % (instance.id_proyecto, instance.nombre)
+
+    class Meta:
+        model = Proyecto
+        fields = [
+            'id',
+            'id_proyecto',
+            'nombre',
+            'to_string',
+        ]
+        read_only_fields = fields
+
+
 class ProyectoSerializer(CustomSerializerMixin, serializers.ModelSerializer):
     cotizacion_relacionada_id = serializers.IntegerField(write_only=True, allow_null=True, required=False)
     costo_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
