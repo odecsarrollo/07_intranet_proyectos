@@ -5,6 +5,7 @@ from django.db.models.functions import Coalesce
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from reversion.views import RevisionMixin
 
 from intranet_proyectos.utils_queryset import query_varios_campos
 from .models import Cotizacion, SeguimientoCotizacion, ArchivoCotizacion
@@ -16,16 +17,17 @@ from .api_serializers import (
 )
 
 
-class CotizacionViewSet(viewsets.ModelViewSet):
+class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
     queryset = Cotizacion.sumatorias.all()
     serializer_class = CotizacionConDetalleSerializer
 
-    # def list(self, request, *args, **kwargs):
-    #     self.serializer_class = CotizacionSerializer
-    #     return super().list(request, *args, **kwargs)
+    def list(self, request, *args, **kwargs):
+        self.serializer_class = CotizacionSerializer
+        return super().list(request, *args, **kwargs)
 
     @action(detail=False, http_method_names=['get', ])
     def listar_cotizacion_abrir_carpeta(self, request):
+        self.serializer_class = CotizacionSerializer
         qs = self.get_queryset().filter(
             (
                     Q(orden_compra_nro__isnull=False) &
@@ -43,6 +45,7 @@ class CotizacionViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, http_method_names=['get', ])
     def listar_cotizaciones_x_parametro(self, request):
+        self.serializer_class = CotizacionSerializer
         parametro = request.GET.get('parametro')
         qs = None
         search_fields = ['nro_cotizacion', 'unidad_negocio']
@@ -78,6 +81,7 @@ class CotizacionViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, http_method_names=['get', ])
     def listar_cotizaciones_agendadas(self, request):
+        self.serializer_class = CotizacionSerializer
         qs = self.get_queryset().filter(fecha_entrega_pactada_cotizacion__isnull=False,
                                         estado__in=['Cita/Generación Interés', 'Configurando Propuesta'])
         serializer = self.get_serializer(qs, many=True)

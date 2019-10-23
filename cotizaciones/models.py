@@ -1,3 +1,4 @@
+import reversion
 from django.db import models
 from django.contrib.auth.models import User
 from model_utils.models import TimeStampedModel
@@ -6,6 +7,7 @@ from clientes.models import ClienteBiable, ContactoCliente
 from cotizaciones.managers import CotizacionManager
 
 
+@reversion.register()
 class Cotizacion(TimeStampedModel):
     ESTADOS_CHOICES = (
         ('Cita/Generación Interés', 'Cita/Generación Interés'),
