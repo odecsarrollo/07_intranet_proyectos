@@ -69,7 +69,6 @@ const Tabla = memo((props) => {
                             },
                             {
                                 Header: "Nro. OP",
-                                accessor: "id_proyecto",
                                 maxWidth: 80,
                                 filterable: true,
                                 filterMethod: (filter, row) => {

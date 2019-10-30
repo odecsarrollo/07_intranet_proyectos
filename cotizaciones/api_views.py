@@ -13,7 +13,11 @@ from .api_serializers import (
     CotizacionSerializer,
     SeguimientoCotizacionSerializer,
     ArchivoCotizacionSerializer,
-    CotizacionConDetalleSerializer, CotizacionParaAbrirCarpetaSerializer, CotizacionTuberiaVentaSerializer)
+    CotizacionConDetalleSerializer,
+    CotizacionParaAbrirCarpetaSerializer,
+    CotizacionTuberiaVentaSerializer,
+    CotizacionListSerializer,
+)
 
 
 class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
@@ -31,6 +35,11 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
     def perform_update(self, serializer):
         self.serializer_class = CotizacionConDetalleSerializer
         super().perform_update(serializer)
+
+    def list(self, request, *args, **kwargs):
+        self.serializer_class = CotizacionListSerializer
+        self.queryset=Cotizacion.sumatorias.all()
+        return super().list(request, *args, **kwargs)
 
     @action(detail=False, http_method_names=['get', ])
     def cotizaciones_con_proyectos(self, request):

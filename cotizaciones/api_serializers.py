@@ -377,6 +377,84 @@ class CotizacionConDetalleSerializer(CotizacionSerializer):
     cotizacion_inicial = CotizacionCotizacionConDetalleSerializer(read_only=True)
 
 
+class CotizacionListSerializer(serializers.ModelSerializer):
+    cliente_nombre = serializers.CharField(source='cliente_cotizacion.nombre', read_only=True)
+    contacto_cliente_nombre = serializers.CharField(source='contacto_cotizacion.full_nombre', read_only=True)
+    responsable_actual = serializers.CharField(source='responsable.username', read_only=True)
+    responsable_actual_nombre = serializers.CharField(source='responsable.get_full_name', read_only=True)
+    color_tuberia_ventas = serializers.SerializerMethodField()
+    porcentaje_tuberia_ventas = serializers.SerializerMethodField()
+
+    proyectos = ProyectoCotizacionConDetalleSerializer(many=True, read_only=True)
+
+    cotizaciones_adicionales = CotizacionCotizacionConDetalleSerializer(many=True, read_only=True)
+
+    cotizacion_inicial = CotizacionCotizacionConDetalleSerializer(read_only=True)
+
+    def get_color_tuberia_ventas(self, obj):
+        fecha_ini = obj.fecha_cambio_estado
+        fecha_seg = obj.fecha_limite_segumiento_estado
+        fecha_act = timezone.datetime.now().date()
+        if obj.estado in ['Cierre (Aprobado)', 'Cancelado', 'Aplazado']:
+            return None
+        if fecha_ini and fecha_seg:
+            delta = (fecha_act - fecha_ini).days
+            dias = (fecha_seg - fecha_ini).days
+            if dias == 0:
+                porcentaje = 1
+            else:
+                porcentaje = delta / dias
+            if porcentaje >= 0.9:
+                return 'tomato'
+            elif porcentaje > 0.66:
+                return 'yellow'
+            else:
+                return 'lightgreen'
+        if not obj.fecha_cambio_estado:
+            return None
+
+    def get_porcentaje_tuberia_ventas(self, obj):
+        fecha_ini = obj.fecha_cambio_estado
+        fecha_seg = obj.fecha_limite_segumiento_estado
+        if obj.estado in ['Cierre (Aprobado)', 'Cancelado', 'Aplazado']:
+            return None
+        if fecha_ini and fecha_seg:
+            fecha_act = timezone.datetime.now().date()
+            delta = (fecha_act - fecha_ini).days
+            dias = (fecha_seg - fecha_ini).days
+            if dias == 0:
+                porcentaje = 1
+            else:
+                porcentaje = delta / dias
+            return round(porcentaje * 100, 2)
+        else:
+            return None
+
+    class Meta:
+        model = Cotizacion
+        fields = [
+            'id',
+            'nro_cotizacion',
+            'proyectos',
+            'cotizaciones_adicionales',
+            'cotizacion_inicial',
+            'responsable_actual',
+            'descripcion_cotizacion',
+            'estado',
+            'valor_ofertado',
+            'orden_compra_fecha',
+            'responsable_actual_nombre',
+            'porcentaje_tuberia_ventas',
+            'color_tuberia_ventas',
+            'unidad_negocio',
+            'contacto_cliente_nombre',
+
+            'cliente_nombre',
+            'fecha_limite_segumiento_estado',
+        ]
+        read_only_fields = fields
+
+
 # endregion
 
 class SeguimientoCotizacionSerializer(serializers.ModelSerializer):

@@ -21,15 +21,18 @@ class CotizacionManager(models.Manager):
 
         qs = super().get_queryset().select_related(
             'responsable',
-            'created_by',
             'cliente',
             'contacto_cliente',
             'cotizacion_inicial',
+            'cotizacion_inicial__cliente',
+            'cotizacion_inicial__contacto_cliente',
+            'created_by',
         ).prefetch_related(
             'proyectos',
             'proyectos__mis_literales',
             'proyectos__mis_literales__cotizaciones',
-            'cotizaciones_adicionales'
+            'cotizaciones_adicionales',
+            'cotizaciones_adicionales__contacto_cliente',
         ).annotate(
             valor_orden_compra_adicionales=Coalesce(
                 ExpressionWrapper(
