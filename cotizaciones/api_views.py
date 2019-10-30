@@ -13,7 +13,7 @@ from .api_serializers import (
     CotizacionSerializer,
     SeguimientoCotizacionSerializer,
     ArchivoCotizacionSerializer,
-    CotizacionConDetalleSerializer)
+    CotizacionConDetalleSerializer, CotizacionParaAbrirCarpetaSerializer, CotizacionTuberiaVentaSerializer)
 
 
 class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
@@ -50,8 +50,11 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
 
     @action(detail=False, http_method_names=['get', ])
     def listar_cotizacion_abrir_carpeta(self, request):
-        print('entro aquiii')
-        qs = self.get_queryset().filter(
+        self.serializer_class = CotizacionParaAbrirCarpetaSerializer
+        qs = Cotizacion.objects.prefetch_related(
+            'cliente',
+            'cotizacion_inicial__cliente'
+        ).filter(
             (
                     Q(orden_compra_nro__isnull=False) &
                     Q(estado='Cierre (Aprobado)') &
@@ -123,6 +126,14 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
 
     @action(detail=False, http_method_names=['get', ])
     def listar_cotizaciones_tuberia_ventas(self, request):
+        self.queryset = Cotizacion.objects.select_related(
+            'cliente',
+            'contacto_cliente',
+            'cotizacion_inicial__cliente',
+            'cotizacion_inicial__contacto_cliente',
+            'responsable'
+        ).all()
+        self.serializer_class = CotizacionTuberiaVentaSerializer
         month = datetime.datetime.now().month
         year = datetime.datetime.now().year
         qs = self.get_queryset().filter(

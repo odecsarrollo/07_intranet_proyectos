@@ -456,6 +456,7 @@ class ConsecutivoProyectoLiteralSerializer(serializers.ModelSerializer):
 
 
 class ConsecutivoProyectoSerializer(serializers.ModelSerializer):
+    cliente_nombre = serializers.CharField(source='cliente.nombre', read_only=True)
     cotizaciones = ConsecutivoProyectoCotizacionSerializer(many=True, read_only=True)
     mis_literales = ConsecutivoProyectoLiteralSerializer(many=True, read_only=True)
 
@@ -463,11 +464,15 @@ class ConsecutivoProyectoSerializer(serializers.ModelSerializer):
         model = Proyecto
         fields = [
             'id',
+            'cliente',
+            'cliente_nombre',
             'id_proyecto',
             'nombre',
             'mis_literales',
             'cotizaciones'
         ]
+
+        read_only_fields = fields
 
 
 class ComparativaProyectoCotizacionSerializer(serializers.ModelSerializer):

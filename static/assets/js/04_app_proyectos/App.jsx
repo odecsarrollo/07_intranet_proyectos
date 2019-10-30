@@ -7,7 +7,7 @@ import DrawerMenu from '../00_utilities/components/ui/drawer/drawer_menu';
 import AppIndex from './index';
 import ItemsCGunoList from './cguno/items_cguno/containers/items_list';
 import ConcecutivoProyectosList
-    from './literales_proyectos/consecutivo_proyectos/ConsecutivoProyecto';
+    from './consecutivo_proyectos/ConsecutivoProyecto';
 import HoraHojaTrabajoCRUD from './mano_obra/horas_hojas_trabajo/HoraHojaTrabajoCRUD';
 import HojasTrabajoList from './mano_obra/hojas_trabajo/HojaTrabajoCRUD';
 import HojasTrabajoDetail from './mano_obra/hojas_trabajo/HojaTrabajoDetail';

@@ -103,20 +103,6 @@ const Tabla = memo(props => {
                                 },
                                 Cell: row => <div>{row.value ? row.value : 'SIN DEFINIR'}</div>
                             },
-                            {
-                                Header: "Costo Presupuestado",
-                                accessor: "costo_presupuestado",
-                                maxWidth: 150,
-                                show: permisos_object.costo_presupuestado,
-                                Cell: row => <div className='text-right'>{pesosColombianos(row.value)}</div>
-                            },
-                            {
-                                Header: "Precio",
-                                accessor: "valor_cliente",
-                                maxWidth: 150,
-                                show: permisos_object.valor,
-                                Cell: row => <div className='text-right'>{pesosColombianos(row.value)}</div>
-                            },
                         ]
                     },
                     {

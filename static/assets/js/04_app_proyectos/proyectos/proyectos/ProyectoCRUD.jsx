@@ -37,19 +37,19 @@ const List = memo(props => {
     };
     return (
         <Fragment>
-            {/*{_.size(list) > 0 &&*/}
-            {/*<CotizacionAbrirCarpetaLista*/}
-            {/*    cargarDatos={cargarDatos}*/}
-            {/*    lista={cotizaciones_list}*/}
-            {/*    permisos_object={{*/}
-            {/*        ...permisos_proyectos,*/}
-            {/*        add: false,*/}
-            {/*        delete: false,*/}
-            {/*        change: true,*/}
-            {/*        list: true*/}
-            {/*    }}*/}
-            {/*    {...props}*/}
-            {/*/>}*/}
+
+            <CotizacionAbrirCarpetaLista
+                cargarDatos={cargarDatos}
+                lista={cotizaciones_list}
+                permisos_object={{
+                    ...permisos_proyectos,
+                    add: false,
+                    delete: false,
+                    change: true,
+                    list: true
+                }}
+                {...props}
+            />
             <CRUD
                 posSummitMethod={() => cargarDatos()}
                 method_pool={method_pool}

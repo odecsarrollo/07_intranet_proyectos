@@ -84,8 +84,20 @@ class MiembroLiteralViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
 
 
 class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
-    queryset = Proyecto.sumatorias.prefetch_related('cotizaciones', 'mis_literales').all()
+    queryset = Proyecto.sumatorias.mano_obra().all()
     serializer_class = ProyectoConDetalleSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        self.queryset = Proyecto.sumatorias.todo()
+        return super().retrieve(request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        self.queryset = Proyecto.sumatorias.todo()
+        return super().create(request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        self.queryset = Proyecto.sumatorias.todo()
+        return super().update(request, *args, **kwargs)
 
     def list(self, request, *args, **kwargs):
         self.serializer_class = ProyectoSerializer
@@ -104,6 +116,7 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
     @action(detail=False, http_method_names=['get', ])
     def listar_consecutivo_proyectos(self, request):
         qs = Proyecto.objects.prefetch_related(
+            'cliente',
             'cotizaciones',
             'cotizaciones__cotizaciones_adicionales',
             'mis_literales',

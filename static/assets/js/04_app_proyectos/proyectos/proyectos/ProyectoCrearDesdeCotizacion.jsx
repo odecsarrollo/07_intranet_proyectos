@@ -37,6 +37,7 @@ const Lista = (props) => {
         setShowVerificar(false);
         setNotificacionSeleccionada(null);
     };
+    console.log(list)
     const onSi = () => dispatch(actions.setRevisadoCotizacion(notificacion_seleccionada, {callback: () => onNo()}));
     return (
         <Fragment>

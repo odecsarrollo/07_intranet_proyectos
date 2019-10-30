@@ -229,6 +229,7 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'cliente_id': {'read_only': True},
             'cotizacion_inicial': {'allow_null': True},
             'revisar': {'read_only': True},
+            'abrir_carpeta': {'read_only': True},
             'relacionada': {'read_only': True},
             'cotizaciones_adicionales': {'read_only': True},
             'proyectos': {'read_only': True},
@@ -239,6 +240,95 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'estado_observacion_adicional': {'allow_null': True},
             'fecha_limite_segumiento_estado': {'allow_null': True},
         }
+
+
+class CotizacionTuberiaVentaSerializer(serializers.ModelSerializer):
+    color_tuberia_ventas = serializers.SerializerMethodField()
+    porcentaje_tuberia_ventas = serializers.SerializerMethodField()
+    cliente_nombre = serializers.CharField(source='cliente_cotizacion.nombre', read_only=True)
+    contacto_cliente_nombre = serializers.CharField(source='contacto_cotizacion.full_nombre', read_only=True)
+    responsable_actual_nombre = serializers.CharField(source='responsable.get_full_name', read_only=True)
+
+    def get_color_tuberia_ventas(self, obj):
+        fecha_ini = obj.fecha_cambio_estado
+        fecha_seg = obj.fecha_limite_segumiento_estado
+        fecha_act = timezone.datetime.now().date()
+        if obj.estado in ['Cierre (Aprobado)', 'Cancelado', 'Aplazado']:
+            return None
+        if fecha_ini and fecha_seg:
+            delta = (fecha_act - fecha_ini).days
+            dias = (fecha_seg - fecha_ini).days
+            if dias == 0:
+                porcentaje = 1
+            else:
+                porcentaje = delta / dias
+            if porcentaje >= 0.9:
+                return 'tomato'
+            elif porcentaje > 0.66:
+                return 'yellow'
+            else:
+                return 'lightgreen'
+        if not obj.fecha_cambio_estado:
+            return None
+
+    def get_porcentaje_tuberia_ventas(self, obj):
+        fecha_ini = obj.fecha_cambio_estado
+        fecha_seg = obj.fecha_limite_segumiento_estado
+        if obj.estado in ['Cierre (Aprobado)', 'Cancelado', 'Aplazado']:
+            return None
+        if fecha_ini and fecha_seg:
+            fecha_act = timezone.datetime.now().date()
+            delta = (fecha_act - fecha_ini).days
+            dias = (fecha_seg - fecha_ini).days
+            if dias == 0:
+                porcentaje = 1
+            else:
+                porcentaje = delta / dias
+            return round(porcentaje * 100, 2)
+        else:
+            return None
+
+    class Meta:
+        model = Cotizacion
+        fields = [
+            'id',
+            'color_tuberia_ventas',
+            'nro_cotizacion',
+            'unidad_negocio',
+            'cliente_nombre',
+            'contacto_cliente_nombre',
+            'responsable_actual_nombre',
+            'descripcion_cotizacion',
+            'fecha_limite_segumiento_estado',
+            'estado',
+            'valor_ofertado',
+            'porcentaje_tuberia_ventas',
+        ]
+        read_only_fields = fields
+
+
+class CotizacionParaAbrirCarpetaSerializer(serializers.ModelSerializer):
+    cliente_nombre = serializers.CharField(source='cliente_cotizacion.nombre', read_only=True)
+    cotizacion_inicial_nro = serializers.CharField(source='cotizacion_inicial.nro_cotizacion', read_only=True)
+    cotizacion_inicial_unidad_negocio = serializers.CharField(
+        source='cotizacion_inicial.unidad_negocio',
+        read_only=True
+    )
+
+    class Meta:
+        model = Cotizacion
+        fields = [
+            'id',
+            'nro_cotizacion',
+            'unidad_negocio',
+            'cotizacion_inicial_nro',
+            'cotizacion_inicial_unidad_negocio',
+            'revisar',
+            'descripcion_cotizacion',
+            'cliente_nombre',
+            'abrir_carpeta',
+        ]
+        read_only_fields = fields
 
 
 class ProyectoCotizacionConDetalleSerializer(serializers.ModelSerializer):
