@@ -75,6 +75,7 @@ class Common(Configuration):
         'webpack_loader',
         'corsheaders',
         'reversion',
+        'silk',
     ]
 
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

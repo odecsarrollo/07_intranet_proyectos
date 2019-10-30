@@ -19,9 +19,7 @@ def get_secret(setting, variable, secrets=secrets):
 
 class Local(Common):
     DEBUG = True
-    THIRD_PART_APPS = [
-        'silk',
-    ]
+    THIRD_PART_APPS = []
 
     INSTALLED_APPS = Common.INSTALLED_APPS + THIRD_PART_APPS
 
