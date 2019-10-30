@@ -7,7 +7,7 @@ import DrawerMenu from '../00_utilities/components/ui/drawer/drawer_menu';
 import AppIndex from './index';
 import ItemsCGunoList from './cguno/items_cguno/containers/items_list';
 import ConcecutivoProyectosList
-    from './literales_proyectos/consecutivo_proyectos/containers/consecutivo_proyectos_container';
+    from './literales_proyectos/consecutivo_proyectos/ConsecutivoProyecto';
 import HoraHojaTrabajoCRUD from './mano_obra/horas_hojas_trabajo/HoraHojaTrabajoCRUD';
 import HojasTrabajoList from './mano_obra/hojas_trabajo/HojaTrabajoCRUD';
 import HojasTrabajoDetail from './mano_obra/hojas_trabajo/HojaTrabajoDetail';
@@ -23,6 +23,8 @@ import FasesProyectosList from "./proyectos/fases/containers/fases_list_containe
 import ReporteCosto from "./proyectos/reportes/reporte_1/containers/reporte_1";
 import ReporteDos from "./proyectos/reportes/reporte_2/containers/reporte_2";
 import ReporteTres from "./proyectos/reportes/reporte_3/containers/reporte_3";
+
+import CotizacionesVsProyectos from "./cotizaciones_vs_proyectos/CotizacionVsProyecto";
 
 const App = () => {
     return (
@@ -51,6 +53,8 @@ const App = () => {
                     <Route exact path='/app/proyectos/proyectos/reporte_dos' component={ReporteDos}/>
                     <Route exact path='/app/proyectos/proyectos/reporte_tres' component={ReporteTres}/>
 
+                    <Route exact path='/app/proyectos/cotizaciones_vs_proyectos/list'
+                           component={CotizacionesVsProyectos}/>
                 </Switch>
             </DrawerMenu>
         </Loading>

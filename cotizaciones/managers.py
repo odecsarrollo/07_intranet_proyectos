@@ -27,9 +27,10 @@ class CotizacionManager(models.Manager):
             'cotizacion_inicial',
         ).prefetch_related(
             'proyectos',
+            'proyectos__mis_literales',
+            'proyectos__mis_literales__cotizaciones',
             'cotizaciones_adicionales'
         ).annotate(
-            # costo_presupuestado_adicionales=Coalesce(Sum('cotizaciones_adicionales__costo_presupuestado'), 0),
             valor_orden_compra_adicionales=Coalesce(
                 ExpressionWrapper(
                     Subquery(cotizaciones_adicionales.values('valor_orden_compra_cotizaciones')),
@@ -42,6 +43,6 @@ class CotizacionManager(models.Manager):
                     output_field=DecimalField(max_digits=4)
                 ), 0
             ),
-            valor_total_orden_compra_cotizaciones=F('valor_orden_compra_adicionales') + F('valor_orden_compra')
+            valor_total_orden_compra_cotizaciones=F('valor_orden_compra_adicionales') + F('valor_orden_compra'),
         ).all()
         return qs

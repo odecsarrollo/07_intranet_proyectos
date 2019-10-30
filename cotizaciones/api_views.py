@@ -1,6 +1,6 @@
 import datetime
 from math import ceil
-from django.db.models import Q, When, Case, DecimalField, Value, F
+from django.db.models import Q, When, Case, DecimalField, Value, F, Count
 from django.db.models.functions import Coalesce
 from rest_framework import viewsets
 from rest_framework.decorators import action
@@ -13,21 +13,44 @@ from .api_serializers import (
     CotizacionSerializer,
     SeguimientoCotizacionSerializer,
     ArchivoCotizacionSerializer,
-    CotizacionConDetalleSerializer
-)
+    CotizacionConDetalleSerializer)
 
 
 class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
     queryset = Cotizacion.sumatorias.all()
-    serializer_class = CotizacionConDetalleSerializer
+    serializer_class = CotizacionSerializer
 
-    def list(self, request, *args, **kwargs):
-        self.serializer_class = CotizacionSerializer
-        return super().list(request, *args, **kwargs)
+    def retrieve(self, request, *args, **kwargs):
+        self.serializer_class = CotizacionConDetalleSerializer
+        return super().retrieve(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        self.serializer_class = CotizacionConDetalleSerializer
+        super().perform_create(serializer)
+
+    def perform_update(self, serializer):
+        self.serializer_class = CotizacionConDetalleSerializer
+        super().perform_update(serializer)
+
+    @action(detail=False, http_method_names=['get', ])
+    def cotizaciones_con_proyectos(self, request):
+        self.queryset = Cotizacion.sumatorias.annotate(
+            cantidad_proyectos=Count('proyectos')
+        ).prefetch_related('proyectos').filter(
+            (
+                    Q(cotizacion_inicial__isnull=True) &
+                    Q(cantidad_proyectos__gt=0)
+            ) | (
+                    Q(cotizacion_inicial__isnull=False) &
+                    Q(estado='Cierre (Aprobado)')
+            )
+        ).all()
+        serializer = self.get_serializer(self.queryset, many=True)
+        return Response(serializer.data)
 
     @action(detail=False, http_method_names=['get', ])
     def listar_cotizacion_abrir_carpeta(self, request):
-        self.serializer_class = CotizacionSerializer
+        print('entro aquiii')
         qs = self.get_queryset().filter(
             (
                     Q(orden_compra_nro__isnull=False) &
@@ -45,7 +68,6 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
 
     @action(detail=False, http_method_names=['get', ])
     def listar_cotizaciones_x_parametro(self, request):
-        self.serializer_class = CotizacionSerializer
         parametro = request.GET.get('parametro')
         qs = None
         search_fields = ['nro_cotizacion', 'unidad_negocio']
@@ -69,6 +91,19 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @action(detail=True, methods=['post'])
+    def relacionar_quitar_literal(self, request, pk=None):
+        cotizacion = self.get_object()
+        self.serializer_class = CotizacionConDetalleSerializer
+        literal_id = int(request.POST.get('literal_id'))
+        from .services import cotizacion_quitar_relacionar_literal
+        cotizacion = cotizacion_quitar_relacionar_literal(
+            literal_id=literal_id,
+            cotizacion_id=cotizacion.id
+        )
+        serializer = self.get_serializer(cotizacion)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
     def set_revisado(self, request, pk=None):
         cotizacion = self.get_object()
         self.serializer_class = CotizacionConDetalleSerializer
@@ -81,7 +116,6 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
 
     @action(detail=False, http_method_names=['get', ])
     def listar_cotizaciones_agendadas(self, request):
-        self.serializer_class = CotizacionSerializer
         qs = self.get_queryset().filter(fecha_entrega_pactada_cotizacion__isnull=False,
                                         estado__in=['Cita/Generación Interés', 'Configurando Propuesta'])
         serializer = self.get_serializer(qs, many=True)

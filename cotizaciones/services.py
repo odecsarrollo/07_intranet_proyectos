@@ -1,12 +1,21 @@
 import datetime
+from typing import List, Union
 
 from django.contrib.auth.models import User
-from django.db.models import Max
+from django.db.models import Max, QuerySet, Count, OuterRef
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError
 
+from proyectos.models import Proyecto, Literal
 from .models import Cotizacion, SeguimientoCotizacion
 from clientes.models import ClienteBiable
+from reversion.models import Version
+
+
+def cotizacion_versions(cotizacion_id: int) -> Version:
+    cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
+    versions = Version.objects.get_for_object(cotizacion)
+    return versions
 
 
 def cotizacion_crear(
@@ -102,7 +111,7 @@ def cotizacion_actualizar(
             raise ValidationError(
                 {
                     '_error': 'Para cambiar una cotización cuyo estado es %s a %s no deben haber cotizaciones adicionales relacionadas ni proyectos relacionados' % (
-                    cotizacion.estado, estado)})
+                        cotizacion.estado, estado)})
 
     cotizacion.estado = estado
     # Valida que al cambiar el cliente o contacto, el contacto pertenezca al cliente definido
@@ -115,6 +124,9 @@ def cotizacion_actualizar(
         else:
             cotizacion.cliente_id = cliente_id
             cotizacion.contacto_cliente_id = contacto_cliente_id
+            for proyecto in cotizacion.proyectos.all():
+                proyecto.cliente_id = cliente_id
+                proyecto.save()
 
     # Valida que una cotizacion ADI no se pueda cambiar en ningún otro tipo de cotización y viceversa
     cambio_unidad_de_negocio = cotizacion.unidad_negocio != unidad_negocio
@@ -212,14 +224,41 @@ def cotizacion_actualizar(
     return cotizacion
 
 
+def cotizacion_quitar_relacionar_literal(
+        cotizacion_id: int,
+        literal_id: int
+) -> Cotizacion:
+    cotizacion_adicional = Cotizacion.objects.get(pk=cotizacion_id)
+    tiene_literal = cotizacion_adicional.literales.filter(pk=literal_id).exists()
+    if tiene_literal:
+        cotizacion_adicional.literales.remove(literal_id)
+    else:
+        cotizacion_inicial = cotizacion_adicional.cotizacion_inicial
+        es_cotizacion_adicional = cotizacion_inicial is not None
+        literal = Literal.objects.get(pk=literal_id)
+        proyecto = literal.proyecto
+        if not es_cotizacion_adicional:
+            raise ValidationError(
+                {'_error': 'Sólo una cotización adicional se puede vincular a un literal'})
+
+        cotizacion_tiene_proyecto = cotizacion_inicial.proyectos.filter(pk=proyecto.id).exists()
+        if not cotizacion_tiene_proyecto:
+            raise ValidationError(
+                {'_error': 'El proyecto del literal no esta relacionado con la cotizacion inicial'})
+        cotizacion_adicional.literales.add(literal_id)
+    cotizacion_adicional = Cotizacion.objects.get(pk=cotizacion_id)
+    return cotizacion_adicional
+
+
 def cotizacion_quitar_relacionar_proyecto(
         cotizacion_id: int,
         proyecto_id: int
 ) -> Cotizacion:
     cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
-    if cotizacion.unidad_negocio == 'ADI':
+    es_cotizacion_adicional = cotizacion.cotizacion_inicial is not None
+    if es_cotizacion_adicional:
         raise ValidationError(
-            {'_error': 'Las cotizaciones de tipo adicional no pueden tener poryectos relacionados'})
+            {'_error': 'Las cotizaciones de tipo adicional no pueden tener proyectos relacionados'})
     if cotizacion.cotizacion_inicial is not None:
         raise ValidationError(
             {
@@ -228,11 +267,27 @@ def cotizacion_quitar_relacionar_proyecto(
         raise ValidationError(
             {'_error': 'La cotización debe de estar en estado cerrado para poder relacionarle un proyecto.'})
 
+    proyecto = Proyecto.objects.get(pk=proyecto_id)
     if cotizacion.proyectos.filter(pk=proyecto_id).exists():
-        cotizacion.proyectos.remove(proyecto_id)
+        literales = Cotizacion.objects.filter(cotizacion_inicial=cotizacion, literales__proyecto__id=proyecto_id)
+        if not literales.exists():
+            cotizacion.proyectos.remove(proyecto_id)
+            proyecto.cliente = None
+            proyecto.save()
+        else:
+            raise ValidationError(
+                {
+                    '_error': 'El proyecto %s no se puede desvincular porque tiene literales relacionados con una cotización adicional de la actual cotización' % proyecto.id_proyecto})
     else:
         if cotizacion.estado == 'Cierre (Aprobado)':
-            cotizacion.proyectos.add(proyecto_id)
+            if not proyecto.cotizaciones.exists():
+                cotizacion.proyectos.add(proyecto_id)
+                proyecto.cliente = cotizacion.cliente
+                proyecto.save()
+            else:
+                raise ValidationError(
+                    {
+                        '_error': 'El proyecto %s ya tiene una cotizacion inicial relacionada, no se pueden relacionar más de una a un proyecto' % proyecto.id_proyecto})
         else:
             raise ValidationError(
                 {'_error': 'Solo se pueden relacionar proyectos a cotizaciones que se encuentren en estado de Cierre'})

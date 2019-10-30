@@ -74,6 +74,40 @@ export const fetchProyectos = (options_action = {}) => {
     }
 };
 
+export const fetchProyectosConCotizaciones = (options_action = {}) => {
+    return function (dispatch) {
+        const FULL_URL = `${current_url_api}/proyectos_con_cotizaciones`;
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch_all, payload: response})
+        };
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        return fetchListGet(FULL_URL, options);
+    }
+};
+
+
+export const fetchProyectosConsecutivo = (options_action = {}) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch_all, payload: response})
+        };
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        return fetchListGet(`${current_url_api}/listar_consecutivo_proyectos`, options);
+    }
+};
+
 export const clearProyectos = () => {
     return (dispatch) => {
         dispatch({type: TYPES.clear})

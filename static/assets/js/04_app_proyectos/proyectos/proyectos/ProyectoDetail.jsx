@@ -2,7 +2,7 @@ import React, {useState, useEffect, memo} from 'react';
 import {useSelector, useDispatch} from "react-redux";
 import * as actions from "../../../01_actions/01_index";
 import {SinObjeto} from "../../../00_utilities/templates/fragmentos";
-import TablaProyectoLiterales from '../literales/components/ProyectoLiteralTabla';
+import TablaProyectoLiterales from '../literales/ProyectoLiteralTabla';
 import FormProyecto from './forms/ProyectoDetailForm';
 import FacturasProyecto from './ProyectoFacturaList';
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
@@ -13,8 +13,8 @@ import {
     COTIZACIONES,
     ARCHIVOS_PROYECTOS,
 } from "../../../permisos";
-import LiteralModalCreate from '../literales/components/ProyectoLiteralModal';
-import LiteralDetail from '../literales/components/LiteralDetail';
+import LiteralModalCreate from '../literales/ProyectoLiteralModal';
+import LiteralDetail from '../literales/LiteralDetail';
 import ProyectoInfo from './ProyectoDetailInfo';
 import ProyectoDetailCotizacionRelacionada from './ProyectoDetailCotizacionRelacionada';
 import PanelArchivosProyecto from '../archivos/proyectos/ProyectoDocumentoList';
@@ -141,6 +141,7 @@ const Detail = memo((props) => {
                                 <LiteralModalCreate
                                     proyecto={proyecto}
                                     permisos_object={permisos_literales}
+                                    literales_list={literales}
                                     cotizacion_pendiente_por_literal={null}
                                     callback={cargarDatos}
                                 />

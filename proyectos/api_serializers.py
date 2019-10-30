@@ -155,6 +155,27 @@ class LiteralSerializer(serializers.ModelSerializer):
     valor_cliente = serializers.DecimalField(source='cotizacion.valor_orden_compra', read_only=True,
                                              max_digits=20, decimal_places=2)
 
+    def create(self, validated_data):
+        proyecto = validated_data.pop('proyecto')
+        id_literal = validated_data.pop('id_literal')
+        descripcion = validated_data.pop('descripcion')
+        from .services import literal_crear
+        literal = literal_crear(proyecto_id=proyecto.id, id_literal=id_literal, descripcion=descripcion)
+        return literal
+
+    def update(self, instance, validated_data):
+        from .services import literal_actualizar
+        descripcion = validated_data.pop('descripcion')
+        abierto = validated_data.pop('abierto')
+        id_literal = validated_data.pop('id_literal')
+        literal = literal_actualizar(
+            literal_id=instance.id,
+            abierto=abierto,
+            descripcion=descripcion,
+            id_literal=id_literal
+        )
+        return literal
+
     class Meta:
         model = Literal
         fields = [
@@ -218,6 +239,7 @@ class ProyectoMaestraSerializer(CustomSerializerMixin, serializers.ModelSerializ
 
 
 class ProyectoSerializer(CustomSerializerMixin, serializers.ModelSerializer):
+    cliente_nombre = serializers.CharField(source='cliente.nombre', read_only=True)
     cotizacion_relacionada_id = serializers.IntegerField(write_only=True, allow_null=True, required=False)
     costo_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     cantidad_horas_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
@@ -244,15 +266,29 @@ class ProyectoSerializer(CustomSerializerMixin, serializers.ModelSerializer):
     def get_cotizaciones_nro(self, obj):
         return 'COLOCAR EN CODIGO SERIALIZER'
 
+    def update(self, instance, validated_data):
+        from .services import proyecto_actualizar
+        id_proyecto = validated_data.pop('id_proyecto')
+        abierto = validated_data.pop('abierto')
+        nombre = validated_data.get('nombre', None)
+        proyecto = proyecto_actualizar(
+            proyecto_id=instance.id,
+            nombre=nombre,
+            abierto=abierto,
+            id_proyecto=id_proyecto
+        )
+        return proyecto
+
     def create(self, validated_data):
-        cotizacion_relacionada_id = validated_data.pop('cotizacion_relacionada_id')
-        proyecto = super().create(validated_data)
-        from cotizaciones.services import cotizacion_quitar_relacionar_proyecto
-        if cotizacion_relacionada_id is not None:
-            cotizacion_quitar_relacionar_proyecto(
-                cotizacion_id=cotizacion_relacionada_id,
-                proyecto_id=proyecto.id
-            )
+        from .services import proyecto_crear
+        id_proyecto = validated_data.pop('id_proyecto')
+        nombre = validated_data.get('nombre', None)
+        cotizacion_relacionada_id = validated_data.get('cotizacion_relacionada_id', None)
+        proyecto = proyecto_crear(
+            id_proyecto=id_proyecto,
+            nombre=nombre,
+            cotizacion_relacionada_id=cotizacion_relacionada_id
+        )
         return proyecto
 
     class Meta:
@@ -264,6 +300,8 @@ class ProyectoSerializer(CustomSerializerMixin, serializers.ModelSerializer):
             'abierto',
             'costo_materiales',
             'en_cguno',
+            'cliente',
+            'cliente_nombre',
             'costo_presupuestado_cotizaciones',
             'valor_orden_compra_cotizaciones',
             'costo_presupuestado_cotizaciones_adicional',
@@ -371,11 +409,12 @@ class ProyectoConDetalleSerializer(ProyectoSerializer):
     )
 
 
-# Indice de proyecto
-class IndiceProyectoCotizacionAdicionalSerializer(serializers.ModelSerializer):
+# Consecutivo proyectos
+class ConsecutivoProyectoCotizacionAdicionalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cotizacion
         fields = [
+            'id',
             'orden_compra_nro',
             'orden_compra_fecha',
             'fecha_entrega_pactada',
@@ -385,12 +424,13 @@ class IndiceProyectoCotizacionAdicionalSerializer(serializers.ModelSerializer):
         ]
 
 
-class IndiceProyectoCotizacionSerializer(serializers.ModelSerializer):
-    cotizaciones_adicionales = IndiceProyectoCotizacionAdicionalSerializer(many=True, read_only=True)
+class ConsecutivoProyectoCotizacionSerializer(serializers.ModelSerializer):
+    cotizaciones_adicionales = ConsecutivoProyectoCotizacionAdicionalSerializer(many=True, read_only=True)
 
     class Meta:
         model = Cotizacion
         fields = [
+            'id',
             'orden_compra_nro',
             'orden_compra_fecha',
             'fecha_entrega_pactada',
@@ -401,29 +441,38 @@ class IndiceProyectoCotizacionSerializer(serializers.ModelSerializer):
         ]
 
 
-class IndiceProyectoLiteralSerializer(serializers.ModelSerializer):
+class ConsecutivoProyectoLiteralSerializer(serializers.ModelSerializer):
+    cotizaciones = ConsecutivoProyectoCotizacionSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Literal
+        fields = [
+            'id',
+            'id_literal',
+            'abierto',
+            'descripcion',
+            'cotizaciones',
+        ]
+
+
+class ConsecutivoProyectoSerializer(serializers.ModelSerializer):
+    cotizaciones = ConsecutivoProyectoCotizacionSerializer(many=True, read_only=True)
+    mis_literales = ConsecutivoProyectoLiteralSerializer(many=True, read_only=True)
+
     class Meta:
         model = Proyecto
         fields = [
+            'id',
             'id_proyecto',
             'nombre',
             'mis_literales',
-            'cliente_nombre',
             'cotizaciones'
         ]
 
 
-class IndiceProyectoProyectoSerializer(serializers.ModelSerializer):
-    cotizaciones = IndiceProyectoCotizacionSerializer(many=True, read_only=True)
-    mis_literales = IndiceProyectoLiteralSerializer(many=True, read_only=True)
-    cliente_nombre = serializers.CharField(source='cliente.nombre', read_only=True)
-
+class ComparativaProyectoCotizacionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Proyecto
+        model: Proyecto
         fields = [
-            'id_proyecto',
-            'nombre',
-            'mis_literales',
-            'cliente_nombre',
-            'cotizaciones'
+            'id'
         ]

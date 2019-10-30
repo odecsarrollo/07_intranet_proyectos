@@ -17,14 +17,12 @@ import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
 const List = memo(props => {
     const dispatch = useDispatch();
     const cargarDatos = () => {
-        const cargarCotizacionesParaCarpetas = () => dispatch(actions.fetchCotizacionesPidiendoCarpeta());
-        dispatch(actions.fetchProyectos({callback: cargarCotizacionesParaCarpetas}));
+        dispatch(actions.fetchProyectos());
     };
     useEffect(() => {
         cargarDatos();
         return () => {
             dispatch(actions.clearProyectos());
-            dispatch(actions.clearCotizaciones());
         };
     }, []);
     const cotizaciones_list = useSelector(state => state.cotizaciones);
@@ -39,19 +37,19 @@ const List = memo(props => {
     };
     return (
         <Fragment>
-            {_.size(list) > 0 &&
-            <CotizacionAbrirCarpetaLista
-                cargarDatos={cargarDatos}
-                lista={cotizaciones_list}
-                permisos_object={{
-                    ...permisos_proyectos,
-                    add: false,
-                    delete: false,
-                    change: true,
-                    list: true
-                }}
-                {...props}
-            />}
+            {/*{_.size(list) > 0 &&*/}
+            {/*<CotizacionAbrirCarpetaLista*/}
+            {/*    cargarDatos={cargarDatos}*/}
+            {/*    lista={cotizaciones_list}*/}
+            {/*    permisos_object={{*/}
+            {/*        ...permisos_proyectos,*/}
+            {/*        add: false,*/}
+            {/*        delete: false,*/}
+            {/*        change: true,*/}
+            {/*        list: true*/}
+            {/*    }}*/}
+            {/*    {...props}*/}
+            {/*/>}*/}
             <CRUD
                 posSummitMethod={() => cargarDatos()}
                 method_pool={method_pool}

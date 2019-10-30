@@ -120,3 +120,99 @@ form .btn {
 .form-field-error {
   color: #f00;
 }
+.consecutivo_proyectos {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.consecutivo_proyectos .header {
+  font-size: 1rem;
+  color: #fff;
+  font-weight: bold;
+  position: sticky;
+  top: 64px;
+  padding-left: 10px;
+  background-color: #ff9800;
+}
+.consecutivo_proyectos .body {
+  font-size: 0.7rem;
+}
+.consecutivo_proyectos .row {
+  padding: 0 !important;
+  margin: 0 !important;
+  border-top: solid #000 1px;
+  align-items: center;
+  align-items: center;
+  align-items: center;
+  align-items: center;
+  align-items: center;
+  align-items: center;
+  align-items: center;
+  align-items: center;
+  align-items: center;
+  align-items: center;
+  align-items: center;
+  align-items: center;
+}
+.consecutivo_proyectos .row :first-child {
+  border-top: none;
+}
+.consecutivo_proyectos .row .col-1 {
+  padding: 0 !important;
+  padding-left: 5px !important;
+  margin: 0 !important;
+}
+.consecutivo_proyectos .row .col-2 {
+  padding: 0 !important;
+  padding-left: 5px !important;
+  margin: 0 !important;
+}
+.consecutivo_proyectos .row .col-3 {
+  padding: 0 !important;
+  padding-left: 5px !important;
+  margin: 0 !important;
+}
+.consecutivo_proyectos .row .col-4 {
+  padding: 0 !important;
+  padding-left: 5px !important;
+  margin: 0 !important;
+}
+.consecutivo_proyectos .row .col-5 {
+  padding: 0 !important;
+  padding-left: 5px !important;
+  margin: 0 !important;
+}
+.consecutivo_proyectos .row .col-6 {
+  padding: 0 !important;
+  padding-left: 5px !important;
+  margin: 0 !important;
+}
+.consecutivo_proyectos .row .col-7 {
+  padding: 0 !important;
+  padding-left: 5px !important;
+  margin: 0 !important;
+}
+.consecutivo_proyectos .row .col-8 {
+  padding: 0 !important;
+  padding-left: 5px !important;
+  margin: 0 !important;
+}
+.consecutivo_proyectos .row .col-9 {
+  padding: 0 !important;
+  padding-left: 5px !important;
+  margin: 0 !important;
+}
+.consecutivo_proyectos .row .col-10 {
+  padding: 0 !important;
+  padding-left: 5px !important;
+  margin: 0 !important;
+}
+.consecutivo_proyectos .row .col-11 {
+  padding: 0 !important;
+  padding-left: 5px !important;
+  margin: 0 !important;
+}
+.consecutivo_proyectos .row .col-12 {
+  padding: 0 !important;
+  padding-left: 5px !important;
+  margin: 0 !important;
+}

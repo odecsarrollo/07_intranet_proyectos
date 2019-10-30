@@ -2,7 +2,7 @@ from django.utils import timezone
 
 from rest_framework import serializers
 
-from proyectos.models import Proyecto
+from proyectos.models import Proyecto, Literal
 from .models import Cotizacion, SeguimientoCotizacion, ArchivoCotizacion
 
 
@@ -220,8 +220,12 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'color_tuberia_ventas',
             'porcentaje_tuberia_ventas',
             'to_string',
+            'es_adicional',
+            'literales',
         ]
         extra_kwargs = {
+            'literales': {'read_only': True},
+            'es_adicional': {'read_only': True},
             'cliente_id': {'read_only': True},
             'cotizacion_inicial': {'allow_null': True},
             'revisar': {'read_only': True},
@@ -254,15 +258,30 @@ class CotizacionCotizacionConDetalleSerializer(serializers.ModelSerializer):
         model = Cotizacion
         fields = [
             'id',
+            'orden_compra_nro',
             'nro_cotizacion',
             'estado',
             'unidad_negocio',
+            'cotizaciones_adicionales',
             'contacto_cliente_nombre',
         ]
         read_only_fields = fields
 
 
+class LiteralCotizacionConDetalle(serializers.ModelSerializer):
+    class Meta:
+        model = Literal
+        fields = [
+            'id',
+            'id_literal',
+            'descripcion',
+            'proyecto_id',
+        ]
+        read_only_fields = fields
+
+
 class CotizacionConDetalleSerializer(CotizacionSerializer):
+    literales = LiteralCotizacionConDetalle(many=True, read_only=True)
     proyectos = ProyectoCotizacionConDetalleSerializer(many=True, read_only=True)
     cotizaciones_adicionales = CotizacionCotizacionConDetalleSerializer(many=True, read_only=True)
     cotizacion_inicial = CotizacionCotizacionConDetalleSerializer(read_only=True)

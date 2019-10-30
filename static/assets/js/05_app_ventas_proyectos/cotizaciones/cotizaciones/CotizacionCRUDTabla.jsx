@@ -111,7 +111,7 @@ const Tabla = memo((props) => {
                                             </div>}
                                             {cotizaciones_adicionales.length > 0 &&
                                             cotizaciones_adicionales.map(c =>
-                                                <div>
+                                                <div key={c.id}>
                                                     <Link
                                                         to={`/app/ventas_proyectos/cotizaciones/cotizaciones/detail/${c.id}`}>
                                                         {c.unidad_negocio}-{c.nro_cotizacion}

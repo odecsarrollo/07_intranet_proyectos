@@ -16,7 +16,6 @@ import ArchivosCotizacionList from '../../../04_app_proyectos/proyectos/archivos
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome/index';
 import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
 import Typography from "@material-ui/core/Typography";
-import Toolbar from "@material-ui/core/Toolbar";
 
 const Detail = memo(props => {
     const dispatch = useDispatch();

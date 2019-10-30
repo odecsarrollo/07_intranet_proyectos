@@ -28,7 +28,10 @@ from .api_serializers import (
     MiembroLiteralSerializer,
     ArchivoLiteralSerializer,
     ArchivoProyectoSerializer,
-    ProyectoConDetalleSerializer, ProyectoMaestraSerializer)
+    ProyectoConDetalleSerializer,
+    ProyectoMaestraSerializer,
+    ConsecutivoProyectoSerializer
+)
 from mano_obra.models import HoraHojaTrabajo, HoraTrabajoColaboradorLiteralInicial
 from .mixins import LiteralesPDFMixin
 
@@ -87,6 +90,30 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         self.serializer_class = ProyectoSerializer
         return super().list(request, *args, **kwargs)
+
+    @action(detail=False, http_method_names=['get', ])
+    def proyectos_con_cotizaciones(self, request):
+        self.queryset = Proyecto.sumatorias.annotate(
+            cantidad_conexiones=Count('cotizaciones')
+        ).prefetch_related('cotizaciones').filter(
+            cantidad_conexiones__gt=0
+        ).all()
+        serializer = self.get_serializer(self.queryset, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, http_method_names=['get', ])
+    def listar_consecutivo_proyectos(self, request):
+        qs = Proyecto.objects.prefetch_related(
+            'cotizaciones',
+            'cotizaciones__cotizaciones_adicionales',
+            'mis_literales',
+            'mis_literales__cotizaciones',
+            'mis_literales__cotizaciones__cotizacion_inicial',
+            'mis_literales__cotizaciones__cotizaciones_adicionales',
+        ).all()
+        self.serializer_class = ConsecutivoProyectoSerializer
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)
 
     @action(detail=False, http_method_names=['get', ])
     def listar_proyectos_x_parametro(self, request):
@@ -190,8 +217,7 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
 
 class LiteralViewSet(viewsets.ModelViewSet):
     queryset = Literal.objects.select_related(
-        'proyecto',
-        'proyecto__cotizacion__cliente'
+        'proyecto'
     ).all()
     serializer_class = LiteralSerializer
 
@@ -202,7 +228,6 @@ class LiteralViewSet(viewsets.ModelViewSet):
         search_fields = ['id_literal', 'descripcion']
         if search_fields:
             qs = query_varios_campos(self.queryset, search_fields, parametro)
-        qs = qs.filter(cotizacion__isnull=True)
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 

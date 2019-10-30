@@ -18,6 +18,12 @@ const MenuConsultas = () => (
         />
         <DrawerListItem
             size='1x'
+            link='/app/proyectos/cotizaciones_vs_proyectos/list'
+            texto='Cotizaciones vs Proyectos'
+            type='main'
+        />
+        <DrawerListItem
+            size='1x'
             link='/app/proyectos/proyectos/reporte_costos'
             texto='Reporte Costos Proyectos 1'
             type='main'

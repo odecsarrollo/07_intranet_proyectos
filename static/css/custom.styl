@@ -14,10 +14,12 @@ $odecopack-color_5 = #ECEDEF
 
 .tabla-maestra
   font-size 11px
+
   tbody
     .tr-seleccionado
       background-color black !important
       color white !important
+
     tr:hover
       background-color white !important
       color black !important
@@ -27,8 +29,10 @@ $odecopack-color_5 = #ECEDEF
   right 30px
   bottom 40px
   cursor pointer
+
   :hover
     color red
+
   :active
     color green
 
@@ -91,14 +95,18 @@ form
 .boton-index
   a
     color $odecopack-color_1
+
     :hover
       background-color black
       color white !important
       border 2px solid black !important
+
     :active
       text-decoration none
+
     :visit
       text-decoration none
+
     .icono
       border-radius 25px
       border 2px solid $odecopack-color_1
@@ -109,12 +117,52 @@ form
   font-size 10px
   position absolute
   color gray
+
   &.bottom
     bottom 0
+
   &.top
     top -5px
+
   &.right
     right 0px
 
 .form-field-error
   color: red
+
+.consecutivo_proyectos
+  padding 0 !important
+  margin 0 !important
+
+  .header
+    font-size 1rem
+    color $odecopack-color_3
+    font-weight bold
+    position sticky
+    top 64px
+    padding-left 10px
+    background-color #ff9800
+
+  .body
+    font-size 0.7rem
+
+  .row
+    padding 0 !important
+    margin 0 !important
+    border-top solid black 1px
+
+    :first-child
+      border-top none
+
+    for row in 1 2 3 4 5 6 7 8 9 10 11 12
+      align-items center
+      .col-{row}
+        padding 0 !important
+        padding-left 5px !important
+        margin 0 !important
+
+//div
+//  border-top 1px black solid
+//
+//  :last-child
+//    border-top none

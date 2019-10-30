@@ -73,6 +73,17 @@ export const relacionarQuitarProyectoaCotizacion = (id, proyecto_id, options_act
         return callApiMethodPostParameters(current_url_api, id, 'relacionar_quitar_proyecto', params, options)
     }
 };
+export const relacionarQuitarLiteralCotizacion = (id, literal_id, options_action = {}) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        params.append('literal_id', literal_id);
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: response})
+        };
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'relacionar_quitar_literal', params, options)
+    }
+};
 
 export const setRevisadoCotizacion = (id, options_action = {}) => {
     return (dispatch) => {
@@ -105,6 +116,23 @@ export function fetchCotizacionesxParametro(parametro, options_action = {}) {
 export const fetchCotizacionesPidiendoCarpeta = (options_action = {}) => {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/listar_cotizacion_abrir_carpeta`;
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch_all, payload: response})
+        };
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        return fetchListGet(FULL_URL, options);
+    }
+};
+
+export const fetchCotizacionesConProyectos = (options_action = {}) => {
+    return function (dispatch) {
+        const FULL_URL = `${current_url_api}/cotizaciones_con_proyectos`;
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };

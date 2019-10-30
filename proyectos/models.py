@@ -47,6 +47,10 @@ class Literal(models.Model):
     en_cguno = models.BooleanField(default=True)
     abierto = models.BooleanField(default=True)
     miembros = models.ManyToManyField(User, through='MiembroLiteral', related_name='literales')
+    cotizaciones = models.ManyToManyField(
+        Cotizacion,
+        related_name='literales'
+    )
 
     def __str__(self):
         return self.id_literal

@@ -10,6 +10,10 @@ const InfoProyecto = (props) => {
             <div className="col-12">
                 <span><strong>Nombre: </strong><small>{proyecto.nombre}</small></span>
             </div>
+            {proyecto.cliente &&
+            <div className="col-12">
+                <span><strong>Cliente: </strong><small>{proyecto.cliente_nombre}</small></span>
+            </div>}
             <div className="col-12 col-md-6 col-lg-3">
                     <span><strong>Sincronizado: </strong>
                         <FontAwesomeIcon

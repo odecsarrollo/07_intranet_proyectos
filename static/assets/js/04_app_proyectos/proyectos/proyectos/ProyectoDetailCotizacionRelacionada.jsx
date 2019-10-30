@@ -7,7 +7,9 @@ const ProyectoDetailCotizacionRelacionada = props => {
     const {proyecto: {cotizaciones}} = props;
     const {table} = useContext(StylesContext);
     let cotizaciones_proyecto = cotizaciones.map(c => ({
+        literales: [],
         tipo: 1,
+        es_adicional: false,
         id: c.id,
         valor_orden_compra: c.valor_orden_compra,
         costo_presupuestado: c.costo_presupuestado,
@@ -19,6 +21,8 @@ const ProyectoDetailCotizacionRelacionada = props => {
     }));
     cotizaciones.map(c => c.cotizaciones_adicionales.filter(e => e.estado === 'Cierre (Aprobado)').map(a => {
         cotizaciones_proyecto = [...cotizaciones_proyecto, {
+            literales: [a.literales],
+            es_adicional: true,
             tipo: 2,
             id: a.id,
             valor_orden_compra: a.valor_orden_compra,
@@ -37,6 +41,7 @@ const ProyectoDetailCotizacionRelacionada = props => {
             <thead>
             <tr style={table.tr}>
                 <th style={table.td}># Cotizacion</th>
+                <th style={table.td}>Tipo</th>
                 <th style={table.td}>Fec. Creación</th>
                 <th style={table.td}>Fec. Pac. Entrega</th>
                 <th style={table.td}># OC</th>
@@ -50,6 +55,7 @@ const ProyectoDetailCotizacionRelacionada = props => {
                     <Link to={`/app/ventas_proyectos/cotizaciones/cotizaciones/detail/${c.id}`}
                           target="_blank">{c.codigo}</Link>
                 </td>
+                <td style={table.td}>{c.es_adicional ? 'Adicional' : 'Inicial'}</td>
                 <td style={table.td_right}>{fechaFormatoUno(c.created)}</td>
                 <td style={table.td_right}>{fechaFormatoUno(c.fecha_entrega_pactada)}</td>
                 <td style={table.td_right}>{c.orden_compra_nro}</td>
@@ -59,7 +65,7 @@ const ProyectoDetailCotizacionRelacionada = props => {
             </tbody>
             <tfoot>
             <tr>
-                <td style={table.td} colSpan={4}>Total</td>
+                <td style={table.td} colSpan={5}>Total</td>
                 <td style={table.td_right}>{pesosColombianos(cotizaciones_proyecto.map(c => c.valor_orden_compra).reduce(((total, actual) => total + actual)))}</td>
                 <td style={table.td_right}>{pesosColombianos(cotizaciones_proyecto.map(c => c.costo_presupuestado).reduce(((total, actual) => total + actual)))}</td>
             </tr>

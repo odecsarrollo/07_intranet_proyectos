@@ -104,6 +104,12 @@ class Cotizacion(TimeStampedModel):
             return self.contacto_cliente
         return self.cotizacion_inicial.contacto_cotizacion
 
+    @property
+    def es_adicional(self) -> bool:
+        if self.cotizacion_inicial is not None:
+            return True
+        return False
+
 
 class SeguimientoCotizacion(TimeStampedModel):
     TIPO_SEGUIMIENTO_CHOICE = (

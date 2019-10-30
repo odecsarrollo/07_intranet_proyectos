@@ -126,6 +126,7 @@ const CotizacionAbrirCarpetaLista = memo(props => {
 
     useEffect(() => {
         cargarCotizacionesParaCarpetas();
+        return () => dispatch(actions.clearCotizaciones());
     }, []);
 
     return (

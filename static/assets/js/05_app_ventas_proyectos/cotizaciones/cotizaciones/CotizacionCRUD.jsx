@@ -21,7 +21,6 @@ const List = memo((props) => {
         };
     }, []);
     const list = useSelector(state => state.cotizaciones);
-    console.log(list)
     const cotizaciones_permisos = useTengoPermisos(COTIZACIONES);
     const proyectos_permisos = useTengoPermisos(PROYECTOS);
     const method_pool = {
