@@ -1,3 +1,4 @@
+from django.db.models import Count
 from rest_framework.exceptions import ValidationError
 
 from .models import Literal, Proyecto
@@ -28,6 +29,16 @@ def proyecto_crear(
     return proyecto
 
 
+def proyecto_correr_actualizacion_clientes():
+    proyectos = Proyecto.objects.annotate(cantidad_cotizaciones=Count('cotizaciones')).filter(
+        cantidad_cotizaciones__gt=0, cliente__isnull=True).all()
+    for proyecto in proyectos:
+        if proyecto.cotizaciones.exists():
+            cotizacion = proyecto.cotizaciones.first()
+            proyecto.cliente_id = cotizacion.cliente_id
+            proyecto.save()
+
+
 def proyecto_actualizar(
         proyecto_id: int,
         id_proyecto: str,
@@ -52,8 +63,6 @@ def literal_crear(
         descripcion=str,
 ) -> Literal:
     proyecto = Proyecto.objects.get(pk=proyecto_id)
-    print(id_literal)
-    print(proyecto.id_proyecto)
     if '%s-' % proyecto.id_proyecto in id_literal and proyecto.id_proyecto == id_literal:
         raise ValidationError({'_error': 'El id literal no corresponde al proyecto'})
     existe = proyecto.mis_literales.filter(id_literal=id_literal).exists()

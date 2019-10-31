@@ -101,6 +101,8 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         self.serializer_class = ProyectoSerializer
+        from .services import proyecto_correr_actualizacion_clientes
+        proyecto_correr_actualizacion_clientes()
         return super().list(request, *args, **kwargs)
 
     @action(detail=False, http_method_names=['get', ])
