@@ -4,12 +4,14 @@ import {Link} from 'react-router-dom';
 import CreateForm from './forms/ProyectoCrearDesdeCotizacionModalForm';
 import crudHOC from '../../../00_utilities/components/HOC_CRUD2';
 import * as actions from "../../../01_actions/01_index";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 
 import SiNoDialog from '../../../00_utilities/components/ui/dialog/SiNoDialog';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import IconButton from "@material-ui/core/IconButton";
 import {makeStyles} from "@material-ui/core";
+import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
+import {COTIZACIONES} from "../../../permisos";
 
 const useStyles = makeStyles(theme => ({
     iconoDelete: {
@@ -37,7 +39,6 @@ const Lista = (props) => {
         setShowVerificar(false);
         setNotificacionSeleccionada(null);
     };
-    console.log(list)
     const onSi = () => dispatch(actions.setRevisadoCotizacion(notificacion_seleccionada, {callback: () => onNo()}));
     return (
         <Fragment>
@@ -110,11 +111,11 @@ const Lista = (props) => {
 const CRUD = crudHOC(CreateForm, Lista);
 
 const CotizacionAbrirCarpetaLista = memo(props => {
-    const {permisos_object, history} = props;
-    let {lista} = props;
+    const {cargarDatosConsecutivoProyectos} = props;
+    const permisos_object = useTengoPermisos(COTIZACIONES);
+    let lista = useSelector(state => state.cotizaciones);
     lista = _.pickBy(lista, c => c.abrir_carpeta || c.revisar);
     const dispatch = useDispatch();
-    const cargarCotizacionesParaCarpetas = () => dispatch(actions.fetchCotizacionesPidiendoCarpeta());
 
     const createProyecto = (item, options) => dispatch(actions.createProyecto({...item, en_cguno: false}, options));
 
@@ -125,17 +126,28 @@ const CotizacionAbrirCarpetaLista = memo(props => {
         updateObjectMethod: null,
     };
 
+    const cargarDatos = (callback) => dispatch(actions.fetchCotizacionesPidiendoCarpeta({callback}));
+
     useEffect(() => {
-        cargarCotizacionesParaCarpetas();
+        cargarDatos();
         return () => dispatch(actions.clearCotizaciones());
     }, []);
 
     return (
         <CRUD
-            posCreateMethod={(item) => history.push(`/app/proyectos/proyectos/detail/${item.id}`)}
+            posCreateMethod={(item) => {
+                window.open(`/app/proyectos/proyectos/detail/${item.id}`, "_blank");
+                cargarDatos(cargarDatosConsecutivoProyectos);
+            }}
             method_pool={method_pool}
             list={lista}
-            permisos_object={permisos_object}
+            permisos_object={{
+                ...permisos_object,
+                add: false,
+                delete: false,
+                change: true,
+                list: true
+            }}
             plural_name=''
             singular_name='Proyecto'
         />

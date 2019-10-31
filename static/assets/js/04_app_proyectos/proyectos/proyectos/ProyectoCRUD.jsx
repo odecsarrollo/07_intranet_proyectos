@@ -11,7 +11,6 @@ import crudHOC from '../../../00_utilities/components/HOC_CRUD2';
 
 const CRUD = crudHOC(CreateForm, Tabla);
 
-import CotizacionAbrirCarpetaLista from './ProyectoCrearDesdeCotizacion';
 import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
 
 const List = memo(props => {
@@ -25,7 +24,6 @@ const List = memo(props => {
             dispatch(actions.clearProyectos());
         };
     }, []);
-    const cotizaciones_list = useSelector(state => state.cotizaciones);
     const list = useSelector(state => state.proyectos);
     const permisos_proyectos = useTengoPermisos(PROYECTOS);
     const permisos_cotizaciones = useTengoPermisos(COTIZACIONES);
@@ -37,19 +35,6 @@ const List = memo(props => {
     };
     return (
         <Fragment>
-
-            <CotizacionAbrirCarpetaLista
-                cargarDatos={cargarDatos}
-                lista={cotizaciones_list}
-                permisos_object={{
-                    ...permisos_proyectos,
-                    add: false,
-                    delete: false,
-                    change: true,
-                    list: true
-                }}
-                {...props}
-            />
             <CRUD
                 posSummitMethod={() => cargarDatos()}
                 method_pool={method_pool}

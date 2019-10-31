@@ -52,7 +52,9 @@ def literal_crear(
         descripcion=str,
 ) -> Literal:
     proyecto = Proyecto.objects.get(pk=proyecto_id)
-    if '%s-' % proyecto.id_proyecto not in id_literal:
+    print(id_literal)
+    print(proyecto.id_proyecto)
+    if '%s-' % proyecto.id_proyecto in id_literal and proyecto.id_proyecto == id_literal:
         raise ValidationError({'_error': 'El id literal no corresponde al proyecto'})
     existe = proyecto.mis_literales.filter(id_literal=id_literal).exists()
     if existe:
@@ -79,7 +81,7 @@ def literal_actualizar(
     if cambio_id_literal and literal.en_cguno:
         raise ValidationError(
             {'_error': 'El id del literal no se puede cambiar, ya esta sincronizado con el sistema de información'})
-    if '%s-' % proyecto.id_proyecto not in id_literal:
+    if '%s-' % proyecto.id_proyecto in id_literal and proyecto.id_proyecto == id_literal:
         raise ValidationError({'_error': 'El id literal no corresponde al proyecto'})
     literal.id_literal = id_literal
     literal.proyecto = proyecto
