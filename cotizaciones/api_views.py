@@ -38,7 +38,7 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         self.serializer_class = CotizacionListSerializer
-        self.queryset=Cotizacion.sumatorias.all()
+        self.queryset = Cotizacion.sumatorias.all()
         return super().list(request, *args, **kwargs)
 
     @action(detail=False, http_method_names=['get', ])
@@ -169,7 +169,14 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
         year = int(request.GET.get('ano', datetime.datetime.now().year))
         current_date = datetime.datetime.now()
         current_quarter = int(request.GET.get('trimestre', ceil(current_date.month / 3)))
-        qsBase = self.get_queryset().annotate(
+        self.serializer_class = CotizacionTuberiaVentaSerializer
+        qsBase = Cotizacion.objects.select_related(
+            'cliente',
+            'contacto_cliente',
+            'cotizacion_inicial__cliente',
+            'cotizacion_inicial__contacto_cliente',
+            'responsable'
+        ).annotate(
             valor_orden_compra_mes=Case(
                 When(
                     Q(orden_compra_fecha__year=current_date.year) &

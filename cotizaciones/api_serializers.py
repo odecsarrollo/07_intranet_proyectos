@@ -243,6 +243,7 @@ class CotizacionSerializer(serializers.ModelSerializer):
 
 
 class CotizacionTuberiaVentaSerializer(serializers.ModelSerializer):
+    valor_orden_compra_mes = serializers.DecimalField(decimal_places=2, max_digits=20, read_only=True)
     color_tuberia_ventas = serializers.SerializerMethodField()
     porcentaje_tuberia_ventas = serializers.SerializerMethodField()
     cliente_nombre = serializers.CharField(source='cliente_cotizacion.nombre', read_only=True)
@@ -294,6 +295,8 @@ class CotizacionTuberiaVentaSerializer(serializers.ModelSerializer):
             'id',
             'color_tuberia_ventas',
             'nro_cotizacion',
+            'valor_orden_compra_mes',
+            'valor_orden_compra',
             'unidad_negocio',
             'cliente_nombre',
             'contacto_cliente_nombre',
@@ -378,12 +381,12 @@ class CotizacionConDetalleSerializer(CotizacionSerializer):
 
 
 class CotizacionListSerializer(serializers.ModelSerializer):
+    color_tuberia_ventas = serializers.SerializerMethodField()
+    porcentaje_tuberia_ventas = serializers.SerializerMethodField()
     cliente_nombre = serializers.CharField(source='cliente_cotizacion.nombre', read_only=True)
     contacto_cliente_nombre = serializers.CharField(source='contacto_cotizacion.full_nombre', read_only=True)
     responsable_actual = serializers.CharField(source='responsable.username', read_only=True)
     responsable_actual_nombre = serializers.CharField(source='responsable.get_full_name', read_only=True)
-    color_tuberia_ventas = serializers.SerializerMethodField()
-    porcentaje_tuberia_ventas = serializers.SerializerMethodField()
 
     proyectos = ProyectoCotizacionConDetalleSerializer(many=True, read_only=True)
 
@@ -441,16 +444,15 @@ class CotizacionListSerializer(serializers.ModelSerializer):
             'responsable_actual',
             'descripcion_cotizacion',
             'estado',
-            'valor_ofertado',
             'orden_compra_fecha',
             'responsable_actual_nombre',
             'porcentaje_tuberia_ventas',
             'color_tuberia_ventas',
             'unidad_negocio',
             'contacto_cliente_nombre',
-
             'cliente_nombre',
             'fecha_limite_segumiento_estado',
+            'valor_ofertado',
         ]
         read_only_fields = fields
 
