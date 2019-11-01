@@ -24,8 +24,6 @@ let Form = memo(props => {
         hoja_trabajo,
     } = props;
 
-    console.log(initialValues)
-
     const proyectos_list = useSelector(state => state.proyectos);
     const literales_list = useSelector(state => state.literales);
 

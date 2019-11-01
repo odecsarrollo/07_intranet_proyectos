@@ -30,8 +30,8 @@ from .api_serializers import (
     ArchivoProyectoSerializer,
     ProyectoConDetalleSerializer,
     ProyectoMaestraSerializer,
-    ConsecutivoProyectoSerializer
-)
+    ConsecutivoProyectoSerializer,
+    LiteralMaestraSerializer)
 from mano_obra.models import HoraHojaTrabajo, HoraTrabajoColaboradorLiteralInicial
 from .mixins import LiteralesPDFMixin
 
@@ -496,10 +496,10 @@ class LiteralViewSet(viewsets.ModelViewSet):
     @action(detail=False, http_method_names=['get', ])
     def listar_x_proyecto(self, request):
         proyecto_id = request.GET.get('proyecto_id')
+        self.serializer_class = LiteralMaestraSerializer
         qs = None
         if proyecto_id:
             qs = self.get_queryset().filter(proyecto_id=proyecto_id)
-
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 

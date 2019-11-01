@@ -221,6 +221,18 @@ class LiteralSerializer(serializers.ModelSerializer):
         }
 
 
+class LiteralMaestraSerializer(CustomSerializerMixin, serializers.ModelSerializer):
+    class Meta:
+        model = Literal
+        fields = [
+            'id',
+            'id_literal',
+            'abierto',
+            'descripcion',
+        ]
+        read_only_fields = fields
+
+
 class ProyectoMaestraSerializer(CustomSerializerMixin, serializers.ModelSerializer):
     to_string = serializers.SerializerMethodField()
 
