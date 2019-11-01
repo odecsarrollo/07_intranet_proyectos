@@ -170,7 +170,6 @@ function crudHOC(CreateForm, Tabla) {
                 }
             }
         };
-
         return (
             <ValidarPermisos can_see={permisos_object.list} nombre={plural_name}>
                 {

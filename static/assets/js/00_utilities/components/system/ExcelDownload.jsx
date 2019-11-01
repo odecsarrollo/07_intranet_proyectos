@@ -7,7 +7,7 @@ const ExcelDownload = (props) => {
     if (data.length === 0) {
         return <Fragment></Fragment>
     }
-    const data_descarga = _.map(data, e => _.pickBy(e, s => !Array.isArray(s)));
+    let data_descarga = _.map(data, e => _.pickBy(e, s => !Array.isArray(s) && typeof s !== 'object'));
     const ExcelFile = ReactExport.ExcelFile;
     const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
     const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
