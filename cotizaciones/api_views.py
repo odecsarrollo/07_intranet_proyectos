@@ -38,7 +38,17 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         self.serializer_class = CotizacionListSerializer
-        self.queryset = Cotizacion.sumatorias.all()
+        self.queryset = Cotizacion.objects.select_related(
+            'cliente',
+            'contacto_cliente',
+            'cotizacion_inicial__cliente',
+            'cotizacion_inicial__contacto_cliente',
+            'responsable'
+        ).prefetch_related(
+            'proyectos',
+            'cotizacion_inicial__cotizaciones_adicionales',
+            'cotizaciones_adicionales__cotizaciones_adicionales'
+        ).all()
         return super().list(request, *args, **kwargs)
 
     @action(detail=False, http_method_names=['get', ])

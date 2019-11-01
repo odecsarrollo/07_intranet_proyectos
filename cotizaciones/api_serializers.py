@@ -383,15 +383,14 @@ class CotizacionConDetalleSerializer(CotizacionSerializer):
 class CotizacionListSerializer(serializers.ModelSerializer):
     color_tuberia_ventas = serializers.SerializerMethodField()
     porcentaje_tuberia_ventas = serializers.SerializerMethodField()
+
     cliente_nombre = serializers.CharField(source='cliente_cotizacion.nombre', read_only=True)
     contacto_cliente_nombre = serializers.CharField(source='contacto_cotizacion.full_nombre', read_only=True)
     responsable_actual = serializers.CharField(source='responsable.username', read_only=True)
     responsable_actual_nombre = serializers.CharField(source='responsable.get_full_name', read_only=True)
 
     proyectos = ProyectoCotizacionConDetalleSerializer(many=True, read_only=True)
-
     cotizaciones_adicionales = CotizacionCotizacionConDetalleSerializer(many=True, read_only=True)
-
     cotizacion_inicial = CotizacionCotizacionConDetalleSerializer(read_only=True)
 
     def get_color_tuberia_ventas(self, obj):
@@ -441,16 +440,16 @@ class CotizacionListSerializer(serializers.ModelSerializer):
             'proyectos',
             'cotizaciones_adicionales',
             'cotizacion_inicial',
-            'responsable_actual',
             'descripcion_cotizacion',
             'estado',
             'orden_compra_fecha',
+            'cliente_nombre',
+            'contacto_cliente_nombre',
+            'responsable_actual',
             'responsable_actual_nombre',
             'porcentaje_tuberia_ventas',
             'color_tuberia_ventas',
             'unidad_negocio',
-            'contacto_cliente_nombre',
-            'cliente_nombre',
             'fecha_limite_segumiento_estado',
             'valor_ofertado',
         ]
