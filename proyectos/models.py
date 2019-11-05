@@ -27,6 +27,7 @@ class Proyecto(models.Model):
 
     class Meta:
         permissions = [
+            ("list_consecutivo_proyectos", "Can list consecutivo proyectos"),
             ("list_proyecto", "Can see list proyectos"),
             ("detail_proyecto", "Can see detail proyecto"),
             ("valor_proyecto", "Ver valor proyecto"),

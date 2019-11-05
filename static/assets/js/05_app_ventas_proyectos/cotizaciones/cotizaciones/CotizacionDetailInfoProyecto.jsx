@@ -1,4 +1,4 @@
-import React, {Fragment, useState} from 'react';
+import React, {useState} from 'react';
 import * as actions from "../../../01_actions/01_index";
 import {useSelector} from "react-redux/es/hooks/useSelector";
 import DialogSeleccionar from "../../../00_utilities/components/ui/search_and_select/SearchAndSelect";
@@ -8,7 +8,7 @@ import MyDialogButtonDelete from "../../../00_utilities/components/ui/dialog/del
 
 const CotizacionDetailInfoProyecto = (props) => {
     const dispatch = useDispatch();
-    const {cotizacion, cotizacion: {proyectos}} = props;
+    const {cotizacion, cotizacion: {proyectos}, permisos_cotizacion} = props;
     const [relacionar_proyecto, setRelacionarProyecto] = useState(false);
 
     const relacionarQuitarProyecto = (proyecto_id) => dispatch(actions.relacionarQuitarProyectoaCotizacion(cotizacion.id, proyecto_id));
@@ -25,13 +25,14 @@ const CotizacionDetailInfoProyecto = (props) => {
             marginBottom: '10px'
         }}>
             <strong>Proyectos: </strong>
+            {permisos_cotizacion.rel_cotizacion_proyecto &&
             <span
                 className='puntero'
                 style={{color: 'red'}}
                 onClick={() => setRelacionarProyecto(true)}
             >
                 Relacionar
-            </span>
+            </span>}
             <div className="col-12">
                 {proyectos.length > 0 && <div className='row'>
                     {_.orderBy(proyectos, ['id_proyecto', 'asc']).map(p => <div

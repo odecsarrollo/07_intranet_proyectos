@@ -73,6 +73,13 @@ class Cotizacion(TimeStampedModel):
 
     class Meta:
         permissions = [
+            ['list_cotizaciones_abrir_carpeta', 'Puede listar cotizaciones para abrir carpeta'],
+            ['list_cotizaciones_notificaciones_consecutivo_proyectos',
+             'Puede listar cotizaciones para notificaciones consecutivo proyectos'],
+            ['eliminar_cotizacion_notificacion_consecutivo_proyectos',
+             'Puede eliminar notificacion cotizaciones en consecutivo proyectos'],
+            ['rel_cotizacion_adicional_a_literal', 'Puede relacionar cotizacion adicional a literal'],
+            ['rel_cotizacion_proyecto', 'Puede relacionar cotizacion a proyecto'],
             ['list_cotizacion', 'Puede listar cotizaciones'],
             ['detail_cotizacion', 'Puede ver detalle cotizacion'],
             ['gestionar_cotizacion', 'Puede gestionar cotizacion'],

@@ -1,4 +1,4 @@
-import React, {Fragment, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../01_actions/01_index";
 import {PROYECTOS} from "../../permisos";
@@ -6,6 +6,7 @@ import Tabla from './ConsecutivoProyectoTabla';
 
 import crudHOC from '../../00_utilities/components/HOC_CRUD2';
 import useTengoPermisos from "../../00_utilities/hooks/useTengoPermisos";
+import ValidarPermisos from "../../permisos/validar_permisos";
 
 const CRUD = crudHOC(null, Tabla);
 
@@ -22,7 +23,7 @@ const ConsecutivoProyecto = (props) => {
     }, []);
     const method_pool = {};
     return (
-        <Fragment>
+        <ValidarPermisos can_see={permisos_proyectos.list_consecutivo_proyectos} nombre='Consecutivo Proyectos'>
             <CRUD
                 method_pool={method_pool}
                 list={_.orderBy(proyectos_list, ['id_proyecto'], ['desc'])}
@@ -31,7 +32,7 @@ const ConsecutivoProyecto = (props) => {
                 singular_name=''
                 cargarDatos={cargarDatos}
             />
-        </Fragment>
+        </ValidarPermisos>
     )
 
 };

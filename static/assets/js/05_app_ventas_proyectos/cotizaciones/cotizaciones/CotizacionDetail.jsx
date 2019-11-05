@@ -2,7 +2,7 @@ import React, {memo, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../../01_actions/01_index";
 import CargarDatos from "../../../00_utilities/components/system/cargar_datos";
-import {Titulo, SinObjeto} from "../../../00_utilities/templates/fragmentos";
+import {SinObjeto} from "../../../00_utilities/templates/fragmentos";
 import ValidarPermisos from "../../../permisos/validar_permisos";
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import {COTIZACIONES, PROYECTOS, ARCHIVOS_COTIZACIONES} from "../../../permisos";
@@ -140,7 +140,8 @@ const Detail = memo(props => {
             <div className="row">
                 <div className="col-12">
                     <Typography variant="h3" color="inherit" noWrap>
-                        Cotización {object.nro_cotizacion && `${object.unidad_negocio}-${object.nro_cotizacion}`} <small> - {object.estado}</small>
+                        Cotización {object.nro_cotizacion && `${object.unidad_negocio}-${object.nro_cotizacion}`}
+                        <small> - {object.estado}</small>
                     </Typography>
                 </div>
                 <div className="col-12">

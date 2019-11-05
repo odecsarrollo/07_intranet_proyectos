@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Lista = (props) => {
-    const {list, onSelectItemEdit} = props;
+    const {list, onSelectItemEdit, permisos_object} = props;
     const para_abrir_carpeta = _.pickBy(list, a => a.abrir_carpeta);
     const para_notificar = _.pickBy(list, a => a.revisar);
     const [show_verificar, setShowVerificar] = useState(false);
@@ -73,6 +73,7 @@ const Lista = (props) => {
             </SiNoDialog>}
             <div className={classes.root}>
                 {_.size(para_notificar) > 0 &&
+                permisos_object.list_cotizaciones_notificaciones_consecutivo_proyectos &&
                 <ExpansionPanel>
                     <ExpansionPanelSummary
                         expandIcon={<FontAwesomeIcon
@@ -98,6 +99,7 @@ const Lista = (props) => {
                                         to={`/app/ventas_proyectos/cotizaciones/cotizaciones/detail/${c.cotizacion_inicial}`}>
                                         ({c.cotizacion_inicial_unidad_negocio}-{c.cotizacion_inicial_nro})
                                     </Link>
+                                    {permisos_object.eliminar_cotizacion_notificacion_consecutivo_proyectos &&
                                     <IconButton
                                         style={{
                                             margin: 0,
@@ -110,13 +112,14 @@ const Lista = (props) => {
                                             icon={'trash'}
                                             size='sm'
                                         />
-                                    </IconButton>
+                                    </IconButton>}
                                 </div>
                             )}
                         </div>
                     </ExpansionPanelDetails>
                 </ExpansionPanel>}
                 {_.size(para_abrir_carpeta) > 0 &&
+                permisos_object.list_cotizaciones_abrir_carpeta &&
                 <ExpansionPanel>
                     <ExpansionPanelSummary
                         expandIcon={<FontAwesomeIcon
@@ -132,10 +135,14 @@ const Lista = (props) => {
                     <ExpansionPanelDetails>
                         <div className='row'>
                             {_.map(para_abrir_carpeta, c =>
-                                <div className={clsx(classes.element_div, 'col-12 puntero')} key={c.id}
-                                     onClick={() => {
-                                         onSelectItemEdit(c);
-                                     }}>
+                                <div
+                                    className={clsx(classes.element_div, `col-12 ${permisos_object.rel_cotizacion_proyecto ? 'puntero' : ''}`)}
+                                    key={c.id}
+                                    onClick={() => {
+                                        if (permisos_object.rel_cotizacion_proyecto) {
+                                            onSelectItemEdit(c)
+                                        }
+                                    }}>
                                     {`${c.unidad_negocio}-${c.nro_cotizacion} ${c.descripcion_cotizacion} `}<strong>({c.cliente_nombre})</strong>
                                 </div>
                             )}

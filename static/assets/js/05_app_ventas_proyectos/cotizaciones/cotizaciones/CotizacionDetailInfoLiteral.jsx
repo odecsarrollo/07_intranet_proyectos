@@ -8,7 +8,7 @@ import MyDialogButtonDelete from "../../../00_utilities/components/ui/dialog/del
 
 const CotizacionDetailInfoLiteral = (props) => {
     const dispatch = useDispatch();
-    const {cotizacion, cotizacion: {literales}} = props;
+    const {cotizacion, cotizacion: {literales}, permisos_cotizacion} = props;
     const [relacionar_literal, setRelacionarLiteral] = useState(false);
     const relacionarQuitarLiteral = (proyecto_id) => dispatch(actions.relacionarQuitarLiteralCotizacion(cotizacion.id, proyecto_id));
     const buscarLiteral = (busqueda) => {
@@ -23,13 +23,14 @@ const CotizacionDetailInfoLiteral = (props) => {
             marginBottom: '10px'
         }}>
             <strong>Literales : </strong>
+            {permisos_cotizacion.rel_cotizacion_adicional_a_literal &&
             <span
                 className='puntero'
                 style={{color: 'red'}}
                 onClick={() => setRelacionarLiteral(true)}
             >
                 Relacionar
-            </span>
+            </span>}
             <div className="col-12">
                 {literales.length > 0 && <div className="row">
                     {literales.map(l => <div key={l.id} className='col-6 col-sm-4 col-md-3'>

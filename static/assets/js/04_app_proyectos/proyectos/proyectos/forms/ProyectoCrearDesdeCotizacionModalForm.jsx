@@ -1,4 +1,4 @@
-import React, {memo, useState, useEffect} from 'react';
+import React, {memo, useState} from 'react';
 import {reduxForm} from 'redux-form';
 import {connect, useSelector, useDispatch} from "react-redux";
 import {MyFormTagModal} from '../../../../00_utilities/components/ui/forms/MyFormTagModal';

@@ -7,7 +7,7 @@ import CotizacionDetailInfoProyecto from './CotizacionDetailInfoProyecto';
 import CotizacionDetailInfoCotizacionAdicional from './CotizacionDetailInfoCotizacionAdicional';
 
 const CotizacionInfo = memo(props => {
-    const {object, object: {estado}} = props;
+    const {object, object: {estado}, permisos_cotizacion} = props;
     const {cotizacion_inicial} = object;
     return (
         <div className="row">
@@ -59,13 +59,13 @@ const CotizacionInfo = memo(props => {
             <Fragment>
                 {object.es_adicional &&
                 <div className="col-12 col-lg-5">
-                    <CotizacionDetailInfoLiteral cotizacion={object}/>
+                    <CotizacionDetailInfoLiteral cotizacion={object} permisos_cotizacion={permisos_cotizacion}/>
                 </div>}
 
                 {!object.es_adicional &&
                 <Fragment>
                     <div className="col-12 col-lg-4">
-                        <CotizacionDetailInfoProyecto cotizacion={object}/>
+                        <CotizacionDetailInfoProyecto cotizacion={object} permisos_cotizacion={permisos_cotizacion}/>
                     </div>
                     <div className="col-12 col-lg-5">
                         <CotizacionDetailInfoCotizacionAdicional cotizacion={object}/>

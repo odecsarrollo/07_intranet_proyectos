@@ -3,6 +3,8 @@ import {Link} from "react-router-dom";
 import TextField from '@material-ui/core/TextField';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import CotizacionAbrirCarpetaLista from "../proyectos/proyectos/ProyectoCrearDesdeCotizacion";
+import useTengoPermisos from "../../00_utilities/hooks/useTengoPermisos";
+import {COTIZACIONES} from "../../permisos";
 
 const ConsecutivoProyectoTabla = (props) => {
     let {list, cargarDatos} = props;
@@ -10,6 +12,7 @@ const ConsecutivoProyectoTabla = (props) => {
     const [busqueda_tipo_proyecto, setBusquedaTipoProyecto] = useState('TODO');
     const [busqueda_abierto, setBusquedaAbierto] = useState('TODO');
     const opciones = _.uniq(_.map(list, e => e.id_proyecto.substring(0, 2)));
+    const permisos_cotizaciones = useTengoPermisos(COTIZACIONES);
     if (busqueda_tipo_proyecto !== 'TODO') {
         list = _.pickBy(list, proyecto => proyecto.id_proyecto.substring(0, 2) === busqueda_tipo_proyecto)
     }
@@ -33,7 +36,9 @@ const ConsecutivoProyectoTabla = (props) => {
     }
     return (
         <div>
-            <CotizacionAbrirCarpetaLista cargarDatosConsecutivoProyectos={cargarDatos}/>
+            {(permisos_cotizaciones.list_cotizaciones_abrir_carpeta ||
+                permisos_cotizaciones.list_cotizaciones_notificaciones_consecutivo_proyectos) &&
+            <CotizacionAbrirCarpetaLista cargarDatosConsecutivoProyectos={cargarDatos}/>}
             <div className="row">
                 <div className="col-12 col-md-6 col-lg-4">
                     <TextField
