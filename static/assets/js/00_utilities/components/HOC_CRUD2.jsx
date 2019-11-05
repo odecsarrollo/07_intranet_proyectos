@@ -230,6 +230,7 @@ function crudHOC(CreateForm, Tabla) {
                             onDelete={onDelete}
                             onSelectForDelete={onSelectForDelete}
                             onSelectItemEdit={onSelectItemEdit}
+                            cargarDatos={cargarDatos}
                         />
                     </div>
                 }

@@ -7,12 +7,9 @@ import {
 
 const BaseProyectoForm = (props) => {
     const {initialValues} = props;
-    console.log(initialValues)
     return (
         <div className="row">
             {
-                //!initialValues ||
-                //(initialValues && !initialValues.en_cguno) &&
                 (!initialValues || (initialValues && !initialValues.en_cguno)) &&
                 <MyTextFieldSimple
                     className="col-12"

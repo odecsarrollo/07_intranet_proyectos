@@ -92,7 +92,9 @@ import {
     faThumbsDown,
     faThumbsUp,
     faHistory,
-    faArrowsAlt
+    faArrowsAlt,
+    faChevronDown,
+    faLink,
 } from '@fortawesome/pro-solid-svg-icons';
 
 library.add(
@@ -155,7 +157,9 @@ library.add(
     faThumbsDown,
     faThumbsUp,
     faHistory,
-    faArrowsAlt
+    faArrowsAlt,
+    faChevronDown,
+    faLink,
 );
 
 const theme = createMuiTheme({

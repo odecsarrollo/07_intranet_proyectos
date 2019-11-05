@@ -1,4 +1,4 @@
-import React, {Fragment, memo, useState} from 'react';
+import React, {Fragment, memo, useEffect, useState} from 'react';
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -49,12 +49,22 @@ const DialogSeleccionar = memo(props => {
         placeholder = 'Colocar Place Holder',
         onCancelar = null,
         selected_item_text = 'nombre',
-        listado = [],
         select_boton_text,
-        titulo_modal = 'Colocar título a modal'
+        titulo_modal = 'Colocar título a modal',
+        onUnMount = null,
+        onMount = null,
     } = props;
-    console.log(listado)
-
+    let {listado = []} = props;
+    useEffect(() => {
+        if (onMount) {
+            onMount()
+        }
+        return () => {
+            if (onUnMount) {
+                onUnMount();
+            }
+        }
+    }, [])
     const [campo_busqueda, setCampoBusqueda] = useState('');
     const buscarProyecto = (busqueda) => {
         onSearch(busqueda);

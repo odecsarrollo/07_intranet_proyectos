@@ -2,9 +2,10 @@ import React, {useState} from 'react';
 import {Link} from "react-router-dom";
 import TextField from '@material-ui/core/TextField';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import CotizacionAbrirCarpetaLista from "../proyectos/proyectos/ProyectoCrearDesdeCotizacion";
 
 const ConsecutivoProyectoTabla = (props) => {
-    let {list} = props;
+    let {list, cargarDatos} = props;
     const [busqueda, setBusqueda] = useState('');
     const [busqueda_tipo_proyecto, setBusquedaTipoProyecto] = useState('TODO');
     const [busqueda_abierto, setBusquedaAbierto] = useState('TODO');
@@ -32,6 +33,7 @@ const ConsecutivoProyectoTabla = (props) => {
     }
     return (
         <div>
+            <CotizacionAbrirCarpetaLista cargarDatosConsecutivoProyectos={cargarDatos}/>
             <div className="row">
                 <div className="col-12 col-md-6 col-lg-4">
                     <TextField
@@ -133,6 +135,7 @@ const ConsecutivoProyectoTabla = (props) => {
                                 <div className="col-7">{literal.id_literal} - {literal.descripcion}</div>
                                 <div className="col-1 text-center">{literal.abierto ?
                                     <FontAwesomeIcon icon={'check-circle'}/> : ''}</div>
+                                {literal.cotizaciones &&
                                 <div className="col-4">
                                     {literal.cotizaciones.map(cotizacion =>
                                         <div key={cotizacion.id} className='row'>
@@ -145,7 +148,7 @@ const ConsecutivoProyectoTabla = (props) => {
                                             </div>
                                             <div className="col-6">{cotizacion.orden_compra_nro}</div>
                                         </div>)}
-                                </div>
+                                </div>}
                             </div>)}
                         </div>
                     </div>)}

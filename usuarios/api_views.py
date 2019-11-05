@@ -139,7 +139,10 @@ class LoginAPI(generics.GenericAPIView):
         if user.is_superuser:
             permissions_list = None
         else:
-            permissions_list = Permission.objects.filter(
+            permissions_list = Permission.objects.select_related(
+                'plus',
+                'content_type'
+            ).filter(
                 Q(user=user) |
                 Q(group__user=user)
             ).distinct()

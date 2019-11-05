@@ -6,7 +6,6 @@ import Tabla from './ConsecutivoProyectoTabla';
 
 import crudHOC from '../../00_utilities/components/HOC_CRUD2';
 import useTengoPermisos from "../../00_utilities/hooks/useTengoPermisos";
-import CotizacionAbrirCarpetaLista from "../proyectos/proyectos/ProyectoCrearDesdeCotizacion";
 
 const CRUD = crudHOC(null, Tabla);
 
@@ -24,7 +23,6 @@ const ConsecutivoProyecto = (props) => {
     const method_pool = {};
     return (
         <Fragment>
-            <CotizacionAbrirCarpetaLista cargarDatosConsecutivoProyectos={cargarDatos}/>
             <CRUD
                 method_pool={method_pool}
                 list={_.orderBy(proyectos_list, ['id_proyecto'], ['desc'])}
