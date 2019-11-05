@@ -166,7 +166,6 @@ const CotizacionAbrirCarpetaLista = memo(props => {
         createObjectMethod: (item, options) => createProyecto(item, options),
         updateObjectMethod: null,
     };
-
     const cargarDatos = (callback) => dispatch(actions.fetchCotizacionesPidiendoCarpeta({callback}));
 
     useEffect(() => {
