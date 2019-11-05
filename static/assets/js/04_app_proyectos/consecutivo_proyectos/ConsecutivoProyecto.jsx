@@ -27,7 +27,7 @@ const ConsecutivoProyecto = (props) => {
                 method_pool={method_pool}
                 list={_.orderBy(proyectos_list, ['id_proyecto'], ['desc'])}
                 permisos_object={{...permisos_proyectos, add: false}}
-                plural_name='Consecutivo de Proyectos'
+                plural_name='Consecutivo de Proyecto'
                 singular_name=''
                 cargarDatos={cargarDatos}
             />
