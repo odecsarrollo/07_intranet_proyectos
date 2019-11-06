@@ -6,6 +6,87 @@ import CotizacionAbrirCarpetaLista from "../proyectos/proyectos/ProyectoCrearDes
 import useTengoPermisos from "../../00_utilities/hooks/useTengoPermisos";
 import {COTIZACIONES} from "../../permisos";
 
+const ConsecutivoProyectoTablaItem = props => {
+    const {
+        proyecto,
+        proyecto: {
+            cotizaciones,
+            mis_literales,
+        }
+    } = props;
+    let cotizaciones_adicionales = [];
+    cotizaciones.filter(c => c.cotizaciones_adicionales.length > 0).map(e => {
+        e.cotizaciones_adicionales.map(ca => {
+            cotizaciones_adicionales = [...cotizaciones_adicionales, ca]
+        });
+    });
+    return (
+        <div className="row">
+            <div className="col-1">
+                <Link
+                    target='_blank'
+                    to={`/app/proyectos/proyectos/detail/${proyecto.id}`}>
+                    {proyecto.id_proyecto}
+                </Link>
+            </div>
+            <div className="col-1">{cotizaciones.map(cotizacion =>
+                <div className="row" key={cotizacion.id}>
+                    <div className="col-12">
+                        <Link
+                            target='_blank'
+                            to={`/app/ventas_proyectos/cotizaciones/cotizaciones/detail/${cotizacion.id}`}>
+                            {cotizacion.unidad_negocio}-{cotizacion.nro_cotizacion}
+                        </Link>
+                    </div>
+                    <div className="col-12">
+                        {cotizacion.orden_compra_nro}
+                    </div>
+                </div>)}</div>
+            <div className="col-2">{proyecto.cliente_nombre}</div>
+            <div className="col-8">
+                {cotizaciones_adicionales.length > 0 &&
+                <div className="row">
+                    <div className="col-7"></div>
+                    <div className="col-1"></div>
+                    <div className="col-4">
+                        {_.map(cotizaciones_adicionales, c => <div className="row" key={c.id}>
+                            <div className="col-6">
+                                <Link
+                                    target='_blank'
+                                    to={`/app/ventas_proyectos/cotizaciones/cotizaciones/detail/${c.id}`}>
+                                    {c.unidad_negocio}-{c.nro_cotizacion}
+                                </Link>
+                            </div>
+                            <div className="col-6">
+                                {c.orden_compra_nro}
+                            </div>
+                        </div>)}
+                    </div>
+                </div>}
+                {mis_literales.map(literal => <div className="row" key={literal.id}>
+                    <div className="col-7">{literal.id_literal} - {literal.descripcion}</div>
+                    <div className="col-1 text-center">{literal.abierto ?
+                        <FontAwesomeIcon icon={'check-circle'}/> : ''}</div>
+                    {literal.cotizaciones &&
+                    <div className="col-4">
+                        {literal.cotizaciones.map(cotizacion =>
+                            <div key={cotizacion.id} className='row'>
+                                <div className="col-6">
+                                    <Link
+                                        target='_blank'
+                                        to={`/app/ventas_proyectos/cotizaciones/cotizaciones/detail/${cotizacion.id}`}>
+                                        {cotizacion.unidad_negocio}-{cotizacion.nro_cotizacion}
+                                    </Link>
+                                </div>
+                                <div className="col-6">{cotizacion.orden_compra_nro}</div>
+                            </div>)}
+                    </div>}
+                </div>)}
+            </div>
+        </div>
+    )
+};
+
 const ConsecutivoProyectoTabla = (props) => {
     let {list, cargarDatos} = props;
     const [busqueda, setBusqueda] = useState('');
@@ -113,50 +194,7 @@ const ConsecutivoProyectoTabla = (props) => {
                     </div>
                 </div>
                 <div className="col-12 body">
-                    {_.map(list, proyecto => <div className="row" key={proyecto.id}>
-                        <div className="col-1">
-                            <Link
-                                target='_blank'
-                                to={`/app/proyectos/proyectos/detail/${proyecto.id}`}>
-                                {proyecto.id_proyecto}
-                            </Link>
-                        </div>
-                        <div className="col-1">{proyecto.cotizaciones.map(cotizacion =>
-                            <div className="row" key={cotizacion.id}>
-                                <div className="col-12">
-                                    <Link
-                                        target='_blank'
-                                        to={`/app/ventas_proyectos/cotizaciones/cotizaciones/detail/${cotizacion.id}`}>
-                                        {cotizacion.unidad_negocio}-{cotizacion.nro_cotizacion}
-                                    </Link>
-                                </div>
-                                <div className="col-12">
-                                    {cotizacion.orden_compra_nro}
-                                </div>
-                            </div>)}</div>
-                        <div className="col-2">{proyecto.cliente_nombre}</div>
-                        <div className="col-8">
-                            {proyecto.mis_literales.map(literal => <div className="row" key={literal.id}>
-                                <div className="col-7">{literal.id_literal} - {literal.descripcion}</div>
-                                <div className="col-1 text-center">{literal.abierto ?
-                                    <FontAwesomeIcon icon={'check-circle'}/> : ''}</div>
-                                {literal.cotizaciones &&
-                                <div className="col-4">
-                                    {literal.cotizaciones.map(cotizacion =>
-                                        <div key={cotizacion.id} className='row'>
-                                            <div className="col-6">
-                                                <Link
-                                                    target='_blank'
-                                                    to={`/app/ventas_proyectos/cotizaciones/cotizaciones/detail/${cotizacion.id}`}>
-                                                    {cotizacion.unidad_negocio}-{cotizacion.nro_cotizacion}
-                                                </Link>
-                                            </div>
-                                            <div className="col-6">{cotizacion.orden_compra_nro}</div>
-                                        </div>)}
-                                </div>}
-                            </div>)}
-                        </div>
-                    </div>)}
+                    {_.map(list, proyecto => <ConsecutivoProyectoTablaItem key={proyecto.id} proyecto={proyecto}/>)}
                 </div>
             </div>
         </div>
