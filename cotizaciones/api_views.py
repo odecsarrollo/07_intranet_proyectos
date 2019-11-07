@@ -1,7 +1,7 @@
-import datetime
 from math import ceil
 from django.db.models import Q, When, Case, DecimalField, Value, F, Count
 from django.db.models.functions import Coalesce
+from django.utils import timezone
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -147,8 +147,8 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
             'responsable'
         ).all()
         self.serializer_class = CotizacionTuberiaVentaSerializer
-        month = datetime.datetime.now().month
-        year = datetime.datetime.now().year
+        month = timezone.datetime.now().month
+        year = timezone.datetime.now().year
         qs = self.get_queryset().filter(
             Q(estado__in=[
                 'Cita/Generación Interés',
@@ -170,8 +170,8 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
 
     @action(detail=False, http_method_names=['get', ])
     def cotizaciones_resumen_tuberia_ventas(self, request):
-        year = int(request.GET.get('ano', datetime.datetime.now().year))
-        current_date = datetime.datetime.now()
+        year = int(request.GET.get('ano', timezone.datetime.now().year))
+        current_date = timezone.datetime.now()
         current_quarter = int(request.GET.get('trimestre', ceil(current_date.month / 3)))
         self.serializer_class = CotizacionTuberiaVentaSerializer
         qsBase = Cotizacion.objects.select_related(

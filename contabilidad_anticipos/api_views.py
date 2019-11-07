@@ -1,5 +1,7 @@
 from django.core.exceptions import ValidationError
+from django.db.models import Q
 from django.http import HttpResponse
+from django.utils import timezone
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -86,6 +88,23 @@ class ProformaAnticipoViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         self.serializer_class = ProformaAnticipoConDetalleSerializer
         return super().update(request, *args, **kwargs)
+
+    @action(detail=False, methods=['get'])
+    def reporte(self, request):
+        month = int(request.GET.get('month', timezone.datetime.now().month))
+        year = int(request.GET.get('year', timezone.datetime.now().year))
+        anticipos = ProformaAnticipo.objects.exclude(
+            estado__in=['EDICION', 'CREADA']
+        ).filter(
+            (
+                    Q(estado__exact='CERRADA') &
+                    Q(fecha_cobro__month=month) &
+                    Q(fecha_cobro__year=year)
+            ) |
+            ~Q(estado__exact='CERRADA')
+        )
+        serializer = self.get_serializer(anticipos, many=True)
+        return Response(serializer.data)
 
     @action(detail=True, methods=['post'])
     def adicionar_item(self, request, pk=None):

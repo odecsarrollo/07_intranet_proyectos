@@ -6,6 +6,7 @@ import DrawerMenu from '../00_utilities/components/ui/drawer/drawer_menu';
 import Menu from './00_menu/index';
 import AppIndex from './index';
 import CobroDetalle from './anticipos/anticipos/CobroDetail';
+import ReporteAnticipo from './anticipos/ReporteAnticipo';
 import useTengoPermisos from "../00_utilities/hooks/useTengoPermisos";
 import {MODULO_PERMISSIONS} from "../permisos";
 
@@ -21,6 +22,7 @@ const App = () => {
             <DrawerMenu lista_menu={<Menu/>} titulo='Contabilidad'>
                 <Switch>
                     <Route exact path='/app/contabilidad/' component={AppIndex}/>
+                    <Route exact path='/app/contabilidad/reporte/' component={ReporteAnticipo}/>
                     <Route exact path='/app/contabilidad/cobros/detalle/:id' component={CobroDetalle}/>
                 </Switch>
             </DrawerMenu>

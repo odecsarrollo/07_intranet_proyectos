@@ -1,9 +1,9 @@
-import datetime
 from decimal import Decimal
 
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Sum, F
+from django.utils import timezone
 from model_utils.models import TimeStampedModel
 from cargues_catalogos.models import ClienteCatalogo
 from imagekit.models import ProcessedImageField
@@ -14,12 +14,12 @@ from proyectos.models import Literal
 
 class ProformaConfiguracion(models.Model):
     def firma_upload_to(instance, filename):
-        fecha = datetime.datetime.now()
+        fecha = timezone.datetime.now()
         return "proforma/configuracion/firma_%s%s%s%s%s%s.%s" % (
             fecha.year, fecha.month, fecha.day, fecha.hour, fecha.minute, fecha.second, filename.split('.')[-1])
 
     def encabezado_upload_to(instance, filename):
-        fecha = datetime.datetime.now()
+        fecha = timezone.datetime.now()
         return "proforma/configuracion/encabezado_%s%s%s%s%s%s.%s" % (
             fecha.year, fecha.month, fecha.day, fecha.hour, fecha.minute, fecha.second, filename.split('.')[-1])
 

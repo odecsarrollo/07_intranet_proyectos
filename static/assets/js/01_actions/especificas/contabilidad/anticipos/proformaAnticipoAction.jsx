@@ -7,10 +7,35 @@ import {
     createObject,
     callApiMethodPostParametersPDF,
     callApiMethodPostParameters,
-    callApiMethodPost, uploadArchivo,
+    uploadArchivo, fetchListGetURLParameters,
 } from '../../../00_general_fuctions'
 
 const current_url_api = 'contabilidad_anticipos_proformas_cobros';
+
+export const fetchProformasAnticiposReporte = (year = null, month = null, options_action = {}) => {
+    return function (dispatch) {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch_all, payload: response})
+        };
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        if (year && month) {
+            const FULL_URL = `${current_url_api}/reporte/?year=${year}&month=${month}`;
+            return fetchListGetURLParameters(FULL_URL, options);
+
+        } else {
+            const FULL_URL = `${current_url_api}/reporte`;
+            return fetchListGet(FULL_URL, options);
+        }
+    }
+};
+
+
 export const createProformaAnticipo = (values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {

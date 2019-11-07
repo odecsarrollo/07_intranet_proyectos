@@ -1,4 +1,5 @@
 import React, {memo} from "react";
+import moment from 'moment';
 import MyDialogButtonDelete from '../../../00_utilities/components/ui/dialog/delete_dialog';
 
 import selectTableHOC from "react-table/lib/hoc/selectTable";

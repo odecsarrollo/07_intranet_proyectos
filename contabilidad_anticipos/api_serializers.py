@@ -139,22 +139,23 @@ class ProformaAnticipoSerializer(serializers.ModelSerializer):
         fecha_seg = obj.fecha_seguimiento
         fecha_act = timezone.datetime.now().date()
         if obj.estado not in ['ENVIADA', 'RECIBIDA']:
-            return None
-        if fecha_ini and fecha_seg:
-            delta = (fecha_act - fecha_ini).days
-            dias = (fecha_seg - fecha_ini).days
-            if dias == 0:
-                porcentaje = 1
-            else:
-                porcentaje = delta / dias
-            if porcentaje >= 0.9:
+            return 'white'
+        else:
+            if not fecha_seg:
                 return 'tomato'
-            elif porcentaje > 0.66:
-                return 'yellow'
-            else:
-                return 'lightgreen'
-        if not obj.fecha_cambio_estado:
-            return None
+            elif fecha_ini and fecha_seg:
+                delta = (fecha_act - fecha_ini).days
+                dias = (fecha_seg - fecha_ini).days
+                if dias == 0:
+                    porcentaje = 1
+                else:
+                    porcentaje = delta / dias
+                if porcentaje >= 0.9:
+                    return 'tomato'
+                elif porcentaje > 0.66:
+                    return 'yellow'
+                else:
+                    return 'lightgreen'
 
     def create(self, validated_data):
         from .services import proforma_anticipo_crear_actualizar

@@ -9,6 +9,12 @@ const Menu = () => <Fragment>
         texto='Contabilidad Anticipos'
         icono='home'
     />
+    <DrawerListItem
+        size='lg'
+        link='/app/contabilidad/reporte'
+        texto='Reporte'
+        icono='home'
+    />
 </Fragment>;
 
 export default Menu;
