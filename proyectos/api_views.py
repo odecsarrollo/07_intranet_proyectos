@@ -122,6 +122,8 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
             'cotizaciones',
             'cotizaciones__cotizaciones_adicionales',
             'mis_literales',
+            'mis_literales__disenador',
+            'mis_literales__disenador',
             'mis_literales__cotizaciones',
             'mis_literales__cotizaciones__cotizacion_inicial',
             'mis_literales__cotizaciones__cotizaciones_adicionales',

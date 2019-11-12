@@ -46,7 +46,8 @@ const ConsecutivoProyectoTablaItem = props => {
             <div className="col-8">
                 {cotizaciones_adicionales.length > 0 &&
                 <div className="row">
-                    <div className="col-7"></div>
+                    <div className="col-5"></div>
+                    <div className="col-2"></div>
                     <div className="col-1"></div>
                     <div className="col-4">
                         {_.map(cotizaciones_adicionales, c => <div className="row" key={c.id}>
@@ -64,7 +65,8 @@ const ConsecutivoProyectoTablaItem = props => {
                     </div>
                 </div>}
                 {mis_literales.map(literal => <div className="row" key={literal.id}>
-                    <div className="col-7">{literal.id_literal} - {literal.descripcion}</div>
+                    <div className="col-5">{literal.id_literal} - {literal.descripcion}</div>
+                    <div className="col-2">{literal.disenador_nombre}</div>
                     <div className="col-1 text-center">{literal.abierto ?
                         <FontAwesomeIcon icon={'check-circle'}/> : ''}</div>
                     {literal.cotizaciones &&
@@ -110,8 +112,9 @@ const ConsecutivoProyectoTabla = (props) => {
                         contiene(l.id_literal) ||
                         l.cotizaciones.filter(c => contiene(c.orden_compra_nro) || contiene(`${c.unidad_negocio}-${c.nro_cotizacion}`)).length > 0
                 }).length > 0;
+                const tiene_disenador = proyecto.mis_literales.filter(l => l.disenador && contiene(l.disenador_nombre)).length > 0;
                 const tiene_cliente = proyecto.cliente_nombre && contiene(proyecto.cliente_nombre);
-                return tiene_proyecto || tiene_cotizacion || tiene_literal || tiene_cliente
+                return tiene_proyecto || tiene_cotizacion || tiene_literal || tiene_cliente || tiene_disenador
             }
         );
     }
@@ -185,7 +188,8 @@ const ConsecutivoProyectoTabla = (props) => {
                         <div className="col-2">Cliente</div>
                         <div className="col-8">
                             <div className="row">
-                                <div className="col-7">Literal</div>
+                                <div className="col-5">Literal</div>
+                                <div className="col-2">Diseñador</div>
                                 <div className="col-1">Activo</div>
                                 <div className="col-2">Cot. Adi</div>
                                 <div className="col-2">#OC</div>

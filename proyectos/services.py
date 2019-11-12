@@ -57,41 +57,31 @@ def proyecto_actualizar(
     return proyecto
 
 
-def literal_crear(
-        proyecto_id: int,
-        id_literal=str,
-        descripcion=str,
+def literal_crear_actualizar(
+        id_literal: str,
+        descripcion: str,
+        abierto: bool = True,
+        literal_id: int = None,
+        proyecto_id: int = None,
+        disenador_id: int = None,
 ) -> Literal:
-    proyecto = Proyecto.objects.get(pk=proyecto_id)
-    if '%s-' % proyecto.id_proyecto in id_literal and proyecto.id_proyecto == id_literal:
-        raise ValidationError({'_error': 'El id literal no corresponde al proyecto'})
-    existe = proyecto.mis_literales.filter(id_literal=id_literal).exists()
-    if existe:
-        raise ValidationError({'_error': 'Ya existe un literal con ese código para este proyecto'})
-    literal = Literal()
-    literal.id_literal = id_literal
-    literal.proyecto = proyecto
-    literal.descripcion = descripcion
-    literal.en_cguno = False
-    literal.abierto = True
-    literal.save()
-    return literal
-
-
-def literal_actualizar(
-        literal_id: int,
-        id_literal=str,
-        descripcion=str,
-        abierto=bool,
-) -> Literal:
-    literal = Literal.objects.get(pk=literal_id)
-    proyecto = literal.proyecto
-    cambio_id_literal = not literal.id_literal == id_literal
+    if literal_id is not None:
+        literal = Literal.objects.get(pk=literal_id)
+        proyecto = literal.proyecto
+    else:
+        proyecto = Proyecto.objects.get(pk=proyecto_id)
+        existe = proyecto.mis_literales.filter(id_literal=id_literal).exists()
+        if existe:
+            raise ValidationError({'_error': 'Ya existe un literal con ese código para este proyecto'})
+        literal = Literal()
+        literal.en_cguno = False
+    cambio_id_literal = literal_id is not None and not literal.id_literal == id_literal
     if cambio_id_literal and literal.en_cguno:
         raise ValidationError(
             {'_error': 'El id del literal no se puede cambiar, ya esta sincronizado con el sistema de información'})
-    if '%s-' % proyecto.id_proyecto in id_literal and proyecto.id_proyecto == id_literal:
+    if cambio_id_literal and not ('%s-' % proyecto.id_proyecto in id_literal or proyecto.id_proyecto == id_literal):
         raise ValidationError({'_error': 'El id literal no corresponde al proyecto'})
+    literal.disenador_id = disenador_id
     literal.id_literal = id_literal
     literal.proyecto = proyecto
     literal.descripcion = descripcion

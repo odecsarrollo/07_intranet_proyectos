@@ -136,14 +136,43 @@ const Lista = (props) => {
                         <div className='row'>
                             {_.map(para_abrir_carpeta, c =>
                                 <div
-                                    className={clsx(classes.element_div, `col-12 ${permisos_object.rel_cotizacion_proyecto ? 'puntero' : ''}`)}
-                                    key={c.id}
-                                    onClick={() => {
-                                        if (permisos_object.rel_cotizacion_proyecto) {
-                                            onSelectItemEdit(c)
-                                        }
-                                    }}>
+                                    className={clsx(classes.element_div, `col-12`)}
+                                    key={c.id}>
                                     {`${c.unidad_negocio}-${c.nro_cotizacion} ${c.descripcion_cotizacion} `}<strong>({c.cliente_nombre})</strong>
+                                    {permisos_object.rel_cotizacion_proyecto &&
+                                    <IconButton
+                                        style={{
+                                            margin: 0,
+                                            marginLeft: '2px',
+                                            padding: 4,
+                                        }}
+                                        onClick={() => {
+                                            if (permisos_object.rel_cotizacion_proyecto) {
+                                                onSelectItemEdit(c)
+                                            }
+                                        }}
+                                    >
+                                        <FontAwesomeIcon
+                                            className={classes.iconoDelete}
+                                            icon='link'
+                                            size='sm'
+                                        />
+                                    </IconButton>}
+                                    {permisos_object.eliminar_cotizacion_notificacion_consecutivo_proyectos &&
+                                    <IconButton
+                                        style={{
+                                            margin: 0,
+                                            marginLeft: '2px',
+                                            padding: 4,
+                                        }}
+                                        onClick={() => onAbrirModal(c.id)}
+                                    >
+                                        <FontAwesomeIcon
+                                            className={classes.iconoDelete}
+                                            icon={'trash'}
+                                            size='sm'
+                                        />
+                                    </IconButton>}
                                 </div>
                             )}
                         </div>
@@ -161,7 +190,7 @@ const CRUD = crudHOC(CreateForm, Lista);
 const CotizacionAbrirCarpetaLista = memo(props => {
     const {cargarDatosConsecutivoProyectos} = props;
     const permisos_object = useTengoPermisos(COTIZACIONES);
-    let lista = useSelector(state => state.cotizaciones);
+    let lista = _.orderBy(useSelector(state => state.cotizaciones), ['nro_cotizacion'], ['desc']);
     lista = _.pickBy(lista, c => c.abrir_carpeta || c.revisar);
     const dispatch = useDispatch();
 

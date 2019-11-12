@@ -159,20 +159,28 @@ class LiteralSerializer(serializers.ModelSerializer):
         proyecto = validated_data.pop('proyecto')
         id_literal = validated_data.pop('id_literal')
         descripcion = validated_data.pop('descripcion')
-        from .services import literal_crear
-        literal = literal_crear(proyecto_id=proyecto.id, id_literal=id_literal, descripcion=descripcion)
+        disenador = validated_data.pop('disenador', None)
+        from .services import literal_crear_actualizar
+        literal = literal_crear_actualizar(
+            proyecto_id=proyecto.id,
+            id_literal=id_literal,
+            descripcion=descripcion,
+            disenador_id=disenador.id if disenador is not None else None
+        )
         return literal
 
     def update(self, instance, validated_data):
-        from .services import literal_actualizar
+        from .services import literal_crear_actualizar
         descripcion = validated_data.pop('descripcion')
         abierto = validated_data.pop('abierto')
         id_literal = validated_data.pop('id_literal')
-        literal = literal_actualizar(
+        disenador = validated_data.pop('disenador', None)
+        literal = literal_crear_actualizar(
             literal_id=instance.id,
             abierto=abierto,
             descripcion=descripcion,
-            id_literal=id_literal
+            id_literal=id_literal,
+            disenador_id=disenador.id if disenador is not None else None
         )
         return literal
 
@@ -193,6 +201,7 @@ class LiteralSerializer(serializers.ModelSerializer):
             'id_proyecto',
             'proyecto',
             'cliente_nombre',
+            'disenador',
             'abierto',
             'en_cguno',
             'descripcion',
@@ -455,6 +464,7 @@ class ConsecutivoProyectoCotizacionSerializer(serializers.ModelSerializer):
 
 class ConsecutivoProyectoLiteralSerializer(serializers.ModelSerializer):
     cotizaciones = ConsecutivoProyectoCotizacionSerializer(many=True, read_only=True)
+    disenador_nombre = serializers.CharField(source='disenador.get_full_name', read_only=True)
 
     class Meta:
         model = Literal
@@ -462,6 +472,8 @@ class ConsecutivoProyectoLiteralSerializer(serializers.ModelSerializer):
             'id',
             'id_literal',
             'abierto',
+            'disenador',
+            'disenador_nombre',
             'descripcion',
             'cotizaciones',
         ]

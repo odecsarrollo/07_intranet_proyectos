@@ -143,8 +143,7 @@ const Detail = memo(props => {
                 <TabPanel>
                     <SeguimientoLiteral id_literal={literal.id} proyecto_permisos={permisos_proyecto}/>
                 </TabPanel>
-                {permisos_literales.change &&
-                <TabPanel>
+                {permisos_literales.change && <TabPanel>
                     <Form
                         cargarProyecto={callbackCargarDatosProyecto}
                         proyecto={proyecto}
@@ -152,17 +151,13 @@ const Detail = memo(props => {
                         onSubmit={onUpdateLiteral}
                         onDelete={onDeleteLiteral}
                     />
-                </TabPanel>
-                }
-                {
-                    permisos_archivos_literal.list &&
-                    <TabPanel>
-                        <PanelArchivosLiteral
-                            literal={literal}
-                            cargarProyecto={callbackCargarDatosProyecto}
-                        />
-                    </TabPanel>
-                }
+                </TabPanel>}
+                {permisos_archivos_literal.list && <TabPanel>
+                    <PanelArchivosLiteral
+                        literal={literal}
+                        cargarProyecto={callbackCargarDatosProyecto}
+                    />
+                </TabPanel>}
             </Tabs>
         </Fragment>
     )

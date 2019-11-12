@@ -9,10 +9,9 @@ const BotoneriaModalForm = (props) => {
         submitting,
         reset,
         initialValues = null,
-        onCancel,
+        onCancel = null,
         mostrar_submit = true,
-        mostrar_limpiar = true,
-        mostrar_cancelar = true,
+        mostrar_limpiar = true
     } = props;
     return (
         <div>
@@ -28,29 +27,23 @@ const BotoneriaModalForm = (props) => {
                     {submit_text_boton ? submit_text_boton : initialValues ? 'Guardar ' : 'Crear '}
                 </Button>
             }
-            {
-                mostrar_limpiar &&
-                <Button
-                    color="secondary"
-                    variant="contained"
-                    className='ml-3'
-                    onClick={reset}
-                    disabled={submitting || pristine}
-                >
-                    Limpiar
-                </Button>
-            }
-            {
-                mostrar_cancelar &&
-                <Button
-                    color="secondary"
-                    variant="contained"
-                    className='ml-3'
-                    onClick={() => onCancel()}
-                >
-                    {submitting || pristine ? 'Cerrar' : 'Cancelar'}
-                </Button>
-            }
+            {mostrar_limpiar && <Button
+                color="secondary"
+                variant="contained"
+                className='ml-3'
+                onClick={reset}
+                disabled={submitting || pristine}
+            >
+                Limpiar
+            </Button>}
+            {onCancel && <Button
+                color="secondary"
+                variant="contained"
+                className='ml-3'
+                onClick={() => onCancel()}
+            >
+                {submitting || pristine ? 'Cerrar' : 'Cancelar'}
+            </Button>}
         </div>
     )
 };
