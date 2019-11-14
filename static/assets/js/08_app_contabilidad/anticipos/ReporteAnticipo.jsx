@@ -3,11 +3,12 @@ import {useDispatch, useSelector} from 'react-redux';
 import * as actions from '../../01_actions/01_index';
 import Typography from "@material-ui/core/Typography";
 import {pesosColombianos} from "../../00_utilities/common";
+import CargarDatos from "../../00_utilities/components/system/cargar_datos";
 
 const ReporteAnticipoTablaItem = props => {
     let {items, color} = props;
-    items = items.filter(e => e.color_estado === color);
-    if (items.length > 0) {
+    if (items && items.length > 0) {
+        items = items.filter(e => e.color_estado === color);
         return <div className="row"
                     style={{
                         backgroundColor: color,
@@ -41,6 +42,8 @@ const ReporteAnticipo = props => {
     const dispatch = useDispatch();
     const anticipos = useSelector(state => state.contabilidad_proforma_anticipos);
 
+    const cargarDatos = () => dispatch(actions.fetchProformasAnticiposReporte());
+
     const colores = _.uniq(_.map(anticipos, a => a.color_estado));
     const anticipos_por_color = _.countBy(anticipos, 'color_estado');
     const anticipos_por_estado = _.groupBy(anticipos, 'estado');
@@ -70,9 +73,9 @@ const ReporteAnticipo = props => {
                 <thead>
                 <tr>
                     <th></th>
-                    <th>ENVIADO</th>
-                    <th>RECIBIDO</th>
-                    <th>COBRADO</th>
+                    <th style={{textAlign: 'center'}}>ENVIADO</th>
+                    <th style={{textAlign: 'center'}}>RECIBIDO</th>
+                    <th style={{textAlign: 'center'}}>COBRADO</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -102,6 +105,9 @@ const ReporteAnticipo = props => {
                 </tfoot>
             </table>
         </div>
+        <CargarDatos
+            cargarDatos={cargarDatos}
+        />
     </div>
 };
 
