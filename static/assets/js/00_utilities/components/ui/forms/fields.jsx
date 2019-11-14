@@ -303,9 +303,9 @@ export const MyDateTimePickerField = (props) => {
     return (
         <div className={`${className} mt-2`}>
             <Grid component="label" container alignItems="center" spacing={2}>
-                <Grid item xs={label_space_xs}>
+                {label_space_xs > 0 && <Grid item xs={label_space_xs}>
                     {props.nombre}
-                </Grid>
+                </Grid>}
                 <Grid item xs={12 - label_space_xs}>
                     <Field
                         name={props.name}

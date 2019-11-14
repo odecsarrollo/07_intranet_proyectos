@@ -1,3 +1,5 @@
+import datetime
+
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.http import HttpResponse
@@ -130,6 +132,7 @@ class ProformaAnticipoViewSet(viewsets.ModelViewSet):
         from .services import proforma_anticipo_cambiar_estado
         estado = self.request.POST.get('estado')
         fecha_cobro = self.request.POST.get('fecha_cobro', None)
+        print(fecha_cobro)
         proforma_anticipo = proforma_anticipo_cambiar_estado(
             estado=estado,
             proforma_anticipo_id=self.get_object().id,

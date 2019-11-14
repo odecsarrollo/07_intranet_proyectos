@@ -11,7 +11,7 @@ import DateTimePicker from "react-widgets/lib/DateTimePicker";
 const PagoModal = memo(props => {
     const now = moment().tz('America/Bogota');
     const {onCobrada, is_open, onCerrar, fecha_minima} = props;
-    const [fecha_cobro, setFechaCobro] = useState(now.toDate());
+    const [fecha_cobro, setFechaCobro] = useState(now.format("YYYY-MM-DD"));
     return <Dialog
         fullScreen={false}
         open={is_open}
