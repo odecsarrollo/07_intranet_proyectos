@@ -32,26 +32,31 @@ let Form = memo(props => {
                         {id: 'EUR', nombre: 'EUR'},
                     ]}
                     filter='contains'
-                    placeholder='Tipo Divisa'
+                    label='Tipo de Divisa'
+                    label_space_xs={3}
+                    placeholder='Seleccionar Tipo de Divisa...'
                     valueField='id'
                     textField='nombre'
                     name='divisa'
                     readOnly={!editable}
                 />
                 <MyCombobox
+                    label='Tipo Documento'
+                    label_space_xs={3}
                     className="col-12 col-md-6 col-lg-4"
                     data={[
                         {id: 'PROFORMA', nombre: 'Proforma'},
                         {id: 'CUENTA_COBRO', nombre: 'Cuenta Cobro'},
                     ]}
                     filter='contains'
-                    placeholder='Tipo Documento'
+                    placeholder='Seleccionar Tipo de Documento...'
                     valueField='id'
                     textField='nombre'
                     name='tipo_documento'
                     readOnly={!editable}
                 />
                 <MyDateTimePickerField
+                    label_space_xs={3}
                     className='col-12 col-md-6 col-lg-4'
                     name='fecha'
                     nombre='Fecha'

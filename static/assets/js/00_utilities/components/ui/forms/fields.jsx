@@ -181,7 +181,7 @@ export const MyCombobox = (props) => {
         autoFocus = false,
         onSelect,
         className,
-        nombre = '',
+        placeholder = null,
         label = null,
         label_space_xs = 0,
         readOnly = false
@@ -203,7 +203,7 @@ export const MyCombobox = (props) => {
                         onChange={v => v[valuesField]}
                         onSelect={onSelect}
                         busy={busy}
-                        placeholder={nombre}
+                        placeholder={placeholder}
                     />
                 </Grid>
             </Grid>
@@ -295,19 +295,30 @@ const renderDateTimePicker = (
 };
 
 export const MyDateTimePickerField = (props) => {
-    const {readOnly = false} = props;
+    const {
+        readOnly = false,
+        label_space_xs = 0,
+        className
+    } = props;
     return (
-        <div className={props.className}>
-            <label>{props.nombre}</label>
-            <Field
-                name={props.name}
-                readOnly={readOnly}
-                type="date"
-                fullWidth={true}
-                label={props.nombre}
-                {...props}
-                component={renderDateTimePicker}
-            />
+        <div className={`${className} mt-2`}>
+            <Grid component="label" container alignItems="center" spacing={2}>
+                <Grid item xs={label_space_xs}>
+                    {props.nombre}
+                </Grid>
+                <Grid item xs={12 - label_space_xs}>
+                    <Field
+                        name={props.name}
+                        readOnly={readOnly}
+                        type="date"
+                        fullWidth={true}
+                        label={props.nombre}
+                        {...props}
+                        component={renderDateTimePicker}
+                    />
+                </Grid>
+
+            </Grid>
         </div>
     )
 };
