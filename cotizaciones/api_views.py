@@ -73,11 +73,9 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
         qs = Cotizacion.objects.prefetch_related(
             'cliente',
             'cotizacion_inicial__cliente'
-        ).filter(
-            estado='Cierre (Aprobado)',
-            relacionada=False
-        ).filter(
-            Q(orden_compra_nro__isnull=False) | Q(cotizacion_inicial__isnull=False)
+        ).exclude(revisada=True).filter(
+            Q(estado='Cierre (Aprobado)') &
+            (Q(orden_compra_nro__isnull=False) | Q(cotizacion_inicial__isnull=False))
         )
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)

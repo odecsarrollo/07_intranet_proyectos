@@ -172,73 +172,58 @@ function crudHOC(CreateForm, Tabla) {
         };
         return (
             <ValidarPermisos can_see={permisos_object.list} nombre={plural_name}>
-                {
-                    con_titulo &&
-                    <Typography variant="h5" gutterBottom color="primary">
-                        {plural_name}
-                    </Typography>
-                }
-                {
-                    permisos_object.add &&
-                    <Button
-                        color='primary'
-                        className='ml-3'
-                        onClick={() => {
-                            setModalOpen(true);
-                            setItemSeleccionado(null);
-                        }}
-                    >
-                        Nuevo
-                    </Button>
-                }
-                {
-                    selected_rows.length > 0 &&
-                    <ExcelDownload
-                        data={_.map(_.pickBy(list, l => selected_rows.includes(l.id)))}
-                        name={plural_name ? plural_name : 'documento'}
-                        file_name={plural_name ? plural_name : 'documento'}
-                    />
-                }
-                {
-                    modal_open &&
-                    <CreateForm
+                {con_titulo && <Typography variant="h5" gutterBottom color="primary">
+                    {plural_name}
+                </Typography>}
+
+                {permisos_object.add && <Button
+                    color='primary'
+                    className='ml-3'
+                    onClick={() => {
+                        setModalOpen(true);
+                        setItemSeleccionado(null);
+                    }}
+                >
+                    Nuevo
+                </Button>}
+
+                {selected_rows.length > 0 && <ExcelDownload
+                    data={_.map(_.pickBy(list, l => selected_rows.includes(l.id)))}
+                    name={plural_name ? plural_name : 'documento'}
+                    file_name={plural_name ? plural_name : 'documento'}
+                />}
+                {modal_open && <CreateForm
+                    {...props}
+                    initialValues={item_seleccionado ? list[item_seleccionado.id] : null}
+                    modal_open={modal_open}
+                    onCancel={() => {
+                        setItemSeleccionado(null);
+                        setModalOpen(false);
+                    }}
+                    onSubmit={onSubmit}
+                    setSelectItem={setSelectItem}
+                />}
+                {Tabla && <div>
+                    <Tabla
                         {...props}
-                        initialValues={item_seleccionado ? list[item_seleccionado.id] : null}
-                        modal_open={modal_open}
-                        onCancel={() => {
-                            setItemSeleccionado(null);
-                            setModalOpen(false);
-                        }}
-                        onSubmit={onSubmit}
-                        setSelectItem={setSelectItem}
-                    />
-                }
-                {
-                    Tabla &&
-                    <div>
-                        <Tabla
-                            {...props}
-                            getTrGroupProps={getTrGroupProps}
-                            rowFn={rowFn}
-                            isSelected={isRowTableSelected}
-                            toggleSelection={toggleRowSelection}
-                            toggleAll={toggleAllRows}
-                            selection={selected_rows}
-                            selectAll={are_select_all_rows}
-                            checkboxTable={checkboxTable}
-                            updateItem={onSubmit}
-                            onDelete={onDelete}
-                            onSelectForDelete={onSelectForDelete}
-                            onSelectItemEdit={onSelectItemEdit}
-                            cargarDatos={cargarDatos}
-                        />
-                    </div>
-                }
-                {
-                    cargarDatos && <CargarDatos
+                        getTrGroupProps={getTrGroupProps}
+                        rowFn={rowFn}
+                        isSelected={isRowTableSelected}
+                        toggleSelection={toggleRowSelection}
+                        toggleAll={toggleAllRows}
+                        selection={selected_rows}
+                        selectAll={are_select_all_rows}
+                        checkboxTable={checkboxTable}
+                        updateItem={onSubmit}
+                        onDelete={onDelete}
+                        onSelectForDelete={onSelectForDelete}
+                        onSelectItemEdit={onSelectItemEdit}
                         cargarDatos={cargarDatos}
                     />
-                }
+                </div>}
+                {cargarDatos && <CargarDatos
+                    cargarDatos={cargarDatos}
+                />}
             </ValidarPermisos>
         )
     };

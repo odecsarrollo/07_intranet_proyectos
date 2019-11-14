@@ -13,6 +13,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormLabel from '@material-ui/core/FormLabel';
+import Grid from '@material-ui/core/Grid';
 
 import InputColor from 'react-input-color';
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';
@@ -180,23 +181,32 @@ export const MyCombobox = (props) => {
         autoFocus = false,
         onSelect,
         className,
-        readOnly = false,
-        label = null
+        nombre = '',
+        label = null,
+        label_space_xs = 0,
+        readOnly = false
     } = props;
     return (
-        <div className={`${className} ${label ? '' : 'mt-4'}`}>
-            <label>{label}</label>
-            <Field
-                {...props}
-                component={renderCombobox}
-                valueField={valuesField}
-                textField={textField}
-                autoFocus={autoFocus}
-                onChange={v => v[valuesField]}
-                onSelect={onSelect}
-                busy={busy}
-                readOnly={readOnly}
-            />
+        <div className={`${className} ${label ? 'mt-2' : 'mt-4'}`}>
+            <Grid component="label" container alignItems="center" spacing={2}>
+                {label && <Grid item xs={label_space_xs}>
+                    {label}
+                </Grid>}
+                <Grid item xs={label ? 12 - label_space_xs : 12}>
+                    <Field
+                        {...props}
+                        readOnly={readOnly}
+                        component={renderCombobox}
+                        valueField={valuesField}
+                        textField={textField}
+                        autoFocus={autoFocus}
+                        onChange={v => v[valuesField]}
+                        onSelect={onSelect}
+                        busy={busy}
+                        placeholder={nombre}
+                    />
+                </Grid>
+            </Grid>
         </div>
     )
 };

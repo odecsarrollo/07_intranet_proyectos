@@ -295,8 +295,10 @@ def cotizacion_quitar_relacionar_proyecto(
     cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
     if cotizacion.proyectos.count() > 0:
         cotizacion.relacionada = True
+        cotizacion.revisada = True
     else:
         cotizacion.relacionada = False
+        cotizacion.revisada = False
     cotizacion.save()
     return cotizacion
 

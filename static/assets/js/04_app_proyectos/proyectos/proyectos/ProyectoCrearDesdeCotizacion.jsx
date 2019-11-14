@@ -44,9 +44,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Lista = (props) => {
-    const {list, onSelectItemEdit, permisos_object} = props;
-    const para_abrir_carpeta = _.pickBy(list, a => a.abrir_carpeta);
-    const para_notificar = _.pickBy(list, a => a.revisar);
+    let {list, onSelectItemEdit, permisos_object} = props;
+    list = _.orderBy(list, ['nro_cotizacion'], ['desc']);
+    const para_abrir_carpeta = _.pickBy(list, a => !a.revisada && a.abrir_carpeta);
+    const para_notificar = _.pickBy(list, a => !a.revisada && a.notificar);
     const [show_verificar, setShowVerificar] = useState(false);
     const [notificacion_seleccionada, setNotificacionSeleccionada] = useState(null);
     const classes = useStyles();
@@ -190,8 +191,8 @@ const CRUD = crudHOC(CreateForm, Lista);
 const CotizacionAbrirCarpetaLista = memo(props => {
     const {cargarDatosConsecutivoProyectos} = props;
     const permisos_object = useTengoPermisos(COTIZACIONES);
-    let lista = _.orderBy(useSelector(state => state.cotizaciones), ['nro_cotizacion'], ['desc']);
-    lista = _.pickBy(lista, c => c.abrir_carpeta || c.revisar);
+    let lista = useSelector(state => state.cotizaciones);
+    lista = _.pickBy(lista, c => !c.revisada);
     const dispatch = useDispatch();
 
     const createProyecto = (item, options) => dispatch(actions.createProyecto({...item, en_cguno: false}, options));

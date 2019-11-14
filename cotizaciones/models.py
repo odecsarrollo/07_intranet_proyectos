@@ -91,13 +91,11 @@ class Cotizacion(TimeStampedModel):
 
     @property
     def abrir_carpeta(self) -> bool:
-        return not self.relacionada and self.orden_compra_nro is not None and self.estado == 'Cierre (Aprobado)' and self.cotizacion_inicial is None
+        return not self.revisada and not self.relacionada and self.orden_compra_nro is not None and self.estado == 'Cierre (Aprobado)' and self.cotizacion_inicial is None
 
     @property
-    def revisar(self) -> bool:
-        if not self.revisada and self.cotizacion_inicial is not None:
-            return True
-        return False
+    def notificar(self) -> bool:
+        return not self.revisada and self.estado == 'Cierre (Aprobado)' and self.cotizacion_inicial is not None
 
     @property
     def cliente_cotizacion(self) -> ClienteBiable:

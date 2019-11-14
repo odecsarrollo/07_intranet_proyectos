@@ -184,7 +184,6 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'cotizacion_inicial_nro',
             'cotizacion_inicial_unidad_negocio',
             'responsable',
-            'revisar',
             'origen_cotizacion',
             'responsable_actual',
             'responsable_actual_nombre',
@@ -228,7 +227,6 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'es_adicional': {'read_only': True},
             'cliente_id': {'read_only': True},
             'cotizacion_inicial': {'allow_null': True},
-            'revisar': {'read_only': True},
             'abrir_carpeta': {'read_only': True},
             'relacionada': {'read_only': True},
             'cotizaciones_adicionales': {'read_only': True},
@@ -326,10 +324,11 @@ class CotizacionParaAbrirCarpetaSerializer(serializers.ModelSerializer):
             'unidad_negocio',
             'cotizacion_inicial_nro',
             'cotizacion_inicial_unidad_negocio',
-            'revisar',
+            'revisada',
             'descripcion_cotizacion',
             'cliente_nombre',
             'abrir_carpeta',
+            'notificar',
         ]
         read_only_fields = fields
 
