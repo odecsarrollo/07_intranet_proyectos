@@ -1,3 +1,12 @@
+export const CONDICION_INICIO_PROYECTO_TYPES = {
+    create: 'create_condicion_inicio_proyecto',
+    delete: 'delete_condicion_inicio_proyecto',
+    fetch_all: 'fetch_condiciones_inicios_proyectos',
+    fetch: 'fetch_condicion_inicio_proyecto',
+    clear: 'clear_condiciones_inicios_proyectos',
+    update: 'update_condicion_inicio_proyecto',
+};
+
 export const ITEM_COTIZACION_COMPONENTE_TYPES = {
     create: 'create_item_cotizacion_componente',
     delete: 'delete_item_cotizacion_componente',

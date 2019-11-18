@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from reversion.views import RevisionMixin
 
 from intranet_proyectos.utils_queryset import query_varios_campos
-from .models import Cotizacion, SeguimientoCotizacion, ArchivoCotizacion
+from .models import Cotizacion, SeguimientoCotizacion, ArchivoCotizacion, CondicionInicioProyecto
 from .api_serializers import (
     CotizacionSerializer,
     SeguimientoCotizacionSerializer,
@@ -17,7 +17,13 @@ from .api_serializers import (
     CotizacionParaAbrirCarpetaSerializer,
     CotizacionTuberiaVentaSerializer,
     CotizacionListSerializer,
+    CondicionInicioProyectoSerializer
 )
+
+
+class CondicionInicioProyectoViewSet(viewsets.ModelViewSet):
+    queryset = CondicionInicioProyecto.objects.all()
+    serializer_class = CondicionInicioProyectoSerializer
 
 
 class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
@@ -102,6 +108,21 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
         cotizacion = cotizacion_quitar_relacionar_proyecto(
             proyecto_id=proyecto_id,
             cotizacion_id=cotizacion.id
+        )
+        serializer = self.get_serializer(cotizacion)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def adicionar_quitar_condicion_inicio_proyecto(self, request, pk=None):
+        cotizacion = self.get_object()
+        self.serializer_class = CotizacionConDetalleSerializer
+        tipo_accion = int(request.POST.get('tipo_accion'))
+        condicion_inicio_proyecto_id = int(request.POST.get('condicion_inicio_proyecto_id'))
+        from .services import cotizacion_adicionar_quitar_condicion_inicio_proyecto
+        cotizacion = cotizacion_adicionar_quitar_condicion_inicio_proyecto(
+            condicion_inicio_proyecto_id=condicion_inicio_proyecto_id,
+            cotizacion_id=cotizacion.id,
+            tipo_accion=tipo_accion
         )
         serializer = self.get_serializer(cotizacion)
         return Response(serializer.data)

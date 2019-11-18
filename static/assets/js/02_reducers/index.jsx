@@ -36,6 +36,7 @@ import clientesTiposIndustriasReducer from "./especificas/clientes/tiposIndustri
 import cotizacionesReducer from "./especificas/cotizaciones/cotizacionesReducer";
 import cotizacionesSeguimientosReducer from "./especificas/cotizaciones/cotizacionesSeguimientosReducer";
 import cotizacionesArchivosReducer from "./especificas/cotizaciones/archivosCotizacionesReducer";
+import cotizacionesCondicionesInicioProyectosReducer from "./especificas/cotizaciones/condicionesInicioProyectosReducer";
 
 import configuracionCostos from './especificas/configuraciones/configuracionCostosReducer';
 
@@ -114,6 +115,7 @@ const rootReducer = combineReducers({
     cotizaciones_seguimientos: cotizacionesSeguimientosReducer,
     configuracion_costos: configuracionCostos,
     archivos_cotizaciones: cotizacionesArchivosReducer,
+    condiciones_inicios_proyectos: cotizacionesCondicionesInicioProyectosReducer,
     archivos_literales: literalesArchivosReducer,
     archivos_proyecto: proyectosArchivosReducer,
 

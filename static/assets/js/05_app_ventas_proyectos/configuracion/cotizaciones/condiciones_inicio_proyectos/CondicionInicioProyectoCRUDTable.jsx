@@ -3,6 +3,7 @@ import MyDialogButtonDelete from '../../../../00_utilities/components/ui/dialog/
 import IconButtonTableEdit from '../../../../00_utilities/components/ui/icon/table_icon_button_edit';
 
 import ReactTable from "react-table";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 class Tabla extends React.Component {
     render() {
@@ -27,11 +28,21 @@ class Tabla extends React.Component {
                                 maxWidth: 40
                             },
                             {
-                                Header: "Nombre",
+                                Header: "Descripción",
+                                accessor: "descripcion",
                                 maxWidth: 220,
-                                filterable: true,
-                                filterMethod: (filter, row) => row._original.to_string.includes(filter.value.toUpperCase()),
-                                Cell: row => `${row.original.to_string}`
+                            },
+                            {
+                                Header: "Requiere Documento",
+                                accessor: "require_documento",
+                                maxWidth: 100,
+                                Cell: row => <div>
+                                    {row.value && <FontAwesomeIcon
+                                        className='puntero ml-4'
+                                        onClick={() => onDelete(e.id)}
+                                        icon={'check-circle'}
+                                    />}
+                                </div>
                             },
                         ]
                     },

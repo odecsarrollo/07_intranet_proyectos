@@ -2,7 +2,7 @@ import datetime
 from typing import List, Union
 
 from django.contrib.auth.models import User
-from django.db.models import Max, QuerySet, Count, OuterRef
+from django.db.models import Max
 from django.db.models.functions import Substr
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError
@@ -11,12 +11,44 @@ from proyectos.models import Proyecto, Literal
 from .models import Cotizacion, SeguimientoCotizacion
 from clientes.models import ClienteBiable
 from reversion.models import Version
+from cotizaciones.models import CondicionInicioProyecto, CondicionInicioProyectoCotizacion
 
 
 def cotizacion_versions(cotizacion_id: int) -> Version:
     cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
     versions = Version.objects.get_for_object(cotizacion)
     return versions
+
+
+def cotizacion_adicionar_quitar_condicion_inicio_proyecto(
+        tipo_accion,
+        cotizacion_id: int = None,
+        condicion_inicio_proyecto_id: int = None,
+        condicion_inicio_proyecto_cotizacion_id: int = None
+) -> Cotizacion:
+    cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
+    if tipo_accion == 'del':
+        if condicion_inicio_proyecto_cotizacion_id is None:
+            raise ValidationError({
+                '_error': 'Para quitar una condicion de inicio de proyecto debe pasar el ID de la condicion a retirar'})
+        if cotizacion.id != cotizacion_id is None:
+            raise ValidationError({
+                '_error': 'La condición a retirar no es parte de la cotización seleccionada'})
+        condicion_a_retirar = CondicionInicioProyectoCotizacion.objects.get(pk=condicion_inicio_proyecto_cotizacion_id)
+        condicion_a_retirar.delete()
+    if tipo_accion == 'add':
+        if condicion_inicio_proyecto_id is None:
+            raise ValidationError({
+                '_error': 'Para adicionar una condicion de inicio de proyecto debe pasar el ID de la condicion a agregar'})
+
+        condicion_inicio_proyecto = CondicionInicioProyecto.objects.get(pk=condicion_inicio_proyecto_id)
+        condicion_proyecto = CondicionInicioProyectoCotizacion()
+        condicion_proyecto.descripcion = condicion_inicio_proyecto.descripcion
+        condicion_proyecto.require_documento = condicion_inicio_proyecto.require_documento
+        condicion_proyecto.cotizacion_proyecto = cotizacion
+        condicion_proyecto.save()
+    cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
+    return cotizacion
 
 
 def cotizacion_crear(

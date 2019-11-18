@@ -10,6 +10,7 @@ import CotizacionesDetail from './cotizaciones/cotizaciones/CotizacionDetail';
 import InformeTunelVentas from './informes/tuberia_ventas/CuadroTuberiaVentas';
 import ClientesList from "../03_app_admin/especificas/clientes/clientes/containers/ClienteContainer";
 import ClienteDetail from "../03_app_admin/especificas/clientes/clientes/containers/ClienteDetail";
+import ConfiguracionDashboard from "./configuracion/ConfiguracionDashboard";
 
 const App = () => {
     return (
@@ -18,6 +19,8 @@ const App = () => {
                 <Switch>
                     <Route exact path='/app/ventas_proyectos/' component={AppIndex}/>
                     <Route exact path='/app/ventas_proyectos/clientes/clientes/list' component={ClientesList}/>
+                    <Route exact path='/app/ventas_proyectos/configuracion/dashboard'
+                           component={ConfiguracionDashboard}/>
                     <Route exact path='/app/ventas_proyectos/clientes/clientes/detail/:id' component={ClienteDetail}/>
                     <Route exact path='/app/ventas_proyectos/cotizaciones/cotizaciones/list'
                            component={CotizacionesList}/>

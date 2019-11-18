@@ -3,7 +3,50 @@ from django.utils import timezone
 from rest_framework import serializers
 
 from proyectos.models import Proyecto, Literal
-from .models import Cotizacion, SeguimientoCotizacion, ArchivoCotizacion
+from .models import (
+    Cotizacion,
+    SeguimientoCotizacion,
+    ArchivoCotizacion,
+    CondicionInicioProyecto,
+    CondicionInicioProyectoCotizacion
+)
+
+
+class CondicionInicioProyectoSerializer(serializers.ModelSerializer):
+    to_string = serializers.SerializerMethodField()
+
+    def get_to_string(self, obj):
+        return obj.descripcion
+
+    class Meta:
+        model = CondicionInicioProyecto
+        fields = [
+            'url',
+            'id',
+            'descripcion',
+            'require_documento',
+            'to_string',
+        ]
+
+
+class CondicionInicioProyectoCotizacionSerializer(serializers.ModelSerializer):
+    cumple_condicion = serializers.BooleanField(read_only=True)
+    to_string = serializers.SerializerMethodField()
+
+    def get_to_string(self, obj):
+        return obj.descripcion
+
+    class Meta:
+        model = CondicionInicioProyectoCotizacion
+        fields = [
+            'url',
+            'id',
+            'descripcion',
+            'require_documento',
+            'cumple_condicion',
+            'to_string',
+        ]
+        read_only_fields = fields
 
 
 # region Serializadores Cotizacion
@@ -187,6 +230,7 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'cotizacion_inicial_unidad_negocio',
             'responsable',
             'origen_cotizacion',
+            'condiciones_inicio',
             'dias_pactados_entrega_proyecto',
             'responsable_actual',
             'responsable_actual_nombre',
@@ -376,6 +420,7 @@ class LiteralCotizacionConDetalle(serializers.ModelSerializer):
 
 
 class CotizacionConDetalleSerializer(CotizacionSerializer):
+    condiciones_inicio = CondicionInicioProyectoCotizacionSerializer(many=True, read_only=True)
     literales = LiteralCotizacionConDetalle(many=True, read_only=True)
     proyectos = ProyectoCotizacionConDetalleSerializer(many=True, read_only=True)
     cotizaciones_adicionales = CotizacionCotizacionConDetalleSerializer(many=True, read_only=True)

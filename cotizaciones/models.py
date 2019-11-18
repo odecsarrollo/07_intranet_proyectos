@@ -154,8 +154,30 @@ class CondicionInicioProyecto(models.Model):
     descripcion = models.CharField(max_length=400)
     require_documento = models.BooleanField(default=False)
 
+    class Meta:
+        permissions = [
+            ("list_condicioninicioproyecto", "Can list condiciones inicio cotizaciones"),
+        ]
+
 
 class CondicionInicioProyectoCotizacion(models.Model):
-    condicion = models.ForeignKey(CondicionInicioProyecto, on_delete=models.PROTECT)
+    cotizacion_proyecto = models.ForeignKey(
+        Cotizacion,
+        on_delete=models.PROTECT,
+        related_name='condiciones_inicio'
+    )
+    descripcion = models.CharField(max_length=400)
+    require_documento = models.BooleanField(default=False)
     fecha_entrega = models.DateField(null=True)
     documento = models.FileField(null=True)
+    documento_nombre = models.FileField(null=True)
+
+    @property
+    def cumple_condicion(self):
+        if self.fecha_entrega:
+            if self.require_documento and self.documento is not None:
+                return True
+            elif not self.require_documento:
+                return True
+            return False
+        return False

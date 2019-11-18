@@ -73,6 +73,19 @@ export const relacionarQuitarProyectoaCotizacion = (id, proyecto_id, options_act
         return callApiMethodPostParameters(current_url_api, id, 'relacionar_quitar_proyecto', params, options)
     }
 };
+
+export const adicionarQuitarCondicionInicioProyectoCotizacion = (id, tipo_accion, condicion_inicio_proyecto_id, options_action = {}) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        params.append('tipo_accion', tipo_accion);
+        params.append('condicion_inicio_proyecto_id', condicion_inicio_proyecto_id);
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: response})
+        };
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'adicionar_quitar_condicion_inicio_proyecto', params, options)
+    }
+};
 export const relacionarQuitarLiteralCotizacion = (id, literal_id, options_action = {}) => {
     return (dispatch) => {
         let params = new URLSearchParams();

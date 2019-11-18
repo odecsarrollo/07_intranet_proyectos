@@ -26,6 +26,12 @@ const Menu = () => <Fragment>
         texto='Tubería de Ventas'
         icono='file'
     />
+    <DrawerListItem
+        size='lg'
+        link='/app/ventas_proyectos/configuracion/dashboard'
+        texto='Configuraciones'
+        icono='wrench'
+    />
 </Fragment>;
 
 export default Menu;

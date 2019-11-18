@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {reduxForm} from 'redux-form';
 import {
+    MyCheckboxSimple,
     MyTextFieldSimple,
 } from '../../../../../00_utilities/components/ui/forms/fields';
 import {MyFormTagModal} from '../../../../../00_utilities/components/ui/forms/MyFormTagModal';
@@ -35,16 +36,21 @@ class Form extends Component {
             >
                 <MyTextFieldSimple
                     className="col-12"
-                    nombre='Nombre'
-                    name='nombre'
+                    nombre='Descripción'
+                    name='descripcion'
                     case='U'/>
+                <MyCheckboxSimple
+                    className="col-6 pt-4"
+                    name='require_documento'
+                    nombre='Requiere Documento'
+                />
             </MyFormTagModal>
         )
     }
 }
 
 Form = reduxForm({
-    form: "paisForm",
+    form: "condicionInicioProyectoForm",
     validate,
     enableReinitialize: true
 })(Form);
