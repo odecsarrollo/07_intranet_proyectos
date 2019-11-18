@@ -2,6 +2,8 @@ import React, {Fragment} from 'react';
 import {upper, lower} from "../../../common";
 import {Field} from 'redux-form';
 import PropTypes from "prop-types";
+import {makeStyles} from '@material-ui/core/styles';
+import clsx from 'clsx';
 
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -25,6 +27,17 @@ import moment from 'moment-timezone';
 moment.tz.setDefault("America/Bogota");
 moment.locale('es');
 momentLocaliser(moment);
+
+const useStyles = makeStyles(theme => ({
+    container: {
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
+    textField: {
+        paddingLeft: theme.spacing(1),
+        paddingRight: theme.spacing(1)
+    },
+}));
 
 const renderInputColor = ({input}) => {
     console.log(input);
@@ -77,9 +90,11 @@ export const MyFieldFileInput = (props) => {
 
 const renderTextField = ({input, label, meta: {touched, error, warning}, ...custom}) => {
     let new_custom = custom;
+    const classes = useStyles();
     if (touched && error) {
         new_custom = {...custom, helperText: error}
     }
+    new_custom = {...new_custom, className: clsx(classes.textField, new_custom.className)};
     return (
         <Fragment>
             <TextField
@@ -118,39 +133,57 @@ MyTextFieldSimple.propTypes = {
     nombre: PropTypes.string
 };
 
-const renderDropdownList = ({input, data, valueField, textField, placeholder, onSelect}) => {
+const renderDropdownList = ({input, data, valueField, textField, placeholder, onSelect, meta: {touched, error, warning}}) => {
     return (
-        <DropdownList {...input}
-                      data={data}
-                      placeholder={placeholder}
-                      valueField={valueField}
-                      textField={textField}
-                      onChange={input.onChange}
-                      onSelect={onSelect}
-        />
+        <Fragment>
+            <DropdownList {...input}
+                          data={data}
+                          placeholder={placeholder}
+                          valueField={valueField}
+                          textField={textField}
+                          onChange={input.onChange}
+                          onSelect={onSelect}
+            />
+            {touched && ((error && <span className='form-field-error'>{error}</span>) || (warning &&
+                <span>{warning}</span>))}
+        </Fragment>
     )
 };
 
 
 export const MyDropdownList = (props) => {
-    const {busy = false, textField = 'name', valuesField = 'id', className, label = null} = props;
+    const {busy = false, textField = 'name', valuesField = 'id', className, label = null, label_space_xs = 0} = props;
     return (
-        <div className={`${className}`}>
-            {
-                label &&
-                <label>{label}</label>
-            }
-            <Field
-                {...props}
-                component={renderDropdownList}
-                valueField={valuesField}
-                textField={textField}
-                busy={busy}
-                dropUp
-            />
+        <div className={`${className} ${label ? 'mt-2' : 'mt-4'}`}>
+            <Grid component="label" container alignItems="center" spacing={2}>
+                {label_space_xs > 0 && label && <Grid item xs={label_space_xs}>
+                    {label}
+                </Grid>}
+                <Grid item xs={label ? 12 - label_space_xs : 12}>
+                    <Field
+                        {...props}
+                        component={renderDropdownList}
+                        valueField={valuesField}
+                        textField={textField}
+                        busy={busy}
+                        dropUp
+                    />
+                </Grid>
+            </Grid>
         </div>
     )
 };
+
+MyDropdownList.propTypes = {
+    label_space_xs: PropTypes.number,
+    label: PropTypes.string,
+    busy: PropTypes.bool,
+    textField: PropTypes.string,
+    name: PropTypes.string,
+    valuesField: PropTypes.string,
+    placeholder: PropTypes.string
+};
+
 const renderCombobox = ({input, data, valueField, textField, placeholder, onSelect, readOnly, filter, meta: {touched, error, warning}}) => {
     return (
         <Fragment>
@@ -189,7 +222,7 @@ export const MyCombobox = (props) => {
     return (
         <div className={`${className} ${label ? 'mt-2' : 'mt-4'}`}>
             <Grid component="label" container alignItems="center" spacing={2}>
-                {label && <Grid item xs={label_space_xs}>
+                {label_space_xs > 0 && label && <Grid item xs={label_space_xs}>
                     {label}
                 </Grid>}
                 <Grid item xs={label ? 12 - label_space_xs : 12}>
@@ -213,6 +246,8 @@ export const MyCombobox = (props) => {
 
 
 MyCombobox.propTypes = {
+    label_space_xs: PropTypes.number,
+    label: PropTypes.string,
     busy: PropTypes.bool,
     autoFocus: PropTypes.bool,
     onSelect: PropTypes.func,
@@ -324,6 +359,8 @@ export const MyDateTimePickerField = (props) => {
 };
 
 MyDateTimePickerField.propTypes = {
+    label_space_xs: PropTypes.number,
+    label: PropTypes.string,
     name: PropTypes.string,
     className: PropTypes.string,
     nombre: PropTypes.string

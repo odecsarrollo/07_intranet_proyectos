@@ -260,6 +260,7 @@ class ProyectoMaestraSerializer(CustomSerializerMixin, serializers.ModelSerializ
 
 
 class ProyectoSerializer(CustomSerializerMixin, serializers.ModelSerializer):
+    tipo_id_proyecto = serializers.CharField(max_length=2, allow_null=True, required=False)
     cliente_nombre = serializers.CharField(source='cliente.nombre', read_only=True)
     cotizacion_relacionada_id = serializers.IntegerField(write_only=True, allow_null=True, required=False)
     costo_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
@@ -288,11 +289,11 @@ class ProyectoSerializer(CustomSerializerMixin, serializers.ModelSerializer):
         return 'COLOCAR EN CODIGO SERIALIZER'
 
     def update(self, instance, validated_data):
-        from .services import proyecto_actualizar
-        id_proyecto = validated_data.pop('id_proyecto')
-        abierto = validated_data.pop('abierto')
+        from .services import proyecto_crear_actualizar
+        id_proyecto = validated_data.get('id_proyecto', None)
+        abierto = validated_data.get('abierto', None)
         nombre = validated_data.get('nombre', None)
-        proyecto = proyecto_actualizar(
+        proyecto = proyecto_crear_actualizar(
             proyecto_id=instance.id,
             nombre=nombre,
             abierto=abierto,
@@ -301,12 +302,13 @@ class ProyectoSerializer(CustomSerializerMixin, serializers.ModelSerializer):
         return proyecto
 
     def create(self, validated_data):
-        from .services import proyecto_crear
-        id_proyecto = validated_data.pop('id_proyecto')
+        from .services import proyecto_crear_actualizar
+        print(validated_data)
+        tipo_id_proyecto = validated_data.get('tipo_id_proyecto', None)
         nombre = validated_data.get('nombre', None)
         cotizacion_relacionada_id = validated_data.get('cotizacion_relacionada_id', None)
-        proyecto = proyecto_crear(
-            id_proyecto=id_proyecto,
+        proyecto = proyecto_crear_actualizar(
+            tipo_id_proyecto=tipo_id_proyecto,
             nombre=nombre,
             cotizacion_relacionada_id=cotizacion_relacionada_id
         )
@@ -323,6 +325,7 @@ class ProyectoSerializer(CustomSerializerMixin, serializers.ModelSerializer):
             'en_cguno',
             'cliente',
             'cliente_nombre',
+            'tipo_id_proyecto',
             'costo_presupuestado_cotizaciones',
             'valor_orden_compra_cotizaciones',
             'costo_presupuestado_cotizaciones_adicional',
@@ -343,6 +346,7 @@ class ProyectoSerializer(CustomSerializerMixin, serializers.ModelSerializer):
             'mis_literales': {'read_only': True},
             'mis_documentos': {'read_only': True},
             'cotizaciones': {'read_only': True},
+            'id_proyecto': {'allow_null': True, 'required': False},
         }
 
 

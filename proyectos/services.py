@@ -1,31 +1,75 @@
 from django.db.models import Count
+from django.db.models.functions import Substr, Length
+from django.utils import timezone
 from rest_framework.exceptions import ValidationError
 
 from .models import Literal, Proyecto
 from cotizaciones.models import Cotizacion
 
 
-def proyecto_crear(
-        id_proyecto: str,
+def proyecto_generar_id_proyecto(
+        tipo_op: str,
+) -> str:
+    now = timezone.datetime.now()
+    nro_base_proyecto = (abs(int(now.year)) % 100) * 1000
+    proyectos = Proyecto.objects.annotate(
+        nro_op=Substr('id_proyecto', 3, 5),
+        tamano=Length('id_proyecto')
+    ).filter(
+        tamano=7,
+        id_proyecto__startswith=tipo_op.upper(),
+        nro_op__gte=nro_base_proyecto,
+        id__gte=500
+    )
+    if not proyectos.exists():
+        return '%s%s' % (tipo_op.upper(), nro_base_proyecto)
+    else:
+        ultimo = proyectos.last()
+        nro = int(ultimo.nro_op) + 1
+        return '%s%s' % (tipo_op.upper(), nro)
+
+
+def proyecto_crear_actualizar(
         nombre: str = None,
-        cotizacion_relacionada_id: int = None
+        cotizacion_relacionada_id: int = None,
+        proyecto_id: int = None,
+        abierto: bool = True,
+        id_proyecto: str = None,
+        tipo_id_proyecto: str = None,
 ) -> Proyecto:
-    proyecto = Proyecto()
-    proyecto.id_proyecto = id_proyecto
-    proyecto.abierto = True
-    proyecto.en_cguno = False
-    proyecto.costo_materiales = 0
+    if proyecto_id is not None:
+        proyecto = Proyecto.objects.get(pk=proyecto_id)
+        cambio_id_proyecto = not id_proyecto == proyecto.id_proyecto
+        if id_proyecto is not None:
+            if cambio_id_proyecto and proyecto.en_cguno:
+                raise ValidationError(
+                    {
+                        '_error': 'El id del proyecto no se puede cambiar, ya esta sincronizado con el sistema de información'})
+            proyecto.id_proyecto = id_proyecto
+    else:
+        if tipo_id_proyecto is None:
+            raise ValidationError(
+                {
+                    '_error': 'Para crear un proyecto debe de definir que tipo de proyecto es. Ej. OP, OO, OS'})
+
+        proyecto = Proyecto()
+        proyecto.en_cguno = False
+        proyecto.costo_materiales = 0
+        proyecto.id_proyecto = proyecto_generar_id_proyecto(tipo_id_proyecto)
+    proyecto.abierto = abierto
     proyecto.nombre = nombre
     proyecto.save()
-    if cotizacion_relacionada_id is not None:
-        from cotizaciones.services import cotizacion_quitar_relacionar_proyecto
-        cotizacion = Cotizacion.objects.get(pk=cotizacion_relacionada_id)
-        proyecto.cliente_id = cotizacion.cliente_id
-        cotizacion_quitar_relacionar_proyecto(
-            cotizacion_id=cotizacion_relacionada_id,
-            proyecto_id=proyecto.id
-        )
-        proyecto.save()
+
+    if proyecto_id is None:
+        if cotizacion_relacionada_id is not None:
+            from cotizaciones.services import cotizacion_quitar_relacionar_proyecto
+            cotizacion = Cotizacion.objects.get(pk=cotizacion_relacionada_id)
+            proyecto.cliente_id = cotizacion.cliente_id
+            cotizacion_quitar_relacionar_proyecto(
+                cotizacion_id=cotizacion_relacionada_id,
+                proyecto_id=proyecto.id
+            )
+            proyecto.save()
     return proyecto
 
 
@@ -37,24 +81,6 @@ def proyecto_correr_actualizacion_clientes():
             cotizacion = proyecto.cotizaciones.first()
             proyecto.cliente_id = cotizacion.cliente_id
             proyecto.save()
-
-
-def proyecto_actualizar(
-        proyecto_id: int,
-        id_proyecto: str,
-        abierto: bool,
-        nombre: str = None
-) -> Proyecto:
-    proyecto = Proyecto.objects.get(pk=proyecto_id)
-    cambio_id_proyecto = not id_proyecto == proyecto.id_proyecto
-    if cambio_id_proyecto and proyecto.en_cguno:
-        raise ValidationError(
-            {'_error': 'El id del proyecto no se puede cambiar, ya esta sincronizado con el sistema de información'})
-    proyecto.id_proyecto = id_proyecto
-    proyecto.nombre = nombre
-    proyecto.abierto = abierto
-    proyecto.save()
-    return proyecto
 
 
 def literal_crear_actualizar(

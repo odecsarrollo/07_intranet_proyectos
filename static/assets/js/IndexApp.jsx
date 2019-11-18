@@ -1,5 +1,5 @@
 import React, {memo} from 'react';
-import Loading from "./00_utilities/components/system/loading_overlay";
+import Loading from "./00_utilities/components/system/LoadingOverlay";
 import {Link} from 'react-router-dom'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {withStyles} from "@material-ui/core/styles/index";

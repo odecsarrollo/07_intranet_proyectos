@@ -104,6 +104,7 @@ class CotizacionSerializer(serializers.ModelSerializer):
         valor_ofertado = validated_data.get('valor_ofertado', 0)
         valor_orden_compra = validated_data.get('valor_orden_compra', 0)
         estado_observacion_adicional = validated_data.get('estado_observacion_adicional', None)
+        dias_pactados_entrega_proyecto = validated_data.get('dias_pactados_entrega_proyecto', None)
         cotizacion = cotizacion_actualizar(
             cotizacion_id=cotizacion.id,
             modified_by_id=created_by.id,
@@ -125,6 +126,7 @@ class CotizacionSerializer(serializers.ModelSerializer):
             orden_compra_fecha=orden_compra_fecha,
             valor_orden_compra=valor_orden_compra,
             estado_observacion_adicional=estado_observacion_adicional,
+            dias_pactados_entrega_proyecto=dias_pactados_entrega_proyecto,
         )
         return cotizacion
 
@@ -185,6 +187,7 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'cotizacion_inicial_unidad_negocio',
             'responsable',
             'origen_cotizacion',
+            'dias_pactados_entrega_proyecto',
             'responsable_actual',
             'responsable_actual_nombre',
             'nro_cotizacion',

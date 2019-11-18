@@ -90,7 +90,7 @@ const FormBaseCotizacion = (props) => {
         {id: 'TRP', text: 'TRP - TRANSPORTADOR'},
         {id: 'EQR', text: 'EQR - EQUIPOS REPRESENTADOS'},
         {id: 'SER', text: 'SER - SERVICIOS'},
-        {id: 'EQO', text: 'TRP - EQUIPO ODECOPACK'},
+        {id: 'EQO', text: 'EQO - EQUIPO ODECOPACK'},
         {id: 'SOL', text: 'SOL - SOLUCIONES'},
     ];
     if (!item) {
@@ -139,54 +139,91 @@ const FormBaseCotizacion = (props) => {
                             }
                         </div>
                     </div>
-                    <MyCombobox
-                        className="col-12"
-                        name='unidad_negocio'
-                        busy={false}
-                        autoFocus={false}
-                        data={tipo_negocio}
-                        readOnly={item && es_adicional}
-                        textField='text'
-                        filter='contains'
-                        valuesField='id'
-                        placeholder='Tipo de Negocio'
-                    />
                     {!es_adicional &&
-                    <Fragment>
-                        <MyCombobox
-                            className="col-12 col-md-6"
-                            name='cliente'
-                            data={_.map(_.orderBy(clientes_list, ['nombre'], ['asc']), e => {
-                                return {
-                                    'name': e.nombre,
-                                    'id': e.id
-                                }
-                            })}
-                            textField='name'
-                            valuesField='id'
-                            placeholder='Cliente'
-                            filter='contains'
-                            onSelect={(v) => cargarContactosCliente(v.id)}
-                        />
-                        {
-                            myValues && myValues.cliente &&
+                    <div className='col-12'>
+                        <div className="row">
                             <MyCombobox
+                                label='Cliente'
+                                label_space_xs={3}
                                 className="col-12 col-md-6"
-                                name='contacto_cliente'
-                                data={_.map(_.orderBy(contactos_list, ['full_nombre'], ['asc']), e => {
+                                name='cliente'
+                                data={_.map(_.orderBy(clientes_list, ['nombre'], ['asc']), e => {
                                     return {
-                                        'name': e.full_nombre,
+                                        'name': e.nombre,
                                         'id': e.id
                                     }
                                 })}
                                 textField='name'
+                                valuesField='id'
+                                placeholder='Cliente'
+                                filter='contains'
+                                onSelect={(v) => cargarContactosCliente(v.id)}
+                            />
+                            {
+                                myValues && myValues.cliente &&
+                                <MyCombobox
+                                    label='Contacto'
+                                    label_space_xs={3}
+                                    className="col-12 col-md-6"
+                                    name='contacto_cliente'
+                                    data={_.map(_.orderBy(contactos_list, ['full_nombre'], ['asc']), e => {
+                                        return {
+                                            'name': e.full_nombre,
+                                            'id': e.id
+                                        }
+                                    })}
+                                    textField='name'
+                                    filter='contains'
+                                    valuesField='id'
+                                    placeholder='Contacto'
+                                />
+                            }
+                        </div>
+                    </div>}
+                    <div className='col-12'>
+                        <div className="row">
+                            <MyCombobox
+                                label_space_xs={4}
+                                label='Unidad de Negocio'
+                                className="col-12 col-md-6"
+                                name='unidad_negocio'
+                                busy={false}
+                                autoFocus={false}
+                                data={tipo_negocio}
+                                readOnly={item && es_adicional}
+                                textField='text'
                                 filter='contains'
                                 valuesField='id'
-                                placeholder='Contacto'
+                                placeholder='Tipo de Negocio'
                             />
-                        }
-                    </Fragment>
-                    }
+                            <MyDropdownList
+                                label_space_xs={4}
+                                className='col-12 col-md-6'
+                                name='origen_cotizacion'
+                                label='Origen Cotización'
+                                data={[
+                                    'Comercial',
+                                    'Mercadeo',
+                                    'Gerencia',
+                                    'Componentes',
+                                    'Técnico',
+                                ]}
+                            />
+                        </div>
+                    </div>
+                    {esta_aprobado &&
+                    <div className="col-12">
+                        <div className="row">
+                            <div className="col-12 col-md-4">
+                                <MyTextFieldSimple
+                                    className="col-6"
+                                    nombre='Nro. Días Entrega'
+                                    name='dias_pactados_entrega_proyecto'
+                                    type='number'
+                                />
+                            </div>
+                        </div>
+                    </div>}
                 </div>
             </div>
             <MyTextFieldSimple
@@ -214,18 +251,6 @@ const FormBaseCotizacion = (props) => {
                     disabled={item && es_adicional}
                     case='U'/>
             }
-            <MyDropdownList
-                className='col-12 col-md-8'
-                name='origen_cotizacion'
-                label='Origen Cotización'
-                data={[
-                    'Comercial',
-                    'Mercadeo',
-                    'Gerencia',
-                    'Componentes',
-                    'Técnico',
-                ]}
-            />
             <MyTextFieldSimple
                 className="col-12"
                 nombre='Observación'
@@ -234,14 +259,18 @@ const FormBaseCotizacion = (props) => {
                 rows={2}
                 case='U'/>
             <MyDateTimePickerField
+                label='Fecha Entrega Cotización'
+                label_space_xs={4}
                 max={new Date(2099, 11, 31)}
                 name='fecha_entrega_pactada_cotizacion'
                 nombre='Fecha Entrega Cotización'
-                className='col-12 col-md-6 col-lg-4'
+                className='col-12 col-md-6'
             />
             {
                 !item && !subir_anterior &&
                 <MyDateTimePickerField
+                    label='Fecha Verificación Estado'
+                    label_space_xs={4}
                     max={new Date(2099, 11, 31)}
                     name='fecha_limite_segumiento_estado'
                     nombre='Verificar el...'
@@ -254,7 +283,8 @@ const FormBaseCotizacion = (props) => {
                     <div className="col-12">
                         <div className="row mb-4">
                             <MyDropdownList
-                                className='col-12 col-md-8'
+                                label_space_xs={3}
+                                className='col-12 col-md-6'
                                 name='estado'
                                 label='Estado'
                                 data={estados_lista}
@@ -262,6 +292,8 @@ const FormBaseCotizacion = (props) => {
                             {
                                 pedir_dias_espera_cambio_estado &&
                                 <MyDateTimePickerField
+                                    label='Fecha Verificación Estado'
+                                    label_space_xs={4}
                                     max={new Date(2099, 11, 31)}
                                     name='fecha_limite_segumiento_estado'
                                     nombre='Verificar el...'
@@ -294,6 +326,8 @@ const FormBaseCotizacion = (props) => {
                 esta_aprobado &&
                 <Fragment>
                     <MyDateTimePickerField
+                        label='Fecha Entrega Proyecto'
+                        label_space_xs={4}
                         max={new Date(2099, 11, 31)}
                         name='fecha_entrega_pactada'
                         nombre='Fecha Entrega Proyecto'
@@ -310,6 +344,8 @@ const FormBaseCotizacion = (props) => {
                                 <h3>Orden de Compra</h3>
                             </div>
                             <MyDateTimePickerField
+                                label='Fecha Orden Compra'
+                                label_space_xs={4}
                                 max={new Date(2099, 11, 31)}
                                 name='orden_compra_fecha'
                                 nombre='Fecha Orden de Compra'

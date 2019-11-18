@@ -49,6 +49,8 @@ let Form = memo(props => {
                                 }
                             )
                         })}
+                        label_space_xs={3}
+                        label='Responsable Cotización'
                         name='responsable'
                         textField='name'
                         valuesField='id'

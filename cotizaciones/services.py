@@ -3,6 +3,7 @@ from typing import List, Union
 
 from django.contrib.auth.models import User
 from django.db.models import Max, QuerySet, Count, OuterRef
+from django.db.models.functions import Substr
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError
 
@@ -101,6 +102,7 @@ def cotizacion_actualizar(
         observacion: str = None,
         orden_compra_nro: str = None,
         estado_observacion_adicional: str = None,
+        dias_pactados_entrega_proyecto: int = None,
 ) -> Cotizacion:
     cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
     cambio_estado = estado != cotizacion.estado
@@ -193,6 +195,12 @@ def cotizacion_actualizar(
         else:
             cotizacion.valor_orden_compra = valor_orden_compra
 
+        if dias_pactados_entrega_proyecto is None or dias_pactados_entrega_proyecto <= 0:
+            raise ValidationError({
+                '_error': 'Para el estado de Cierre (Aprobado) es necesario tener unos días pactados de entrega del proyectos'})
+        else:
+            cotizacion.dias_pactados_entrega_proyecto = dias_pactados_entrega_proyecto
+
         if orden_compra_nro is None:
             raise ValidationError({
                 '_error': 'Para el estado de Cierre (Aprobado) es necesario tener un número de orden de compra'})
@@ -202,6 +210,7 @@ def cotizacion_actualizar(
         cotizacion.orden_compra_fecha = None
         cotizacion.valor_orden_compra = 0
         cotizacion.orden_compra_nro = None
+        cotizacion.dias_pactados_entrega_proyecto = None
 
     cotizacion.responsable_id = responsable_id
     cotizacion.descripcion_cotizacion = descripcion_cotizacion
@@ -314,15 +323,20 @@ def cotizacion_set_revisado(
 
 def cotizacion_generar_numero_cotizacion() -> int:
     now = datetime.datetime.now()
-    base_nro_cotizacion = int('%s%s' % ((abs(int(now.year)) % 100), (abs(int(now.month))))) * 10000
-    qs = Cotizacion.objects.filter(
+    ano = abs(int(now.year) % 100)
+    mes = abs(int(now.month))
+    base_nro_cotizacion = ano * 1000000
+    cotizaciones = Cotizacion.objects.filter(
         nro_cotizacion__isnull=False,
         nro_cotizacion__gte=base_nro_cotizacion
-    ).aggregate(
-        ultimo_indice=Max('nro_cotizacion')
     )
-    ultimo_indice = qs['ultimo_indice']
-    if ultimo_indice is None:
-        return base_nro_cotizacion
-    else:
-        return int(ultimo_indice) + 1
+    ultimo_indice = 1
+    if cotizaciones.exists():
+        cotizaciones = cotizaciones.annotate(
+            nro_cot=Substr('nro_cotizacion', 5, 4)
+        ).aggregate(Max('nro_cot'))
+        ultimo_indice = int(cotizaciones['nro_cot__max']) + 1
+
+    nuevo_nro_cotizacion = (int('%s%s' % (ano, mes)) * 10000) + ultimo_indice
+
+    return nuevo_nro_cotizacion

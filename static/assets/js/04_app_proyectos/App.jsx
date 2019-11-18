@@ -1,6 +1,6 @@
 import React from 'react';
 import {Route, Switch} from 'react-router-dom';
-import Loading from '../00_utilities/components/system/loading_overlay';
+import Loading from '../00_utilities/components/system/LoadingOverlay';
 
 import Menu from './00_menu/index';
 import DrawerMenu from '../00_utilities/components/ui/drawer/drawer_menu';

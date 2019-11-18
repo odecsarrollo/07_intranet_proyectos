@@ -25,6 +25,8 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
     serializer_class = CotizacionSerializer
 
     def retrieve(self, request, *args, **kwargs):
+        from .services import cotizacion_generar_numero_cotizacion
+        print(cotizacion_generar_numero_cotizacion())
         self.serializer_class = CotizacionConDetalleSerializer
         return super().retrieve(request, *args, **kwargs)
 

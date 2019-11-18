@@ -38,7 +38,7 @@ const List = memo(props => {
             <CRUD
                 posSummitMethod={() => cargarDatos()}
                 method_pool={method_pool}
-                list={_.orderBy(list, ['id_proyecto'], ['desc'])}
+                list={list}
                 permisos_cotizaciones={permisos_cotizaciones}
                 permisos_object={permisos_proyectos}
                 plural_name='Proyectos'

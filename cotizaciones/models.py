@@ -56,6 +56,7 @@ class Cotizacion(TimeStampedModel):
     orden_compra_fecha = models.DateField(null=True)
     fecha_entrega_pactada_cotizacion = models.DateField(null=True)
     fecha_entrega_pactada = models.DateField(null=True)
+    dias_pactados_entrega_proyecto = models.IntegerField(null=True)
     costo_presupuestado = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     responsable = models.ForeignKey(User, on_delete=models.PROTECT, null=True)
 
@@ -147,3 +148,14 @@ class ArchivoCotizacion(TimeStampedModel):
         permissions = [
             ("list_archivocotizacion", "Can see list archivos cotizaciones"),
         ]
+
+
+class CondicionInicioProyecto(models.Model):
+    descripcion = models.CharField(max_length=400)
+    require_documento = models.BooleanField(default=False)
+
+
+class CondicionInicioProyectoCotizacion(models.Model):
+    condicion = models.ForeignKey(CondicionInicioProyecto, on_delete=models.PROTECT)
+    fecha_entrega = models.DateField(null=True)
+    documento = models.FileField(null=True)
