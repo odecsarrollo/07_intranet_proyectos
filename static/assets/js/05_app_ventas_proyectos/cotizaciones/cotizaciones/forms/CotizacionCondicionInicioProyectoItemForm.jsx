@@ -99,7 +99,7 @@ let CotizacionCondicionInicioProyectoItemForm = (props) => {
             is_open={show_limpiar}
             titulo='Limpiar Condición Inicio'
         >
-            Desea Limpiar
+            Desea Limpiar condición de inicio {to_string}
         </SiNoDialog>}
         <div className="row">
             {!read_only && <Fragment>
