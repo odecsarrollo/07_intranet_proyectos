@@ -1,0 +1,161 @@
+import React, {Fragment, useState} from 'react';
+import classNames from 'classnames';
+import {
+    MyDateTimePickerField,
+    MyFieldFileInput
+} from "../../../../00_utilities/components/ui/forms/fields";
+import BotoneriaModalForm from "../../../../00_utilities/components/ui/forms/botoneria_modal_form";
+import {reduxForm} from "redux-form";
+import validate from "../../tuberia_ventas/forms/validate";
+import Typography from "@material-ui/core/Typography";
+import MyDialogButtonDelete from "../../../../00_utilities/components/ui/dialog/delete_dialog";
+import * as actions from "../../../../01_actions/01_index";
+import {useDispatch} from "react-redux/es/hooks/useDispatch";
+import IconButton from "@material-ui/core/IconButton";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {makeStyles} from "@material-ui/core";
+import {fechaFormatoUno, formatBytes} from "../../../../00_utilities/common";
+import moment from "moment-timezone";
+import SiNoDialog from "../../../../00_utilities/components/ui/dialog/SiNoDialog";
+
+const useStyles = makeStyles(theme => ({
+    delete_boton: {
+        position: 'absolute',
+        bottom: '10px',
+        right: '10px'
+    },
+    download_boton: {
+        position: 'absolute',
+        bottom: '10px',
+        right: '40px',
+        margin: 0,
+        padding: 4,
+        color: theme.palette.primary.dark
+    },
+    limpiar_boton: {
+        position: 'absolute',
+        bottom: '10px',
+        right: '20px',
+        margin: 0,
+        padding: 4,
+        color: theme.palette.primary.dark
+    },
+    info_archivo: {
+        color: theme.palette.primary.dark
+    },
+}));
+
+
+let CotizacionCondicionInicioProyectoItemForm = (props) => {
+    const {
+        pristine,
+        submitting,
+        reset,
+        initialValues,
+        handleSubmit,
+        onDelete
+    } = props;
+    const classes = useStyles();
+    const {to_string, require_documento, documento_url, size, fecha_entrega, filename, condicion_inicio_proyecto, cotizacion_proyecto} = initialValues;
+    const read_only = (require_documento && documento_url && fecha_entrega) || (!require_documento && fecha_entrega);
+    const [show_limpiar, setShowLimpiar] = useState(false);
+    const dispatch = useDispatch();
+    const onSubmit = (v) => {
+        if (initialValues.id) {
+            const cargarCotizacion = () => dispatch(actions.fetchCotizacion(cotizacion_proyecto));
+            return dispatch(actions.updateCondicionInicioProyectoCotizacion(initialValues.id, v, {callback: cargarCotizacion}))
+        }
+    };
+    const onSiLimpiarCondicionInicio = () => dispatch(actions.limpiarCondicionInicioCotizacion(cotizacion_proyecto, condicion_inicio_proyecto, {callback: () => setShowLimpiar(false)}));
+    const submitObject = (item) => {
+        let datos_a_subir = new FormData();
+        let datos_formulario = _.omit(item, 'documento');
+        let {fecha_entrega} = datos_formulario;
+        if (fecha_entrega) {
+            if ((typeof fecha_entrega) === 'string') {
+                fecha_entrega = new Date(fecha_entrega)
+            }
+            fecha_entrega = moment(fecha_entrega).tz('America/Bogota').format('YYYY-MM-DD');
+            datos_formulario = {...datos_formulario, fecha_entrega};
+        }
+        _.mapKeys(datos_formulario, (item, key) => {
+            datos_a_subir.append(key, item);
+        });
+        if (item.documento) {
+            if (typeof item.documento !== 'string') {
+                datos_a_subir.append('documento', item.documento[0]);
+            }
+        }
+        return datos_a_subir;
+    };
+    return <form className={`card p-4 m-1`}
+                 onSubmit={handleSubmit(v => onSubmit(submitObject(v)))}>
+        <Typography variant="body1" gutterBottom color="primary">
+            {to_string}
+        </Typography>
+        {show_limpiar && <SiNoDialog
+            onSi={onSiLimpiarCondicionInicio}
+            onNo={() => setShowLimpiar(false)}
+            is_open={show_limpiar}
+            titulo='Limpiar Condición Inicio'
+        >
+            Desea Limpiar
+        </SiNoDialog>}
+        <div className="row">
+            {!read_only && <Fragment>
+                <MyDateTimePickerField
+                    className={`col-12`}
+                    name='fecha_entrega'
+                    dropUp={false}
+                    label='Fecha Engregado'
+                    label_space_xs={4}
+                />
+                {require_documento && <MyFieldFileInput className='col-12 p-2' name="documento"/>}
+                <MyDialogButtonDelete
+                    className={classes.delete_boton}
+                    onDelete={onDelete}
+                    element_name={to_string}
+                    element_type='Condicion Inicio'
+                />
+                <BotoneriaModalForm
+                    conCerrar={false}
+                    mostrar_cancelar={false}
+                    pristine={pristine}
+                    reset={reset}
+                    submitting={submitting}
+                    initialValues={initialValues}
+                />
+            </Fragment>}
+            {read_only && <Fragment>
+                <div className={classNames("col-12", classes.info_archivo)}>Fecha
+                    Entrega: {fechaFormatoUno(fecha_entrega)}</div>
+                <IconButton className={classes.limpiar_boton} onClick={() => setShowLimpiar(true)}>
+                    <FontAwesomeIcon
+                        className='puntero'
+                        icon='eraser'
+                        size='xs'
+                    />
+                </IconButton>
+                {documento_url && <Fragment>
+                    <a href={documento_url} target='_blank'>
+                        <IconButton className={classes.download_boton}>
+                            <FontAwesomeIcon
+                                className='puntero'
+                                icon='download'
+                                size='xs'
+                            />
+                        </IconButton>
+                    </a>
+                    <div className={classNames("col-12", classes.info_archivo)}>Nombre Archivo: {filename}</div>
+                    <div className={classNames("col-12", classes.info_archivo)}>Tamaño: {formatBytes(size)}</div>
+                </Fragment>}
+            </Fragment>}
+        </div>
+    </form>
+};
+CotizacionCondicionInicioProyectoItemForm = reduxForm({
+    validate,
+    enableReinitialize: true
+})(CotizacionCondicionInicioProyectoItemForm);
+
+export default CotizacionCondicionInicioProyectoItemForm;

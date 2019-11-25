@@ -40,7 +40,7 @@ const Comentario = memo(props => {
 
 const ComentariosList = memo(props => {
     const {seguimiento_list, guardarComentario} = props;
-    const comentarios_array = _.map(_.orderBy(_.pickBy(seguimiento_list, s => s.tipo_seguimiento === 0), ['id'], ['desc']));
+    const comentarios_array = _.orderBy(seguimiento_list.filter(s => s.tipo_seguimiento === 0), ['id'], ['desc']);
     return (
         <div className="col-xs-12">
             <div className="page-header">

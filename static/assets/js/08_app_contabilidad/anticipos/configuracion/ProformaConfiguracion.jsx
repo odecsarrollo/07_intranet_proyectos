@@ -60,9 +60,7 @@ let ProformaConfiguracionForm = memo(props => {
     }
     return (
         <ValidarPermisos can_see={change || detail} nombre={'Configuración Proforma'}>
-            <form onSubmit={handleSubmit(v => {
-                return onSubmit(submitObject(v))
-            })}>
+            <form onSubmit={handleSubmit(v => {return onSubmit(submitObject(v))})}>
                 <div className="row">
                     {/*<MyTextFieldSimple*/}
                     {/*    className="col-12 col-md-6"*/}
@@ -101,7 +99,7 @@ let ProformaConfiguracionForm = memo(props => {
                         initialValues && initialValues.encabezado &&
                         <div className="col-12">
                             <img style={{width: '100%'}} src={initialValues.encabezado}></img>
-                            {change && <MyCheckboxSimple nombre='Borrar Encabezado?' name='borrar_encabezado'/>}
+                            {change && <MyCheckboxSimple label='Borrar Encabezado?' name='borrar_encabezado'/>}
                         </div>
                     }
                     {
@@ -118,7 +116,7 @@ let ProformaConfiguracionForm = memo(props => {
                         initialValues && initialValues.firma &&
                         <div className="col-12">
                             <img src={initialValues.firma}></img>
-                            {change && <MyCheckboxSimple nombre='Borrar Firma?' name='borrar_firma'/>}
+                            {change && <MyCheckboxSimple label='Borrar Firma?' name='borrar_firma'/>}
                         </div>
                     }
                     {

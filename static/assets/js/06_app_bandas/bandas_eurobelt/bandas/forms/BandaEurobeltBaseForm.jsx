@@ -134,15 +134,15 @@ let Form = memo(props => {
                         type='number'/>
                     <MyCheckboxSimple
                         className="col-12 col-md-6"
-                        nombre='Tiene Empujador'
+                        label='Tiene Empujador'
                         name='con_empujador'/>
                     <MyCheckboxSimple
                         className="col-12 col-md-6"
-                        nombre='Tiene Aleta'
+                        label='Tiene Aleta'
                         name='con_aleta'/>
                     <MyCheckboxSimple
                         className="col-12 col-md-6"
-                        nombre='Tiene Torneado Varilla'
+                        label='Tiene Torneado Varilla'
                         name='con_torneado_varilla'/>
                 </div>
             </div>

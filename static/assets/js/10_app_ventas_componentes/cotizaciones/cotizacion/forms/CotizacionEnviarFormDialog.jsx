@@ -43,17 +43,17 @@ let CotizacionEnviarFormDialog = memo(props => {
         >
             {correo_electronico &&
             <MyCheckboxSimple
-                nombre={correo_electronico.toString().toLowerCase()}
+                label={correo_electronico.toString().toLowerCase()}
                 name='email_uno'
                 className='col-12'/>}
             {correo_electronico_2 &&
             <MyCheckboxSimple
-                nombre={correo_electronico_2.toString().toLowerCase()}
+                label={correo_electronico_2.toString().toLowerCase()}
                 name='email_dos'
                 className='col-12'/>}
             {email &&
             <MyCheckboxSimple
-                nombre={email.toString().toLowerCase()}
+                label={email.toString().toLowerCase()}
                 name='email_asesor'
                 className='col-12'/>}
             <MyTextFieldSimple

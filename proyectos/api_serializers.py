@@ -22,10 +22,10 @@ class FacturaLiteralSerializer(serializers.ModelSerializer):
 
 
 class ArchivoLiteralSerializer(serializers.ModelSerializer):
+    creado_por_username = serializers.CharField(source='creado_por.username', read_only=True)
     archivo_url = serializers.SerializerMethodField()
     size = serializers.SerializerMethodField()
     extension = serializers.SerializerMethodField()
-    creado_por_username = serializers.CharField(source='creado_por.username', read_only=True)
 
     def get_size(self, obj):
         if obj.archivo:
@@ -38,8 +38,8 @@ class ArchivoLiteralSerializer(serializers.ModelSerializer):
         return None
 
     def get_extension(self, obj):
-        extension = obj.archivo.url.split('.')[-1]
         if obj.archivo:
+            extension = obj.archivo.url.split('.')[-1]
             return extension.title()
         return None
 
@@ -82,8 +82,8 @@ class ArchivoProyectoSerializer(serializers.ModelSerializer):
         return None
 
     def get_extension(self, obj):
-        extension = obj.archivo.url.split('.')[-1]
         if obj.archivo:
+            extension = obj.archivo.url.split('.')[-1]
             return extension.title()
         return None
 

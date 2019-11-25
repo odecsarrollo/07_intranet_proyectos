@@ -27,7 +27,8 @@ let Form = memo(props => {
                 <MyDateTimePickerField
                     className='col-12 col-md-6'
                     name='fecha_inicio_tarea'
-                    nombre='Fecha'
+                    label='Fecha'
+                    label_space_xs={4}
                     max={new Date(2099, 11, 1)}
                 />
                 <MyTextFieldSimple

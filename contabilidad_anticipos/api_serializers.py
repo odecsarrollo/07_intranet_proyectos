@@ -72,8 +72,8 @@ class ProformaAnticipoEnvioSerializer(serializers.ModelSerializer):
         return None
 
     def get_extension(self, obj):
-        extension = obj.archivo.url.split('.')[-1]
         if obj.archivo:
+            extension = obj.archivo.url.split('.')[-1]
             return extension.title()
         return None
 
@@ -305,8 +305,8 @@ class ProformaAnticipoArchivoSerializer(serializers.ModelSerializer):
         return None
 
     def get_extension(self, obj):
-        extension = obj.archivo.url.split('.')[-1]
         if obj.archivo:
+            extension = obj.archivo.url.split('.')[-1]
             return extension.title()
         return None
 

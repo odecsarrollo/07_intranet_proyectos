@@ -4,10 +4,12 @@ from .api_views import (
     SeguimientoCotizacionViewSet,
     ArchivoCotizacionViewSet,
     CondicionInicioProyectoViewSet,
+    CondicionInicioProyectoCotizacionViewSet
 )
 
 router = routers.DefaultRouter()
 router.register(r'cotizaciones', CotizacionViewSet)
+router.register(r'cotizaciones_condiciones_inicio_proyectos_cotizaciones', CondicionInicioProyectoCotizacionViewSet)
 router.register(r'cotizaciones_condiciones_inicio_proyectos', CondicionInicioProyectoViewSet)
 router.register(r'cotizaciones_seguimiento', SeguimientoCotizacionViewSet)
 router.register(r'cotizaciones_archivos', ArchivoCotizacionViewSet)

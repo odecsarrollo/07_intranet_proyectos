@@ -62,6 +62,34 @@ export const fetchCotizacionesAgendadas = (options_action = {}) => {
     }
 };
 
+export const adicionarCondicionInicioProyectoCotizacion = (id, condicion_inicio_proyecto_id, options_action = {}) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        params.append('tipo_accion', 'add');
+        params.append('condicion_inicio_proyecto_id', condicion_inicio_proyecto_id);
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: response})
+        };
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'adicionar_quitar_condicion_inicio', params, options)
+    }
+};
+
+
+export const quitarCondicionInicioProyectoCotizacion = (id, condicion_inicio_proyecto_id, options_action = {}) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        params.append('tipo_accion', 'del');
+        params.append('condicion_inicio_proyecto_id', condicion_inicio_proyecto_id);
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: response})
+        };
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'adicionar_quitar_condicion_inicio', params, options)
+    }
+};
+
+
 export const relacionarQuitarProyectoaCotizacion = (id, proyecto_id, options_action = {}) => {
     return (dispatch) => {
         let params = new URLSearchParams();
@@ -71,6 +99,18 @@ export const relacionarQuitarProyectoaCotizacion = (id, proyecto_id, options_act
         };
         const options = {...options_action, dispatches, dispatch_method: dispatch};
         return callApiMethodPostParameters(current_url_api, id, 'relacionar_quitar_proyecto', params, options)
+    }
+};
+
+export const limpiarCondicionInicioCotizacion = (id, condicion_inicio_proyecto_id, options_action = {}) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        params.append('condicion_inicio_proyecto_id', condicion_inicio_proyecto_id);
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: response})
+        };
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'limpiar_condicion_inicio_proyecto', params, options)
     }
 };
 

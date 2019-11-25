@@ -30,8 +30,32 @@ class CondicionInicioProyectoSerializer(serializers.ModelSerializer):
 
 
 class CondicionInicioProyectoCotizacionSerializer(serializers.ModelSerializer):
-    cumple_condicion = serializers.BooleanField(read_only=True)
+    filename = serializers.SerializerMethodField()
     to_string = serializers.SerializerMethodField()
+    documento_url = serializers.SerializerMethodField()
+    size = serializers.SerializerMethodField()
+    extension = serializers.SerializerMethodField()
+
+    def get_size(self, obj):
+        if obj.documento:
+            return obj.documento.size
+        return None
+
+    def get_documento_url(self, obj):
+        if obj.documento:
+            return obj.documento.url
+        return None
+
+    def get_extension(self, obj):
+        if obj.documento:
+            extension = obj.documento.url.split('.')[-1]
+            return extension.title()
+        return None
+
+    def get_filename(self, obj):
+        if obj.documento:
+            return obj.documento.name.split('/')[-1]
+        return None
 
     def get_to_string(self, obj):
         return obj.descripcion
@@ -39,14 +63,20 @@ class CondicionInicioProyectoCotizacionSerializer(serializers.ModelSerializer):
     class Meta:
         model = CondicionInicioProyectoCotizacion
         fields = [
-            'url',
             'id',
+            'cotizacion_proyecto',
             'descripcion',
+            'documento_url',
+            'size',
+            'filename',
+            'extension',
+            'condicion_inicio_proyecto',
             'require_documento',
-            'cumple_condicion',
+            'fecha_entrega',
+            'documento',
             'to_string',
         ]
-        read_only_fields = fields
+        read_only_fields = ['require_documento', 'condicion_inicio_proyecto']
 
 
 # region Serializadores Cotizacion
@@ -228,9 +258,10 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'cotizacion_inicial',
             'cotizacion_inicial_nro',
             'cotizacion_inicial_unidad_negocio',
+            'mis_seguimientos',
             'responsable',
             'origen_cotizacion',
-            'condiciones_inicio',
+            'condiciones_inicio_cotizacion',
             'dias_pactados_entrega_proyecto',
             'responsable_actual',
             'responsable_actual_nombre',
@@ -271,15 +302,17 @@ class CotizacionSerializer(serializers.ModelSerializer):
         ]
         extra_kwargs = {
             'literales': {'read_only': True},
+            'condiciones_inicio_cotizacion': {'read_only': True},
+            'mis_seguimientos': {'read_only': True},
             'es_adicional': {'read_only': True},
-            'cliente_id': {'read_only': True},
-            'cotizacion_inicial': {'allow_null': True},
-            'abrir_carpeta': {'read_only': True},
             'relacionada': {'read_only': True},
-            'cotizaciones_adicionales': {'read_only': True},
+            'cliente_id': {'read_only': True},
+            'abrir_carpeta': {'read_only': True},
             'proyectos': {'read_only': True},
             'responsable_actual': {'read_only': True},
             'fecha_cambio_estado': {'read_only': True},
+            'cotizaciones_adicionales': {'read_only': True},
+            'cotizacion_inicial': {'allow_null': True},
             'contacto': {'allow_null': True},
             'origen_cotizacion': {'allow_null': True},
             'estado_observacion_adicional': {'allow_null': True},
@@ -419,14 +452,6 @@ class LiteralCotizacionConDetalle(serializers.ModelSerializer):
         read_only_fields = fields
 
 
-class CotizacionConDetalleSerializer(CotizacionSerializer):
-    condiciones_inicio = CondicionInicioProyectoCotizacionSerializer(many=True, read_only=True)
-    literales = LiteralCotizacionConDetalle(many=True, read_only=True)
-    proyectos = ProyectoCotizacionConDetalleSerializer(many=True, read_only=True)
-    cotizaciones_adicionales = CotizacionCotizacionConDetalleSerializer(many=True, read_only=True)
-    cotizacion_inicial = CotizacionCotizacionConDetalleSerializer(read_only=True)
-
-
 class CotizacionListSerializer(serializers.ModelSerializer):
     color_tuberia_ventas = serializers.SerializerMethodField()
     porcentaje_tuberia_ventas = serializers.SerializerMethodField()
@@ -509,15 +534,15 @@ class SeguimientoCotizacionSerializer(serializers.ModelSerializer):
     cliente_nombre = serializers.CharField(source='cotizacion.cliente.nombre', read_only=True)
     cliente = serializers.CharField(source='cotizacion.cliente.id', read_only=True)
     creado_por_username = serializers.CharField(source='creado_por.username', read_only=True)
-    fecha_inicio_tarea = serializers.DateTimeField(
+    fecha_inicio_tarea = serializers.DateField(
         format="%Y-%m-%d",
-        input_formats=['%Y-%m-%d', 'iso-8601'],
+        input_formats=['%Y-%m-%dT%H:%M:%S.%fZ', 'iso-8601'],
         allow_null=True,
         required=False
     )
-    fecha_fin_tarea = serializers.DateTimeField(
+    fecha_fin_tarea = serializers.DateField(
         format="%Y-%m-%d",
-        input_formats=['%Y-%m-%d', 'iso-8601'],
+        input_formats=['%Y-%m-%dT%H:%M:%S.%fZ', 'iso-8601'],
         allow_null=True,
         required=False
     )
@@ -549,6 +574,15 @@ class SeguimientoCotizacionSerializer(serializers.ModelSerializer):
         }
 
 
+class CotizacionConDetalleSerializer(CotizacionSerializer):
+    literales = LiteralCotizacionConDetalle(many=True, read_only=True)
+    proyectos = ProyectoCotizacionConDetalleSerializer(many=True, read_only=True)
+    cotizaciones_adicionales = CotizacionCotizacionConDetalleSerializer(many=True, read_only=True)
+    cotizacion_inicial = CotizacionCotizacionConDetalleSerializer(read_only=True)
+    condiciones_inicio_cotizacion = CondicionInicioProyectoCotizacionSerializer(many=True, read_only=True)
+    mis_seguimientos = SeguimientoCotizacionSerializer(many=True, read_only=True)
+
+
 class ArchivoCotizacionSerializer(serializers.ModelSerializer):
     archivo_url = serializers.SerializerMethodField()
     extension = serializers.SerializerMethodField()
@@ -561,8 +595,8 @@ class ArchivoCotizacionSerializer(serializers.ModelSerializer):
         return None
 
     def get_extension(self, obj):
-        extension = obj.archivo.url.split('.')[-1]
         if obj.archivo:
+            extension = obj.archivo.url.split('.')[-1]
             return extension.title()
         return None
 

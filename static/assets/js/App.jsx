@@ -95,6 +95,7 @@ import {
     faArrowsAlt,
     faChevronDown,
     faLink,
+    faEraser
 } from '@fortawesome/pro-solid-svg-icons';
 
 library.add(
@@ -160,6 +161,7 @@ library.add(
     faArrowsAlt,
     faChevronDown,
     faLink,
+    faEraser,
 );
 
 const theme = createMuiTheme({

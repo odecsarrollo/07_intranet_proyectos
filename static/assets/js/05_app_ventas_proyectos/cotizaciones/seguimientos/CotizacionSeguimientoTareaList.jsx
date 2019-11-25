@@ -75,11 +75,10 @@ const Tarea = memo(props => {
 
 const TareasList = memo(props => {
     const [mostrar_formulario, setMostrarFormulario] = useState(false);
-    const {seguimiento_list, guardarTarea} = props;
-    const tareas_pendientes = _.map(_.pickBy(seguimiento_list, s => {
-        return s.tipo_seguimiento === 2 && !s.tarea_terminada
-    })).length;
-    const tareas_array = _.map(_.orderBy(_.pickBy(seguimiento_list, s => s.tipo_seguimiento === 2), ['tarea_terminada', 'fecha_inicio_tarea'], ['asc', 'asc']));
+    let {seguimiento_list, guardarTarea} = props;
+    seguimiento_list = seguimiento_list.filter(s => s.tipo_seguimiento === 2);
+    const tareas_pendientes = seguimiento_list.filter(s => !s.tarea_terminada).length;
+    const tareas_array = _.orderBy(seguimiento_list, ['tarea_terminada', 'fecha_inicio_tarea'], ['asc', 'asc']);
     return (
         <div className="col-xs-12">
             <div className="page-header">

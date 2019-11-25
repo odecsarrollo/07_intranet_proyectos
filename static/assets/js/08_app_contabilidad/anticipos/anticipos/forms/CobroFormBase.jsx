@@ -57,9 +57,9 @@ let Form = memo(props => {
                 />
                 <MyDateTimePickerField
                     label_space_xs={3}
+                    label='Fecha'
                     className='col-12 col-md-6 col-lg-4'
                     name='fecha'
-                    nombre='Fecha'
                     dropUp={false}
                     readOnly={!editable}
                 />
@@ -87,7 +87,8 @@ let Form = memo(props => {
                     <MyDateTimePickerField
                         max={new Date(2099, 11, 31)}
                         name='fecha_seguimiento'
-                        nombre='Verificar el...'
+                        label='Verificar el...'
+                        label_space_xs={4}
                         className="col-12 col-md-6 col-lg-2 col-md-3"
                     />
                 }

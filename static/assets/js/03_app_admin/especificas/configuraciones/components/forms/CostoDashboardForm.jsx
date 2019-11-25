@@ -23,7 +23,8 @@ class ConfiguracionCostosForm extends Component {
                     <MyDateTimePickerField
                         className='col-12 mb-5'
                         name='fecha_cierre'
-                        nombre='Fecha Cierre Costos MO'
+                        label='Fecha Cierre Costos MO'
+                        label_space_xs={4}
                         dropUp={false}
                     />
 

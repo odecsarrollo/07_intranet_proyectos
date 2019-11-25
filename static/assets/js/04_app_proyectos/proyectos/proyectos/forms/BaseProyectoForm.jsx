@@ -38,7 +38,7 @@ const BaseProyectoForm = (props) => {
                 case='U'/>
             {initialValues && <MyCheckboxSimple
                 className="col-12"
-                nombre='Abierto'
+                label='Abierto'
                 name='abierto'/>}
         </div>
     )

@@ -30,19 +30,19 @@ class Form extends Component {
                 <div className="row">
                     <MyCheckboxSimple
                         name='todo'
-                        nombre='Todo'
+                        label='Todo'
                         className="col-12 col-md-6 col-lg-4"
                         disabled={valores.lapso}
                     />
                     <MyCheckboxSimple
                         name='con_mo_saldo_inicial'
-                        nombre='Con MO saldo inicial (Hasta Abril de 2018)'
+                        label='Con MO saldo inicial (Hasta Abril de 2018)'
                         className="col-12 col-md-6 col-lg-4"
                         disabled={valores.todo}
                     />
                     <MyCheckboxSimple
                         name='lapso'
-                        nombre='Por Lapso'
+                        label='Por Lapso'
                         className="col-12 col-md-6 col-lg-4"
                         disabled={valores.todo}
                     />
@@ -52,12 +52,14 @@ class Form extends Component {
                             <div className="row">
                                 <MyDateTimePickerField
                                     name='fecha_inicial'
-                                    nombre='Fecha Inicial'
+                                    label='Fecha Inicial'
+                                    label_space_xs={4}
                                     className='col-12 col-md-6'
                                 />
                                 <MyDateTimePickerField
                                     name='fecha_final'
-                                    nombre='Fecha Final'
+                                    label='Fecha Final'
+                                    label_space_xs={4}
                                     className='col-12 col-md-6'
                                 />
                             </div>

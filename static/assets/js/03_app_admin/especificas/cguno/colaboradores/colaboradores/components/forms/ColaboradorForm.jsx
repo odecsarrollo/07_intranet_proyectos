@@ -99,24 +99,24 @@ class Form extends Component {
 
                 <MyCheckboxSimple
                     className="col-12 col-md-6"
-                    nombre='Autogestiona Horas'
+                    label='Autogestiona Horas'
                     name='autogestion_horas_trabajadas'/>
 
                 <MyCheckboxSimple
                     className="col-12 col-md-6"
-                    nombre='En Proyectos'
+                    label='En Proyectos'
                     name='en_proyectos'/>
 
                 <MyCheckboxSimple
                     onClick={(e) => this.setState({salario_fijo: e.target.checked})}
                     className="col-12 col-md-6"
-                    nombre='Tiene Salario Fijo'
+                    label='Tiene Salario Fijo'
                     name='es_salario_fijo'/>
 
                 <MyCheckboxSimple
                     onClick={(e) => this.setState({salario_fijo: e.target.checked})}
                     className="col-12 col-md-6"
-                    nombre='Es Aprendiz'
+                    label='Es Aprendiz'
                     name='es_aprendiz'/>
 
                 <MyTextFieldSimple

@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react';
 import {upper, lower} from "../../../common";
 import {Field} from 'redux-form';
-import PropTypes from "prop-types";
+import PropTypes, {instanceOf} from "prop-types";
 import {makeStyles} from '@material-ui/core/styles';
 import clsx from 'clsx';
 
@@ -40,7 +40,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const renderInputColor = ({input}) => {
-    console.log(input);
     return (
         <Fragment>
             <InputColor initialHexColor="#5e72e4" onChange={(e) => {
@@ -69,7 +68,7 @@ const renderInputField = (field) => {
                 {...field.input}
                 type="file"
                 accept={field.accept}
-                value={null}
+                value={undefined}
             />
             {field.meta.touched && field.meta.error &&
             <span className='form-field-error'>{field.meta.error}</span>}
@@ -133,26 +132,22 @@ MyTextFieldSimple.propTypes = {
     nombre: PropTypes.string
 };
 
-const renderDropdownList = ({input, data, valueField, textField, placeholder, onSelect, meta: {touched, error, warning}}) => {
+const renderDropdownList = ({input, data, valueField, textField, placeholder, onSelect}) => {
     return (
-        <Fragment>
-            <DropdownList {...input}
-                          data={data}
-                          placeholder={placeholder}
-                          valueField={valueField}
-                          textField={textField}
-                          onChange={input.onChange}
-                          onSelect={onSelect}
-            />
-            {touched && ((error && <span className='form-field-error'>{error}</span>) || (warning &&
-                <span>{warning}</span>))}
-        </Fragment>
+        <DropdownList {...input}
+                      data={data}
+                      placeholder={placeholder}
+                      valueField={valueField}
+                      textField={textField}
+                      onChange={(e) => input.onChange(e[valueField])}
+                      onSelect={onSelect}
+        />
     )
 };
 
 
 export const MyDropdownList = (props) => {
-    const {busy = false, textField = 'name', valuesField = 'id', className, label = null, label_space_xs = 0} = props;
+    const {busy = false, textField = 'name', valuesField = 'id', className, placeholder = '', label = null, label_space_xs = 0} = props;
     return (
         <div className={`${className} ${label ? 'mt-2' : 'mt-4'}`}>
             <Grid component="label" container alignItems="center" spacing={2}>
@@ -166,6 +161,7 @@ export const MyDropdownList = (props) => {
                         valueField={valuesField}
                         textField={textField}
                         busy={busy}
+                        placeholder={placeholder}
                         dropUp
                     />
                 </Grid>
@@ -273,7 +269,7 @@ const renderCheckbox = ({input, label}) => (
 );
 
 export const MyCheckboxSimple = (props) => {
-    const {onClick, className = null} = props;
+    const {onClick, className = null, label, name} = props;
     return (
         <div className={className}>
             <Field
@@ -283,18 +279,19 @@ export const MyCheckboxSimple = (props) => {
                     }
                 }}
                 {...props}
-                name={props.name}
+                name={name}
                 component={renderCheckbox}
-                label={props.nombre}
+                label={label ? label : name}
                 normalize={v => !!v}
             />
         </div>
     )
 };
+
 MyCheckboxSimple.propTypes = {
     name: PropTypes.string,
     className: PropTypes.string,
-    nombre: PropTypes.string
+    label: PropTypes.string
 };
 
 const renderDateTimePicker = (
@@ -339,7 +336,7 @@ export const MyDateTimePickerField = (props) => {
         <div className={`${className} mt-2`}>
             <Grid component="label" container alignItems="center" spacing={2}>
                 {label_space_xs > 0 && <Grid item xs={label_space_xs}>
-                    {props.nombre}
+                    {props.label}
                 </Grid>}
                 <Grid item xs={12 - label_space_xs}>
                     <Field
@@ -347,7 +344,7 @@ export const MyDateTimePickerField = (props) => {
                         readOnly={readOnly}
                         type="date"
                         fullWidth={true}
-                        label={props.nombre}
+                        label={props.label}
                         {...props}
                         component={renderDateTimePicker}
                     />

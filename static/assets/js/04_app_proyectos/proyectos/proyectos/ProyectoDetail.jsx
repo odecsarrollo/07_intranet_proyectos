@@ -11,7 +11,7 @@ import {
     PROYECTOS,
     LITERALES,
     COTIZACIONES,
-    ARCHIVOS_PROYECTOS,
+    ARCHIVOS_PROYECTOS
 } from "../../../permisos";
 import LiteralModalCreate from '../literales/ProyectoLiteralModal';
 import LiteralDetail from '../literales/LiteralDetail';
@@ -70,7 +70,6 @@ const Detail = memo((props) => {
         cargarDatos();
         return () => dispatch(actions.clearProyectos());
     }, []);
-
     const permisos = useTengoPermisos(PROYECTOS);
     const permisos_literales = useTengoPermisos(LITERALES);
     const cotizacion_permisos = useTengoPermisos(COTIZACIONES);
@@ -154,29 +153,25 @@ const Detail = memo((props) => {
                                     permisos={permisos}
                                 />
                             </div>
-                            {
-                                literal_seleccionado &&
-                                <div className="col-12 col-lg-8">
-                                    <LiteralDetail
-                                        callbackCargarDatosProyecto={cargarDatos}
-                                        clearCurrentLiteral={clearCurrentLiteral}
-                                        literal={literal_seleccionado}
-                                        proyecto={proyecto}
-                                    />
-                                </div>
-                            }
+                            {literal_seleccionado &&
+                            <div className="col-12 col-lg-8">
+                                <LiteralDetail
+                                    callbackCargarDatosProyecto={cargarDatos}
+                                    clearCurrentLiteral={clearCurrentLiteral}
+                                    literal={literal_seleccionado}
+                                    proyecto={proyecto}
+                                />
+                            </div>}
                         </div>
                     </TabPanel>
 
-                    {proyecto.cotizaciones.length > 0 &&
-                    <TabPanel>
+                    {proyecto.cotizaciones.length > 0 && <TabPanel>
                         <ProyectoDetailCotizacionRelacionada
                             proyecto={proyecto}
                         />
                     </TabPanel>}
 
-                    {permisos.change &&
-                    <TabPanel>
+                    {permisos.change && <TabPanel>
                         <FormProyecto
                             onSubmit={onUpdateProyecto}
                             initialValues={proyecto}
@@ -184,8 +179,7 @@ const Detail = memo((props) => {
                         />
                     </TabPanel>}
 
-                    {permisos_archivos_proyecto.list &&
-                    <TabPanel>
+                    {permisos_archivos_proyecto.list && <TabPanel>
                         <PanelArchivosProyecto
                             proyecto={proyecto}
                             permisos_archivos_proyecto={permisos_archivos_proyecto}

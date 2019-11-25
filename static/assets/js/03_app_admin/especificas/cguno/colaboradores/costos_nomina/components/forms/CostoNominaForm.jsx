@@ -73,12 +73,12 @@ class Form extends Component {
                 />
                 <MyCheckboxSimple
                     className="col-12 col-md-6"
-                    nombre='Salario Fijo'
+                    label='Salario Fijo'
                     name='es_salario_fijo'
                 />
                 <MyCheckboxSimple
                     className="col-12 col-md-6"
-                    nombre='No Actualizar'
+                    label='No Actualizar'
                     name='modificado'
                 />
                 <MyCombobox

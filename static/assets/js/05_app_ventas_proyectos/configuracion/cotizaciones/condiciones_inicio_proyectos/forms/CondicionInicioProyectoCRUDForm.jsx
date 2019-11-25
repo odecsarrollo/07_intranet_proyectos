@@ -42,7 +42,7 @@ class Form extends Component {
                 <MyCheckboxSimple
                     className="col-6 pt-4"
                     name='require_documento'
-                    nombre='Requiere Documento'
+                    label='Requiere Documento'
                 />
             </MyFormTagModal>
         )

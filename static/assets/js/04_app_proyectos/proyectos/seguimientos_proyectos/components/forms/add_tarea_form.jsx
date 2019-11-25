@@ -74,13 +74,15 @@ class Form extends Component {
                         }
                         <MyDateTimePickerField
                             className='col-12  col-sm-6'
-                            nombre='Fecha Inicial'
+                            label='Fecha Inicial'
+                            label_space_xs={4}
                             name='fecha_inicial'
                             max={new Date(2999, 12, 31)}
                         />
                         <MyDateTimePickerField
                             className='col-12 col-sm-6'
-                            nombre='Fecha Límite'
+                            label='Fecha Límite'
+                            label_space_xs={4}
                             name='fecha_limite'
                             max={new Date(2999, 12, 31)}
                         />

@@ -99,7 +99,7 @@ let Form = memo(props => {
             />
             <MyCheckboxSimple
                 className='col-12'
-                nombre='Activo'
+                label='Activo'
                 name='activo'
             />
             {

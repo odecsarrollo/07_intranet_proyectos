@@ -20,29 +20,36 @@ def cotizacion_versions(cotizacion_id: int) -> Version:
     return versions
 
 
-def cotizacion_adicionar_quitar_condicion_inicio_proyecto(
-        tipo_accion,
-        cotizacion_id: int = None,
-        condicion_inicio_proyecto_id: int = None,
-        condicion_inicio_proyecto_cotizacion_id: int = None
+def cotizacion_limpiar_condicion_inicio_proyecto(
+        cotizacion_id: int,
+        condicion_inicio_proyecto_id: int
 ) -> Cotizacion:
     cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
-    if tipo_accion == 'del':
-        if condicion_inicio_proyecto_cotizacion_id is None:
-            raise ValidationError({
-                '_error': 'Para quitar una condicion de inicio de proyecto debe pasar el ID de la condicion a retirar'})
-        if cotizacion.id != cotizacion_id is None:
-            raise ValidationError({
-                '_error': 'La condición a retirar no es parte de la cotización seleccionada'})
-        condicion_a_retirar = CondicionInicioProyectoCotizacion.objects.get(pk=condicion_inicio_proyecto_cotizacion_id)
-        condicion_a_retirar.delete()
-    if tipo_accion == 'add':
-        if condicion_inicio_proyecto_id is None:
-            raise ValidationError({
-                '_error': 'Para adicionar una condicion de inicio de proyecto debe pasar el ID de la condicion a agregar'})
+    condiciones_inicio_cotizaciones = cotizacion.condiciones_inicio_cotizacion.filter(
+        condicion_inicio_proyecto_id=condicion_inicio_proyecto_id)
+    for condicion_inicio in condiciones_inicio_cotizaciones.all():
+        condicion_inicio.fecha_entrega = None
+        condicion_inicio.documento = None
+        condicion_inicio.save()
+    cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
+    return cotizacion
 
+
+def cotizacion_adicionar_quitar_condicion_inicio_proyecto(
+        tipo_accion,
+        cotizacion_id: int,
+        condicion_inicio_proyecto_id: int
+) -> Cotizacion:
+    cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
+    condicion_inicio_cotizacion = CondicionInicioProyectoCotizacion.objects.filter(
+        condicion_inicio_proyecto_id=condicion_inicio_proyecto_id,
+        cotizacion_proyecto_id=cotizacion_id)
+    if tipo_accion == 'del' and condicion_inicio_cotizacion.exists():
+        [c.delete() for c in condicion_inicio_cotizacion.all()]
+    if tipo_accion == 'add' and not condicion_inicio_cotizacion.exists():
         condicion_inicio_proyecto = CondicionInicioProyecto.objects.get(pk=condicion_inicio_proyecto_id)
         condicion_proyecto = CondicionInicioProyectoCotizacion()
+        condicion_proyecto.condicion_inicio_proyecto_id = condicion_inicio_proyecto_id
         condicion_proyecto.descripcion = condicion_inicio_proyecto.descripcion
         condicion_proyecto.require_documento = condicion_inicio_proyecto.require_documento
         condicion_proyecto.cotizacion_proyecto = cotizacion

@@ -90,7 +90,8 @@ let Form = memo(props => {
                 min={fecha_cierre_costos}
                 className='col-12 mb-5'
                 name='fecha'
-                nombre='Fecha'
+                label='Fecha'
+                label_space_xs={4}
                 dropUp={false}
             />
             <div style={{height: '300px'}}>

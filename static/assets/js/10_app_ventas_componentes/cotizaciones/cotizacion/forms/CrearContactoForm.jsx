@@ -57,7 +57,7 @@ let CrearContactoForm = memo(props => {
                 <div className="row">
                     <MyCheckboxSimple
                         className="col-12 col-md-6"
-                        nombre='Crear Cliente'
+                        label='Crear Cliente'
                         name='nuevo_cliente'
                     />
                 </div>

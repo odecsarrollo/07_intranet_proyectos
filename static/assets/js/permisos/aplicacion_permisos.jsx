@@ -1,3 +1,11 @@
+export const CONDICIONES_INICIOS_PROYECTOS_COTIZACIONES = {
+    add: 'add_condicioninicioproyectocotizacion',
+    delete: 'delete_condicioninicioproyectocotizacion',
+    change: 'change_condicioninicioproyectocotizacion',
+    list: 'list_condicioninicioproyectocotizacion',
+    detail: 'view_condicioninicioproyectocotizacion',
+};
+
 export const CONDICIONES_INICIOS_PROYECTOS = {
     add: 'add_condicioninicioproyecto',
     delete: 'delete_condicioninicioproyecto',

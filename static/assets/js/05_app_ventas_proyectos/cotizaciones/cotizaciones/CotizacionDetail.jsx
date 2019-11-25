@@ -16,12 +16,11 @@ import ArchivosCotizacionList from '../../../04_app_proyectos/proyectos/archivos
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome/index';
 import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
 import Typography from "@material-ui/core/Typography";
+import CotizacionCondicionInicioProyecto from "./forms/CotizacionCondicionInicioProyecto";
 
 const Detail = memo(props => {
     const dispatch = useDispatch();
-    const {history} = props;
     const {id} = props.match.params;
-    const seguimiento_list = useSelector(state => state.cotizaciones_seguimientos);
     const archivos_list = useSelector(state => state.archivos_cotizaciones);
     const object = useSelector(state => state.cotizaciones[id]);
     const [adicionar_documento, setAdicionarDocumento] = useState(false);
@@ -36,35 +35,35 @@ const Detail = memo(props => {
     };
 
     const guardarCambiosCotizacion = (cotizacion) => {
-        const callback = () => {
-            history.push('/app/ventas_proyectos')
-        };
-        dispatch(actions.updateCotizacion(id, cotizacion, {callback}));
+        dispatch(actions.updateCotizacion(id, cotizacion));
     };
 
     const guardarComentario = (comentario) => {
         const seguimiento = {...comentario, cotizacion: id, tipo_seguimiento: 0};
-        dispatch(actions.createSeguimientoCotizacion(seguimiento));
+        const cargarCotizacion = () => dispatch(actions.fetchCotizacion(id));
+        dispatch(actions.createSeguimientoCotizacion(seguimiento, {callback: cargarCotizacion}));
     };
 
     const eliminarSeguimiento = (seguimiento_id) => {
-        dispatch(actions.deleteSeguimientoCotizacion(seguimiento_id))
+        const cargarCotizacion = () => dispatch(actions.fetchCotizacion(id));
+        dispatch(actions.deleteSeguimientoCotizacion(seguimiento_id, {callback: cargarCotizacion}))
     };
 
     const guardarTarea = (tarea) => {
         const seguimiento = {...tarea, cotizacion: id, tipo_seguimiento: 2};
-        dispatch(actions.createSeguimientoCotizacion(seguimiento));
+        const cargarCotizacion = () => dispatch(actions.fetchCotizacion(id));
+        dispatch(actions.createSeguimientoCotizacion(seguimiento, {callback: cargarCotizacion}));
     };
 
     const actualizarSeguimiento = (seguimiento) => {
-        dispatch(actions.updateSeguimientoCotizacion(seguimiento.id, seguimiento))
+        const cargarCotizacion = () => dispatch(actions.fetchCotizacion(id));
+        dispatch(actions.updateSeguimientoCotizacion(seguimiento.id, seguimiento, {callback: cargarCotizacion}))
     };
 
     const cargarDatos = () => {
         const cargarArchivos = () => dispatch(actions.fetchArchivosCotizaciones_x_cotizacion(id));
         const cargarMiCuenta = () => dispatch(actions.fetchMiCuenta({callback: cargarArchivos}));
-        const cargarSeguimientos = () => dispatch(actions.fetchSeguimientosCotizacionesxCotizacion(id, {callback: cargarMiCuenta}));
-        dispatch(actions.fetchCotizacion(id, {callback: cargarSeguimientos}));
+        dispatch(actions.fetchCotizacion(id, {callback: cargarMiCuenta}));
 
     };
 
@@ -155,70 +154,63 @@ const Detail = memo(props => {
                 <div className="col-12 mt-3">
                     <Tabs>
                         <TabList>
-                            {
-                                permisos.change &&
-                                <Tab>Editar</Tab>
-                            }
-                            {
-                                permisos_archivos_cotizacion.list &&
-                                <Tab onClick={() => setAdicionarDocumento(false)}>Documentos</Tab>
-                            }
+                            {object.estado === 'Cierre (Aprobado)' && <Tab>Inicio Proyecto</Tab>}
+                            {permisos.change && <Tab>Editar</Tab>}
+                            {permisos_archivos_cotizacion.list &&
+                            <Tab onClick={() => setAdicionarDocumento(false)}>Documentos</Tab>}
                             <Tab>Comentarios</Tab>
                             <Tab>Cambios de Estado</Tab>
                             <Tab>Tareas</Tab>
                         </TabList>
-                        {
-                            permisos.change &&
-                            <TabPanel>
-                                <CotizacionForm
-                                    initialValues={object}
-                                    onSubmit={guardarCambiosCotizacion}
+                        {object.estado === 'Cierre (Aprobado)' && <TabPanel>
+                            <CotizacionCondicionInicioProyecto cotizacion={object}/>
+                        </TabPanel>}
+                        {permisos.change && <TabPanel>
+                            <CotizacionForm
+                                initialValues={object}
+                                onSubmit={guardarCambiosCotizacion}
+                            />
+                        </TabPanel>}
+                        {permisos_archivos_cotizacion.list && <TabPanel>
+                            {
+                                permisos_archivos_cotizacion.add &&
+                                <FontAwesomeIcon
+                                    className='puntero'
+                                    icon={`${adicionar_documento ? 'minus' : 'plus'}-circle`}
+                                    onClick={() => {
+                                        setAdicionarDocumento(!adicionar_documento);
+                                        setItemSeleccionado(null);
+                                    }}
                                 />
-                            </TabPanel>
-                        }
-                        {
-                            permisos_archivos_cotizacion.list &&
-                            <TabPanel>
-                                {
-                                    permisos_archivos_cotizacion.add &&
-                                    <FontAwesomeIcon
-                                        className='puntero'
-                                        icon={`${adicionar_documento ? 'minus' : 'plus'}-circle`}
-                                        onClick={() => {
-                                            setAdicionarDocumento(!adicionar_documento);
-                                            setItemSeleccionado(null);
-                                        }}
-                                    />
-                                }
-                                {
-                                    adicionar_documento &&
-                                    <UploadDocumentoForm
-                                        onSubmit={onSubmitUploadArchivo}
-                                        initialValues={item_seleccionado}
-                                    />
-                                }
-                                <ArchivosCotizacionList
-                                    lista={archivos_list}
-                                    permisos={permisos_archivos_cotizacion}
-                                    onDeleteArchivo={onDeleteArchivo}
-                                    onSelectElemento={onSelectArchivo}
+                            }
+                            {
+                                adicionar_documento &&
+                                <UploadDocumentoForm
+                                    onSubmit={onSubmitUploadArchivo}
+                                    initialValues={item_seleccionado}
                                 />
-                            </TabPanel>
-                        }
+                            }
+                            <ArchivosCotizacionList
+                                lista={archivos_list}
+                                permisos={permisos_archivos_cotizacion}
+                                onDeleteArchivo={onDeleteArchivo}
+                                onSelectElemento={onSelectArchivo}
+                            />
+                        </TabPanel>}
                         <TabPanel>
                             <ComentariosList
-                                seguimiento_list={seguimiento_list}
+                                seguimiento_list={object.mis_seguimientos}
                                 guardarComentario={guardarComentario}
                                 eliminarSeguimiento={eliminarSeguimiento}
                             />
                         </TabPanel>
                         <TabPanel>
-                            <CambioEstadoList seguimiento_list={seguimiento_list}/>
+                            <CambioEstadoList seguimiento_list={object.mis_seguimientos}/>
                         </TabPanel>
                         <TabPanel>
                             <TareasList
                                 actualizarSeguimiento={actualizarSeguimiento}
-                                seguimiento_list={seguimiento_list}
+                                seguimiento_list={object.mis_seguimientos}
                                 guardarTarea={guardarTarea}
                                 eliminarSeguimiento={eliminarSeguimiento}
                                 cotizacion={object}

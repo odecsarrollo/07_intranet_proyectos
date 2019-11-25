@@ -82,12 +82,12 @@ let CrearUbicacionForm = memo(props => {
                 <div className="row">
                     <MyCheckboxSimple
                         className="col-12 col-md-6"
-                        nombre='Crear País'
+                        label='Crear País'
                         name='nuevo_pais'
                     />
                     <MyCheckboxSimple
                         className="col-12 col-md-6"
-                        nombre='Crear Departamento'
+                        label='Crear Departamento'
                         name='nuevo_departamento'
                     />
                 </div>

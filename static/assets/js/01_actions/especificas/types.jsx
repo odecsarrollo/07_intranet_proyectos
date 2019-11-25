@@ -1,3 +1,12 @@
+export const CONDICION_INICIO_PROYECTO_COTIZACION_TYPES = {
+    create: 'create_condicion_inicio_proyecto_cotizacion',
+    delete: 'delete_condicion_inicio_proyecto_cotizacion',
+    fetch_all: 'fetch_condiciones_inicios_proyectos_cotizaciones',
+    fetch: 'fetch_condicion_inicio_proyecto_cotizacion',
+    clear: 'clear_condiciones_inicios_proyectos_cotizaciones',
+    update: 'update_condicion_inicio_proyecto_cotizacion',
+};
+
 export const CONDICION_INICIO_PROYECTO_TYPES = {
     create: 'create_condicion_inicio_proyecto',
     delete: 'delete_condicion_inicio_proyecto',

@@ -62,7 +62,7 @@ class Form extends Component {
                 />
                 <MyCheckboxSimple
                     name='es_para_compras'
-                    nombre='Maneja Compras'
+                    label='Maneja Compras'
                 />
             </MyFormTagModal>
         )

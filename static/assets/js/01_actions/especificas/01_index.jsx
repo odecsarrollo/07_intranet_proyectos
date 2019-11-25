@@ -23,6 +23,7 @@ export * from './cotizaciones/cotizacionesAction';
 export * from './cotizaciones/cotizacionesSeguimientoAction';
 export * from './cotizaciones/archivosCotizacionesAction';
 export * from './cotizaciones/condicionesInicioProyectoAction';
+export * from './cotizaciones/condicionesIniciosProyectosCotizacionesAction';
 export * from './configuraciones/configuracionCostosAction';
 export * from './geografia/paisesAction';
 export * from './geografia/ciudadesAction';

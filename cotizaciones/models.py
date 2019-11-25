@@ -62,6 +62,7 @@ class Cotizacion(TimeStampedModel):
 
     relacionada = models.BooleanField(default=False)
     revisada = models.BooleanField(default=False)
+    listo_para_iniciar = models.BooleanField(default=False)
     estado = models.CharField(max_length=200, null=True, choices=ESTADOS_CHOICES)
     origen_cotizacion = models.CharField(max_length=100, null=True)
     estado_observacion_adicional = models.CharField(max_length=400, null=True)
@@ -161,16 +162,24 @@ class CondicionInicioProyecto(models.Model):
 
 
 class CondicionInicioProyectoCotizacion(models.Model):
+    def archivo_upload_to(instance, filename):
+        nro_cotizacion = instance.cotizacion_proyecto.id
+        return "documentos/cotizaciones/%s/%s" % (nro_cotizacion, filename)
+
     cotizacion_proyecto = models.ForeignKey(
         Cotizacion,
         on_delete=models.PROTECT,
-        related_name='condiciones_inicio'
+        related_name='condiciones_inicio_cotizacion'
+    )
+    condicion_inicio_proyecto = models.ForeignKey(
+        CondicionInicioProyecto,
+        on_delete=models.PROTECT,
+        related_name='condiciones_inicio_cotizacion'
     )
     descripcion = models.CharField(max_length=400)
     require_documento = models.BooleanField(default=False)
-    fecha_entrega = models.DateField(null=True)
-    documento = models.FileField(null=True)
-    documento_nombre = models.FileField(null=True)
+    fecha_entrega = models.DateField(null=True, blank=True)
+    documento = models.FileField(null=True, upload_to=archivo_upload_to)
 
     @property
     def cumple_condicion(self):

@@ -69,7 +69,8 @@ let CotizacionSeguimientoFormDialog = memo(props => {
                     <MyDateTimePickerField
                         time={true}
                         className='col-8'
-                        nombre='Fecha'
+                        label='Fecha'
+                        label_space_xs={4}
                         name='fecha'
                         min={new Date(cotizacion_componente.created)}
                         max={new Date()}

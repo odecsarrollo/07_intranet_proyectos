@@ -49,7 +49,7 @@ const BaseFormLiteral = (props) => {
                 initialValues &&
                 <MyCheckboxSimple
                     className="col-12"
-                    nombre='Abierto'
+                    label='Abierto'
                     name='abierto'/>
             }
         </div>
