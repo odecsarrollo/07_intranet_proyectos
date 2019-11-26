@@ -313,7 +313,6 @@ def cotizacion_actualizar(
             raise ValidationError({
                 '_error': 'Para el estado de Cierre (Aprobado) es necesario tener un número de orden de compra'})
     else:
-        cotizacion.fecha_entrega_pactada = None
         cotizacion.costo_presupuestado = 0
         cotizacion.orden_compra_fecha = None
         cotizacion.valor_orden_compra = 0
