@@ -6,7 +6,6 @@ import {
 } from "../../../../00_utilities/components/ui/forms/fields";
 import BotoneriaModalForm from "../../../../00_utilities/components/ui/forms/botoneria_modal_form";
 import {reduxForm} from "redux-form";
-import validate from "../../tuberia_ventas/forms/validate";
 import Typography from "@material-ui/core/Typography";
 import MyDialogButtonDelete from "../../../../00_utilities/components/ui/dialog/delete_dialog";
 import * as actions from "../../../../01_actions/01_index";
@@ -17,6 +16,7 @@ import {makeStyles} from "@material-ui/core";
 import {fechaFormatoUno, formatBytes} from "../../../../00_utilities/common";
 import moment from "moment-timezone";
 import SiNoDialog from "../../../../00_utilities/components/ui/dialog/SiNoDialog";
+import validate from './condicion_inicio_proyecto_cotizacion_validate';
 
 const useStyles = makeStyles(theme => ({
     delete_boton: {

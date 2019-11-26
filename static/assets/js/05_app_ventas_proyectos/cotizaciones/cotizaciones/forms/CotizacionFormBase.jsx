@@ -96,6 +96,7 @@ const FormBaseCotizacion = (props) => {
     }
     const cotizacion_a_relacionar = cotizacion_inicial ? cotizaciones_encontradas[cotizacion_inicial] : null;
     estados_lista = estados_lista.map(e => ({id: e, name: e}));
+    const buscarCotizacion = (busqueda) => dispatch(actions.fetchCotizacionesxParametro(busqueda));
     return (
         <Fragment>
             {buscar_cotizacion_inicial_modal_open && <DialogSeleccionar

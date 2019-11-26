@@ -1,6 +1,9 @@
+import datetime
+
 import reversion
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 from model_utils.models import TimeStampedModel
 
 from clientes.models import ClienteBiable, ContactoCliente
@@ -55,7 +58,6 @@ class Cotizacion(TimeStampedModel):
     orden_compra_nro = models.CharField(max_length=100, null=True)
     orden_compra_fecha = models.DateField(null=True)
     fecha_entrega_pactada_cotizacion = models.DateField(null=True)
-    fecha_entrega_pactada = models.DateField(null=True)
     dias_pactados_entrega_proyecto = models.IntegerField(null=True)
     costo_presupuestado = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     responsable = models.ForeignKey(User, on_delete=models.PROTECT, null=True)
@@ -69,6 +71,9 @@ class Cotizacion(TimeStampedModel):
     fecha_cambio_estado = models.DateField(null=True)
     fecha_cambio_estado_cerrado = models.DateField(null=True)
     fecha_limite_segumiento_estado = models.DateField(null=True)
+
+    condiciones_inicio_fecha_ultima = models.DateField(null=True)
+    condiciones_inicio_completas = models.BooleanField(default=False)
 
     objects = models.Manager()
     sumatorias = CotizacionManager()
@@ -90,6 +95,20 @@ class Cotizacion(TimeStampedModel):
             ['list_tuberia_ventas', 'Puede ver la tuberia de bentas'],
             ['list_tuberia_informe_uno', 'Puede Ver informe de tuberia de ventas'],
         ]
+
+    @property
+    def fecha_entrega_pactada(self):
+        if self.condiciones_inicio_fecha_ultima is not None:
+            fecha_entrega_proyecto = self.condiciones_inicio_fecha_ultima + datetime.timedelta(
+                days=self.dias_pactados_entrega_proyecto)
+            return fecha_entrega_proyecto
+        return None
+
+    @property
+    def dias_para_vencer(self):
+        if self.fecha_entrega_pactada:
+            return (self.fecha_entrega_pactada - timezone.datetime.now().date()).days
+        return None
 
     @property
     def abrir_carpeta(self) -> bool:

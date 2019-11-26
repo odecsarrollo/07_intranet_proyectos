@@ -1,3 +1,5 @@
+import datetime
+
 from django.utils import timezone
 
 from rest_framework import serializers
@@ -35,6 +37,17 @@ class CondicionInicioProyectoCotizacionSerializer(serializers.ModelSerializer):
     documento_url = serializers.SerializerMethodField()
     size = serializers.SerializerMethodField()
     extension = serializers.SerializerMethodField()
+
+    def update(self, instance, validated_data):
+        fecha_entrega = validated_data.get('fecha_entrega', None)
+        documento = validated_data.get('documento', None)
+        from .services import condicion_inicio_proyecto_cotizacion_actualizar
+        condicion = condicion_inicio_proyecto_cotizacion_actualizar(
+            condicion_inicio_cotizacion_id=instance.id,
+            fecha_entrega=fecha_entrega,
+            documento=documento
+        )
+        return condicion
 
     def get_size(self, obj):
         if obj.documento:
@@ -96,12 +109,6 @@ class CotizacionSerializer(serializers.ModelSerializer):
     responsable_actual = serializers.CharField(source='responsable.username', read_only=True)
     responsable_actual_nombre = serializers.CharField(source='responsable.get_full_name', read_only=True)
     orden_compra_fecha = serializers.DateField(
-        format="%Y-%m-%d",
-        input_formats=['%Y-%m-%dT%H:%M:%S.%fZ', 'iso-8601'],
-        allow_null=True,
-        required=False
-    )
-    fecha_entrega_pactada = serializers.DateField(
         format="%Y-%m-%d",
         input_formats=['%Y-%m-%dT%H:%M:%S.%fZ', 'iso-8601'],
         allow_null=True,
@@ -172,7 +179,6 @@ class CotizacionSerializer(serializers.ModelSerializer):
         contacto_cliente = validated_data.get('contacto_cliente', None)
         costo_presupuestado = validated_data.get('costo_presupuestado', 0)
         orden_compra_nro = validated_data.get('orden_compra_nro', None)
-        fecha_entrega_pactada = validated_data.get('fecha_entrega_pactada', None)
         orden_compra_fecha = validated_data.get('orden_compra_fecha', None)
         valor_ofertado = validated_data.get('valor_ofertado', 0)
         valor_orden_compra = validated_data.get('valor_orden_compra', 0)
@@ -195,7 +201,6 @@ class CotizacionSerializer(serializers.ModelSerializer):
             valor_ofertado=valor_ofertado,
             costo_presupuestado=costo_presupuestado,
             orden_compra_nro=orden_compra_nro,
-            fecha_entrega_pactada=fecha_entrega_pactada,
             orden_compra_fecha=orden_compra_fecha,
             valor_orden_compra=valor_orden_compra,
             estado_observacion_adicional=estado_observacion_adicional,
@@ -274,6 +279,7 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'relacionada',
             'contacto_cliente',
             'contacto_cliente_nombre',
+            'condiciones_inicio_completas',
             'contacto',
             'estado',
             'estado_observacion_adicional',
@@ -296,9 +302,11 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'fecha_limite_segumiento_estado',
             'color_tuberia_ventas',
             'porcentaje_tuberia_ventas',
+            'condiciones_inicio_fecha_ultima',
             'to_string',
             'es_adicional',
             'literales',
+            'dias_para_vencer',
         ]
         extra_kwargs = {
             'literales': {'read_only': True},
@@ -318,6 +326,12 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'estado_observacion_adicional': {'allow_null': True},
             'fecha_limite_segumiento_estado': {'allow_null': True},
         }
+        read_only_fields = [
+            'condiciones_inicio_completas',
+            'condiciones_inicio_fecha_ultima',
+            'fecha_entrega_pactada',
+            'dias_para_vencer'
+        ]
 
 
 class CotizacionTuberiaVentaSerializer(serializers.ModelSerializer):

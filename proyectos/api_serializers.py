@@ -443,6 +443,7 @@ class ConsecutivoProyectoCotizacionAdicionalSerializer(serializers.ModelSerializ
             'orden_compra_nro',
             'orden_compra_fecha',
             'fecha_entrega_pactada',
+            'dias_para_vencer',
             'valor_orden_compra',
             'unidad_negocio',
             'nro_cotizacion',
@@ -459,11 +460,13 @@ class ConsecutivoProyectoCotizacionSerializer(serializers.ModelSerializer):
             'orden_compra_nro',
             'orden_compra_fecha',
             'fecha_entrega_pactada',
+            'dias_para_vencer',
             'valor_orden_compra',
             'unidad_negocio',
             'nro_cotizacion',
             'cotizaciones_adicionales'
         ]
+        read_only_fields = fields
 
 
 class ConsecutivoProyectoLiteralSerializer(serializers.ModelSerializer):
@@ -481,6 +484,7 @@ class ConsecutivoProyectoLiteralSerializer(serializers.ModelSerializer):
             'descripcion',
             'cotizaciones',
         ]
+        read_only_fields = fields
 
 
 class ConsecutivoProyectoSerializer(serializers.ModelSerializer):

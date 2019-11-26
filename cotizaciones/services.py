@@ -1,9 +1,10 @@
 import datetime
-from typing import List, Union
 
 from django.contrib.auth.models import User
+from django.core.mail import EmailMultiAlternatives
 from django.db.models import Max
 from django.db.models.functions import Substr
+from django.template.loader import render_to_string
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError
 
@@ -20,6 +21,74 @@ def cotizacion_versions(cotizacion_id: int) -> Version:
     return versions
 
 
+def cotizacion_envio_correo_notificacion_condiciones_inicio_completas(
+        cotizacion_id: int
+):
+    cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
+    correos_to = ['fabio.garcia.sanchez@gmail.com']
+    context = {
+        "cotizacion": cotizacion,
+        "condiciones_inicio_cotizacion": cotizacion.condiciones_inicio_cotizacion.order_by('fecha_entrega').all()
+    }
+    text_content = render_to_string('emails/cotizacion_proyecto/correo_base.html', context=context)
+    msg = EmailMultiAlternatives(
+        'Solicitud apertura Cotizacion %s-%s' % (
+            cotizacion.unidad_negocio,
+            cotizacion.nro_cotizacion
+        ),
+        text_content,
+        # bcc=[configuracion.email_copia_default],
+        from_email='Odecopack SAS <%s>' % 'prueba@odecopack.com',
+        to=correos_to
+    )
+    msg.attach_alternative(text_content, "text/html")
+
+    documentos_para_enviar = cotizacion.condiciones_inicio_cotizacion.filter(require_documento=True)
+    for condicion in documentos_para_enviar.all():
+        if condicion.documento:
+            nombre_archivo = '%s.%s' % (condicion.descripcion, condicion.documento.name.split('.')[-1])
+            msg.attach(nombre_archivo, condicion.documento.read())
+    try:
+        msg.send()
+    except Exception as e:
+        raise ValidationError(
+            {'_error': 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e})
+    return cotizacion
+
+
+def cotizacion_verificar_condicion_inicio_proyecto_si_estan_completas(
+        cotizacion_id: int
+) -> Cotizacion:
+    cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
+    condiciones_incompletas = cotizacion.condiciones_inicio_cotizacion.filter(fecha_entrega__isnull=True)
+    if not condiciones_incompletas.exists():
+        fecha_max = cotizacion.condiciones_inicio_cotizacion.aggregate(fecha_max=Max('fecha_entrega'))['fecha_max']
+        cotizacion.condiciones_inicio_fecha_ultima = fecha_max
+        cotizacion.condiciones_inicio_completas = True
+        cotizacion.save()
+        cotizacion_envio_correo_notificacion_condiciones_inicio_completas(cotizacion.id)
+    else:
+        cotizacion.condiciones_inicio_fecha_ultima = None
+        cotizacion.condiciones_inicio_completas = False
+        cotizacion.save()
+    return cotizacion
+
+
+def condicion_inicio_proyecto_cotizacion_actualizar(
+        condicion_inicio_cotizacion_id: int,
+        fecha_entrega: datetime.date,
+        documento
+) -> CondicionInicioProyectoCotizacion:
+    condicion_inicio_proyecto_cotizacion = CondicionInicioProyectoCotizacion.objects.get(
+        pk=condicion_inicio_cotizacion_id)
+    condicion_inicio_proyecto_cotizacion.fecha_entrega = fecha_entrega
+    condicion_inicio_proyecto_cotizacion.documento = documento
+    condicion_inicio_proyecto_cotizacion.save()
+    cotizacion_verificar_condicion_inicio_proyecto_si_estan_completas(
+        cotizacion_id=condicion_inicio_proyecto_cotizacion.cotizacion_proyecto.id)
+    return condicion_inicio_proyecto_cotizacion
+
+
 def cotizacion_limpiar_condicion_inicio_proyecto(
         cotizacion_id: int,
         condicion_inicio_proyecto_id: int
@@ -32,6 +101,9 @@ def cotizacion_limpiar_condicion_inicio_proyecto(
         condicion_inicio.documento = None
         condicion_inicio.save()
     cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
+    cotizacion.condiciones_inicio_completas = False
+    cotizacion.condiciones_inicio_fecha_ultima = None
+    cotizacion.save()
     return cotizacion
 
 
@@ -46,6 +118,7 @@ def cotizacion_adicionar_quitar_condicion_inicio_proyecto(
         cotizacion_proyecto_id=cotizacion_id)
     if tipo_accion == 'del' and condicion_inicio_cotizacion.exists():
         [c.delete() for c in condicion_inicio_cotizacion.all()]
+        cotizacion = cotizacion_verificar_condicion_inicio_proyecto_si_estan_completas(cotizacion_id=cotizacion.id)
     if tipo_accion == 'add' and not condicion_inicio_cotizacion.exists():
         condicion_inicio_proyecto = CondicionInicioProyecto.objects.get(pk=condicion_inicio_proyecto_id)
         condicion_proyecto = CondicionInicioProyectoCotizacion()
@@ -54,6 +127,9 @@ def cotizacion_adicionar_quitar_condicion_inicio_proyecto(
         condicion_proyecto.require_documento = condicion_inicio_proyecto.require_documento
         condicion_proyecto.cotizacion_proyecto = cotizacion
         condicion_proyecto.save()
+        cotizacion.condiciones_inicio_completas = False
+        cotizacion.condiciones_inicio_fecha_ultima = None
+    cotizacion.save()
     cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
     return cotizacion
 
@@ -129,7 +205,6 @@ def cotizacion_actualizar(
         fecha_entrega_pactada_cotizacion: datetime,
         fecha_limite_segumiento_estado: datetime,
         orden_compra_fecha: datetime.date = None,
-        fecha_entrega_pactada: datetime.date = None,
 
         cotizacion_inicial_id: int = None,
         contacto_cliente_id: int = None,
@@ -210,12 +285,6 @@ def cotizacion_actualizar(
         cotizacion.fecha_cambio_estado_cerrado = None
 
     if estado == 'Cierre (Aprobado)':
-        if fecha_entrega_pactada is None:
-            raise ValidationError({
-                '_error': 'Para el estado de Cierre (Aprobado) es necesario tener una fecha de entrega del proyecto'})
-        else:
-            cotizacion.fecha_entrega_pactada = fecha_entrega_pactada
-
         if costo_presupuestado is None or costo_presupuestado <= 0:
             raise ValidationError({
                 '_error': 'Para el estado de Cierre (Aprobado) es necesario tener un costo presupuestado del proyecto'})

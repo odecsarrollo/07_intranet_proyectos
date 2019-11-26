@@ -1,0 +1,269 @@
+{% load static l10n humanize %}
+<style>
+    @page {
+        text-align: justify;
+        font-family: Arial;
+        size: 21.6cm 27.9cm;
+        margin: 4cm 0.7cm 4cm 0.7cm;
+        @bottom-center {
+            font-size: 1rem;
+            content: "Página " counter(page) " de " counter(pages);
+        }
+    }
+
+    h1 {
+        font-size: 16px;
+    }
+
+    h2 {
+        font-size: 14px;
+    }
+
+    h3 {
+        font-size: 12px;
+    }
+
+    p {
+        font-size: 10px;
+    }
+
+    table {
+        font-size: 9px;
+    }
+
+    .img-circle {
+        border-radius: 50%;
+    }
+
+    #email_body {
+        padding: 20px;
+    }
+
+    #email_body #email_header {
+        margin: 20px;
+        height: 100px;
+        width: 190px;
+        background-repeat: no-repeat;
+    }
+
+    #email_body #email_header {
+        margin: 10px;
+    }
+
+    #email_body #email_header .info_cotizacion h6,
+    #email_body #email_header .info_cotizacion h4 {
+        margin: 5px;
+        padding: 0;
+    }
+
+    #email_body #email_coti_condiciones_comerciales {
+        background-color: #f0f8ff;
+        margin-top: 10px;
+        padding: 10px;
+        font-size: 10px;
+    }
+
+    #email_body #email_coti_condiciones_comerciales h5,
+    #email_body #email_coti_condiciones_comerciales h4 {
+        margin: 5px;
+        padding: 0;
+    }
+
+    footer {
+        background-color: #df5e00;
+    }
+
+    footer p {
+        margin: 5px;
+        padding: 0;
+        color: white;
+    }
+
+    #email_body footer {
+        text-align: center;
+    }
+
+    #orden table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    #orden th,
+    #orden td {
+        text-align: left;
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    #orden tr:nth-child(even) {
+        background-color: #f2f2f2
+    }
+
+    #orden table, #orden td, #orden th {
+        border: 1px solid black;
+    }
+
+    #orden .table .numero {
+        text-align: right;
+    }
+
+    .texto_mensaje {
+        font-size: 12px;
+        padding: 10px;
+        text-align: justify;
+    }
+
+    .firma p {
+        font-size: 9px;
+        margin: 5px;
+        padding: 0;
+    }
+</style>
+<body id="email_body">
+<header>
+    <div>
+        {% localize off %}
+            <h1><strong>Cotización Nro:
+                <small>{{ cotizacion.nro_consecutivo }} {% if cotizacion.version %}, ver.
+                    {{ cotizacion.version }} {% endif %}</small>
+            </strong></h1>
+        {% endlocalize %}
+        <h3>
+            <small>Fecha: {{ cotizacion.fecha_envio }}</small>
+        </h3>
+    </div>
+</header>
+<div class="texto_mensaje">
+    Apreciado(a) {{ cotizacion.contacto.nombres }} mi nombre es
+    {% if cotizacion.responsable %}
+        {{ cotizacion.responsable.get_full_name|title }}
+    {% else %}
+        {{ cotizacion.creado_por.get_full_name|title }}
+    {% endif %}, de
+    <strong>ODECOPACK
+        S.A.S</strong>,
+    quien realizó la cotización para
+    <strong>
+        {{ cotizacion.cliente.nombre|title }}
+    </strong> en
+    {{ cotizacion.ciudad.nombre|title }} - {{ cotizacion.ciudad.departamento.nombre|title }}
+    - {{ cotizacion.ciudad.departamento.pais.nombre|title }}.
+    <br/>
+    <br/>
+    Hago envío de la cotización llevada a cabo
+    el {{ cotizacion.modified }} hora local y referenciada con el <strong> número de
+    cotizacion {% localize off %}{{ cotizacion.nro_consecutivo }}{% endlocalize %}</strong>{% if cotizacion.version %}
+    que contiene las modificaciones
+    requeridas{% endif %}.
+    <br/>
+    <br/>
+    <div style="text-align: center">
+        <strong>No somos grandes contribuyentes, sómos responsables de IVA, no somos autorretenedores</strong>
+    </div>
+    <br/>
+    A continuación relaciono los items cotizados con sus respectivas cantidades y precios:
+</div>
+<div id="orden" style="overflow-x:auto;">
+
+    {#        <table style="width: 100%">#}
+    {#            <tr>#}
+    {#                <td colspan="2" style="padding: 3px">#}
+    {#                    <div><span class="title">FECHA: </span>{{ cotizacion.fecha }}</div>#}
+    {#                </td>#}
+    {#            </tr>#}
+    {#            <tr>#}
+    {#                <td style="width: 50%; padding: 3px; vertical-align: top">#}
+    {#                    <div class="title">CLIENTE</div>#}
+    {#                    <div class="text">{{ anticipo.informacion_cliente }}</div>#}
+    {#                </td>#}
+    {#                <td style="width: 50%; padding: 3px; vertical-align: top">#}
+    {#                    {% if anticipo.informacion_locatario %}#}
+    {#                        <div class="title">LOCATARIO</div>#}
+    {#                        <div class="text">{{ anticipo.informacion_locatario }}</div>#}
+    {#                    {% endif %}#}
+    {#                </td>#}
+    {#            </tr>#}
+    {#            <tr>#}
+    {#                <td colspan="2">#}
+    {#                    {% localize off %}#}
+    {#                        <span class="title">{{ anticipo.get_tipo_documento_display|upper }}:</span>#}
+    {#                        {% if anticipo.nro_consecutivo %}#}
+    {#                            {{ anticipo.nro_consecutivo }}{% if anticipo.version > 1 %} v.{{ anticipo.version }}#}
+    {#                            {% endif %}#}
+    {#                        {% else %}#}
+    {#                            SÍN GENERAR CONSECUTIVO#}
+    {#                        {% endif %}#}
+    {#                    {% endlocalize %}#}
+    {#                </td>#}
+    {#            </tr>#}
+    {#            <tr>#}
+    {#                <td colspan="2">#}
+    {#                    <span class="title">ORDEN DE COMPRA:</span> {{ anticipo.nro_orden_compra }}#}
+    {#                </td>#}
+    {#            </tr>#}
+    {#        </table>#}
+    <table class="table table-striped tabla">
+        <tr>
+            <th>Referencia</th>
+            <th>Descripción</th>
+            <th>Cantidad</th>
+            <th>Pre. Uni</th>
+            <th>Uni. Emp</th>
+            <th>Total</th>
+            <th>Tiem. Entre</th>
+        </tr>
+        {% for item in cotizacion.items.all %}
+            <tr>
+                <td style="max-width: 4cm">{{ item.referencia }}</td>
+                <td style="max-width: 8cm">{{ item.descripcion|title }}</td>
+                <td class="numero">{{ item.cantidad|floatformat:2|intcomma }}</td>
+                <td class="numero">{{ item.precio_unitario|floatformat:2|intcomma }} </td>
+                <td>{{ item.unidad_medida }} </td>
+                <td class="numero">{{ item.valor_total|floatformat:2|intcomma }} </td>
+                <td>{{ item.tiempo_entrega }} </td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td style="border: none" colspan="5">TOTAL</td>
+            <td class="numero">{{ cotizacion.valor_total|floatformat:2|intcomma }}</td>
+            <td style="border: none"></td>
+        </tr>
+    </table>
+    {% if cotizacion.observaciones %}
+        <p style="padding:3px">
+            <span style="font-weight: bold">Observación:</span><br/>
+            {{ cotizacion.observaciones }}
+        </p>
+    {% endif %}
+    <div id="email_coti_condiciones_comerciales">
+        <h4>NOTAS Y CONDICCIONES COMERCIALES </h4>
+        <ol>
+            <li> Agregar el IVA vigente a la fecha de facturación.</li>
+            <li>Para Compras inferiores a $800.000, el cliente asume el costo del envío.</li>
+            <li>Favor enviar orden de compra a nombre de ODECOPACK S.A.S. Nit. 800.176.169-3</li>
+            <li>Pagos con cheque favor girar a nombre de ODECOPACK S.A.S.</li>
+            <li>Transferencias bancarias a cuenta corriente Bancolombia 812063344-48 ODECOPACK S.A.S.</li>
+            <li>Medios de pago Cheque/T. Débito/T. Crédito/Transferencia Bancaria</li>
+            <li>Precios pueden variar en función de la TRM del día</li>
+        </ol>
+    </div>
+
+    <div class="texto_mensaje">
+        ODECOPACK S.A.S agradece tenernos en cuenta para sus futuros proyectos y
+        por contar con nuestra compañia para suplir sus necesidades empresariales.<br/>
+        Atentamente...
+        {#        {% if avatar %}#}
+        {#            <div>#}
+        {#                <img class="img-circle" height="100" width="100"#}
+        {#                     src="{{ avatar }}"/>#}
+        {#            </div>#}
+        {#        {% endif %}#}
+        <div class="firma">
+            <p>{{ cotizacion.responsable.get_full_name|title }}</p>
+            <p>{{ cotizacion.responsable.email }}</p>
+            {#            <p>{{ object.usuario.user_extendido.colaborador.numero_contacto }}</p>#}
+            <p>Colombia - Cali</p>
+        </div>
+    </div>
+</div>
+</body>

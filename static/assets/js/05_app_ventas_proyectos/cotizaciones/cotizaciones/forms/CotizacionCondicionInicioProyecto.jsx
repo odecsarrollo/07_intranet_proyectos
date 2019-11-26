@@ -12,6 +12,7 @@ const CotizacionCondicionInicioProyecto = props => {
     let list = useSelector(state => state.condiciones_inicios_proyectos);
     const cargarDatos = () => {
         dispatch(actions.fetchCondicionesIniciosProyectos());
+        dispatch(actions.fetchCotizacion(cotizacion.id));
     };
     useEffect(() => {
         cargarDatos();

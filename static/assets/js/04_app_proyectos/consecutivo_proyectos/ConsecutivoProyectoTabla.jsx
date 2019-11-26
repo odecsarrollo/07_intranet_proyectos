@@ -41,46 +41,53 @@ const ConsecutivoProyectoTablaItem = props => {
                     <div className="col-12">
                         {cotizacion.orden_compra_nro}
                     </div>
-                </div>)}</div>
-            <div className="col-2">{proyecto.cliente_nombre}</div>
-            <div className="col-8">
+                </div>)}
+            </div>
+            <div className="col-1">{proyecto.cliente_nombre}</div>
+            <div className="col-9">
                 {cotizaciones_adicionales.length > 0 &&
                 <div className="row">
-                    <div className="col-5"></div>
+                    <div className="col-3"></div>
                     <div className="col-2"></div>
                     <div className="col-1"></div>
-                    <div className="col-4">
+                    <div className="col-6">
                         {_.map(cotizaciones_adicionales, c => <div className="row" key={c.id}>
-                            <div className="col-6">
+                            <div className="col-4">
                                 <Link
                                     target='_blank'
                                     to={`/app/ventas_proyectos/cotizaciones/cotizaciones/detail/${c.id}`}>
                                     {c.unidad_negocio}-{c.nro_cotizacion}
                                 </Link>
                             </div>
-                            <div className="col-6">
+                            <div className="col-4">
                                 {c.orden_compra_nro}
+                            </div>
+                            <div className="col-4">
+                                {c.fecha_entrega_pactada} {`${c.dias_para_vencer ? `(${c.dias_para_vencer} días)` : ''}`}
                             </div>
                         </div>)}
                     </div>
                 </div>}
                 {mis_literales.map(literal => <div className="row" key={literal.id}>
-                    <div className="col-5">{literal.id_literal} - {literal.descripcion}</div>
+                    <div className="col-3">{literal.id_literal} - {literal.descripcion}</div>
                     <div className="col-2">{literal.disenador_nombre}</div>
                     <div className="col-1 text-center">{literal.abierto ?
                         <FontAwesomeIcon icon={'check-circle'}/> : ''}</div>
                     {literal.cotizaciones &&
-                    <div className="col-4">
+                    <div className="col-6">
                         {literal.cotizaciones.map(cotizacion =>
                             <div key={cotizacion.id} className='row'>
-                                <div className="col-6">
+                                <div className="col-4">
                                     <Link
                                         target='_blank'
                                         to={`/app/ventas_proyectos/cotizaciones/cotizaciones/detail/${cotizacion.id}`}>
                                         {cotizacion.unidad_negocio}-{cotizacion.nro_cotizacion}
                                     </Link>
                                 </div>
-                                <div className="col-6">{cotizacion.orden_compra_nro}</div>
+                                <div className="col-4">{cotizacion.orden_compra_nro}</div>
+                                <div
+                                    className="col-4">{cotizacion.fecha_entrega_pactada} {`${cotizacion.dias_para_vencer ? `(${cotizacion.dias_para_vencer} días)` : ''}`}
+                                </div>
                             </div>)}
                     </div>}
                 </div>)}
@@ -185,14 +192,15 @@ const ConsecutivoProyectoTabla = (props) => {
                     <div className="row">
                         <div className="col-1">OP</div>
                         <div className="col-1">Cot. Ini</div>
-                        <div className="col-2">Cliente</div>
-                        <div className="col-8">
+                        <div className="col-1">Cliente</div>
+                        <div className="col-9">
                             <div className="row">
-                                <div className="col-5">Literal</div>
+                                <div className="col-3">Literal</div>
                                 <div className="col-2">Diseñador</div>
                                 <div className="col-1">Activo</div>
                                 <div className="col-2">Cot. Adi</div>
                                 <div className="col-2">#OC</div>
+                                <div className="col-2">#Fecha Entrega</div>
                             </div>
                         </div>
                     </div>

@@ -172,24 +172,19 @@ const Detail = memo(props => {
                             />
                         </TabPanel>}
                         {permisos_archivos_cotizacion.list && <TabPanel>
-                            {
-                                permisos_archivos_cotizacion.add &&
-                                <FontAwesomeIcon
-                                    className='puntero'
-                                    icon={`${adicionar_documento ? 'minus' : 'plus'}-circle`}
-                                    onClick={() => {
-                                        setAdicionarDocumento(!adicionar_documento);
-                                        setItemSeleccionado(null);
-                                    }}
-                                />
-                            }
-                            {
-                                adicionar_documento &&
-                                <UploadDocumentoForm
-                                    onSubmit={onSubmitUploadArchivo}
-                                    initialValues={item_seleccionado}
-                                />
-                            }
+                            {permisos_archivos_cotizacion.add && <FontAwesomeIcon
+                                className='puntero'
+                                icon={`${adicionar_documento ? 'minus' : 'plus'}-circle`}
+                                onClick={() => {
+                                    setAdicionarDocumento(!adicionar_documento);
+                                    setItemSeleccionado(null);
+                                }}
+                            />}
+                            {adicionar_documento &&
+                            <UploadDocumentoForm
+                                onSubmit={onSubmitUploadArchivo}
+                                initialValues={item_seleccionado}
+                            />}
                             <ArchivosCotizacionList
                                 lista={archivos_list}
                                 permisos={permisos_archivos_cotizacion}
