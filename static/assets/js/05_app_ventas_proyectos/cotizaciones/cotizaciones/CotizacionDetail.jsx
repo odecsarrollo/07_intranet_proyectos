@@ -11,9 +11,7 @@ import TareasList from '../seguimientos/CotizacionSeguimientoTareaList';
 import CambioEstadoList from '../seguimientos/CotizacionSeguimientoCambioEstadoList';
 import CotizacionForm from './forms/CotizacionFormDetail';
 import CotizacionInfo from './CotizacionDetailInfo';
-import UploadDocumentoForm from '../../../04_app_proyectos/proyectos/archivos/forms/UploadArchivoForm';
 import ArchivosCotizacionList from '../../../04_app_proyectos/proyectos/archivos/components/ProyectoDocumentoList';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome/index';
 import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
 import Typography from "@material-ui/core/Typography";
 import CotizacionCondicionInicioProyecto from "./forms/CotizacionCondicionInicioProyecto";
@@ -21,18 +19,11 @@ import CotizacionCondicionInicioProyecto from "./forms/CotizacionCondicionInicio
 const Detail = memo(props => {
     const dispatch = useDispatch();
     const {id} = props.match.params;
-    const archivos_list = useSelector(state => state.archivos_cotizaciones);
     const object = useSelector(state => state.cotizaciones[id]);
-    const [adicionar_documento, setAdicionarDocumento] = useState(false);
-    const [item_seleccionado, setItemSeleccionado] = useState(null);
+
     const permisos = useTengoPermisos(COTIZACIONES);
     const permisos_proyecto = useTengoPermisos(PROYECTOS);
     const permisos_archivos_cotizacion = useTengoPermisos(ARCHIVOS_COTIZACIONES);
-
-    const onSelectArchivo = (item_seleccionado) => {
-        setItemSeleccionado(item_seleccionado);
-        setAdicionarDocumento(true);
-    };
 
     const guardarCambiosCotizacion = (cotizacion) => {
         dispatch(actions.updateCotizacion(id, cotizacion));
@@ -65,60 +56,6 @@ const Detail = memo(props => {
         const cargarMiCuenta = () => dispatch(actions.fetchMiCuenta({callback: cargarArchivos}));
         dispatch(actions.fetchCotizacion(id, {callback: cargarMiCuenta}));
 
-    };
-
-
-    const onSubmitUploadArchivo = (valores) => {
-        if (valores.id) {
-            delete valores.archivo;
-            dispatch(
-                actions.updateArchivoCotizacion(
-                    valores.id,
-                    valores,
-                    {callback: () => setAdicionarDocumento(false)}
-                )
-            )
-        } else {
-            onUploadArchivo(valores);
-        }
-    };
-
-    const onDeleteArchivo = (archivo_id) => {
-        dispatch(
-            actions.deleteArchivoCotizacion(
-                archivo_id,
-                {callback: () => dispatch(actions.fetchArchivosCotizaciones_x_cotizacion(object.id))}
-            )
-        )
-    };
-
-    const onUploadArchivo = (e) => {
-        const file = e.archivo[0];
-        if (file) {
-            let formData = new FormData();
-            formData.append('archivo', file);
-            formData.append('nombre', e.nombre_archivo);
-            dispatch(
-                actions.uploadArchivoCotizacion(
-                    object.id,
-                    formData,
-                    {
-                        callback:
-                            () => {
-                                dispatch(
-                                    actions.fetchArchivosCotizaciones_x_cotizacion(
-                                        object.id,
-                                        () => {
-                                            dispatch(actions.notificarAction(`La ha subido el archivo para la cotizacion ${object.nro_cotizacion ? object.nro_cotizacion : object.id}`));
-                                            setAdicionarDocumento(false);
-                                        }
-                                    )
-                                )
-                            }
-                    }
-                )
-            )
-        }
     };
 
     useEffect(() => {
@@ -154,42 +91,29 @@ const Detail = memo(props => {
                 <div className="col-12 mt-3">
                     <Tabs>
                         <TabList>
-                            {object.estado === 'Cierre (Aprobado)' && <Tab>Inicio Proyecto</Tab>}
+                            {(object.estado === 'Aceptación de Terminos y Condiciones' || object.estado === 'Cierre (Aprobado)') &&
+                            <Tab>Inicio Proyecto</Tab>}
                             {permisos.change && <Tab>Editar</Tab>}
-                            {permisos_archivos_cotizacion.list &&
-                            <Tab onClick={() => setAdicionarDocumento(false)}>Documentos</Tab>}
+                            {permisos_archivos_cotizacion.list && <Tab>Documentos</Tab>}
                             <Tab>Comentarios</Tab>
                             <Tab>Cambios de Estado</Tab>
                             <Tab>Tareas</Tab>
                         </TabList>
-                        {object.estado === 'Cierre (Aprobado)' && <TabPanel>
+                        {(object.estado === 'Aceptación de Terminos y Condiciones' || object.estado === 'Cierre (Aprobado)') &&
+                        <TabPanel>
                             <CotizacionCondicionInicioProyecto cotizacion={object}/>
                         </TabPanel>}
                         {permisos.change && <TabPanel>
                             <CotizacionForm
                                 initialValues={object}
                                 onSubmit={guardarCambiosCotizacion}
+                                permisos={permisos}
                             />
                         </TabPanel>}
                         {permisos_archivos_cotizacion.list && <TabPanel>
-                            {permisos_archivos_cotizacion.add && <FontAwesomeIcon
-                                className='puntero'
-                                icon={`${adicionar_documento ? 'minus' : 'plus'}-circle`}
-                                onClick={() => {
-                                    setAdicionarDocumento(!adicionar_documento);
-                                    setItemSeleccionado(null);
-                                }}
-                            />}
-                            {adicionar_documento &&
-                            <UploadDocumentoForm
-                                onSubmit={onSubmitUploadArchivo}
-                                initialValues={item_seleccionado}
-                            />}
                             <ArchivosCotizacionList
-                                lista={archivos_list}
+                                cotizacion={object}
                                 permisos={permisos_archivos_cotizacion}
-                                onDeleteArchivo={onDeleteArchivo}
-                                onSelectElemento={onSelectArchivo}
                             />
                         </TabPanel>}
                         <TabPanel>

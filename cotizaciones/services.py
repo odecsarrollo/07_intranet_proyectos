@@ -23,22 +23,22 @@ def cotizacion_versions(cotizacion_id: int) -> Version:
 
 def cotizacion_envio_correo_notificacion_condiciones_inicio_completas(
         cotizacion_id: int
-):
+) -> Cotizacion:
     cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
-    correos_to = ['fabio.garcia.sanchez@gmail.com']
+    correos_to = ['miguel.cordoba@odecopack.com']
     context = {
         "cotizacion": cotizacion,
         "condiciones_inicio_cotizacion": cotizacion.condiciones_inicio_cotizacion.order_by('fecha_entrega').all()
     }
     text_content = render_to_string('emails/cotizacion_proyecto/correo_base.html', context=context)
     msg = EmailMultiAlternatives(
-        'Solicitud apertura Cotizacion %s-%s' % (
+        'Solicitud apertura para Cotizacion %s-%s' % (
             cotizacion.unidad_negocio,
             cotizacion.nro_cotizacion
         ),
         text_content,
-        # bcc=[configuracion.email_copia_default],
-        from_email='Odecopack SAS <%s>' % 'prueba@odecopack.com',
+        bcc=['fabio.garcia.sanchez@gmail.com'],
+        from_email='Odecopack Ventas Proyectos<%s>' % 'noreply@odecopack.com',
         to=correos_to
     )
     msg.attach_alternative(text_content, "text/html")
@@ -60,14 +60,19 @@ def cotizacion_verificar_condicion_inicio_proyecto_si_estan_completas(
         cotizacion_id: int
 ) -> Cotizacion:
     cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
+    con_orden_de_compra = cotizacion.orden_compra_nro is not None and cotizacion.orden_compra_fecha is not None and cotizacion.valor_orden_compra > 0
     condiciones_incompletas = cotizacion.condiciones_inicio_cotizacion.filter(fecha_entrega__isnull=True)
-    if not condiciones_incompletas.exists():
+    if not condiciones_incompletas.exists() and con_orden_de_compra:
         fecha_max = cotizacion.condiciones_inicio_cotizacion.aggregate(fecha_max=Max('fecha_entrega'))['fecha_max']
-        cotizacion.condiciones_inicio_fecha_ultima = fecha_max
+        cotizacion.condiciones_inicio_fecha_ultima = max(cotizacion.orden_compra_fecha,
+                                                         fecha_max) if fecha_max else cotizacion.orden_compra_fecha
         cotizacion.condiciones_inicio_completas = True
+        cotizacion.estado = 'Cierre (Aprobado)'
+        cotizacion.fecha_cambio_estado_cerrado = timezone.now()
         cotizacion.save()
         cotizacion_envio_correo_notificacion_condiciones_inicio_completas(cotizacion.id)
     else:
+        cotizacion.fecha_cambio_estado_cerrado = None
         cotizacion.condiciones_inicio_fecha_ultima = None
         cotizacion.condiciones_inicio_completas = False
         cotizacion.save()
@@ -91,19 +96,28 @@ def condicion_inicio_proyecto_cotizacion_actualizar(
 
 def cotizacion_limpiar_condicion_inicio_proyecto(
         cotizacion_id: int,
-        condicion_inicio_proyecto_id: int
+        condicion_inicio_proyecto_id: int = None,
+        es_orden_compra: bool = False,
 ) -> Cotizacion:
     cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
-    condiciones_inicio_cotizaciones = cotizacion.condiciones_inicio_cotizacion.filter(
-        condicion_inicio_proyecto_id=condicion_inicio_proyecto_id)
-    for condicion_inicio in condiciones_inicio_cotizaciones.all():
-        condicion_inicio.fecha_entrega = None
-        condicion_inicio.documento = None
-        condicion_inicio.save()
-    cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
+    if condicion_inicio_proyecto_id is not None:
+        condiciones_inicio_cotizaciones = cotizacion.condiciones_inicio_cotizacion.filter(
+            condicion_inicio_proyecto_id=condicion_inicio_proyecto_id)
+        for condicion_inicio in condiciones_inicio_cotizaciones.all():
+            condicion_inicio.fecha_entrega = None
+            condicion_inicio.documento = None
+            condicion_inicio.save()
+    if es_orden_compra:
+        cotizacion.orden_compra_fecha = None
+        cotizacion.valor_orden_compra = 0
+        cotizacion.orden_compra_nro = None
     cotizacion.condiciones_inicio_completas = False
     cotizacion.condiciones_inicio_fecha_ultima = None
+    cotizacion.fecha_cambio_estado_cerrado = None
+    if cotizacion.estado == 'Cierre (Aprobado)':
+        cotizacion.estado = 'Aceptación de Terminos y Condiciones'
     cotizacion.save()
+    cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
     return cotizacion
 
 
@@ -129,6 +143,10 @@ def cotizacion_adicionar_quitar_condicion_inicio_proyecto(
         condicion_proyecto.save()
         cotizacion.condiciones_inicio_completas = False
         cotizacion.condiciones_inicio_fecha_ultima = None
+        cotizacion.fecha_cambio_estado_cerrado = None
+        if cotizacion.estado != 'Aceptación de Terminos y Condiciones':
+            raise ValidationError({
+                '_error': 'No se puede adicionar condiciones de inicio a una cotizacion en estado diferente a Aceptación de Terminos y Condiciones'})
     cotizacion.save()
     cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
     return cotizacion
@@ -222,7 +240,7 @@ def cotizacion_actualizar(
     cambio_estado = estado != cotizacion.estado
 
     # Valida que no se vaya a cambiar de estado de Cierre (Aprobado) si tiene cotizaciones adicionales o proyectos vinculados
-    if cotizacion.estado == 'Cierre (Aprobado)' and cambio_estado:
+    if cotizacion.estado == 'Aceptación de Terminos y Condiciones' and cambio_estado:
         if cotizacion.cotizaciones_adicionales.count() > 0 or cotizacion.proyectos.count() > 0:
             raise ValidationError(
                 {
@@ -253,7 +271,7 @@ def cotizacion_actualizar(
     else:
         cotizacion.unidad_negocio = unidad_negocio
 
-    if estado in ['Aplazado', 'Cancelado', 'Aceptación de Terminos y Condiciones']:
+    if estado in ['Aplazado', 'Cancelado', 'Evaluación Técnica y Económica']:
         if estado_observacion_adicional is None:
             raise ValidationError({
                 '_error': 'Una cotización en estado %s debe tener una observación del estado' % cotizacion.estado})
@@ -261,14 +279,24 @@ def cotizacion_actualizar(
     else:
         cotizacion.estado_observacion_adicional = None
 
-    if estado in ['Cotización Enviada', 'Evaluación Técnica y Económica', 'Aceptación de Terminos y Condiciones',
-                  'Cierre (Aprobado)']:
+    if estado in [
+        'Cotización Enviada',
+        'Evaluación Técnica y Económica',
+        'Aceptación de Terminos y Condiciones',
+        'Cierre (Aprobado)'
+    ]:
         if valor_ofertado is None or valor_ofertado <= 0:
             raise ValidationError(
                 {'_error': 'Para el estado de %s es necesario tener un valor ofertado' % estado})
         cotizacion.valor_ofertado = valor_ofertado
+        if costo_presupuestado is None or costo_presupuestado <= 0:
+            raise ValidationError({
+                '_error': 'Para el estado de Aceptación de Terminos y Condiciones es necesario tener un costo presupuestado del proyecto'})
+        else:
+            cotizacion.costo_presupuestado = costo_presupuestado
     else:
         cotizacion.valor_ofertado = 0
+        cotizacion.costo_presupuestado = 0
 
     # Valida cuándo se puede crear un número de cotización
     if estado not in ['Aplazado', 'Cancelado', 'Cita/Generación Interés']:
@@ -278,42 +306,21 @@ def cotizacion_actualizar(
     if cambio_estado:
         cotizacion.fecha_cambio_estado = timezone.now().date()
 
-    if estado == 'Cierre (Aprobado)':
-        if cambio_estado:
-            cotizacion.fecha_cambio_estado_cerrado = timezone.now()
-    else:
-        cotizacion.fecha_cambio_estado_cerrado = None
-
-    if estado == 'Cierre (Aprobado)':
-        if costo_presupuestado is None or costo_presupuestado <= 0:
-            raise ValidationError({
-                '_error': 'Para el estado de Cierre (Aprobado) es necesario tener un costo presupuestado del proyecto'})
-        else:
-            cotizacion.costo_presupuestado = costo_presupuestado
-
-        if orden_compra_fecha is None:
-            raise ValidationError({
-                '_error': 'Para el estado de Cierre (Aprobado) es necesario tener una fecha de la orden de compra'})
-        else:
-            cotizacion.orden_compra_fecha = orden_compra_fecha
-
-        if valor_orden_compra is None or valor_orden_compra <= 0:
-            raise ValidationError({
-                '_error': 'Para el estado de Cierre (Aprobado) es necesario tener un valor de la orden de compra'})
-        else:
-            cotizacion.valor_orden_compra = valor_orden_compra
-
+    if estado in ['Aceptación de Terminos y Condiciones', 'Cierre (Aprobado)']:
         if dias_pactados_entrega_proyecto is None or dias_pactados_entrega_proyecto <= 0:
             raise ValidationError({
-                '_error': 'Para el estado de Cierre (Aprobado) es necesario tener unos días pactados de entrega del proyectos'})
+                '_error': 'Para el estado de %s es necesario tener unos días pactados de entrega del proyectos' % (
+                    estado)})
         else:
             cotizacion.dias_pactados_entrega_proyecto = dias_pactados_entrega_proyecto
 
-        if orden_compra_nro is None:
-            raise ValidationError({
-                '_error': 'Para el estado de Cierre (Aprobado) es necesario tener un número de orden de compra'})
+        if estado == 'Aceptación de Terminos y Condiciones':
+            cotizacion.orden_compra_fecha = orden_compra_fecha
+            cotizacion.orden_compra_nro = orden_compra_nro
+            cotizacion.valor_orden_compra = valor_orden_compra
+            cotizacion.save()
+            cotizacion = cotizacion_verificar_condicion_inicio_proyecto_si_estan_completas(cotizacion_id=cotizacion_id)
     else:
-        cotizacion.costo_presupuestado = 0
         cotizacion.orden_compra_fecha = None
         cotizacion.valor_orden_compra = 0
         cotizacion.orden_compra_nro = None

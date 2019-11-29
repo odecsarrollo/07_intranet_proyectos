@@ -41,13 +41,9 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
         self.serializer_class = CotizacionConDetalleSerializer
         return super().retrieve(request, *args, **kwargs)
 
-    def perform_create(self, serializer):
+    def update(self, request, *args, **kwargs):
         self.serializer_class = CotizacionConDetalleSerializer
-        super().perform_create(serializer)
-
-    def perform_update(self, serializer):
-        self.serializer_class = CotizacionConDetalleSerializer
-        super().perform_update(serializer)
+        return super().update(request, *args, **kwargs)
 
     def list(self, request, *args, **kwargs):
         self.serializer_class = CotizacionListSerializer
@@ -86,10 +82,7 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
         qs = Cotizacion.objects.prefetch_related(
             'cliente',
             'cotizacion_inicial__cliente'
-        ).exclude(revisada=True).filter(
-            Q(estado='Cierre (Aprobado)') &
-            (Q(orden_compra_nro__isnull=False) | Q(cotizacion_inicial__isnull=False))
-        )
+        ).exclude(revisada=True).filter(estado='Cierre (Aprobado)')
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
@@ -135,11 +128,13 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
     def limpiar_condicion_inicio_proyecto(self, request, pk=None):
         cotizacion = self.get_object()
         self.serializer_class = CotizacionConDetalleSerializer
-        condicion_inicio_proyecto_id = int(request.POST.get('condicion_inicio_proyecto_id'))
+        condicion_inicio_proyecto_id = request.POST.get('condicion_inicio_proyecto_id', None)
+        es_orden_compra = request.POST.get('es_orden_compra', False)
         from .services import cotizacion_limpiar_condicion_inicio_proyecto
         cotizacion = cotizacion_limpiar_condicion_inicio_proyecto(
             condicion_inicio_proyecto_id=condicion_inicio_proyecto_id,
-            cotizacion_id=cotizacion.id
+            cotizacion_id=cotizacion.id,
+            es_orden_compra=es_orden_compra
         )
         serializer = self.get_serializer(cotizacion)
         return Response(serializer.data)

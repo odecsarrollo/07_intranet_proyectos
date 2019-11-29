@@ -17,6 +17,7 @@ let Form = memo(props => {
         initialValues,
         onSubmit,
         handleSubmit,
+        permisos = null,
     } = props;
     const dispatch = useDispatch();
     const myValues = useSelector(state => selector(state, 'estado', 'valor_ofertado', 'cliente', 'unidad_negocio', 'cotizacion_inicial'));
@@ -37,6 +38,7 @@ let Form = memo(props => {
                 <FormBaseCotizacion
                     item={initialValues}
                     myValues={myValues}
+                    permisos={permisos}
                 />
                 {
                     _.size(usuarios_list) > 0 &&

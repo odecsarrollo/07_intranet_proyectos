@@ -102,10 +102,15 @@ export const relacionarQuitarProyectoaCotizacion = (id, proyecto_id, options_act
     }
 };
 
-export const limpiarCondicionInicioCotizacion = (id, condicion_inicio_proyecto_id, options_action = {}) => {
+export const limpiarCondicionInicioCotizacion = (id, condicion_inicio_proyecto_id, es_orden_compra, options_action = {}) => {
     return (dispatch) => {
         let params = new URLSearchParams();
-        params.append('condicion_inicio_proyecto_id', condicion_inicio_proyecto_id);
+        if (condicion_inicio_proyecto_id) {
+            params.append('condicion_inicio_proyecto_id', condicion_inicio_proyecto_id);
+        }
+        if (es_orden_compra) {
+            params.append('es_orden_compra', es_orden_compra);
+        }
         const dispatches = (response) => {
             dispatch({type: TYPES.update, payload: response})
         };

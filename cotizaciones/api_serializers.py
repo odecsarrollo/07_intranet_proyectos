@@ -179,8 +179,8 @@ class CotizacionSerializer(serializers.ModelSerializer):
         contacto_cliente = validated_data.get('contacto_cliente', None)
         costo_presupuestado = validated_data.get('costo_presupuestado', 0)
         orden_compra_nro = validated_data.get('orden_compra_nro', None)
-        orden_compra_fecha = validated_data.get('orden_compra_fecha', None)
         valor_ofertado = validated_data.get('valor_ofertado', 0)
+        orden_compra_fecha = validated_data.get('orden_compra_fecha', 0)
         valor_orden_compra = validated_data.get('valor_orden_compra', 0)
         estado_observacion_adicional = validated_data.get('estado_observacion_adicional', None)
         dias_pactados_entrega_proyecto = validated_data.get('dias_pactados_entrega_proyecto', None)
@@ -199,12 +199,12 @@ class CotizacionSerializer(serializers.ModelSerializer):
             cliente_id=None if cliente is None else cliente.id,
             contacto_cliente_id=None if contacto_cliente is None else contacto_cliente.id,
             valor_ofertado=valor_ofertado,
+            valor_orden_compra=valor_orden_compra,
             costo_presupuestado=costo_presupuestado,
             orden_compra_nro=orden_compra_nro,
-            orden_compra_fecha=orden_compra_fecha,
-            valor_orden_compra=valor_orden_compra,
             estado_observacion_adicional=estado_observacion_adicional,
             dias_pactados_entrega_proyecto=dias_pactados_entrega_proyecto,
+            orden_compra_fecha=orden_compra_fecha
         )
         return cotizacion
 
@@ -264,6 +264,7 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'cotizacion_inicial_nro',
             'cotizacion_inicial_unidad_negocio',
             'mis_seguimientos',
+            'mis_documentos',
             'responsable',
             'origen_cotizacion',
             'condiciones_inicio_cotizacion',
@@ -320,11 +321,15 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'responsable_actual': {'read_only': True},
             'fecha_cambio_estado': {'read_only': True},
             'cotizaciones_adicionales': {'read_only': True},
+            'mis_documentos': {'read_only': True},
             'cotizacion_inicial': {'allow_null': True},
+            'orden_compra_nro': {'allow_null': True},
             'contacto': {'allow_null': True},
+            'observacion': {'allow_null': True},
             'origen_cotizacion': {'allow_null': True},
             'estado_observacion_adicional': {'allow_null': True},
             'fecha_limite_segumiento_estado': {'allow_null': True},
+            'dias_pactados_entrega_proyecto': {'allow_null': True},
         }
         read_only_fields = [
             'condiciones_inicio_completas',
@@ -588,15 +593,6 @@ class SeguimientoCotizacionSerializer(serializers.ModelSerializer):
         }
 
 
-class CotizacionConDetalleSerializer(CotizacionSerializer):
-    literales = LiteralCotizacionConDetalle(many=True, read_only=True)
-    proyectos = ProyectoCotizacionConDetalleSerializer(many=True, read_only=True)
-    cotizaciones_adicionales = CotizacionCotizacionConDetalleSerializer(many=True, read_only=True)
-    cotizacion_inicial = CotizacionCotizacionConDetalleSerializer(read_only=True)
-    condiciones_inicio_cotizacion = CondicionInicioProyectoCotizacionSerializer(many=True, read_only=True)
-    mis_seguimientos = SeguimientoCotizacionSerializer(many=True, read_only=True)
-
-
 class ArchivoCotizacionSerializer(serializers.ModelSerializer):
     archivo_url = serializers.SerializerMethodField()
     extension = serializers.SerializerMethodField()
@@ -639,3 +635,13 @@ class ArchivoCotizacionSerializer(serializers.ModelSerializer):
             'creado_por': {'read_only': True},
             'nombre_archivo': {'required': False},
         }
+
+
+class CotizacionConDetalleSerializer(CotizacionSerializer):
+    literales = LiteralCotizacionConDetalle(many=True, read_only=True)
+    proyectos = ProyectoCotizacionConDetalleSerializer(many=True, read_only=True)
+    cotizaciones_adicionales = CotizacionCotizacionConDetalleSerializer(many=True, read_only=True)
+    cotizacion_inicial = CotizacionCotizacionConDetalleSerializer(read_only=True)
+    condiciones_inicio_cotizacion = CondicionInicioProyectoCotizacionSerializer(many=True, read_only=True)
+    mis_seguimientos = SeguimientoCotizacionSerializer(many=True, read_only=True)
+    mis_documentos = ArchivoCotizacionSerializer(many=True, read_only=True)

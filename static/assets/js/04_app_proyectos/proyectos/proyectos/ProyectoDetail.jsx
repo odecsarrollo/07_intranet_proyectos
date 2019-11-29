@@ -21,6 +21,8 @@ import PanelArchivosProyecto from '../archivos/proyectos/ProyectoDocumentoList';
 import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
 import Typography from "@material-ui/core/Typography";
 import CargarDatos from "../../../00_utilities/components/system/cargar_datos";
+import SiNoDialog from "../../../00_utilities/components/ui/dialog/SiNoDialog";
+import Button from "@material-ui/core/Button";
 
 const style = {
     tabla: {
@@ -65,6 +67,7 @@ const Detail = memo((props) => {
     const {id} = props.match.params;
     const [select_literal_id, setSelectLiteralId] = useState(null);
     const [mostrar_literal_info, setMostrarLiteralInfo] = useState(false);
+    const [show_enviar_aperturas, setEnviarAperturas] = useState(false);
     const cotizaciones = useSelector(state => state.cotizaciones);
     useEffect(() => {
         cargarDatos();
@@ -84,6 +87,8 @@ const Detail = memo((props) => {
     }
     const literales = _.mapKeys(proyecto.mis_literales, 'id');
 
+    const cantidad_apertura_literales = _.size(_.pickBy(literales, l => !l.correo_apertura));
+
     let facturas = [];
     proyecto.mis_literales.map(l => {
         if (l.facturas) {
@@ -92,6 +97,8 @@ const Detail = memo((props) => {
             })
         }
     });
+
+    const enviarAperturas = () => dispatch(actions.enviarAperturaLiteralesProyecto(id, {callback: () => setEnviarAperturas(false)}));
 
     const literal_seleccionado = select_literal_id ? literales[select_literal_id] : null;
 
@@ -111,6 +118,21 @@ const Detail = memo((props) => {
 
     return (
         <div className="row">
+            {show_enviar_aperturas && <SiNoDialog
+                onSi={enviarAperturas}
+                onNo={() => setEnviarAperturas(false)}
+                is_open={show_enviar_aperturas}
+                titulo='Eliminar notificación'
+            >
+                Hay ({cantidad_apertura_literales}) literales para enviar correo de apertura. Desea Enviarlo?
+            </SiNoDialog>}
+            {cantidad_apertura_literales > 0 && <Button
+                color="primary"
+                variant="contained"
+                onClick={() => setEnviarAperturas(true)}
+            >
+                Solicitar Aperturas ({cantidad_apertura_literales})
+            </Button>}
             <div className="col-12">
                 <Typography variant="h3" color="inherit" noWrap>
                     Proyecto {proyecto.id_proyecto}

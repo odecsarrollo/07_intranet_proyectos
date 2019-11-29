@@ -15,6 +15,7 @@ import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
 
 const List = memo(props => {
     const dispatch = useDispatch();
+    const {history} = props;
     const cargarDatos = () => {
         dispatch(actions.fetchProyectos());
     };
@@ -36,7 +37,7 @@ const List = memo(props => {
     return (
         <Fragment>
             <CRUD
-                posSummitMethod={() => cargarDatos()}
+                posCreateMethod={(pro) => history.push(`/app/proyectos/proyectos/detail/${pro.id}`)}
                 method_pool={method_pool}
                 list={list}
                 permisos_cotizaciones={permisos_cotizaciones}

@@ -354,6 +354,7 @@ export const COTIZACIONES = {
     add: 'add_cotizacion',
     delete: 'delete_cotizacion',
     change: 'change_cotizacion',
+    change_cerrada: 'change_cerrada',
     list: 'list_cotizacion',
     detail: 'view_cotizacion',
     eliminar_cotizacion_notificacion_consecutivo_proyectos: 'eliminar_cotizacion_notificacion_consecutivo_proyectos',

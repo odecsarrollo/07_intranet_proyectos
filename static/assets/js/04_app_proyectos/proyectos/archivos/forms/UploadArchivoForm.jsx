@@ -1,20 +1,10 @@
 import React, {memo} from 'react';
-import {reduxForm, formValueSelector} from 'redux-form';
+import {reduxForm} from 'redux-form';
 import {MyTextFieldSimple, MyFieldFileInput} from '../../../../00_utilities/components/ui/forms/fields';
-import {useSelector, useDispatch} from "react-redux";
 import Button from '@material-ui/core/Button';
 import validate from './validate';
 
-const selector = formValueSelector('uploadArchivoForm');
-
 let Form = memo(props => {
-    const valores = useSelector(state => selector(state, 'archivo', 'nombre_archivo'));
-    const onChangeFile = (f, v) => {
-        const archivo = v[0];
-        const nombre_archivo = archivo.name.split('.')[0];
-        props.change('nombre_archivo', nombre_archivo.toUpperCase());
-    };
-
     const {
         handleSubmit,
         onSubmit,
@@ -22,6 +12,11 @@ let Form = memo(props => {
         pristine,
         initialValues
     } = props;
+    const onChangeFile = (f, v) => {
+        const archivo = v[0];
+        const nombre_archivo = archivo.name.split('.')[0];
+        props.change('nombre_archivo', nombre_archivo.toUpperCase());
+    };
     return (
         <form onSubmit={handleSubmit((v) => onSubmit(v))}>
             <div className="row">

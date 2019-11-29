@@ -8,7 +8,8 @@ import {
     deleteObject,
     fetchObjectWithParameterPDF,
     fetchListGetURLParameters,
-    uploadArchivo
+    uploadArchivo,
+    callApiMethodPost
 } from '../../00_general_fuctions'
 
 const current_url_api = 'proyectos';
@@ -192,5 +193,15 @@ export const uploadArchivoProyecto = (id, values, options_action = {}) => {
     return (dispatch) => {
         const options = {...options_action, dispatch_method: dispatch};
         uploadArchivo(current_url_api, id, 'upload_archivo', values, options)
+    }
+};
+
+export const enviarAperturaLiteralesProyecto = (id, options_action = {}) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: response})
+        };
+        const options = {dispatches, ...options_action, dispatch_method: dispatch};
+        callApiMethodPost(current_url_api, id, 'envio_correo_aperturas_almacen', options)
     }
 };

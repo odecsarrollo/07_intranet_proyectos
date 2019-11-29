@@ -12,12 +12,12 @@ const validate = values => {
         'id_proyecto',
         'valor_ofertado',
         'descripcion_cotizacion',
+        'dias_pactados_entrega_proyecto',
         'orden_compra_fecha',
         'fecha_entrega_pactada',
         'costo_presupuestado',
         'contacto_cliente',
         'fecha_limite_segumiento_estado',
-        'estado_observacion_adicional',
     ];
     requiredFields.map(field => {
         if (!values[field]) {

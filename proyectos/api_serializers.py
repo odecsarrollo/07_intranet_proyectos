@@ -201,6 +201,7 @@ class LiteralSerializer(serializers.ModelSerializer):
             'id_proyecto',
             'proyecto',
             'cliente_nombre',
+            'correo_apertura',
             'disenador',
             'abierto',
             'en_cguno',
@@ -228,6 +229,7 @@ class LiteralSerializer(serializers.ModelSerializer):
             'mis_horas_trabajadas_iniciales': {'read_only': True},
             'facturas': {'read_only': True},
         }
+        read_only_fields = ['correo_apertura']
 
 
 class LiteralMaestraSerializer(CustomSerializerMixin, serializers.ModelSerializer):
@@ -303,7 +305,6 @@ class ProyectoSerializer(CustomSerializerMixin, serializers.ModelSerializer):
 
     def create(self, validated_data):
         from .services import proyecto_crear_actualizar
-        print(validated_data)
         tipo_id_proyecto = validated_data.get('tipo_id_proyecto', None)
         nombre = validated_data.get('nombre', None)
         cotizacion_relacionada_id = validated_data.get('cotizacion_relacionada_id', None)

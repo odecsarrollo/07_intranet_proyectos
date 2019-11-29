@@ -13,7 +13,7 @@ const CRUD = crudHOC(CreateForm, Tabla);
 import moment from "moment/moment";
 import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
 
-const List = memo(props => {
+const HojaTrabajoCRUD = memo(props => {
     const dispatch = useDispatch();
     const {history} = props;
     const permisos = useTengoPermisos(MANOS_OBRAS_HOJAS_TRABAJOS);
@@ -72,4 +72,4 @@ const List = memo(props => {
         </Fragment>
     )
 });
-export default List;
+export default HojaTrabajoCRUD;

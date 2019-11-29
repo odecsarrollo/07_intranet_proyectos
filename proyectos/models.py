@@ -47,6 +47,7 @@ class Literal(models.Model):
     costo_materiales = models.DecimalField(decimal_places=2, max_digits=12, default=0, null=True, blank=True)
     en_cguno = models.BooleanField(default=True)
     abierto = models.BooleanField(default=True)
+    correo_apertura = models.BooleanField(default=False)
     disenador = models.ForeignKey(User, null=True, related_name='disenos_asignados', on_delete=models.PROTECT)
     miembros = models.ManyToManyField(User, through='MiembroLiteral', related_name='literales')
     cotizaciones = models.ManyToManyField(

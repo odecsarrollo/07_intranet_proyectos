@@ -52,7 +52,7 @@ class Cotizacion(TimeStampedModel):
         on_delete=models.PROTECT
     )
     contacto = models.CharField(max_length=400, null=True)
-    observacion = models.TextField(null=True)
+    observacion = models.TextField(null=True, blank=True)
     valor_ofertado = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     valor_orden_compra = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     orden_compra_nro = models.CharField(max_length=100, null=True)
@@ -94,11 +94,12 @@ class Cotizacion(TimeStampedModel):
             ['list_all_cotizaciones_activas', 'Puede listar todas las cotizaciones activas'],
             ['list_tuberia_ventas', 'Puede ver la tuberia de bentas'],
             ['list_tuberia_informe_uno', 'Puede Ver informe de tuberia de ventas'],
+            ['change_cerrada', 'Puede Editar Cotizacion Cerrada'],
         ]
 
     @property
     def fecha_entrega_pactada(self):
-        if self.condiciones_inicio_fecha_ultima is not None:
+        if self.condiciones_inicio_fecha_ultima is not None and self.dias_pactados_entrega_proyecto is not None:
             fecha_entrega_proyecto = self.condiciones_inicio_fecha_ultima + datetime.timedelta(
                 days=self.dias_pactados_entrega_proyecto)
             return fecha_entrega_proyecto
@@ -112,7 +113,7 @@ class Cotizacion(TimeStampedModel):
 
     @property
     def abrir_carpeta(self) -> bool:
-        return not self.revisada and not self.relacionada and self.orden_compra_nro is not None and self.estado == 'Cierre (Aprobado)' and self.cotizacion_inicial is None
+        return not self.revisada and not self.relacionada and self.estado == 'Cierre (Aprobado)' and self.cotizacion_inicial is None
 
     @property
     def notificar(self) -> bool:

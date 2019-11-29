@@ -132,7 +132,7 @@ MyTextFieldSimple.propTypes = {
     nombre: PropTypes.string
 };
 
-const renderDropdownList = ({input, data, valueField, textField, placeholder, onSelect}) => {
+const renderDropdownList = ({input, data, valueField, textField, placeholder, onSelect, readOnly}) => {
     return (
         <DropdownList {...input}
                       data={data}
@@ -141,13 +141,14 @@ const renderDropdownList = ({input, data, valueField, textField, placeholder, on
                       textField={textField}
                       onChange={(e) => input.onChange(e[valueField])}
                       onSelect={onSelect}
+                      readOnly={readOnly}
         />
     )
 };
 
 
 export const MyDropdownList = (props) => {
-    const {busy = false, textField = 'name', valuesField = 'id', className, placeholder = '', label = null, label_space_xs = 0} = props;
+    const {busy = false, textField = 'name', valuesField = 'id', className, placeholder = '', label = null, label_space_xs = 0, readOnly = false} = props;
     return (
         <div className={`${className} ${label ? 'mt-2' : 'mt-4'}`}>
             <Grid component="label" container alignItems="center" spacing={2}>
@@ -163,6 +164,7 @@ export const MyDropdownList = (props) => {
                         busy={busy}
                         placeholder={placeholder}
                         dropUp
+                        readOnly={readOnly}
                     />
                 </Grid>
             </Grid>

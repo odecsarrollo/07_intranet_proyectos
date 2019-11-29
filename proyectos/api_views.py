@@ -157,6 +157,13 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
         serializer = self.get_serializer(proyecto)
         return Response(serializer.data)
 
+    @action(detail=True, methods=['post'])
+    def envio_correo_aperturas_almacen(self, request, pk=None):
+        from .services import proyecto_envio_correo_apertura_proyectos_para_almacen
+        proyecto = proyecto_envio_correo_apertura_proyectos_para_almacen(proyecto_id=pk)
+        serializer = self.get_serializer(proyecto)
+        return Response(serializer.data)
+
     @action(detail=False, http_method_names=['get', ])
     def abiertos(self, request):
         self.serializer_class = ProyectoSerializer

@@ -13,8 +13,9 @@ import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
 
 const CRUD = crudHOC(CreateForm, Tabla);
 
-const List = memo((props) => {
+const TuberiaVentasCRUD = memo((props) => {
     const dispatch = useDispatch();
+    const {history} = props;
     const cargarDatos = () => {
         dispatch(actions.fetchCotizacionesTuberiaVentas());
     };
@@ -37,7 +38,7 @@ const List = memo((props) => {
         <CRUD
             permisos_object={{...cotizaciones_permisos, list: cotizaciones_permisos.list_tuberia_ventas}}
             proyectos_permisos={proyectos_permisos}
-            posSummitMethod={() => cargarDatos()}
+            posCreateMethod={(cot) => history.push(`/app/ventas_proyectos/cotizaciones/cotizaciones/detail/${cot.id}`)}
             method_pool={method_pool}
             list={list}
             plural_name='Panel Ventas'
@@ -48,4 +49,4 @@ const List = memo((props) => {
 });
 
 
-export default List;
+export default TuberiaVentasCRUD;

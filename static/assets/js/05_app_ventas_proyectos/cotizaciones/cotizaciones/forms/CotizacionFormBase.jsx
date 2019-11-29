@@ -1,7 +1,6 @@
 import React, {Fragment, useEffect} from 'react';
 import {
     MyTextFieldSimple,
-    MyDropdownList,
     MyDateTimePickerField,
     MyCombobox,
     MyCheckboxSimple
@@ -16,10 +15,12 @@ const FormBaseCotizacion = (props) => {
     const {
         item = null,
         myValues,
-        change = null
+        change = null,
+        permisos = null
     } = props;
     const {cotizacion_inicial} = myValues;
     const dispatch = useDispatch();
+    const change_cerrada = permisos ? permisos.change_cerrada : false;
 
     useEffect(() => {
         dispatch(actions.fetchClientes());
@@ -29,7 +30,7 @@ const FormBaseCotizacion = (props) => {
     }, []);
 
     useEffect(() => {
-        if (item) {
+        if (item && item.cliente_id) {
             dispatch(actions.fetchContactosClientes_por_cliente(item.cliente_id));
         }
         return () => {
@@ -50,27 +51,18 @@ const FormBaseCotizacion = (props) => {
     const buscar_cotizacion_inicial_modal_open = !cotizacion_inicial && es_adicional && !item;
     const {estado, subir_anterior} = myValues;
     const comentario_estado = estado && (
-        estado === 'Evaluación Técnica y Económinca'
-        || estado === 'Aceptación de Terminos y Condiciones'
-        || estado === 'Perdido'
-        || estado === 'Aplazado'
+        estado === 'Aplazado'
         || estado === 'Cancelado'
+        || estado === 'Evaluación Técnica y Económica'
     );
-    const esta_aprobado = estado === 'Cierre (Aprobado)';
     const en_proceso = estado && estado !== 'Cita/Generación Interés' && estado !== 'Aplazado' && estado !== 'Perdido' && estado !== 'Cancelado';
-    const enviado = en_proceso && estado !== 'Configurando Propuesta';
-    const pedir_dias_espera_cambio_estado = (
-        estado !== 'Cierre (Aprobado)' &&
-        estado !== 'Perdido' &&
-        estado !== 'Cancelado'
-    );
     let estados_lista = [
         'Cita/Generación Interés',
         'Configurando Propuesta',
         'Cotización Enviada',
         'Evaluación Técnica y Económica',
         'Aceptación de Terminos y Condiciones',
-        'Cierre (Aprobado)',
+        //'Cierre (Aprobado)',
         'Aplazado',
         'Cancelado',
         //'Perdido',
@@ -84,6 +76,13 @@ const FormBaseCotizacion = (props) => {
             'Aceptación de Terminos y Condiciones'
         ];
     }
+    let origenes_cotizacion = [
+        'Comercial',
+        'Mercadeo',
+        'Gerencia',
+        'Componentes',
+        'Técnico',
+    ];
     let tipo_negocio = [
         {id: 'TRP', text: 'TRP - TRANSPORTADOR'},
         {id: 'EQR', text: 'EQR - EQUIPOS REPRESENTADOS'},
@@ -96,6 +95,15 @@ const FormBaseCotizacion = (props) => {
     }
     const cotizacion_a_relacionar = cotizacion_inicial ? cotizaciones_encontradas[cotizacion_inicial] : null;
     estados_lista = estados_lista.map(e => ({id: e, name: e}));
+    origenes_cotizacion = origenes_cotizacion.map(e => ({id: e, name: e}));
+    const en_cita_generacion_interes = estado === 'Cita/Generación Interés';
+    const en_configurando_propuesta = estado === 'Configurando Propuesta';
+    const en_cotizacion_enviada = estado === 'Cotización Enviada';
+    const en_evaluacion_tecnica_economica = estado === 'Evaluación Técnica y Económica';
+    const en_aceptacion_terminos_condiciones = estado === 'Aceptación de Terminos y Condiciones';
+    const cerrado = item && item.estado === 'Cierre (Aprobado)' && !change_cerrada;
+    const en_aplazado = estado === 'Aplazado';
+    const en_cancelado = estado === 'Cancelado';
     const buscarCotizacion = (busqueda) => dispatch(actions.fetchCotizacionesxParametro(busqueda));
     return (
         <Fragment>
@@ -103,6 +111,7 @@ const FormBaseCotizacion = (props) => {
                 min_caracteres={4}
                 placeholder='Cotización a buscar'
                 id_text='id'
+                onCancelar={() => props.change('unidad_negocio', null)}
                 selected_item_text='nro_cotizacion'
                 onSearch={buscarCotizacion}
                 onSelect={(id) => change('cotizacion_inicial', id)}
@@ -118,8 +127,7 @@ const FormBaseCotizacion = (props) => {
                 <div className="row">
                     <div className="col-12">
                         <div className="row">
-                            {!item && !es_adicional &&
-                            <MyCheckboxSimple
+                            {!item && !es_adicional && <MyCheckboxSimple
                                 className="col-6 pt-4"
                                 name='subir_anterior'
                                 label='subir anterior'
@@ -132,7 +140,39 @@ const FormBaseCotizacion = (props) => {
                             />}
                         </div>
                     </div>
-                    {!es_adicional && <div className='col-12'>
+                    <div className='col-12'>
+                        <div className="row">
+                            <MyCombobox
+                                label_space_xs={4}
+                                label='Unidad de Negocio'
+                                className="col-12 col-md-6"
+                                name='unidad_negocio'
+                                busy={false}
+                                autoFocus={false}
+                                data={tipo_negocio}
+                                readOnly={(item && es_adicional) || cerrado}
+                                textField='text'
+                                filter='contains'
+                                valuesField='id'
+                                placeholder='Tipo de Negocio'
+                            />
+                            <MyCombobox
+                                label_space_xs={4}
+                                label='Origen Cotización'
+                                className='col-12 col-md-6'
+                                name='origen_cotizacion'
+                                busy={false}
+                                autoFocus={false}
+                                data={origenes_cotizacion}
+                                readOnly={cerrado}
+                                textField='name'
+                                filter='contains'
+                                valuesField='id'
+                                placeholder='Origen Cotización'
+                            />
+                        </div>
+                    </div>
+                    {!es_adicional && myValues.unidad_negocio && <div className='col-12'>
                         <div className="row">
                             <MyCombobox
                                 label='Cliente'
@@ -150,6 +190,7 @@ const FormBaseCotizacion = (props) => {
                                 placeholder='Cliente'
                                 filter='contains'
                                 onSelect={(v) => cargarContactosCliente(v.id)}
+                                readOnly={cerrado}
                             />
                             {myValues && myValues.cliente && <MyCombobox
                                 label='Contacto'
@@ -166,50 +207,8 @@ const FormBaseCotizacion = (props) => {
                                 filter='contains'
                                 valuesField='id'
                                 placeholder='Contacto'
+                                readOnly={cerrado}
                             />}
-                        </div>
-                    </div>}
-                    <div className='col-12'>
-                        <div className="row">
-                            <MyCombobox
-                                label_space_xs={4}
-                                label='Unidad de Negocio'
-                                className="col-12 col-md-6"
-                                name='unidad_negocio'
-                                busy={false}
-                                autoFocus={false}
-                                data={tipo_negocio}
-                                readOnly={item && es_adicional}
-                                textField='text'
-                                filter='contains'
-                                valuesField='id'
-                                placeholder='Tipo de Negocio'
-                            />
-                            <MyDropdownList
-                                label_space_xs={4}
-                                className='col-12 col-md-6'
-                                name='origen_cotizacion'
-                                label='Origen Cotización'
-                                data={[
-                                    {id: 'Comercial', name: 'Comercial'},
-                                    {id: 'Mercadeo', name: 'Mercadeo'},
-                                    {id: 'Gerencia', name: 'Gerencia'},
-                                    {id: 'Componentes', name: 'Componentes'},
-                                    {id: 'Técnico', name: 'Técnico'},
-                                ]}
-                            />
-                        </div>
-                    </div>
-                    {esta_aprobado && <div className="col-12">
-                        <div className="row">
-                            <div className="col-12 col-md-4">
-                                <MyTextFieldSimple
-                                    className="col-6"
-                                    nombre='Nro. Días Entrega'
-                                    name='dias_pactados_entrega_proyecto'
-                                    type='number'
-                                />
-                            </div>
                         </div>
                     </div>}
                 </div>
@@ -218,6 +217,7 @@ const FormBaseCotizacion = (props) => {
                 className="col-12"
                 nombre='Descripción'
                 name='descripcion_cotizacion'
+                disabled={cerrado}
                 case='U'/>
             {cotizacion_a_relacionar &&
             <div className="col-12" style={{border: '1px solid black', borderRadius: '10px'}}>
@@ -236,106 +236,72 @@ const FormBaseCotizacion = (props) => {
                 name='contacto'
                 disabled={item && es_adicional}
                 case='U'/>}
-            <MyTextFieldSimple
+            {item && <MyTextFieldSimple
                 className="col-12"
                 nombre='Observación'
                 name='observacion'
+                disabled={cerrado}
                 multiline={true}
                 rows={2}
-                case='U'/>
-            <MyDateTimePickerField
-                label='Fecha Entrega Cotización'
-                label_space_xs={4}
-                max={new Date(2099, 11, 31)}
-                name='fecha_entrega_pactada_cotizacion'
+                case='U'/>}
+            {(item || subir_anterior) && <MyCombobox
+                label_space_xs={3}
                 className='col-12 col-md-6'
-            />
-            {!item && !subir_anterior && <MyDateTimePickerField
+                name='estado'
+                label='Estado'
+                busy={false}
+                autoFocus={false}
+                data={estados_lista}
+                readOnly={cerrado}
+                textField='name'
+                filter='contains'
+                valuesField='id'
+                placeholder='Seleccionar Estado...'
+            />}
+            {!en_aceptacion_terminos_condiciones && item && <MyDateTimePickerField
                 label='Verificar el...'
                 label_space_xs={4}
                 max={new Date(2099, 11, 31)}
                 name='fecha_limite_segumiento_estado'
-                className="col-12 col-md-4"
+                className="col-12 col-md-3"
+                readOnly={cerrado}
             />}
-            {(item || subir_anterior) &&
+            {!en_cita_generacion_interes && !en_configurando_propuesta && !en_cancelado && !en_aplazado && item &&
             <Fragment>
-                <div className="col-12">
-                    <div className="row mb-4">
-                        <MyDropdownList
-                            placeholder='Seleccionar Estado...'
-                            label_space_xs={3}
-                            className='col-12 col-md-6'
-                            name='estado'
-                            label='Estado'
-                            data={estados_lista}
-                        />
-                        {pedir_dias_espera_cambio_estado &&
-                        <MyDateTimePickerField
-                            label='Verificar el...'
-                            label_space_xs={4}
-                            max={new Date(2099, 11, 31)}
-                            name='fecha_limite_segumiento_estado'
-                            className="col-12 col-md-4"
-                        />}
-                    </div>
-                </div>
-            </Fragment>}
-            {comentario_estado &&
-            <MyTextFieldSimple
-                className="col-12"
-                nombre='Observación Estado'
-                name='estado_observacion_adicional'
-                case='U'/>}
-            {enviado &&
-            <Fragment>
+                <MyDateTimePickerField
+                    label='Fecha Entrega Cotización'
+                    label_space_xs={4}
+                    max={new Date(2099, 11, 31)}
+                    name='fecha_entrega_pactada_cotizacion'
+                    className='col-12 col-md-3'
+                    readOnly={cerrado}
+                />
                 <MyTextFieldSimple
                     className="col-12 col-md-6 col-lg-4"
                     nombre='Valor Oferta'
                     name='valor_ofertado'
-                />
-            </Fragment>}
-            {esta_aprobado &&
-            <Fragment>
-                <MyDateTimePickerField
-                    label='Fecha Entrega Proyecto'
-                    label_space_xs={4}
-                    max={new Date(2099, 11, 31)}
-                    name='fecha_entrega_pactada'
-                    nombre='Fecha Entrega Proyecto'
-                    className='col-12 col-md-6 col-lg-4'
+                    disabled={cerrado}
                 />
                 <MyTextFieldSimple
                     className="col-12 col-md-6 col-lg-4"
                     nombre='Costo Presupuestado'
                     name='costo_presupuestado'
+                    disabled={cerrado}
                 />
-                <div className='col-12'>
-                    <div className="row">
-                        <div className='col-12 mt-2'>
-                            <h3>Orden de Compra</h3>
-                        </div>
-                        <MyDateTimePickerField
-                            label='Fecha Orden Compra'
-                            label_space_xs={4}
-                            max={new Date(2099, 11, 31)}
-                            name='orden_compra_fecha'
-                            nombre='Fecha Orden de Compra'
-                            className='col-12 col-md-4'
-                        />
-                        <MyTextFieldSimple
-                            className="col-12 col-md-4"
-                            nombre='Valor OC'
-                            name='valor_orden_compra'
-                        />
-                        <MyTextFieldSimple
-                            className="col-12 col-md-4"
-                            nombre='Nro. Orden Compra'
-                            name='orden_compra_nro'
-                            case='U'/>
-                    </div>
-                </div>
-
             </Fragment>}
+            {(en_aceptacion_terminos_condiciones || cerrado) && <MyTextFieldSimple
+                className="col-12 col-md-4"
+                nombre='Nro. Días Entrega'
+                name='dias_pactados_entrega_proyecto'
+                disabled={cerrado}
+                type='number'
+            />}
+            {comentario_estado && <MyTextFieldSimple
+                className="col-12"
+                nombre='Observación Estado'
+                name='estado_observacion_adicional'
+                disabled={cerrado}
+                case='U'/>}
         </Fragment>
     )
 };

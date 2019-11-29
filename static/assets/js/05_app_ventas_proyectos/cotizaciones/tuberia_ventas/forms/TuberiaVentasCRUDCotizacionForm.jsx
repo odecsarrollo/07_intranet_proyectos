@@ -36,7 +36,6 @@ let Form = memo(props => {
         >
             <FormBaseCotizacion
                 change={change}
-                item={initialValues}
                 myValues={myValues}
             />
             <div style={{height: '300px'}}>

@@ -7,30 +7,34 @@ import {
 
 const BaseProyectoForm = (props) => {
     const {initialValues} = props;
-    console.log(initialValues)
     return (
         <div className="row">
             {initialValues &&
+            initialValues.id_proyecto &&
             !initialValues.en_cguno && <MyTextFieldSimple
                 className="col-12"
                 nombre='OP Proyecto'
                 name='id_proyecto'
                 case='U'/>}
-            {!initialValues && <MyCombobox
-                label='Tipo de Proyecto'
-                label_space_xs={5}
-                className="col-12"
-                data={[
-                    {id: 'OP', nombre: 'OP'},
-                    {id: 'OS', nombre: 'OS'},
-                    {id: 'OO', nombre: 'OO'},
-                ]}
-                filter='contains'
-                placeholder='Seleccionar Tipo de Proyecto...'
-                valueField='id'
-                textField='nombre'
-                name='tipo_id_proyecto'
-            />}
+            {
+                (!initialValues ||
+                    (initialValues && !initialValues.id_proyecto)
+                ) &&
+                <MyCombobox
+                    label='Tipo de Proyecto'
+                    label_space_xs={5}
+                    className="col-12"
+                    data={[
+                        {id: 'OP', nombre: 'OP'},
+                        {id: 'OS', nombre: 'OS'},
+                        {id: 'OO', nombre: 'OO'},
+                    ]}
+                    filter='contains'
+                    placeholder='Seleccionar Tipo de Proyecto...'
+                    valueField='id'
+                    textField='nombre'
+                    name='tipo_id_proyecto'
+                />}
             <MyTextFieldSimple
                 className="col-12"
                 nombre='Nombre Proyecto'

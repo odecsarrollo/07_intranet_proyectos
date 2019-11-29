@@ -1,10 +1,49 @@
+from django.core.mail import EmailMultiAlternatives
 from django.db.models import Count
 from django.db.models.functions import Substr, Length
+from django.template.loader import render_to_string
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError
 
 from .models import Literal, Proyecto
 from cotizaciones.models import Cotizacion
+
+
+def proyecto_envio_correo_apertura_proyectos_para_almacen(
+        proyecto_id: int
+) -> Proyecto:
+    proyecto = Proyecto.objects.get(pk=proyecto_id)
+    correos_to = ['fabio.garcia.sanchez@gmail.com']
+    literales_para_correos_para_apertura = proyecto.mis_literales.filter(correo_apertura=False).all()
+    if not literales_para_correos_para_apertura.exists():
+        raise ValidationError({'_error': 'Ya todos los literales y el proyecto se han notificado para apertura'})
+
+    context = {
+        "proyecto": proyecto,
+        "literales": literales_para_correos_para_apertura
+    }
+    for literal in literales_para_correos_para_apertura:
+        literal.correo_apertura = True
+        literal.save()
+
+    text_content = render_to_string('emails/proyectos/correo_aperturas_para_almacen.html', context=context)
+    msg = EmailMultiAlternatives(
+        'Solicitud creacion apertura %s' % (
+            proyecto.id_proyecto
+        ),
+        text_content,
+        bcc=['fabio.garcia.sanchez@gmail.com'],
+        from_email='ODECOPACK / INGENIERIA - MIGUEL CORDOBA <%s>' % 'miguel.cordoba@odecopack.com',
+        to=correos_to
+    )
+    msg.attach_alternative(text_content, "text/html")
+    try:
+        msg.send()
+    except Exception as e:
+        raise ValidationError(
+            {'_error': 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e})
+    proyecto = Proyecto.objects.get(pk=proyecto_id)
+    return proyecto
 
 
 def proyecto_generar_id_proyecto(

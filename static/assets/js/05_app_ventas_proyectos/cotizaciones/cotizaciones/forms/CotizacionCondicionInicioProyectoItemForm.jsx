@@ -12,39 +12,10 @@ import * as actions from "../../../../01_actions/01_index";
 import {useDispatch} from "react-redux/es/hooks/useDispatch";
 import IconButton from "@material-ui/core/IconButton";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {makeStyles} from "@material-ui/core";
 import {fechaFormatoUno, formatBytes} from "../../../../00_utilities/common";
 import moment from "moment-timezone";
 import SiNoDialog from "../../../../00_utilities/components/ui/dialog/SiNoDialog";
 import validate from './condicion_inicio_proyecto_cotizacion_validate';
-
-const useStyles = makeStyles(theme => ({
-    delete_boton: {
-        position: 'absolute',
-        bottom: '10px',
-        right: '10px'
-    },
-    download_boton: {
-        position: 'absolute',
-        bottom: '10px',
-        right: '40px',
-        margin: 0,
-        padding: 4,
-        color: theme.palette.primary.dark
-    },
-    limpiar_boton: {
-        position: 'absolute',
-        bottom: '10px',
-        right: '20px',
-        margin: 0,
-        padding: 4,
-        color: theme.palette.primary.dark
-    },
-    info_archivo: {
-        color: theme.palette.primary.dark
-    },
-}));
-
 
 let CotizacionCondicionInicioProyectoItemForm = (props) => {
     const {
@@ -53,9 +24,9 @@ let CotizacionCondicionInicioProyectoItemForm = (props) => {
         reset,
         initialValues,
         handleSubmit,
-        onDelete
+        onDelete,
+        classes
     } = props;
-    const classes = useStyles();
     const {to_string, require_documento, documento_url, size, fecha_entrega, filename, condicion_inicio_proyecto, cotizacion_proyecto} = initialValues;
     const read_only = (require_documento && documento_url && fecha_entrega) || (!require_documento && fecha_entrega);
     const [show_limpiar, setShowLimpiar] = useState(false);
@@ -66,7 +37,7 @@ let CotizacionCondicionInicioProyectoItemForm = (props) => {
             return dispatch(actions.updateCondicionInicioProyectoCotizacion(initialValues.id, v, {callback: cargarCotizacion}))
         }
     };
-    const onSiLimpiarCondicionInicio = () => dispatch(actions.limpiarCondicionInicioCotizacion(cotizacion_proyecto, condicion_inicio_proyecto, {callback: () => setShowLimpiar(false)}));
+    const onSiLimpiarCondicionInicio = () => dispatch(actions.limpiarCondicionInicioCotizacion(cotizacion_proyecto, condicion_inicio_proyecto, null, {callback: () => setShowLimpiar(false)}));
     const submitObject = (item) => {
         let datos_a_subir = new FormData();
         let datos_formulario = _.omit(item, 'documento');
@@ -88,8 +59,7 @@ let CotizacionCondicionInicioProyectoItemForm = (props) => {
         }
         return datos_a_subir;
     };
-    return <form className={`card p-4 m-1`}
-                 onSubmit={handleSubmit(v => onSubmit(submitObject(v)))}>
+    return <div className="row card p-4 m-1">
         <Typography variant="body1" gutterBottom color="primary">
             {to_string}
         </Typography>
@@ -101,8 +71,10 @@ let CotizacionCondicionInicioProyectoItemForm = (props) => {
         >
             Desea Limpiar condición de inicio {to_string}
         </SiNoDialog>}
-        <div className="row">
-            {!read_only && <Fragment>
+        {!read_only && <Fragment>
+            <form
+                onSubmit={handleSubmit(v => onSubmit(submitObject(v)))}
+            >
                 <MyDateTimePickerField
                     className={`col-12`}
                     name='fecha_entrega'
@@ -125,33 +97,34 @@ let CotizacionCondicionInicioProyectoItemForm = (props) => {
                     submitting={submitting}
                     initialValues={initialValues}
                 />
+            </form>
+        </Fragment>}
+        {read_only && <Fragment>
+            <div className={classNames("col-12", classes.info_archivo)}>
+                Fecha Entrega: {fechaFormatoUno(fecha_entrega)}
+            </div>
+            <IconButton className={classes.limpiar_boton} onClick={() => setShowLimpiar(true)}>
+                <FontAwesomeIcon
+                    className='puntero'
+                    icon='eraser'
+                    size='xs'
+                />
+            </IconButton>
+            {documento_url && <Fragment>
+                <a href={documento_url} target='_blank'>
+                    <IconButton className={classes.download_boton}>
+                        <FontAwesomeIcon
+                            className='puntero'
+                            icon='download'
+                            size='xs'
+                        />
+                    </IconButton>
+                </a>
+                <div className={classNames("col-12", classes.info_archivo)}>Nombre Archivo: {filename}</div>
+                <div className={classNames("col-12", classes.info_archivo)}>Tamaño: {formatBytes(size)}</div>
             </Fragment>}
-            {read_only && <Fragment>
-                <div className={classNames("col-12", classes.info_archivo)}>Fecha
-                    Entrega: {fechaFormatoUno(fecha_entrega)}</div>
-                <IconButton className={classes.limpiar_boton} onClick={() => setShowLimpiar(true)}>
-                    <FontAwesomeIcon
-                        className='puntero'
-                        icon='eraser'
-                        size='xs'
-                    />
-                </IconButton>
-                {documento_url && <Fragment>
-                    <a href={documento_url} target='_blank'>
-                        <IconButton className={classes.download_boton}>
-                            <FontAwesomeIcon
-                                className='puntero'
-                                icon='download'
-                                size='xs'
-                            />
-                        </IconButton>
-                    </a>
-                    <div className={classNames("col-12", classes.info_archivo)}>Nombre Archivo: {filename}</div>
-                    <div className={classNames("col-12", classes.info_archivo)}>Tamaño: {formatBytes(size)}</div>
-                </Fragment>}
-            </Fragment>}
-        </div>
-    </form>
+        </Fragment>}
+    </div>
 };
 CotizacionCondicionInicioProyectoItemForm = reduxForm({
     validate,
