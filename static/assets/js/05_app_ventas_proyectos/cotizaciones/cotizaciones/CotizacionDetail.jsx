@@ -114,7 +114,6 @@ const Detail = memo(props => {
                             <CotizacionDetailDocumento
                                 cotizacion={object}
                                 permisos={permisos_archivos_cotizacion}
-                                onUploadFile={() => console.log('dio en upload')}
                             />
                         </TabPanel>}
                         <TabPanel>

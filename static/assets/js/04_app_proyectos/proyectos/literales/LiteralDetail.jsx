@@ -14,8 +14,8 @@ import {
     PROYECTOS,
     ARCHIVOS_LITERALES
 } from "../../../permisos";
-import PanelArchivosLiteral from '../archivos/literales/ProyectoLiteralDocumentoList';
 import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
+import LiteralDetailDocumento from './LiteralDetailDocumento';
 
 const Detail = memo(props => {
     const {
@@ -153,9 +153,10 @@ const Detail = memo(props => {
                     />
                 </TabPanel>}
                 {permisos_archivos_literal.list && <TabPanel>
-                    <PanelArchivosLiteral
+                    <LiteralDetailDocumento
                         literal={literal}
-                        cargarProyecto={callbackCargarDatosProyecto}
+                        cargarLiteral={callbackCargarDatosProyecto}
+                        permisos={permisos_archivos_literal}
                     />
                 </TabPanel>}
             </Tabs>

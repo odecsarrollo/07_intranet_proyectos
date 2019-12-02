@@ -7,6 +7,7 @@ import FormProyecto from './forms/ProyectoDetailForm';
 import FacturasProyecto from './ProyectoFacturaList';
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
+import ProyectoDetailDocumento from './ProyectoDetailDocumento';
 import {
     PROYECTOS,
     LITERALES,
@@ -17,12 +18,13 @@ import LiteralModalCreate from '../literales/ProyectoLiteralModal';
 import LiteralDetail from '../literales/LiteralDetail';
 import ProyectoInfo from './ProyectoDetailInfo';
 import ProyectoDetailCotizacionRelacionada from './ProyectoDetailCotizacionRelacionada';
-import PanelArchivosProyecto from '../archivos/proyectos/ProyectoDocumentoList';
 import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
 import Typography from "@material-ui/core/Typography";
 import CargarDatos from "../../../00_utilities/components/system/cargar_datos";
 import SiNoDialog from "../../../00_utilities/components/ui/dialog/SiNoDialog";
 import Button from "@material-ui/core/Button";
+import CotizacionDetailDocumento
+    from "../../../05_app_ventas_proyectos/cotizaciones/cotizaciones/CotizacionDetailDocumento";
 
 const style = {
     tabla: {
@@ -202,9 +204,9 @@ const Detail = memo((props) => {
                     </TabPanel>}
 
                     {permisos_archivos_proyecto.list && <TabPanel>
-                        <PanelArchivosProyecto
+                        <ProyectoDetailDocumento
+                            permisos={permisos_archivos_proyecto}
                             proyecto={proyecto}
-                            permisos_archivos_proyecto={permisos_archivos_proyecto}
                             cargarProyecto={cargarDatos}
                         />
                     </TabPanel>}
