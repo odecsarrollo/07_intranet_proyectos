@@ -18,7 +18,7 @@ const FormBaseCotizacion = (props) => {
         change = null,
         permisos = null
     } = props;
-    const {cotizacion_inicial, unidad_negocio} = myValues;
+    const {cotizacion_inicial} = myValues;
     const dispatch = useDispatch();
     const change_cerrada = permisos ? permisos.change_cerrada : false;
     const cargarContactosCliente = (cliente_id = null) => {
@@ -119,7 +119,10 @@ const FormBaseCotizacion = (props) => {
                 min_caracteres={4}
                 placeholder='Cotización a buscar'
                 id_text='id'
-                onCancelar={() => props.change('unidad_negocio', null)}
+                onCancelar={() => {
+                    change('unidad_negocio', null);
+                    change('cotizacion_inicial', null);
+                }}
                 selected_item_text='nro_cotizacion'
                 onSearch={buscarCotizacion}
                 onSelect={(id) => change('cotizacion_inicial', id)}
@@ -159,6 +162,12 @@ const FormBaseCotizacion = (props) => {
                                 autoFocus={false}
                                 data={tipo_negocio}
                                 readOnly={(item && es_adicional) || cerrado}
+                                onSelect={(e) => {
+                                    const {text} = e;
+                                    if (text !== 'ADI - ADICIONAL') {
+                                        change('cotizacion_inicial', null)
+                                    }
+                                }}
                                 textField='text'
                                 filter='contains'
                                 valuesField='id'
@@ -238,12 +247,6 @@ const FormBaseCotizacion = (props) => {
                 <br/>
                 <strong>Contacto:</strong> {cotizacion_a_relacionar.contacto_cliente_nombre}
             </div>}
-            {item && !item.contacto_cliente && <MyTextFieldSimple
-                className="col-12 col-md-12 col-lg-5"
-                nombre='Contacto'
-                name='contacto'
-                disabled={item && es_adicional}
-                case='U'/>}
             {item && <MyTextFieldSimple
                 className="col-12"
                 nombre='Observación'
