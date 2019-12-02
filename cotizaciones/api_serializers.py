@@ -17,6 +17,31 @@ from .models import (
 class CondicionInicioProyectoSerializer(serializers.ModelSerializer):
     to_string = serializers.SerializerMethodField()
 
+    def create(self, validated_data):
+        from .services import condicion_inicio_proyecto_crear_actualizar
+        descripcion = validated_data.get('descripcion', None)
+        condicion_especial = validated_data.get('condicion_especial', False)
+        require_documento = validated_data.get('require_documento', False)
+        condicion_inicio_proyecto = condicion_inicio_proyecto_crear_actualizar(
+            descripcion=descripcion,
+            condicion_especial=condicion_especial,
+            require_documento=require_documento
+        )
+        return condicion_inicio_proyecto
+
+    def update(self, instance, validated_data):
+        from .services import condicion_inicio_proyecto_crear_actualizar
+        descripcion = validated_data.get('descripcion', None)
+        condicion_especial = validated_data.get('condicion_especial', False)
+        require_documento = validated_data.get('require_documento', False)
+        condicion_inicio_proyecto = condicion_inicio_proyecto_crear_actualizar(
+            condicion_inicio_proyecto_id=instance.id,
+            descripcion=descripcion,
+            condicion_especial=condicion_especial,
+            require_documento=require_documento
+        )
+        return condicion_inicio_proyecto
+
     def get_to_string(self, obj):
         return obj.descripcion
 
@@ -26,6 +51,7 @@ class CondicionInicioProyectoSerializer(serializers.ModelSerializer):
             'url',
             'id',
             'descripcion',
+            'condicion_especial',
             'require_documento',
             'to_string',
         ]
@@ -84,6 +110,7 @@ class CondicionInicioProyectoCotizacionSerializer(serializers.ModelSerializer):
             'filename',
             'extension',
             'condicion_inicio_proyecto',
+            'condicion_especial',
             'require_documento',
             'fecha_entrega',
             'documento',
@@ -94,14 +121,14 @@ class CondicionInicioProyectoCotizacionSerializer(serializers.ModelSerializer):
 
 # region Serializadores Cotizacion
 class CotizacionSerializer(serializers.ModelSerializer):
-    cliente_nombre = serializers.CharField(source='cliente_cotizacion.nombre', read_only=True)
-    cliente_id = serializers.CharField(source='cliente_cotizacion.id', read_only=True)
+    cliente_nombre = serializers.CharField(source='cliente.nombre', read_only=True)
+    cliente_id = serializers.CharField(source='cliente.id', read_only=True)
     cotizacion_inicial_nro = serializers.CharField(source='cotizacion_inicial.nro_cotizacion', read_only=True)
     cotizacion_inicial_unidad_negocio = serializers.CharField(
         source='cotizacion_inicial.unidad_negocio',
         read_only=True
     )
-    contacto_cliente_nombre = serializers.CharField(source='contacto_cotizacion.full_nombre', read_only=True)
+    contacto_cliente_nombre = serializers.CharField(source='contacto_cliente.full_nombre', read_only=True)
     valor_orden_compra_mes = serializers.DecimalField(decimal_places=2, max_digits=20, read_only=True)
     valor_orden_compra_adicionales = serializers.DecimalField(decimal_places=2, max_digits=20, read_only=True)
     valor_total_orden_compra_cotizaciones = serializers.DecimalField(decimal_places=2, max_digits=20, read_only=True)
@@ -173,7 +200,6 @@ class CotizacionSerializer(serializers.ModelSerializer):
         origen_cotizacion = validated_data.get('origen_cotizacion', None)
         fecha_entrega_pactada_cotizacion = validated_data.get('fecha_entrega_pactada_cotizacion', None)
         fecha_limite_segumiento_estado = validated_data.get('fecha_limite_segumiento_estado', None)
-        cotizacion_inicial = validated_data.get('cotizacion_inicial', None)
         observacion = validated_data.get('observacion', None)
         cliente = validated_data.get('cliente', None)
         contacto_cliente = validated_data.get('contacto_cliente', None)
@@ -194,7 +220,6 @@ class CotizacionSerializer(serializers.ModelSerializer):
             origen_cotizacion=origen_cotizacion,
             fecha_entrega_pactada_cotizacion=fecha_entrega_pactada_cotizacion,
             fecha_limite_segumiento_estado=fecha_limite_segumiento_estado,
-            cotizacion_inicial_id=None if cotizacion_inicial is None else cotizacion_inicial.id,
             observacion=observacion,
             cliente_id=None if cliente is None else cliente.id,
             contacto_cliente_id=None if contacto_cliente is None else contacto_cliente.id,
@@ -326,7 +351,6 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'orden_compra_nro': {'allow_null': True},
             'contacto': {'allow_null': True},
             'observacion': {'allow_null': True},
-            'origen_cotizacion': {'allow_null': True},
             'estado_observacion_adicional': {'allow_null': True},
             'fecha_limite_segumiento_estado': {'allow_null': True},
             'dias_pactados_entrega_proyecto': {'allow_null': True},
@@ -343,8 +367,8 @@ class CotizacionTuberiaVentaSerializer(serializers.ModelSerializer):
     valor_orden_compra_mes = serializers.DecimalField(decimal_places=2, max_digits=20, read_only=True)
     color_tuberia_ventas = serializers.SerializerMethodField()
     porcentaje_tuberia_ventas = serializers.SerializerMethodField()
-    cliente_nombre = serializers.CharField(source='cliente_cotizacion.nombre', read_only=True)
-    contacto_cliente_nombre = serializers.CharField(source='contacto_cotizacion.full_nombre', read_only=True)
+    cliente_nombre = serializers.CharField(source='cliente.nombre', read_only=True)
+    contacto_cliente_nombre = serializers.CharField(source='contacto_cliente.full_nombre', read_only=True)
     responsable_actual_nombre = serializers.CharField(source='responsable.get_full_name', read_only=True)
 
     def get_color_tuberia_ventas(self, obj):
@@ -396,6 +420,8 @@ class CotizacionTuberiaVentaSerializer(serializers.ModelSerializer):
             'valor_orden_compra',
             'unidad_negocio',
             'cliente_nombre',
+            'cliente',
+            'contacto_cliente',
             'contacto_cliente_nombre',
             'responsable_actual_nombre',
             'descripcion_cotizacion',
@@ -408,7 +434,7 @@ class CotizacionTuberiaVentaSerializer(serializers.ModelSerializer):
 
 
 class CotizacionParaAbrirCarpetaSerializer(serializers.ModelSerializer):
-    cliente_nombre = serializers.CharField(source='cliente_cotizacion.nombre', read_only=True)
+    cliente_nombre = serializers.CharField(source='cliente.nombre', read_only=True)
     cotizacion_inicial_nro = serializers.CharField(source='cotizacion_inicial.nro_cotizacion', read_only=True)
     cotizacion_inicial_unidad_negocio = serializers.CharField(
         source='cotizacion_inicial.unidad_negocio',
@@ -443,7 +469,7 @@ class ProyectoCotizacionConDetalleSerializer(serializers.ModelSerializer):
 
 
 class CotizacionCotizacionConDetalleSerializer(serializers.ModelSerializer):
-    contacto_cliente_nombre = serializers.CharField(source='contacto_cotizacion.full_nombre', read_only=True)
+    contacto_cliente_nombre = serializers.CharField(source='contacto_cliente.full_nombre', read_only=True)
 
     class Meta:
         model = Cotizacion
@@ -452,6 +478,8 @@ class CotizacionCotizacionConDetalleSerializer(serializers.ModelSerializer):
             'orden_compra_nro',
             'nro_cotizacion',
             'estado',
+            'cliente',
+            'contacto_cliente',
             'unidad_negocio',
             'cotizaciones_adicionales',
             'contacto_cliente_nombre',
@@ -475,8 +503,8 @@ class CotizacionListSerializer(serializers.ModelSerializer):
     color_tuberia_ventas = serializers.SerializerMethodField()
     porcentaje_tuberia_ventas = serializers.SerializerMethodField()
 
-    cliente_nombre = serializers.CharField(source='cliente_cotizacion.nombre', read_only=True)
-    contacto_cliente_nombre = serializers.CharField(source='contacto_cotizacion.full_nombre', read_only=True)
+    cliente_nombre = serializers.CharField(source='cliente.nombre', read_only=True)
+    contacto_cliente_nombre = serializers.CharField(source='contacto_cliente.full_nombre', read_only=True)
     responsable_actual = serializers.CharField(source='responsable.username', read_only=True)
     responsable_actual_nombre = serializers.CharField(source='responsable.get_full_name', read_only=True)
 
@@ -535,6 +563,8 @@ class CotizacionListSerializer(serializers.ModelSerializer):
             'estado',
             'orden_compra_fecha',
             'cliente_nombre',
+            'cliente',
+            'contacto_cliente',
             'contacto_cliente_nombre',
             'responsable_actual',
             'responsable_actual_nombre',

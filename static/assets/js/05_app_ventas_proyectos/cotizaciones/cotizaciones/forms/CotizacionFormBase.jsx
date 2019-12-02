@@ -18,25 +18,9 @@ const FormBaseCotizacion = (props) => {
         change = null,
         permisos = null
     } = props;
-    const {cotizacion_inicial} = myValues;
+    const {cotizacion_inicial, unidad_negocio} = myValues;
     const dispatch = useDispatch();
     const change_cerrada = permisos ? permisos.change_cerrada : false;
-
-    useEffect(() => {
-        dispatch(actions.fetchClientes());
-        return () => {
-            dispatch(actions.clearClientes());
-        }
-    }, []);
-
-    useEffect(() => {
-        if (item && item.cliente_id) {
-            dispatch(actions.fetchContactosClientes_por_cliente(item.cliente_id));
-        }
-        return () => {
-            dispatch(actions.clearContactosClientes());
-        }
-    }, []);
     const cargarContactosCliente = (cliente_id = null) => {
         if (cliente_id) {
             dispatch(actions.fetchContactosClientes_por_cliente(cliente_id));
@@ -105,6 +89,30 @@ const FormBaseCotizacion = (props) => {
     const en_aplazado = estado === 'Aplazado';
     const en_cancelado = estado === 'Cancelado';
     const buscarCotizacion = (busqueda) => dispatch(actions.fetchCotizacionesxParametro(busqueda));
+    useEffect(() => {
+        dispatch(actions.fetchClientes());
+        return () => {
+            dispatch(actions.clearClientes());
+        }
+    }, []);
+
+    useEffect(() => {
+        if (item && item.cliente_id) {
+            dispatch(actions.fetchContactosClientes_por_cliente(item.cliente_id));
+        }
+        return () => {
+            dispatch(actions.clearContactosClientes());
+        }
+    }, []);
+    useEffect(() => {
+        if (cotizacion_a_relacionar) {
+            dispatch(actions.fetchContactosClientes_por_cliente(cotizacion_a_relacionar.cliente, {
+                callback: () => {
+                    props.change('cliente', cotizacion_a_relacionar.cliente);
+                }
+            }));
+        }
+    }, [cotizacion_inicial]);
     return (
         <Fragment>
             {buscar_cotizacion_inicial_modal_open && <DialogSeleccionar
@@ -172,7 +180,7 @@ const FormBaseCotizacion = (props) => {
                             />
                         </div>
                     </div>
-                    {!es_adicional && myValues.unidad_negocio && <div className='col-12'>
+                    {myValues.unidad_negocio && <div className='col-12'>
                         <div className="row">
                             <MyCombobox
                                 label='Cliente'
@@ -190,7 +198,7 @@ const FormBaseCotizacion = (props) => {
                                 placeholder='Cliente'
                                 filter='contains'
                                 onSelect={(v) => cargarContactosCliente(v.id)}
-                                readOnly={cerrado}
+                                readOnly={cerrado || es_adicional}
                             />
                             {myValues && myValues.cliente && <MyCombobox
                                 label='Contacto'
@@ -266,16 +274,18 @@ const FormBaseCotizacion = (props) => {
                 className="col-12 col-md-3"
                 readOnly={cerrado}
             />}
+            {!en_cita_generacion_interes && !en_cancelado && !en_aplazado && item &&
+            <MyDateTimePickerField
+                label='Fecha Pactada Entrega Cotización'
+                label_space_xs={4}
+                max={new Date(2099, 11, 31)}
+                name='fecha_entrega_pactada_cotizacion'
+                className='col-12 col-md-3'
+                readOnly={cerrado}
+            />
+            }
             {!en_cita_generacion_interes && !en_configurando_propuesta && !en_cancelado && !en_aplazado && item &&
             <Fragment>
-                <MyDateTimePickerField
-                    label='Fecha Entrega Cotización'
-                    label_space_xs={4}
-                    max={new Date(2099, 11, 31)}
-                    name='fecha_entrega_pactada_cotizacion'
-                    className='col-12 col-md-3'
-                    readOnly={cerrado}
-                />
                 <MyTextFieldSimple
                     className="col-12 col-md-6 col-lg-4"
                     nombre='Valor Oferta'

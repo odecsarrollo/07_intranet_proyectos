@@ -27,7 +27,17 @@ let CotizacionCondicionInicioProyectoItemForm = (props) => {
         onDelete,
         classes
     } = props;
-    const {to_string, require_documento, documento_url, size, fecha_entrega, filename, condicion_inicio_proyecto, cotizacion_proyecto} = initialValues;
+    const {
+        to_string,
+        require_documento,
+        documento_url,
+        size,
+        fecha_entrega,
+        filename,
+        condicion_inicio_proyecto,
+        cotizacion_proyecto,
+        condicion_especial
+    } = initialValues;
     const read_only = (require_documento && documento_url && fecha_entrega) || (!require_documento && fecha_entrega);
     const [show_limpiar, setShowLimpiar] = useState(false);
     const dispatch = useDispatch();
@@ -59,7 +69,7 @@ let CotizacionCondicionInicioProyectoItemForm = (props) => {
         }
         return datos_a_subir;
     };
-    return <div className="row card p-4 m-1">
+    return <div className="row card p-4 m-1" style={{border: `${condicion_especial ? '1px solid red' : ''}`}}>
         <Typography variant="body1" gutterBottom color="primary">
             {to_string}
         </Typography>
@@ -97,6 +107,9 @@ let CotizacionCondicionInicioProyectoItemForm = (props) => {
                     submitting={submitting}
                     initialValues={initialValues}
                 />
+                {condicion_especial &&
+                <div style={{color: 'red'}}>Esta condición notificará para apertura de la orden independientemente las
+                    otras se cumplan o no.</div>}
             </form>
         </Fragment>}
         {read_only && <Fragment>

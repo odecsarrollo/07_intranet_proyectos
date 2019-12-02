@@ -13,7 +13,18 @@ def proyecto_envio_correo_apertura_proyectos_para_almacen(
         proyecto_id: int
 ) -> Proyecto:
     proyecto = Proyecto.objects.get(pk=proyecto_id)
-    correos_to = ['fabio.garcia.sanchez@gmail.com']
+    correos_to = [
+        'guillermo.osorio@odecopack.com',
+        'miller.guarnizo@odecopack.com',
+    ]
+    correos_cc = [
+        'alejandro.guevara@odecopack.com',
+        'solanyi.mosquera@odecopack.com',
+        'edward.villegas@odecopack.com',
+    ]
+    correos_bcc = [
+        'fabio.garcia.sanchez@gmail.com',
+    ]
     literales_para_correos_para_apertura = proyecto.mis_literales.filter(correo_apertura=False).all()
     if not literales_para_correos_para_apertura.exists():
         raise ValidationError({'_error': 'Ya todos los literales y el proyecto se han notificado para apertura'})
@@ -32,9 +43,10 @@ def proyecto_envio_correo_apertura_proyectos_para_almacen(
             proyecto.id_proyecto
         ),
         text_content,
-        bcc=['fabio.garcia.sanchez@gmail.com'],
+        cc=correos_cc,
+        bcc=correos_bcc,
+        to=correos_to,
         from_email='ODECOPACK / INGENIERIA - MIGUEL CORDOBA <%s>' % 'miguel.cordoba@odecopack.com',
-        to=correos_to
     )
     msg.attach_alternative(text_content, "text/html")
     try:

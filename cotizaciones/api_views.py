@@ -58,6 +58,12 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
             'cotizacion_inicial__cotizaciones_adicionales',
             'cotizaciones_adicionales__cotizaciones_adicionales'
         ).all()
+        cotizaciones = Cotizacion.objects.filter(cliente__isnull=True, cotizacion_inicial__isnull=False)
+        if cotizaciones.exists():
+            for cotizacion in cotizaciones.all():
+                cotizacion.cliente_id = cotizacion.cotizacion_inicial.cliente_id
+                cotizacion.contacto_cliente_id = cotizacion.cotizacion_inicial.contacto_cliente_id
+                cotizacion.save()
         return super().list(request, *args, **kwargs)
 
     @action(detail=False, http_method_names=['get', ])

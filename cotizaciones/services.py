@@ -15,6 +15,25 @@ from reversion.models import Version
 from cotizaciones.models import CondicionInicioProyecto, CondicionInicioProyectoCotizacion
 
 
+def condicion_inicio_proyecto_crear_actualizar(
+        descripcion: str,
+        condicion_especial: bool,
+        require_documento: bool,
+        condicion_inicio_proyecto_id: int = None,
+) -> CondicionInicioProyecto:
+    if condicion_inicio_proyecto_id is not None:
+        condicion_inicio_proyecto = CondicionInicioProyecto.objects.get(pk=condicion_inicio_proyecto_id)
+    else:
+        condicion_inicio_proyecto = CondicionInicioProyecto()
+    condicion_inicio_proyecto.descripcion = descripcion
+    if condicion_especial and CondicionInicioProyecto.objects.filter(condicion_especial=True).exists():
+        raise ValidationError({'_error': 'Sólo puede existir una condición de inicio de tipo condicion especial'})
+    condicion_inicio_proyecto.condicion_especial = condicion_especial
+    condicion_inicio_proyecto.require_documento = require_documento
+    condicion_inicio_proyecto.save()
+    return condicion_inicio_proyecto
+
+
 def cotizacion_versions(cotizacion_id: int) -> Version:
     cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
     versions = Version.objects.get_for_object(cotizacion)
@@ -62,7 +81,22 @@ def cotizacion_verificar_condicion_inicio_proyecto_si_estan_completas(
     cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
     con_orden_de_compra = cotizacion.orden_compra_nro is not None and cotizacion.orden_compra_fecha is not None and cotizacion.valor_orden_compra > 0
     condiciones_incompletas = cotizacion.condiciones_inicio_cotizacion.filter(fecha_entrega__isnull=True)
-    if not condiciones_incompletas.exists() and con_orden_de_compra:
+    condicion_especial = cotizacion.condiciones_inicio_cotizacion.filter(
+        condicion_especial=True,
+        fecha_entrega__isnull=False
+    )
+    if condicion_especial.exists():
+        if cotizacion.estado == 'Cierre (Aprobado)':
+            return cotizacion
+        cotizacion.condiciones_inicio_completas = True
+        cotizacion.condiciones_inicio_fecha_ultima = condicion_especial.first().fecha_entrega
+        cotizacion.estado = 'Cierre (Aprobado)'
+        cotizacion.fecha_cambio_estado_cerrado = timezone.now()
+        cotizacion.save()
+        cotizacion_envio_correo_notificacion_condiciones_inicio_completas(cotizacion.id)
+    elif not condiciones_incompletas.exists() and con_orden_de_compra:
+        if cotizacion.estado == 'Cierre (Aprobado)':
+            return cotizacion
         fecha_max = cotizacion.condiciones_inicio_cotizacion.aggregate(fecha_max=Max('fecha_entrega'))['fecha_max']
         cotizacion.condiciones_inicio_fecha_ultima = max(cotizacion.orden_compra_fecha,
                                                          fecha_max) if fecha_max else cotizacion.orden_compra_fecha
@@ -111,11 +145,16 @@ def cotizacion_limpiar_condicion_inicio_proyecto(
         cotizacion.orden_compra_fecha = None
         cotizacion.valor_orden_compra = 0
         cotizacion.orden_compra_nro = None
-    cotizacion.condiciones_inicio_completas = False
-    cotizacion.condiciones_inicio_fecha_ultima = None
-    cotizacion.fecha_cambio_estado_cerrado = None
-    if cotizacion.estado == 'Cierre (Aprobado)':
-        cotizacion.estado = 'Aceptación de Terminos y Condiciones'
+    con_condicion_especial = cotizacion.condiciones_inicio_cotizacion.filter(
+        condicion_especial=True,
+        fecha_entrega__isnull=False
+    ).exists()
+    if not con_condicion_especial:
+        cotizacion.condiciones_inicio_completas = False
+        cotizacion.condiciones_inicio_fecha_ultima = None
+        cotizacion.fecha_cambio_estado_cerrado = None
+        if cotizacion.estado == 'Cierre (Aprobado)':
+            cotizacion.estado = 'Aceptación de Terminos y Condiciones'
     cotizacion.save()
     cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
     return cotizacion
@@ -139,6 +178,7 @@ def cotizacion_adicionar_quitar_condicion_inicio_proyecto(
         condicion_proyecto.condicion_inicio_proyecto_id = condicion_inicio_proyecto_id
         condicion_proyecto.descripcion = condicion_inicio_proyecto.descripcion
         condicion_proyecto.require_documento = condicion_inicio_proyecto.require_documento
+        condicion_proyecto.condicion_especial = condicion_inicio_proyecto.condicion_especial
         condicion_proyecto.cotizacion_proyecto = cotizacion
         condicion_proyecto.save()
         cotizacion.condiciones_inicio_completas = False
@@ -152,6 +192,18 @@ def cotizacion_adicionar_quitar_condicion_inicio_proyecto(
     return cotizacion
 
 
+# def cotizacion_cambiar_estado(
+#         cotizacion_id,
+#         nuevo_estado: str
+# ) -> Cotizacion:
+#     cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
+#     estado_actual = cotizacion.estado
+#     if estado_actual==nuevo_estado:
+#         return cotizacion
+#     else:
+#
+
+
 def cotizacion_crear(
         created_by_id: User,
         unidad_negocio: str,
@@ -159,38 +211,43 @@ def cotizacion_crear(
         origen_cotizacion: str,
         fecha_entrega_pactada_cotizacion: datetime,
         fecha_limite_segumiento_estado: datetime,
+        contacto_cliente_id: int,
+        cliente_id: int,
         observacion: str = None,
         cotizacion_inicial_id: int = None,
-        contacto_cliente_id: int = None,
-        cliente_id: int = None
 ) -> Cotizacion:
-    if unidad_negocio == 'ADI' and cotizacion_inicial_id is None:
-        raise ValidationError(
-            {'_error': 'Una cotización adicional debe tener una inicial obligatoriamente'})
-    if unidad_negocio == 'ADI' and cotizacion_inicial_id is not None:
-        cotizacion_inicial = Cotizacion.objects.get(pk=cotizacion_inicial_id)
-        if cotizacion_inicial.unidad_negocio == 'ADI':
+    cotizacion = Cotizacion()
+    if unidad_negocio == 'ADI':
+        if cotizacion_inicial_id is None:
             raise ValidationError(
-                {'_error': 'Una cotización inicial no puede ser otra adicional'})
-        elif cotizacion_inicial.estado != 'Cierre (Aprobado)':
-            raise ValidationError(
-                {'_error': 'La cotización inicial debe de estar en estado Cierre (Aprobado)'})
+                {'_error': 'Una cotización adicional debe tener una inicial obligatoriamente'})
+        else:
+            cotizacion_inicial = Cotizacion.objects.get(pk=cotizacion_inicial_id)
+            if cotizacion_inicial.unidad_negocio == 'ADI':
+                raise ValidationError(
+                    {'_error': 'Una cotización inicial no puede ser otra adicional'})
 
-    if unidad_negocio != 'ADI' and (cliente_id is None or contacto_cliente_id is None):
+            elif cotizacion_inicial.estado != 'Cierre (Aprobado)':
+                raise ValidationError(
+                    {'_error': 'La cotización inicial debe de estar en estado Cierre (Aprobado)'})
+            cotizacion.cotizacion_inicial_id = cotizacion_inicial_id
+
+            if cotizacion_inicial.cliente_id != cliente_id:
+                raise ValidationError({
+                    '_error': 'El cliente de una cotizacion adicional no puede ser diferente al cliente de la inicial'})
+
+    if cliente_id is None or contacto_cliente_id is None:
         raise ValidationError(
             {'_error': 'La cotización debe tener cliente y contacto'})
 
-    if cliente_id is not None:
-        cliente = ClienteBiable.objects.get(pk=cliente_id)
-        contactos = cliente.contactos.filter(pk=contacto_cliente_id)
-        if not contactos.exists():
-            raise ValidationError(
-                {'_error': 'El contacto seleccionado no existe para el cliente elegido'})
+    cliente = ClienteBiable.objects.get(pk=cliente_id)
+    contactos = cliente.contactos.filter(pk=contacto_cliente_id)
+    if not contactos.exists():
+        raise ValidationError(
+            {'_error': 'El contacto seleccionado no existe para el cliente elegido'})
 
-    cotizacion = Cotizacion()
     cotizacion.created_by_id = created_by_id
     cotizacion.unidad_negocio = unidad_negocio
-    cotizacion.cotizacion_inicial_id = cotizacion_inicial_id
     cotizacion.descripcion_cotizacion = descripcion_cotizacion
     cotizacion.observacion = observacion
     cotizacion.origen_cotizacion = origen_cotizacion
@@ -213,35 +270,42 @@ def cotizacion_crear(
 
 def cotizacion_actualizar(
         modified_by_id: User,
-        cotizacion_id: int,
-        estado: str,
         unidad_negocio: str,
-
-        responsable_id: int,
         descripcion_cotizacion: str,
         origen_cotizacion: str,
         fecha_entrega_pactada_cotizacion: datetime,
         fecha_limite_segumiento_estado: datetime,
+        cotizacion_id: int,
+        estado: str,
+        responsable_id: int,
+        cliente_id: int,
+        contacto_cliente_id: int,
+        observacion: str = None,
         orden_compra_fecha: datetime.date = None,
-
-        cotizacion_inicial_id: int = None,
-        contacto_cliente_id: int = None,
-        cliente_id: int = None,
-
         valor_ofertado: float = None,
         costo_presupuestado: float = None,
         valor_orden_compra: float = None,
-        observacion: str = None,
         orden_compra_nro: str = None,
         estado_observacion_adicional: str = None,
         dias_pactados_entrega_proyecto: int = None,
 ) -> Cotizacion:
     cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
     cambio_estado = estado != cotizacion.estado
+    cambio_cliente = cliente_id != cotizacion.cliente_id
+    tiene_cotizaciones_adicionales = cotizacion.cotizaciones_adicionales.exists()
+    tiene_proyectos = cotizacion.proyectos.exists()
+
+    if unidad_negocio == 'ADI' and cambio_cliente:
+        raise ValidationError(
+            {
+                '_error': 'No se puede cambiar el cliente porque la cotización inicial no puede tener un cliente diferente al de las cotizaciones adicionales'})
+    elif (tiene_cotizaciones_adicionales or tiene_proyectos) and cambio_cliente:
+        raise ValidationError(
+            {'_error': 'No se puede cambiar el cliente si se tiene proyectos o cotizaciones adicionales relacionadas'})
 
     # Valida que no se vaya a cambiar de estado de Cierre (Aprobado) si tiene cotizaciones adicionales o proyectos vinculados
-    if cotizacion.estado == 'Aceptación de Terminos y Condiciones' and cambio_estado:
-        if cotizacion.cotizaciones_adicionales.count() > 0 or cotizacion.proyectos.count() > 0:
+    if cotizacion.estado == 'Cierre (Aprobado)' and cambio_estado:
+        if tiene_cotizaciones_adicionales or tiene_proyectos:
             raise ValidationError(
                 {
                     '_error': 'Para cambiar una cotización cuyo estado es %s a %s no deben haber cotizaciones adicionales relacionadas ni proyectos relacionados' % (
@@ -249,24 +313,24 @@ def cotizacion_actualizar(
 
     cotizacion.estado = estado
     # Valida que al cambiar el cliente o contacto, el contacto pertenezca al cliente definido
-    if cliente_id is not None:
-        cliente = ClienteBiable.objects.get(pk=cliente_id)
-        contactos = cliente.contactos.filter(pk=contacto_cliente_id)
-        if not contactos.exists():
-            raise ValidationError(
-                {'_error': 'El contacto seleccionado no existe para el cliente elegido'})
-        else:
-            cotizacion.cliente_id = cliente_id
-            cotizacion.contacto_cliente_id = contacto_cliente_id
-            for proyecto in cotizacion.proyectos.all():
-                proyecto.cliente_id = cliente_id
-                proyecto.save()
+
+    cliente = ClienteBiable.objects.get(pk=cliente_id)
+    contactos = cliente.contactos.filter(pk=contacto_cliente_id)
+    if not contactos.exists():
+        raise ValidationError(
+            {'_error': 'El contacto seleccionado no existe para el cliente elegido'})
+    else:
+        cotizacion.cliente_id = cliente_id
+        cotizacion.contacto_cliente_id = contacto_cliente_id
+        for proyecto in cotizacion.proyectos.all():
+            proyecto.cliente_id = cliente_id
+            proyecto.save()
 
     # Valida que una cotizacion ADI no se pueda cambiar en ningún otro tipo de cotización y viceversa
     cambio_unidad_de_negocio = cotizacion.unidad_negocio != unidad_negocio
     if (cotizacion.unidad_negocio == 'ADI' or unidad_negocio == 'ADI') and cambio_unidad_de_negocio:
         raise ValidationError(
-            {'_error': 'No se puede cambiar de la unidad de negocio %s a %s' % (
+            {'_error': 'No se puede cambiar la unidad de negocio %s a %s' % (
                 cotizacion.unidad_negocio, unidad_negocio)})
     else:
         cotizacion.unidad_negocio = unidad_negocio
@@ -332,7 +396,6 @@ def cotizacion_actualizar(
     cotizacion.origen_cotizacion = origen_cotizacion
     cotizacion.fecha_entrega_pactada_cotizacion = fecha_entrega_pactada_cotizacion
     cotizacion.fecha_limite_segumiento_estado = fecha_limite_segumiento_estado
-    cotizacion.cotizacion_inicial_id = cotizacion_inicial_id
     cotizacion.orden_compra_nro = orden_compra_nro
 
     cotizacion.save()

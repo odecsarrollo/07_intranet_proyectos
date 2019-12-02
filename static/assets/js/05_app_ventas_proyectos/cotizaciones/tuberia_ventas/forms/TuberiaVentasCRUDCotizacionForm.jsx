@@ -22,7 +22,6 @@ let Form = memo(props => {
         change
     } = props;
     const myValues = useSelector(state => selector(state, 'estado', 'valor_ofertado', 'cliente', 'unidad_negocio', 'subir_anterior', 'cotizacion_inicial'));
-
     return (
         <MyFormTagModal
             onCancel={onCancel}

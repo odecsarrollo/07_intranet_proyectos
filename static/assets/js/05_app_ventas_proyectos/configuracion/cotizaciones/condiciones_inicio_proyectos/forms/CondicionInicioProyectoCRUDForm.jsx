@@ -44,6 +44,11 @@ class Form extends Component {
                     name='require_documento'
                     label='Requiere Documento'
                 />
+                <MyCheckboxSimple
+                    className="col-6 pt-4"
+                    name='condicion_especial'
+                    label='Condición Especial'
+                />
             </MyFormTagModal>
         )
     }

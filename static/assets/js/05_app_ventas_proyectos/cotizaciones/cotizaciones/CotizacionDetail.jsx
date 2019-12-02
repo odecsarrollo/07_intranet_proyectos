@@ -1,4 +1,4 @@
-import React, {memo, useEffect, useState} from 'react';
+import React, {memo, useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../../01_actions/01_index";
 import CargarDatos from "../../../00_utilities/components/system/cargar_datos";
@@ -11,7 +11,7 @@ import TareasList from '../seguimientos/CotizacionSeguimientoTareaList';
 import CambioEstadoList from '../seguimientos/CotizacionSeguimientoCambioEstadoList';
 import CotizacionForm from './forms/CotizacionFormDetail';
 import CotizacionInfo from './CotizacionDetailInfo';
-import ArchivosCotizacionList from '../../../04_app_proyectos/proyectos/archivos/components/ProyectoDocumentoList';
+import CotizacionDetailDocumento from './CotizacionDetailDocumento';
 import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
 import Typography from "@material-ui/core/Typography";
 import CotizacionCondicionInicioProyecto from "./forms/CotizacionCondicionInicioProyecto";
@@ -111,9 +111,10 @@ const Detail = memo(props => {
                             />
                         </TabPanel>}
                         {permisos_archivos_cotizacion.list && <TabPanel>
-                            <ArchivosCotizacionList
+                            <CotizacionDetailDocumento
                                 cotizacion={object}
                                 permisos={permisos_archivos_cotizacion}
+                                onUploadFile={() => console.log('dio en upload')}
                             />
                         </TabPanel>}
                         <TabPanel>

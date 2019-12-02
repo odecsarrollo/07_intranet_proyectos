@@ -44,6 +44,18 @@ class Tabla extends React.Component {
                                     />}
                                 </div>
                             },
+                            {
+                                Header: "Con. Especial",
+                                accessor: "condicion_especial",
+                                maxWidth: 100,
+                                Cell: row => <div>
+                                    {row.value && <FontAwesomeIcon
+                                        className='puntero ml-4'
+                                        onClick={() => onDelete(e.id)}
+                                        icon={'check-circle'}
+                                    />}
+                                </div>
+                            },
                         ]
                     },
                     {

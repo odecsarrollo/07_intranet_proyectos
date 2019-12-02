@@ -29,19 +29,15 @@ const CotizacionInfo = memo(props => {
             <div className="col-12">
                 <div className="row">
                     <div className="col-12 col-md-4 col-lg-3">
-                        <strong>Fecha Entrega
-                            Cotización: </strong>{object.fecha_entrega_pactada_cotizacion ? fechaFormatoUno(object.fecha_entrega_pactada_cotizacion) : 'Sin Definir'}
+                        <strong>Fecha Inicio
+                            Proyecto: </strong>{object.condiciones_inicio_fecha_ultima ? fechaFormatoUno(object.condiciones_inicio_fecha_ultima) : 'Sin Definir'}
                     </div>
                     <div className="col-12 col-md-4 col-lg-3">
-                        <strong>Fecha Orden
-                            Compra: </strong>{object.orden_compra_fecha ? fechaFormatoUno(object.orden_compra_fecha) : 'Sin Definir'}
+                        <strong>Días Pactados Entrega Proyecto: </strong>{object.dias_pactados_entrega_proyecto}
                     </div>
                     <div className="col-12 col-md-4 col-lg-3">
                         <strong>Fecha Entrega
                             Proyecto: </strong>{object.fecha_entrega_pactada ? fechaFormatoUno(object.fecha_entrega_pactada) : 'Sin Definir'}
-                    </div>
-                    <div className="col-12 col-md-4 col-lg-3">
-                        <strong>Nro Orden Compra: </strong>{object.orden_compra_nro}
                     </div>
                 </div>
             </div>

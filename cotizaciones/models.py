@@ -66,7 +66,7 @@ class Cotizacion(TimeStampedModel):
     revisada = models.BooleanField(default=False)
     listo_para_iniciar = models.BooleanField(default=False)
     estado = models.CharField(max_length=200, null=True, choices=ESTADOS_CHOICES)
-    origen_cotizacion = models.CharField(max_length=100, null=True)
+    origen_cotizacion = models.CharField(max_length=100)
     estado_observacion_adicional = models.CharField(max_length=400, null=True)
     fecha_cambio_estado = models.DateField(null=True)
     fecha_cambio_estado_cerrado = models.DateField(null=True)
@@ -120,18 +120,6 @@ class Cotizacion(TimeStampedModel):
         return not self.revisada and self.estado == 'Cierre (Aprobado)' and self.cotizacion_inicial is not None
 
     @property
-    def cliente_cotizacion(self) -> ClienteBiable:
-        if self.cotizacion_inicial is None:
-            return self.cliente
-        return self.cotizacion_inicial.cliente_cotizacion
-
-    @property
-    def contacto_cotizacion(self) -> ContactoCliente:
-        if self.cotizacion_inicial is None:
-            return self.contacto_cliente
-        return self.cotizacion_inicial.contacto_cotizacion
-
-    @property
     def es_adicional(self) -> bool:
         if self.cotizacion_inicial is not None:
             return True
@@ -174,6 +162,7 @@ class ArchivoCotizacion(TimeStampedModel):
 class CondicionInicioProyecto(models.Model):
     descripcion = models.CharField(max_length=400)
     require_documento = models.BooleanField(default=False)
+    condicion_especial = models.BooleanField(default=False)  # Casos especiales donde inician solo con esta opción
 
     class Meta:
         permissions = [
@@ -198,6 +187,7 @@ class CondicionInicioProyectoCotizacion(models.Model):
     )
     descripcion = models.CharField(max_length=400)
     require_documento = models.BooleanField(default=False)
+    condicion_especial = models.BooleanField(default=False)
     fecha_entrega = models.DateField(null=True, blank=True)
     documento = models.FileField(null=True, upload_to=archivo_upload_to)
 
