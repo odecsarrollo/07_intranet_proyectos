@@ -5,7 +5,7 @@ const validate = values => {
 
     const requiredFields = [
         'ano',
-        'trimestre',
+        'mes',
     ];
     requiredFields.map(field => {
         if (!values[field]) {
@@ -13,18 +13,18 @@ const validate = values => {
         }
     });
 
-    const jusNumbersFields = [
+    const justNumbersFields = [
         'ano',
-        'trimestre',
+        'mes',
     ];
-    jusNumbersFields.map(field => {
+    justNumbersFields.map(field => {
         if (values[field] && !REGEX_SOLO_NUMEROS.test(values[field])) {
             errors[field] = 'Debe ser un número'
         }
     });
 
-    if (values.trimestre && values.trimestre < 1 || values.trimestre > 4) {
-        errors['trimestre'] = 'Debe ser un número del 1 al 4'
+    if (values.mes && values.mes < 1 || values.mes > 12) {
+        errors['mes'] = 'Debe ser un número del 1 al 12'
     }
 
     if (values.ano && values.ano.length !== 4) {

@@ -222,13 +222,13 @@ export const fetchCotizacionesTuberiaVentas = (options_action = {}) => {
     }
 };
 
-export const fetchCotizacionesTuberiaVentasResumen = (ano = null, trimestre = null, options_action = {}) => {
+export const fetchCotizacionesTuberiaVentasResumen = (ano = null, mes = null, options_action = {}) => {
     return function (dispatch) {
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: response})
         };
-        if (ano && trimestre) {
-            const FULL_URL = `${current_url_api}/cotizaciones_resumen_tuberia_ventas/?ano=${ano}&trimestre=${trimestre}`;
+        if (ano && mes) {
+            const FULL_URL = `${current_url_api}/cotizaciones_resumen_tuberia_ventas/?ano=${ano}&mes=${mes}`;
 
             const {limpiar_coleccion = true} = options_action;
             const options = {

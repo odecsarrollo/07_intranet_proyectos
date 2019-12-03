@@ -1,7 +1,6 @@
 import React, {memo} from 'react';
 import {reduxForm} from 'redux-form';
 import validate from './validate';
-import {connect} from "react-redux";
 import {MyTextFieldSimple} from '../../../../00_utilities/components/ui/forms/fields';
 import Button from '@material-ui/core/Button';
 
@@ -23,8 +22,8 @@ let Form = memo(props => {
                 />
                 <MyTextFieldSimple
                     className="col-3 ml-2"
-                    nombre='Trimestre'
-                    name='trimestre'
+                    nombre='Mes'
+                    name='mes'
                 />
                 <div className="cal-6">
                     <Button

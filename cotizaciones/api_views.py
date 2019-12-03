@@ -195,8 +195,6 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
             'responsable'
         ).all()
         self.serializer_class = CotizacionTuberiaVentaSerializer
-        month = timezone.datetime.now().month
-        year = timezone.datetime.now().year
         qs = self.get_queryset().filter(
             Q(estado__in=[
                 'Cita/Generación Interés',
@@ -204,12 +202,7 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
                 'Cotización Enviada',
                 'Evaluación Técnica y Económica',
                 'Aceptación de Terminos y Condiciones',
-            ]) |
-            (
-                    Q(estado='Cierre (Aprobado)') &
-                    Q(orden_compra_fecha__year=year) &
-                    Q(orden_compra_fecha__month=month)
-            )
+            ])
         )
         if not self.request.user.has_perm('cotizaciones.list_all_cotizaciones_activas'):
             qs = qs.filter(responsable=self.request.user)
@@ -218,10 +211,13 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
 
     @action(detail=False, http_method_names=['get', ])
     def cotizaciones_resumen_tuberia_ventas(self, request):
-        year = int(request.GET.get('ano', timezone.datetime.now().year))
-        current_date = timezone.datetime.now()
-        current_quarter = int(request.GET.get('trimestre', ceil(current_date.month / 3)))
         self.serializer_class = CotizacionTuberiaVentaSerializer
+        filtro_ano = request.GET.get('ano', None)
+        filtro_mes = request.GET.get('mes', None)
+        year = int(filtro_ano) if filtro_ano else timezone.datetime.now().year
+        month = int(filtro_mes) if filtro_mes else timezone.datetime.now().month
+        current_date = timezone.datetime.now()
+        current_quarter = int(ceil(current_date.month / 3))
         qsBase = Cotizacion.objects.select_related(
             'cliente',
             'contacto_cliente',
@@ -231,8 +227,8 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
         ).annotate(
             valor_orden_compra_mes=Case(
                 When(
-                    Q(orden_compra_fecha__year=current_date.year) &
-                    Q(orden_compra_fecha__month=current_date.month),
+                    Q(orden_compra_fecha__year=year) &
+                    Q(orden_compra_fecha__month=month),
                     then=Coalesce(F('valor_orden_compra'), 0)
                 ),
                 default=Value(0),
@@ -240,14 +236,16 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
             ),
         )
         qs2 = qsBase.filter(
-            estado='Cierre (Aprobado)',
-            orden_compra_fecha__year=year,
-            orden_compra_fecha__quarter=current_quarter
+            estado='Cierre (Aprobado)'
         )
 
         qs3 = None
 
-        if current_date.year == year and ceil(current_date.month / 3) == current_quarter:
+        if not filtro_ano or not filtro_mes:
+            qs2 = qs2.annotate(valor_orden_compra_trimestre=Coalesce(F('valor_orden_compra'), 0)).filter(
+                orden_compra_fecha__year=year,
+                orden_compra_fecha__quarter=current_quarter
+            )
             qs3 = qsBase.filter(
                 estado__in=[
                     'Cita/Generación Interés',

@@ -363,6 +363,7 @@ class CotizacionSerializer(serializers.ModelSerializer):
 
 class CotizacionTuberiaVentaSerializer(serializers.ModelSerializer):
     valor_orden_compra_mes = serializers.DecimalField(decimal_places=2, max_digits=20, read_only=True)
+    valor_orden_compra_trimestre = serializers.DecimalField(decimal_places=2, max_digits=20, read_only=True)
     color_tuberia_ventas = serializers.SerializerMethodField()
     porcentaje_tuberia_ventas = serializers.SerializerMethodField()
     cliente_nombre = serializers.CharField(source='cliente.nombre', read_only=True)
@@ -415,6 +416,7 @@ class CotizacionTuberiaVentaSerializer(serializers.ModelSerializer):
             'color_tuberia_ventas',
             'nro_cotizacion',
             'valor_orden_compra_mes',
+            'valor_orden_compra_trimestre',
             'valor_orden_compra',
             'unidad_negocio',
             'cliente_nombre',

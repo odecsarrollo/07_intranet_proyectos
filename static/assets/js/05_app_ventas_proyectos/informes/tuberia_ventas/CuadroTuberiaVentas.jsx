@@ -13,8 +13,8 @@ const InformeTunelVentas = memo(props => {
     const cotizaciones_permisos = useTengoPermisos(COTIZACIONES);
     const object_list = useSelector(state => state.cotizaciones);
     const dispatch = useDispatch();
-    const cargarDatos = (ano = null, trimestre = null) => {
-        dispatch(actions.fetchCotizacionesTuberiaVentasResumen(ano, trimestre));
+    const cargarDatos = (ano = null, mes = null) => {
+        dispatch(actions.fetchCotizacionesTuberiaVentasResumen(ano, mes));
     };
     useEffect(() => {
         cargarDatos();
@@ -45,7 +45,7 @@ const InformeTunelVentas = memo(props => {
     const valorTotal = (indice) => {
         const arreglo = cotizaciones_x_orden[indice];
         const total_valor = _.map(arreglo, e => e).reduce((suma, elemento) => {
-            const valor = indice === 6 ? elemento.valor_orden_compra : elemento.valor_ofertado;
+            const valor = indice === 6 ? elemento.valor_orden_compra_trimestre : elemento.valor_ofertado;
             return parseFloat(suma) + (valor ? parseFloat(valor) : 0)
         }, 0);
         return {total: total_valor, cantidad: _.size(arreglo)}
@@ -70,7 +70,7 @@ const InformeTunelVentas = memo(props => {
 
 
     const valores_totales = _.map(cotizaciones, e => e).reduce((suma, elemento) => {
-        const valor = elemento.orden === 6 ? elemento.valor_orden_compra : ([3, 4, 5].includes(elemento.orden) ? elemento.valor_ofertado : 0);
+        const valor = elemento.orden === 6 ? elemento.valor_orden_compra_trimestre : ([3, 4, 5].includes(elemento.orden) ? elemento.valor_ofertado : 0);
         return parseFloat(suma) + (valor ? parseFloat(valor) : 0)
     }, 0);
 
@@ -88,7 +88,7 @@ const InformeTunelVentas = memo(props => {
                 Informe de Tuberias de Ventas
             </Typography>
             <FormTuberiaVentas onSubmit={(v) => {
-                cargarDatos(v.ano, v.trimestre)
+                cargarDatos(v.ano, v.mes)
             }}/>
             <div className='p-4'>
                 <div className='row'>
@@ -116,12 +116,13 @@ const InformeTunelVentas = memo(props => {
                 {_.map(responsables, r => {
                     const cotizaciones_x_responsable = _.pickBy(cotizaciones, c => c.responsable_actual_nombre === r);
                     const totalValorOfertado = (index) => _.map(_.pickBy(cotizaciones_x_responsable, e => (e.orden === index && e.valor_ofertado > 0)), t => parseFloat(t.valor_ofertado)).reduce((uno, dos) => uno + dos, 0);
-                    const totalValorOrdenCompra = (index) => _.map(_.pickBy(cotizaciones_x_responsable, e => (e.orden === index && e.valor_orden_compra > 0)), t => parseFloat(t.valor_orden_compra)).reduce((uno, dos) => uno + dos, 0);
+                    //const totalValorOrdenCompra = (index) => _.map(_.pickBy(cotizaciones_x_responsable, e => (e.orden === index && e.valor_orden_compra > 0)), t => parseFloat(t.valor_orden_compra)).reduce((uno, dos) => uno + dos, 0);
+                    const totalValorOrdenCompraTrimestre = (index) => _.map(_.pickBy(cotizaciones_x_responsable, e => (e.orden === index && e.valor_orden_compra_trimestre > 0)), t => parseFloat(t.valor_orden_compra_trimestre)).reduce((uno, dos) => uno + dos, 0);
                     const totalValorOrdenCompraMes = (index) => _.map(_.pickBy(cotizaciones_x_responsable, e => (e.orden === index && e.valor_orden_compra_mes > 0)), t => parseFloat(t.valor_orden_compra_mes)).reduce((uno, dos) => uno + dos, 0);
                     const orden_tres = totalValorOfertado(3);
                     const orden_cuatro = totalValorOfertado(4);
                     const orden_cinco = totalValorOfertado(5);
-                    const orden_seis = totalValorOrdenCompra(6);
+                    const orden_seis = totalValorOrdenCompraTrimestre(6);
                     const orden_seis_mes = totalValorOrdenCompraMes(6);
                     const total_valor = orden_tres + orden_cuatro + orden_cinco + orden_seis;
                     return <tr key={r ? r : 'Sin Nombre'}>

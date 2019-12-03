@@ -14,7 +14,7 @@ import CotizacionInfo from './CotizacionDetailInfo';
 import CotizacionDetailDocumento from './CotizacionDetailDocumento';
 import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
 import Typography from "@material-ui/core/Typography";
-import CotizacionCondicionInicioProyecto from "./forms/CotizacionCondicionInicioProyecto";
+import CotizacionCondicionInicioProyecto from "./CotizacionCondicionInicioProyecto";
 
 const Detail = memo(props => {
     const dispatch = useDispatch();
