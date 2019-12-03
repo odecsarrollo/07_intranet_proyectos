@@ -20,6 +20,7 @@ from medios_adhesivos.api_urls import router as medios_adhesivos_router
 from contabilidad_anticipos.api_urls import router as contabilidad_anticipos_router
 from sistemas_equipos.api_urls import router as sistemas_equipos_router
 from cotizaciones_componentes.api_urls import router as cotizaciones_componentes_router
+from correos_servicios.api_urls import router as correos_servicios_router
 
 router = DefaultRouter()
 router.extend(proyectos_router)
@@ -43,3 +44,4 @@ router.extend(medios_adhesivos_router)
 router.extend(contabilidad_anticipos_router)
 router.extend(sistemas_equipos_router)
 router.extend(cotizaciones_componentes_router)
+router.extend(correos_servicios_router)

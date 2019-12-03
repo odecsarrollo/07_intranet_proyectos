@@ -20,16 +20,23 @@
         Ya todas las condiciones definidas para la misma se han cumplido.
     </p>
 {% endlocalize %}
-Condiciones Definidas para el inicio del proyecto
+<p>{% if cotizacion.cotizacion_inicial %}Cotización Inicial: {{ cotizacion_inicial }}{% endif %}</p>
+Condiciones Definidas para el inicio:
 <ol>
+    {% if cotizacion.orden_compra_fecha %}
+        <li>ORDEN COMPRA {{ cotizacion.orden_compra_nro }} -
+            {{ cotizacion.orden_compra_fecha }}</li>{% endif %}
     {% for condicion in condiciones_inicio_cotizacion %}
-        <li>{{ condicion.descripcion }} - {{ condicion.fecha_entrega }} {% if condicion.documento %}
-            (Adjunto){% endif %}</li>
+        {% if condicion.fecha_entrega %}
+            <li>{{ condicion.descripcion }} - {{ condicion.fecha_entrega }} {% if condicion.documento %}
+                (Adjunto){% endif %}</li>
+        {% endif %}
     {% endfor %}
 </ol>
 <p> Para el proyecto se pactó con el cliente {{ cotizacion.dias_pactados_entrega_proyecto }} días a partir de la entrega
     de los documentos definidos.
-    El último documento fué entregado el {{ cotizacion.condiciones_inicio_fecha_ultima }} para finalmente tener una
+    El último documento o el que defini el inicio del proyecto fué entregado
+    el {{ cotizacion.condiciones_inicio_fecha_ultima }} para finalmente tener una
     fecha
     apróximada de entrega para {{ cotizacion.fecha_entrega_pactada }}.
 </p>

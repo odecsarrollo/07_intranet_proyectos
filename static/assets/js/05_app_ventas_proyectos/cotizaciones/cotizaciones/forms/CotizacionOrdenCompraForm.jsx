@@ -50,7 +50,6 @@ let CotizacionOrdenCompraForm = (props) => {
                     <MyDateTimePickerField
                         label='Fecha Entregada'
                         label_space_xs={4}
-                        max={new Date(2099, 11, 31)}
                         name='orden_compra_fecha'
                         nombre='Fecha Orden de Compra'
                         className='col-12 col-md-4'

@@ -48,9 +48,9 @@ class Local(Common):
         }
     }
 
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
     # if not str_to_bool(get_secret("EMAIL_SERVER", "EMAIL_IS_LOCAL")):
-    #     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
     EMAIL_HOST = get_secret("EMAIL_SERVER", "EMAIL_HOST")
 

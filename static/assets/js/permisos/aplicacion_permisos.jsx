@@ -1,3 +1,11 @@
+export const CORREOS_APLICACIONES = {
+    add: 'add_correoaplicacion',
+    delete: 'delete_correoaplicacion',
+    change: 'change_correoaplicacion',
+    list: 'list_correoaplicacion',
+    detail: 'view_correoaplicacion',
+};
+
 export const CONDICIONES_INICIOS_PROYECTOS_COTIZACIONES = {
     add: 'add_condicioninicioproyectocotizacion',
     delete: 'delete_condicioninicioproyectocotizacion',

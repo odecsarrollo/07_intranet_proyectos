@@ -13,6 +13,7 @@ from .models import Cotizacion, SeguimientoCotizacion
 from clientes.models import ClienteBiable
 from reversion.models import Version
 from cotizaciones.models import CondicionInicioProyecto, CondicionInicioProyectoCotizacion
+from correos_servicios.models import CorreoAplicacion
 
 
 def condicion_inicio_proyecto_crear_actualizar(
@@ -43,21 +44,32 @@ def cotizacion_versions(cotizacion_id: int) -> Version:
 def cotizacion_envio_correo_notificacion_condiciones_inicio_completas(
         cotizacion_id: int
 ) -> Cotizacion:
+    correos = CorreoAplicacion.objects.filter(aplicacion='CORREO_COTIZACION_APERTURA_OP')
+    correo_from = correos.filter(tipo='FROM').first()
+
+    correos_to = list(correos.values_list('email', flat=True).filter(tipo='TO'))
+    correos_cc = list(correos.values_list('email', flat=True).filter(tipo='CC'))
+    correos_bcc = list(correos.values_list('email', flat=True).filter(tipo='BCC'))
     cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
-    correos_to = ['miguel.cordoba@odecopack.com']
+    asunto = 'Solicitud apertura para Cotizacion %s-%s' % (cotizacion.unidad_negocio, cotizacion.nro_cotizacion)
+    es_adicional = cotizacion.cotizacion_inicial is not None
+    asunto = asunto if not es_adicional else 'Notificación de cotización adicional %s-%s' % (
+        cotizacion.unidad_negocio, cotizacion.nro_cotizacion)
     context = {
+        "cotizacion_inicial": '%s-%s' % (cotizacion.cotizacion_inicial.unidad_negocio,
+                                         cotizacion.cotizacion_inicial.nro_cotizacion) if cotizacion.cotizacion_inicial else '',
         "cotizacion": cotizacion,
         "condiciones_inicio_cotizacion": cotizacion.condiciones_inicio_cotizacion.order_by('fecha_entrega').all()
     }
     text_content = render_to_string('emails/cotizacion_proyecto/correo_base.html', context=context)
+    correos_to = correos_to if len(correos_to) > 0 else ['fabio.garcia.sanchez@gmail.com']
     msg = EmailMultiAlternatives(
-        'Solicitud apertura para Cotizacion %s-%s' % (
-            cotizacion.unidad_negocio,
-            cotizacion.nro_cotizacion
-        ),
+        asunto,
         text_content,
-        bcc=['fabio.garcia.sanchez@gmail.com'],
-        from_email='Odecopack Ventas Proyectos<%s>' % 'noreply@odecopack.com',
+        cc=correos_cc,
+        bcc=correos_bcc,
+        from_email='%s <%s>' % (
+            correo_from.alias_from, correo_from.email) if correo_from else 'noreply@odecopack.com',
         to=correos_to
     )
     msg.attach_alternative(text_content, "text/html")
@@ -65,7 +77,9 @@ def cotizacion_envio_correo_notificacion_condiciones_inicio_completas(
     documentos_para_enviar = cotizacion.condiciones_inicio_cotizacion.filter(require_documento=True)
     for condicion in documentos_para_enviar.all():
         if condicion.documento:
-            nombre_archivo = '%s.%s' % (condicion.descripcion, condicion.documento.name.split('.')[-1])
+            nombre_archivo = '%s%s %s.%s' % (
+                cotizacion.cotizacion_inicial.unidad_negocio, cotizacion.cotizacion_inicial.nro_cotizacion,
+                condicion.descripcion, condicion.documento.name.split('.')[-1])
             msg.attach(nombre_archivo, condicion.documento.read())
     try:
         msg.send()

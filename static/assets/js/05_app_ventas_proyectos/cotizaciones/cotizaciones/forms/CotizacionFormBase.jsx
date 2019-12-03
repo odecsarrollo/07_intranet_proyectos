@@ -85,6 +85,7 @@ const FormBaseCotizacion = (props) => {
     const en_cotizacion_enviada = estado === 'Cotización Enviada';
     const en_evaluacion_tecnica_economica = estado === 'Evaluación Técnica y Económica';
     const en_aceptacion_terminos_condiciones = estado === 'Aceptación de Terminos y Condiciones';
+    const en_cierre = estado === 'Cierre (Aprobado)';
     const cerrado = item && item.estado === 'Cierre (Aprobado)' && !change_cerrada;
     const en_aplazado = estado === 'Aplazado';
     const en_cancelado = estado === 'Cancelado';
@@ -302,7 +303,7 @@ const FormBaseCotizacion = (props) => {
                     disabled={cerrado}
                 />
             </Fragment>}
-            {(en_aceptacion_terminos_condiciones || cerrado) && <MyTextFieldSimple
+            {(en_aceptacion_terminos_condiciones || en_cierre) && <MyTextFieldSimple
                 className="col-12 col-md-4"
                 nombre='Nro. Días Entrega'
                 name='dias_pactados_entrega_proyecto'

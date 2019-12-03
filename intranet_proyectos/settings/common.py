@@ -64,6 +64,7 @@ class Common(Configuration):
         'sistemas_equipos.apps.SistemasEquiposConfig',
         'cotizaciones_componentes.apps.CotizacionesComponentesConfig',
         'envios_emails.apps.EnviosEmailsConfig',
+        'correos_servicios.apps.CorreosServiciosConfig',
     ]
 
     THIRD_PART_APPS = [

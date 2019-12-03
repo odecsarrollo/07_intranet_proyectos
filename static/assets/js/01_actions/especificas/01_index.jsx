@@ -44,6 +44,8 @@ export * from './bandas_eurobelt/configuracionAction';
 export * from './bandas_eurobelt/costoEnsambladoAction';
 export * from './bandas_eurobelt/bandasAction';
 
+export * from './correos_servicios/correosAplicacionesAction';
+
 export * from './catalogos_productos/itemsVentasAction';
 export * from './medios/adhesivosActions';
 

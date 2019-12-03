@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react';
 import {upper, lower} from "../../../common";
 import {Field} from 'redux-form';
-import PropTypes, {instanceOf} from "prop-types";
+import PropTypes from "prop-types";
 import {makeStyles} from '@material-ui/core/styles';
 import clsx from 'clsx';
 

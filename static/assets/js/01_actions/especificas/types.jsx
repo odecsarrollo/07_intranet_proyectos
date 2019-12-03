@@ -1,3 +1,12 @@
+export const CORREO_APLICACION_TYPES = {
+    create: 'create_correo_aplicacion',
+    delete: 'delete_correo_aplicacion',
+    fetch_all: 'fetch_correos_aplicaciones',
+    fetch: 'fetch_correo_aplicacion',
+    clear: 'clear_correos_aplicaciones',
+    update: 'update_correo_aplicacion',
+};
+
 export const CONDICION_INICIO_PROYECTO_COTIZACION_TYPES = {
     create: 'create_condicion_inicio_proyecto_cotizacion',
     delete: 'delete_condicion_inicio_proyecto_cotizacion',

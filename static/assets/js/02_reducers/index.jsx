@@ -36,7 +36,8 @@ import clientesTiposIndustriasReducer from "./especificas/clientes/tiposIndustri
 import cotizacionesReducer from "./especificas/cotizaciones/cotizacionesReducer";
 import cotizacionesSeguimientosReducer from "./especificas/cotizaciones/cotizacionesSeguimientosReducer";
 import cotizacionesArchivosReducer from "./especificas/cotizaciones/archivosCotizacionesReducer";
-import cotizacionesCondicionesInicioProyectosReducer from "./especificas/cotizaciones/condicionesInicioProyectosReducer";
+import cotizacionesCondicionesInicioProyectosReducer
+    from "./especificas/cotizaciones/condicionesInicioProyectosReducer";
 
 import configuracionCostos from './especificas/configuraciones/configuracionCostosReducer';
 
@@ -79,6 +80,9 @@ import sistemasEquiposComputadoresReducers from './especificas/sistemas/computad
 
 import cotizacionesComponentes from './especificas/cotizaciones_componentes/cotizacionComponenteReducer';
 import cotizacionesComponentesItems from './especificas/cotizaciones_componentes/cotizacionComponenteItemReducer';
+
+
+import correosAplicacionesReducer from './especificas/correos_servicios/correosAplicacionesReducer';
 
 import {reducer as notificationsReducers} from 'react-notification-system-redux';
 
@@ -154,6 +158,8 @@ const rootReducer = combineReducers({
 
     cotizaciones_componentes: cotizacionesComponentes,
     cotizaciones_componentes_items: cotizacionesComponentesItems,
+
+    correos_aplicaciones: correosAplicacionesReducer,
 });
 
 export default rootReducer;
