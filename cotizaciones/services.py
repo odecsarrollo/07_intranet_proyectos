@@ -44,7 +44,7 @@ def cotizacion_versions(cotizacion_id: int) -> Version:
 def cotizacion_envio_correo_notificacion_condiciones_inicio_completas(
         cotizacion_id: int
 ) -> Cotizacion:
-    correos = CorreoAplicacion.objects.filter(aplicacion='CORREO_COTIZACION_APERTURA_OP')
+    correos = CorreoAplicacion.objects.filter(aplicacion='CORREO_COTIZACION_NOTIFICACION_INICIO')
     correo_from = correos.filter(tipo='FROM').first()
 
     correos_to = list(correos.values_list('email', flat=True).filter(tipo='TO'))
@@ -62,7 +62,6 @@ def cotizacion_envio_correo_notificacion_condiciones_inicio_completas(
         "condiciones_inicio_cotizacion": cotizacion.condiciones_inicio_cotizacion.order_by('fecha_entrega').all()
     }
     text_content = render_to_string('emails/cotizacion_proyecto/correo_base.html', context=context)
-    correos_to = correos_to if len(correos_to) > 0 else ['fabio.garcia.sanchez@gmail.com']
     msg = EmailMultiAlternatives(
         asunto,
         text_content,
@@ -70,7 +69,7 @@ def cotizacion_envio_correo_notificacion_condiciones_inicio_completas(
         bcc=correos_bcc,
         from_email='%s <%s>' % (
             correo_from.alias_from, correo_from.email) if correo_from else 'noreply@odecopack.com',
-        to=correos_to
+        to=correos_to if len(correos_to) > 0 else ['fabio.garcia.sanchez@gmail.com']
     )
     msg.attach_alternative(text_content, "text/html")
 

@@ -5,6 +5,7 @@ from django.template.loader import render_to_string
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError
 
+from correos_servicios.models import CorreoAplicacion
 from .models import Literal, Proyecto
 from cotizaciones.models import Cotizacion
 
@@ -12,19 +13,13 @@ from cotizaciones.models import Cotizacion
 def proyecto_envio_correo_apertura_proyectos_para_almacen(
         proyecto_id: int
 ) -> Proyecto:
+    correos = CorreoAplicacion.objects.filter(aplicacion='CORREO_COTIZACION_APERTURA_OP')
+    correo_from = correos.filter(tipo='FROM').first()
+    correos_to = list(correos.values_list('email', flat=True).filter(tipo='TO'))
+    correos_cc = list(correos.values_list('email', flat=True).filter(tipo='CC'))
+    correos_bcc = list(correos.values_list('email', flat=True).filter(tipo='BCC'))
+
     proyecto = Proyecto.objects.get(pk=proyecto_id)
-    correos_to = [
-        'guillermo.osorio@odecopack.com',
-        'miller.guarnizo@odecopack.com',
-    ]
-    correos_cc = [
-        'alejandro.guevara@odecopack.com',
-        'solanyi.mosquera@odecopack.com',
-        'edward.villegas@odecopack.com',
-    ]
-    correos_bcc = [
-        'fabio.garcia.sanchez@gmail.com',
-    ]
     literales_para_correos_para_apertura = proyecto.mis_literales.filter(correo_apertura=False).all()
     if not literales_para_correos_para_apertura.exists():
         raise ValidationError({'_error': 'Ya todos los literales y el proyecto se han notificado para apertura'})
@@ -45,8 +40,9 @@ def proyecto_envio_correo_apertura_proyectos_para_almacen(
         text_content,
         cc=correos_cc,
         bcc=correos_bcc,
-        to=correos_to,
-        from_email='ODECOPACK / INGENIERIA - MIGUEL CORDOBA <%s>' % 'miguel.cordoba@odecopack.com',
+        from_email='%s <%s>' % (
+            correo_from.alias_from, correo_from.email) if correo_from else 'noreply@odecopack.com',
+        to=correos_to if len(correos_to) > 0 else ['fabio.garcia.sanchez@gmail.com']
     )
     msg.attach_alternative(text_content, "text/html")
     try:

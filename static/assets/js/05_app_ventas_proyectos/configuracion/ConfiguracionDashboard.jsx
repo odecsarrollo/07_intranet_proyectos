@@ -19,10 +19,14 @@ const ContabilidadConfiguracionDashboard = () => {
                   value={slideIndex}
             >
                 <Tab label="Condiciones Inicio Proyectos"/>
+                <Tab label="Correos Notificar Inicio Op"/>
                 <Tab label="Correos Apertura Op"/>
             </Tabs>
             {slideIndex === 0 && <CondicionInicioProyectoCrud/>}
             {slideIndex === 1 &&
+            <CorreoCRUD aplicacion='CORREO_COTIZACION_NOTIFICACION_INICIO' plural_name='Correos Inicio Proyectos'
+                        singular_name='Correo Inicio Proyecto'/>}
+            {slideIndex === 2 &&
             <CorreoCRUD aplicacion='CORREO_COTIZACION_APERTURA_OP' plural_name='Correos Aperturas OP'
                         singular_name='Correo Apertura OP'/>}
         </Fragment>
