@@ -175,7 +175,6 @@ class CotizacionSerializer(serializers.ModelSerializer):
         contacto_cliente = validated_data.get('contacto_cliente', None)
         cotizacion_inicial = validated_data.get('cotizacion_inicial', None)
         fecha_entrega_pactada_cotizacion = validated_data.get('fecha_entrega_pactada_cotizacion', None)
-        fecha_limite_segumiento_estado = validated_data.get('fecha_limite_segumiento_estado', None)
         cotizacion = cotizacion_crear(
             created_by_id=created_by.id,
             unidad_negocio=unidad_negocio,
@@ -185,7 +184,6 @@ class CotizacionSerializer(serializers.ModelSerializer):
             cliente_id=None if cliente is None else cliente.id,
             contacto_cliente_id=None if contacto_cliente is None else contacto_cliente.id,
             fecha_entrega_pactada_cotizacion=fecha_entrega_pactada_cotizacion,
-            fecha_limite_segumiento_estado=fecha_limite_segumiento_estado,
             cotizacion_inicial_id=None if cotizacion_inicial is None else cotizacion_inicial.id
         )
         return cotizacion

@@ -15,6 +15,7 @@ import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../../../01_actions/01_index";
 import {makeStyles, useTheme} from '@material-ui/core/styles';
 import clsx from 'clsx';
+import NotificationBar from '../NotificationBar';
 
 
 const drawerWidth = 240;
@@ -140,14 +141,17 @@ const DrawerMenu = memo(props => {
                     <Typography variant="h6" color="inherit" noWrap>
                         {titulo}
                     </Typography>
-                    <div className='text-right' style={{position: 'absolute', right: 0}}>
-                        <Button
-                            color="inherit"
-                            onClick={() => dispatch(actions.logout())}
-                        >
-                            Salir
-                        </Button>
+                    <div className='text-right' style={{position: 'absolute', right: 20}}>
+                        <NotificationBar/>
                     </div>
+                    {/*<div className='text-right' style={{position: 'absolute', right: 0}}>*/}
+                    {/*    <Button*/}
+                    {/*        color="inherit"*/}
+                    {/*        onClick={() => dispatch(actions.logout())}*/}
+                    {/*    >*/}
+                    {/*        Salir*/}
+                    {/*    </Button>*/}
+                    {/*</div>*/}
                 </Toolbar>
             </AppBar>
             <Drawer

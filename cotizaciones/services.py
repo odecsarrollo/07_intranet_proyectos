@@ -223,7 +223,6 @@ def cotizacion_crear(
         descripcion_cotizacion: str,
         origen_cotizacion: str,
         fecha_entrega_pactada_cotizacion: datetime,
-        fecha_limite_segumiento_estado: datetime,
         contacto_cliente_id: int,
         cliente_id: int,
         observacion: str = None,
@@ -260,6 +259,7 @@ def cotizacion_crear(
             {'_error': 'El contacto seleccionado no existe para el cliente elegido'})
 
     cotizacion.created_by_id = created_by_id
+    cotizacion.fecha_limite_segumiento_estado = timezone.now().date()
     cotizacion.unidad_negocio = unidad_negocio
     cotizacion.descripcion_cotizacion = descripcion_cotizacion
     cotizacion.observacion = observacion
@@ -269,7 +269,6 @@ def cotizacion_crear(
     cotizacion.contacto_cliente_id = contacto_cliente_id
     cotizacion.responsable_id = created_by_id
     cotizacion.fecha_entrega_pactada_cotizacion = fecha_entrega_pactada_cotizacion
-    cotizacion.fecha_limite_segumiento_estado = fecha_limite_segumiento_estado
     cotizacion.estado = 'Cita/Generación Interés'
     cotizacion.save()
     SeguimientoCotizacion.objects.create(

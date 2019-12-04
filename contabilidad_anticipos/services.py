@@ -79,7 +79,7 @@ def proforma_anticipo_enviar(
     text_content = render_to_string('emails/contabilidad/correo_base.html', context=context)
 
     msg = EmailMultiAlternatives(
-        '%s - %s v%s' % (
+        'ODECOPACK %s - %s v%s' % (
             proforma_anticipo.get_tipo_documento_display(), proforma_anticipo.nro_consecutivo,
             proforma_anticipo.version
         ),

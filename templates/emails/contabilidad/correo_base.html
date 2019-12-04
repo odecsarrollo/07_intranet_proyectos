@@ -11,6 +11,7 @@
 </head>
 <body>
 <p>
+    Muy buen día.</br>
     Cordíal Saludo,
 </p>
 <p>
@@ -24,14 +25,14 @@
         {{ email_texto_adicional|linebreaksbr }}
     </p>
 {% endif %}
-{% if cobro.documentos %}
-    Se adjuntan los siguientes documentos:
-    <ol>
-        {% for documento in documentos_adjuntos %}
-            <li>{{ documento.nombre_archivo }}</li>
-        {% endfor %}
-    </ol>
-{% endif %}
+{#{% if cobro.documentos %}#}
+{#    Se adjuntan los siguientes documentos:#}
+{#    <ol>#}
+{#        {% for documento in documentos_adjuntos %}#}
+{#            <li>{{ documento.nombre_archivo }}</li>#}
+{#        {% endfor %}#}
+{#    </ol>#}
+{#{% endif %}#}
 <div>
     <div style="padding: 5px; border-radius: 15px; border: solid black 1px">
         <h4 style="font-weight: bold">AVISO LEGAL:</h4>
