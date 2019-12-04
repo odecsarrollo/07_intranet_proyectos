@@ -252,6 +252,7 @@ class ProformaAnticipoSerializer(serializers.ModelSerializer):
             'cobrado',
             'fecha',
             'nro_orden_compra',
+            'recibo_pago',
             'editable',
             'condicion_pago',
             'impuesto',

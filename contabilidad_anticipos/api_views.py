@@ -132,8 +132,9 @@ class ProformaAnticipoViewSet(viewsets.ModelViewSet):
         from .services import proforma_anticipo_cambiar_estado
         estado = self.request.POST.get('estado')
         fecha_cobro = self.request.POST.get('fecha_cobro', None)
-        print(fecha_cobro)
+        recibo_pago = self.request.POST.get('recibo_pago', None)
         proforma_anticipo = proforma_anticipo_cambiar_estado(
+            recibo_pago=recibo_pago,
             estado=estado,
             proforma_anticipo_id=self.get_object().id,
             fecha_cobro=fecha_cobro

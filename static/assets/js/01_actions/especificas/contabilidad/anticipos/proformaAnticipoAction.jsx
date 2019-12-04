@@ -85,7 +85,7 @@ export const quitarRelacionLiteralProformaAnticipo = (id, literal_id, options_ac
     }
 };
 
-export const cambiarEstadoProformaAnticipo = (id, estado, fecha_cobro = null, options_action = {}) => {
+export const cambiarEstadoProformaAnticipo = (id, estado, fecha_cobro = null, recibo_pago = null, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch, payload: response})
@@ -94,6 +94,9 @@ export const cambiarEstadoProformaAnticipo = (id, estado, fecha_cobro = null, op
         params.append('estado', estado);
         if (fecha_cobro) {
             params.append('fecha_cobro', fecha_cobro);
+        }
+        if (recibo_pago) {
+            params.append('recibo_pago', recibo_pago);
         }
         const options = {...options_action, dispatches, dispatch_method: dispatch};
         return callApiMethodPostParameters(current_url_api, id, 'cambiar_estado', params, options)

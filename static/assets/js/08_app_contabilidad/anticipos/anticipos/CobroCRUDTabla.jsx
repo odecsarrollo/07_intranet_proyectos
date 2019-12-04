@@ -6,7 +6,7 @@ import selectTableHOC from "react-table/lib/hoc/selectTable";
 import Table from "react-table";
 
 const SelectTable = selectTableHOC(Table);
-import {fechaFormatoUno} from "../../../00_utilities/common";
+import {fechaFormatoUno, numeroFormato} from "../../../00_utilities/common";
 import {Link} from "react-router-dom";
 import IconButtonTableSee from "../../../00_utilities/components/ui/icon/table_icon_button_detail";
 
@@ -157,6 +157,13 @@ const Tabla = memo(props => {
                                     </div>
                                 )
                             },
+                        },
+                        {
+                            Header: "Valor",
+                            accessor: "valor_total_sin_impuesto",
+                            maxWidth: 120,
+                            minWidth: 120,
+                            Cell: row => <div className='text-right'>{numeroFormato(row.value + row.original.impuesto, 2)}</div>
                         },
                         {
                             Header: "Divisa",

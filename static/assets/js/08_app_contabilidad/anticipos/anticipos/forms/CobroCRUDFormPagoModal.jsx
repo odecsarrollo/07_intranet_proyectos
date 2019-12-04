@@ -1,56 +1,57 @@
-import React, {memo, useState} from 'react';
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import Button from "@material-ui/core/Button";
+import React, {memo} from 'react';
 import moment from "moment-timezone";
-import DateTimePicker from "react-widgets/lib/DateTimePicker";
+import {MyTextFieldSimple, MyDateTimePickerField} from "../../../../00_utilities/components/ui/forms/fields";
+import {MyFormTagModal} from "../../../../00_utilities/components/ui/forms/MyFormTagModal";
+import validate from './validate_cobro_crud_form_pago_modal';
+import {reduxForm} from "redux-form";
 
 
-const PagoModal = memo(props => {
+let PagoModal = memo(props => {
+    const {
+        pristine,
+        submitting,
+        reset,
+        initialValues,
+        onSubmit,
+        onCancel,
+        handleSubmit,
+        modal_open,
+        fecha_minima,
+    } = props;
+    const min = moment(fecha_minima).tz('America/Bogota');
     const now = moment().tz('America/Bogota');
-    const {onCobrada, is_open, onCerrar, fecha_minima} = props;
-    const [fecha_cobro, setFechaCobro] = useState(now.format("YYYY-MM-DD"));
-    return <Dialog
-        fullScreen={false}
-        open={is_open}
+    return (<MyFormTagModal
+        onCancel={onCancel}
+        onSubmit={handleSubmit(onSubmit)}
+        reset={reset}
+        initialValues={initialValues}
+        submitting={submitting}
+        modal_open={modal_open}
+        pristine={pristine}
+        element_type={''}
     >
-        <DialogTitle id="responsive-dialog-title">
-            Fecha de pago
-        </DialogTitle>
-        <DialogContent>
-            <div style={{height: '350px', width: '300px'}}>
-                <DateTimePicker
-                    onChange={(e, s) => {
-                        setFechaCobro(s);
-                    }}
-                    format="YYYY-MM-DD"
-                    time={false}
-                    max={new Date()}
-                    min={moment(fecha_minima).toDate()}
-                    value={moment(fecha_cobro).toDate()}
-                />
-            </div>
-        </DialogContent>
-        <DialogActions>
-            <Button
-                color="secondary"
-                variant="contained"
-                className='ml-3'
-                onClick={() => onCobrada(fecha_cobro)}
-            >
-                Cobrada
-            </Button>
-            <Button
-                color="secondary"
-                variant="contained"
-                className='ml-3'
-                onClick={() => onCerrar()}
-            >
-                Cancelar
-            </Button>
-        </DialogActions>
-    </Dialog>
+        <MyDateTimePickerField
+            className='col-12  col-sm-6'
+            label='Fecha Inicial'
+            label_space_xs={4}
+            name='fecha_cobro'
+            min={min.toDate()}
+            max={now.toDate()}
+        />
+        <MyTextFieldSimple
+            className="col-12"
+            nombre='Recibo'
+            name='recibo_pago'
+            case='U'/>
+        <div style={{height: '300px'}}>
+
+        </div>
+    </MyFormTagModal>)
 });
+PagoModal = reduxForm({
+    form: "pagoAnticipoForm",
+    validate,
+    enableReinitialize: true
+})(PagoModal);
+
 export default PagoModal;

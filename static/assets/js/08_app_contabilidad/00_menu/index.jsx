@@ -6,13 +6,13 @@ const Menu = () => <Fragment>
     <DrawerListItem
         size='lg'
         link='/app/contabilidad'
-        texto='Contabilidad Anticipos'
+        texto='Reporte'
         icono='home'
     />
     <DrawerListItem
         size='lg'
-        link='/app/contabilidad/reporte'
-        texto='Reporte'
+        link='/app/contabilidad/anticipos'
+        texto='Contabilidad Anticipos'
         icono='home'
     />
 </Fragment>;

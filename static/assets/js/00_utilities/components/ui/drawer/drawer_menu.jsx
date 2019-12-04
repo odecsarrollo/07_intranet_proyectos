@@ -141,9 +141,9 @@ const DrawerMenu = memo(props => {
                     <Typography variant="h6" color="inherit" noWrap>
                         {titulo}
                     </Typography>
-                    <div className='text-right' style={{position: 'absolute', right: 20}}>
-                        <NotificationBar/>
-                    </div>
+                    {/*<div className='text-right' style={{position: 'absolute', right: 20}}>*/}
+                    {/*    <NotificationBar/>*/}
+                    {/*</div>*/}
                     {/*<div className='text-right' style={{position: 'absolute', right: 0}}>*/}
                     {/*    <Button*/}
                     {/*        color="inherit"*/}

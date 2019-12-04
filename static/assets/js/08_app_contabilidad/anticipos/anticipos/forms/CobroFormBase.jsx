@@ -1,4 +1,4 @@
-import React, {memo, Fragment, useState} from 'react';
+import React, {memo, Fragment} from 'react';
 import {
     MyTextFieldSimple,
     MyCombobox,
@@ -6,6 +6,7 @@ import {
 } from '../../../../00_utilities/components/ui/forms/fields';
 import {reduxForm} from "redux-form";
 import BotoneriaModalForm from "../../../../00_utilities/components/ui/forms/botoneria_modal_form";
+import validate from './validate';
 
 let Form = memo(props => {
     const {
@@ -81,17 +82,14 @@ let Form = memo(props => {
                     name='nro_orden_compra'
                     disabled={!editable}
                 />
-                {
-                    cobro &&
-                    !esta_cerrada &&
-                    <MyDateTimePickerField
-                        max={new Date(2099, 11, 31)}
-                        name='fecha_seguimiento'
-                        label='Verificar el...'
-                        label_space_xs={4}
-                        className="col-12 col-md-6 col-lg-2 col-md-3"
-                    />
-                }
+                {cobro &&
+                !esta_cerrada && <MyDateTimePickerField
+                    max={new Date(2099, 11, 31)}
+                    name='fecha_seguimiento'
+                    label='Verificar el...'
+                    label_space_xs={4}
+                    className="col-12 col-md-3 col-xl-2"
+                />}
                 <div className='col-12'>
                     <div className="row">
                         <MyTextFieldSimple
@@ -120,51 +118,45 @@ let Form = memo(props => {
                         />
                     </div>
                 </div>
-                {
-                    cobro &&
-                    <Fragment>
-                        <MyTextFieldSimple
-                            className="col-12"
-                            nombre='Observación'
-                            name='observacion'
-                            multiline
-                            rows={3}
-                            disabled={!editable}
-                        />
-                        <div className="col-12">
-                            <div className="row">
-                                <div className="col-12">Destinatario Correo:</div>
-                                <MyTextFieldSimple
-                                    className="col-12 col-md-6 pr-3"
-                                    nombre='Email Destino'
-                                    name='email_destinatario'
-                                    case='U'
-                                    type='email'
-                                    disabled={!editable}
-                                />
-                                <MyTextFieldSimple
-                                    className="col-12 col-md-6 pr-3"
-                                    nombre='Email Destino Dos'
-                                    name='email_destinatario_dos'
-                                    case='U'
-                                    type='email'
-                                    disabled={!editable}
-                                />
-                            </div>
-                        </div>
-                        {
-                            cobro.items.length > 0 &&
+                {cobro && <Fragment>
+                    <MyTextFieldSimple
+                        className="col-12"
+                        nombre='Observación'
+                        name='observacion'
+                        multiline
+                        rows={3}
+                        disabled={!editable}
+                    />
+                    <div className="col-12">
+                        <div className="row">
+                            <div className="col-12">Destinatario Correo:</div>
                             <MyTextFieldSimple
                                 className="col-12 col-md-6 pr-3"
-                                nombre='Impuesto'
-                                name='impuesto'
+                                nombre='Email Destino'
+                                name='email_destinatario'
                                 case='U'
-                                type='number'
+                                type='email'
                                 disabled={!editable}
                             />
-                        }
-                    </Fragment>
-                }
+                            <MyTextFieldSimple
+                                className="col-12 col-md-6 pr-3"
+                                nombre='Email Destino Dos'
+                                name='email_destinatario_dos'
+                                case='U'
+                                type='email'
+                                disabled={!editable}
+                            />
+                        </div>
+                    </div>
+                    {cobro.items.length > 0 && <MyTextFieldSimple
+                        className="col-12 col-md-6 pr-3"
+                        nombre='Impuesto'
+                        name='impuesto'
+                        case='U'
+                        type='number'
+                        disabled={!editable}
+                    />}
+                </Fragment>}
             </div>
             <BotoneriaModalForm
                 mostrar_submit={true}
@@ -182,6 +174,7 @@ let Form = memo(props => {
 
 Form = reduxForm({
     form: "proformaAnticipoForm",
+    validate,
     enableReinitialize: true
 })(Form);
 

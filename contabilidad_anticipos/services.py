@@ -55,7 +55,7 @@ def proforma_anticipo_enviar(
         consecutivo = int('%s%s0001' % (year, month))
         qs_con_consecutivo = ProformaAnticipo.objects.filter(nro_consecutivo__gte=consecutivo)
         if qs_con_consecutivo.exists():
-            consecutivo = int(qs_con_consecutivo.first().nro_consecutivo) + 1
+            consecutivo = int(qs_con_consecutivo.last().nro_consecutivo) + 1
         proforma_anticipo.nro_consecutivo = consecutivo
         proforma_anticipo.save()
 
@@ -114,7 +114,8 @@ def proforma_anticipo_enviar(
 def proforma_anticipo_cambiar_estado(
         estado: str,
         proforma_anticipo_id: int,
-        fecha_cobro: datetime.date = None
+        fecha_cobro: datetime.date = None,
+        recibo_pago: str = None
 ) -> ProformaAnticipo:
     anticipo = ProformaAnticipo.objects.get(pk=proforma_anticipo_id)
     if estado == 'CERRADA' and not fecha_cobro:
@@ -129,6 +130,7 @@ def proforma_anticipo_cambiar_estado(
     if estado != anticipo.estado:
         anticipo.fecha_cambio_estado = timezone.now().date()
     anticipo.estado = estado
+    anticipo.recibo_pago = recibo_pago
     anticipo.save()
     return anticipo
 

@@ -1,112 +1,75 @@
-import React, {memo, useState} from 'react';
-import PropTypes from "prop-types";
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogActions from '@material-ui/core/DialogActions';
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
+import React, {memo} from 'react';
+import {MyTextFieldSimple} from "../../../../00_utilities/components/ui/forms/fields";
+import {MyFormTagModal} from "../../../../00_utilities/components/ui/forms/MyFormTagModal";
+import {formValueSelector, reduxForm} from "redux-form";
+import {useSelector} from "react-redux/es/hooks/useSelector";
+import {numeroFormato} from "../../../../00_utilities/common";
+import validate from './validate_new_item';
 
-const NuevoItemModal = memo(props => {
+const selector = formValueSelector('nuevoItemModalForm');
+let NuevoItemModal = memo(props => {
     const {
-        is_open,
-        onCancel
+        pristine,
+        submitting,
+        reset,
+        initialValues,
+        onSubmit,
+        onCancel,
+        handleSubmit,
+        modal_open,
     } = props;
-    const [item, setItem] = useState({
-        item: {
-            cantidad: 0,
-            valor_unitario: 0,
-            descripcion: '',
-            referencia: '',
-        }
-    });
-    const adicionarItem = () => props.adicionarItem(item);
+    const myValues = useSelector(state => selector(state, 'cantidad', 'valor_unitario', 'descripcion', 'referencia'));
+    const {cantidad = 0, valor_unitario = 0} = myValues;
 
-    const {cantidad = 0, valor_unitario = 0, descripcion, referencia} = item;
-    return (
-        <Dialog
-            open={is_open}
-        >
-            <DialogTitle id="responsive-dialog-title">
-                Add Item
-            </DialogTitle>
-            <DialogContent>
-                <div className="row">
-                    <div className="col-4">
-                        <TextField
-                            fullWidth={true}
-                            label='Referencia'
-                            margin="normal"
-                            name='referencia'
-                            value={referencia}
-                            onChange={v => setItem({...item, [v.target.name]: v.target.value})}
-                        />
-                    </div>
-                    <div className="col-12">
-                        <TextField
-                            fullWidth={true}
-                            label='Descripción'
-                            margin="normal"
-                            name='descripcion'
-                            multiline={true}
-                            rows={4}
-                            value={descripcion}
-                            onChange={v => setItem({...item, [v.target.name]: v.target.value})}
-                        />
-                    </div>
-                    <div className="col-2">
-                        <TextField
-                            fullWidth={true}
-                            label='Cantidad'
-                            margin="normal"
-                            name='cantidad'
-                            value={cantidad}
-                            type='number'
-                            onChange={v => setItem({...item, [v.target.name]: v.target.value})}
-                        />
-                    </div>
-                    <div className="col-4">
-                        <TextField
-                            fullWidth={true}
-                            label='Valor Unitario'
-                            margin="normal"
-                            name='valor_unitario'
-                            value={valor_unitario}
-                            type='number'
-                            onChange={v => setItem({...item, [v.target.name]: v.target.value})}
-                        />
-                    </div>
-                    <div className="col-12">
-                        {valor_unitario * cantidad}
-                    </div>
-                </div>
-            </DialogContent>
-            <DialogActions>
-                <Button
-                    color="primary"
-                    variant="contained"
-                    className='ml-3'
-                    disabled={valor_unitario <= 0 || cantidad <= 0 || descripcion === ''}
-                    onClick={() => adicionarItem()}
-                >
-                    Adicionar
-                </Button>
+    return <MyFormTagModal
+        onCancel={onCancel}
+        onSubmit={handleSubmit(onSubmit)}
+        reset={reset}
+        initialValues={initialValues}
+        submitting={submitting}
+        modal_open={modal_open}
+        pristine={pristine}
+        element_type={'Nuevo Item'}
+    >
+        <MyTextFieldSimple
+            className="col-12 col-md-4"
+            nombre='Referencia'
+            name='referencia'
+            case='U'/>
+        <MyTextFieldSimple
+            className="col-12"
+            nombre='Descripción'
+            name='descripcion'
+            multiline={true}
+            rows={4}
+            case='U'/>
 
-                <Button
-                    color="secondary"
-                    variant="contained"
-                    className='ml-3'
-                    onClick={() => onCancel()}
-                >
-                    Cancelar
-                </Button>
-            </DialogActions>
-        </Dialog>
-    )
+        <MyTextFieldSimple
+            className="col-12 col-md-2"
+            nombre='Cantidad'
+            name='cantidad'
+            type='number'
+            case='U'/>
+
+        <MyTextFieldSimple
+            className="col-12 col-md-3"
+            nombre='Valor Unitario'
+            name='valor_unitario'
+            type='number'
+            case='U'/>
+        <div className="col-12">
+            {numeroFormato(valor_unitario * cantidad, 2)}
+        </div>
+        <div style={{height: '300px'}}>
+
+        </div>
+    </MyFormTagModal>
 });
 
+NuevoItemModal = reduxForm({
+    form: "nuevoItemModalForm",
+    validate,
+    enableReinitialize: true
+})(NuevoItemModal);
 
-NuevoItemModal.propTypes = {
-    is_open: PropTypes.bool
-};
 export default NuevoItemModal;

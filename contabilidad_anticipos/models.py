@@ -79,6 +79,7 @@ class ProformaAnticipo(TimeStampedModel):
     fecha = models.DateField()
     nro_orden_compra = models.CharField(max_length=20)
     condicion_pago = models.CharField(max_length=200)
+    recibo_pago = models.CharField(max_length=50, null=True)
     cobrado = models.BooleanField(default=False)
     impuesto = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     fecha_cambio_estado = models.DateField(null=True)

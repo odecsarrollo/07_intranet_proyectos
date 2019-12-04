@@ -21,8 +21,8 @@ const App = () => {
         <Loading>
             <DrawerMenu lista_menu={<Menu/>} titulo='Contabilidad'>
                 <Switch>
-                    <Route exact path='/app/contabilidad/' component={AppIndex}/>
-                    <Route exact path='/app/contabilidad/reporte/' component={ReporteAnticipo}/>
+                    <Route exact path='/app/contabilidad/' component={ReporteAnticipo}/>
+                    <Route exact path='/app/contabilidad/anticipos/' component={AppIndex}/>
                     <Route exact path='/app/contabilidad/cobros/detalle/:id' component={CobroDetalle}/>
                 </Switch>
             </DrawerMenu>
