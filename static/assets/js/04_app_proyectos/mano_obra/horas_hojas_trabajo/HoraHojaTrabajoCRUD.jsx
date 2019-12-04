@@ -17,9 +17,10 @@ const List = memo(props => {
     const dispatch = useDispatch();
     const permisos = useTengoPermisos(MANOS_OBRAS_HORAS_HOJAS_TRABAJOS);
     const horas = useSelector(state => state.horas_hojas_trabajos);
-    const colaboradores = useSelector(state => state.colaboradores);
+    let colaboradores = useSelector(state => state.colaboradores);
+    colaboradores = _.map(colaboradores, c => ({nombre: `${c.nombres} ${c.apellidos}`, id: c.id}));
+    colaboradores = [{id: null, nombre: 'TODOS'}, ...colaboradores];
     const [colaborador_id_filtro, setColaboradorIdFiltro] = useState(null);
-
 
     const cargarDatos = () => {
         const {add_para_otros} = permisos;
@@ -57,7 +58,7 @@ const List = memo(props => {
                 <label>Colaborador</label>
                 <Combobox
                     className="col-6"
-                    data={_.map(colaboradores, c => ({nombre: `${c.nombres} ${c.apellidos}`, id: c.id}))}
+                    data={colaboradores}
                     onSelect={(e) => setColaboradorIdFiltro(e.id)}
                     filter='contains'
                     placeholder='Seleccionar Colaborador'

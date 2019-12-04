@@ -8,6 +8,7 @@ import Tab from '@material-ui/core/Tab/index';
 
 import BloqueProformaConfiguracion from "./configuracion/ProformaConfiguracion";
 import BloqueProformaCobros from "./anticipos/CobroCRUD";
+import CorreoCRUD from "../../00_utilities/components/ui/correos_servicios/correos_aplicaciones/CorreoCRUD";
 
 const ItemsDashboard = memo(props => {
     const {contabilidad_proforma_configuracion} = props;
@@ -26,6 +27,7 @@ const ItemsDashboard = memo(props => {
             >
                 <Tab label="Anticipos"/>
                 <Tab label="Configuracion"/>
+                <Tab label="Correos Cobros Envios"/>
             </Tabs>
             {slideIndex === 0 && <BloqueProformaCobros/>}
             {
@@ -34,6 +36,13 @@ const ItemsDashboard = memo(props => {
                     initialValues={_.map(contabilidad_proforma_configuracion)[0]}
                 />
             }
+            {slideIndex === 2 &&
+            <CorreoCRUD
+                aplicacion='CORREO_COBRO_CONTABILIDAD'
+                plural_name='Correos Cobros Contabilidad'
+                singular_name='Correo Cobro Contabilidad'
+                exclude_tipo_correo={['TO']}
+            />}
         </Fragment>
     )
 });

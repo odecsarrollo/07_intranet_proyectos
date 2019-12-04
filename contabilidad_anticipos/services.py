@@ -8,6 +8,8 @@ from django.template.loader import render_to_string
 from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
+
+from correos_servicios.models import CorreoAplicacion
 from envios_emails.services import generar_base_pdf
 from .models import ProformaAnticipo, ProformaConfiguracion, ProformaAnticipoItem, ProformaAnticipoEnvios
 
@@ -38,8 +40,12 @@ def proforma_anticipo_enviar(
         request,
         email_texto_adicional: str = ''
 ) -> ProformaAnticipo:
-    configuracion = ProformaConfiguracion.objects.first()
     proforma_anticipo = ProformaAnticipo.objects.get(pk=proforma_anticipo_id)
+
+    correos = CorreoAplicacion.objects.filter(aplicacion='CORREO_COBRO_CONTABILIDAD')
+    correo_from = correos.filter(tipo='FROM').first()
+    correos_cc = list(correos.values_list('email', flat=True).filter(tipo='CC'))
+    correos_bcc = list(correos.values_list('email', flat=True).filter(tipo='BCC'))
 
     if not proforma_anticipo.nro_consecutivo:
         now = timezone.now()
@@ -53,16 +59,14 @@ def proforma_anticipo_enviar(
         proforma_anticipo.nro_consecutivo = consecutivo
         proforma_anticipo.save()
 
-    correos = []
+    correos_to = []
     if proforma_anticipo.email_destinatario:
-        correos.append(proforma_anticipo.email_destinatario)
+        correos_to.append(proforma_anticipo.email_destinatario)
     if proforma_anticipo.email_destinatario_dos:
-        correos.append(proforma_anticipo.email_destinatario_dos)
+        correos_to.append(proforma_anticipo.email_destinatario_dos)
 
-    if not correos:
+    if len(correos_to) <= 0:
         raise ValidationError({'_error': 'No se han especificado destinatarios'})
-    if configuracion.email_copia_default:
-        correos.append(configuracion.email_copia_default)
 
     if proforma_anticipo.editable:
         proforma_cobro_generar_pdf(id=proforma_anticipo_id, request=request, generar_archivo=True)
@@ -74,18 +78,16 @@ def proforma_anticipo_enviar(
     }
     text_content = render_to_string('emails/contabilidad/correo_base.html', context=context)
 
-    if not configuracion.email_from_default:
-        raise serializers.ValidationError({'_error': 'No ha definido un correo de origen en la configuración'})
-
     msg = EmailMultiAlternatives(
         '%s - %s v%s' % (
             proforma_anticipo.get_tipo_documento_display(), proforma_anticipo.nro_consecutivo,
             proforma_anticipo.version
         ),
         text_content,
-        bcc=[configuracion.email_copia_default],
-        from_email='Odecopack SAS <%s>' % configuracion.email_from_default,
-        to=[proforma_anticipo.email_destinatario, proforma_anticipo.email_destinatario_dos]
+        bcc=correos_bcc,
+        cc=correos_cc,
+        from_email='%s <%s>' % (correo_from.alias_from, correo_from.email) if correo_from else 'noreply@odecopack.com',
+        to=correos_to
     )
     msg.attach_alternative(text_content, "text/html")
 

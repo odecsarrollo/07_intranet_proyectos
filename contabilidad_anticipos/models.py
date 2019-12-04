@@ -25,8 +25,6 @@ class ProformaConfiguracion(models.Model):
 
     informacion_odecopack = models.TextField(null=True)
     informacion_bancaria = models.TextField(null=True)
-    email_copia_default = models.EmailField(null=True)
-    email_from_default = models.EmailField(null=True)
     firma = ProcessedImageField(
         processors=[ResizeToFit(width=400, height=300, upscale=False)],
         format='PNG',

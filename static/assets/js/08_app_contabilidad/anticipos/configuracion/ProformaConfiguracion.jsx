@@ -60,7 +60,9 @@ let ProformaConfiguracionForm = memo(props => {
     }
     return (
         <ValidarPermisos can_see={change || detail} nombre={'Configuración Proforma'}>
-            <form onSubmit={handleSubmit(v => {return onSubmit(submitObject(v))})}>
+            <form onSubmit={handleSubmit(v => {
+                return onSubmit(submitObject(v))
+            })}>
                 <div className="row">
                     {/*<MyTextFieldSimple*/}
                     {/*    className="col-12 col-md-6"*/}
@@ -70,22 +72,6 @@ let ProformaConfiguracionForm = memo(props => {
                     {/*    multiline*/}
                     {/*    rows={4}*/}
                     {/*/>*/}
-                    <MyTextFieldSimple
-                        className="col-12 col-md-6 pr-3"
-                        nombre='Email Copia por defecto'
-                        name='email_copia_default'
-                        case='U'
-                        type='email'
-                        disabled={!change}
-                    />
-                    <MyTextFieldSimple
-                        className="col-12 col-md-6 pr-3"
-                        nombre='Email From por Defecto'
-                        name='email_from_default'
-                        case='U'
-                        type='email'
-                        disabled={!change}
-                    />
                     <MyTextFieldSimple
                         className="col-12 col-md-6 pr-3"
                         nombre='Información Bancaria'

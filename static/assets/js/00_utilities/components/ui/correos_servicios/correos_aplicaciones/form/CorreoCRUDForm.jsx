@@ -13,6 +13,7 @@ let CorreoCRUDForm = memo(props => {
         submitting,
         reset,
         initialValues,
+        exclude_tipo_correo = [],
         onSubmit,
         onCancel,
         handleSubmit,
@@ -20,6 +21,13 @@ let CorreoCRUDForm = memo(props => {
         singular_name,
     } = props;
     const form_values = useSelector(state => selector(state, 'tipo', ''));
+    let tipos_correos = [
+        {name: 'From', id: 'FROM'},
+        {name: 'To', id: 'TO'},
+        {name: 'Cc', id: 'CC'},
+        {name: 'Bcc', id: 'BCC'},
+    ];
+    tipos_correos = tipos_correos.filter(t => !exclude_tipo_correo.includes(t.id));
     return (
         <MyFormTagModal
             onCancel={onCancel}
@@ -38,12 +46,7 @@ let CorreoCRUDForm = memo(props => {
                 label='Tipo'
                 busy={false}
                 autoFocus={false}
-                data={[
-                    {name: 'From', id: 'FROM'},
-                    {name: 'To', id: 'TO'},
-                    {name: 'Cc', id: 'CC'},
-                    {name: 'Bcc', id: 'BCC'},
-                ]}
+                data={tipos_correos}
                 textField='name'
                 filter='contains'
                 valuesField='id'

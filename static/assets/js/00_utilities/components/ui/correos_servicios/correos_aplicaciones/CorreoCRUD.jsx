@@ -13,7 +13,7 @@ const CRUD = crudHOC(CreateForm, Tabla);
 
 const CorreoCRUD = (props) => {
     const dispatch = useDispatch();
-    const {aplicacion, plural_name, singular_name} = props;
+    const {aplicacion, plural_name, singular_name, exclude_tipo_correo = []} = props;
     const cargarDatos = () => {
         dispatch(actions.fetchCorreosAplicacionesxAplicacion(aplicacion));
     };
@@ -33,6 +33,7 @@ const CorreoCRUD = (props) => {
     };
     return (
         <CRUD
+            exclude_tipo_correo={exclude_tipo_correo}
             aplicacion={aplicacion}
             method_pool={method_pool}
             list={list}
@@ -44,6 +45,7 @@ const CorreoCRUD = (props) => {
     )
 };
 CorreoCRUD.propTypes = {
+    exclude_tipo_correo: PropTypes.array,
     aplicacion: PropTypes.string,
     plural_name: PropTypes.string,
     singular_name: PropTypes.string

@@ -34,8 +34,6 @@ class ProformaConfiguracionSerializer(serializers.ModelSerializer):
             'borrar_firma',
             'borrar_encabezado',
             'informacion_bancaria',
-            'email_copia_default',
-            'email_from_default',
             'firma',
             'encabezado',
         ]
