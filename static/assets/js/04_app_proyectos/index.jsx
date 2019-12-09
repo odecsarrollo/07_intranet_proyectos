@@ -1,14 +1,10 @@
-import React, {Component} from 'react';
-import Dashboard from './dashboard_inicio/dashboard/dashboard_proyectos';
+import React, {memo} from 'react';
 
-class App extends Component {
-    render() {
-        return (
-            <div className='row'>
-                <Dashboard/>
-            </div>
-        )
-    }
-}
-
+const App = memo(props => {
+    return (
+        <div className='text-center'>
+            <img className='img-fluid' src={`${img_static_url}/logo.png`} alt="logo"/>
+        </div>
+    )
+});
 export default App;

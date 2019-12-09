@@ -37,6 +37,29 @@ class MenuAdminPermission(models.Model):
         )
 
 
+class MenuProyectosPermission(models.Model):
+    class Meta:
+        managed = False
+        permissions = (
+            ('menu_proyectos_proyectos', 'Menu Proyectos Proyectos'),
+            ('menu_proyectos_fases', 'Menu Proyectos Fases'),
+            ('menu_proyectos_mano_obra_verificar_horas', 'Menu Proyectos Mano Obra Verificar Horas'),
+            ('menu_proyectos_mano_obra_hojas_trabajo', 'Menu Proyectos Mano Obra Hojas de Trabajo'),
+            ('menu_proyectos_mano_obra_horas_hojas_trabajo', 'Menu Proyectos Mano Obra Horas Hojas de Trabajo'),
+        )
+
+
+class MenuVentasProyectosPermission(models.Model):
+    class Meta:
+        managed = False
+        permissions = (
+            ('menu_ventas_proyectos_configuraciones', 'Menu Ventas Proyectos Configuraciones'),
+            ('menu_ventas_proyectos_resumen_tuberia_ventas', 'Menu Ventas Proyectos Resumen Tuberia Ventas'),
+            ('menu_ventas_proyectos_cotizaciones', 'Menu Ventas Proyectos Cotizaciones'),
+            ('menu_ventas_proyectos_clientes', 'Menu Ventas Proyectos Clientes'),
+        )
+
+
 class ModuloPermission(models.Model):
     class Meta:
         managed = False

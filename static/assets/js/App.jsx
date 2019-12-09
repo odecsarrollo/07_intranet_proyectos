@@ -263,6 +263,7 @@ class RootContainerComponent extends Component {
 function mapPropsToState(state, ownProps) {
     return {
         auth: state.auth,
+        api_rest_results: state.api_rest_results,
     }
 }
 

@@ -1,5 +1,10 @@
 export const FETCH_OTRO_USUARIO_PERMISOS = 'fetch_otro_usuario_permisos';
 
+export const API_REST_ACTIONS = {
+    trm_colombia: 'trm_colombia',
+    clear_trm_colombia: 'clear_trm_colombia',
+};
+
 export const LOADING = {
     loading: 'is_loading',
     stop: 'in_not_loading',

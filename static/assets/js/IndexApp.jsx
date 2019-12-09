@@ -2,7 +2,7 @@ import React, {memo} from 'react';
 import Loading from "./00_utilities/components/system/LoadingOverlay";
 import {Link} from 'react-router-dom'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {withStyles} from "@material-ui/core/styles/index";
+import {makeStyles, withStyles} from "@material-ui/core/styles/index";
 import Typography from '@material-ui/core/Typography';
 import classNames from 'classnames';
 import useTengoPermisos from "./00_utilities/hooks/useTengoPermisos";
@@ -32,8 +32,31 @@ const Boton = memo(props => {
     )
 });
 
+const useStyles = makeStyles(theme => ({
+    iconoBoton: {
+        color: theme.palette.primary.dark
+    },
+    bordeBoton: {
+        borderRadius: '25px',
+        border: `2px solid ${theme.palette.primary.dark}`,
+        padding: '1rem',
+        width: '100%'
+    },
+    botonAnimado: {
+        transition: '0.3s',
+        '&:hover': {
+            textDecoration: 'none',
+            zIndex: '100',
+            webkitTransform: 'scale(1.1)',
+            msTransform: 'scale(1.1)',
+            transform: 'scale(1.1)'
+        }
+    }
+}));
+
+
 const IndexApp = memo(props => {
-    const {classes} = props;
+    const classes = useStyles();
     const dispatch = useDispatch();
     const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
     const {is_superuser} = mi_cuenta;
@@ -54,57 +77,49 @@ const IndexApp = memo(props => {
                     <div className="col-12 p-5">
                         <img className='img-fluid' src={`${img_static_url}/logo.png`} alt=""/>
                     </div>
-                    {modulo_admin &&
-                    <Boton
+                    {modulo_admin && <Boton
                         nombre='Admin'
                         link='/app/admin/'
                         icono='cogs'
                         classes={classes}
                     />}
-                    {modulo_proyectos &&
-                    <Boton
+                    {modulo_proyectos && <Boton
                         nombre='Proyectos'
                         link='/app/proyectos/'
                         icono='wrench'
                         classes={classes}
                     />}
-                    {modulo_ventas &&
-                    <Boton
+                    {modulo_ventas && <Boton
                         nombre='Ventas Proyectos'
                         link='/app/ventas_proyectos/'
                         icono='shopping-cart'
                         classes={classes}
                     />}
-                    {modulo_ventas_componentes &&
-                    <Boton
+                    {modulo_ventas_componentes && <Boton
                         nombre='Ventas Componentes'
                         link='/app/ventas_componentes/'
                         icono='shopping-cart'
                         classes={classes}
                     />}
-                    {is_superuser &&
-                    <Boton
+                    {is_superuser && <Boton
                         nombre='Bandas Eurobelt'
                         link='/app/bandas/'
                         icono='puzzle-piece'
                         classes={classes}
                     />}
-                    {modulo_medios &&
-                    <Boton
+                    {modulo_medios && <Boton
                         nombre='Medios'
                         link='/app/medios/'
                         icono='desktop'
                         classes={classes}
                     />}
-                    {modulo_sistemas &&
-                    <Boton
+                    {modulo_sistemas && <Boton
                         nombre='Sistemas'
                         link='/app/sistemas/'
                         icono='laptop-code'
                         classes={classes}
                     />}
-                    {modulo_contabilidad &&
-                    <Boton
+                    {modulo_contabilidad && <Boton
                         nombre='Contabilidad'
                         link='/app/contabilidad/'
                         icono='coins'
@@ -145,28 +160,4 @@ const IndexApp = memo(props => {
     </Loading>
 });
 
-const styles = theme => (
-    {
-        iconoBoton: {
-            color: theme.palette.primary.dark
-        },
-        bordeBoton: {
-            borderRadius: '25px',
-            border: `2px solid ${theme.palette.primary.dark}`,
-            padding: '1rem',
-            width: '100%'
-        },
-        botonAnimado: {
-            transition: '0.3s',
-            '&:hover': {
-                textDecoration: 'none',
-                zIndex: '100',
-                webkitTransform: 'scale(1.1)',
-                msTransform: 'scale(1.1)',
-                transform: 'scale(1.1)'
-            }
-        }
-    })
-;
-
-export default withStyles(styles, {withTheme: true})(IndexApp);
+export default IndexApp;

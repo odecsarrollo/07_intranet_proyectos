@@ -84,6 +84,9 @@ import cotizacionesComponentesItems from './especificas/cotizaciones_componentes
 
 import correosAplicacionesReducer from './especificas/correos_servicios/correosAplicacionesReducer';
 
+
+import apiRestReducer from './generales/ApiRestServicesReducer';
+
 import {reducer as notificationsReducers} from 'react-notification-system-redux';
 
 const rootReducer = combineReducers({
@@ -94,6 +97,7 @@ const rootReducer = combineReducers({
     mi_cuenta: miCuentaReducer,
     usuarios: usuariosReducer,
     esta_cargando: loadingReducer,
+    api_rest_results: apiRestReducer,
     notifications: notificationsReducers,
     form: formReducer,
     auth,

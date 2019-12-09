@@ -31,7 +31,7 @@ const App = () => {
         <Loading>
             <DrawerMenu lista_menu={<Menu/>} titulo='Ventas'>
                 <Switch>
-                    <Route exact path='/app/proyectos/' component={AppIndex}/>
+                    <Route exact path='/app/proyectos/' component={ConcecutivoProyectosList}/>
 
                     <Route exact path='/app/proyectos/fases/list' component={FasesProyectosList}/>
 

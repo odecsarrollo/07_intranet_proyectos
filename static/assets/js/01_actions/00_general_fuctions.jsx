@@ -79,6 +79,21 @@ export function createRequest(request, options = {}) {
         );
 }
 
+
+export function fetchApiRestGet(url, options, token = null) {
+    console.log(`%cFETCH Api Rest - %c${url.toUpperCase()}`, 'color:red', 'color:blue');
+    const mensaje_cargando = `Consultando ${url.toUpperCase()}`;
+    const FULL_URL = `${url}`;
+    const headers = {"Content-Type": "application/json"};
+    if (token) {
+        headers["Authorization"] = `Token ${token}`;
+    }
+    axios_instance.defaults.headers = headers;
+    const request = axios_instance.get(FULL_URL);
+    return createRequest(request, {...options, mensaje_cargando});
+}
+
+
 export function fetchListGet(url, options) {
     console.log(`%cFETCH LIST - %c${url.toUpperCase()}`, 'color:red', 'color:blue');
     const mensaje_cargando = `Consultando ${url.toUpperCase()}`;
@@ -209,9 +224,9 @@ export function callApiMethodPostParameters(url, id = null, method, values, opti
     }
     axios_instance.defaults.headers = headers;
     var FULL_URL = null;
-    if(id){
+    if (id) {
         FULL_URL = `${url}/${id}/${method}/`;
-    }else{
+    } else {
         FULL_URL = `${url}/${method}/`;
     }
     const request = axios_instance.post(FULL_URL, values);

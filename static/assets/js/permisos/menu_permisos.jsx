@@ -7,3 +7,16 @@ export const MENU_ADMIN_PERMISSIONS = {
     admin_terceros_colaboradores: 'menu_admin_terceros_colaboradores',
     admin_terceros_proveedores: 'menu_admin_terceros_proveedores',
 };
+export const MENU_PROYECTOS_PERMISSIONS = {
+    menu_proyectos_proyectos: 'menu_proyectos_proyectos',
+    menu_proyectos_fases: 'menu_proyectos_fases',
+    menu_proyectos_mano_obra_verificar_horas: 'menu_proyectos_mano_obra_verificar_horas',
+    menu_proyectos_mano_obra_hojas_trabajo: 'menu_proyectos_mano_obra_hojas_trabajo',
+    menu_proyectos_mano_obra_horas_hojas_trabajo: 'menu_proyectos_mano_obra_horas_hojas_trabajo',
+};
+export const MENU_VENTAS_PROYECTOS_PERMISSIONS = {
+    menu_ventas_proyectos_configuraciones: 'menu_ventas_proyectos_configuraciones',
+    menu_ventas_proyectos_resumen_tuberia_ventas: 'menu_ventas_proyectos_resumen_tuberia_ventas',
+    menu_ventas_proyectos_cotizaciones: 'menu_ventas_proyectos_cotizaciones',
+    menu_ventas_proyectos_clientes: 'menu_ventas_proyectos_clientes',
+};
