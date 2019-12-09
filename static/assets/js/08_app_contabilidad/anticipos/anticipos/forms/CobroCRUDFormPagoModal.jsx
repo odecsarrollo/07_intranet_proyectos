@@ -32,7 +32,7 @@ let PagoModal = memo(props => {
     >
         <MyDateTimePickerField
             className='col-12  col-sm-6'
-            label='Fecha Inicial'
+            label='Fecha de Pago'
             label_space_xs={4}
             name='fecha_cobro'
             min={min.toDate()}

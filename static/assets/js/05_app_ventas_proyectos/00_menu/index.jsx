@@ -13,7 +13,7 @@ const Menu = () => {
     } = permisos_menu;
     return (<Fragment>
         <DrawerListItem
-            size='lg'
+            size='l g'
             link='/app/ventas_proyectos'
             texto='Principal'
             icono='home'
