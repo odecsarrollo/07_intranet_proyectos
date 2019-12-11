@@ -1,10 +1,11 @@
-import React, {Fragment, useEffect, memo} from 'react';
+import React, {Fragment, useEffect, memo, useState} from 'react';
 import * as actions from "../../../01_actions/01_index";
 import {useSelector, useDispatch} from "react-redux";
 import CargarDatos from "../../../00_utilities/components/system/cargar_datos";
 import {pesosColombianos} from "../../../00_utilities/common";
 import Typography from '@material-ui/core/Typography';
 import {COTIZACIONES} from "../../../permisos";
+import InformeTunelVentasTabla from './CuadroTuberiaVentasTabla';
 
 import FormTuberiaVentas from './forms/TuveriaVentaForm'
 import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
@@ -12,6 +13,7 @@ import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
 const InformeTunelVentas = memo(props => {
     const cotizaciones_permisos = useTengoPermisos(COTIZACIONES);
     const object_list = useSelector(state => state.cotizaciones);
+    const [cotizaciones_seleccionardas, setCotizacionesSeleccionadas] = useState(null);
     const dispatch = useDispatch();
     const cargarDatos = (ano = null, mes = null) => {
         dispatch(actions.fetchCotizacionesTuberiaVentasResumen(ano, mes));
@@ -82,6 +84,25 @@ const InformeTunelVentas = memo(props => {
     );
     const responsables = _.uniq(_.map(object_list, e => e.responsable_actual_nombre));
 
+    const filtro_cotizaciones = (estado, responsable, mes = false) => {
+        let seleccionados = _.pickBy(object_list, c => c.estado === estado && c.responsable_actual_nombre === responsable);
+        let campo_valor = 'valor_ofertado';
+        if (estado === 'Cierre (Aprobado)') {
+            if (mes) {
+                campo_valor = 'valor_orden_compra_mes';
+                seleccionados = _.pickBy(seleccionados, c => c.valor_orden_compra_mes > 0)
+            } else {
+                campo_valor = 'valor_orden_compra_trimestre'
+            }
+        }
+        setCotizacionesSeleccionadas({
+            lista: _.map(seleccionados),
+            responsable,
+            estado,
+            campo_valor
+        });
+    };
+
     return (
         <Fragment>
             <Typography variant="h5" gutterBottom color="primary">
@@ -90,6 +111,10 @@ const InformeTunelVentas = memo(props => {
             <FormTuberiaVentas onSubmit={(v) => {
                 cargarDatos(v.ano, v.mes)
             }}/>
+            {cotizaciones_seleccionardas && <InformeTunelVentasTabla
+                cotizaciones_seleccionardas={cotizaciones_seleccionardas}
+                limpiarLista={() => setCotizacionesSeleccionadas(null)}
+            />}
             <div className='p-4'>
                 <div className='row'>
                     {
@@ -127,12 +152,14 @@ const InformeTunelVentas = memo(props => {
                     const total_valor = orden_tres + orden_cuatro + orden_cinco + orden_seis;
                     return <tr key={r ? r : 'Sin Nombre'}>
                         <td className='text-center'>{r}</td>
-                        <td className='text-center'>
+                        <td className='text-center puntero'
+                            onClick={() => filtro_cotizaciones('Cita/Generación Interés', r)}>
                             <div>
                                 {_.size(_.pickBy(cotizaciones_x_responsable, e => e.orden === 1))}
                             </div>
                         </td>
-                        <td className='text-center'>
+                        <td className='text-center puntero'
+                            onClick={() => filtro_cotizaciones('Configurando Propuesta', r)}>
                             <div>
                                 {_.size(_.pickBy(cotizaciones_x_responsable, e => e.orden === 2))}
                             </div>
@@ -140,7 +167,8 @@ const InformeTunelVentas = memo(props => {
 
                             </div>
                         </td>
-                        <td className='text-center'>
+                        <td className='text-center puntero'
+                            onClick={() => filtro_cotizaciones('Cotización Enviada', r)}>
                             <div>
                                 {_.size(_.pickBy(cotizaciones_x_responsable, e => e.orden === 3))}
                             </div>
@@ -148,7 +176,8 @@ const InformeTunelVentas = memo(props => {
                                 {pesosColombianos(orden_tres)}
                             </div>
                         </td>
-                        <td className='text-center'>
+                        <td className='text-center puntero'
+                            onClick={() => filtro_cotizaciones('Evaluación Técnica y Económica', r)}>
                             <div>
                                 {_.size(_.pickBy(cotizaciones_x_responsable, e => e.orden === 4))}
                             </div>
@@ -156,7 +185,8 @@ const InformeTunelVentas = memo(props => {
                                 {pesosColombianos(orden_cuatro)}
                             </div>
                         </td>
-                        <td className='text-center'>
+                        <td className='text-center puntero'
+                            onClick={() => filtro_cotizaciones('Aceptación de Terminos y Condiciones', r)}>
                             <div>
                                 {_.size(_.pickBy(cotizaciones_x_responsable, e => e.orden === 5))}
                             </div>
@@ -165,7 +195,7 @@ const InformeTunelVentas = memo(props => {
                             </div>
 
                         </td>
-                        <td className='text-center'>
+                        <td className='text-center puntero' onClick={() => filtro_cotizaciones('Cierre (Aprobado)', r)}>
                             <div>
                                 {_.size(_.pickBy(cotizaciones_x_responsable, e => e.orden === 6))}
                             </div>
@@ -181,7 +211,8 @@ const InformeTunelVentas = memo(props => {
                                 {pesosColombianos(total_valor)}
                             </div>
                         </td>
-                        <td className='text-center'
+                        <td className='text-center puntero'
+                            onClick={() => filtro_cotizaciones('Cierre (Aprobado)', r, true)}
                             style={{backgroundColor: 'gray', color: 'white', fontWeight: 'bold'}}>
                             <div>
                                 {_.size(_.pickBy(cotizaciones_x_responsable, e => e.valor_orden_compra_mes > 0))}

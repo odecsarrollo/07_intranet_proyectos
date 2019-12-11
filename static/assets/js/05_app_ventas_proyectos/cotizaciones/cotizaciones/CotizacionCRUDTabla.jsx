@@ -33,8 +33,7 @@ const Tabla = memo((props) => {
         rowFn,
         singular_name,
         onDelete,
-        permisos_object,
-        proyectos_permisos
+        permisos_object
     } = props;
 
     return (
@@ -170,6 +169,7 @@ const Tabla = memo((props) => {
                                 Header: "Responsable",
                                 maxWidth: 80,
                                 filterable: true,
+                                accessor: "responsable_actual",
                                 filterMethod: (filter, row) => {
                                     const {_original: {responsable_actual}} = row;
                                     if (responsable_actual) {
@@ -265,30 +265,30 @@ const Tabla = memo((props) => {
                                 </div>
                             },
                             {
-                                Header: "Trim. OC",
-                                accessor: "orden_compra_fecha",
-                                maxWidth: 80,
-                                Cell: row => {
-                                    return (
-                                        <div className='text-right'>
-                                            {
-                                                row.value &&
-                                                Math.ceil((new Date(row.value).getMonth() + 1) / 3)
-                                            }
-                                        </div>
-                                    )
-                                }
-                            },
-                            {
                                 Header: "Año OC",
-                                accessor: "orden_compra_fecha",
                                 maxWidth: 80,
+                                accessor: "orden_compra_fecha",
                                 Cell: row => <div className='text-right'>
                                     {
                                         row.value &&
                                         new Date(row.value).getFullYear()
                                     }
                                 </div>
+                            },
+                            {
+                                Header: "Mes. OC",
+                                maxWidth: 80,
+                                accessor: "orden_compra_fecha",
+                                Cell: row => {
+                                    return (
+                                        <div className='text-right'>
+                                            {
+                                                row.value &&
+                                                new Date(row.value).getMonth()
+                                            }
+                                        </div>
+                                    )
+                                }
                             },
                         ]
                     },
