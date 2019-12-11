@@ -77,7 +77,7 @@ def cotizacion_envio_correo_notificacion_condiciones_inicio_completas(
     for condicion in documentos_para_enviar.all():
         if condicion.documento:
             nombre_archivo = '%s%s %s.%s' % (
-                cotizacion.cotizacion_inicial.unidad_negocio, cotizacion.cotizacion_inicial.nro_cotizacion,
+                cotizacion.unidad_negocio, cotizacion.nro_cotizacion,
                 condicion.descripcion, condicion.documento.name.split('.')[-1])
             msg.attach(nombre_archivo, condicion.documento.read())
     try:
@@ -390,11 +390,12 @@ def cotizacion_actualizar(
         else:
             cotizacion.dias_pactados_entrega_proyecto = dias_pactados_entrega_proyecto
 
+        cotizacion.orden_compra_fecha = orden_compra_fecha
+        cotizacion.orden_compra_nro = orden_compra_nro
+        cotizacion.valor_orden_compra = valor_orden_compra
+        cotizacion.save()
+
         if estado == 'Aceptación de Terminos y Condiciones':
-            cotizacion.orden_compra_fecha = orden_compra_fecha
-            cotizacion.orden_compra_nro = orden_compra_nro
-            cotizacion.valor_orden_compra = valor_orden_compra
-            cotizacion.save()
             cotizacion = cotizacion_verificar_condicion_inicio_proyecto_si_estan_completas(cotizacion_id=cotizacion_id)
     else:
         cotizacion.orden_compra_fecha = None

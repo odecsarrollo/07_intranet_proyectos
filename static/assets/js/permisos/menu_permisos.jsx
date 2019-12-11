@@ -6,6 +6,11 @@ export const MENU_ADMIN_PERMISSIONS = {
     admin_terceros_clientes: 'menu_admin_terceros_clientes',
     admin_terceros_colaboradores: 'menu_admin_terceros_colaboradores',
     admin_terceros_proveedores: 'menu_admin_terceros_proveedores',
+    menu_admin_sistemas_informacion: 'menu_admin_sistemas_informacion',
+    menu_admin_importaciones: 'menu_admin_importaciones',
+    menu_admin_geografia: 'menu_admin_geografia',
+    menu_admin_listas_precios: 'menu_admin_listas_precios',
+    menu_admin_items: 'menu_admin_items',
 };
 export const MENU_PROYECTOS_PERMISSIONS = {
     menu_proyectos_proyectos: 'menu_proyectos_proyectos',

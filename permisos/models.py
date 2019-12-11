@@ -34,6 +34,11 @@ class MenuAdminPermission(models.Model):
             ('menu_admin_terceros_costos_nomina', 'Menu Admin Terceros Costos Nomina'),
             ('menu_admin_terceros_colaboradores', 'Menu Admin Terceros Colaboradores'),
             ('menu_admin_terceros_proveedores', 'Menu Admin Terceros Proveedores'),
+            ('menu_admin_sistemas_informacion', 'Menu Admin Sistemas Información'),
+            ('menu_admin_importaciones', 'Menu Admin Importaciones'),
+            ('menu_admin_geografia', 'Menu Admin Geografía'),
+            ('menu_admin_items', 'Menu Admin Items'),
+            ('menu_admin_listas_precios', 'Menu Admin Listas Precios'),
         )
 
 

@@ -8,41 +8,48 @@ import {MENU_ADMIN_PERMISSIONS} from "../../permisos";
 
 const MenuAdmin = memo(props => {
     const permisos_menu = useTengoPermisos(MENU_ADMIN_PERMISSIONS);
+    const {
+        menu_admin_sistemas_informacion = false,
+        menu_admin_importaciones = false,
+        menu_admin_geografia = false,
+        menu_admin_listas_precios = false,
+        menu_admin_items = false,
+    } = permisos_menu;
     return (
         <Fragment>
             <MenuTerceros permisos_menu={permisos_menu}/>
             <MenuPermisos permisos_menu={permisos_menu}/>
             <MenuConfiguraciones permisos_menu={permisos_menu}/>
-            <DrawerListItem
+            {menu_admin_sistemas_informacion && <DrawerListItem
                 size='lg'
                 link='/app/admin/sistemas_informacion/list'
                 texto='Sistemas de Informacion'
                 icono='desktop'
-            />
-            <DrawerListItem
+            />}
+            {menu_admin_importaciones && <DrawerListItem
                 size='lg'
                 link='/app/admin/importaciones/dashboard'
                 texto='Importaciones'
                 icono='exchange-alt'
-            />
-            <DrawerListItem
+            />}
+            {menu_admin_items && <DrawerListItem
                 size='lg'
                 link='/app/admin/items/dashboard'
                 texto='Items'
                 icono='conveyor-belt'
-            />
-            <DrawerListItem
+            />}
+            {menu_admin_geografia && <DrawerListItem
                 size='lg'
                 link='/app/admin/geografia/list'
                 texto='Geografia'
                 icono='map'
-            />
-            <DrawerListItem
+            />}
+            {menu_admin_listas_precios && <DrawerListItem
                 size='lg'
                 link='/app/admin/listas_precios/dashboard'
                 texto='Listas Precios'
                 icono='map'
-            />
+            />}
         </Fragment>
     )
 });
