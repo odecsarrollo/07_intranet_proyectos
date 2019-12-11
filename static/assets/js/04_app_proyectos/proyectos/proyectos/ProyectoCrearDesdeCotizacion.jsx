@@ -92,11 +92,13 @@ const Lista = (props) => {
                                 <div className={clsx(classes.element_div, 'col-12')} key={c.id}>
                                     <span>Se ha creado una cotización adicional </span>
                                     <Link
+                                        target='_blank'
                                         to={`/app/ventas_proyectos/cotizaciones/cotizaciones/detail/${c.id}`}>
                                         ({c.unidad_negocio}-{c.nro_cotizacion})
                                     </Link>
                                     <span> para la cotización </span>
                                     <Link
+                                        target='_blank'
                                         to={`/app/ventas_proyectos/cotizaciones/cotizaciones/detail/${c.cotizacion_inicial}`}>
                                         ({c.cotizacion_inicial_unidad_negocio}-{c.cotizacion_inicial_nro})
                                     </Link>
@@ -139,7 +141,12 @@ const Lista = (props) => {
                                 <div
                                     className={clsx(classes.element_div, `col-12`)}
                                     key={c.id}>
-                                    {`${c.unidad_negocio}-${c.nro_cotizacion} ${c.descripcion_cotizacion} `}<strong>({c.cliente_nombre})</strong>
+                                    <Link
+                                        target='_blank'
+                                        to={`/app/ventas_proyectos/cotizaciones/cotizaciones/detail/${c.id}`}>
+                                        {`${c.unidad_negocio}-${c.nro_cotizacion} ${c.descripcion_cotizacion} `}
+                                    </Link>
+                                    <strong>({c.cliente_nombre})</strong>
                                     {permisos_object.rel_cotizacion_proyecto &&
                                     <IconButton
                                         style={{

@@ -4,7 +4,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
-import {numeroFormato, pesosColombianos} from "../../../00_utilities/common";
+import {pesosColombianos} from "../../../00_utilities/common";
 import {Link} from "react-router-dom";
 
 const InformeTunelVentasTabla = memo(props => {
