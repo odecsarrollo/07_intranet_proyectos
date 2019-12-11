@@ -15,6 +15,9 @@ const ConsecutivoProyectoTablaItem = props => {
         }
     } = props;
     let cotizaciones_adicionales = [];
+    cotizaciones.map(c => {
+        cotizaciones_adicionales = [...cotizaciones_adicionales, c]
+    });
     cotizaciones.filter(c => c.cotizaciones_adicionales.length > 0).map(e => {
         e.cotizaciones_adicionales.map(ca => {
             cotizaciones_adicionales = [...cotizaciones_adicionales, ca]
@@ -37,9 +40,6 @@ const ConsecutivoProyectoTablaItem = props => {
                             to={`/app/ventas_proyectos/cotizaciones/cotizaciones/detail/${cotizacion.id}`}>
                             {cotizacion.unidad_negocio}-{cotizacion.nro_cotizacion}
                         </Link>
-                    </div>
-                    <div className="col-12">
-                        {cotizacion.orden_compra_nro}
                     </div>
                 </div>)}
             </div>
@@ -198,7 +198,7 @@ const ConsecutivoProyectoTabla = (props) => {
                                 <div className="col-3">Literal</div>
                                 <div className="col-2">Diseñador</div>
                                 <div className="col-1">Activo</div>
-                                <div className="col-2">Cot. Adi</div>
+                                <div className="col-2">Cot.</div>
                                 <div className="col-2">#OC</div>
                                 <div className="col-2">#Fecha Entrega</div>
                             </div>

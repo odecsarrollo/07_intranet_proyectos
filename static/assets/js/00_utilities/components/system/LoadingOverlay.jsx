@@ -84,8 +84,8 @@ const LoadingOverlay = memo((props) => {
                             {titulo}
                         </Typography>
                         <Typography variant="overline" color="inherit" gutterBottom>
-                            {mensajes.length > 0 && <div className='row'>
-                                {mensajes.map(m => <div key={m} className="col-12">
+                            {_.size(mensajes) > 0 && <div className='row'>
+                                {_.map(mensajes, m => <div key={m} className="col-12">
                                     {m}
                                 </div>)}
                             </div>}

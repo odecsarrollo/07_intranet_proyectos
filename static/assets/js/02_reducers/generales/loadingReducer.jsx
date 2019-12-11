@@ -4,7 +4,7 @@ import {
 
 export default function (state = {
     cargando: false,
-    mensajes: [],
+    mensajes: {},
     error: null,
     titulo: '',
     index: 0
@@ -16,7 +16,10 @@ export default function (state = {
             return {
                 index: new_index,
                 cargando: new_index > 0,
-                mensajes: new_index > 0 ? (action.mensaje ? [...state.mensajes, action.mensaje] : state.mensajes) : [],
+                mensajes: new_index > 0 ? (action.mensaje ? {
+                    ...state.mensajes,
+                    [action.mensaje]: action.mensaje
+                } : state.mensajes) : {},
                 error: false,
                 titulo: action.titulo ? action.titulo : 'Procesando...'
             };
