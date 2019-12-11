@@ -8,12 +8,77 @@ import selectTableHOC from "react-table/lib/hoc/selectTable";
 
 const SelectTable = selectTableHOC(Table);
 import {fechaFormatoUno, pesosColombianos} from "../../../00_utilities/common";
+import {makeStyles} from "@material-ui/core";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import Badge from "@material-ui/core/Badge/Badge";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import clsx from "clsx";
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 
 
 function areEqual(prevProps, nextProps) {
     return prevProps.list === nextProps.list && prevProps.selection === nextProps.selection
 }
 
+const useStylesNotificaciones = makeStyles(theme => ({
+    element_div: {
+        fontSize: '0.7rem',
+        borderLeft: '1px solid black',
+        borderRight: '1px solid black',
+        borderTop: '1px solid black',
+        padding: '3px',
+    },
+    iconoDelete: {
+        color: theme.palette.primary.dark
+    },
+    elementNameText: {
+        color: theme.palette.primary.dark,
+        fontSize: '1rem'
+    },
+    root: {
+        width: '100%',
+    },
+    heading: {
+        fontSize: theme.typography.pxToRem(15),
+        fontWeight: theme.typography.fontWeightRegular,
+    },
+}));
+
+const TablaNotificacionDocumentoFaltante = (props) => {
+    const {lista} = props;
+    const classes = useStylesNotificaciones();
+    return (
+        <ExpansionPanel>
+            <ExpansionPanelSummary
+                expandIcon={<FontAwesomeIcon
+                    icon='chevron-down'
+                    size='xs'
+                />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+            >
+                En Cierre con espera de documentos <Badge className='ml-3' badgeContent={_.size(lista)}
+                                                          color="secondary"/>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+                <div className='row' style={{width:'100%'}}>
+                    {_.map(lista, c =>
+                        <div className={clsx(classes.element_div, 'col-12')} key={c.id}>
+                            <span>Aún falta información para </span>
+                            <Link
+                                to={`/app/ventas_proyectos/cotizaciones/cotizaciones/detail/${c.id}`}
+                                target='_blank'
+                            >
+                                ({c.unidad_negocio}-{c.nro_cotizacion})
+                            </Link>
+                        </div>
+                    )}
+                </div>
+            </ExpansionPanelDetails>
+        </ExpansionPanel>
+    )
+};
 
 const Tabla = memo((props) => {
     const {
@@ -29,7 +94,9 @@ const Tabla = memo((props) => {
         onDelete,
         permisos_object,
     } = props;
-    let data = _.map(_.orderBy(props.list, ['nro_cotizacion'], ['desc']));
+    const con_documentos_faltantes = _.pickBy(props.list, e => e.estado === 'Cierre (Aprobado)');
+    const listado = _.pickBy(props.list, e => e.estado !== 'Cierre (Aprobado)');
+    let data = _.map(_.orderBy(listado, ['nro_cotizacion'], ['desc']));
 
     const [color, setColor] = useState(null);
     if (color) {
@@ -39,6 +106,9 @@ const Tabla = memo((props) => {
 
     return (
         <div className='row'>
+            {_.size(con_documentos_faltantes) > 0 && <div className="col-12">
+                <TablaNotificacionDocumentoFaltante lista={con_documentos_faltantes}/>
+            </div>}
             <div className="col-12">
                 <div className="row">
                     <div className="col-12 text-right pb-1">

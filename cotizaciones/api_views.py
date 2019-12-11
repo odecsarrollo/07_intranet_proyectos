@@ -195,14 +195,28 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
             'responsable'
         ).all()
         self.serializer_class = CotizacionTuberiaVentaSerializer
-        qs = self.get_queryset().filter(
+        qs = self.get_queryset().annotate(
+            numero_condiciones_inicio=Count('condiciones_inicio_cotizacion')
+        ).filter(
             Q(estado__in=[
                 'Cita/Generación Interés',
                 'Configurando Propuesta',
                 'Cotización Enviada',
                 'Evaluación Técnica y Económica',
                 'Aceptación de Terminos y Condiciones',
-            ])
+            ]) |
+            (
+                    Q(estado='Cierre (Aprobado)') &
+                    (
+                            Q(orden_compra_nro__isnull=True) |
+                            Q(valor_orden_compra__isnull=True) |
+                            Q(orden_compra_fecha__isnull=True) |
+                            (
+                                    Q(condiciones_inicio_cotizacion__fecha_entrega__isnull=True) &
+                                    Q(numero_condiciones_inicio__gt=0)
+                            )
+                    )
+            )
         )
         if not self.request.user.has_perm('cotizaciones.list_all_cotizaciones_activas'):
             qs = qs.filter(responsable=self.request.user)
