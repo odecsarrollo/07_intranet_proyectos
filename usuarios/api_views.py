@@ -24,39 +24,39 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     ).all()
     serializer_class = UsuarioSerializer
 
-    def retrieve(self, request, *args, **kwargs):
-        instancia = self.get_object()
-        from django.db.utils import DEFAULT_DB_ALIAS
-        from django.contrib.admin.utils import NestedObjects
-
-        collector = NestedObjects(using=DEFAULT_DB_ALIAS)
-        collector.collect([instancia])
-
-        protected = collector.protected
-
-        modelos_protegidos = {'protegidos': {}, 'eliminar': {}}
-        for x in protected:
-            if not modelos_protegidos['protegidos'].get(x._meta.verbose_name_plural, None):
-                modelos_protegidos['protegidos'][x._meta.verbose_name_plural] = 1
-            else:
-                modelos_protegidos['protegidos'][x._meta.verbose_name_plural] += 1
-
-        for model, objs in collector.model_objs.items():
-            if not modelos_protegidos['eliminar'].get(model._meta.verbose_name_plural, None):
-                modelos_protegidos['eliminar'][model._meta.verbose_name_plural] = len(objs)
-            else:
-                modelos_protegidos['eliminar'][model._meta.verbose_name_plural] += len(objs)
-
-        print(modelos_protegidos)
-
-        # print('to delete')
-        # print(to_delete)
-        # print('protected')
-        # print(protected)
-        # print('model count')
-        # print(model_count)
-
-        return super().retrieve(request, *args, **kwargs)
+    # def retrieve(self, request, *args, **kwargs):
+    #     instancia = self.get_object()
+    #     # from django.db.utils import DEFAULT_DB_ALIAS
+    #     # from django.contrib.admin.utils import NestedObjects
+    #     #
+    #     # collector = NestedObjects(using=DEFAULT_DB_ALIAS)
+    #     # collector.collect([instancia])
+    #     #
+    #     # protected = collector.protected
+    #     #
+    #     # modelos_protegidos = {'protegidos': {}, 'eliminar': {}}
+    #     # for x in protected:
+    #     #     if not modelos_protegidos['protegidos'].get(x._meta.verbose_name_plural, None):
+    #     #         modelos_protegidos['protegidos'][x._meta.verbose_name_plural] = 1
+    #     #     else:
+    #     #         modelos_protegidos['protegidos'][x._meta.verbose_name_plural] += 1
+    #     #
+    #     # for model, objs in collector.model_objs.items():
+    #     #     if not modelos_protegidos['eliminar'].get(model._meta.verbose_name_plural, None):
+    #     #         modelos_protegidos['eliminar'][model._meta.verbose_name_plural] = len(objs)
+    #     #     else:
+    #     #         modelos_protegidos['eliminar'][model._meta.verbose_name_plural] += len(objs)
+    #     #
+    #     # print(modelos_protegidos)
+    #
+    #     # print('to delete')
+    #     # print(to_delete)
+    #     # print('protected')
+    #     # print(protected)
+    #     # print('model count')
+    #     # print(model_count)
+    #
+    #     return super().retrieve(request, *args, **kwargs)
 
     @action(detail=False, methods=['get'])
     def mi_cuenta(self, request):

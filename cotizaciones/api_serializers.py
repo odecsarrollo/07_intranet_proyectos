@@ -4,6 +4,7 @@ from django.utils import timezone
 
 from rest_framework import serializers
 
+from intranet_proyectos.general_mixins.custom_serializer_mixins import CustomSerializerMixin
 from proyectos.models import Proyecto, Literal
 from .models import (
     Cotizacion,
@@ -581,7 +582,7 @@ class CotizacionListSerializer(serializers.ModelSerializer):
 
 # endregion
 
-class SeguimientoCotizacionSerializer(serializers.ModelSerializer):
+class SeguimientoCotizacionSerializer(CustomSerializerMixin, serializers.ModelSerializer):
     cliente_nombre = serializers.CharField(source='cotizacion.cliente.nombre', read_only=True)
     cliente = serializers.CharField(source='cotizacion.cliente.id', read_only=True)
     creado_por_username = serializers.CharField(source='creado_por.username', read_only=True)
@@ -675,5 +676,9 @@ class CotizacionConDetalleSerializer(CotizacionSerializer):
     cotizaciones_adicionales = CotizacionCotizacionConDetalleSerializer(many=True, read_only=True)
     cotizacion_inicial = CotizacionCotizacionConDetalleSerializer(read_only=True)
     condiciones_inicio_cotizacion = CondicionInicioProyectoCotizacionSerializer(many=True, read_only=True)
-    mis_seguimientos = SeguimientoCotizacionSerializer(many=True, read_only=True)
+    mis_seguimientos = SeguimientoCotizacionSerializer(
+        many=True,
+        read_only=True,
+        context={'quitar_campos': ['cliente_nombre', 'cliente']}
+    )
     mis_documentos = ArchivoCotizacionSerializer(many=True, read_only=True)

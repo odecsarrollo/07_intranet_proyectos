@@ -24,8 +24,8 @@ let Form = memo(props => {
     const usuarios_list = useSelector(state => state.usuarios);
 
     useEffect(() => {
-        dispatch(actions.fetchUsuariosxPermiso('gestionar_cotizacion'));
-        dispatch(actions.fetchUsuario(initialValues.responsable));
+        const fetchUsuarioxPermiso = () => dispatch(actions.fetchUsuariosxPermiso('gestionar_cotizacion'));
+        dispatch(actions.fetchUsuario(initialValues.responsable, {callback: fetchUsuarioxPermiso}));
         return () => dispatch(actions.clearUsuarios());
     }, []);
 

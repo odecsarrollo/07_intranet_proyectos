@@ -52,8 +52,7 @@ const Detail = memo(props => {
     };
 
     const cargarDatos = () => {
-        const cargarArchivos = () => dispatch(actions.fetchArchivosCotizaciones_x_cotizacion(id));
-        const cargarMiCuenta = () => dispatch(actions.fetchMiCuenta({callback: cargarArchivos}));
+        const cargarMiCuenta = () => dispatch(actions.fetchMiCuenta());
         dispatch(actions.fetchCotizacion(id, {callback: cargarMiCuenta}));
 
     };
@@ -61,7 +60,6 @@ const Detail = memo(props => {
     useEffect(() => {
         cargarDatos();
         return () => {
-            dispatch(actions.clearArchivosCotizaciones());
             dispatch(actions.clearCotizaciones());
             dispatch(actions.clearSeguimientosCotizaciones());
         }

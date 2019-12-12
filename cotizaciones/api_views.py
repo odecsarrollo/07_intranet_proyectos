@@ -39,6 +39,22 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         self.serializer_class = CotizacionConDetalleSerializer
+        self.queryset = Cotizacion.objects.select_related(
+            'cliente',
+            'contacto_cliente',
+            'cotizacion_inicial__cliente',
+            'cotizacion_inicial__contacto_cliente',
+            'responsable'
+        ).prefetch_related(
+            'proyectos',
+            'literales',
+            'condiciones_inicio_cotizacion',
+            'cotizacion_inicial__cotizaciones_adicionales',
+            'cotizaciones_adicionales__contacto_cliente',
+            'cotizaciones_adicionales__cotizaciones_adicionales',
+            'mis_documentos__creado_por',
+            'mis_seguimientos__creado_por',
+        ).all()
         return super().retrieve(request, *args, **kwargs)
 
     def update(self, request, *args, **kwargs):
