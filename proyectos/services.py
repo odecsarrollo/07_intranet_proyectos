@@ -117,6 +117,10 @@ def proyecto_crear_actualizar(
                 proyecto_id=proyecto.id
             )
             proyecto.save()
+            proyecto_envio_correo_creacion_proyecto_para_cotizacion(
+                cotizacion_id=cotizacion_relacionada_id,
+                proyecto_id=proyecto.id
+            )
     return proyecto
 
 
@@ -138,9 +142,11 @@ def literal_crear_actualizar(
         proyecto_id: int = None,
         disenador_id: int = None,
 ) -> Literal:
+    cambio_disenador = True
     if literal_id is not None:
         literal = Literal.objects.get(pk=literal_id)
         proyecto = literal.proyecto
+        cambio_disenador = disenador_id != literal.disenador_id
     else:
         proyecto = Proyecto.objects.get(pk=proyecto_id)
         existe = proyecto.mis_literales.filter(id_literal=id_literal).exists()
@@ -160,4 +166,71 @@ def literal_crear_actualizar(
     literal.descripcion = descripcion
     literal.abierto = abierto
     literal.save()
+    if cambio_disenador:
+        literal_envio_correo_asignacion_disenador(literal_id=literal.id)
     return literal
+
+
+def literal_envio_correo_asignacion_disenador(
+        literal_id: int
+) -> None:
+    literal = Literal.objects.get(pk=literal_id)
+    disenador = literal.disenador
+    correo_to = disenador.email
+    correo_from = 'noreply@odecopack.com'
+    if correo_to is not None:
+        context = {
+            "literal": literal
+        }
+        text_content = render_to_string('emails/proyectos/correo_notificacion_disenador.html', context=context)
+        msg = EmailMultiAlternatives(
+            'Asignación de literal %s' % (
+                literal.id_literal
+            ),
+            text_content,
+            bcc=['fabio.garcia.sanchez@gmail.com'],
+            from_email='Odecopack No Reply <%s>' % correo_from,
+            to=[correo_to]
+        )
+        msg.attach_alternative(text_content, "text/html")
+        try:
+            msg.send()
+        except Exception as e:
+            raise ValidationError(
+                {'_error': 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e})
+
+
+def proyecto_envio_correo_creacion_proyecto_para_cotizacion(
+        cotizacion_id: int,
+        proyecto_id: int
+) -> None:
+    cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
+    proyecto = Proyecto.objects.get(pk=proyecto_id)
+
+    correo_to = cotizacion.responsable.email
+    correo_from = 'noreply@odecopack.com'
+    if correo_to is not None:
+        context = {
+            "cotizacion": cotizacion,
+            "proyecto": proyecto
+        }
+        text_content = render_to_string(
+            'emails/proyectos/correo_notificacion_apertura_proyecto_asesor.html',
+            context=context
+        )
+        msg = EmailMultiAlternatives(
+            'Apertura de proyecto para cotización %s-%s' % (
+                cotizacion.unidad_negocio,
+                cotizacion.nro_cotizacion
+            ),
+            text_content,
+            bcc=['fabio.garcia.sanchez@gmail.com'],
+            from_email='Odecopack No Reply <%s>' % correo_from,
+            to=[correo_to]
+        )
+        msg.attach_alternative(text_content, "text/html")
+        try:
+            msg.send()
+        except Exception as e:
+            raise ValidationError(
+                {'_error': 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e})

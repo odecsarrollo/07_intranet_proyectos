@@ -15,6 +15,7 @@ const CotizacionDetailInfoLiteral = (props) => {
         dispatch(actions.fetchLiteralesxParametro(busqueda));
     };
     let literales_list = useSelector(state => state.literales);
+    literales_list = _.pickBy(literales_list, p => !literales.map(e => e.id).includes(p.id));
     return (
         <div style={{
             borderRadius: '5px',

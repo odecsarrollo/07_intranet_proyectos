@@ -429,7 +429,9 @@ def cotizacion_quitar_relacionar_literal(
 ) -> Cotizacion:
     cotizacion_adicional = Cotizacion.objects.get(pk=cotizacion_id)
     tiene_literal = cotizacion_adicional.literales.filter(pk=literal_id).exists()
+    elimina = False
     if tiene_literal:
+        elimina = True
         cotizacion_adicional.literales.remove(literal_id)
     else:
         cotizacion_inicial = cotizacion_adicional.cotizacion_inicial
@@ -445,6 +447,11 @@ def cotizacion_quitar_relacionar_literal(
             raise ValidationError(
                 {'_error': 'El proyecto del literal no esta relacionado con la cotizacion inicial'})
         cotizacion_adicional.literales.add(literal_id)
+    cotizacion_envio_correo_relacionar_literal(
+        literal_id=literal_id,
+        cotizacion_id=cotizacion_id,
+        elimina=elimina
+    )
     cotizacion_adicional = Cotizacion.objects.get(pk=cotizacion_id)
     return cotizacion_adicional
 
@@ -473,6 +480,11 @@ def cotizacion_quitar_relacionar_proyecto(
             cotizacion.proyectos.remove(proyecto_id)
             proyecto.cliente = None
             proyecto.save()
+            cotizacion_envio_correo_relacionar_proyecto(
+                cotizacion_id=cotizacion_id,
+                proyecto_id=proyecto_id,
+                elimina=True
+            )
         else:
             raise ValidationError(
                 {
@@ -483,6 +495,11 @@ def cotizacion_quitar_relacionar_proyecto(
                 cotizacion.proyectos.add(proyecto_id)
                 proyecto.cliente = cotizacion.cliente
                 proyecto.save()
+                cotizacion_envio_correo_relacionar_proyecto(
+                    cotizacion_id=cotizacion_id,
+                    proyecto_id=proyecto_id,
+                    elimina=False
+                )
             else:
                 raise ValidationError(
                     {
@@ -530,3 +547,95 @@ def cotizacion_generar_numero_cotizacion() -> int:
     nuevo_nro_cotizacion = (int('%s%s' % (ano, mes)) * 10000) + ultimo_indice
 
     return nuevo_nro_cotizacion
+
+
+def cotizacion_envio_correo_relacionar_proyecto(
+        cotizacion_id: int,
+        proyecto_id: int,
+        elimina=False
+) -> None:
+    cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
+    proyecto = Proyecto.objects.get(pk=proyecto_id)
+
+    correo_to = cotizacion.responsable.email
+    correo_from = 'noreply@odecopack.com'
+    if correo_to is not None:
+        context = {
+            "cotizacion": cotizacion,
+            "proyecto": proyecto,
+            "elimina": elimina,
+        }
+        text_content = render_to_string(
+            'emails/proyectos/correo_notificacion_relacion_proyecto_cotizacion_asesor.html',
+            context=context
+        )
+        asunto = 'Relación de proyecto %s a cotización %s-%s' % (
+            proyecto.id_proyecto,
+            cotizacion.unidad_negocio,
+            cotizacion.nro_cotizacion
+        )
+        if elimina:
+            asunto = 'ELIMINACIÓN relación de proyecto %s a cotización %s-%s' % (
+                proyecto.id_proyecto,
+                cotizacion.unidad_negocio,
+                cotizacion.nro_cotizacion
+            )
+        msg = EmailMultiAlternatives(
+            asunto,
+            text_content,
+            bcc=['fabio.garcia.sanchez@gmail.com'],
+            from_email='Odecopack No Reply <%s>' % correo_from,
+            to=[correo_to]
+        )
+        msg.attach_alternative(text_content, "text/html")
+        try:
+            msg.send()
+        except Exception as e:
+            raise ValidationError(
+                {'_error': 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e})
+
+
+def cotizacion_envio_correo_relacionar_literal(
+        cotizacion_id: int,
+        literal_id: int,
+        elimina=False
+) -> None:
+    cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
+    literal = Literal.objects.get(pk=literal_id)
+
+    correo_to = cotizacion.responsable.email
+    correo_from = 'noreply@odecopack.com'
+    if correo_to is not None:
+        context = {
+            "cotizacion": cotizacion,
+            "literal": literal,
+            "elimina": elimina,
+        }
+        text_content = render_to_string(
+            'emails/proyectos/correo_notificacion_relacion_literal_cotizacion_asesor.html',
+            context=context
+        )
+        asunto = 'Relación de literal %s a cotización %s-%s' % (
+            literal.id_literal,
+            cotizacion.unidad_negocio,
+            cotizacion.nro_cotizacion
+        )
+        if elimina:
+            asunto = 'ELIMINACIÓN relación de literal %s a cotización %s-%s' % (
+                literal.id_literal,
+                cotizacion.unidad_negocio,
+                cotizacion.nro_cotizacion
+            )
+        msg = EmailMultiAlternatives(
+            asunto,
+            text_content,
+            bcc=['fabio.garcia.sanchez@gmail.com'],
+            from_email='Odecopack No Reply <%s>' % correo_from,
+            to=[correo_to]
+        )
+        msg.attach_alternative(text_content, "text/html")
+        try:
+            msg.send()
+        except Exception as e:
+            raise ValidationError(
+                {'_error': 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e})
