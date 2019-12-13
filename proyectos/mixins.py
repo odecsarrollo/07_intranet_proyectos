@@ -97,6 +97,9 @@ class LiteralesPDFMixin(object):
 
         total_costo_materiales = qsLiterales.aggregate(Sum('costo_mis_materiales'))['costo_mis_materiales__sum']
 
+        for li in qsLiterales.all():
+            print(li.__dict__)
+
         context['tipo_consulta'] = 'Todo'
         if fecha_inicial and fecha_final:
             context['tipo_consulta'] = 'por lapso'

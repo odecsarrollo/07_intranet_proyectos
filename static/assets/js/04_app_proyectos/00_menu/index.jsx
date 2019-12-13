@@ -19,7 +19,7 @@ const Menu = () => {
             icono='home'
         />
         <MenuManoObra permisos_menu={permisos_menu}/>
-        {/*<MenuConsultas permisos_menu={permisos_menu}/>*/}
+        <MenuConsultas permisos_menu={permisos_menu}/>
         {menu_proyectos_proyectos && <DrawerListItem
             size='lg'
             link='/app/proyectos/proyectos/list'
