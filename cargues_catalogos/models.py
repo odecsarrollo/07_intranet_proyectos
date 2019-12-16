@@ -145,7 +145,7 @@ class ColaboradorCatalogo(models.Model):
 
 class ClienteCatalogo(TimeStampedModel):
     sistema_informacion = models.ForeignKey(SistemaInformacionOrigen, on_delete=models.PROTECT)
-    nit = models.CharField(max_length=20, unique=True)
+    nit = models.CharField(max_length=20)
     nombre = models.CharField(max_length=120)
     cliente_contacto = models.ForeignKey(
         ClienteBiable,
