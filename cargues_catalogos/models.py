@@ -14,7 +14,6 @@ class PaisCatalogo(models.Model):
     nombre = models.CharField(max_length=120)
 
     class Meta:
-        unique_together = [('sistema_informacion', 'pais_id')]
         permissions = [
             ("list_paiscatalogo", "Can list paises catalogos"),
         ]
@@ -27,7 +26,6 @@ class DepartamentoCatalogo(models.Model):
     pais = models.ForeignKey(PaisCatalogo, on_delete=models.PROTECT)
 
     class Meta:
-        unique_together = [('sistema_informacion', 'departamento_id')]
         permissions = [
             ("list_departamentocatalogo", "Can list departamentos catalogos"),
         ]
@@ -41,7 +39,6 @@ class CiudadCatalogo(models.Model):
     ciudad_intranet = models.ForeignKey(Ciudad, null=True, on_delete=models.PROTECT)
 
     class Meta:
-        unique_together = [('sistema_informacion', 'ciudad_id')]
         permissions = [
             ("list_ciudadcatalogo", "Can list ciudades catalogos"),
         ]
