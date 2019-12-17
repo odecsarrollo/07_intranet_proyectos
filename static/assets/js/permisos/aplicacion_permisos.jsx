@@ -279,6 +279,7 @@ export const PROYECTOS = {
     valor: 'valor_proyecto',
     costo: 'costo_proyecto',
     list_consecutivo_proyectos: 'list_consecutivo_proyectos',
+    enviar_solicitud_apertura_al_almacen: 'enviar_soliciud_apertura_proyectos_al_almacen_proyectos',
     costo_presupuestado: 'costo_presupuestado_proyecto',
     costo_materiales: 'costo_materiales_proyecto',
     costo_mano_obra: 'costo_mano_obra_proyecto',

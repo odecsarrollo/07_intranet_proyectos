@@ -25,7 +25,8 @@ Condiciones Definidas para el inicio:
 <ol>
     {% if cotizacion.orden_compra_fecha %}
         <li>ORDEN COMPRA {{ cotizacion.orden_compra_nro }} -
-            {{ cotizacion.orden_compra_fecha }}</li>{% endif %}
+            {{ cotizacion.orden_compra_fecha }} {% if cotizacion.orden_compra_archivo %}
+                (Adjunto){% endif %}</li>{% endif %}
     {% for condicion in condiciones_inicio_cotizacion %}
         {% if condicion.fecha_entrega %}
             <li>{{ condicion.descripcion }} - {{ condicion.fecha_entrega }} {% if condicion.documento %}

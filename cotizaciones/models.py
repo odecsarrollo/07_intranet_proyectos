@@ -12,6 +12,10 @@ from cotizaciones.managers import CotizacionManager
 
 @reversion.register()
 class Cotizacion(TimeStampedModel):
+    def archivo_upload_to(instance, filename):
+        nro_cotizacion = instance.id
+        return "documentos/cotizaciones/%s/%s" % (nro_cotizacion, filename)
+
     ESTADOS_CHOICES = (
         ('Cita/Generación Interés', 'Cita/Generación Interés'),
         ('Configurando Propuesta', 'Configurando Propuesta'),
@@ -55,6 +59,7 @@ class Cotizacion(TimeStampedModel):
     valor_orden_compra = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     orden_compra_nro = models.CharField(max_length=100, null=True)
     orden_compra_fecha = models.DateField(null=True)
+    orden_compra_archivo = models.FileField(null=True, upload_to=archivo_upload_to)
     fecha_entrega_pactada_cotizacion = models.DateField(null=True)
     dias_pactados_entrega_proyecto = models.IntegerField(null=True)
     costo_presupuestado = models.DecimalField(max_digits=20, decimal_places=2, default=0)

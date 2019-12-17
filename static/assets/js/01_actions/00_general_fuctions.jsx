@@ -217,10 +217,11 @@ export function callApiMethodPostParameters(url, id = null, method, values, opti
     const mensaje_cargando = `Ejecutando ${method.toUpperCase()} en ${url.toUpperCase()}`;
     axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
     axios_instance.defaults.xsrfCookieName = "csrftoken";
+    const {content_type = null} = options;
     const headers = {};
     if (localStorage.token) {
         headers["Authorization"] = `Token ${localStorage.token}`;
-        headers["Content-Type"] = 'application/x-www-form-urlencoded;charset=UTF-8';
+        headers["Content-Type"] = content_type ? content_type : 'application/x-www-form-urlencoded;charset=UTF-8';
     }
     axios_instance.defaults.headers = headers;
     var FULL_URL = null;

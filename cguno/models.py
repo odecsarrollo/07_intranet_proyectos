@@ -105,8 +105,6 @@ class ColaboradorBiable(models.Model):
             last_name=self.apellidos.upper()
         )
         self.usuario = user
-        new_group, created = Group.objects.get_or_create(name='Autogestion Horas Trabajo')
-        user.groups.add(new_group)
         self.save()
 
     def cambiar_activacion(self):

@@ -1,7 +1,7 @@
 from django.db.models.signals import pre_delete, post_init, post_save
 from django.dispatch import receiver
 
-from .models import ArchivoCotizacion, CondicionInicioProyectoCotizacion
+from .models import ArchivoCotizacion, CondicionInicioProyectoCotizacion, Cotizacion
 
 
 @receiver(pre_delete, sender=ArchivoCotizacion)
@@ -36,3 +36,20 @@ def delete_documento_condicion_inicio(sender, instance, **kwargs):
     if hasattr(instance, '_current_documento'):
         if instance._current_documento != instance.documento:
             instance._current_documento.delete(save=False)
+
+
+@receiver(pre_delete, sender=Cotizacion)
+def orden_compra_archivo_cotizacion_pre_delete(sender, instance, **kwargs):
+    instance.orden_compra_archivo.delete(False)
+
+
+@receiver(post_init, sender=Cotizacion)
+def backup_orden_compra_archivo_cotizacion_path(sender, instance, **kwargs):
+    instance._current_documento = instance.orden_compra_archivo
+
+
+@receiver(post_save, sender=Cotizacion)
+def delete_orden_compra_archivo_cotizacion(sender, instance, **kwargs):
+    if hasattr(instance, '_current_orden_compra_archivo'):
+        if instance._current_orden_compra_archivo != instance.orden_compra_archivo:
+            instance._current_orden_compra_archivo.delete(save=False)

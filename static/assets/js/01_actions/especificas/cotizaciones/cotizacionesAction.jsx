@@ -119,6 +119,16 @@ export const limpiarCondicionInicioCotizacion = (id, condicion_inicio_proyecto_i
     }
 };
 
+export const actualizarOrdenCompraCotizacion = (id, values, options_action = {}) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: response})
+        };
+        const options = {...options_action, dispatches, dispatch_method: dispatch, content_type: 'application/json'};
+        return callApiMethodPostParameters(current_url_api, id, 'actualizar_orden_compra', values, options)
+    }
+};
+
 export const adicionarQuitarCondicionInicioProyectoCotizacion = (id, tipo_accion, condicion_inicio_proyecto_id, options_action = {}) => {
     return (dispatch) => {
         let params = new URLSearchParams();

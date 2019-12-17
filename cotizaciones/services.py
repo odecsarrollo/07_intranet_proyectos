@@ -44,13 +44,15 @@ def cotizacion_versions(cotizacion_id: int) -> Version:
 def cotizacion_envio_correo_notificacion_condiciones_inicio_completas(
         cotizacion_id: int
 ) -> Cotizacion:
+    cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
     correos = CorreoAplicacion.objects.filter(aplicacion='CORREO_COTIZACION_NOTIFICACION_INICIO')
     correo_from = correos.filter(tipo='FROM').first()
 
     correos_to = list(correos.values_list('email', flat=True).filter(tipo='TO'))
+    if cotizacion.responsable and cotizacion.responsable.email:
+        correos_to.append(cotizacion.responsable.email)
     correos_cc = list(correos.values_list('email', flat=True).filter(tipo='CC'))
     correos_bcc = list(correos.values_list('email', flat=True).filter(tipo='BCC'))
-    cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
     asunto = 'Solicitud apertura para Cotizacion %s-%s' % (cotizacion.unidad_negocio, cotizacion.nro_cotizacion)
     es_adicional = cotizacion.cotizacion_inicial is not None
     asunto = asunto if not es_adicional else 'Notificación de cotización adicional %s-%s' % (
@@ -74,6 +76,11 @@ def cotizacion_envio_correo_notificacion_condiciones_inicio_completas(
     msg.attach_alternative(text_content, "text/html")
 
     documentos_para_enviar = cotizacion.condiciones_inicio_cotizacion.filter(require_documento=True)
+    if cotizacion.orden_compra_archivo:
+        nombre_archivo = '%s%s %s.%s' % (
+            cotizacion.unidad_negocio, cotizacion.nro_cotizacion,
+            'Orden Compra', cotizacion.orden_compra_archivo.name.split('.')[-1])
+        msg.attach(nombre_archivo, cotizacion.orden_compra_archivo.read())
     for condicion in documentos_para_enviar.all():
         if condicion.documento:
             nombre_archivo = '%s%s %s.%s' % (
@@ -92,7 +99,7 @@ def cotizacion_verificar_condicion_inicio_proyecto_si_estan_completas(
         cotizacion_id: int
 ) -> Cotizacion:
     cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
-    con_orden_de_compra = cotizacion.orden_compra_nro is not None and cotizacion.orden_compra_fecha is not None and cotizacion.valor_orden_compra > 0
+    con_orden_de_compra = cotizacion.orden_compra_nro is not None and cotizacion.orden_compra_fecha is not None and cotizacion.valor_orden_compra > 0 and cotizacion.orden_compra_archivo
     condiciones_incompletas = cotizacion.condiciones_inicio_cotizacion.filter(fecha_entrega__isnull=True)
     condicion_especial = cotizacion.condiciones_inicio_cotizacion.filter(
         condicion_especial=True,
@@ -141,6 +148,24 @@ def condicion_inicio_proyecto_cotizacion_actualizar(
     return condicion_inicio_proyecto_cotizacion
 
 
+def cotizacion_condicion_inicio_orden_compra_actualizar(
+        cotizacion_id: int,
+        orden_compra_nro: str,
+        orden_compra_fecha: datetime.date,
+        valor_orden_compra,
+        orden_compra_archivo,
+) -> Cotizacion:
+    cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
+    cotizacion.orden_compra_fecha = orden_compra_fecha
+    cotizacion.valor_orden_compra = valor_orden_compra
+    cotizacion.orden_compra_nro = orden_compra_nro
+    if orden_compra_archivo:
+        cotizacion.orden_compra_archivo = orden_compra_archivo
+    cotizacion.save()
+    cotizacion = cotizacion_verificar_condicion_inicio_proyecto_si_estan_completas(cotizacion_id=cotizacion_id)
+    return cotizacion
+
+
 def cotizacion_limpiar_condicion_inicio_proyecto(
         cotizacion_id: int,
         condicion_inicio_proyecto_id: int = None,
@@ -158,6 +183,7 @@ def cotizacion_limpiar_condicion_inicio_proyecto(
         cotizacion.orden_compra_fecha = None
         cotizacion.valor_orden_compra = 0
         cotizacion.orden_compra_nro = None
+        cotizacion.orden_compra_archivo = None
     con_condicion_especial = cotizacion.condiciones_inicio_cotizacion.filter(
         condicion_especial=True,
         fecha_entrega__isnull=False
@@ -203,18 +229,6 @@ def cotizacion_adicionar_quitar_condicion_inicio_proyecto(
     cotizacion.save()
     cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
     return cotizacion
-
-
-# def cotizacion_cambiar_estado(
-#         cotizacion_id,
-#         nuevo_estado: str
-# ) -> Cotizacion:
-#     cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
-#     estado_actual = cotizacion.estado
-#     if estado_actual==nuevo_estado:
-#         return cotizacion
-#     else:
-#
 
 
 def cotizacion_crear(
@@ -420,6 +434,25 @@ def cotizacion_actualizar(
             estado=cotizacion.estado
         )
 
+    return cotizacion
+
+
+def cotizacion_convertir_en_adicional(
+        cotizacion_id: int,
+        cotizacion_inicial_id: int
+) -> Cotizacion:
+    cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
+    cotizacion_inicial = Cotizacion.objects.get(pk=cotizacion_inicial_id)
+    if cotizacion.cliente_id != cotizacion_inicial.cliente_id:
+        raise ValidationError(
+            {'_error': 'Los clientes de las dos cotizaciones son diferentes, validar que sean iguales'})
+    proyectos_cotizacion = cotizacion.proyectos
+    if cotizacion.proyectos.exists():
+        for proyecto in proyectos_cotizacion.all():
+            cotizacion.proyectos.remove(proyecto)
+            cotizacion_inicial.proyectos.add(proyecto)
+    cotizacion.cotizacion_inicial = cotizacion_inicial
+    cotizacion.save()
     return cotizacion
 
 

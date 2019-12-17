@@ -38,13 +38,12 @@ const useStyles = makeStyles(theme => ({
 const CotizacionCondicionInicioProyecto = props => {
     const dispatch = useDispatch();
     const classes = useStyles();
-    const {cotizacion, cotizacion: {condiciones_inicio_cotizacion, orden_compra_fecha, valor_orden_compra, orden_compra_nro}} = props;
+    const {cotizacion, cotizacion: {condiciones_inicio_cotizacion, orden_compra_fecha, valor_orden_compra, orden_compra_nro, orden_compra_archivo}} = props;
     const cerrado = cotizacion.estado === 'Cierre (Aprobado)';
     let list = useSelector(state => state.condiciones_inicios_proyectos);
-    const read_only_orden_compra = (orden_compra_fecha && valor_orden_compra > 0 && orden_compra_nro);
+    const read_only_orden_compra = (orden_compra_fecha && valor_orden_compra > 0 && orden_compra_nro && orden_compra_archivo);
     const cargarDatos = () => {
         dispatch(actions.fetchCondicionesIniciosProyectos());
-        //dispatch(actions.fetchCotizacion(cotizacion.id));
     };
     useEffect(() => {
         cargarDatos();

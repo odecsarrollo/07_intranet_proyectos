@@ -166,7 +166,7 @@ def literal_crear_actualizar(
     literal.descripcion = descripcion
     literal.abierto = abierto
     literal.save()
-    if cambio_disenador:
+    if cambio_disenador and literal.disenador:
         literal_envio_correo_asignacion_disenador(literal_id=literal.id)
     return literal
 

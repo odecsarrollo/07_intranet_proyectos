@@ -4,7 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import CotizacionAbrirCarpetaLista from "../proyectos/proyectos/ProyectoCrearDesdeCotizacion";
 import useTengoPermisos from "../../00_utilities/hooks/useTengoPermisos";
-import {COTIZACIONES} from "../../permisos";
+import {COTIZACIONES, PROYECTOS} from "../../permisos";
 
 const ConsecutivoProyectoTablaItem = props => {
     const {
@@ -12,7 +12,9 @@ const ConsecutivoProyectoTablaItem = props => {
         proyecto: {
             cotizaciones,
             mis_literales,
-        }
+        },
+        permisos_proyectos,
+        permisos_cotizaciones
     } = props;
     let cotizaciones_adicionales = [];
     cotizaciones.map(c => {
@@ -26,20 +28,20 @@ const ConsecutivoProyectoTablaItem = props => {
     return (
         <div className="row">
             <div className="col-1">
-                <Link
+                {permisos_proyectos.detail ? <Link
                     target='_blank'
                     to={`/app/proyectos/proyectos/detail/${proyecto.id}`}>
                     {proyecto.id_proyecto}
-                </Link>
+                </Link> : proyecto.id_proyecto}
             </div>
             <div className="col-1">{cotizaciones.map(cotizacion =>
                 <div className="row" key={cotizacion.id}>
                     <div className="col-12">
-                        <Link
+                        {permisos_cotizaciones.detail ? <Link
                             target='_blank'
                             to={`/app/ventas_proyectos/cotizaciones/cotizaciones/detail/${cotizacion.id}`}>
                             {cotizacion.unidad_negocio}-{cotizacion.nro_cotizacion}
-                        </Link>
+                        </Link> : <div>{cotizacion.unidad_negocio}-{cotizacion.nro_cotizacion}</div>}
                     </div>
                 </div>)}
             </div>
@@ -53,11 +55,11 @@ const ConsecutivoProyectoTablaItem = props => {
                     <div className="col-6">
                         {_.map(cotizaciones_adicionales, c => <div className="row" key={c.id}>
                             <div className="col-4">
-                                <Link
+                                {permisos_cotizaciones.detail ? <Link
                                     target='_blank'
                                     to={`/app/ventas_proyectos/cotizaciones/cotizaciones/detail/${c.id}`}>
                                     {c.unidad_negocio}-{c.nro_cotizacion}
-                                </Link>
+                                </Link> : <div>{c.unidad_negocio}-{c.nro_cotizacion}</div>}
                             </div>
                             <div className="col-4">
                                 {c.orden_compra_nro}
@@ -78,11 +80,11 @@ const ConsecutivoProyectoTablaItem = props => {
                         {literal.cotizaciones.map(cotizacion =>
                             <div key={cotizacion.id} className='row'>
                                 <div className="col-4">
-                                    <Link
+                                    {permisos_cotizaciones.detail ? <Link
                                         target='_blank'
                                         to={`/app/ventas_proyectos/cotizaciones/cotizaciones/detail/${cotizacion.id}`}>
                                         {cotizacion.unidad_negocio}-{cotizacion.nro_cotizacion}
-                                    </Link>
+                                    </Link> : <div>{cotizacion.unidad_negocio}-{cotizacion.nro_cotizacion}</div>}
                                 </div>
                                 <div className="col-4">{cotizacion.orden_compra_nro}</div>
                                 <div
@@ -103,6 +105,7 @@ const ConsecutivoProyectoTabla = (props) => {
     const [busqueda_abierto, setBusquedaAbierto] = useState('TODO');
     const opciones = _.uniq(_.map(list, e => e.id_proyecto.substring(0, 2)));
     const permisos_cotizaciones = useTengoPermisos(COTIZACIONES);
+    const permisos_proyectos = useTengoPermisos(PROYECTOS);
     if (busqueda_tipo_proyecto !== 'TODO') {
         list = _.pickBy(list, proyecto => proyecto.id_proyecto.substring(0, 2) === busqueda_tipo_proyecto)
     }
@@ -206,7 +209,12 @@ const ConsecutivoProyectoTabla = (props) => {
                     </div>
                 </div>
                 <div className="col-12 body">
-                    {_.map(list, proyecto => <ConsecutivoProyectoTablaItem key={proyecto.id} proyecto={proyecto}/>)}
+                    {_.map(list, proyecto => <ConsecutivoProyectoTablaItem
+                        key={proyecto.id}
+                        proyecto={proyecto}
+                        permisos_proyectos={permisos_proyectos}
+                        permisos_cotizaciones={permisos_cotizaciones}
+                    />)}
                 </div>
             </div>
         </div>

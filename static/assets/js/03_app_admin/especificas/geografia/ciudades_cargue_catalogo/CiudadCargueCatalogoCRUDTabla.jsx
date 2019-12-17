@@ -45,7 +45,7 @@ const Cell = memo((props) => {
             {
                 !editando &&
                 <div className='puntero' onClick={() => setEditando(true)}>
-                    {row.value ? row.value : 'Relacionar'}
+                    {row.value ? `${row.value} - ${row.original.departamento_intranet_nombre}` : 'Relacionar'}
                 </div>
             }
         </div>

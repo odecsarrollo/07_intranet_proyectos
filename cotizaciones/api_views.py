@@ -184,6 +184,18 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @action(detail=True, methods=['post'])
+    def convertir_en_adicional(self, request, pk=None):
+        self.serializer_class = CotizacionConDetalleSerializer
+        cotizacion_inicial_id = request.POST.get('cotizacion_inicial_id')
+        from .services import cotizacion_convertir_en_adicional
+        cotizacion = cotizacion_convertir_en_adicional(
+            cotizacion_id=pk,
+            cotizacion_inicial_id=cotizacion_inicial_id
+        )
+        serializer = self.get_serializer(cotizacion)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
     def set_revisado(self, request, pk=None):
         cotizacion = self.get_object()
         self.serializer_class = CotizacionConDetalleSerializer
@@ -227,6 +239,7 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
                             Q(orden_compra_nro__isnull=True) |
                             Q(valor_orden_compra__isnull=True) |
                             Q(orden_compra_fecha__isnull=True) |
+                            Q(orden_compra_archivo__isnull=True) |
                             (
                                     Q(condiciones_inicio_cotizacion__fecha_entrega__isnull=True) &
                                     Q(numero_condiciones_inicio__gt=0)
@@ -307,6 +320,28 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
         archivo_cotizacion.nombre_archivo = nombre_archivo
         archivo_cotizacion.creado_por = self.request.user
         archivo_cotizacion.save()
+        serializer = self.get_serializer(cotizacion)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def actualizar_orden_compra(self, request, pk=None):
+        self.serializer_class = CotizacionConDetalleSerializer
+
+        serializer = self.get_serializer(self.get_object(), data=request.data.dict(), partial=True)
+        serializer.is_valid(raise_exception=True)
+
+        orden_compra_fecha = serializer.validated_data.get('orden_compra_fecha', None)
+        valor_orden_compra = serializer.validated_data.get('valor_orden_compra', 0)
+        orden_compra_nro = serializer.validated_data.get('orden_compra_nro', None)
+        orden_compra_archivo = self.request.FILES.get('orden_compra_archivo', None)
+        from .services import cotizacion_condicion_inicio_orden_compra_actualizar
+        cotizacion = cotizacion_condicion_inicio_orden_compra_actualizar(
+            cotizacion_id=pk,
+            orden_compra_fecha=orden_compra_fecha,
+            valor_orden_compra=valor_orden_compra,
+            orden_compra_nro=orden_compra_nro,
+            orden_compra_archivo=orden_compra_archivo
+        )
         serializer = self.get_serializer(cotizacion)
         return Response(serializer.data)
 

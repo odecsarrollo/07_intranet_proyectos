@@ -157,6 +157,11 @@ class CotizacionSerializer(serializers.ModelSerializer):
     color_tuberia_ventas = serializers.SerializerMethodField()
     porcentaje_tuberia_ventas = serializers.SerializerMethodField()
 
+    orden_compra_archivo_url = serializers.SerializerMethodField()
+    orden_compra_archivo_extension = serializers.SerializerMethodField()
+    orden_compra_archivo_size = serializers.SerializerMethodField()
+    orden_compra_archivo_filename = serializers.SerializerMethodField()
+
     to_string = serializers.SerializerMethodField()
     creado = serializers.DateTimeField(
         source='created',
@@ -277,11 +282,37 @@ class CotizacionSerializer(serializers.ModelSerializer):
         if not obj.fecha_cambio_estado:
             return None
 
+    def get_orden_compra_archivo_url(self, obj):
+        if obj.orden_compra_archivo:
+            return obj.orden_compra_archivo.url
+        return None
+
+    def get_orden_compra_archivo_extension(self, obj):
+        if obj.orden_compra_archivo:
+            extension = obj.orden_compra_archivo.url.split('.')[-1]
+            return extension.title()
+        return None
+
+    def get_orden_compra_archivo_size(self, obj):
+        if obj.orden_compra_archivo:
+            return obj.orden_compra_archivo.size
+        return None
+
+    def get_orden_compra_archivo_filename(self, obj):
+        if obj.orden_compra_archivo:
+            return obj.orden_compra_archivo.name.split('/')[-1]
+        return None
+
     class Meta:
         model = Cotizacion
         fields = [
             'url',
             'id',
+            'orden_compra_archivo_url',
+            'orden_compra_archivo_filename',
+            'orden_compra_archivo_extension',
+            'orden_compra_archivo_size',
+            'orden_compra_archivo',
             'created_by',
             'creado',
             'cotizacion_inicial',
@@ -351,12 +382,14 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'estado_observacion_adicional': {'allow_null': True},
             'fecha_limite_segumiento_estado': {'allow_null': True},
             'dias_pactados_entrega_proyecto': {'allow_null': True},
+            'orden_compra_archivo': {'allow_null': True},
         }
         read_only_fields = [
             'condiciones_inicio_completas',
             'condiciones_inicio_fecha_ultima',
             'fecha_entrega_pactada',
-            'dias_para_vencer'
+            'dias_para_vencer',
+            'orden_compra_archivo',
         ]
 
 

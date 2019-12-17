@@ -36,7 +36,7 @@ class CiudadCatalogo(models.Model):
     ciudad_id = models.PositiveIntegerField()
     nombre = models.CharField(max_length=120)
     departamento = models.ForeignKey(DepartamentoCatalogo, on_delete=models.PROTECT)
-    ciudad_intranet = models.ForeignKey(Ciudad, null=True, on_delete=models.PROTECT)
+    ciudad_intranet = models.ForeignKey(Ciudad, null=True, on_delete=models.PROTECT, related_name='ciudad_catalogo')
 
     class Meta:
         permissions = [

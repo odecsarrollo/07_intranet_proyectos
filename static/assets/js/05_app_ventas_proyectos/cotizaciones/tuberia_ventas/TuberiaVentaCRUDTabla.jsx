@@ -62,7 +62,7 @@ const TablaNotificacionDocumentoFaltante = (props) => {
                                                           color="secondary"/>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-                <div className='row' style={{width:'100%'}}>
+                <div className='row' style={{width: '100%'}}>
                     {_.map(lista, c =>
                         <div className={clsx(classes.element_div, 'col-12')} key={c.id}>
                             <span>Aún falta información para </span>
@@ -94,7 +94,7 @@ const Tabla = memo((props) => {
         onDelete,
         permisos_object,
     } = props;
-    const con_documentos_faltantes = _.pickBy(props.list, e => e.estado === 'Cierre (Aprobado)');
+    const con_documentos_faltantes = _.pickBy(props.list, e => e.estado === 'Cierre (Aprobado)' && e.id >= 848);
     const listado = _.pickBy(props.list, e => e.estado !== 'Cierre (Aprobado)');
     let data = _.map(_.orderBy(listado, ['nro_cotizacion'], ['desc']));
 

@@ -25,6 +25,7 @@ import SiNoDialog from "../../../00_utilities/components/ui/dialog/SiNoDialog";
 import Button from "@material-ui/core/Button";
 import CotizacionDetailDocumento
     from "../../../05_app_ventas_proyectos/cotizaciones/cotizaciones/CotizacionDetailDocumento";
+import ValidarPermisos from "../../../permisos/validar_permisos";
 
 const style = {
     tabla: {
@@ -119,104 +120,109 @@ const Detail = memo((props) => {
     };
 
     return (
-        <div className="row">
-            {show_enviar_aperturas && <SiNoDialog
-                onSi={enviarAperturas}
-                onNo={() => setEnviarAperturas(false)}
-                is_open={show_enviar_aperturas}
-                titulo='Eliminar notificación'
-            >
-                Hay ({cantidad_apertura_literales}) literales para enviar correo de apertura. Desea Enviarlo?
-            </SiNoDialog>}
-            {cantidad_apertura_literales > 0 && <Button
-                color="primary"
-                variant="contained"
-                onClick={() => setEnviarAperturas(true)}
-            >
-                Solicitar Aperturas ({cantidad_apertura_literales})
-            </Button>}
-            <div className="col-12">
-                <Typography variant="h3" color="inherit" noWrap>
-                    Proyecto {proyecto.id_proyecto}
-                </Typography>
-            </div>
-            <div className="col-12">
-                <ProyectoInfo
-                    cotizaciones_proyecto_list={cotizaciones}
-                    proyecto={proyecto}
-                    cotizaciones_permisos={cotizacion_permisos}
+        <ValidarPermisos can_see={permisos.detail} nombre='detalles de Proyecto'>
+            <div className="row">
+                {show_enviar_aperturas && <SiNoDialog
+                    onSi={enviarAperturas}
+                    onNo={() => setEnviarAperturas(false)}
+                    is_open={show_enviar_aperturas}
+                    titulo='Eliminar notificación'
+                >
+                    Hay ({cantidad_apertura_literales}) literales para enviar correo de apertura. Desea Enviarlo?
+                </SiNoDialog>}
+                {cantidad_apertura_literales > 0 &&
+                permisos.enviar_solicitud_apertura_al_almacen &&
+                <Button
+                    color="primary"
+                    variant="contained"
+                    onClick={() => setEnviarAperturas(true)}
+                >
+                    Solicitar Aperturas ({cantidad_apertura_literales})
+                </Button>}
+                <div className="col-12">
+                    <Typography variant="h3" color="inherit" noWrap>
+                        Proyecto {proyecto.id_proyecto}
+                    </Typography>
+                </div>
+                <div className="col-12">
+                    <ProyectoInfo
+                        cotizaciones_proyecto_list={cotizaciones}
+                        proyecto={proyecto}
+                        cotizaciones_permisos={cotizacion_permisos}
+                    />
+                </div>
+                <div className="col-12">
+                    <Tabs>
+                        <TabList>
+                            <Tab onClick={() => cargarDatos()}>Literales</Tab>
+                            {proyecto.cotizaciones.length > 0 &&
+                            <Tab onClick={() => cargarDatos()}>Cotizaciones Relacionadas</Tab>}
+                            {permisos.change && <Tab>Editar</Tab>}
+                            {permisos_archivos_proyecto.list && <Tab>Documentos</Tab>}
+                            {facturas.length > 0 && <Tab>Facturas</Tab>}
+                        </TabList>
+
+                        <TabPanel>
+                            <div className="row">
+                                <div className="col-12 col-lg-4">
+                                    <LiteralModalCreate
+                                        proyecto={proyecto}
+                                        permisos_object={permisos_literales}
+                                        literales_list={literales}
+                                        cotizacion_pendiente_por_literal={null}
+                                        callback={cargarDatos}
+                                    />
+                                    <TablaProyectoLiterales
+                                        style={style}
+                                        lista_literales={literales}
+                                        onSelectItem={onLiteralSelect}
+                                        select_literal_id={select_literal_id}
+                                        proyecto={proyecto}
+                                        permisos={permisos}
+                                    />
+                                </div>
+                                {literal_seleccionado &&
+                                <div className="col-12 col-lg-8">
+                                    <LiteralDetail
+                                        callbackCargarDatosProyecto={cargarDatos}
+                                        clearCurrentLiteral={clearCurrentLiteral}
+                                        literal={literal_seleccionado}
+                                        proyecto={proyecto}
+                                    />
+                                </div>}
+                            </div>
+                        </TabPanel>
+
+                        {proyecto.cotizaciones.length > 0 && <TabPanel>
+                            <ProyectoDetailCotizacionRelacionada
+                                proyecto={proyecto}
+                            />
+                        </TabPanel>}
+
+                        {permisos.change && <TabPanel>
+                            <FormProyecto
+                                onSubmit={onUpdateProyecto}
+                                initialValues={proyecto}
+                                permisos_object={permisos}
+                            />
+                        </TabPanel>}
+
+                        {permisos_archivos_proyecto.list && <TabPanel>
+                            <ProyectoDetailDocumento
+                                permisos={permisos_archivos_proyecto}
+                                proyecto={proyecto}
+                                cargarProyecto={cargarDatos}
+                            />
+                        </TabPanel>}
+                        {facturas.length > 0 &&
+                        <TabPanel><FacturasProyecto facturas={facturas} style={style}/></TabPanel>}
+                    </Tabs>
+                </div>
+                <CargarDatos
+                    cargarDatos={cargarDatos}
                 />
             </div>
-            <div className="col-12">
-                <Tabs>
-                    <TabList>
-                        <Tab onClick={() => cargarDatos()}>Literales</Tab>
-                        {proyecto.cotizaciones.length > 0 &&
-                        <Tab onClick={() => cargarDatos()}>Cotizaciones Relacionadas</Tab>}
-                        {permisos.change && <Tab>Editar</Tab>}
-                        {permisos_archivos_proyecto.list && <Tab>Documentos</Tab>}
-                        {facturas.length > 0 && <Tab>Facturas</Tab>}
-                    </TabList>
-
-                    <TabPanel>
-                        <div className="row">
-                            <div className="col-12 col-lg-4">
-                                <LiteralModalCreate
-                                    proyecto={proyecto}
-                                    permisos_object={permisos_literales}
-                                    literales_list={literales}
-                                    cotizacion_pendiente_por_literal={null}
-                                    callback={cargarDatos}
-                                />
-                                <TablaProyectoLiterales
-                                    style={style}
-                                    lista_literales={literales}
-                                    onSelectItem={onLiteralSelect}
-                                    select_literal_id={select_literal_id}
-                                    proyecto={proyecto}
-                                    permisos={permisos}
-                                />
-                            </div>
-                            {literal_seleccionado &&
-                            <div className="col-12 col-lg-8">
-                                <LiteralDetail
-                                    callbackCargarDatosProyecto={cargarDatos}
-                                    clearCurrentLiteral={clearCurrentLiteral}
-                                    literal={literal_seleccionado}
-                                    proyecto={proyecto}
-                                />
-                            </div>}
-                        </div>
-                    </TabPanel>
-
-                    {proyecto.cotizaciones.length > 0 && <TabPanel>
-                        <ProyectoDetailCotizacionRelacionada
-                            proyecto={proyecto}
-                        />
-                    </TabPanel>}
-
-                    {permisos.change && <TabPanel>
-                        <FormProyecto
-                            onSubmit={onUpdateProyecto}
-                            initialValues={proyecto}
-                            permisos_object={permisos}
-                        />
-                    </TabPanel>}
-
-                    {permisos_archivos_proyecto.list && <TabPanel>
-                        <ProyectoDetailDocumento
-                            permisos={permisos_archivos_proyecto}
-                            proyecto={proyecto}
-                            cargarProyecto={cargarDatos}
-                        />
-                    </TabPanel>}
-                    {facturas.length > 0 && <TabPanel><FacturasProyecto facturas={facturas} style={style}/></TabPanel>}
-                </Tabs>
-            </div>
-            <CargarDatos
-                cargarDatos={cargarDatos}
-            />
-        </div>
+        </ValidarPermisos>
     );
 });
 
