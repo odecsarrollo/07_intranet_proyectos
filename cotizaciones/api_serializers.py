@@ -596,6 +596,7 @@ class CotizacionListSerializer(serializers.ModelSerializer):
             'orden_compra_nro',
             'orden_compra_fecha',
             'valor_orden_compra',
+            'fecha_entrega_pactada_cotizacion',
             'estado',
             'orden_compra_fecha',
             'cliente_nombre',
