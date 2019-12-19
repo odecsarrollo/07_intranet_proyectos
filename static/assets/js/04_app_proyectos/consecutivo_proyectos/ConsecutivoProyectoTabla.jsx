@@ -113,7 +113,7 @@ const ConsecutivoProyectoTablaItem = props => {
 };
 
 const ConsecutivoProyectoTabla = (props) => {
-    let {list, cargarDatos} = props;
+    let {list, cargarDatosConsecutivoProyectos} = props;
     const [busqueda, setBusqueda] = useState('');
     const [busqueda_tipo_proyecto, setBusquedaTipoProyecto] = useState('TODO');
     const [busqueda_abierto, setBusquedaAbierto] = useState('TODO');
@@ -146,7 +146,7 @@ const ConsecutivoProyectoTabla = (props) => {
         <div>
             {(permisos_cotizaciones.list_cotizaciones_abrir_carpeta ||
                 permisos_cotizaciones.list_cotizaciones_notificaciones_consecutivo_proyectos) &&
-            <CotizacionAbrirCarpetaLista cargarDatosConsecutivoProyectos={cargarDatos}/>}
+            <CotizacionAbrirCarpetaLista cargarDatosConsecutivoProyectos={cargarDatosConsecutivoProyectos}/>}
             <div className="row">
                 <div className="col-12 col-md-6 col-lg-4">
                     <TextField

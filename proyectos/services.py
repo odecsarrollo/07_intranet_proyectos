@@ -16,6 +16,7 @@ def proyecto_envio_correo_apertura_proyectos_para_almacen(
     correos = CorreoAplicacion.objects.filter(aplicacion='CORREO_COTIZACION_APERTURA_OP')
     correo_from = correos.filter(tipo='FROM').first()
     correos_to = list(correos.values_list('email', flat=True).filter(tipo='TO'))
+    literales_id_notificacion_disenadores = []
     correos_cc = list(correos.values_list('email', flat=True).filter(tipo='CC'))
     correos_bcc = list(correos.values_list('email', flat=True).filter(tipo='BCC'))
 
@@ -29,8 +30,11 @@ def proyecto_envio_correo_apertura_proyectos_para_almacen(
         "literales": literales_para_correos_para_apertura
     }
     for literal in literales_para_correos_para_apertura:
+        literales_id_notificacion_disenadores.append(literal.id)
         literal.correo_apertura = True
         literal.save()
+    if len(literales_id_notificacion_disenadores) > 0:
+        literal_envio_correo_asignacion_disenador(literales_id=literales_id_notificacion_disenadores)
 
     text_content = render_to_string('emails/proyectos/correo_aperturas_para_almacen.html', context=context)
     msg = EmailMultiAlternatives(
@@ -162,17 +166,21 @@ def literal_crear_actualizar(
         proyecto_id: int = None,
         disenador_id: int = None,
 ) -> Literal:
-    cambio_disenador = True
     if literal_id is not None:
         literal = Literal.objects.get(pk=literal_id)
         proyecto = literal.proyecto
         cambio_disenador = disenador_id != literal.disenador_id
+        literal.disenador_id = disenador_id
+        literal.save()
+        if cambio_disenador and literal.disenador:
+            literal_envio_correo_asignacion_disenador(literales_id=[literal.id])
     else:
         proyecto = Proyecto.objects.get(pk=proyecto_id)
         existe = proyecto.mis_literales.filter(id_literal=id_literal).exists()
         if existe:
             raise ValidationError({'_error': 'Ya existe un literal con ese código para este proyecto'})
         literal = Literal()
+        literal.disenador_id = disenador_id
         literal.en_cguno = False
     cambio_id_literal = literal_id is not None and not literal.id_literal == id_literal
     if cambio_id_literal and literal.en_cguno:
@@ -180,32 +188,37 @@ def literal_crear_actualizar(
             {'_error': 'El id del literal no se puede cambiar, ya esta sincronizado con el sistema de información'})
     if cambio_id_literal and not ('%s-' % proyecto.id_proyecto in id_literal or proyecto.id_proyecto == id_literal):
         raise ValidationError({'_error': 'El id literal no corresponde al proyecto'})
-    literal.disenador_id = disenador_id
     literal.id_literal = id_literal
     literal.proyecto = proyecto
     literal.descripcion = descripcion
     literal.abierto = abierto
     literal.save()
-    if cambio_disenador and literal.disenador:
-        literal_envio_correo_asignacion_disenador(literal_id=literal.id)
     return literal
 
 
 def literal_envio_correo_asignacion_disenador(
-        literal_id: int
+        literales_id: []
 ) -> None:
-    literal = Literal.objects.get(pk=literal_id)
-    disenador = literal.disenador
-    correo_to = disenador.email
     correo_from = 'noreply@odecopack.com'
-    if correo_to is not None:
+    literales = Literal.objects.filter(pk__in=literales_id)
+    disenadores_id_correo_to = []
+    for literal in literales.all():
+        if literal.disenador and literal.disenador.email:
+            if literal.disenador.id not in disenadores_id_correo_to:
+                disenadores_id_correo_to.append(literal.disenador.id)
+
+    for disenador_id in disenadores_id_correo_to:
+        literales_disenador = literales.filter(disenador_id=disenador_id)
+        disenador = literales_disenador.first().disenador
+        proyecto = literales.first().proyecto
+        correo_to = disenador.email
         context = {
-            "literal": literal
+            "literales": literales_disenador.all()
         }
         text_content = render_to_string('emails/proyectos/correo_notificacion_disenador.html', context=context)
         msg = EmailMultiAlternatives(
-            'Asignación de literal %s' % (
-                literal.id_literal
+            'Asignación de literales para proyecto %s' % (
+                proyecto.id_proyecto
             ),
             text_content,
             bcc=['fabio.garcia.sanchez@gmail.com'],

@@ -25,9 +25,26 @@
 </p>
 {% localize off %}
     <p>
-        Se genera esta notificación para informarle que se le ha asignado como diseñador del
-        literal {{ literal.id_literal }} {{ literal.descripcion }}
+        Se genera esta notificación para informarle que se le ha asignado como diseñador de los siguientes literales:
     </p>
+    <table class="table table-striped tabla">
+        <thead>
+        <tr>
+            <th>Literal</th>
+            <th>Nombre proyecto o equipo</th>
+            <th>Diseñador</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for literal in literales %}
+            <tr>
+                <td>{{ literal.id_literal }}</td>
+                <td style="text-align: center">{{ literal.descripcion }}</td>
+                <td>{{ literal.disenador }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 {% endlocalize %}
 
 <div>

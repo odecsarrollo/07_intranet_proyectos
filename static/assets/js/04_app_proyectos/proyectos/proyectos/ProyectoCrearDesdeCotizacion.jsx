@@ -210,7 +210,7 @@ const CotizacionAbrirCarpetaLista = memo(props => {
         createObjectMethod: (item, options) => createProyecto(item, options),
         updateObjectMethod: null,
     };
-    const cargarDatos = (callback) => dispatch(actions.fetchCotizacionesPidiendoCarpeta({callback}));
+    const cargarDatos = (callback = null) => dispatch(actions.fetchCotizacionesPidiendoCarpeta({callback}));
 
     useEffect(() => {
         cargarDatos();
@@ -219,6 +219,9 @@ const CotizacionAbrirCarpetaLista = memo(props => {
 
     return (
         <CRUD
+            cargarDatos={() => {
+                cargarDatos(cargarDatosConsecutivoProyectos)
+            }}
             posCreateMethod={(item) => {
                 window.open(`/app/proyectos/proyectos/detail/${item.id}`, "_blank");
                 cargarDatos(cargarDatosConsecutivoProyectos);

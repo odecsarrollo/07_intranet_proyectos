@@ -28,7 +28,7 @@ const ConsecutivoProyecto = (props) => {
             permisos_object={{...permisos_proyectos, add: false, list: permisos_proyectos.list_consecutivo_proyectos}}
             plural_name='Consecutivo de Proyecto'
             singular_name=''
-            cargarDatos={cargarDatos}
+            cargarDatosConsecutivoProyectos={cargarDatos}
         />
     )
 

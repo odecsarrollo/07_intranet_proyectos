@@ -1,13 +1,13 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import {
     MyTextFieldSimple,
-    MyCheckboxSimple, MyCombobox
+    MyCheckboxSimple,
+    MyCombobox
 } from '../../../../00_utilities/components/ui/forms/fields';
 
 
 const BaseProyectoForm = (props) => {
     const {initialValues, myValues} = props;
-    //proyecto_id
     return (
         <div className="row">
             {((initialValues && !initialValues.id) || !initialValues) && <MyCheckboxSimple
@@ -38,21 +38,23 @@ const BaseProyectoForm = (props) => {
                     textField='nombre'
                     name='tipo_id_proyecto'
                 />}
-            <MyTextFieldSimple
-                className="col-12 col-md-4"
-                nombre='Nro. Cotización Componentes'
-                name='cotizacion_componentes_nro_cotizacion'
-            />
-            <MyTextFieldSimple
-                className="col-12 col-md-4"
-                nombre='Nro. Orden Compra'
-                name='cotizacion_componentes_nro_orden_compra'
-            />
-            <MyTextFieldSimple
-                className="col-12 col-md-4"
-                nombre='Precio Venta Componente'
-                name='cotizacion_componentes_precio_venta'
-                type='number'/>
+            {initialValues.cotizaciones.length === 0 && <Fragment>
+                <MyTextFieldSimple
+                    className="col-12 col-md-4"
+                    nombre='Nro. Cotización Componentes'
+                    name='cotizacion_componentes_nro_cotizacion'
+                />
+                <MyTextFieldSimple
+                    className="col-12 col-md-4"
+                    nombre='Nro. Orden Compra'
+                    name='cotizacion_componentes_nro_orden_compra'
+                />
+                <MyTextFieldSimple
+                    className="col-12 col-md-4"
+                    nombre='Precio Venta Componente'
+                    name='cotizacion_componentes_precio_venta'
+                    type='number'/>
+            </Fragment>}
             <MyTextFieldSimple
                 className="col-12"
                 nombre='Nombre Proyecto'
