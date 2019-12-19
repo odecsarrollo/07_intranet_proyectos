@@ -18,6 +18,7 @@ let Form = memo(props => {
         initialValues = null,
         onSubmit,
         onCancel,
+        anulada
     } = props;
     const cobro = initialValues;
     const editable = cobro ? cobro.editable : true;
@@ -89,6 +90,7 @@ let Form = memo(props => {
                     label='Verificar el...'
                     label_space_xs={4}
                     className="col-12 col-md-3 col-xl-2"
+                    readOnly={anulada}
                 />}
                 <div className='col-12'>
                     <div className="row">
@@ -158,7 +160,7 @@ let Form = memo(props => {
                     />}
                 </Fragment>}
             </div>
-            <BotoneriaModalForm
+            {!anulada && <BotoneriaModalForm
                 mostrar_submit={true}
                 mostrar_limpiar={true}
                 mostrar_cancelar={mostrar_cancelar}
@@ -167,7 +169,7 @@ let Form = memo(props => {
                 reset={reset}
                 submitting={submitting}
                 initialValues={cobro}
-            />
+            />}
         </form>
     )
 });

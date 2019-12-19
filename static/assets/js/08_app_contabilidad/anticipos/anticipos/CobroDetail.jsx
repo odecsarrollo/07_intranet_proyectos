@@ -20,6 +20,7 @@ import TextField from "@material-ui/core/TextField";
 import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
 import {PROFORMAS_ANTICIPOS} from "../../../permisos";
 import SiNoDialog from "../../../00_utilities/components/ui/dialog/SiNoDialog";
+import Typography from "@material-ui/core/Typography";
 
 const style = {
     tabla: {
@@ -118,6 +119,7 @@ const CobroDetail = memo(props => {
     const dispatch = useDispatch();
     const cobro = useSelector(state => state.contabilidad_proforma_anticipos[id]);
     const [show_mas_opciones, setMostrarMasOpciones] = useState(false);
+    const [show_anular, setShowAnular] = useState(false);
     const [show_editar, setShowEditar] = useState(false);
     const [show_enviar, setShowEnviar] = useState(false);
     const [show_recibido, setShowRecibido] = useState(false);
@@ -146,6 +148,7 @@ const CobroDetail = memo(props => {
     };
 
     const editar = () => dispatch(actions.cambiarEstadoProformaAnticipo(cobro.id, 'EDICION', null, null, {callback: () => setShowEditar(false)}));
+    const anular = () => dispatch(actions.cambiarEstadoProformaAnticipo(cobro.id, 'ANULADA', null, null, {callback: () => setShowAnular(false)}));
     const recibida = () => dispatch(actions.cambiarEstadoProformaAnticipo(cobro.id, 'RECIBIDA', null, null, {callback: () => setShowRecibido(false)}));
     const cobrada = (fecha_cobro, recibo_pago) => dispatch(actions.cambiarEstadoProformaAnticipo(cobro.id, 'CERRADA', fechaToYMD(fecha_cobro), recibo_pago, {callback: () => setCobradaModal(false)}));
 
@@ -169,9 +172,22 @@ const CobroDetail = memo(props => {
     const fue_recibida = cobro.estado === 'RECIBIDA';
     const puede_enviar = cobro.items.length > 0 && (cobro.email_destinatario_dos || cobro.email_destinatario) && permisos.send_email;
     const esta_cerrada = cobro.estado === 'CERRADA';
-    const editable = cobro.editable && permisos.change;
+    const esta_anulada = cobro.estado === 'ANULADA';
+    const editable = cobro.editable && permisos.change && !esta_anulada;
     return (
-        <Fragment>
+        <Fragment>{esta_anulada && <Typography variant="h1" color="primary" noWrap>
+            ANULADA
+        </Typography>}
+            {show_anular && <SiNoDialog
+                texto_verificacion_comprobacion={`ANULAR${cobro.id}`}
+                on_si_texto='Sí Anular'
+                onSi={anular}
+                onNo={() => setShowAnular(false)}
+                is_open={show_anular}
+                titulo='Anular cobro'
+            >
+                DESÉA REALMENTE ANULAR ESTE COBRO?
+            </SiNoDialog>}
             {show_editar && <SiNoDialog
                 onSi={editar}
                 onNo={() => setShowEditar(false)}
@@ -207,12 +223,12 @@ const CobroDetail = memo(props => {
                 onCancel={() => setCobradaModal(false)}
                 fecha_minima={cobro.fecha}
             />}
-            <CobroFormBase initialValues={cobro} onSubmit={onSubmit}/>
+            <CobroFormBase initialValues={cobro} onSubmit={onSubmit} anulada={esta_anulada}/>
             <CobroDetailTablaItems editable={editable} cobro={cobro} style={style}/>
             <Literales cobro={cobro}/>
             <CobroDetailDocuento documentos={cobro.documentos} style={style} cobro={cobro}/>
             <EnviosTabla envios={cobro.envios} style={style}/>
-            <div className="col-12">
+            {!esta_anulada && <div className="col-12">
                 <Button
                     color="primary"
                     onClick={() => imprimirCobro()}
@@ -267,9 +283,16 @@ const CobroDetail = memo(props => {
                     >
                         Cobrada
                     </Button>}
-                </Fragment>
-                }
-            </div>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        className='ml-2'
+                        onClick={() => setShowAnular(true)}
+                    >
+                        Anular
+                    </Button>
+                </Fragment>}
+            </div>}
             {cobro.fecha_cobro && <div>
                 Pagada en {fechaFormatoUno(moment(cobro.fecha_cobro).tz('America/Bogota').toDate())}<br/>
                 Recibo {cobro.recibo_pago}<br/>
