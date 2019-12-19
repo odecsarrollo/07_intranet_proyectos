@@ -16,18 +16,20 @@ import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
 const List = memo(props => {
     const dispatch = useDispatch();
     const {history} = props;
+    const permisos_proyectos = useTengoPermisos(PROYECTOS);
+    const permisos_cotizaciones = useTengoPermisos(COTIZACIONES);
     const cargarDatos = () => {
-        dispatch(actions.fetchProyectos());
+        if (permisos_proyectos.list) {
+            dispatch(actions.fetchProyectos());
+        }
     };
     useEffect(() => {
         cargarDatos();
         return () => {
             dispatch(actions.clearProyectos());
         };
-    }, []);
+    }, [permisos_proyectos.list]);
     const list = useSelector(state => state.proyectos);
-    const permisos_proyectos = useTengoPermisos(PROYECTOS);
-    const permisos_cotizaciones = useTengoPermisos(COTIZACIONES);
     const method_pool = {
         fetchObjectMethod: (id, options) => dispatch(actions.fetchProyecto(id, options)),
         deleteObjectMethod: (id, options) => dispatch(actions.deleteProyecto(id, options)),

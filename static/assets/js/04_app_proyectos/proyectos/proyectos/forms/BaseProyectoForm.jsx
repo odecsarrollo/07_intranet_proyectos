@@ -38,7 +38,7 @@ const BaseProyectoForm = (props) => {
                     textField='nombre'
                     name='tipo_id_proyecto'
                 />}
-            {initialValues.cotizaciones.length === 0 && <Fragment>
+            {initialValues && initialValues.cotizaciones && initialValues.cotizaciones.length === 0 && <Fragment>
                 <MyTextFieldSimple
                     className="col-12 col-md-4"
                     nombre='Nro. Cotización Componentes'

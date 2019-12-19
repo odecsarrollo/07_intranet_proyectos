@@ -18,7 +18,7 @@ let Form = memo(props => {
         initialValues = null,
         onSubmit,
         onCancel,
-        anulada
+        anulada,
     } = props;
     const cobro = initialValues;
     const editable = cobro ? cobro.editable : true;
