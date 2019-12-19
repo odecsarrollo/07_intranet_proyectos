@@ -30,7 +30,7 @@ export const deleteSistemasEquipoComputador = (id, options_action = {}) => {
 export const fetchSistemasEquiposComputadores = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {
@@ -69,7 +69,7 @@ export const updateSistemasEquipoComputador = (id, values, options_action = {}) 
 export function fetchComputadoresFile(listado, options_action = {}) {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         let params = new URLSearchParams();
         params.append('listado', JSON.stringify(listado));

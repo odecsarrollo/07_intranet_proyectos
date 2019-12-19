@@ -30,7 +30,7 @@ export const deleteHoraColaboradorProyectoInicial = (id, options_action = {}) =>
 export const fetchHorasColaboradoresProyectosIniciales = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {
@@ -47,7 +47,7 @@ export function fetchHorasColaboradoresProyectosInicialesxLiteral(literal_id, op
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/horas_por_literal/?literal_id=${literal_id}`;
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {

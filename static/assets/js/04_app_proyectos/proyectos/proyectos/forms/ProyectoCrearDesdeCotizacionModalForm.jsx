@@ -1,5 +1,5 @@
 import React, {memo, useState} from 'react';
-import {reduxForm} from 'redux-form';
+import {formValueSelector, reduxForm} from 'redux-form';
 import {connect, useSelector, useDispatch} from "react-redux";
 import {MyFormTagModal} from '../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import DialogSeleccionar from "../../../../00_utilities/components/ui/search_and_select/SearchAndSelect";
@@ -9,6 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import * as actions from "../../../../01_actions/01_index";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
+const selector = formValueSelector('proyectoCrearDesdeCotizacionModalForm');
 let ProyectoCrearDesdeCotizacionModalForm = memo(props => {
     const {
         pristine,
@@ -24,6 +25,7 @@ let ProyectoCrearDesdeCotizacionModalForm = memo(props => {
         clientes_list,
     } = props;
     const dispatch = useDispatch();
+    const myValues = useSelector(state => selector(state, 'nro_automatico', ''));
     const [open_relacionar, setOpenRelacionar] = useState(false);
     const relacionarQuitarProyecto = (proyecto_id) => {
         dispatch(actions.relacionarQuitarProyectoaCotizacion(initialValues.cotizacion, proyecto_id, {callback: onCancel}))
@@ -84,6 +86,7 @@ let ProyectoCrearDesdeCotizacionModalForm = memo(props => {
                     {initialValues.cotizacion_nro}
                 </Typography>
                 <BaseForm
+                    myValues={myValues}
                     clientes_list={clientes_list}
                     permisos_object={permisos_object}
                     initialValues={initialValues}

@@ -30,7 +30,7 @@ export const deleteColaboradorCostoMes = (id, options_action = {}) => {
 export const fetchColaboradoresCostosMeses = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {
@@ -46,7 +46,7 @@ export const fetchColaboradoresCostosMeses = (options_action = {}) => {
 export const fetchColaboradoresCostosMesesxFechas = (fecha_inicial, fecha_final, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {

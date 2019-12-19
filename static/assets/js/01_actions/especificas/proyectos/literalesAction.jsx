@@ -23,7 +23,7 @@ export function fetchLiteralesxParametro(parametro, options_action = {}) {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/listar_literales_x_parametro/?parametro=${parametro}`;
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {
@@ -66,7 +66,7 @@ export function quitarMiembroLiteral(id, id_usuario, options_action = {}) {
 export const fetchLiterales = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {
@@ -82,7 +82,7 @@ export const fetchLiterales = (options_action = {}) => {
 export function fetchLiteralesXProyecto(proyecto_id, options_action = {}) {
     return function (dispatch) {
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {
@@ -99,7 +99,7 @@ export const fetchLiteralesAbiertos = (options_action = {}) => {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/abiertos`;
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {
@@ -116,7 +116,7 @@ export const fetchLiteralesConSeguimiento = (options_action = {}) => {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/con_seguimiento`;
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {
@@ -134,7 +134,7 @@ export const fetchLiteralesSinSincronizar = (options_action = {}) => {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/sin_sincronizar`;
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {
@@ -151,7 +151,7 @@ export const fetchLiteralesProyectoAbierto = (options_action = {}) => {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/proyecto_abierto`;
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {

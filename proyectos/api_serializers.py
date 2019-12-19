@@ -295,23 +295,39 @@ class ProyectoSerializer(CustomSerializerMixin, serializers.ModelSerializer):
         id_proyecto = validated_data.get('id_proyecto', None)
         abierto = validated_data.get('abierto', None)
         nombre = validated_data.get('nombre', None)
+        cotizacion_componentes_nro_cotizacion = validated_data.get('cotizacion_componentes_nro_cotizacion', None)
+        cotizacion_componentes_nro_orden_compra = validated_data.get('cotizacion_componentes_nro_orden_compra', None)
+        cotizacion_componentes_precio_venta = validated_data.get('cotizacion_componentes_precio_venta', 0)
         proyecto = proyecto_crear_actualizar(
             proyecto_id=instance.id,
             nombre=nombre,
             abierto=abierto,
-            id_proyecto=id_proyecto
+            id_proyecto=id_proyecto,
+            cotizacion_componentes_precio_venta=cotizacion_componentes_precio_venta,
+            cotizacion_componentes_nro_cotizacion=cotizacion_componentes_nro_cotizacion,
+            cotizacion_componentes_nro_orden_compra=cotizacion_componentes_nro_orden_compra
         )
         return proyecto
 
     def create(self, validated_data):
         from .services import proyecto_crear_actualizar
+        proyecto_id = validated_data.get('proyecto_id', None)
+        id_proyecto = validated_data.get('id_proyecto', None)
         tipo_id_proyecto = validated_data.get('tipo_id_proyecto', None)
         nombre = validated_data.get('nombre', None)
         cotizacion_relacionada_id = validated_data.get('cotizacion_relacionada_id', None)
+        cotizacion_componentes_nro_cotizacion = validated_data.get('cotizacion_componentes_nro_cotizacion', None)
+        cotizacion_componentes_nro_orden_compra = validated_data.get('cotizacion_componentes_nro_orden_compra', None)
+        cotizacion_componentes_precio_venta = validated_data.get('cotizacion_componentes_precio_venta', 0)
         proyecto = proyecto_crear_actualizar(
+            proyecto_id=proyecto_id,
+            id_proyecto=id_proyecto,
             tipo_id_proyecto=tipo_id_proyecto,
             nombre=nombre,
-            cotizacion_relacionada_id=cotizacion_relacionada_id
+            cotizacion_relacionada_id=cotizacion_relacionada_id,
+            cotizacion_componentes_precio_venta=cotizacion_componentes_precio_venta,
+            cotizacion_componentes_nro_orden_compra=cotizacion_componentes_nro_orden_compra,
+            cotizacion_componentes_nro_cotizacion=cotizacion_componentes_nro_cotizacion
         )
         return proyecto
 
@@ -326,6 +342,9 @@ class ProyectoSerializer(CustomSerializerMixin, serializers.ModelSerializer):
             'en_cguno',
             'cliente',
             'cliente_nombre',
+            'cotizacion_componentes_nro_cotizacion',
+            'cotizacion_componentes_precio_venta',
+            'cotizacion_componentes_nro_orden_compra',
             'tipo_id_proyecto',
             'costo_presupuestado_cotizaciones',
             'valor_orden_compra_cotizaciones',
@@ -348,6 +367,9 @@ class ProyectoSerializer(CustomSerializerMixin, serializers.ModelSerializer):
             'mis_documentos': {'read_only': True},
             'cotizaciones': {'read_only': True},
             'id_proyecto': {'allow_null': True, 'required': False},
+            'cotizacion_componentes_nro_cotizacion': {'allow_null': True, 'required': False},
+            'cotizacion_componentes_precio_venta': {'allow_null': True, 'required': False},
+            'cotizacion_componentes_nro_orden_compra': {'allow_null': True, 'required': False},
         }
 
 
@@ -437,6 +459,13 @@ class ProyectoConDetalleSerializer(ProyectoSerializer):
 
 # Consecutivo proyectos
 class ConsecutivoProyectoCotizacionAdicionalSerializer(serializers.ModelSerializer):
+    orden_compra_archivo_url = serializers.SerializerMethodField()
+
+    def get_orden_compra_archivo_url(self, obj):
+        if obj.orden_compra_archivo:
+            return obj.orden_compra_archivo.url
+        return None
+
     class Meta:
         model = Cotizacion
         fields = [
@@ -445,6 +474,7 @@ class ConsecutivoProyectoCotizacionAdicionalSerializer(serializers.ModelSerializ
             'orden_compra_fecha',
             'fecha_entrega_pactada',
             'dias_para_vencer',
+            'orden_compra_archivo_url',
             'valor_orden_compra',
             'unidad_negocio',
             'nro_cotizacion',
@@ -453,6 +483,12 @@ class ConsecutivoProyectoCotizacionAdicionalSerializer(serializers.ModelSerializ
 
 class ConsecutivoProyectoCotizacionSerializer(serializers.ModelSerializer):
     cotizaciones_adicionales = ConsecutivoProyectoCotizacionAdicionalSerializer(many=True, read_only=True)
+    orden_compra_archivo_url = serializers.SerializerMethodField()
+
+    def get_orden_compra_archivo_url(self, obj):
+        if obj.orden_compra_archivo:
+            return obj.orden_compra_archivo.url
+        return None
 
     class Meta:
         model = Cotizacion
@@ -462,6 +498,7 @@ class ConsecutivoProyectoCotizacionSerializer(serializers.ModelSerializer):
             'orden_compra_fecha',
             'fecha_entrega_pactada',
             'dias_para_vencer',
+            'orden_compra_archivo_url',
             'valor_orden_compra',
             'unidad_negocio',
             'nro_cotizacion',
@@ -500,6 +537,9 @@ class ConsecutivoProyectoSerializer(serializers.ModelSerializer):
             'cliente',
             'cliente_nombre',
             'id_proyecto',
+            'cotizacion_componentes_precio_venta',
+            'cotizacion_componentes_nro_orden_compra',
+            'cotizacion_componentes_nro_cotizacion',
             'nombre',
             'mis_literales',
             'cotizaciones'

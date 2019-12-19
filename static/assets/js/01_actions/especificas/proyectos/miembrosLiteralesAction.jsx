@@ -13,7 +13,7 @@ const current_url_api = 'miembros_literales';
 export const fetchMiembrosLiterales_x_literal = (id_literal, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {
@@ -48,7 +48,7 @@ export const deleteMiembroLiteral = (id, options_action = {}) => {
 export const fetchMiembrosLiterales = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {

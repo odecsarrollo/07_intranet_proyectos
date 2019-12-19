@@ -33,7 +33,7 @@ export const deleteCotizacion = (id, options_action = {}) => {
 export const fetchCotizaciones = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {
@@ -46,10 +46,27 @@ export const fetchCotizaciones = (options_action = {}) => {
     }
 };
 
+export function fetchCotizacionesxParametro(parametro, options_action = {}) {
+    return function (dispatch) {
+        const FULL_URL = `${current_url_api}/listar_cotizaciones_x_parametro/?parametro=${parametro}`;
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
+        };
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        return fetchListGetURLParameters(FULL_URL, options);
+    }
+}
+
 export const fetchCotizacionesAgendadas = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {
@@ -152,6 +169,17 @@ export const relacionarQuitarLiteralCotizacion = (id, literal_id, options_action
         return callApiMethodPostParameters(current_url_api, id, 'relacionar_quitar_literal', params, options)
     }
 };
+export const convertirEnAdicionalCotizacion = (id, cotizacion_inicial_id, options_action = {}) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        params.append('cotizacion_inicial_id', cotizacion_inicial_id);
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: response})
+        };
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'convertir_en_adicional', params, options)
+    }
+};
 
 export const setRevisadoCotizacion = (id, options_action = {}) => {
     return (dispatch) => {
@@ -163,29 +191,12 @@ export const setRevisadoCotizacion = (id, options_action = {}) => {
     }
 };
 
-export function fetchCotizacionesxParametro(parametro, options_action = {}) {
-    return function (dispatch) {
-        const FULL_URL = `${current_url_api}/listar_cotizaciones_x_parametro/?parametro=${parametro}`;
-        const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
-        };
-        const {limpiar_coleccion = true} = options_action;
-        const options = {
-            dispatches,
-            ...options_action,
-            dispatch_method: dispatch,
-            clear_action_type: limpiar_coleccion ? TYPES.clear : null
-        };
-        return fetchListGetURLParameters(FULL_URL, options);
-    }
-}
-
 
 export const fetchCotizacionesPidiendoCarpeta = (options_action = {}) => {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/listar_cotizacion_abrir_carpeta`;
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {
@@ -202,7 +213,7 @@ export const fetchCotizacionesConProyectos = (options_action = {}) => {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/cotizaciones_con_proyectos`;
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {
@@ -219,7 +230,7 @@ export const fetchCotizacionesTuberiaVentas = (options_action = {}) => {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/listar_cotizaciones_tuberia_ventas`;
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {
@@ -235,7 +246,7 @@ export const fetchCotizacionesTuberiaVentas = (options_action = {}) => {
 export const fetchCotizacionesTuberiaVentasResumen = (ano = null, mes = null, options_action = {}) => {
     return function (dispatch) {
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         if (ano && mes) {
             const FULL_URL = `${current_url_api}/cotizaciones_resumen_tuberia_ventas/?ano=${ano}&mes=${mes}`;
@@ -274,9 +285,9 @@ export const fetchCotizacion = (id, options_action = {}) => {
     }
 };
 
-export const clearCotizaciones = () => {
+export const clearCotizaciones = (options_action = {}) => {
     return (dispatch) => {
-        dispatch({type: TYPES.clear});
+        dispatch({type: TYPES.clear, payload: options_action});
 
     }
 };

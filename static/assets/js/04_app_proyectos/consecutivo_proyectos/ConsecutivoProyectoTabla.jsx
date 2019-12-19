@@ -12,6 +12,8 @@ const ConsecutivoProyectoTablaItem = props => {
         proyecto: {
             cotizaciones,
             mis_literales,
+            cotizacion_componentes_nro_cotizacion,
+            cotizacion_componentes_nro_orden_compra,
         },
         permisos_proyectos,
         permisos_cotizaciones
@@ -47,12 +49,18 @@ const ConsecutivoProyectoTablaItem = props => {
             </div>
             <div className="col-1">{proyecto.cliente_nombre}</div>
             <div className="col-9">
-                {cotizaciones_adicionales.length > 0 &&
+                {(cotizaciones_adicionales.length > 0 || cotizacion_componentes_nro_cotizacion || cotizacion_componentes_nro_orden_compra) &&
                 <div className="row">
                     <div className="col-3"></div>
                     <div className="col-2"></div>
                     <div className="col-1"></div>
                     <div className="col-6">
+                        {(cotizacion_componentes_nro_orden_compra || cotizacion_componentes_nro_cotizacion) &&
+                        <div className="row">
+                            <div className="col-4">{cotizacion_componentes_nro_orden_compra}</div>
+                            <div className="col-4">{cotizacion_componentes_nro_cotizacion}</div>
+                            <div className="col-4"></div>
+                        </div>}
                         {_.map(cotizaciones_adicionales, c => <div className="row" key={c.id}>
                             <div className="col-4">
                                 {permisos_cotizaciones.detail ? <Link
@@ -62,7 +70,9 @@ const ConsecutivoProyectoTablaItem = props => {
                                 </Link> : <div>{c.unidad_negocio}-{c.nro_cotizacion}</div>}
                             </div>
                             <div className="col-4">
-                                {c.orden_compra_nro}
+                                {c.orden_compra_archivo_url ?
+                                    <a href={c.orden_compra_archivo_url}
+                                       target='_blank'>{c.orden_compra_nro}</a> : c.orden_compra_nro}
                             </div>
                             <div className="col-4">
                                 {c.fecha_entrega_pactada} {`${c.dias_para_vencer ? `(${c.dias_para_vencer} días)` : ''}`}
@@ -86,7 +96,11 @@ const ConsecutivoProyectoTablaItem = props => {
                                         {cotizacion.unidad_negocio}-{cotizacion.nro_cotizacion}
                                     </Link> : <div>{cotizacion.unidad_negocio}-{cotizacion.nro_cotizacion}</div>}
                                 </div>
-                                <div className="col-4">{cotizacion.orden_compra_nro}</div>
+                                <div className="col-4">
+                                    {cotizacion.orden_compra_archivo_url ?
+                                        <a href={cotizacion.orden_compra_archivo_url}
+                                           target='_blank'>{cotizacion.orden_compra_nro}</a> : cotizacion.orden_compra_nro}
+                                </div>
                                 <div
                                     className="col-4">{cotizacion.fecha_entrega_pactada} {`${cotizacion.dias_para_vencer ? `(${cotizacion.dias_para_vencer} días)` : ''}`}
                                 </div>

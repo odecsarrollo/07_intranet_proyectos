@@ -45,7 +45,7 @@ export const deleteContactoCliente = (id, options_action = {}) => {
 export const fetchContactosClientes = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {
@@ -61,7 +61,7 @@ export const fetchContactosClientes = (options_action = {}) => {
 export const fetchContactosClientes_por_cliente = (cliente_id, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {

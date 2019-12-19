@@ -29,7 +29,7 @@ export const deleteCanalDistribucion = (id, options_action = {}) => {
 export const fetchCanalesDistribuciones = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {

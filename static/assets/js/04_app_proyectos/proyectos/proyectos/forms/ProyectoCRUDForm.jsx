@@ -1,8 +1,11 @@
 import React, {memo} from 'react';
-import {reduxForm} from 'redux-form';
+import {formValueSelector, reduxForm} from 'redux-form';
 import {MyFormTagModal} from '../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import validate from './validate';
 import BaseForm from './BaseProyectoForm';
+import {useSelector} from "react-redux/es/hooks/useSelector";
+
+const selector = formValueSelector('proyectosCRUDForm');
 
 let ProyectosCRUDForm = memo(props => {
     const {
@@ -18,6 +21,7 @@ let ProyectosCRUDForm = memo(props => {
         permisos_object,
         clientes_list
     } = props;
+    const myValues = useSelector(state => selector(state, 'nro_automatico', ''));
     return (
         <MyFormTagModal
             onCancel={onCancel}
@@ -31,6 +35,7 @@ let ProyectosCRUDForm = memo(props => {
         >
             <div className="m-2">
                 <BaseForm
+                    myValues={myValues}
                     clientes_list={clientes_list}
                     permisos_object={permisos_object}
                     initialValues={initialValues}

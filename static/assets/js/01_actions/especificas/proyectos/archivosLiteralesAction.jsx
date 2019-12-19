@@ -30,7 +30,7 @@ export const deleteArchivoLiteral = (id, options_action = {}) => {
 export const fetchArchivosLiterales = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {
@@ -47,7 +47,7 @@ export const fetchArchivosLiterales_x_literal = (literal_id, options_action = {}
     return (dispatch) => {
         const url = `${current_url_api}/listar_x_literal/?literal_id=${literal_id}`;
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {

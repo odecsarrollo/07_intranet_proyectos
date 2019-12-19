@@ -71,6 +71,7 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
             'responsable'
         ).prefetch_related(
             'proyectos',
+            'cotizaciones_adicionales__contacto_cliente',
             'cotizacion_inicial__cotizaciones_adicionales',
             'cotizaciones_adicionales__cotizaciones_adicionales'
         ).all()
@@ -106,7 +107,7 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
     def listar_cotizaciones_x_parametro(self, request):
         parametro = request.GET.get('parametro')
         qs = None
-        search_fields = ['nro_cotizacion', 'unidad_negocio']
+        search_fields = ['nro_cotizacion', 'unidad_negocio', 'estado']
         if search_fields:
             qs = query_varios_campos(self.queryset, search_fields, parametro)
         self.serializer_class = CotizacionSerializer

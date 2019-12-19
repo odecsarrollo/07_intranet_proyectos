@@ -83,9 +83,15 @@ def proyecto_crear_actualizar(
         abierto: bool = True,
         id_proyecto: str = None,
         tipo_id_proyecto: str = None,
+        cotizacion_componentes_nro_cotizacion: str = None,
+        cotizacion_componentes_nro_orden_compra: str = None,
+        cotizacion_componentes_precio_venta: float = 0,
 ) -> Proyecto:
     if proyecto_id is not None:
         proyecto = Proyecto.objects.get(pk=proyecto_id)
+        if cotizacion_componentes_precio_venta < 0:
+            raise ValidationError({
+                '_error': 'No se puede asociar un precio de venta de cotización de componentes porque tiene cotizaciones de proyectos asociadas'})
         cambio_id_proyecto = not id_proyecto == proyecto.id_proyecto
         if id_proyecto is not None:
             if cambio_id_proyecto and proyecto.en_cguno:
@@ -94,16 +100,30 @@ def proyecto_crear_actualizar(
                         '_error': 'El id del proyecto no se puede cambiar, ya esta sincronizado con el sistema de información'})
             proyecto.id_proyecto = id_proyecto
     else:
-        if tipo_id_proyecto is None:
+        if tipo_id_proyecto is None and id_proyecto is None:
             raise ValidationError(
                 {
-                    '_error': 'Para crear un proyecto debe de definir que tipo de proyecto es. Ej. OP, OO, OS'})
+                    '_error': 'Para crear un proyecto debe de definir que tipo de proyecto es. Ej. OP, OO, OS o el numero de proyecto'})
+
+        if tipo_id_proyecto is not None and id_proyecto is not None:
+            raise ValidationError(
+                {
+                    '_error': 'Se ha definido tipo de proyecto y numero de proyecto, sólo se puede definir uno'})
 
         proyecto = Proyecto()
         proyecto.en_cguno = False
         proyecto.costo_materiales = 0
-        proyecto.id_proyecto = proyecto_generar_id_proyecto(tipo_id_proyecto)
+        if tipo_id_proyecto is not None:
+            proyecto.id_proyecto = proyecto_generar_id_proyecto(tipo_id_proyecto)
+        elif id_proyecto is not None:
+            if Proyecto.objects.filter(id_proyecto=id_proyecto).exists():
+                raise ValidationError(
+                    {'_error': 'El numero de proyecto ya existe, debe elegir otro'})
+            proyecto.id_proyecto = id_proyecto
     proyecto.abierto = abierto
+    proyecto.cotizacion_componentes_nro_cotizacion = cotizacion_componentes_nro_cotizacion
+    proyecto.cotizacion_componentes_nro_orden_compra = cotizacion_componentes_nro_orden_compra
+    proyecto.cotizacion_componentes_precio_venta = cotizacion_componentes_precio_venta
     proyecto.nombre = nombre
     proyecto.save()
 

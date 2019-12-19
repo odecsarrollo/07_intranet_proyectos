@@ -135,7 +135,7 @@ export const deleteCotizacionComponente = (id, options_action = {}) => {
 export const fetchCotizacionesComponentes = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {
@@ -149,7 +149,7 @@ export const fetchCotizacionesComponentes = (options_action = {}) => {
 export const fetchCotizacionesComponentesEdicionAsesor = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {

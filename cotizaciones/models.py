@@ -83,6 +83,7 @@ class Cotizacion(TimeStampedModel):
 
     class Meta:
         permissions = [
+            ['cotizacion_convertir_en_adicional', 'Puede convertir cotizacion en adicional'],
             ['list_cotizaciones_abrir_carpeta', 'Puede listar cotizaciones para abrir carpeta'],
             ['list_cotizaciones_notificaciones_consecutivo_proyectos',
              'Puede listar cotizaciones para notificaciones consecutivo proyectos'],

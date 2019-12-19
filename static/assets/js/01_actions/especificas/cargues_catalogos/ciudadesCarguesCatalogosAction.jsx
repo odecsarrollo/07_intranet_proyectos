@@ -9,7 +9,7 @@ const current_url_api = 'cargues_catalogos_ciudades';
 export const fetchCiudadesCarguesCatalogos = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {

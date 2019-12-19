@@ -18,7 +18,12 @@ export default function (actions_types, state = {}, action, mapKey = 'id') {
             return omit(state, action.payload);
         case actions_types.fetch_all:
             mostrarLogs('fetch_all');
-            return mapKeys(action.payload.data, mapKey);
+            let result = mapKeys(action.payload.data, mapKey);
+            const {preserve_items = null} = action.payload;
+            if (preserve_items) {
+                result = {..._.omit(result, preserve_items), ..._.pickBy(state, e => preserve_items.includes(e[mapKey]))}
+            }
+            return result;
         case actions_types.fetch:
             mostrarLogs('fetch');
             if (!_.isEqual(state[action.payload.data.id], action.payload.data)) {
@@ -28,6 +33,12 @@ export default function (actions_types, state = {}, action, mapKey = 'id') {
             }
         case actions_types.clear:
             mostrarLogs('clear');
+            if (action.payload) {
+                const {omit_items = null} = action.payload;
+                if (omit_items) {
+                    return _.pickBy(state, e => omit_items.includes(e[mapKey]));
+                }
+            }
             return {};
         case actions_types.update:
             mostrarLogs('update');

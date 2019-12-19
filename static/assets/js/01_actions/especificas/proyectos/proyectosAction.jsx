@@ -18,7 +18,7 @@ export function fetchProyectosxParametro(parametro, options_action = {}) {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/listar_proyectos_x_parametro/?parametro=${parametro}`;
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {
@@ -62,7 +62,7 @@ export function printReporteCostoDosProyecto(valores, options_action = {}) {
 export const fetchProyectos = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {
@@ -79,7 +79,7 @@ export const fetchProyectosConCotizaciones = (options_action = {}) => {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/proyectos_con_cotizaciones`;
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {
@@ -96,7 +96,7 @@ export const fetchProyectosConCotizaciones = (options_action = {}) => {
 export const fetchProyectosConsecutivo = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {
@@ -119,7 +119,7 @@ export const fetchProyectosAbiertos = (options_action = {}) => {
     return (dispatch) => {
         const FULL_URL = `${current_url_api}/abiertos`;
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {
@@ -136,7 +136,7 @@ export const fetchProyectosConLiteralesAbiertos = (options_action = {}) => {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/con_literales_abiertos`;
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {

@@ -30,7 +30,7 @@ export const deleteSeguimientoCotizacion = (id, options_action = {}) => {
 export const fetchSeguimientosCotizaciones = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {
@@ -47,7 +47,7 @@ export function fetchSeguimientosCotizacionesxCotizacion(cotizacion_id, options_
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/listar_x_cotizacion/?cotizacion_id=${cotizacion_id}`;
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {
@@ -64,7 +64,7 @@ export function fetchSeguimientosCotizacionesTareasPendientes(options_action = {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/listar_tareas_pendientes`;
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {

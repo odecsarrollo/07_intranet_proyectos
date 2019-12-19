@@ -441,8 +441,24 @@ def cotizacion_convertir_en_adicional(
         cotizacion_id: int,
         cotizacion_inicial_id: int
 ) -> Cotizacion:
+    estado_permitido = ['Aceptación de Terminos y Condiciones', 'Cierre (Aprobado)']
     cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
     cotizacion_inicial = Cotizacion.objects.get(pk=cotizacion_inicial_id)
+    if cotizacion_inicial.estado not in estado_permitido:
+        raise ValidationError({
+            '_error': 'La cotización que se pretende poner adicional esta en estado %s y por ende no puede ser inicial' % (
+                cotizacion_inicial.estado)})
+
+    if cotizacion.estado not in estado_permitido:
+        raise ValidationError({
+            '_error': 'La cotización que se pretende volver adicional esta en estado %s y por ende no puede ser adicional' % (
+                cotizacion.estado)})
+
+    if cotizacion.cotizacion_inicial:
+        raise ValidationError({'_error': 'Ya es una cotización adicional'})
+    if cotizacion_inicial.cotizacion_inicial:
+        raise ValidationError(
+            {'_error': 'No se puede relacionar como cotización inicial a una que sea adicional'})
     if cotizacion.cliente_id != cotizacion_inicial.cliente_id:
         raise ValidationError(
             {'_error': 'Los clientes de las dos cotizaciones son diferentes, validar que sean iguales'})
@@ -451,6 +467,11 @@ def cotizacion_convertir_en_adicional(
         for proyecto in proyectos_cotizacion.all():
             cotizacion.proyectos.remove(proyecto)
             cotizacion_inicial.proyectos.add(proyecto)
+    cotizaciones_adicionales_cotizacion = cotizacion.cotizaciones_adicionales
+    if cotizaciones_adicionales_cotizacion.exists():
+        for cotizacion_adicional in cotizaciones_adicionales_cotizacion.all():
+            cotizacion.cotizaciones_adicionales.remove(cotizacion_adicional)
+            cotizacion_inicial.cotizaciones_adicionales.add(cotizacion_adicional)
     cotizacion.cotizacion_inicial = cotizacion_inicial
     cotizacion.save()
     return cotizacion

@@ -30,7 +30,7 @@ export const deleteArchivoCotizacion = (id, options_action = {}) => {
 export const fetchArchivosCotizaciones = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {
@@ -47,7 +47,7 @@ export const fetchArchivosCotizaciones_x_cotizacion = (cotizacion_id, options_ac
     return (dispatch) => {
         const url = `${current_url_api}/listar_x_cotizacion/?cotizacion_id=${cotizacion_id}`;
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {

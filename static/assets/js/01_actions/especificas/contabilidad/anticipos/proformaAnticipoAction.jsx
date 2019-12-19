@@ -15,7 +15,7 @@ const current_url_api = 'contabilidad_anticipos_proformas_cobros';
 export const fetchProformasAnticiposReporte = (year = null, month = null, options_action = {}) => {
     return function (dispatch) {
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {
@@ -146,7 +146,7 @@ export const deleteProformaAnticipo = (id, options_action = {}) => {
 export const fetchProformasAnticipos = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {

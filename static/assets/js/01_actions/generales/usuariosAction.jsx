@@ -18,7 +18,7 @@ export function fetchUsuariosxPermiso(permiso_nombre, options_action = {}) {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/listar_x_permiso/?permiso_nombre=${permiso_nombre}`;
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {
@@ -71,7 +71,7 @@ export const deleteUsuario = (id, options_action = {}) => {
 export const fetchUsuarios = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {

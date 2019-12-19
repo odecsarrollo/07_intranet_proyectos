@@ -16,7 +16,7 @@ export function fetchHojasTrabajosxFechas(fecha_inicial, fecha_final, options_ac
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/listar_x_fechas/?fecha_inicial=${fecha_inicial}&fecha_final=${fecha_final}`;
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {
@@ -50,7 +50,7 @@ export const deleteHojaTrabajo = (id, options_action = {}) => {
 export const fetchHojasTrabajos = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: response})
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };
         const {limpiar_coleccion = true} = options_action;
         const options = {

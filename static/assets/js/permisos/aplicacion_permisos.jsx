@@ -374,6 +374,7 @@ export const COTIZACIONES = {
     gestionar_cotizacion: 'gestionar_cotizacion',
     list_tuberia_ventas: 'list_tuberia_ventas',
     informe_uno: 'list_tuberia_informe_uno',
+    cotizacion_convertir_en_adicional: 'cotizacion_convertir_en_adicional',
 };
 
 export const CONTACTOS_CLIENTES = {

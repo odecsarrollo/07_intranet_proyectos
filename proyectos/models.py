@@ -18,6 +18,9 @@ class Proyecto(models.Model):
     en_cguno = models.BooleanField(default=True)
     nombre = models.CharField(max_length=200, null=True, blank=True)
     cliente = models.ForeignKey(ClienteBiable, on_delete=models.PROTECT, null=True, blank=True)
+    cotizacion_componentes_nro_cotizacion = models.CharField(null=True, blank=True, max_length=20)
+    cotizacion_componentes_precio_venta = models.DecimalField(decimal_places=2, default=0, max_digits=12)
+    cotizacion_componentes_nro_orden_compra = models.CharField(null=True, blank=True, max_length=20)
 
     objects = models.Manager()
     sumatorias = ProyectoManager()
@@ -28,7 +31,8 @@ class Proyecto(models.Model):
     class Meta:
         permissions = [
             ("list_consecutivo_proyectos", "Can list consecutivo proyectos"),
-            ("enviar_soliciud_apertura_proyectos_al_almacen_proyectos", "Enviar Solicitud Apertura Proyectos al Almacen"),
+            ("enviar_soliciud_apertura_proyectos_al_almacen_proyectos",
+             "Enviar Solicitud Apertura Proyectos al Almacen"),
             ("list_proyecto", "Can see list proyectos"),
             ("detail_proyecto", "Can see detail proyecto"),
             ("valor_proyecto", "Ver valor proyecto"),
