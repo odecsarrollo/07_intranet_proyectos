@@ -147,9 +147,10 @@ class LoginAPI(generics.GenericAPIView):
                 Q(group__user=user)
             ).distinct()
 
+        _, token = AuthToken.objects.create(user)
         return Response({
             "user": UserSerializer(user, context=self.get_serializer_context()).data,
-            "token": AuthToken.objects.create(user),
+            "token": token,
             "mi_cuenta": UsuarioConDetalleSerializer(
                 user,
                 context=self.get_serializer_context()
