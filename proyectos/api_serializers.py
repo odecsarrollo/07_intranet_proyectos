@@ -517,6 +517,8 @@ class ConsecutivoProyectoLiteralSerializer(serializers.ModelSerializer):
             'id',
             'id_literal',
             'abierto',
+            'proyecto',
+            'en_cguno',
             'disenador',
             'disenador_nombre',
             'descripcion',

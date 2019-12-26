@@ -126,6 +126,16 @@ const ConsecutivoProyectoTabla = (props) => {
     if (busqueda_abierto !== 'TODO') {
         list = _.pickBy(list, proyecto => proyecto.mis_literales.filter(l => l.abierto === (busqueda_abierto === 'SI')).length > 0)
     }
+    let literales_sin_sincronizar = [];
+    _.map(list, proyecto => {
+        proyecto.mis_literales.map(l => {
+            literales_sin_sincronizar = [...literales_sin_sincronizar, l]
+        })
+
+    });
+    literales_sin_sincronizar = literales_sin_sincronizar.filter(e => !e.en_cguno);
+
+
     if (busqueda !== '') {
         list = _.pickBy(list, proyecto => {
                 const contiene = texto => texto.toLowerCase().includes(busqueda.toLowerCase());
@@ -146,7 +156,10 @@ const ConsecutivoProyectoTabla = (props) => {
         <div>
             {(permisos_cotizaciones.list_cotizaciones_abrir_carpeta ||
                 permisos_cotizaciones.list_cotizaciones_notificaciones_consecutivo_proyectos) &&
-            <CotizacionAbrirCarpetaLista cargarDatosConsecutivoProyectos={cargarDatosConsecutivoProyectos}/>}
+            <CotizacionAbrirCarpetaLista
+                cargarDatosConsecutivoProyectos={cargarDatosConsecutivoProyectos}
+                literales_sin_sincronizar={literales_sin_sincronizar}
+            />}
             <div className="row">
                 <div className="col-12 col-md-6 col-lg-4">
                     <TextField

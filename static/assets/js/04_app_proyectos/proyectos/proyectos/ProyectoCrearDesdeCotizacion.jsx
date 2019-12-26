@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Lista = (props) => {
-    let {list, onSelectItemEdit, permisos_object} = props;
+    let {list, literales_sin_sincronizar, onSelectItemEdit, permisos_object} = props;
     list = _.orderBy(list, ['nro_cotizacion'], ['desc']);
     const para_abrir_carpeta = _.pickBy(list, a => !a.revisada && a.abrir_carpeta);
     const para_notificar = _.pickBy(list, a => !a.revisada && a.notificar);
@@ -52,6 +52,7 @@ const Lista = (props) => {
     const [notificacion_seleccionada, setNotificacionSeleccionada] = useState(null);
     const classes = useStyles();
     const dispatch = useDispatch();
+    console.log(literales_sin_sincronizar)
     const onAbrirModal = id_cotizacion => {
         setShowVerificar(true);
         setNotificacionSeleccionada(id_cotizacion);
@@ -185,8 +186,40 @@ const Lista = (props) => {
                             )}
                         </div>
                     </ExpansionPanelDetails>
-                </ExpansionPanel>
-                }
+                </ExpansionPanel>}
+                {literales_sin_sincronizar.length > 0 && <ExpansionPanel>
+                    <ExpansionPanelSummary
+                        expandIcon={<FontAwesomeIcon
+                            icon='chevron-down'
+                            size='xs'
+                        />}
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                    >
+                        Literales Sin Sincronizar <Badge className='ml-3'
+                                                         badgeContent={literales_sin_sincronizar.length}
+                                                         color="secondary"/>
+                    </ExpansionPanelSummary>
+                    <ExpansionPanelDetails>
+                        <div className='row'>
+                            <div className="col-12">
+                                Literales que no se han sincronizado con Siesa Cloud
+                            </div>
+                            {_.map(literales_sin_sincronizar, c =>
+                                <div
+                                    className={clsx(classes.element_div, `col-12`)}
+                                    key={c.id}>
+
+                                    <Link
+                                        target='_blank'
+                                        to={`/app/proyectos/proyectos/detail/${c.proyecto}`}>
+                                        {`${c.id_literal} - ${c.descripcion}`}
+                                    </Link>
+                                </div>
+                            )}
+                        </div>
+                    </ExpansionPanelDetails>
+                </ExpansionPanel>}
             </div>
         </Fragment>
     )
@@ -196,7 +229,7 @@ const Lista = (props) => {
 const CRUD = crudHOC(CreateForm, Lista);
 
 const CotizacionAbrirCarpetaLista = memo(props => {
-    const {cargarDatosConsecutivoProyectos} = props;
+    const {cargarDatosConsecutivoProyectos, literales_sin_sincronizar = []} = props;
     const permisos_object = useTengoPermisos(COTIZACIONES);
     let lista = useSelector(state => state.cotizaciones);
     lista = _.pickBy(lista, c => !c.revisada);
@@ -227,6 +260,7 @@ const CotizacionAbrirCarpetaLista = memo(props => {
                 cargarDatos(cargarDatosConsecutivoProyectos);
             }}
             method_pool={method_pool}
+            literales_sin_sincronizar={literales_sin_sincronizar}
             list={lista}
             permisos_object={{
                 ...permisos_object,

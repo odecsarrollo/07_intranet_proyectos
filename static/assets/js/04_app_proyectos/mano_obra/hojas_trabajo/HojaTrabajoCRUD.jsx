@@ -18,6 +18,7 @@ const HojaTrabajoCRUD = memo(props => {
     const {history} = props;
     const permisos = useTengoPermisos(MANOS_OBRAS_HOJAS_TRABAJOS);
     const hojas_trabajos_diarios = useSelector(state => state.hojas_trabajos_diarios);
+    const configuracion_costos = _.map(useSelector(state => state.configuracion_costos))[0];
 
     const cargarDatos = () => {
         const {add_para_otros} = permisos;
@@ -61,6 +62,7 @@ const HojaTrabajoCRUD = memo(props => {
                 dispatch(actions.fetchHojasTrabajosxFechas(i, f));
             }}/>
             <CRUD
+                configuracion_costos={configuracion_costos}
                 posCreateMethod={(r) => history.push(`/app/proyectos/mano_obra/hojas_trabajo/detail/${r.id}`)}
                 method_pool={method_pool}
                 list={hojas_trabajos_diarios}
