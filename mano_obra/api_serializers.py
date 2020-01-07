@@ -4,8 +4,8 @@ from intranet_proyectos.general_mixins.custom_serializer_mixins import CustomSer
 from .models import (
     HojaTrabajoDiario,
     HoraHojaTrabajo,
-    HoraTrabajoColaboradorLiteralInicial
-)
+    HoraTrabajoColaboradorLiteralInicial,
+    DistribucionHoraHojaTrabajo)
 
 
 class HoraHojaTrabajoSerializer(CustomSerializerMixin, serializers.ModelSerializer):
@@ -61,6 +61,65 @@ class HoraHojaTrabajoSerializer(CustomSerializerMixin, serializers.ModelSerializ
             'colaborador_nombre',
             'creado_por_username',
             'to_string',
+        ]
+
+
+class DistribucionHoraHojaTrabajoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DistribucionHoraHojaTrabajo
+        fields = [
+            'url',
+            'id',
+            'hoja',
+            'literal',
+            'am2430_am0100',
+            'am0100_am0130',
+            'am0130_am0200',
+            'am0200_am0230',
+            'am0230_am0300',
+            'am0300_am0330',
+            'am0330_am0400',
+            'am0400_am0430',
+            'am0430_am0500',
+            'am0500_am0530',
+            'am0530_am0600',
+            'am0600_am0630',
+            'am0630_am0700',
+            'am0700_am0730',
+            'am0730_am0800',
+            'am0800_am0830',
+            'am0830_am0900',
+            'am0900_am0930',
+            'am0930_am1000',
+            'am1000_am1030',
+            'am1030_am1100',
+            'am1100_am1130',
+            'am1130_pm1200',
+            'pm1200_pm1230',
+            'pm1230_pm1300',
+            'pm1300_pm1330',
+            'pm1330_pm1400',
+            'pm1400_pm1430',
+            'pm1430_pm1500',
+            'pm1500_pm1530',
+            'pm1530_pm1600',
+            'pm1600_pm1630',
+            'pm1630_pm1700',
+            'pm1700_pm1730',
+            'pm1730_pm1800',
+            'pm1800_pm1830',
+            'pm1830_pm1900',
+            'pm1900_pm1930',
+            'pm1930_pm2000',
+            'pm2000_pm2030',
+            'pm2030_pm2100',
+            'pm2100_pm2130',
+            'pm2130_pm2200',
+            'pm2200_pm2230',
+            'pm2230_pm2300',
+            'pm2300_pm2330',
+            'pm2330_am2400',
+            'am2400_am2430',
         ]
 
 

@@ -1,14 +1,16 @@
-import React, {memo} from 'react';
+import React, {memo, useState} from 'react';
 import Loading from "./00_utilities/components/system/LoadingOverlay";
 import {Link} from 'react-router-dom'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {makeStyles, withStyles} from "@material-ui/core/styles/index";
+import {makeStyles} from "@material-ui/core/styles/index";
 import Typography from '@material-ui/core/Typography';
 import classNames from 'classnames';
 import useTengoPermisos from "./00_utilities/hooks/useTengoPermisos";
 import {MODULO_PERMISSIONS} from "./permisos";
 import * as actions from './01_actions/01_index';
 import {useDispatch} from 'react-redux';
+import DistribucionHoraHojaTrabajoDialog
+    from './04_app_proyectos/mano_obra/hojas_trabajo/DistribucionHoraHojaTrabajoDialog';
 
 const Boton = memo(props => {
     const {nombre, icono, link, classes} = props;
@@ -60,6 +62,7 @@ const IndexApp = memo(props => {
     const dispatch = useDispatch();
     const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
     const {is_superuser} = mi_cuenta;
+    const [prueba, setPrueba] = useState(false);
     const permisos_modulos = useTengoPermisos(MODULO_PERMISSIONS);
     const {
         modulo_admin,
@@ -77,6 +80,8 @@ const IndexApp = memo(props => {
                     <div className="col-12 p-5">
                         <img className='img-fluid' src={`${img_static_url}/logo.png`} alt=""/>
                     </div>
+                    {/*<span onClick={() => setPrueba(true)}>DAR CLICK AQUI</span>*/}
+                    {/*{prueba && <DistribucionHoraHojaTrabajoDialog open={prueba} onCancel={() => setPrueba(false)}/>}*/}
                     {modulo_admin && <Boton
                         nombre='Admin'
                         link='/app/admin/'

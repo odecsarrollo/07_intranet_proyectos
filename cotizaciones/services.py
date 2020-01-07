@@ -597,7 +597,7 @@ def cotizacion_generar_numero_cotizacion() -> int:
             nro_cot=Substr('nro_cotizacion', 5, 4)
         ).aggregate(Max('nro_cot'))
         ultimo_indice = int(cotizaciones['nro_cot__max']) + 1
-
+    mes = '%s%s' % ('0', mes) if mes < 10 else mes
     nuevo_nro_cotizacion = (int('%s%s' % (ano, mes)) * 10000) + ultimo_indice
 
     return nuevo_nro_cotizacion

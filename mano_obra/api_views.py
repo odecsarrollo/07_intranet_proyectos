@@ -11,17 +11,26 @@ from rest_framework.response import Response
 from .models import (
     HoraHojaTrabajo,
     HojaTrabajoDiario,
-    HoraTrabajoColaboradorLiteralInicial
+    HoraTrabajoColaboradorLiteralInicial,
+    DistribucionHoraHojaTrabajo
 )
 from .api_serializers import (
     HoraHojaTrabajoSerializer,
     HojaTrabajoDiarioSerializer,
     HoraTrabajoColaboradorLiteralInicialSerializer,
-    HojaTrabajoDiarioConDetalleSerializer)
-
-from cguno.models import ColaboradorCostoMesBiable
+    HojaTrabajoDiarioConDetalleSerializer,
+    DistribucionHoraHojaTrabajoSerializer
+)
 
 from .mixins import HoraHojaTrabajoPDFMixin
+
+
+class DistribucionHoraHojaTrabajoViewSet(viewsets.ModelViewSet):
+    queryset = DistribucionHoraHojaTrabajo.objects.select_related(
+        'hoja',
+        'literal',
+    )
+    serializer_class = DistribucionHoraHojaTrabajoSerializer
 
 
 class HojaTrabajoDiarioViewSet(viewsets.ModelViewSet):
