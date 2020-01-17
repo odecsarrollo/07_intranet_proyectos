@@ -117,8 +117,7 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
 
     @action(detail=False, http_method_names=['get', ])
     def listar_consecutivo_proyectos(self, request):
-        qs = Proyecto.objects.prefetch_related(
-            'cliente',
+        qs = Proyecto.objects.select_related('cliente').prefetch_related(
             'cotizaciones',
             'cotizaciones__cotizaciones_adicionales',
             'mis_literales',
