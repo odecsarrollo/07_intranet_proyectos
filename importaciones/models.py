@@ -53,6 +53,7 @@ class MargenProvedor(TimeStampedModel):
     )
 
     class Meta:
+        unique_together = (['categoria', 'proveedor'])
         permissions = [
             ['list_margenprovedor', 'Puede listar margenes x proveedores'],
         ]

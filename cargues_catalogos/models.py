@@ -184,7 +184,7 @@ class ItemsCatalogo(models.Model):
     material = models.CharField(max_length=100, null=True)
     color = models.CharField(max_length=30, null=True)
 
-    desc_item_padre = models.CharField(max_length=40)
+    desc_item_padre = models.CharField(max_length=400)
     unidad_medida_inventario = models.CharField(max_length=6)
     id_procedencia = models.CharField(max_length=1)
 
