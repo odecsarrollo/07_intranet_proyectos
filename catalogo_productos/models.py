@@ -36,6 +36,7 @@ class ItemVentaCatalogo(models.Model):
 
     activo = models.BooleanField(default=True)
     origen = models.CharField(max_length=20, default='LP_INTRANET')
+    id_procedencia = models.CharField(max_length=1, null=True, blank=True)
 
     objects = ItemVentaCatalogoManager()
 

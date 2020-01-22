@@ -102,6 +102,7 @@ class ItemVentaCatalogoSerializer(serializers.ModelSerializer):
             'margen',
             'activo',
             'origen',
+            'id_procedencia',
             'margen_deseado',
             'costo',
             'costo_cop',
