@@ -56,7 +56,7 @@ class ProformaAnticipo(TimeStampedModel):
         ('EUR', 'Euros'),
     )
     TIPO_DOCUMENTO_CHOICES = (
-        ('PROFORMA', 'Proforma'),
+        ('PROFORMA', 'Factura Proforma'),
         ('CUENTA_COBRO', 'Cuenta de Cobro'),
     )
     cliente = models.ForeignKey(

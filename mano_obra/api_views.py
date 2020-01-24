@@ -42,10 +42,16 @@ class HojaTrabajoDiarioViewSet(viewsets.ModelViewSet):
         'mis_horas_trabajadas__literal',
         'mis_horas_trabajadas__literal__proyecto',
     ).annotate(
-        costo_total=ExpressionWrapper((Coalesce(Sum('mis_horas_trabajadas__cantidad_minutos'), V(0)) / 60) * (
-                F('tasa__costo') / F('tasa__nro_horas_mes_trabajadas')), output_field=DecimalField(max_digits=4)),
-        cantidad_horas=ExpressionWrapper((Coalesce(Sum('mis_horas_trabajadas__cantidad_minutos'), V(0)) / 60),
-                                         output_field=DecimalField(max_digits=4))
+        costo_total=ExpressionWrapper(
+            (Coalesce(Sum('mis_horas_trabajadas__cantidad_minutos'), V(0)) / 60) * (
+                    F('tasa__costo') / F('tasa__nro_horas_mes_trabajadas')
+            ),
+            output_field=DecimalField(max_digits=4)
+        ),
+        cantidad_horas=ExpressionWrapper(
+            (Coalesce(Sum('mis_horas_trabajadas__cantidad_minutos'), V(0)) / 60),
+            output_field=DecimalField(max_digits=4)
+        )
     ).all()
     serializer_class = HojaTrabajoDiarioSerializer
 
