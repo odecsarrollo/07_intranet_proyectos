@@ -4,9 +4,7 @@ from django.db.models.functions import Coalesce
 from django.template.loader import get_template
 from weasyprint import HTML, CSS
 
-from proyectos.models import Literal
 from .models import HoraHojaTrabajo
-from cguno.models import ItemsLiteralBiable
 
 
 def get_page_body(boxes):

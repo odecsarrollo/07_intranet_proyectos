@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from cguno.api_serializers import ItemsLiteralBiableSerializer
+from cargues_detalles.api_serializers import ItemsLiteralDetalleSerializer
 from cotizaciones.models import Cotizacion
 from intranet_proyectos.general_mixins.custom_serializer_mixins import CustomSerializerMixin
 from mano_obra.api_serializers import HoraHojaTrabajoSerializer, HoraTrabajoColaboradorLiteralInicialSerializer
@@ -216,14 +216,14 @@ class LiteralSerializer(serializers.ModelSerializer):
             'orden_compra_fecha',
             'fecha_entrega_pactada',
             'mis_documentos',
-            'mis_materiales',
+            'materiales',
             'mis_horas_trabajadas',
             'mis_horas_trabajadas_iniciales',
             'facturas',
             'valor_cliente',
         ]
         extra_kwargs = {
-            'mis_materiales': {'read_only': True},
+            'materiales': {'read_only': True},
             'mis_horas_trabajadas': {'read_only': True},
             'mis_documentos': {'read_only': True},
             'mis_horas_trabajadas_iniciales': {'read_only': True},
@@ -378,7 +378,7 @@ class LiteralConDetalleSerializer(LiteralSerializer):
         many=True,
         read_only=True
     )
-    mis_materiales = ItemsLiteralBiableSerializer(many=True, read_only=True)
+    materiales = ItemsLiteralDetalleSerializer(many=True, read_only=True)
     mis_horas_trabajadas = HoraHojaTrabajoSerializer(
         many=True,
         read_only=True,

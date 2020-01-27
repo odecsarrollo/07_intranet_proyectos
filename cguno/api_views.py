@@ -7,14 +7,12 @@ from rest_framework.response import Response
 
 from .models import (
     ColaboradorBiable,
-    ItemsLiteralBiable,
     ItemsBiable,
     ColaboradorCentroCosto,
     ColaboradorCostoMesBiable
 )
 from .api_serializers import (
     ColaboradorBiableSerializer,
-    ItemsLiteralBiableSerializer,
     ItemsBiableSerializer,
     ColaboradorCentroCostoSerializer,
     ColaboradorCostoMesBiableSerializer
@@ -102,19 +100,6 @@ class ColaboradorBiableViewSet(viewsets.ModelViewSet):
                 colaborador.autogestion_horas_trabajadas = False
                 colaborador.save()
         serializer = self.get_serializer(colaborador)
-        return Response(serializer.data)
-
-
-class ItemsLiteralBiableViewSet(viewsets.ModelViewSet):
-    queryset = ItemsLiteralBiable.objects.select_related('item_biable').all()
-    serializer_class = ItemsLiteralBiableSerializer
-    http_method_names = []
-
-    @action(detail=False, http_method_names=['get', ])
-    def listar_items_x_literal(self, request):
-        literal_id = request.GET.get('id_literal')
-        lista = self.queryset.filter(literal_id=literal_id).order_by('item_biable__descripcion').all()
-        serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
 

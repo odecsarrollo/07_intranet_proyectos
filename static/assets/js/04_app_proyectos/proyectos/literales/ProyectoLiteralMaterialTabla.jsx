@@ -3,28 +3,29 @@ import {fechaFormatoDos, pesosColombianos, numeroFormato} from '../../../00_util
 import {ListaBusqueda} from '../../../00_utilities/utiles';
 
 const ItemTabla = memo((props) => {
-    const {item, item: {item_biable}, ultimo_costo_item_biable} = props;
+    const {material, material: {item}, ultimo_costo_item_biable} = props;
     return (
         <tr>
-            <td>{fechaFormatoDos(item.lapso)}</td>
-            <td>{item_biable.id_item}</td>
-            <td>{item_biable.id_referencia}</td>
-            <td>{item_biable.descripcion}</td>
-            <td>{numeroFormato(item.cantidad)}</td>
-            <td>{item_biable.unidad_medida_inventario}</td>
-            {ultimo_costo_item_biable && <td>{pesosColombianos(item.costo_total)}</td>}
+            <td>{fechaFormatoDos(material.lapso)}</td>
+            <td>{item.id_item}</td>
+            <td>{item.id_referencia}</td>
+            <td>{item.descripcion}</td>
+            <td>{numeroFormato(material.cantidad)}</td>
+            <td>{item.unidad_medida_inventario}</td>
+            <td>{item.sistema_informacion === 1 ? 'CGUno' : 'Siesa Cloud'}</td>
+            {ultimo_costo_item_biable && <td>{pesosColombianos(material.costo_total)}</td>}
         </tr>
     )
 });
 
 const buscarBusqueda = (lista, busqueda) => {
-    return _.pickBy(lista, (item) => {
+    return _.pickBy(lista, (material) => {
         return (
-            item.item_biable && (
-                item.item_biable.descripcion.toUpperCase().includes(busqueda.toUpperCase()) ||
-                item.item_biable.id_referencia.toUpperCase().includes(busqueda.toUpperCase()) ||
-                fechaFormatoDos(item.lapso).toUpperCase().includes(busqueda.toUpperCase()) ||
-                item.item_biable.id_item.toString().toUpperCase().includes(busqueda.toUpperCase())
+            material.item && (
+                material.item.descripcion.toUpperCase().includes(busqueda.toUpperCase()) ||
+                material.item.id_referencia.toUpperCase().includes(busqueda.toUpperCase()) ||
+                fechaFormatoDos(material.lapso).toUpperCase().includes(busqueda.toUpperCase()) ||
+                material.item.id_item.toString().toUpperCase().includes(busqueda.toUpperCase())
             )
         )
     });
@@ -47,14 +48,15 @@ const Tabla = (props) => {
                                 <th>Nombre</th>
                                 <th>Cantidad</th>
                                 <th>Unidad</th>
+                                <th>Origen</th>
                                 {permisos_proyecto.ultimo_costo_item_biable && <th>Costo Total</th>}
                             </tr>
                             </thead>
                             <tbody>
-                            {_.map(listado_materiales, item => {
+                            {_.map(listado_materiales, material => {
                                 return <ItemTabla
-                                    key={item.id}
-                                    item={item}
+                                    key={material.id}
+                                    material={material}
                                     ultimo_costo_item_biable={permisos_proyecto.ultimo_costo_item_biable}
                                 />
                             })}

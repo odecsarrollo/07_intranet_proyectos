@@ -27,27 +27,6 @@ class ItemsBiable(models.Model):
         return self.descripcion
 
 
-class ItemsLiteralBiable(models.Model):
-    lapso = models.DateField()
-    item_biable = models.ForeignKey(ItemsBiable, on_delete=models.PROTECT)
-    literal = models.ForeignKey(
-        Literal,
-        on_delete=models.CASCADE,
-        verbose_name='mis_items_biable',
-        related_name='mis_materiales'
-    )
-    cantidad = models.DecimalField(decimal_places=4, max_digits=20)
-    costo_total = models.DecimalField(decimal_places=4, max_digits=20)
-
-    class Meta:
-        verbose_name = 'Item Literales Proyecto'
-        verbose_name_plural = 'Items Literales Proyecto'
-        unique_together = [('item_biable', 'literal', 'lapso')]
-
-    def __str__(self):
-        return self.item_biable.descripcion
-
-
 class CargosBiable(models.Model):
     id_cargo = models.PositiveIntegerField(primary_key=True)
     descripcion = models.CharField(max_length=300, null=True, blank=True)

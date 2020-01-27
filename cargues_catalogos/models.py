@@ -8,6 +8,14 @@ from geografia.models import Ciudad
 from sistema_informacion_origen.models import SistemaInformacionOrigen
 
 
+class CargueControl(models.Model):
+    procedimiento_nombre = models.CharField(max_length=400)
+    tarea = models.CharField(max_length=400)
+    fecha = models.DateTimeField()
+    numero_filas = models.BigIntegerField()
+    cuenta = models.BigIntegerField()
+
+
 class PaisCatalogo(models.Model):
     sistema_informacion = models.ForeignKey(SistemaInformacionOrigen, on_delete=models.PROTECT)
     pais_id = models.PositiveIntegerField()

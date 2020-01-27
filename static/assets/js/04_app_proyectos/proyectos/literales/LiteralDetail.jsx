@@ -26,11 +26,10 @@ const Detail = memo(props => {
     } = props;
     const dispatch = useDispatch();
     const {
-        mis_materiales,
+        materiales,
         mis_horas_trabajadas,
         mis_horas_trabajadas_iniciales
     } = literal;
-
     const onUpdateLiteral = (literal) => {
         const callback = () => {
             if (clearCurrentLiteral) {
@@ -130,7 +129,7 @@ const Detail = memo(props => {
                 </TabList>
                 <TabPanel>
                     <TablaProyectoLiteralesMateriales
-                        materiales={mis_materiales}
+                        materiales={materiales}
                         permisos_proyecto={permisos_proyecto}
                     />
                 </TabPanel>

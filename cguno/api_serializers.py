@@ -2,7 +2,6 @@ from rest_framework import serializers
 
 from .models import (
     ColaboradorBiable,
-    ItemsLiteralBiable,
     ItemsBiable,
     ColaboradorCentroCosto,
     ColaboradorCostoMesBiable
@@ -117,19 +116,3 @@ class ColaboradorCostoMesBiableSerializer(serializers.ModelSerializer):
             'valor_hora',
         ]
         extra_kwargs = {'valor_hora': {'read_only': True}}
-
-
-class ItemsLiteralBiableSerializer(serializers.ModelSerializer):
-    item_biable = ItemsBiableSerializer(read_only=True)
-
-    class Meta:
-        model = ItemsLiteralBiable
-        fields = [
-            'url',
-            'id',
-            'lapso',
-            'literal',
-            'item_biable',
-            'cantidad',
-            'costo_total',
-        ]

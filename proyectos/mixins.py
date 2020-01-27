@@ -4,8 +4,8 @@ from django.db.models.functions import Coalesce
 from django.template.loader import get_template
 from weasyprint import HTML, CSS
 
-from .models import Proyecto, Literal
-from cguno.models import ItemsLiteralBiable
+from .models import Literal
+from cargues_detalles.models import ItemsLiteralDetalle
 from mano_obra.models import HoraHojaTrabajo
 
 
@@ -34,7 +34,7 @@ class LiteralesPDFMixin(object):
             literal_id=OuterRef('id'),
         )
 
-        materiales = ItemsLiteralBiable.objects.values('literal').annotate(
+        materiales = ItemsLiteralDetalle.objects.values('literal').annotate(
             costo_total=Coalesce(Sum('costo_total'), 0)
         ).filter(
             literal_id=OuterRef('id')

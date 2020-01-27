@@ -13,7 +13,7 @@ class ProyectoQuerySet(models.QuerySet):
             'mis_documentos__creado_por',
             'mis_literales__facturas',
             'mis_literales__mis_documentos__creado_por',
-            'mis_literales__mis_materiales__item_biable',
+            'mis_literales__materiales__item',
         )
         if tipo in [0, 1]:
             from mano_obra.models import HoraHojaTrabajo, HoraTrabajoColaboradorLiteralInicial
