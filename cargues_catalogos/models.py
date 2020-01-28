@@ -8,12 +8,16 @@ from geografia.models import Ciudad
 from sistema_informacion_origen.models import SistemaInformacionOrigen
 
 
-class CargueControl(models.Model):
+class SeguimientoCargue(models.Model):
+    fecha = models.DateTimeField()
+
+
+class SeguimientoCargueProcedimiento(models.Model):
+    cargue_contro = models.ForeignKey(SeguimientoCargue, on_delete=models.PROTECT, related_name='procedimientos')
     procedimiento_nombre = models.CharField(max_length=400)
     tarea = models.CharField(max_length=400)
     fecha = models.DateTimeField()
     numero_filas = models.BigIntegerField()
-    cuenta = models.BigIntegerField()
 
 
 class PaisCatalogo(models.Model):
