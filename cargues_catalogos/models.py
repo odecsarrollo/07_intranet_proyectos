@@ -15,6 +15,7 @@ class SeguimientoCargue(models.Model):
 class SeguimientoCargueProcedimiento(models.Model):
     cargue_contro = models.ForeignKey(SeguimientoCargue, on_delete=models.PROTECT, related_name='procedimientos')
     procedimiento_nombre = models.CharField(max_length=400)
+    tabla = models.CharField(max_length=400, default='default')
     tarea = models.CharField(max_length=400)
     fecha = models.DateTimeField()
     fecha_final = models.DateTimeField(null=True)
