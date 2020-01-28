@@ -10,6 +10,7 @@ from sistema_informacion_origen.models import SistemaInformacionOrigen
 
 class SeguimientoCargue(models.Model):
     fecha = models.DateTimeField()
+    fecha_final = models.DateTimeField(null=True)
 
 
 class SeguimientoCargueProcedimiento(models.Model):
