@@ -17,6 +17,7 @@ class SeguimientoCargueProcedimiento(models.Model):
     procedimiento_nombre = models.CharField(max_length=400)
     tarea = models.CharField(max_length=400)
     fecha = models.DateTimeField()
+    fecha_final = models.DateTimeField(null=True)
     numero_filas = models.BigIntegerField()
 
 
