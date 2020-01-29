@@ -96,6 +96,7 @@ class ColaboradorCatalogo(models.Model):
     cedula = models.CharField(max_length=20, unique=True)
     nombres = models.CharField(max_length=200, null=True)
     apellidos = models.CharField(max_length=200, null=True)
+    tercero_id = models.BigIntegerField(null=True)
     porcentaje_caja_compensacion = models.DecimalField(max_digits=10, decimal_places=4, default=0)
     porcentaje_pension = models.DecimalField(max_digits=10, decimal_places=4, default=0)
     porcentaje_arl = models.DecimalField(max_digits=10, decimal_places=4, default=0)
@@ -160,6 +161,7 @@ class ColaboradorCatalogo(models.Model):
 
 class ClienteCatalogo(TimeStampedModel):
     sistema_informacion = models.ForeignKey(SistemaInformacionOrigen, on_delete=models.PROTECT)
+    tercero_id = models.BigIntegerField(null=True)
     nit = models.CharField(max_length=20)
     nombre = models.CharField(max_length=120)
     cliente_contacto = models.ForeignKey(
