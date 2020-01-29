@@ -164,7 +164,7 @@ class ClienteCatalogo(TimeStampedModel):
     tercero_id = models.BigIntegerField(null=True)
     nit = models.CharField(max_length=20)
     nombre = models.CharField(max_length=120)
-    cliente_contacto = models.ForeignKey(
+    cliente = models.ForeignKey(
         ClienteBiable,
         on_delete=models.PROTECT,
         related_name='clientes_sistemas_informacion',
