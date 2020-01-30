@@ -243,13 +243,13 @@ class ComponenteSerializer(serializers.ModelSerializer):
             'largo',
             'diametro',
             'series_compatibles',
-            'item_cguno',
+            'item_sistema_informacion',
             'costo',
         ]
         extra_kwargs = {
             'nombre': {'read_only': True},
             'series_compatibles': {'read_only': True},
-            'item_cguno': {'allow_null': True},
+            'item_sistema_informacion': {'allow_null': True},
             'descripcion_adicional': {'allow_null': True, 'allow_blank': True}
         }
 

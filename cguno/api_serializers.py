@@ -2,7 +2,6 @@ from rest_framework import serializers
 
 from .models import (
     ColaboradorBiable,
-    ItemsBiable,
     ColaboradorCentroCosto,
     ColaboradorCostoMesBiable
 )
@@ -60,24 +59,6 @@ class ColaboradorCentroCostoSerializer(serializers.ModelSerializer):
             'nombre',
             'centro_costo_padre',
             'centro_costo_padre_nombre'
-        ]
-
-
-class ItemsBiableSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ItemsBiable
-        fields = [
-            'url',
-            'id_item',
-            'id_referencia',
-            'descripcion',
-            'descripcion_dos',
-            'activo',
-            'nombre_tercero',
-            'desc_item_padre',
-            'unidad_medida_inventario',
-            'id_procedencia',
-            'ultimo_costo'
         ]
 
 

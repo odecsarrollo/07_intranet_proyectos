@@ -3,7 +3,7 @@ from django.db import models
 from model_utils.models import TimeStampedModel
 
 from bandas_eurobelt.managers import ComponenteManager, BandaEurobeltManager
-from cguno.models import ItemsBiable
+from cargues_catalogos.models import ItemsCatalogo
 from items.models import CategoriaProducto
 from importaciones.models import ProveedorImportacion, MargenProvedor
 
@@ -132,7 +132,12 @@ class ComponenteBandaEurobelt(models.Model):
     alto = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     largo = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     diametro = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    item_cguno = models.ForeignKey(ItemsBiable, null=True, on_delete=models.PROTECT, related_name='componente_banda')
+    item_sistema_informacion = models.ForeignKey(
+        ItemsCatalogo,
+        null=True,
+        on_delete=models.PROTECT,
+        related_name='componente_banda'
+    )
     costo = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     nombre = models.CharField(max_length=400, null=True)
     objects = ComponenteManager()

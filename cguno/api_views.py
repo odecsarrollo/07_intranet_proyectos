@@ -7,13 +7,11 @@ from rest_framework.response import Response
 
 from .models import (
     ColaboradorBiable,
-    ItemsBiable,
     ColaboradorCentroCosto,
     ColaboradorCostoMesBiable
 )
 from .api_serializers import (
     ColaboradorBiableSerializer,
-    ItemsBiableSerializer,
     ColaboradorCentroCostoSerializer,
     ColaboradorCostoMesBiableSerializer
 )
@@ -103,38 +101,38 @@ class ColaboradorBiableViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-class ItemBiableViewSet(viewsets.ModelViewSet):
-    queryset = ItemsBiable.objects.all()
-    serializer_class = ItemsBiableSerializer
-    http_method_names = ['get', ]
-
-    @action(detail=False, http_method_names=['get', ])
-    def listar_items_x_parametro(self, request):
-        parametro = request.GET.get('parametro')
-        tipo_parametro = int(request.GET.get('tipo_parametro'))
-        search_fields = None
-        qs = None
-
-        if (tipo_parametro == 2 and parametro.isnumeric()):
-            qs = self.queryset.filter(id_item=int(parametro))
-
-        if (tipo_parametro == 1 and len(parametro) >= 3):
-            search_fields = ['descripcion', 'nombre_tercero', 'descripcion_dos']
-
-        if (tipo_parametro == 3 and len(parametro) >= 3):
-            search_fields = ['=id_referencia']
-
-        if search_fields:
-            qs = query_varios_campos(self.queryset, search_fields, parametro)
-        serializer = self.get_serializer(qs, many=True)
-        return Response(serializer.data)
-
-    @action(detail=False, http_method_names=['get', ])
-    def consultar_arreglo_codigos(self, request):
-        codigos = request.GET.get('codigos')
-        qs = self.queryset.filter(id_item__in=json.loads(codigos))
-        serializer = self.get_serializer(qs, many=True)
-        return Response(serializer.data)
+# class ItemBiableViewSet(viewsets.ModelViewSet):
+#     queryset = ItemsBiable.objects.all()
+#     serializer_class = ItemsBiableSerializer
+#     http_method_names = ['get', ]
+#
+#     @action(detail=False, http_method_names=['get', ])
+#     def listar_items_x_parametro(self, request):
+#         parametro = request.GET.get('parametro')
+#         tipo_parametro = int(request.GET.get('tipo_parametro'))
+#         search_fields = None
+#         qs = None
+#
+#         if (tipo_parametro == 2 and parametro.isnumeric()):
+#             qs = self.queryset.filter(id_item=int(parametro))
+#
+#         if (tipo_parametro == 1 and len(parametro) >= 3):
+#             search_fields = ['descripcion', 'nombre_tercero', 'descripcion_dos']
+#
+#         if (tipo_parametro == 3 and len(parametro) >= 3):
+#             search_fields = ['=id_referencia']
+#
+#         if search_fields:
+#             qs = query_varios_campos(self.queryset, search_fields, parametro)
+#         serializer = self.get_serializer(qs, many=True)
+#         return Response(serializer.data)
+#
+#     @action(detail=False, http_method_names=['get', ])
+#     def consultar_arreglo_codigos(self, request):
+#         codigos = request.GET.get('codigos')
+#         qs = self.queryset.filter(id_item__in=json.loads(codigos))
+#         serializer = self.get_serializer(qs, many=True)
+#         return Response(serializer.data)
 
 
 class ColaboradorCostoMesBiableViewSet(viewsets.ModelViewSet):
