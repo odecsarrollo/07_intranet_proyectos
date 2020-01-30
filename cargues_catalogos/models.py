@@ -77,7 +77,7 @@ class ColaboradorCentroCostoCatalogo(models.Model):
     sistema_informacion = models.ForeignKey(SistemaInformacionOrigen, on_delete=models.PROTECT)
     centro_costo_id = models.PositiveIntegerField()
     centro_costo_padre = models.ForeignKey('self', null=True, on_delete=models.PROTECT)
-    nombre = models.CharField(unique=True, max_length=120)
+    nombre = models.CharField(max_length=120)
 
     class Meta:
         unique_together = [('sistema_informacion', 'centro_costo_id')]
