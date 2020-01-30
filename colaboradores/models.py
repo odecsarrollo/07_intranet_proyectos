@@ -30,7 +30,21 @@ class Colaborador(models.Model):
 
     linea = models.ForeignKey(LineaVendedor, on_delete=models.PROTECT, null=True)
 
+    cargo = models.ForeignKey(
+        'cargues_catalogos.CargoColaboradorCatalogo',
+        on_delete=models.PROTECT,
+        null=True
+    )
+    centro_costo = models.ForeignKey(
+        'cargues_catalogos.ColaboradorCentroCostoCatalogo',
+        on_delete=models.PROTECT,
+        related_name='costos_mensuales_colaboradores',
+        null=True
+    )
+
+    activo = models.BooleanField(default=True)
     es_aprendiz = models.BooleanField(default=False)
+    es_vendedor = models.BooleanField(default=False)
     en_proyectos = models.BooleanField(default=False)
     autogestion_horas_trabajadas = models.BooleanField(default=False)
     es_salario_fijo = models.BooleanField(default=False)

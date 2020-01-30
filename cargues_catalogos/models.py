@@ -24,6 +24,13 @@ class SeguimientoCargueProcedimiento(models.Model):
     numero_filas = models.BigIntegerField()
 
 
+class CargoColaboradorCatalogo(models.Model):
+    cargo_id = models.PositiveIntegerField()
+    descripcion = models.CharField(max_length=300, null=True, blank=True)
+    tipo_cargo = models.CharField(max_length=300, null=True, blank=True)
+    sistema_informacion = models.ForeignKey(SistemaInformacionOrigen, on_delete=models.PROTECT)
+
+
 class PaisCatalogo(models.Model):
     sistema_informacion = models.ForeignKey(SistemaInformacionOrigen, on_delete=models.PROTECT)
     pais_id = models.PositiveIntegerField()
@@ -95,15 +102,6 @@ class ColaboradorCatalogo(models.Model):
     nombres = models.CharField(max_length=200, null=True)
     apellidos = models.CharField(max_length=200, null=True)
     tercero_id = models.BigIntegerField(null=True)
-    # cargo = models.ForeignKey(CargosCatalogo, on_delete=models.PROTECT, null=True)
-    centro_costo = models.ForeignKey(
-        ColaboradorCentroCostoCatalogo,
-        on_delete=models.PROTECT,
-        related_name='costos_mensuales_colaboradores',
-        null=True
-    )
-    es_vendedor = models.BooleanField(default=False)
-    activo = models.BooleanField(default=True)
 
     def create_user(self):
         nombre_split = self.nombres.split()
