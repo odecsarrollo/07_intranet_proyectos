@@ -6,6 +6,7 @@ from model_utils.models import TimeStampedModel
 from clientes.models import ClienteBiable
 from geografia.models import Ciudad
 from sistema_informacion_origen.models import SistemaInformacionOrigen
+from colaboradores.models import Colaborador
 
 
 class SeguimientoCargue(models.Model):
@@ -59,18 +60,14 @@ class CiudadCatalogo(models.Model):
         ]
 
 
-class CargosCatalogo(models.Model):
-    sistema_informacion = models.ForeignKey(SistemaInformacionOrigen, on_delete=models.PROTECT)
-    id_cargo = models.PositiveIntegerField()
-    descripcion = models.CharField(max_length=300, null=True, blank=True)
-    tipo_cargo = models.CharField(max_length=300, null=True, blank=True)
-
-    class Meta:
-        unique_together = [('sistema_informacion', 'id_cargo')]
-
-
-class LineaVendedorCatalogo(models.Model):
-    nombre = models.CharField(max_length=120, unique=True)
+# class CargosCatalogo(models.Model):
+#     sistema_informacion = models.ForeignKey(SistemaInformacionOrigen, on_delete=models.PROTECT)
+#     id_cargo = models.PositiveIntegerField()
+#     descripcion = models.CharField(max_length=300, null=True, blank=True)
+#     tipo_cargo = models.CharField(max_length=300, null=True, blank=True)
+#
+#     class Meta:
+#         unique_together = [('sistema_informacion', 'id_cargo')]
 
 
 class ColaboradorCentroCostoCatalogo(models.Model):
@@ -87,38 +84,26 @@ class ColaboradorCentroCostoCatalogo(models.Model):
 
 
 class ColaboradorCatalogo(models.Model):
-    usuario = models.OneToOneField(
-        User,
-        related_name='ncolaborador',
-        on_delete=models.SET_NULL,
+    colaborador = models.ForeignKey(
+        Colaborador,
+        related_name='colaborador_sistema_informacion',
+        on_delete=models.PROTECT,
         null=True
     )
+    sistema_informacion = models.ForeignKey(SistemaInformacionOrigen, on_delete=models.PROTECT)
     cedula = models.CharField(max_length=20, unique=True)
     nombres = models.CharField(max_length=200, null=True)
     apellidos = models.CharField(max_length=200, null=True)
     tercero_id = models.BigIntegerField(null=True)
-    porcentaje_caja_compensacion = models.DecimalField(max_digits=10, decimal_places=4, default=0)
-    porcentaje_pension = models.DecimalField(max_digits=10, decimal_places=4, default=0)
-    porcentaje_arl = models.DecimalField(max_digits=10, decimal_places=4, default=0)
-    porcentaje_salud = models.DecimalField(max_digits=10, decimal_places=4, default=0)
-    porcentaje_prestaciones_sociales = models.DecimalField(max_digits=10, decimal_places=4, default=0)
-    base_salario = models.DecimalField(max_digits=20, decimal_places=2, default=0)
-    auxilio_transporte = models.DecimalField(max_digits=20, decimal_places=2, default=0)
-    nro_horas_mes = models.PositiveIntegerField(default=0, null=True)
-    cargo = models.ForeignKey(CargosCatalogo, on_delete=models.PROTECT, null=True)
+    # cargo = models.ForeignKey(CargosCatalogo, on_delete=models.PROTECT, null=True)
     centro_costo = models.ForeignKey(
         ColaboradorCentroCostoCatalogo,
         on_delete=models.PROTECT,
-        related_name='colaboradores',
+        related_name='costos_mensuales_colaboradores',
         null=True
     )
     es_vendedor = models.BooleanField(default=False)
-    es_aprendiz = models.BooleanField(default=False)
-    en_proyectos = models.BooleanField(default=False)
     activo = models.BooleanField(default=True)
-    autogestion_horas_trabajadas = models.BooleanField(default=False)
-    es_salario_fijo = models.BooleanField(default=False)
-    linea = models.ForeignKey(LineaVendedorCatalogo, on_delete=models.PROTECT, null=True)
 
     def create_user(self):
         nombre_split = self.nombres.split()
@@ -147,8 +132,9 @@ class ColaboradorCatalogo(models.Model):
         user.save()
 
     class Meta:
+        unique_together = [('sistema_informacion', 'cedula')]
         permissions = [
-            ("list_colaboradorcatalogo", "Can see list colaboradores")
+            ("list_colaboradorcatalogo", "Can see list colaboradores catalogos")
         ]
 
     def __str__(self):
