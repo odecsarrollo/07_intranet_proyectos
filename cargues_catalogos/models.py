@@ -199,7 +199,7 @@ class ItemsCatalogo(models.Model):
 class SucursalCatalogo(models.Model):
     sistema_informacion = models.ForeignKey(SistemaInformacionOrigen, on_delete=models.PROTECT)
     nro_sucursal = models.PositiveIntegerField()
-    cliente = models.ForeignKey(ClienteCatalogo, related_name='sucursales', on_delete=models.PROTECT)
+    cliente = models.ForeignKey(ClienteBiable, related_name='sucursales', on_delete=models.PROTECT)
     nombre_establecimiento = models.CharField(max_length=200, null=True)
     nombre_establecimiento_alternativo = models.CharField(max_length=200, null=True)
     cupo_credito = models.DecimalField(max_digits=10, decimal_places=0)
@@ -208,16 +208,16 @@ class SucursalCatalogo(models.Model):
     fecha_creacion = models.DateField()
     direccion = models.CharField(max_length=200)
     colaborador = models.ForeignKey(
-        ColaboradorCatalogo,
+        Colaborador,
         on_delete=models.PROTECT,
         null=True,
-        related_name='clientes'
+        related_name='sucursales_sistema_informacion'
     )
     colaborador_real = models.ForeignKey(
-        ColaboradorCatalogo,
+        Colaborador,
         on_delete=models.PROTECT,
         null=True,
-        related_name='clientes_asignados'
+        related_name='sucursales_asignadas'
     )
 
     class Meta:
