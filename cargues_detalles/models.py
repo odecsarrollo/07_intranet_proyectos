@@ -5,12 +5,12 @@ from sistema_informacion_origen.models import SistemaInformacionOrigen
 
 from cargues_catalogos.models import (
     CiudadCatalogo,
-    ClienteCatalogo,
     SucursalCatalogo,
-    ItemsCatalogo,
-    ColaboradorCatalogo
+    ItemsCatalogo
 )
 from proyectos.models import Literal
+from colaboradores.models import Colaborador
+from clientes.models import ClienteBiable
 
 
 class ItemsLiteralDetalle(models.Model):
@@ -34,13 +34,14 @@ class ItemsLiteralDetalle(models.Model):
 
 class FacturaDetalle(TimeStampedModel):
     sistema_informacion = models.ForeignKey(SistemaInformacionOrigen, on_delete=models.PROTECT)
+    documento_id = models.BigIntegerField(null=True, db_index=True)
     ciudad = models.ForeignKey(CiudadCatalogo, null=True, on_delete=models.PROTECT)
     fecha_documento = models.DateField(null=True)
     direccion_despacho = models.CharField(max_length=400, null=True)
     tipo_documento = models.CharField(max_length=3, null=True)
     nro_documento = models.CharField(max_length=10, null=True)
-    cliente = models.ForeignKey(ClienteCatalogo, on_delete=models.PROTECT, null=True, related_name='compras')
-    colaborador = models.ForeignKey(ColaboradorCatalogo, on_delete=models.PROTECT, null=True, related_name='ventas')
+    cliente = models.ForeignKey(ClienteBiable, on_delete=models.PROTECT, null=True, related_name='compras_componentes')
+    colaborador = models.ForeignKey(Colaborador, on_delete=models.PROTECT, null=True, related_name='ventas_componentes')
     venta_bruta = models.DecimalField(max_digits=18, decimal_places=4)
     dscto_netos = models.DecimalField(max_digits=18, decimal_places=4)
     costo_total = models.DecimalField(max_digits=18, decimal_places=4)
@@ -50,11 +51,11 @@ class FacturaDetalle(TimeStampedModel):
     sucursal = models.ForeignKey(SucursalCatalogo, null=True, related_name='facturas', on_delete=models.PROTECT)
     activa = models.BooleanField(default=True)
 
+    class Meta:
+        unique_together = [('sistema_informacion', 'tipo_documento', 'nro_documento')]
+
 
 class MovimientoVentaDetalle(models.Model):
-    sistema_informacion = models.ForeignKey(SistemaInformacionOrigen, on_delete=models.PROTECT)
-    tipo_documento = models.CharField(max_length=3, null=True)
-    nro_documento = models.CharField(max_length=10, null=True)
     factura = models.ForeignKey(
         FacturaDetalle,
         null=True,
