@@ -73,4 +73,4 @@ class MovimientoVentaDetalle(models.Model):
     venta_neto = models.DecimalField(max_digits=18, decimal_places=4, default=0)
 
     class Meta:
-        unique_together = [('sistema_informacion', 'factura', 'item')]
+        unique_together = [('factura', 'item')]
