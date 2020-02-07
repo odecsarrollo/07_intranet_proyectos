@@ -71,4 +71,6 @@ class MovimientoVentaDetalle(models.Model):
     rentabilidad = models.DecimalField(max_digits=18, decimal_places=4, default=0)
     imp_netos = models.DecimalField(max_digits=18, decimal_places=4, default=0)
     venta_neto = models.DecimalField(max_digits=18, decimal_places=4, default=0)
-    proyecto = models.CharField(max_length=60, null=True)
+
+    class Meta:
+        unique_together = [('sistema_informacion', 'factura', 'item')]
