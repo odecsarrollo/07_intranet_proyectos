@@ -33,7 +33,7 @@ class CargoColaboradorCatalogo(models.Model):
 
 class PaisCatalogo(models.Model):
     sistema_informacion = models.ForeignKey(SistemaInformacionOrigen, on_delete=models.PROTECT)
-    pais_id = models.PositiveIntegerField()
+    pais_id = models.PositiveIntegerField(db_index=True)
     nombre = models.CharField(max_length=120)
 
     class Meta:
@@ -44,7 +44,7 @@ class PaisCatalogo(models.Model):
 
 class DepartamentoCatalogo(models.Model):
     sistema_informacion = models.ForeignKey(SistemaInformacionOrigen, on_delete=models.PROTECT)
-    departamento_id = models.PositiveIntegerField()
+    departamento_id = models.PositiveIntegerField(db_index=True)
     nombre = models.CharField(max_length=120)
     pais = models.ForeignKey(PaisCatalogo, on_delete=models.PROTECT)
 
@@ -56,7 +56,7 @@ class DepartamentoCatalogo(models.Model):
 
 class CiudadCatalogo(models.Model):
     sistema_informacion = models.ForeignKey(SistemaInformacionOrigen, on_delete=models.PROTECT)
-    ciudad_id = models.PositiveIntegerField()
+    ciudad_id = models.PositiveIntegerField(db_index=True)
     nombre = models.CharField(max_length=120)
     departamento = models.ForeignKey(DepartamentoCatalogo, on_delete=models.PROTECT)
     ciudad_intranet = models.ForeignKey(Ciudad, null=True, on_delete=models.PROTECT, related_name='ciudad_catalogo')
