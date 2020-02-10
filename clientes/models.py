@@ -45,6 +45,7 @@ class ClienteBiable(models.Model):
     es_competencia = models.BooleanField(default=False)
     cliente_nuevo_nit = models.ForeignKey('self', null=True, related_name='cliente_viejo_nit', on_delete=models.PROTECT)
     nueva_desde_cotizacion = models.BooleanField(default=True)
+    sincronizado_sistemas_informacion = models.BooleanField(default=False)
 
     class Meta:
         permissions = [

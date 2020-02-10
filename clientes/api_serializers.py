@@ -54,6 +54,7 @@ class ClienteSerializer(serializers.ModelSerializer):
             'id',
             'nit',
             'nombre',
+            'sincronizado_sistemas_informacion',
             'to_string',
         ]
 

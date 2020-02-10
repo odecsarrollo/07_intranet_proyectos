@@ -49,3 +49,8 @@ def contacto_cliente_crear_desde_cotizacion(
     )
 
     return contacto
+
+# def unificar_clientes(
+#         cliente_uno_id:int,
+#         cliente_dos_id:int
+# ):
