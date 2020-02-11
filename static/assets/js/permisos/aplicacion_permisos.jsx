@@ -357,6 +357,7 @@ export const CLIENTES = {
     change: 'change_clientebiable',
     list: 'list_clientebiable',
     detail: 'view_clientebiable',
+    fusionar: 'can_fusionar_clientebiable',
 };
 
 export const COTIZACIONES = {

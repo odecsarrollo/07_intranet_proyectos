@@ -51,6 +51,7 @@ class ClienteBiable(models.Model):
         permissions = [
             ['list_clientebiable', 'Puede listar clientes'],
             ['detail_clientebiable', 'Puede ver detalle cliente'],
+            ['can_fusionar_clientebiable', 'Puede Fusionar clientes'],
         ]
 
 

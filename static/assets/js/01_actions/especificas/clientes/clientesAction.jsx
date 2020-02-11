@@ -4,7 +4,7 @@ import {
     updateObject,
     fetchObject,
     deleteObject,
-    createObject
+    createObject, callApiMethodPostParameters
 } from '../../00_general_fuctions'
 
 const current_url_api = 'clientes';
@@ -41,6 +41,16 @@ export const fetchClientes = (options_action = {}) => {
         return fetchListGet(current_url_api, options);
     }
 };
+
+export const fusionarClientes = (cliente_que_permanece_id, cliente_a_eliminar_id, options_action = {}) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        params.append('cliente_a_eliminar_id', cliente_a_eliminar_id);
+        const options = {...options_action, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, cliente_que_permanece_id, 'fusionar_clientes', params, options)
+    }
+};
+
 
 export const fetchCliente = (id, options_action = {}) => {
     return (dispatch) => {

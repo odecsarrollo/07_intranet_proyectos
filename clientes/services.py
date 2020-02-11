@@ -64,6 +64,14 @@ def fusionar_clientes(
         proyecto.cliente_id = cliente_que_permanece_id
         proyecto.save()
 
+    for cotizacion in cliente_eliminar.cotizaciones_proyectos.all():
+        cotizacion.cliente_id = cliente_que_permanece_id
+        cotizacion.save()
+
+    for cotizacion in cliente_eliminar.cotizaciones_componentes.all():
+        cotizacion.cliente_id = cliente_que_permanece_id
+        cotizacion.save()
+
     for contacto in cliente_eliminar.contactos.all():
         contacto.cliente_id = cliente_que_permanece_id
         contacto.save()

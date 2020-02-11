@@ -7,8 +7,8 @@ import Menu from './00_menu/index';
 import CotizacionesList from './cotizaciones/cotizaciones/CotizacionCRUD';
 import CotizacionesDetail from './cotizaciones/cotizaciones/CotizacionDetail';
 import InformeTunelVentas from './informes/tuberia_ventas/CuadroTuberiaVentas';
-import ClientesList from "../03_app_admin/especificas/clientes/clientes/containers/ClienteContainer";
-import ClienteDetail from "../03_app_admin/especificas/clientes/clientes/containers/ClienteDetail";
+import ClientesList from "../03_app_admin/especificas/clientes/clientes/ClienteCRUD";
+import ClienteDetail from "../03_app_admin/especificas/clientes/clientes/ClienteDetail";
 import ConfiguracionDashboard from "./configuracion/ConfiguracionDashboard";
 import TuberiaVentas from './cotizaciones/tuberia_ventas/TuberiaVentasCRUD';
 const App = () => {

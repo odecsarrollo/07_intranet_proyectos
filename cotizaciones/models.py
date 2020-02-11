@@ -47,7 +47,8 @@ class Cotizacion(TimeStampedModel):
         on_delete=models.PROTECT,
         related_name='cotizaciones_adicionales'
     )
-    cliente = models.ForeignKey(ClienteBiable, on_delete=models.PROTECT, null=True)
+    cliente = models.ForeignKey(ClienteBiable, on_delete=models.PROTECT, null=True,
+                                related_name='cotizaciones_proyectos')
     descripcion_cotizacion = models.CharField(max_length=500)
     contacto_cliente = models.ForeignKey(
         ContactoCliente,
