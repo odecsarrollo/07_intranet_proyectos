@@ -50,7 +50,22 @@ def contacto_cliente_crear_desde_cotizacion(
 
     return contacto
 
-# def unificar_clientes(
-#         cliente_uno_id:int,
-#         cliente_dos_id:int
-# ):
+
+def fusionar_clientes(
+        cliente_que_permanece_id: int,
+        cliente_a_eliminar_id: int
+) -> ClienteBiable:
+    cliente_permanece = ClienteBiable.objects.get(pk=cliente_que_permanece_id)
+    if not cliente_permanece.sincronizado_sistemas_informacion:
+        raise ValidationError({'_error': 'No se puede fusionar un cliente no sincronizado con uno a eliminar'})
+    cliente_eliminar = ClienteBiable.objects.get(pk=cliente_a_eliminar_id)
+
+    for proyecto in cliente_eliminar.proyectos.all():
+        proyecto.cliente_id = cliente_que_permanece_id
+        proyecto.save()
+
+    for contacto in cliente_eliminar.contactos.all():
+        contacto.cliente_id = cliente_que_permanece_id
+        contacto.save()
+    cliente_eliminar.delete()
+    return cliente_permanece

@@ -38,6 +38,17 @@ class ContactoClienteViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(creado_por=self.request.user)
 
+    @action(detail=False, methods=['post'])
+    def fusionar_clientes(self, request):
+        from .services import fusionar_clientes
+        cliente_que_permanece_id = request.POST.get('cliente_que_permanece_id', False)
+        cliente_a_eliminar_id = request.POST.get('cliente_a_eliminar_id', None)
+        cliente_permanece = fusionar_clientes(
+            cliente_que_permanece_id=cliente_que_permanece_id,
+            cliente_a_eliminar_id=cliente_a_eliminar_id
+        )
+        return Response({'result': 'La fusión se ha realizado con éxito para el cliente %s'})
+
     @action(detail=False, http_method_names=['get', ])
     def por_cliente(self, request):
         cliente_id = request.GET.get('cliente_id')
