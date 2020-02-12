@@ -23,6 +23,7 @@ class ProveedorImportacion(TimeStampedModel):
     moneda = models.ForeignKey(MonedaCambio, on_delete=models.PROTECT, related_name="provedores_con_moneda")
     factor_importacion = models.DecimalField(max_digits=18, decimal_places=3, default=1)
     factor_importacion_aereo = models.DecimalField(max_digits=18, decimal_places=3, default=0)
+    proveedor_id_temporal = models.BigIntegerField(null=True)
     margenes = models.ManyToManyField(
         CategoriaProducto,
         through='MargenProvedor',
@@ -51,6 +52,7 @@ class MargenProvedor(TimeStampedModel):
         max_digits=18,
         decimal_places=3
     )
+    margen_id_temporal = models.BigIntegerField(null=True)
 
     class Meta:
         unique_together = (['categoria', 'proveedor'])
