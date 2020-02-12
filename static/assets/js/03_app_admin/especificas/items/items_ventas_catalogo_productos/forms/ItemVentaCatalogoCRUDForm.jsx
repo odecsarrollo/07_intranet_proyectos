@@ -33,6 +33,7 @@ let Form = memo(props => {
         modal_open,
         singular_name
     } = props;
+    const editable = initialValues ? initialValues.origen !== 'SIS_INF' : true;
     return (
         <MyFormTagModal
             onCancel={onCancel}
@@ -49,18 +50,22 @@ let Form = memo(props => {
                 className="col-12"
                 nombre='Nombre'
                 name='nombre_catalogo'
+                disabled={!editable}
                 case='U'/>
             <MyTextFieldSimple
                 className="col-12 col-md-5 pl-2"
+                disabled={!editable}
                 nombre='Referencia'
                 name='referencia_catalogo'
                 case='U'/>
             <MyTextFieldSimple
                 className="col-12 col-md-4 pl-2"
+                disabled={!editable}
                 nombre='U.M'
                 name='unidad_medida_catalogo'
                 case='U'/>
             <MyTextFieldSimple
+                disabled={!editable}
                 className="col-12 col-md-3 pl-2"
                 nombre='Costo'
                 name='costo_catalogo'

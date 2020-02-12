@@ -31,7 +31,6 @@ const List = memo((props) => {
     };
     return (
         <CRUD
-            posSummitMethod={() => cargarDatos()}
             method_pool={method_pool}
             list={list}
             permisos_object={permisos}

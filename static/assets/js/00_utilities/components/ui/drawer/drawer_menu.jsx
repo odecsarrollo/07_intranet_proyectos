@@ -135,7 +135,7 @@ const DrawerMenu = memo((props) => {
                                 [classes.hide]: menu_abierto,
                             })}
                         >
-                            <FontAwesomeIcon icon={['far', 'bars']}/>
+                            <FontAwesomeIcon icon={'bars'}/>
                         </IconButton>
                     }
                     <Typography className={lista_menu ? '' : 'pl-5'} variant="h6" color="inherit" noWrap>

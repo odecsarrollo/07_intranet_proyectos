@@ -11,6 +11,7 @@ class ItemVentaCatalogo(models.Model):
         on_delete=models.PROTECT,
         null=True
     )
+    item_id_temporal = models.BigIntegerField(null=True)
     item_sistema_informacion = models.ForeignKey(
         ItemsCatalogo,
         null=True,
