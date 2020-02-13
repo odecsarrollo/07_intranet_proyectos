@@ -107,7 +107,6 @@ class SerieBandaEurobelt(models.Model):
 
 class ComponenteBandaEurobelt(models.Model):
     referencia = models.CharField(max_length=100, null=True)
-    componente_banda_eurobelt_temporal = models.BigIntegerField(null=True)
     descripcion_adicional = models.CharField(max_length=100, null=True)
     material = models.ForeignKey(MaterialBandaEurobelt, on_delete=models.PROTECT, related_name='componentes')
     margen = models.ForeignKey(MargenProvedor, on_delete=models.PROTECT, related_name='ensamblados', null=True)

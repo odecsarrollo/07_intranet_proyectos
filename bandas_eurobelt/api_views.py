@@ -293,6 +293,12 @@ class ComponenteViewSet(viewsets.ModelViewSet):
     queryset = ComponenteBandaEurobelt.objects.all()
     serializer_class = ComponenteSerializer
 
+    def list(self, request, *args, **kwargs):
+        qs = self.queryset.filter(nombre__isnull=True)
+        for componente in qs.all():
+            componente.set_nombre()
+        return super().list(request, *args, **kwargs)
+
     @action(detail=True, methods=['post'])
     def adicionar_quitar_serie_compatible(self, request, pk=None):
         from .services import componente_banda_eurobelt_adicionar_quitar_serie_compatible
