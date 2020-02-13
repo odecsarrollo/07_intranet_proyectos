@@ -256,7 +256,7 @@ class BandaEurobelt(models.Model):
             self.tipo.nomenclatura,
             self.material.nomenclatura,
             self.color.nomenclatura,
-            '%s%s' % ('V', varilla.material.nomenclatura) if varilla is not None else '',
+            'V%s' % varilla.material.nomenclatura if varilla is not None else '',
             int(self.ancho)
         )
 
@@ -265,7 +265,7 @@ class BandaEurobelt(models.Model):
             self.tipo.nombre,
             self.material.nombre,
             self.color.nombre,
-            varilla.material.nombre if varilla is not None else '',
+            'V%s' % varilla.material.nombre if varilla is not None else '',
             int(self.ancho)
         )
 
