@@ -248,19 +248,24 @@ class BandaEurobelt(models.Model):
     objects = BandaEurobeltManager()
 
     def set_referencia_nombre(self):
-        referencia = 'BEU-%s%s%s%s(V)W%s' % (
+        categoria_varilla = ConfiguracionBandaEurobelt.objects.first().categoria_varilla
+        varilla = self.ensamblado.filter(componente__categoria_id=categoria_varilla.id).first()
+
+        referencia = 'BEU-%s%s%s%s%sW%s' % (
             self.serie.nomenclatura,
             self.tipo.nomenclatura,
             self.material.nomenclatura,
             self.color.nomenclatura,
+            '%s%s' % ('V', varilla.material.nomenclatura) if varilla is not None else '',
             int(self.ancho)
         )
 
-        nombre = 'Banda %s %s %s %s (V) W%s' % (
+        nombre = 'Banda %s %s %s %s %s W%s' % (
             self.serie.nombre,
             self.tipo.nombre,
             self.material.nombre,
             self.color.nombre,
+            varilla.material.nombre if varilla is not None else '',
             int(self.ancho)
         )
 
