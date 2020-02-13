@@ -16,7 +16,7 @@ from .api_serializers_con_detalle import (
 class CategoriaProductoViewSet(viewsets.ModelViewSet):
     queryset = CategoriaProducto.objects.prefetch_related(
         'categorias_dos_eurobelt',
-        #'tipos_eurobelt',
+        'tipos_eurobelt',
     ).all()
     serializer_class = CategoriaProductoSerializer
 

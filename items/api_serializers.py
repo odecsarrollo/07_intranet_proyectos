@@ -19,9 +19,9 @@ class CategoriaProductoSerializer(CustomSerializerMixin, serializers.ModelSerial
             'nomenclatura',
             'to_string',
             'categorias_dos_eurobelt',
-            #'tipos_eurobelt',
+            'tipos_eurobelt',
         ]
         extra_kwargs = {
             'categorias_dos_eurobelt': {'read_only': True},
-            #'tipos_eurobelt': {'read_only': True},
+            'tipos_eurobelt': {'read_only': True},
         }

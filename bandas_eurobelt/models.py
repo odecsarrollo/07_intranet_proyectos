@@ -77,12 +77,12 @@ class MaterialBandaEurobelt(models.Model):
 class TipoBandaBandaEurobelt(models.Model):
     nombre = models.CharField(max_length=100, unique=True)
     nomenclatura = models.CharField(max_length=4, unique=True)
-    # categorias = models.ManyToManyField(
-    #     CategoriaProducto,
-    #     related_name='tipos_eurobelt',
-    #     through='TipoBandaCategoriaProducto',
-    #     through_fields=('tipo', 'categoria')
-    # )
+    categorias = models.ManyToManyField(
+        CategoriaProducto,
+        related_name='tipos_eurobelt',
+        through='TipoBandaCategoriaProducto',
+        through_fields=('tipo', 'categoria')
+    )
 
     class Meta:
         permissions = [
