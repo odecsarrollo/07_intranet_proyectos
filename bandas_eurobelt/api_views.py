@@ -294,7 +294,7 @@ class ComponenteViewSet(viewsets.ModelViewSet):
     serializer_class = ComponenteSerializer
 
     def list(self, request, *args, **kwargs):
-        qs = self.queryset.filter(nombre__isnull=True)
+        qs = self.queryset
         for componente in qs.all():
             componente.set_nombre()
         return super().list(request, *args, **kwargs)
