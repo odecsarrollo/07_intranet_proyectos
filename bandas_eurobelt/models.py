@@ -148,9 +148,9 @@ class ComponenteBandaEurobelt(models.Model):
             nombre = '%s %s' % (nombre, self.categoria_dos.nombre)
         if self.tipo_banda:
             nombre = '%s %s' % (nombre, self.tipo_banda.nombre)
-        if self.material.nombre:
+        if self.material:
             nombre = '%s %s' % (nombre, self.material.nombre)
-        if self.color.nombre:
+        if self.color:
             nombre = '%s %s' % (nombre, self.color.nombre)
         if self.descripcion_adicional:
             nombre = '%s %s' % (nombre, self.descripcion_adicional)
