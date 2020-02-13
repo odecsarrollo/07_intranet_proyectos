@@ -178,6 +178,12 @@ class BandaEurobeltViewSet(viewsets.ModelViewSet):
     queryset = BandaEurobelt.objects.all()
     serializer_class = BandaEurobeltSerializer
 
+    def list(self, request, *args, **kwargs):
+        qs = self.queryset
+        for banda in qs.all():
+            banda.set_referencia_nombre()
+        return super().list(request, *args, **kwargs)
+
     def retrieve(self, request, *args, **kwargs):
         self.serializer_class = BandaEurobeltConDetalleSerializer
         return super().retrieve(request, *args, **kwargs)
