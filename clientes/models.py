@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 
 from model_utils.models import TimeStampedModel
 
+from colaboradores.models import Colaborador
+
 
 class CanalDistribucion(TimeStampedModel):
     nombre = models.CharField(max_length=100, unique=True)
@@ -46,6 +48,19 @@ class ClienteBiable(models.Model):
     cliente_nuevo_nit = models.ForeignKey('self', null=True, related_name='cliente_viejo_nit', on_delete=models.PROTECT)
     nueva_desde_cotizacion = models.BooleanField(default=True)
     sincronizado_sistemas_informacion = models.BooleanField(default=False)
+
+    colaborador_componentes = models.ForeignKey(
+        Colaborador,
+        on_delete=models.PROTECT,
+        null=True,
+        related_name='clientes_componentes'
+    )
+    colaborador_proyectos = models.ForeignKey(
+        Colaborador,
+        on_delete=models.PROTECT,
+        null=True,
+        related_name='clientes_proyectos'
+    )
 
     class Meta:
         permissions = [
