@@ -249,7 +249,7 @@ class BandaEurobelt(models.Model):
 
     def set_referencia_nombre(self):
         categoria_varilla = ConfiguracionBandaEurobelt.objects.first().categoria_varilla
-        varilla = self.ensamblado.filter(componente__categoria_id=categoria_varilla.id).first()
+        varilla = self.ensamblado.filter(componente__categoria_id=categoria_varilla.id).first().componente
 
         referencia = 'BEU-%s%s%s%s%sW%s' % (
             self.serie.nomenclatura,
