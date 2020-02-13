@@ -357,7 +357,10 @@ class BandaEurobeltSerializer(serializers.ModelSerializer):
             'referencia',
         ]
         extra_kwargs = {
-            'costo_ensamblado': {'read_only': True}
+            'costo_ensamblado': {'read_only': True},
+            'ensamblado': {'read_only': True},
+            'nombre': {'read_only': True},
+            'referencia': {'read_only': True},
         }
 
     def create(self, validated_data):
