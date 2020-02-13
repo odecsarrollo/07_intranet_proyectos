@@ -270,7 +270,7 @@ class BandaEurobelt(models.Model):
                 int(self.empujador_alto),
                 int(self.empujador_ancho),
                 int(self.empujador_distanciado),
-                int(self.empujador_identacion)
+                self.empujador_identacion
             )
 
             nombre += ' con Empujador %s H%s W%s D%s I%s' % (
@@ -278,16 +278,16 @@ class BandaEurobelt(models.Model):
                 int(self.empujador_alto),
                 int(self.empujador_ancho),
                 int(self.empujador_distanciado),
-                int(self.empujador_identacion)
+                self.empujador_identacion
             )
         if self.con_aleta:
             referencia += '/AH%sI%s' % (
                 int(self.aleta_alto),
-                int(self.aleta_identacion)
+                self.aleta_identacion
             )
             nombre += ' con Aleta H%s I%s' % (
                 int(self.aleta_alto),
-                int(self.aleta_identacion)
+                self.aleta_identacion
             )
 
         self.referencia = referencia
