@@ -77,12 +77,22 @@ class MaterialBandaEurobelt(models.Model):
 class TipoBandaBandaEurobelt(models.Model):
     nombre = models.CharField(max_length=100, unique=True)
     nomenclatura = models.CharField(max_length=4, unique=True)
-    categorias = models.ManyToManyField(CategoriaProducto, related_name='tipos_eurobelt')
+    # categorias = models.ManyToManyField(
+    #     CategoriaProducto,
+    #     related_name='tipos_eurobelt',
+    #     through='TipoBandaCategoriaProducto',
+    #     through_fields=('tipo', 'categoria')
+    # )
 
     class Meta:
         permissions = [
             ("list_tipobandabandaeurobelt", "Can see list tipos bandas eurobelt"),
         ]
+
+
+class TipoBandaCategoriaProducto(models.Model):
+    categoria = models.ForeignKey(CategoriaProducto, related_name='tipos_bandas', on_delete=models.PROTECT)
+    tipo = models.ForeignKey(TipoBandaBandaEurobelt, on_delete=models.PROTECT, related_name='categorias_productos')
 
 
 class ColorBandaEurobelt(models.Model):
@@ -230,11 +240,11 @@ class BandaEurobelt(models.Model):
     empujador_alto = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     empujador_ancho = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     empujador_distanciado = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    empujador_identacion = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    empujador_identacion = models.CharField(max_length=100)
     empujador_filas_entre_empujador = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     empujador_filas_empujador = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     aleta_alto = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    aleta_identacion = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    aleta_identacion = models.CharField(max_length=100)
     objects = BandaEurobeltManager()
 
     def set_referencia_nombre(self):

@@ -40,7 +40,7 @@ class CategoriaDosSerializer(CustomSerializerMixin, serializers.ModelSerializer)
 class CategoriaDosConDetalleSerializer(CategoriaDosSerializer):
     categorias = CategoriaProductoSerializer(
         many=True, read_only=True,
-        context={'quitar_campos': ['categorias_dos_eurobelt', 'tipos_eurobelt']}
+        context={'quitar_campos': ['categorias_dos_eurobelt']}
     )
 
 
