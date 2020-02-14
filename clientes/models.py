@@ -73,6 +73,7 @@ class ClienteBiable(models.Model):
 class ContactoCliente(TimeStampedModel):
     cliente = models.ForeignKey(ClienteBiable, on_delete=models.CASCADE, related_name='contactos')
     creado_por = models.ForeignKey(User, on_delete=models.PROTECT, related_name='contactos_creados')
+    id_temporal_crm = models.BigIntegerField(null=True)
     nombres = models.CharField(max_length=200)
     pais = models.CharField(max_length=200, null=True)
     ciudad = models.CharField(max_length=200, null=True)
@@ -81,6 +82,8 @@ class ContactoCliente(TimeStampedModel):
     correo_electronico_2 = models.EmailField(null=True)
     telefono = models.CharField(max_length=120, null=True)
     telefono_2 = models.CharField(max_length=120, null=True)
+    planta = models.CharField(max_length=120, null=True)
+    empresa = models.CharField(max_length=120, null=True)
     cargo = models.CharField(max_length=200, null=True)
     nueva_desde_cotizacion = models.BooleanField(default=False)
 
