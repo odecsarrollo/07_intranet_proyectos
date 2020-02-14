@@ -77,3 +77,21 @@ def fusionar_clientes(
         contacto.save()
     cliente_eliminar.delete()
     return cliente_permanece
+
+
+def fusionar_contactos(
+        contacto_que_permanece_id: int,
+        contacto_a_eliminar_id: int
+) -> ContactoCliente:
+    contacto_eliminar = ContactoCliente.objects.get(pk=contacto_a_eliminar_id)
+
+    for cotizacion in contacto_eliminar.cotizaciones_componentes.all():
+        cotizacion.contacto_id = contacto_que_permanece_id
+        cotizacion.save()
+
+    for cotizacion in contacto_eliminar.cotizaciones_proyectos.all():
+        cotizacion.contacto_cliente_id = contacto_que_permanece_id
+        cotizacion.save()
+    contacto_eliminar.delete()
+    contacto_permanece = ContactoCliente.objects.get(pk=contacto_que_permanece_id)
+    return contacto_permanece

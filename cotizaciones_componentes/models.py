@@ -40,6 +40,7 @@ class CotizacionComponente(TimeStampedModel):
     estado = models.CharField(max_length=10, choices=ESTADOS, default='INI')
     observaciones = models.TextField(null=True)
     razon_rechazo = models.TextField(null=True)
+    es_crm_anterior = models.BooleanField(default=False)
     objects = CotizacionComponenteManager()
 
     @property
@@ -134,6 +135,7 @@ class ItemCotizacionComponente(TimeStampedModel):
     cantidad = models.DecimalField(max_digits=18, decimal_places=3)
     precio_unitario = models.DecimalField(max_digits=18, decimal_places=2)
     valor_total = models.DecimalField(max_digits=18, decimal_places=2)
+    transporte_tipo = models.CharField(null=True, max_length=100)
 
     @property
     def tiempo_entrega(self):
