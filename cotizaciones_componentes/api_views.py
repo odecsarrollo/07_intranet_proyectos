@@ -18,15 +18,15 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
     queryset = CotizacionComponente.objects.all()
     serializer_class = CotizacionComponenteSerializer
 
-    def list(self, request, *args, **kwargs):
-        user = self.request.user
-        self.queryset = self.queryset.filter(
-            (
-                    (Q(responsable__isnull=True) & Q(creado_por=user)) |
-                    (Q(responsable__isnull=False) & Q(responsable=user))
-            )
-        )
-        return super().list(request, *args, **kwargs)
+    # def list(self, request, *args, **kwargs):
+    #     user = self.request.user
+    #     self.queryset = self.queryset.filter(
+    #         (
+    #                 (Q(responsable__isnull=True) & Q(creado_por=user)) |
+    #                 (Q(responsable__isnull=False) & Q(responsable=user))
+    #         )
+    #     )
+    #     return super().list(request, *args, **kwargs)
 
     def perform_create(self, serializer):
         serializer.save(creado_por=self.request.user)
