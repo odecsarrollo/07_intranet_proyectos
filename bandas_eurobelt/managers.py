@@ -66,6 +66,17 @@ class BandaEurobeltManager(models.Manager):
                     ) / (1 - (F('componente__margen__margen_deseado') / 100))
                 ),
                 output_field=DecimalField(max_digits=12, decimal_places=2)
+            ),
+            precio_base_aereo=ExpressionWrapper(
+                Sum(
+                    (
+                            F('cantidad') *
+                            F('componente__margen__proveedor__moneda__cambio') *
+                            F('componente__margen__proveedor__factor_importacion_aereo') *
+                            F('componente__costo')
+                    ) / (1 - (F('componente__margen__margen_deseado') / 100))
+                ),
+                output_field=DecimalField(max_digits=12, decimal_places=2)
             )
         ).filter(banda_id=OuterRef('id'))
 
@@ -75,6 +86,7 @@ class BandaEurobeltManager(models.Manager):
             cantidad_componentes=Subquery(componentes.values('cantidad_componentes')),
             costo_cop=Subquery(componentes.values('costo_cop')),
             precio_base=Subquery(componentes.values('precio_base')),
+            precio_base_aereo=Subquery(componentes.values('precio_base_aereo')),
         ).annotate(
             precio_mano_obra=ExpressionWrapper(
                 F('precio_base') * (F('costo_ensamblado__porcentaje') / 100),

@@ -315,6 +315,7 @@ class BandaEurobeltSerializer(serializers.ModelSerializer):
     cantidad_componentes = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     precio_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     precio_con_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    precio_con_mano_obra_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     to_string = serializers.SerializerMethodField()
 
     def get_to_string(self, instance):
@@ -334,6 +335,7 @@ class BandaEurobeltSerializer(serializers.ModelSerializer):
             'rentabilidad',
             'precio_mano_obra',
             'precio_con_mano_obra',
+            'precio_con_mano_obra_aereo',
             'cantidad_componentes',
             'con_aleta',
             'con_torneado_varilla',
