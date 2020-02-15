@@ -2,7 +2,7 @@ import React, {memo, Fragment} from 'react';
 import {useSelector} from 'react-redux';
 import {reduxForm, formValueSelector} from 'redux-form';
 import {MyCombobox, MyTextFieldSimple, MyCheckboxSimple} from '../../../../00_utilities/components/ui/forms/fields';
-import validate from './validate';
+import validate from './validate_crear_contacto';
 import {MyFormTagModal} from '../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import ContactoFormBase
     from "../../../../03_app_admin/especificas/clientes/contactos/components/forms/ContactoFormBase";
@@ -71,7 +71,7 @@ let CrearContactoForm = memo(props => {
                     case='U'/>
                 <MyTextFieldSimple
                     className="col-12"
-                    nombre='Nombre Cliente'
+                    nombre='Razón Social Cliente'
                     name='cliente_nombre'
                     case='U'/>
             </Fragment>}

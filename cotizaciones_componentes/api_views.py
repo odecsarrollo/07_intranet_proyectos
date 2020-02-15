@@ -161,6 +161,7 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
         item_unidad_medida = request.POST.get('item_unidad_medida')
         id_item = request.POST.get('id_item', None)
         forma_pago_id = request.POST.get('forma_pago_id', None)
+        tipo_transporte = request.POST.get('tipo_transporte', None)
         from .services import cotizacion_componentes_adicionar_item
         cotizacion_componente = cotizacion_componentes_adicionar_item(
             tipo_item=tipo_item,
@@ -170,7 +171,8 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
             item_descripcion=item_descripcion,
             item_referencia=item_referencia,
             item_unidad_medida=item_unidad_medida,
-            forma_pago_id=forma_pago_id
+            forma_pago_id=forma_pago_id,
+            tipo_transporte=tipo_transporte
         )
         self.serializer_class = CotizacionComponenteConDetalleSerializer
         serializer = self.get_serializer(cotizacion_componente)

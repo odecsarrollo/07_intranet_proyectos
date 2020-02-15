@@ -89,6 +89,7 @@ def cotizacion_componentes_adicionar_item(
         item_descripcion: str,
         item_referencia: str,
         item_unidad_medida: str,
+        tipo_transporte: str,
         forma_pago_id: int = None,
         id_item: int = None,
 ) -> CotizacionComponente:
@@ -119,6 +120,7 @@ def cotizacion_componentes_adicionar_item(
     item.precio_unitario = precio_unitario
     item.valor_total = precio_unitario
     item.forma_pago_id = forma_pago_id
+    item.transporte_tipo = tipo_transporte
     item.save()
     cotizacion_componente = CotizacionComponente.objects.get(pk=cotizacion_componente_id)
     return cotizacion_componente

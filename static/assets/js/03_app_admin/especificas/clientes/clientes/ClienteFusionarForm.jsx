@@ -49,7 +49,7 @@ let Form = memo(props => {
                 name='cliente_que_permanece_id'
                 busy={false}
                 autoFocus={false}
-                data={_.map(_.pickBy(list, c => c.sincronizado_sistemas_informacion), e => {
+                data={_.map(_.pickBy(list, c => c.sincronizado_sistemas_informacion && !c.nueva_desde_cotizacion), e => {
                     return {
                         'name': `${e.nombre} - ${e.nit}`,
                         'id': e.id
@@ -65,7 +65,7 @@ let Form = memo(props => {
                 name='cliente_a_eliminar_id'
                 busy={false}
                 autoFocus={false}
-                data={_.map(_.pickBy(list, c => !c.sincronizado_sistemas_informacion), e => {
+                data={_.map(_.pickBy(list, c => (!c.sincronizado_sistemas_informacion || c.nueva_desde_cotizacion)), e => {
                     return {
                         'name': `${e.nombre} - ${e.nit}`,
                         'id': e.id

@@ -114,6 +114,7 @@ const CotizacionDetailItemsTablaItem = memo(props => {
                     margin="normal"
                 />
             </td>
+            <td style={table.td}>{item.transporte_tipo}</td>
             {editable &&
             <td style={table.td}>
                 <MyDialogButtonDelete
@@ -199,6 +200,7 @@ const CotizacionDetailItemsTabla = memo(props => {
                 <th style={table.td}>Cant.</th>
                 <th style={table.td}>$ Total</th>
                 <th style={table.td}>T. Ent</th>
+                <th style={table.td}>Tipo Transporte</th>
                 {editable &&
                 <th style={table.td}>Eli.</th>
                 }
@@ -222,6 +224,7 @@ const CotizacionDetailItemsTabla = memo(props => {
                 <td style={table.td}></td>
                 <td style={table.td} className='text-center'>{cantidad_items}</td>
                 <td style={table.td_right}>{pesosColombianos(valor_total)}</td>
+                <td style={table.td}></td>
                 <td style={table.td}></td>
                 {editable &&
                 <td style={table.td}></td>

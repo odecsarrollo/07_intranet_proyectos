@@ -14,7 +14,7 @@ const CotizadorListaPrecioTablaItem = memo(props => {
         id_item,
         forma_pago_id
     } = item;
-    const adicionarItemConPrecio = (precio) => {
+    const adicionarItemConPrecio = (precio, transporte_tipo) => {
         if (!adicionarItem || precio <= 0) {
             return null
         }
@@ -24,6 +24,7 @@ const CotizadorListaPrecioTablaItem = memo(props => {
             item_descripcion,
             item_referencia,
             item_unidad_medida,
+            transporte_tipo,
             id_item,
             forma_pago_id
         )
@@ -36,13 +37,13 @@ const CotizadorListaPrecioTablaItem = memo(props => {
             <td>{item_unidad_medida}</td>
             <td>
                 <span className='puntero'
-                      onClick={() => adicionarItemConPrecio(precio_unitario)}>
+                      onClick={() => adicionarItemConPrecio(precio_unitario, 'CONVENCIONAL')}>
                     {pesosColombianos(precio_unitario)}
                 </span>
             </td>
             <td>
                 <span className='puntero'
-                      onClick={() => adicionarItemConPrecio(precio_unitario_aereo)}>
+                      onClick={() => adicionarItemConPrecio(precio_unitario_aereo, 'AEREO')}>
                     {pesosColombianos(precio_unitario_aereo)}
                 </span>
             </td>

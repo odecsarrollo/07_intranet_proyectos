@@ -48,6 +48,7 @@ export const adicionarItemCotizacionComponente = (
     item_descripcion,
     item_referencia,
     item_unidad_medida,
+    tipo_transporte,
     id_item = null,
     forma_pago_id = null,
     options_action = {},
@@ -59,6 +60,7 @@ export const adicionarItemCotizacionComponente = (
         params.append('item_descripcion', item_descripcion);
         params.append('item_referencia', item_referencia);
         params.append('item_unidad_medida', item_unidad_medida);
+        params.append('tipo_transporte', tipo_transporte);
         if (id_item) {
             params.append('id_item', id_item);
         }

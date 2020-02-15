@@ -1,4 +1,5 @@
 import React, {memo} from "react";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import MyDialogButtonDelete from '../../../../00_utilities/components/ui/dialog/delete_dialog';
 import IconButtonTableSee from '../../../../00_utilities/components/ui/icon/table_icon_button_detail';
 import IconButtonTableEdit from '../../../../00_utilities/components/ui/icon/table_icon_button_edit';
@@ -28,12 +29,18 @@ const Tabla = memo(props => {
                     Header: "Caracteristicas",
                     columns: [
                         {
+                            Header: "Id",
+                            accessor: "id",
+                            maxWidth: 50,
+                            filterable: true
+                        },
+                        {
                             Header: "Nit",
                             accessor: "nit",
                             maxWidth: 150,
                             filterable: true,
                             filterMethod: (filter, row) => {
-                                return row[filter.id].includes(filter.value.toUpperCase())
+                                return row[filter.id] && row[filter.id].includes(filter.value.toUpperCase())
                             }
                         },
                         {
@@ -44,6 +51,18 @@ const Tabla = memo(props => {
                             filterMethod: (filter, row) => {
                                 return row[filter.id].includes(filter.value.toUpperCase())
                             }
+                        },
+                        {
+                            Header: "Creado",
+                            accessor: "nueva_desde_cotizacion",
+                            maxWidth: 100,
+                            Cell: row => <div>{row.value && <FontAwesomeIcon icon={'check'}/>}</div>
+                        },
+                        {
+                            Header: "Sincronizado",
+                            accessor: "sincronizado_sistemas_informacion",
+                            maxWidth: 100,
+                            Cell: row => <div>{row.value && <FontAwesomeIcon icon={'check'}/>}</div>
                         },
                     ]
                 },

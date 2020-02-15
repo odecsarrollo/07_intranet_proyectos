@@ -22,6 +22,7 @@ const CotizadorAdicionarItem = memo(props => {
         item_descripcion,
         item_referencia,
         item_unidad_medida,
+        tipo_transporte = 'NO APLICA',
         item_id = null,
         forma_pago_id = null,
         callback = null
@@ -34,6 +35,7 @@ const CotizadorAdicionarItem = memo(props => {
                 item_descripcion,
                 item_referencia,
                 item_unidad_medida,
+                tipo_transporte,
                 item_id,
                 forma_pago_id,
                 {callback}

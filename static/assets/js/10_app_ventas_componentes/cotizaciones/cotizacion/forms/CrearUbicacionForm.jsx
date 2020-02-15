@@ -3,7 +3,7 @@ import * as actions from '../../../../01_actions/01_index';
 import {useDispatch, useSelector} from 'react-redux';
 import {reduxForm, formValueSelector} from 'redux-form';
 import {MyCombobox, MyTextFieldSimple, MyCheckboxSimple} from '../../../../00_utilities/components/ui/forms/fields';
-import validate from './validate';
+import validate from './validate_crear_ciudad';
 import {MyFormTagModal} from '../../../../00_utilities/components/ui/forms/MyFormTagModal';
 
 const selector = formValueSelector('crearUbicacionForm');

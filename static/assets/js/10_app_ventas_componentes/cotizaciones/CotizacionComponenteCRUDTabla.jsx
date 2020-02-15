@@ -6,7 +6,7 @@ import ReactTable from "react-table";
 import {Link} from "react-router-dom";
 
 const Tabla = memo(props => {
-    const data = _.map(props.list);
+    const data = _.map(_.orderBy(props.list, ['nro_consecutivo', 'desc']));
     const {
         singular_name,
         onDelete,
@@ -28,7 +28,8 @@ const Tabla = memo(props => {
                         {
                             Header: "#",
                             accessor: "nro_consecutivo",
-                            maxWidth: 70
+                            maxWidth: 70,
+                            filterable: true
                         },
                         {
                             Header: "Cliente",

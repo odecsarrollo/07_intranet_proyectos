@@ -26,6 +26,12 @@ class Tabla extends React.Component {
                         Header: "Caracteristicas",
                         columns: [
                             {
+                                Header: "Id",
+                                accessor: "id",
+                                maxWidth: 50,
+                                filterable: true
+                            },
+                            {
                                 Header: "Nombre",
                                 accessor: "nombres",
                                 maxWidth: 150,

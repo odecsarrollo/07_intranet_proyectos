@@ -76,6 +76,7 @@ class ItemCotizacionComponenteSerializer(serializers.ModelSerializer):
             'componente_eurobelt',
             'posicion',
             'banda_eurobelt',
+            'transporte_tipo',
             'cotizacion',
             'articulo_catalogo',
             'forma_pago',
