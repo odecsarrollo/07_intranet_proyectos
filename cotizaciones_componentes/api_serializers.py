@@ -123,6 +123,8 @@ class CotizacionComponenteSerializer(serializers.ModelSerializer):
     contacto_nombres = serializers.CharField(source='contacto.nombres', read_only=True)
     contacto_apellidos = serializers.CharField(source='contacto.apellidos', read_only=True)
     estado_display = serializers.SerializerMethodField()
+    responsable_username = serializers.CharField(source='responsable.username', read_only=True)
+    creado_por_username = serializers.CharField(source='creado_por.username', read_only=True)
 
     def get_estado_display(self, obj):
         return obj.get_estado_display()
@@ -148,6 +150,8 @@ class CotizacionComponenteSerializer(serializers.ModelSerializer):
             'departamento_nombre',
             'pais_nombre',
             'estado',
+            'responsable_username',
+            'creado_por_username',
             'razon_rechazo',
             'estado_display',
             'envios_emails',
@@ -155,6 +159,8 @@ class CotizacionComponenteSerializer(serializers.ModelSerializer):
             'items',
         ]
         extra_kwargs = {
+            'responsable_username': {'read_only': True},
+            'creado_por_username': {'read_only': True},
             'envios_emails': {'read_only': True},
             'items': {'read_only': True},
             'seguimientos': {'read_only': True},

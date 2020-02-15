@@ -4,6 +4,7 @@ import IconButtonTableSee from "../../00_utilities/components/ui/icon/table_icon
 
 import ReactTable from "react-table";
 import {Link} from "react-router-dom";
+import {pesosColombianos} from "../../00_utilities/common";
 
 const Tabla = memo(props => {
     const data = _.map(_.pickBy(_.orderBy(props.list, ['nro_consecutivo'], ['desc']), e => e.estado !== 'INI'));
@@ -69,17 +70,38 @@ const Tabla = memo(props => {
                             },
                             {
                                 Header: "Ciudad",
-                                maxWidth: 350,
-                                minWidth: 350,
+                                maxWidth: 250,
+                                minWidth: 250,
                                 filterable: true,
                                 Cell: row => `${row.original.pais_nombre}-${row.original.departamento_nombre}-${row.original.ciudad_nombre}`
                             },
                             {
                                 Header: "Contacto",
-                                maxWidth: 250,
-                                minWidth: 250,
+                                maxWidth: 200,
+                                minWidth: 200,
                                 filterable: true,
                                 Cell: row => `${row.original.contacto_nombres} ${row.original.contacto_apellidos}`
+                            },
+                            {
+                                Header: "Responsable",
+                                accessor: "responsable_username",
+                                maxWidth: 80,
+                                minWidth: 80,
+                                filterable: true
+                            },
+                            {
+                                Header: "Creado Por",
+                                accessor: "creado_por_username",
+                                maxWidth: 80,
+                                minWidth: 80,
+                                filterable: true
+                            },
+                            {
+                                Header: "Valor Total",
+                                accessor: "valor_total",
+                                maxWidth: 80,
+                                minWidth: 80,
+                                Cell: row => <div className='text-right'>{pesosColombianos(row.value)}</div>
                             },
                         ]
                     },

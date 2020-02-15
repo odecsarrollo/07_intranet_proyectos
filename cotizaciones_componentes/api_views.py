@@ -1,6 +1,6 @@
-from django.db.models import Q
+from django.db.models import Q, Sum
+from django.db.models.functions import Coalesce
 from django.http import HttpResponse
-from django.utils import timezone
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
@@ -15,18 +15,15 @@ from .api_serializers import (
 
 
 class CotizacionComponenteViewSet(viewsets.ModelViewSet):
-    queryset = CotizacionComponente.objects.all()
+    queryset = CotizacionComponente.objects.prefetch_related(
+        'items'
+    ).select_related(
+        'responsable',
+        'creado_por'
+    ).annotate(
+        valor_total=Coalesce(Sum('items__valor_total'), 0)
+    ).all()
     serializer_class = CotizacionComponenteSerializer
-
-    # def list(self, request, *args, **kwargs):
-    #     user = self.request.user
-    #     self.queryset = self.queryset.filter(
-    #         (
-    #                 (Q(responsable__isnull=True) & Q(creado_por=user)) |
-    #                 (Q(responsable__isnull=False) & Q(responsable=user))
-    #         )
-    #     )
-    #     return super().list(request, *args, **kwargs)
 
     def perform_create(self, serializer):
         serializer.save(creado_por=self.request.user)
@@ -214,6 +211,13 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
             Q(estado=estado) |
             Q(estado='INI')
         )
+        user = self.request.user
+        if not user.is_superuser:
+            lista = lista.filter(
+                (Q(responsable__isnull=True) & Q(creado_por=user)) |
+                (Q(responsable__isnull=False) & Q(responsable=user))
+            )
+
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
