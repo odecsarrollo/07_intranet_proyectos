@@ -25,6 +25,7 @@ let Form = memo(props => {
                     v.item_descripcion,
                     v.item_referencia,
                     v.item_unidad_medida,
+                    'PERSONALIZADO',
                     null,
                     null,
                     cerrarDialog

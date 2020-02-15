@@ -34,9 +34,10 @@ const CotizadorListaPrecio = memo(props => {
             precio_unitario_aereo: 0,
             item_descripcion: b.nombre.toUpperCase(),
             item_referencia: b.referencia.toUpperCase(),
-            item_unidad_medida: 'La unidad de medida',
+            item_unidad_medida: `${(b.largo / 1000)} Metro(s)`,
             id_item: b.id,
             forma_pago_id: forma_pago.id,
+            origen: 'Bandas Eurobelt',
         }));
 
         componentes_eurobelt = _.map(componentes_eurobelt, b => ({
@@ -45,9 +46,10 @@ const CotizadorListaPrecio = memo(props => {
             precio_unitario_aereo: Math.ceil((b.precio_base_aereo * (1 + porcentaje) / 1000)) * 1000,
             item_descripcion: b.nombre.toUpperCase(),
             item_referencia: b.referencia.toUpperCase(),
-            item_unidad_medida: 'La unidad de medida',
+            item_unidad_medida: 'Unidad',
             id_item: b.id,
             forma_pago_id: forma_pago.id,
+            origen: 'Componentes Eurobelt',
         }));
 
         articulos_catalogos = _.map(articulos_catalogos, b => ({
@@ -56,9 +58,10 @@ const CotizadorListaPrecio = memo(props => {
             precio_unitario_aereo: Math.ceil((b.precio_base_aereo * (1 + porcentaje) / 1000)) * 1000,
             item_descripcion: b.nombre.toUpperCase(),
             item_referencia: b.referencia.toUpperCase(),
-            item_unidad_medida: 'La unidad de medida',
+            item_unidad_medida: b.unidad_medida_catalogo,
             id_item: b.id,
             forma_pago_id: forma_pago.id,
+            origen: `Catalogo ${b.origen}`,
         }));
         todos_los_items = _.orderBy([...bandas_eurobelt, ...componentes_eurobelt, ...articulos_catalogos], ['item_descripcion'], ['asc']);
     }

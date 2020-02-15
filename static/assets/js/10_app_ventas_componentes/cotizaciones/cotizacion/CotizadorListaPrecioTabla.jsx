@@ -12,7 +12,8 @@ const CotizadorListaPrecioTablaItem = memo(props => {
         precio_unitario,
         precio_unitario_aereo,
         id_item,
-        forma_pago_id
+        forma_pago_id,
+        origen
     } = item;
     const adicionarItemConPrecio = (precio, transporte_tipo) => {
         if (!adicionarItem || precio <= 0) {
@@ -47,6 +48,7 @@ const CotizadorListaPrecioTablaItem = memo(props => {
                     {pesosColombianos(precio_unitario_aereo)}
                 </span>
             </td>
+            <td>{origen}</td>
         </tr>
     )
 });
