@@ -296,7 +296,8 @@ class BandaEurobelt(models.Model):
                 self.aleta_identacion
             )
 
-        self.referencia = referencia
+        self.nombre = '%s por %s %s' % (nombre, self.largo, 'Metros' if self.largo > 1000 else 'Metro')
+        self.referencia = '%sx%sMTS' % (referencia, self.largo)
         self.nombre = nombre.strip().title()
         self.save()
 
