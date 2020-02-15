@@ -129,8 +129,8 @@ class ItemCotizacionComponente(TimeStampedModel):
     )
 
     dias_entrega = models.PositiveIntegerField(default=0)
-    descripcion = models.CharField(max_length=300, null=True)
-    referencia = models.CharField(max_length=120, null=True)
+    descripcion = models.CharField(max_length=400, null=True)
+    referencia = models.CharField(max_length=150, null=True)
     unidad_medida = models.CharField(max_length=120, null=True)
     cantidad = models.DecimalField(max_digits=18, decimal_places=3)
     precio_unitario = models.DecimalField(max_digits=18, decimal_places=2)
