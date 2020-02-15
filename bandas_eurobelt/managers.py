@@ -84,6 +84,10 @@ class BandaEurobeltManager(models.Manager):
                 F('precio_base') + F('precio_mano_obra'),
                 output_field=DecimalField(max_digits=12, decimal_places=2)
             ),
+            precio_con_mano_obra_aereo=ExpressionWrapper(
+                F('precio_base_aereo') + F('precio_mano_obra'),
+                output_field=DecimalField(max_digits=12, decimal_places=2)
+            ),
             rentabilidad=ExpressionWrapper(
                 F('precio_con_mano_obra') - F('costo_cop'),
                 output_field=DecimalField(max_digits=12, decimal_places=2)

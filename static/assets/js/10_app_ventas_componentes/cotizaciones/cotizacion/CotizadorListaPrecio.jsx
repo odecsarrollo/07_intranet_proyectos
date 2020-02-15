@@ -31,7 +31,7 @@ const CotizadorListaPrecio = memo(props => {
         bandas_eurobelt = _.map(bandas_eurobelt, b => ({
             tipo_item: 'BandaEurobelt',
             precio_unitario: Math.ceil((b.precio_con_mano_obra * (1 + porcentaje)) / 1000) * 1000,
-            precio_unitario_aereo: 0,
+            precio_unitario_aereo: Math.ceil((b.precio_con_mano_obra_aereo * (1 + porcentaje)) / 1000) * 1000,
             item_descripcion: b.nombre.toUpperCase(),
             item_referencia: b.referencia.toUpperCase(),
             item_unidad_medida: `${(b.largo / 1000)} Metro(s)`,
@@ -73,7 +73,7 @@ const CotizadorListaPrecio = memo(props => {
     };
     return (
         <div className='row'>
-            <div className="col-4">
+            <div className="col-12 col-md-3 col-xl-2">
                 <label>Forma Pago</label>
                 <Combobox
                     data={_.map(formas_pago, f => ({...f, nombre: `${f.canal_nombre} ${f.forma}`}))}
@@ -89,7 +89,7 @@ const CotizadorListaPrecio = memo(props => {
             </div>
             {forma_pago &&
             <Fragment>
-                <div className="col-8">
+                <div className="col-12 col-md-7 col-xl-7">
                     <TextField
                         fullWidth={true}
                         label='Busqueda'
@@ -97,7 +97,7 @@ const CotizadorListaPrecio = memo(props => {
                         onChange={e => setBusqueda(e.target.value)}
                     />
                 </div>
-                <div className="col-12">
+                <div className="col-12 col-md-2 col-xl-3">
                     <Button
                         color="primary"
                         variant="contained"
