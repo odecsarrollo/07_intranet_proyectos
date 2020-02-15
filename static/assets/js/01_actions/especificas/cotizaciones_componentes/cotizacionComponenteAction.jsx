@@ -27,8 +27,6 @@ export const eliminarItemCotizacionComponente = (id, id_item_cotizacion, options
 
 export const cambiarPosicionItemCotizacionComponente = (id, item_uno_id, item_dos_id, options_action = {}) => {
     return (dispatch) => {
-        console.log(item_uno_id)
-        console.log(item_dos_id)
         let params = new URLSearchParams();
         params.append('item_uno_id', item_uno_id);
         params.append('item_dos_id', item_dos_id);
