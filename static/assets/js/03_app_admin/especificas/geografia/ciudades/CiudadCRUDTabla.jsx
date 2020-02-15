@@ -29,7 +29,7 @@ class Tabla extends React.Component {
                                 maxWidth: 40
                             },
                             {
-                                Header: "Nombre",
+                                Header: "Ciudad",
                                 maxWidth: 220,
                                 filterable: true,
                                 filterMethod: (filter, row) => row._original.to_string.includes(filter.value.toUpperCase()),
@@ -40,7 +40,6 @@ class Tabla extends React.Component {
                                 maxWidth: 220,
                                 accessor: "departamento_nombre",
                                 filterable: true,
-                                filterMethod: (filter, row) => row.value.includes(filter.value.toUpperCase()),
                                 Cell: row => `${row.value}`
                             },
                             {
@@ -48,7 +47,6 @@ class Tabla extends React.Component {
                                 maxWidth: 220,
                                 accessor: "pais_nombre",
                                 filterable: true,
-                                filterMethod: (filter, row) => row.value.includes(filter.value.toUpperCase()),
                                 Cell: row => `${row.value}`
                             },
                         ]

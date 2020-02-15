@@ -1,6 +1,7 @@
 from rest_framework.exceptions import ValidationError
 
 from .models import ContactoCliente, ClienteBiable
+from colaboradores.models import Colaborador
 
 
 def contacto_cliente_crear_desde_cotizacion(
@@ -49,6 +50,44 @@ def contacto_cliente_crear_desde_cotizacion(
     )
 
     return contacto
+
+
+def asignar_colaborador_vendedor_proyectos(
+        cliente_id: int,
+        colaborador_id: int = None
+) -> Colaborador:
+    cliente = ClienteBiable.objects.get(pk=cliente_id)
+    if colaborador_id is None:
+        cliente.colaborador_proyectos = None
+        colaborador_proyectos = None
+    else:
+        colaborador_proyectos = Colaborador.objects.get(pk=colaborador_id)
+        if colaborador_proyectos.usuario is None:
+            raise ValidationError(
+                {'_error': 'El colaborador a asignar como vendedor de proyectos debe tener un usuario definido'}
+            )
+        cliente.colaborador_proyectos = colaborador_id
+    cliente.save()
+    return colaborador_proyectos
+
+
+def asignar_colaborador_vendedor_componentes(
+        cliente_id: int,
+        colaborador_id: int = None
+) -> Colaborador:
+    cliente = ClienteBiable.objects.get(pk=cliente_id)
+    if colaborador_id is None:
+        cliente.colaborador_componentes = None
+        colaborador_componentes = None
+    else:
+        colaborador_componentes = Colaborador.objects.get(pk=colaborador_id)
+        if colaborador_componentes.usuario is None:
+            raise ValidationError(
+                {'_error': 'El colaborador a asignar como vendedor de proyectos debe tener un usuario definido'}
+            )
+        cliente.colaborador_componentes = colaborador_id
+    cliente.save()
+    return colaborador_componentes
 
 
 def fusionar_clientes(

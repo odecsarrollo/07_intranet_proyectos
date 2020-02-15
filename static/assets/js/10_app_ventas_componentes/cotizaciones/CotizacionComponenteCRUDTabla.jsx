@@ -136,7 +136,7 @@ const Tabla = memo(props => {
                         ]
                     }
                 ]}
-                defaultPageSize={10}
+                defaultPageSize={100}
                 className="-striped -highlight tabla-maestra"
             />
         </div>
