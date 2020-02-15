@@ -311,7 +311,9 @@ class EnsambladoBandaEurobeltSerializer(serializers.ModelSerializer):
 class BandaEurobeltSerializer(serializers.ModelSerializer):
     rentabilidad = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     costo_cop = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    costo_cop_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     precio_base = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    precio_base_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     cantidad_componentes = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     precio_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     precio_con_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
