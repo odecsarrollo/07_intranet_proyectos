@@ -208,6 +208,16 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @action(detail=False, http_method_names=['get', ])
+    def cotizaciones_por_estado(self, request):
+        estado = self.request.GET.get('estado')
+        lista = self.queryset.filter(
+            Q(estado=estado) |
+            Q(estado='INI')
+        )
+        serializer = self.get_serializer(lista, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, http_method_names=['get', ])
     def cotizaciones_en_edicion_asesor(self, request):
         user = self.request.user
         self.serializer_class = CotizacionComponenteConDetalleSerializer

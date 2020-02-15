@@ -8,7 +8,7 @@ import {
     callApiMethodPostParameters,
     callApiMethodPostParametersPDF,
     callApiMethodPost,
-    uploadArchivo
+    uploadArchivo, fetchListGetURLParameters
 } from '../../00_general_fuctions'
 
 const current_url_api = 'cotizaciones_componentes';
@@ -146,6 +146,24 @@ export const fetchCotizacionesComponentes = (options_action = {}) => {
         return fetchListGet(current_url_api, options);
     }
 };
+
+
+export const fetchCotizacionesComponentes_por_estado = (estado, options_action = {}) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
+        };
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        return fetchListGetURLParameters(`${current_url_api}/cotizaciones_por_estado/?estado=${estado}`, options);
+    }
+};
+
 export const fetchCotizacionesComponentesEdicionAsesor = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {

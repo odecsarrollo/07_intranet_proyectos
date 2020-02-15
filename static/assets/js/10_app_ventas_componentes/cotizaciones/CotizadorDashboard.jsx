@@ -1,4 +1,4 @@
-import React, {memo, useEffect, Fragment} from 'react';
+import React, {memo, useEffect, Fragment, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../01_actions/01_index";
 import {COTIZACIONES_COMPONENTES} from "../../permisos";
@@ -12,15 +12,16 @@ const CRUD = crudHOC(CreateForm, Tabla);
 const Cotizaciones = memo(props => {
     const {history} = props;
     const dispatch = useDispatch();
+    const [estado_cotizacion, setEstadoCotizacion] = useState('PRO');
     const cargarDatos = () => {
-        dispatch(actions.fetchCotizacionesComponentes());
+        dispatch(actions.fetchCotizacionesComponentes_por_estado(estado_cotizacion));
     };
     useEffect(() => {
         cargarDatos();
         return () => {
             dispatch(actions.clearCotizacionesComponentes());
         };
-    }, []);
+    }, [estado_cotizacion]);
     const list = useSelector(state => state.cotizaciones_componentes);
     const permisos = useTengoPermisos(COTIZACIONES_COMPONENTES);
     const method_pool = {
@@ -36,6 +37,8 @@ const Cotizaciones = memo(props => {
                 posSummitMethod={(cot) => history.push(`/app/ventas_componentes/cotizaciones/detail/${cot.id}`)}
                 method_pool={method_pool}
                 list={list}
+                setEstadoCotizacion={setEstadoCotizacion}
+                estado_cotizacion_seleccionada={estado_cotizacion}
                 permisos_object={permisos}
                 plural_name='Cotizaciones'
                 singular_name='Cotización'
