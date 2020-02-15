@@ -75,6 +75,10 @@ def fusionar_clientes(
     for contacto in cliente_eliminar.contactos.all():
         contacto.cliente_id = cliente_que_permanece_id
         contacto.save()
+
+    for cliente_catalogo in cliente_eliminar.clientes_sistemas_informacion.all():
+        cliente_catalogo.cliente_id = cliente_que_permanece_id
+        cliente_catalogo.save()
     cliente_eliminar.delete()
     return cliente_permanece
 
