@@ -214,8 +214,8 @@ class BandaEurobelt(models.Model):
         through='EnsambladoBandaEurobelt',
         through_fields=('banda', 'componente'),
     )
-    referencia = models.CharField(max_length=100, null=True)
-    nombre = models.CharField(max_length=300, null=True)
+    referencia = models.CharField(max_length=150, null=True)
+    nombre = models.CharField(max_length=400, null=True)
     con_empujador = models.BooleanField(default=False)
     con_aleta = models.BooleanField(default=False)
     con_torneado_varilla = models.BooleanField(default=False)
@@ -296,8 +296,9 @@ class BandaEurobelt(models.Model):
                 self.aleta_identacion
             )
 
-        self.nombre = '%s por %s %s' % (nombre, self.largo, 'Metros' if self.largo > 1000 else 'Metro')
-        self.referencia = '%sx%sMTS' % (referencia, self.largo)
+        self.nombre = '%s por %s %s' % (
+            nombre, round((self.largo / 1000), 2), 'Metros' if self.largo > 1000 else 'Metro')
+        self.referencia = '%sx%sMTS' % (referencia, round((self.largo / 1000), 2))
         self.nombre = nombre.strip().title()
         self.save()
 
