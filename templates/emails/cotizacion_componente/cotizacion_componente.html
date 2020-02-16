@@ -212,7 +212,7 @@
             <th>Total</th>
             <th>Tiem. Entre</th>
         </tr>
-        {% for item in cotizacion.items.all %}
+        {% for item in cotizacion.items.all|dictsort:"posicion" %}
             <tr>
                 <td style="max-width: 4cm">{{ item.referencia }}</td>
                 <td style="max-width: 8cm">{{ item.descripcion|title }}</td>
