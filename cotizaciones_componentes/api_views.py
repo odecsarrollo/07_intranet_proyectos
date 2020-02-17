@@ -16,10 +16,12 @@ from .api_serializers import (
 
 class CotizacionComponenteViewSet(viewsets.ModelViewSet):
     queryset = CotizacionComponente.objects.prefetch_related(
-        'items'
+        'items',
+        'seguimientos',
+        'seguimientos__documento_cotizacion'
     ).select_related(
         'responsable',
-        'creado_por'
+        'creado_por',
     ).annotate(
         valor_total=Coalesce(Sum('items__valor_total'), 0)
     ).all()

@@ -44,7 +44,7 @@ class CotizacionComponente(TimeStampedModel):
     objects = CotizacionComponenteManager()
 
     @property
-    def pdf(self):
+    def pdf(self) -> 'CotizacionComponenteDocumento':
         return self.versiones.last()
 
     class Meta:
@@ -160,7 +160,16 @@ class CotizacionComponenteSeguimiento(TimeStampedModel):
         on_delete=models.PROTECT,
         related_name='seguimientos'
     )
-    tipo_seguimiento = models.CharField(max_length=3, choices=TIPOS)
+    tipo_seguimiento = models.CharField(
+        max_length=3,
+        choices=TIPOS
+    )
+    documento_cotizacion = models.ForeignKey(
+        CotizacionComponenteDocumento,
+        null=True,
+        related_name='seguimientos',
+        on_delete=models.PROTECT
+    )
     descripcion = models.TextField()
     fecha = models.DateTimeField()
     creado_por = models.ForeignKey(

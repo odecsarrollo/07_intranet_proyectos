@@ -95,9 +95,34 @@ class ItemCotizacionComponenteSerializer(serializers.ModelSerializer):
 class CotizacionComponenteSeguimientoSerializer(serializers.ModelSerializer):
     creado_por_username = serializers.CharField(source='creado_por.username', read_only=True)
     tipo_seguimiento_nombre = serializers.SerializerMethodField()
+    documento_cotizacion_url = serializers.SerializerMethodField()
+    documento_cotizacion_extension = serializers.SerializerMethodField()
+    documento_cotizacion_size = serializers.SerializerMethodField()
+    documento_cotizacion_version = serializers.SerializerMethodField()
 
     def get_tipo_seguimiento_nombre(self, obj):
         return obj.get_tipo_seguimiento_display()
+
+    def get_documento_cotizacion_version(self, obj):
+        if obj.documento_cotizacion:
+            return obj.documento_cotizacion.version
+        return None
+
+    def get_documento_cotizacion_url(self, obj):
+        if obj.documento_cotizacion:
+            return obj.documento_cotizacion.pdf_cotizacion.url
+        return None
+
+    def get_documento_cotizacion_extension(self, obj):
+        extension = ''
+        if obj.documento_cotizacion:
+            extension = obj.documento_cotizacion.pdf_cotizacion.url.split('.')[-1]
+        return extension.title()
+
+    def get_documento_cotizacion_size(self, obj):
+        if obj.documento_cotizacion:
+            return obj.documento_cotizacion.pdf_cotizacion.size
+        return None
 
     class Meta:
         model = CotizacionComponenteSeguimiento
@@ -107,6 +132,11 @@ class CotizacionComponenteSeguimientoSerializer(serializers.ModelSerializer):
             'tipo_seguimiento_nombre',
             'tipo_seguimiento',
             'descripcion',
+            'documento_cotizacion',
+            'documento_cotizacion_url',
+            'documento_cotizacion_extension',
+            'documento_cotizacion_size',
+            'documento_cotizacion_version',
             'creado_por',
             'creado_por_username',
             'fecha',
@@ -123,8 +153,12 @@ class CotizacionComponenteSerializer(serializers.ModelSerializer):
     contacto_nombres = serializers.CharField(source='contacto.nombres', read_only=True)
     contacto_apellidos = serializers.CharField(source='contacto.apellidos', read_only=True)
     estado_display = serializers.SerializerMethodField()
+    version = serializers.SerializerMethodField()
     responsable_username = serializers.CharField(source='responsable.username', read_only=True)
     creado_por_username = serializers.CharField(source='creado_por.username', read_only=True)
+
+    def get_version(self, obj):
+        return None
 
     def get_estado_display(self, obj):
         return obj.get_estado_display()
@@ -139,6 +173,7 @@ class CotizacionComponenteSerializer(serializers.ModelSerializer):
             'observaciones',
             'cantidad_items',
             'nro_consecutivo',
+            'version',
             'cliente',
             'cliente_nombre',
             'contacto',
@@ -176,3 +211,6 @@ class CotizacionComponenteConDetalleSerializer(CotizacionComponenteSerializer):
     adjuntos = CotizacionComponenteAdjuntoSerializer(many=True, read_only=True)
     envios_emails = CotizacionComponenteEnvioSerializer(many=True, read_only=True)
     seguimientos = CotizacionComponenteSeguimientoSerializer(many=True, read_only=True)
+
+    def get_version(self, obj):
+        return obj.pdf.version if obj.pdf else None

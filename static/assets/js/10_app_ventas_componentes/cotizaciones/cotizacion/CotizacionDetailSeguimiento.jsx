@@ -11,7 +11,7 @@ import CotizacionSeguimientoFormDialog from "./forms/CotizacionSeguimientoFormDi
 import Typography from '@material-ui/core/Typography';
 import clsx from "clsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {fechaHoraFormatoUno} from "../../../00_utilities/common";
+import {fechaHoraFormatoUno, formatBytes} from "../../../00_utilities/common";
 import * as actions from '../../../01_actions/01_index';
 import moment from "moment-timezone";
 
@@ -49,7 +49,10 @@ const CotizacionDetailSeguimientoItem = memo(props => {
             fecha,
             id,
             descripcion,
-            tipo_seguimiento_nombre
+            tipo_seguimiento_nombre,
+            documento_cotizacion_url,
+            documento_cotizacion_size,
+            documento_cotizacion_version
         },
         eliminarSeguimiento
     } = props;
@@ -74,6 +77,7 @@ const CotizacionDetailSeguimientoItem = memo(props => {
     const getFecha = () => {
         return fechaHoraFormatoUno(fecha)
     };
+    const onOpenUrl = (url) => window.open(url, '_blank');
 
     const puede_eliminar = tipo_seguimiento !== 'ENV' && tipo_seguimiento !== 'EST';
     return (
@@ -91,6 +95,17 @@ const CotizacionDetailSeguimientoItem = memo(props => {
                     primary={`${tipo_seguimiento_nombre}`}
                     secondary={
                         <Fragment>
+                            {documento_cotizacion_url && <Fragment>
+                                <FontAwesomeIcon
+                                    onClick={() => onOpenUrl(documento_cotizacion_url)}
+                                    className='puntero'
+                                    icon={'file'}
+                                    size={'2x'}
+                                />
+                                ({formatBytes(documento_cotizacion_size, 2)}) {documento_cotizacion_version &&
+                            <Fragment>(v.{documento_cotizacion_version})</Fragment>}
+                                <br/>
+                            </Fragment>}
                             <Typography
                                 component="span"
                                 variant="body2"

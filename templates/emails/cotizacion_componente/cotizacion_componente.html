@@ -124,12 +124,12 @@
     <div>
         {% localize off %}
             <h1><strong>Cotización Nro:
-                <small>{{ cotizacion.nro_consecutivo }} {% if cotizacion.version %}, ver.
-                    {{ cotizacion.version }} {% endif %}</small>
+                <small>{{ cotizacion.nro_consecutivo }} {% if cotizacion.pdf %}, ver.
+                    {{ cotizacion.pdf.version }} {% endif %}</small>
             </strong></h1>
         {% endlocalize %}
         <h3>
-            <small>Fecha: {{ cotizacion.fecha_envio }}</small>
+            <small>Fecha: {{ cotizacion.pdf.created }}</small>
         </h3>
     </div>
 </header>

@@ -76,7 +76,7 @@ def cotizacion_componentes_asignar_nro_consecutivo(
         consecutivo = int('%s%s001' % (year, month))
         qs_con_consecutivo = CotizacionComponente.objects.filter(nro_consecutivo__gte=consecutivo)
         if qs_con_consecutivo.exists():
-            consecutivo = int(qs_con_consecutivo.first().nro_consecutivo) + 1
+            consecutivo = int(qs_con_consecutivo.last().nro_consecutivo) + 1
         cotizacion_componente.nro_consecutivo = consecutivo
         cotizacion_componente.save()
     return cotizacion_componente
@@ -179,7 +179,7 @@ def cotizacion_componentes_item_cambiar_posicion(
 def cotizacion_componentes_enviar(
         request,
         cotizacion_componente_id: int,
-        emails_destino: list = None
+        emails_destino: list = None,
 ) -> CotizacionComponente:
     cotizacion = CotizacionComponente.objects.get(pk=cotizacion_componente_id)
     if cotizacion.estado not in ['INI', 'ENV', 'REC']:
@@ -187,10 +187,6 @@ def cotizacion_componentes_enviar(
 
     cotizacion_componentes_asignar_nro_consecutivo(
         cotizacion_componente_id=cotizacion_componente_id
-    )
-    output_documento = cotizacion_componentes_generar_pdf(
-        cotizacion_id=cotizacion.id,
-        request=request
     )
 
     if cotizacion.nro_consecutivo is None:
@@ -210,6 +206,11 @@ def cotizacion_componentes_enviar(
         documento.cotizacion_componente = cotizacion
         documento.version = version
         documento.creado_por = request.user
+        documento.save()
+        output_documento = cotizacion_componentes_generar_pdf(
+            cotizacion_id=cotizacion.id,
+            request=request
+        )
         documento.pdf_cotizacion.save(filename, File(output_documento))
         documento.save()
 
@@ -218,7 +219,7 @@ def cotizacion_componentes_enviar(
         archivo=cotizacion.pdf,
         creado_por=request.user,
         correo_from=request.user.email if request.user.email else '',
-        correos_to=','.join(emails_destino)
+        correos_to=','.join(emails_destino),
     )
 
     context = {
@@ -253,7 +254,9 @@ def cotizacion_componentes_enviar(
             cotizacion_componente_id=cotizacion_componente_id,
             tipo_seguimiento='ENV',
             descripcion='Envío de correo para %s desde %s' % (emails_destino, email_from),
-            creado_por=request.user
+            creado_por=request.user,
+            fecha=timezone.now(),
+            pdf_cotizacion_id=cotizacion.pdf.id
         )
     except Exception as e:
         raise ValidationError(
@@ -286,6 +289,7 @@ def cotizacion_componentes_add_seguimiento(
         descripcion: str,
         creado_por: User,
         fecha: datetime = timezone.now(),
+        pdf_cotizacion_id: int = None
 ) -> CotizacionComponenteSeguimiento:
     cotizacion_componente = CotizacionComponente.objects.get(pk=cotizacion_componente_id)
     # if cotizacion_componente.estado not in ['ENV', 'REC', 'ELI', 'PRO']:
@@ -297,6 +301,7 @@ def cotizacion_componentes_add_seguimiento(
     seguimiento.descripcion = descripcion
     seguimiento.fecha = fecha
     seguimiento.creado_por = creado_por
+    seguimiento.documento_cotizacion_id = pdf_cotizacion_id
     seguimiento.save()
     return seguimiento
 

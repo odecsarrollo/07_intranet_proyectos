@@ -35,7 +35,8 @@ const CotizacionDetailInfo = memo(props => {
                 onSubmit={v => onSubmitCotizacion(v, () => setShowCotizacionInformacionDialog(false))}
             />}
             <Typography variant="h5" gutterBottom color="primary">
-                Datos Cotización {cotizacion.nro_consecutivo}
+                Datos Cotización {cotizacion.nro_consecutivo} {cotizacion.version &&
+            <Fragment>v.{cotizacion.version}</Fragment>}
                 {editable &&
                 <FontAwesomeIcon
                     className='puntero'
