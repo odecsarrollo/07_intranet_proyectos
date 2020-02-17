@@ -50,6 +50,14 @@ const MenuTerceros = memo(props => {
                 icono='money-bill-alt'
                 type='nested'
             />}
+            {admin_terceros_usuarios &&
+            <DrawerListItem
+                size='1x'
+                link='/app/admin/colaboradoresn/dashboard'
+                texto='Pruebas'
+                icono='user'
+                type='nested'
+            />}
         </ListCollapse>
     )
 });

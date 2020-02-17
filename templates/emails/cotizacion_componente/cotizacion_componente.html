@@ -124,7 +124,7 @@
     <div>
         {% localize off %}
             <h1><strong>Cotización Nro:
-                <small>{{ cotizacion.nro_consecutivo }} {% if cotizacion.pdf %}, ver.
+                <small>{{ cotizacion.nro_consecutivo }}{% if cotizacion.pdf %}, ver.
                     {{ cotizacion.pdf.version }} {% endif %}</small>
             </strong></h1>
         {% endlocalize %}
@@ -164,44 +164,6 @@
     A continuación relaciono los items cotizados con sus respectivas cantidades y precios:
 </div>
 <div id="orden" style="overflow-x:auto;">
-
-    {#        <table style="width: 100%">#}
-    {#            <tr>#}
-    {#                <td colspan="2" style="padding: 3px">#}
-    {#                    <div><span class="title">FECHA: </span>{{ cotizacion.fecha }}</div>#}
-    {#                </td>#}
-    {#            </tr>#}
-    {#            <tr>#}
-    {#                <td style="width: 50%; padding: 3px; vertical-align: top">#}
-    {#                    <div class="title">CLIENTE</div>#}
-    {#                    <div class="text">{{ anticipo.informacion_cliente }}</div>#}
-    {#                </td>#}
-    {#                <td style="width: 50%; padding: 3px; vertical-align: top">#}
-    {#                    {% if anticipo.informacion_locatario %}#}
-    {#                        <div class="title">LOCATARIO</div>#}
-    {#                        <div class="text">{{ anticipo.informacion_locatario }}</div>#}
-    {#                    {% endif %}#}
-    {#                </td>#}
-    {#            </tr>#}
-    {#            <tr>#}
-    {#                <td colspan="2">#}
-    {#                    {% localize off %}#}
-    {#                        <span class="title">{{ anticipo.get_tipo_documento_display|upper }}:</span>#}
-    {#                        {% if anticipo.nro_consecutivo %}#}
-    {#                            {{ anticipo.nro_consecutivo }}{% if anticipo.version > 1 %} v.{{ anticipo.version }}#}
-    {#                            {% endif %}#}
-    {#                        {% else %}#}
-    {#                            SÍN GENERAR CONSECUTIVO#}
-    {#                        {% endif %}#}
-    {#                    {% endlocalize %}#}
-    {#                </td>#}
-    {#            </tr>#}
-    {#            <tr>#}
-    {#                <td colspan="2">#}
-    {#                    <span class="title">ORDEN DE COMPRA:</span> {{ anticipo.nro_orden_compra }}#}
-    {#                </td>#}
-    {#            </tr>#}
-    {#        </table>#}
     <table class="table table-striped tabla">
         <tr>
             <th>Referencia</th>
@@ -252,16 +214,10 @@
         ODECOPACK S.A.S agradece tenernos en cuenta para sus futuros proyectos y
         por contar con nuestra compañia para suplir sus necesidades empresariales.<br/>
         Atentamente...
-        {#        {% if avatar %}#}
-        {#            <div>#}
-        {#                <img class="img-circle" height="100" width="100"#}
-        {#                     src="{{ avatar }}"/>#}
-        {#            </div>#}
-        {#        {% endif %}#}
         <div class="firma">
             <p>{{ cotizacion.responsable.get_full_name|title }}</p>
             <p>{{ cotizacion.responsable.email }}</p>
-            {#            <p>{{ object.usuario.user_extendido.colaborador.numero_contacto }}</p>#}
+            <p>{{ cotizacion.responsable.mi_colaborador.nro_contacto }}</p>
             <p>Colombia - Cali</p>
         </div>
     </div>

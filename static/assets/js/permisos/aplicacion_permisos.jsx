@@ -1,3 +1,11 @@
+export const COLABORADORESN = {
+    add: 'add_colaborador',
+    delete: 'delete_colaborador',
+    change: 'change_colaborador',
+    list: 'list_colaborador',
+    detail: 'view_colaborador',
+};
+
 export const CORREOS_APLICACIONES = {
     add: 'add_correoaplicacion',
     delete: 'delete_correoaplicacion',

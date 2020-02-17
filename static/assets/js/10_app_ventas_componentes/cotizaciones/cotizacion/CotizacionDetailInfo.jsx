@@ -115,8 +115,15 @@ const CotizacionDetailInfo = memo(props => {
                         {cotizacion.observaciones}
                     </Typography>
                 </div>}
-            </Fragment>
-            }
+            </Fragment>}
+            {cotizacion.responsable_nombre && <div>
+                <Typography variant="body1" gutterBottom color="primary" style={styles.texto_principal}>
+                    Atendido por:
+                </Typography>
+                <Typography variant="body2" gutterBottom color="secondary" style={styles.texto_principal}>
+                    {cotizacion.responsable_nombre}
+                </Typography>
+            </div>}
             {editable && !cotizacion.nro_consecutivo &&
             <MyDialogButtonDelete
                 element_name={`Cotización para ${cotizacion.cliente_nombre}`}

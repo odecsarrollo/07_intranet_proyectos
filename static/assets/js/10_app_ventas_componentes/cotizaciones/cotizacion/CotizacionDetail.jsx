@@ -21,12 +21,19 @@ const Detail = memo(props => {
     const dispatch = useDispatch();
     const {id} = props.match.params;
     const {history} = props;
-    const object = useSelector(state => state.cotizaciones_componentes[id]);
+    const cotizaciones = useSelector(state => state.cotizaciones_componentes);
+    const cotizacion = cotizaciones[id];
     const contactos = useSelector(state => state.clientes_contactos);
     const permisos = useTengoPermisos(COTIZACIONES_COMPONENTES);
     const cargarDatos = () => {
-        const cargarContacto = (contacto_id) => dispatch(actions.fetchContactoCliente(contacto_id));
-        dispatch(actions.fetchCotizacionComponente(id, {callback: coti => cargarContacto(coti.contacto)}));
+        const cargarContacto = (
+            contacto_id
+        ) => dispatch(actions.fetchContactoCliente(contacto_id));
+        dispatch(actions.fetchCotizacionComponente(
+            id, {
+                callback: coti => cargarContacto(coti.contacto)
+            })
+        );
     };
 
     useEffect(() => {
@@ -37,11 +44,10 @@ const Detail = memo(props => {
             dispatch(actions.clearItemsCotizacionesComponentes());
         }
     }, [id]);
-
-    if (!object) {
+    if (!cotizacion) {
         return <SinObjeto/>
     }
-    const contacto_cotizacion = contactos[object.contacto];
+    const contacto_cotizacion = contactos[cotizacion.contacto];
     const onSubmitCotizacion = (v, callback) => dispatch(
         actions.updateCotizacionComponente(
             id,
@@ -64,46 +70,45 @@ const Detail = memo(props => {
     const generarNroConsecutivo = () => dispatch(actions.asignarNroConsecutivoCotizacionComponente(id));
     const onDeleteCotizacion = () => dispatch(actions.deleteCotizacionComponente(id, {callback: () => history.push('/app/ventas_componentes/cotizaciones/list')}));
 
-    const editable = object.estado === 'INI';
+    const editable = cotizacion.estado === 'INI';
     return (
         <ValidarPermisos can_see={permisos.detail} nombre='detalles de cotización'>
             <div className="row">
                 <div className="col-12">
                     <div className="row">
                         <div className="col-9">
-                            {editable &&
-                            <div className="col-12">
+                            {editable && <div className="col-12">
                                 <CotizacionEdicionList
-                                    cotizacion_actual_id={object.id}
+                                    cotizacion_actual_id={cotizacion.id}
                                     cargar={true}
                                 />
                             </div>}
                             <div className="col-12">
                                 <Typography variant="h5" gutterBottom color="primary">
                                     Items Cotización
-                                    {editable && <CotizadorAdicionarItem cotizacion_componente={object}/>}
+                                    {editable && <CotizadorAdicionarItem cotizacion_componente={cotizacion}/>}
                                 </Typography>
                                 <CotizacionDetailItemsTabla
                                     editable={editable}
-                                    cotizacion_componente={object}
+                                    cotizacion_componente={cotizacion}
                                     cargarDatos={cargarDatos}
-                                    valor_total={object.valor_total}
-                                    cantidad_items={object.cantidad_items}
+                                    valor_total={cotizacion.valor_total}
+                                    cantidad_items={cotizacion.cantidad_items}
                                 />
                             </div>
                             <div className="col-12">
                                 <CotizacionDetailAdjuntoList
                                     cargarDatos={cargarDatos}
-                                    cotizacion_componente={object}
-                                    en_edicion={object.estado === 'INI'}
-                                    adjuntos={object.adjuntos}
+                                    cotizacion_componente={cotizacion}
+                                    en_edicion={cotizacion.estado === 'INI'}
+                                    adjuntos={cotizacion.adjuntos}
                                 />
                             </div>
                             <div className="col-12">
                                 <CotizacionDetailSeguimiento
-                                    seguimientos={object.seguimientos}
+                                    seguimientos={cotizacion.seguimientos}
                                     cargarDatos={cargarDatos}
-                                    cotizacion_componente={object}
+                                    cotizacion_componente={cotizacion}
                                 />
                             </div>
                         </div>
@@ -113,7 +118,7 @@ const Detail = memo(props => {
                                     <CotizacionDetailInfo
                                         onDelete={onDeleteCotizacion}
                                         editable={editable}
-                                        cotizacion={object}
+                                        cotizacion={cotizacion}
                                         contacto={contacto_cotizacion}
                                         onSubmitCotizacion={onSubmitCotizacion}
                                         cargarDatos={cargarDatos}
@@ -123,7 +128,7 @@ const Detail = memo(props => {
                             <CotizacionDetailBotoneriaEstado
                                 cargarDatos={cargarDatos}
                                 contacto={contacto_cotizacion}
-                                cotizacion_componente={object}
+                                cotizacion_componente={cotizacion}
                             />
                         </div>
                     </div>
@@ -134,8 +139,7 @@ const Detail = memo(props => {
                 >
                     Imprimir Cotización
                 </Button>
-                {!object.nro_consecutivo &&
-                <Button
+                {!cotizacion.nro_consecutivo && <Button
                     color="primary"
                     onClick={() => generarNroConsecutivo()}
                 >

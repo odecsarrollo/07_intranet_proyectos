@@ -44,6 +44,36 @@ class CanalDistribucionSerializer(serializers.ModelSerializer):
 class ClienteSerializer(serializers.ModelSerializer):
     to_string = serializers.SerializerMethodField()
 
+    def create(self, validated_data):
+        from .services import asignar_colaborador_vendedor_componentes, asignar_colaborador_vendedor_proyectos
+        colaborador_componentes = validated_data.get('colaborador_componentes', None)
+        colaborador_proyectos = validated_data.get('colaborador_proyectos', None)
+        cliente = super().create(validated_data)
+        asignar_colaborador_vendedor_componentes(
+            colaborador_id=colaborador_componentes.id if colaborador_componentes is not None else None,
+            cliente_id=cliente.id
+        )
+        asignar_colaborador_vendedor_proyectos(
+            colaborador_id=colaborador_proyectos.id if colaborador_proyectos is not None else None,
+            cliente_id=cliente.id
+        )
+        return cliente
+
+    def update(self, instance, validated_data):
+        from .services import asignar_colaborador_vendedor_componentes, asignar_colaborador_vendedor_proyectos
+        colaborador_componentes = validated_data.get('colaborador_componentes', None)
+        colaborador_proyectos = validated_data.get('colaborador_proyectos', None)
+        cliente = super().update(instance, validated_data)
+        asignar_colaborador_vendedor_componentes(
+            colaborador_id=colaborador_componentes.id if colaborador_componentes is not None else None,
+            cliente_id=cliente.id
+        )
+        asignar_colaborador_vendedor_proyectos(
+            colaborador_id=colaborador_proyectos.id if colaborador_proyectos is not None else None,
+            cliente_id=cliente.id
+        )
+        return cliente
+
     def get_to_string(self, instance):
         return instance.nombre
 
@@ -56,6 +86,8 @@ class ClienteSerializer(serializers.ModelSerializer):
             'nombre',
             'sincronizado_sistemas_informacion',
             'nueva_desde_cotizacion',
+            'colaborador_componentes',
+            'colaborador_proyectos',
             'to_string',
         ]
 

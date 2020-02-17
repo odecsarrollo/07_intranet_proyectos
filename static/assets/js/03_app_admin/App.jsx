@@ -11,6 +11,7 @@ import GruposPermisosList from "./generales/permisos/containers/GrupoPermisoList
 import UsuariosList from "./generales/usuarios/containers/UsuarioListContainer";
 import ColaboradoresDashBoard
     from "./especificas/cguno/colaboradores/dashboard/containers/ColaboradorDashboard";
+import ColaboradoresNDashBoard from "./especificas/colaboradores/ColaboradorCRUD";
 import ColaboradoresDetail from "./especificas/cguno/colaboradores/colaboradores/containers/base_detail";
 import ColaboradoresCostosNominaList
     from "./especificas/cguno/colaboradores/costos_nomina/containers/CostoNominaListContainer";
@@ -61,6 +62,7 @@ const AdminApp = memo(props => {
                     <Route exact path='/app/admin/items/dashboard' component={ItemsDashboard}/>
                     <Route exact path='/app/admin/importaciones/dashboard' component={ImportacionesDashboard}/>
                     <Route exact path='/app/admin/listas_precios/dashboard' component={ListasPreciosDashboard}/>
+                    <Route exact path='/app/admin/colaboradoresn/dashboard' component={ColaboradoresNDashBoard}/>
                 </Switch>
             </DrawerMenu>
         </Loading>

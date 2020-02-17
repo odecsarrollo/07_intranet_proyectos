@@ -66,7 +66,7 @@ def asignar_colaborador_vendedor_proyectos(
             raise ValidationError(
                 {'_error': 'El colaborador a asignar como vendedor de proyectos debe tener un usuario definido'}
             )
-        cliente.colaborador_proyectos = colaborador_id
+        cliente.colaborador_proyectos_id = colaborador_id
     cliente.save()
     return colaborador_proyectos
 
@@ -83,9 +83,9 @@ def asignar_colaborador_vendedor_componentes(
         colaborador_componentes = Colaborador.objects.get(pk=colaborador_id)
         if colaborador_componentes.usuario is None:
             raise ValidationError(
-                {'_error': 'El colaborador a asignar como vendedor de proyectos debe tener un usuario definido'}
+                {'_error': 'El colaborador a asignar como vendedor de componentes debe tener un usuario definido'}
             )
-        cliente.colaborador_componentes = colaborador_id
+        cliente.colaborador_componentes_id = colaborador_id
     cliente.save()
     return colaborador_componentes
 

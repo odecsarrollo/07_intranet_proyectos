@@ -1,3 +1,12 @@
+export const COLABORADORN_TYPES = {
+    create: 'create_colaboradorn',
+    delete: 'delete_colaboradorn',
+    fetch_all: 'fetch_colaboradoresn',
+    fetch: 'fetch_colaboradorn',
+    clear: 'clear_colaboradoresn',
+    update: 'update_colaboradorn',
+};
+
 export const CORREO_APLICACION_TYPES = {
     create: 'create_correo_aplicacion',
     delete: 'delete_correo_aplicacion',

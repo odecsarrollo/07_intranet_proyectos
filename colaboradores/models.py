@@ -18,6 +18,8 @@ class Colaborador(models.Model):
     cedula = models.CharField(max_length=20, unique=True)
     nombres = models.CharField(max_length=200, null=True, blank=True)
     apellidos = models.CharField(max_length=200, null=True, blank=True)
+    nro_contacto = models.CharField(max_length=200, null=True, blank=True)
+    alias_correo = models.CharField(max_length=200, null=True, blank=True)
 
     porcentaje_caja_compensacion = models.DecimalField(max_digits=10, decimal_places=4, default=0)
     porcentaje_pension = models.DecimalField(max_digits=10, decimal_places=4, default=0)

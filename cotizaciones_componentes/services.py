@@ -4,7 +4,7 @@ from io import BytesIO
 from django.contrib.auth.models import User
 from django.core.files import File
 from django.core.mail import EmailMultiAlternatives
-from django.db.models import Max, Q
+from django.db.models import Q
 from django.template.loader import render_to_string
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError
@@ -31,36 +31,48 @@ def cotizacion_componentes_cambiar_estado(
     cotizacion_componente = CotizacionComponente.objects.get(pk=cotizacion_componente_id)
     estado_actual = cotizacion_componente.estado
     error = True
-    if nuevo_estado == 'ENV':
-        error = False
-    elif estado_actual == 'ENV':
-        if nuevo_estado == 'REC':
+    cambio_estado = nuevo_estado != estado_actual
+    estado_actual_display = cotizacion_componente.get_estado_display()
+    if cambio_estado:
+        if nuevo_estado == 'ENV':
             error = False
-    elif estado_actual == 'REC':
-        if nuevo_estado in ['INI', 'PRO', 'ELI']:
-            error = False
-    elif estado_actual == 'PRO':
-        if nuevo_estado in ['ELI', 'FIN']:
-            error = False
-    elif estado_actual in ['ELI', 'FIN']:
-        error = True
+        elif estado_actual == 'ENV':
+            if nuevo_estado == 'REC':
+                error = False
+        elif estado_actual == 'REC':
+            if nuevo_estado in ['INI', 'PRO', 'ELI']:
+                error = False
+        elif estado_actual == 'PRO':
+            if nuevo_estado in ['ELI', 'FIN']:
+                error = False
+        elif estado_actual in ['ELI', 'FIN']:
+            error = True
 
-    if error:
-        raise ValidationError(
-            {'_error': 'No se puede cambiar una cotización en estado %s a %s' % (estado_actual, nuevo_estado)})
+        if usuario.is_superuser:
+            if nuevo_estado != 'ENV':
+                if cotizacion_componente.responsable is not None and usuario != cotizacion_componente.responsable:
+                    cotizacion_componente.estado = nuevo_estado
+                    raise ValidationError(
+                        {
+                            '_error': 'No se puede cambiar una cotización en estado %s a %s si usted no es el responsable de la misma' % (
+                                estado_actual_display, cotizacion_componente.get_estado_display())})
 
-    cotizacion_componente.estado = nuevo_estado
-    if nuevo_estado == 'ELI':
-        cotizacion_componente.razon_rechazo = razon_rechazo
-    if nuevo_estado != 'ELI':
-        cotizacion_componente.razon_rechazo = None
-    cotizacion_componente.save()
-    cotizacion_componentes_add_seguimiento(
-        cotizacion_componente_id=cotizacion_componente_id,
-        tipo_seguimiento='EST',
-        descripcion='Cambio a estado %s' % (cotizacion_componente.get_estado_display()),
-        creado_por=usuario
-    )
+        if error:
+            raise ValidationError(
+                {'_error': 'No se puede cambiar una cotización en estado %s a %s' % (estado_actual, nuevo_estado)})
+
+        cotizacion_componente.estado = nuevo_estado
+        if nuevo_estado == 'ELI':
+            cotizacion_componente.razon_rechazo = razon_rechazo
+        if nuevo_estado != 'ELI':
+            cotizacion_componente.razon_rechazo = None
+        cotizacion_componente.save()
+        cotizacion_componentes_add_seguimiento(
+            cotizacion_componente_id=cotizacion_componente_id,
+            tipo_seguimiento='EST',
+            descripcion='Cambio a estado %s' % (cotizacion_componente.get_estado_display()),
+            creado_por=usuario
+        )
     return cotizacion_componente
 
 
@@ -197,6 +209,11 @@ def cotizacion_componentes_enviar(
 
     if cotizacion.estado == 'INI':
         cotizacion.estado = 'ENV'
+        if cotizacion.responsable is None:
+            if cotizacion.cliente.colaborador_componentes:
+                cotizacion.responsable = cotizacion.cliente.colaborador_componentes.usuario
+            else:
+                cotizacion.responsable = cotizacion.creado_por
         cotizacion.save()
         filename = "%s_v%s.pdf" % (
             cotizacion.nro_consecutivo,
@@ -214,21 +231,36 @@ def cotizacion_componentes_enviar(
         documento.pdf_cotizacion.save(filename, File(output_documento))
         documento.save()
 
-    CotizacionComponenteEnvio.objects.create(
-        cotizacion_componente=cotizacion,
-        archivo=cotizacion.pdf,
-        creado_por=request.user,
-        correo_from=request.user.email if request.user.email else '',
-        correos_to=','.join(emails_destino),
-    )
-
     context = {
         "cotizacion": cotizacion
     }
     text_content = render_to_string('emails/cotizacion_componente/cotizacion_componente.html', context=context)
-    email_from = cotizacion.responsable.email if cotizacion.responsable else cotizacion.creado_por.email
+    usuario_responsable = cotizacion.responsable
+    email_from = 'webmaster@odecopack.com'
+    email_alias = 'ODECOPACK VENTAS -'
+    if usuario_responsable is not None:
+        if usuario_responsable.is_active and usuario_responsable.email:
+            email_from = usuario_responsable.email
+            email_alias = usuario_responsable.mi_colaborador.alias_correo if hasattr(usuario_responsable,
+                                                                                     'mi_colaborador') else ''
+    else:
+        usuario_creador = cotizacion.creado_por
+        if usuario_creador is not None:
+            if usuario_creador.is_active and usuario_creador.email:
+                email_from = usuario_creador.email
+                email_alias = usuario_creador.mi_colaborador.alias_correo if hasattr(usuario_creador,
+                                                                                     'mi_colaborador') else ''
+
     if email_from not in emails_destino:
         emails_destino.append(email_from)
+
+    CotizacionComponenteEnvio.objects.create(
+        cotizacion_componente=cotizacion,
+        archivo=cotizacion.pdf,
+        creado_por=request.user,
+        correo_from=email_from,
+        correos_to=','.join(emails_destino),
+    )
 
     nombre_cotizacion = 'Cotización - %s v%s' % (
         cotizacion.nro_consecutivo,
@@ -237,7 +269,7 @@ def cotizacion_componentes_enviar(
     msg = EmailMultiAlternatives(
         nombre_cotizacion,
         text_content,
-        from_email='Odecopack SAS <%s>' % email_from,
+        from_email='%s <%s>' % (email_alias, email_from),
         to=emails_destino
     )
     msg.attach_alternative(text_content, "text/html")
@@ -261,6 +293,7 @@ def cotizacion_componentes_enviar(
     except Exception as e:
         raise ValidationError(
             {'_error': 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e})
+    cotizacion = CotizacionComponente.objects.get(pk=cotizacion_componente_id)
     return cotizacion
 
 

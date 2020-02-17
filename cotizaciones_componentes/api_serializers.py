@@ -155,6 +155,7 @@ class CotizacionComponenteSerializer(serializers.ModelSerializer):
     estado_display = serializers.SerializerMethodField()
     version = serializers.SerializerMethodField()
     responsable_username = serializers.CharField(source='responsable.username', read_only=True)
+    responsable_nombre = serializers.CharField(source='responsable.get_full_name', read_only=True)
     creado_por_username = serializers.CharField(source='creado_por.username', read_only=True)
 
     def get_version(self, obj):
@@ -185,6 +186,7 @@ class CotizacionComponenteSerializer(serializers.ModelSerializer):
             'departamento_nombre',
             'pais_nombre',
             'estado',
+            'responsable_nombre',
             'responsable_username',
             'creado_por_username',
             'razon_rechazo',

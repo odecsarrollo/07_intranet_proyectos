@@ -63,6 +63,8 @@ import bandaEurobeltSerieReducer from './especificas/bandas_eurobelt/seriesReduc
 import categoriasDosReducer from './especificas/bandas_eurobelt/categoriasDosReducer';
 import componentesReducer from './especificas/bandas_eurobelt/componentesReducer';
 
+import colaboradoresNReducer from './especificas/colaboradores/colaboradoresReducer';
+
 
 import contabilidadProformaConfiguracionReducer
     from './especificas/contabilidad/anticipos/proformaConfiguracionReducer';
@@ -109,6 +111,7 @@ const rootReducer = combineReducers({
     literales: literalesReducer,
     items_literales: itemsLiteralesReducer,
     colaboradores: colaboradoresReducer,
+    colaboradoresn: colaboradoresNReducer,
     items_cguno: itemsCgunoReducer,
     centros_costos_colaboradores: centrosCostosColaboradoresReducer,
     colaboradores_costos_nomina: colaboradoresCostosMesesReducer,
