@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from rest_framework.exceptions import ValidationError
 
 from .models import ContactoCliente, ClienteBiable
@@ -19,8 +20,14 @@ def contacto_cliente_crear_desde_cotizacion(
         ciudad: str = None,
         telefono: str = None,
         telefono_2: str = None,
+        tipo_cotizacion: str = 'Proyectos'
 ) -> ContactoCliente:
     if nuevo_cliente:
+        usuario = User.objects.get(pk=creado_por_id)
+        colaborador = None
+        if hasattr(usuario, 'mi_colaborador'):
+            if usuario.mi_colaborador.es_vendedor:
+                colaborador = usuario.mi_colaborador
         if cliente_nit:
             cliente_con_nit = ClienteBiable.objects.filter(nit=cliente_nit)
             if cliente_con_nit.exists():
@@ -30,7 +37,10 @@ def contacto_cliente_crear_desde_cotizacion(
         cliente = ClienteBiable.objects.create(
             nombre=cliente_nombre,
             nit=cliente_nit,
-            nueva_desde_cotizacion=True
+            nueva_desde_cotizacion=True,
+            creado_por_id=creado_por_id,
+            colaborador_componentes_id=colaborador.id if colaborador is not None and tipo_cotizacion == 'Componentes' else None,
+            colaborador_proyectos_id=colaborador.id if colaborador is not None and tipo_cotizacion == 'Proyectos' else None,
         )
     else:
         cliente = ClienteBiable.objects.get(pk=cliente_id)

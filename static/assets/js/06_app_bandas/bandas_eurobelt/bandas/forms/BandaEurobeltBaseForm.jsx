@@ -12,7 +12,7 @@ const selector = formValueSelector('bandaEurobeltForm');
 
 let Form = memo(props => {
     const dispatch = useDispatch();
-    const valores = useSelector(state => selector(state, 'serie', 'con_aleta', 'con_empujador', 'empujador_tipo'));
+    const valores = useSelector(state => selector(state, 'serie', 'con_aleta', 'con_empujador', 'empujador_tipo', 'largo'));
     const {
         pristine,
         submitting,
@@ -55,6 +55,8 @@ let Form = memo(props => {
             <div className="col-12">
                 <div className="row">
                     <MyCombobox
+                        label_space_xs={4}
+                        label='Serie'
                         className="col-6 col-md-4 col-lg-3"
                         name='serie'
                         busy={false}
@@ -71,6 +73,8 @@ let Form = memo(props => {
                         placeholder='Serie'
                     />
                     <MyCombobox
+                        label_space_xs={4}
+                        label='Tipo'
                         className="col-6 col-md-4 col-lg-3"
                         name='tipo'
                         busy={false}
@@ -87,6 +91,8 @@ let Form = memo(props => {
                         placeholder='Tipo'
                     />
                     <MyCombobox
+                        label_space_xs={4}
+                        label='Material'
                         className="col-6 col-md-4 col-lg-3"
                         name='material'
                         busy={false}
@@ -103,6 +109,8 @@ let Form = memo(props => {
                         placeholder='Material'
                     />
                     <MyCombobox
+                        label_space_xs={4}
+                        label='Color'
                         className="col-6 col-md-4 col-lg-3"
                         name='color'
                         busy={false}
@@ -129,7 +137,7 @@ let Form = memo(props => {
                         type='number'/>
                     <MyTextFieldSimple
                         className="col-12 col-md-3 pl-3"
-                        nombre='Ancho'
+                        nombre='Ancho (mm)'
                         name='ancho'
                         type='number'/>
                     <MyCheckboxSimple
@@ -156,6 +164,8 @@ let Form = memo(props => {
                     <div className="col-12">
                         <div className="row">
                             <MyCombobox
+                                label_space_xs={4}
+                                label='Tipo Empujador'
                                 className="col-6 col-md-4"
                                 name='empujador_tipo'
                                 busy={false}

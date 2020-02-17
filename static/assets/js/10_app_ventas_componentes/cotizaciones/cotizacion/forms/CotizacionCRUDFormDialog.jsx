@@ -52,7 +52,7 @@ let CotizacionCRUDFormDialog = memo(props => {
             })
     );
     const onSubmitContacto = (v) =>
-        dispatch(actions.createContactoClienteCotizacion(v, {
+        dispatch(actions.createContactoClienteCotizacionComponentes(v, {
             callback: (res) => dispatch(
                 actions.fetchCliente(
                     res.cliente,

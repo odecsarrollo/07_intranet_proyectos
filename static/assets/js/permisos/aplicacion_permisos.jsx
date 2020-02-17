@@ -366,6 +366,8 @@ export const CLIENTES = {
     list: 'list_clientebiable',
     detail: 'view_clientebiable',
     fusionar: 'can_fusionar_clientebiable',
+    cambiar_vendedor_componentes: 'can_cambiar_vendedor_componentes_clientebiable',
+    cambiar_vendedor_proyectos: 'can_cambiar_vendedor_proyectos_clientebiable',
 };
 
 export const COTIZACIONES = {

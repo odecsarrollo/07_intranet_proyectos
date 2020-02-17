@@ -4,7 +4,7 @@ import DrawerListItem from '../../00_utilities/components/ui/drawer/drawer_list_
 const Menu = () => <Fragment>
     <DrawerListItem
         size='lg'
-        link='/app/proyectos'
+        link='/app/bandas/'
         texto='Principal'
         icono='home'
     />

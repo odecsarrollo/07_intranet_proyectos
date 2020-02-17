@@ -12,7 +12,7 @@ import BloqueCategorias from "./categorias_dos/CategoriaDosCRUD";
 import Configuracion from "./configuracion/ConfiguracionBandaEurobelt";
 import Typography from "@material-ui/core/Typography";
 
-const ItemsDashboard = memo(() => {
+const ItemsDashboard = memo((props) => {
     const singular_name = 'Panel Banda Eurobelt';
     const [slideIndex, setSlideIndex] = useState(0);
     return (
@@ -34,7 +34,7 @@ const ItemsDashboard = memo(() => {
                 <Tab label="Categorias Dos"/>
                 <Tab label="Configuración"/>
             </Tabs>
-            {slideIndex === 0 && <BloqueBandas/>}
+            {slideIndex === 0 && <BloqueBandas history={props.history}/>}
             {slideIndex === 1 && <BloqueComponentes/>}
             {slideIndex === 2 && <BloqueTipos/>}
             {slideIndex === 3 && <BloqueMateriales/>}

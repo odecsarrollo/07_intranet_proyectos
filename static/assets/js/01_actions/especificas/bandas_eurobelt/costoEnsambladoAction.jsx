@@ -33,6 +33,6 @@ export const updateBandaEurobeltCostoEnsamblado = (id, values, options_action = 
             dispatch({type: TYPES.update, payload: response})
         };
         const options = {dispatches, ...options_action, dispatch_method: dispatch};
-        updateObject(current_url_api, id, values, options);
+        return updateObject(current_url_api, id, values, options);
     }
 };

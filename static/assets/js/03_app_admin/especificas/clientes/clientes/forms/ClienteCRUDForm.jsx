@@ -17,6 +17,7 @@ let Form = (props) => {
         handleSubmit,
         modal_open,
         singular_name,
+        permisos_object
     } = props;
     const dispatch = useDispatch();
     useEffect(() => {
@@ -45,7 +46,7 @@ let Form = (props) => {
                 nombre='Nombre'
                 name='nombre'
                 case='U'/>
-            <MyCombobox
+            {permisos_object.cambiar_vendedor_componentes && <MyCombobox
                 className="col-12"
                 name='colaborador_componentes'
                 label={'Vendedor en Componentes'}
@@ -60,9 +61,9 @@ let Form = (props) => {
                 filter='contains'
                 valuesField='id'
                 placeholder='Vendedor en Componentes'
-            />
+            />}
 
-            <MyCombobox
+            {permisos_object.cambiar_vendedor_proyectos && <MyCombobox
                 className="col-12"
                 name='colaborador_proyectos'
                 label={'Vendedor en Proyectos'}
@@ -77,7 +78,7 @@ let Form = (props) => {
                 filter='contains'
                 valuesField='id'
                 placeholder='Vendedor en Proyectos'
-            />
+            />}
         </MyFormTagModal>
     )
 };

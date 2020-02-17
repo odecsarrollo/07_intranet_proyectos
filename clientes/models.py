@@ -35,7 +35,7 @@ class GrupoCliente(models.Model):
 
 
 # Realmente cliente contacto
-class ClienteBiable(models.Model):
+class ClienteBiable(TimeStampedModel):
     nit = models.CharField(max_length=20, null=True)
     nombre = models.CharField(max_length=200)
     forma_pago = models.CharField(max_length=120, null=True)
@@ -47,6 +47,7 @@ class ClienteBiable(models.Model):
     es_competencia = models.BooleanField(default=False)
     cliente_nuevo_nit = models.ForeignKey('self', null=True, related_name='cliente_viejo_nit', on_delete=models.PROTECT)
     nueva_desde_cotizacion = models.BooleanField(default=True)
+    creado_por = models.ForeignKey(User, on_delete=models.PROTECT, null=True, related_name='clientes_creados')
     sincronizado_sistemas_informacion = models.BooleanField(default=False)
 
     colaborador_componentes = models.ForeignKey(
@@ -67,6 +68,8 @@ class ClienteBiable(models.Model):
             ['list_clientebiable', 'Puede listar clientes'],
             ['detail_clientebiable', 'Puede ver detalle cliente'],
             ['can_fusionar_clientebiable', 'Puede Fusionar clientes'],
+            ['can_cambiar_vendedor_componentes_clientebiable', 'Puede Cambiar Vendedor Componentes'],
+            ['can_cambiar_vendedor_proyectos_clientebiable', 'Puede Cambiar Vendedor Proyectos'],
         ]
 
 

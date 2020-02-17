@@ -5,6 +5,7 @@ import IconButtonTableSee from '../../../00_utilities/components/ui/icon/table_i
 import ReactTable from "react-table";
 import {Link} from "react-router-dom";
 import {pesosColombianos} from "../../../00_utilities/common";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 function areEqual(prevProps, nextProps) {
     return prevProps.list === nextProps.list
@@ -84,6 +85,27 @@ const Tabla = memo(props => {
                             minWidth: 80,
                             maxWidth: 80,
                             Cell: row => `${pesosColombianos(row.value)}`
+                        },
+                        {
+                            Header: "Empuja.",
+                            accessor: "con_empujador",
+                            minWidth: 50,
+                            maxWidth: 50,
+                            Cell: row => <div>{row.value && <FontAwesomeIcon icon={'check'}/>}</div>
+                        }, ,
+                        {
+                            Header: "Aleta",
+                            accessor: "con_aleta",
+                            minWidth: 50,
+                            maxWidth: 50,
+                            Cell: row => <div>{row.value && <FontAwesomeIcon icon={'check'}/>}</div>
+                        },
+                        {
+                            Header: "Torn.V",
+                            accessor: "con_torneado_varilla",
+                            minWidth: 50,
+                            maxWidth: 50,
+                            Cell: row => <div>{row.value && <FontAwesomeIcon icon={'check'}/>}</div>
                         }
                     ]
                 },

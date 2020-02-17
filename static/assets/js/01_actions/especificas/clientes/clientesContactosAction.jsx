@@ -9,12 +9,13 @@ import {
 } from '../../00_general_fuctions'
 
 const current_url_api = 'clientes_contactos';
-export const createContactoClienteCotizacion = (values, options_action = {}) => {
+export const createContactoClienteCotizacionComponentes = (values, options_action = {}) => {
     return (dispatch) => {
         let params = new URLSearchParams();
         _.mapKeys(values, (v, k) => {
             params.append(k, v);
         });
+        params.append('tipo_cotizacion', 'Componentes');
         const dispatches = (response) => {
             dispatch({type: TYPES.create, payload: response})
         };

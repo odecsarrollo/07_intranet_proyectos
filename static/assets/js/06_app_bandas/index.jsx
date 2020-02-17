@@ -1,12 +1,6 @@
 import React, {Component} from 'react';
 import BandasEurobeltPropiedadesDashboard from './bandas_eurobelt/BandaEurobeltDashboard';
 
-class App extends Component {
-    render() {
-        return (
-            <BandasEurobeltPropiedadesDashboard/>
-        )
-    }
-}
+const App = (props) => <BandasEurobeltPropiedadesDashboard history={props.history}/>
 
 export default App;

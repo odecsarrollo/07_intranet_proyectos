@@ -13,6 +13,7 @@ const CRUD = crudHOC(CreateForm, Tabla);
 
 const List = memo(props => {
     const dispatch = useDispatch();
+    const {history} = props;
     const permisos = useTengoPermisos(BANDAS_EUROBELT);
     const bandas = useSelector(state => state.banda_eurobelt_bandas);
     const method_pool = {
@@ -34,6 +35,7 @@ const List = memo(props => {
     }, []);
     return (
         <CRUD
+            posCreateMethod={(r) => history.push(`/app/bandas/banda/${r.id}`)}
             method_pool={method_pool}
             list={bandas}
             permisos_object={permisos}

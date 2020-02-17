@@ -27,7 +27,7 @@ class CanalDistribucionViewSet(viewsets.ModelViewSet):
 
 
 class ClienteViewSet(viewsets.ModelViewSet):
-    queryset = ClienteBiable.objects.all()
+    queryset = ClienteBiable.objects.select_related('creado_por').all()
     serializer_class = ClienteSerializer
 
     @action(detail=True, methods=['post'])
@@ -72,6 +72,7 @@ class ContactoClienteViewSet(viewsets.ModelViewSet):
         cargo = request.POST.get('cargo', None)
         telefono = request.POST.get('telefono', None)
         telefono_2 = request.POST.get('telefono_2', None)
+        tipo_cotizacion = request.POST.get('tipo_cotizacion', None)
         contacto = contacto_cliente_crear_desde_cotizacion(
             nuevo_cliente=nuevo_cliente,
             creado_por_id=self.request.user.id,
@@ -86,7 +87,8 @@ class ContactoClienteViewSet(viewsets.ModelViewSet):
             ciudad=ciudad,
             cargo=cargo,
             telefono=telefono,
-            telefono_2=telefono_2
+            telefono_2=telefono_2,
+            tipo_cotizacion=tipo_cotizacion
         )
         serializer = self.get_serializer(contacto)
         return Response(serializer.data)

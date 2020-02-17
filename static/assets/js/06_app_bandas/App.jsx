@@ -10,7 +10,7 @@ import BandaEurobeltDetail from './bandas_eurobelt/bandas/BandaEurobeltDetail';
 const App = () => {
     return (
         <Loading>
-            <DrawerMenu lista_menu={<Menu/>} titulo='Ventas'>
+            <DrawerMenu lista_menu={<Menu/>} titulo='Bandas Eurobelt'>
                 <Switch>
                     <Route exact path='/app/bandas/' component={AppIndex}/>
                     <Route exact path='/app/bandas/banda/:id' component={BandaEurobeltDetail}/>

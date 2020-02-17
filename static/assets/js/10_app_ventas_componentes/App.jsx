@@ -7,6 +7,8 @@ import Menu from './00_menu/index';
 import AppIndex from './index';
 import CotizadorDashboard from './cotizaciones/CotizadorDashboard';
 import CotizacionDetail from './cotizaciones/cotizacion/CotizacionDetail';
+import ClientesList from "../03_app_admin/especificas/clientes/clientes/ClienteCRUD";
+import ClienteDetail from "../03_app_admin/especificas/clientes/clientes/ClienteDetail";
 
 const App = () => {
     return (
@@ -16,6 +18,9 @@ const App = () => {
                     <Route exact path='/app/ventas_componentes/' component={AppIndex}/>
                     <Route exact path='/app/ventas_componentes/cotizaciones/list' component={CotizadorDashboard}/>
                     <Route exact path='/app/ventas_componentes/cotizaciones/detail/:id' component={CotizacionDetail}/>
+                    <Route exact path='/app/ventas_componentes/clientes/clientes/detail/:id' component={ClienteDetail}/>
+                    <Route exact path='/app/ventas_componentes/clientes/clientes/list'
+                           render={() => <ClientesList modulo='ventas_componentes'/>}/>
                 </Switch>
             </DrawerMenu>
         </Loading>

@@ -11,6 +11,8 @@ import FusionarCliente from "./ClienteFusionar";
 const CRUD = crudHOC(CreateForm, Tabla);
 const List = memo(props => {
     const dispatch = useDispatch();
+    const {modulo = 'ventas_proyectos'} = props;
+    console.log(props);
     const cargarDatos = () => {
         dispatch(actions.fetchClientes());
     };
@@ -32,6 +34,7 @@ const List = memo(props => {
         <Fragment>
             {permisos.fusionar && <FusionarCliente list={list}/>}
             <CRUD
+                modulo={modulo}
                 posSummitMethod={() => cargarDatos()}
                 method_pool={method_pool}
                 list={list}

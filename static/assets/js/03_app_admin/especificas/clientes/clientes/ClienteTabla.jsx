@@ -17,7 +17,8 @@ const Tabla = memo(props => {
         singular_name,
         onDelete,
         onSelectItemEdit,
-        permisos_object
+        permisos_object,
+        modulo
     } = props;
 
     return (
@@ -57,6 +58,12 @@ const Tabla = memo(props => {
                             accessor: "nueva_desde_cotizacion",
                             maxWidth: 100,
                             Cell: row => <div>{row.value && <FontAwesomeIcon icon={'check'}/>}</div>
+                        },
+                        {
+                            Header: "Creado Por",
+                            accessor: "creado_por_username",
+                            maxWidth: 100,
+                            minWidth: 100,
                         },
                         {
                             Header: "Sincronizado",
@@ -111,7 +118,7 @@ const Tabla = memo(props => {
                             show: permisos_object.detail,
                             maxWidth: 60,
                             Cell: row =>
-                                <Link to={`/app/ventas_proyectos/clientes/clientes/detail/${row.original.id}`}>
+                                <Link to={`/app/${modulo}/clientes/clientes/detail/${row.original.id}`}>
                                     <IconButtonTableSee/>
                                 </Link>
 

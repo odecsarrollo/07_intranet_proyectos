@@ -65,6 +65,15 @@ class MenuVentasProyectosPermission(models.Model):
         )
 
 
+class MenuVentasComponentesPermission(models.Model):
+    class Meta:
+        managed = False
+        permissions = (
+            ('menu_ventas_componentes_cotizaciones', 'Menu Ventas Componentes Cotizaciones'),
+            ('menu_ventas_componentes_clientes', 'Menu Ventas Componentes Clientes'),
+        )
+
+
 class ModuloPermission(models.Model):
     class Meta:
         managed = False
