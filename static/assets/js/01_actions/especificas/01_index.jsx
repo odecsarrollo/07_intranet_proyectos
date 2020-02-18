@@ -63,3 +63,4 @@ export * from './cotizaciones_componentes/cotizacionComponenteItemAction';
 
 
 export * from './colaboradores/colaboradoresAction';
+export * from './cargues_detalles/facturasAction';

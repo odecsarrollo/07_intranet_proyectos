@@ -1,3 +1,11 @@
+export const FACTURAS = {
+    add: 'add_facturadetalle',
+    delete: 'delete_facturadetalle',
+    change: 'change_facturadetalle',
+    list: 'list_facturadetalle',
+    detail: 'view_facturadetalle',
+};
+
 export const COLABORADORESN = {
     add: 'add_colaborador',
     delete: 'delete_colaborador',

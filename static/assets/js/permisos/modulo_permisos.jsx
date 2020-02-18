@@ -6,4 +6,5 @@ export const MODULO_PERMISSIONS = {
     modulo_medios: 'modulo_medios',
     modulo_sistemas: 'modulo_sistemas',
     modulo_contabilidad: 'modulo_contabilidad',
+    modulo_bandas_eurobelt: 'modulo_bandas_eurobelt',
 };

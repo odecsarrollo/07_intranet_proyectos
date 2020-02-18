@@ -17,7 +17,7 @@ import ColaboradoresCostosNominaList
     from "./especificas/cguno/colaboradores/costos_nomina/containers/CostoNominaListContainer";
 import UsuariosDetail from "./generales/usuarios/containers/UsuarioDetail";
 import ClientesList from "./especificas/clientes/clientes/ClienteCRUD";
-import ClientesDashboard from "./especificas/clientes/ClienteDashboard";
+import ClientesDashboard from "./especificas/clientes/PanelClienteDashboard";
 import SistemaInformacionOrigenList
     from "./especificas/sistemas_informacion_origen/SistemaInformacionOrigenCRUD";
 import GeografiaList

@@ -178,6 +178,21 @@ export const fetchCotizacionesComponentesEdicionAsesor = (options_action = {}) =
         return fetchListGet(`${current_url_api}/cotizaciones_en_edicion_asesor`, options);
     }
 };
+
+export const fetchCotizacionesComponentesCliente = (cliente_id, options_action = {}) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
+        };
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches, ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        return fetchListGetURLParameters(`${current_url_api}/cotizaciones_por_cliente/?cliente_id=${cliente_id}`, options);
+    }
+};
 export const fetchCotizacionComponente = (id, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {

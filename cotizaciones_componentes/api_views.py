@@ -224,6 +224,14 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @action(detail=False, http_method_names=['get', ])
+    def cotizaciones_por_cliente(self, request):
+        cliente_id = self.request.GET.get('cliente_id')
+        self.serializer_class = CotizacionComponenteConDetalleSerializer
+        lista = self.queryset.filter(cliente_id=cliente_id)
+        serializer = self.get_serializer(lista, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, http_method_names=['get', ])
     def cotizaciones_en_edicion_asesor(self, request):
         user = self.request.user
         self.serializer_class = CotizacionComponenteConDetalleSerializer
@@ -270,3 +278,11 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
 class ItemCotizacionComponenteViewSet(viewsets.ModelViewSet):
     queryset = ItemCotizacionComponente.objects.select_related('forma_pago', 'forma_pago__canal').all()
     serializer_class = ItemCotizacionComponenteSerializer
+
+    @action(detail=False, http_method_names=['get', ])
+    def items_por_cliente_por_codigo(self, request):
+        cliente_id = self.request.GET.get('cli ente_id')
+        item_id = self.request.GET.get('item_id')
+        lista = self.queryset.filter(cliente_id=cliente_id, item_id=item_id)
+        serializer = self.get_serializer(lista, many=True)
+        return Response(serializer.data)

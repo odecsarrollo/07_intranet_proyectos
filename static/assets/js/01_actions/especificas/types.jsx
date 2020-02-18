@@ -1,3 +1,12 @@
+export const FACTURA_TYPES = {
+    create: 'create_factura',
+    delete: 'delete_factura',
+    fetch_all: 'fetch_facturas',
+    fetch: 'fetch_factura',
+    clear: 'clear_facturas',
+    update: 'update_factura',
+};
+
 export const COLABORADORN_TYPES = {
     create: 'create_colaboradorn',
     delete: 'delete_colaboradorn',

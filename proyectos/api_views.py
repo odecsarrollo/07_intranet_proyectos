@@ -106,6 +106,13 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
         return super().list(request, *args, **kwargs)
 
     @action(detail=False, http_method_names=['get', ])
+    def proyectos_por_cliente(self, request):
+        cliente_id = self.request.GET.get('cliente_id')
+        lista = self.queryset.filter(cliente_id=cliente_id)
+        serializer = self.get_serializer(lista, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, http_method_names=['get', ])
     def proyectos_con_cotizaciones(self, request):
         self.queryset = Proyecto.sumatorias.annotate(
             cantidad_conexiones=Count('cotizaciones')

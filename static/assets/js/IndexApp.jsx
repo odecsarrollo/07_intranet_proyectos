@@ -71,7 +71,8 @@ const IndexApp = memo(props => {
         modulo_ventas_componentes,
         modulo_medios,
         modulo_sistemas,
-        modulo_contabilidad
+        modulo_contabilidad,
+        modulo_bandas_eurobelt
     } = permisos_modulos;
     return <Loading>
         <div className="mt-3">
@@ -106,7 +107,7 @@ const IndexApp = memo(props => {
                         icono='shopping-cart'
                         classes={classes}
                     />}
-                    {is_superuser && <Boton
+                    {modulo_bandas_eurobelt && <Boton
                         nombre='Bandas Eurobelt'
                         link='/app/bandas/'
                         icono='puzzle-piece'

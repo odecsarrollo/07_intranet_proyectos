@@ -86,6 +86,8 @@ import cotizacionesComponentesItems from './especificas/cotizaciones_componentes
 
 import correosAplicacionesReducer from './especificas/correos_servicios/correosAplicacionesReducer';
 
+import facturaCargueDetalleReducer from './especificas/cargues_detalles/facturasReducer';
+
 
 import apiRestReducer from './generales/ApiRestServicesReducer';
 
@@ -167,6 +169,8 @@ const rootReducer = combineReducers({
     cotizaciones_componentes_items: cotizacionesComponentesItems,
 
     correos_aplicaciones: correosAplicacionesReducer,
+
+    facturas: facturaCargueDetalleReducer
 });
 
 export default rootReducer;

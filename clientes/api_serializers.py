@@ -44,6 +44,14 @@ class CanalDistribucionSerializer(serializers.ModelSerializer):
 class ClienteSerializer(serializers.ModelSerializer):
     to_string = serializers.SerializerMethodField()
     creado_por_username = serializers.CharField(source='creado_por.username', read_only=True)
+    colaborador_componentes_nombre = serializers.CharField(
+        source='colaborador_componentes.usuario.get_full_name',
+        read_only=True
+    )
+    colaborador_proyectos_nombre = serializers.CharField(
+        source='colaborador_proyectos.usuario.get_full_name',
+        read_only=True
+    )
 
     def create(self, validated_data):
         from .services import asignar_colaborador_vendedor_componentes, asignar_colaborador_vendedor_proyectos
@@ -88,7 +96,9 @@ class ClienteSerializer(serializers.ModelSerializer):
             'sincronizado_sistemas_informacion',
             'nueva_desde_cotizacion',
             'colaborador_componentes',
+            'colaborador_componentes_nombre',
             'colaborador_proyectos',
+            'colaborador_proyectos_nombre',
             'to_string',
             'creado_por_username',
         ]

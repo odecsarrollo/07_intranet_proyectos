@@ -85,4 +85,5 @@ class ModuloPermission(models.Model):
             ('modulo_medios', 'Modulo Medios'),
             ('modulo_sistemas', 'Modulo Sistemas'),
             ('modulo_contabilidad', 'Modulo Contabilidad'),
+            ('modulo_bandas_eurobelt', 'Modulo Eurobelt'),
         )

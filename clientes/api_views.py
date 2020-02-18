@@ -27,7 +27,11 @@ class CanalDistribucionViewSet(viewsets.ModelViewSet):
 
 
 class ClienteViewSet(viewsets.ModelViewSet):
-    queryset = ClienteBiable.objects.select_related('creado_por').all()
+    queryset = ClienteBiable.objects.select_related(
+        'creado_por',
+        'colaborador_componentes__usuario',
+        'colaborador_proyectos__usuario',
+    ).all()
     serializer_class = ClienteSerializer
 
     @action(detail=True, methods=['post'])

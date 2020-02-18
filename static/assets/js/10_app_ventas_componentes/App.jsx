@@ -8,7 +8,7 @@ import AppIndex from './index';
 import CotizadorDashboard from './cotizaciones/CotizadorDashboard';
 import CotizacionDetail from './cotizaciones/cotizacion/CotizacionDetail';
 import ClientesList from "../03_app_admin/especificas/clientes/clientes/ClienteCRUD";
-import ClienteDetail from "../03_app_admin/especificas/clientes/clientes/ClienteDetail";
+import ClienteDetail from "../03_app_admin/especificas/clientes/clientes/ClienteDetailDashboard";
 
 const App = () => {
     return (
