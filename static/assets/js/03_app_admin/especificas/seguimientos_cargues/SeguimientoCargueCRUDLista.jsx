@@ -51,62 +51,73 @@ function areEqual(prevProps, nextProps) {
 }
 
 const Tabla = memo(props => {
-    const data = _.orderBy(props.list, ['fecha_final'], ['desc']);
+    const data = _.orderBy(props.list, ['fecha'], ['desc']);
     return (
         <div>
-            {_.map(data, e =>
-                <ListCollapse key={e.id}
-                              texto={`Fecha Inicial: ${fechaHoraFormatoUno(e.fecha)}, Fecha Final: ${fechaHoraFormatoUno(e.fecha_final)}${e.fecha_final ? ` (${e.tiempo.toFixed(2)} minutos)` : ''}`}
-                >
-                    <ReactTable
-                        data={e.procedimientos}
-                        columns={[
-                            {
-                                Header: "Procedimientos",
-                                columns: [
-                                    {
-                                        Header: "Hora Inicial",
-                                        accessor: "fecha",
-                                        maxWidth:80,
-                                        minWidth:80,
-                                        Cell: row => <div>{horaFormatoUno(row.value)}</div>
-                                    },
-                                    {
-                                        Header: "Hora Final",
-                                        accessor: "fecha_final",
-                                        maxWidth:80,
-                                        minWidth:80,
-                                        Cell: row => <div>{horaFormatoUno(row.value)}</div>
-                                    },
-                                    {
-                                        Header: "Procedimiento",
-                                        accessor: "procedimiento_nombre",
-                                    },
-                                    {
-                                        Header: "Tabla",
-                                        accessor: "tabla"
-                                    },
-                                    {
-                                        Header: "Nro. Filas",
-                                        accessor: "numero_filas",
-                                        maxWidth:70,
-                                        minWidth:70,
-                                    },
-                                    {
-                                        Header: "Tiempo",
-                                        accessor: "tiempo",
-                                        maxWidth:100,
-                                        minWidth:100,
-                                        Cell: row =>
-                                            <div>{row.original.fecha_final ? ` (${row.value.toFixed(2)} minutos)` : ''}</div>
-                                    },
-                                ]
-                            },
-                        ]}
-                        defaultPageSize={e.procedimientos.length}
-                        className="-striped -highlight tabla-maestra"
-                    />
-                </ListCollapse>)}
+            {_.map(data, e => {
+                const fecha_inicial = `Fecha Inicial: ${fechaHoraFormatoUno(e.fecha)}`;
+                const fecha_final = e.fecha_final ? `Fecha Final: ${fechaHoraFormatoUno(e.fecha_final)}${e.fecha_final ? ` (${e.tiempo.toFixed(2)} minutos)` : ''}` : 'Error';
+                return (
+                    <ListCollapse key={e.id}
+                                  texto={`${fecha_inicial}, ${fecha_final}`}
+                    >
+                        <ReactTable
+                            data={e.procedimientos}
+                            columns={[
+                                {
+                                    Header: "Procedimientos",
+                                    columns: [
+                                        {
+                                            Header: "Hora Inicial",
+                                            accessor: "fecha",
+                                            maxWidth: 80,
+                                            minWidth: 80,
+                                            Cell: row => <div>{horaFormatoUno(row.value)}</div>
+                                        },
+                                        {
+                                            Header: "Hora Final",
+                                            accessor: "fecha_final",
+                                            maxWidth: 80,
+                                            minWidth: 80,
+                                            Cell: row => <div>{horaFormatoUno(row.value)}</div>
+                                        },
+                                        {
+                                            Header: "Procedimiento",
+                                            accessor: "procedimiento_nombre",
+                                        },
+                                        {
+                                            Header: "Tabla",
+                                            accessor: "tabla"
+                                        },
+                                        {
+                                            Header: "Tarea",
+                                            accessor: "tarea",
+                                            maxWidth: 220,
+                                            minWidth: 220,
+                                        },
+                                        {
+                                            Header: "Nro. Filas",
+                                            accessor: "numero_filas",
+                                            maxWidth: 70,
+                                            minWidth: 70,
+                                        },
+                                        {
+                                            Header: "Tiempo",
+                                            accessor: "tiempo",
+                                            maxWidth: 100,
+                                            minWidth: 100,
+                                            Cell: row =>
+                                                <div>{row.original.fecha_final ? ` (${row.value.toFixed(2)} minutos)` : ''}</div>
+                                        },
+                                    ]
+                                },
+                            ]}
+                            defaultPageSize={e.procedimientos.length}
+                            className="-striped -highlight tabla-maestra"
+                        />
+                    </ListCollapse>
+                )
+            })}
         </div>
     )
 }, areEqual);

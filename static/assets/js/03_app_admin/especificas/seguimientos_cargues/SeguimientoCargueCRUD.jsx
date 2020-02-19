@@ -19,7 +19,6 @@ const List = memo(props => {
         };
     }, []);
     const list = useSelector(state => state.seguimientos_cargues);
-    console.log(list)
     const permisos = useTengoPermisos(SEGUIMIENTOS_CARGUES);
     const method_pool = {
         fetchObjectMethod: (id, options) => dispatch(actions.fetchSistemaInformacionOrigen(id, options)),

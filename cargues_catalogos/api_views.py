@@ -12,7 +12,7 @@ from .api_serializers import (
 
 
 class SeguimientoCargueViewSet(viewsets.ModelViewSet):
-    queryset = SeguimientoCargue.objects.prefetch_related('procedimientos').order_by('-fecha').all()[:5]
+    queryset = SeguimientoCargue.objects.prefetch_related('procedimientos').order_by('-fecha').all()[:30]
     serializer_class = SeguimientoCargueSerializer
 
 
