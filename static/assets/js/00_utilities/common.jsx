@@ -19,6 +19,10 @@ export const fechaHoraFormatoUno = (fecha) => {
     const dateTime = moment.tz(fecha, "America/Bogota");
     return `${fechaFormatoUno(fecha)} ${dateTime.hours()}:${dateTime.minutes()}`;
 };
+export const horaFormatoUno = (fecha) => {
+    const dateTime = moment.tz(fecha, "America/Bogota");
+    return `${dateTime.hours()}:${dateTime.minutes()}`;
+};
 
 export const fechaToYMD = (fecha) => fecha.getFullYear() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getDate();
 

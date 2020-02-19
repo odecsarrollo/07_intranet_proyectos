@@ -1,10 +1,24 @@
 from rest_framework import viewsets
 from .models import (
-    CiudadCatalogo
+    CiudadCatalogo,
+    SeguimientoCargueProcedimiento,
+    SeguimientoCargue
 )
 from .api_serializers import (
-    CiudadCatalogoSerializer
+    CiudadCatalogoSerializer,
+    SeguimientoCargueSerializer,
+    SeguimientoCargueProcedimientoSerializer
 )
+
+
+class SeguimientoCargueViewSet(viewsets.ModelViewSet):
+    queryset = SeguimientoCargue.objects.prefetch_related('procedimientos').order_by('-fecha').all()[:5]
+    serializer_class = SeguimientoCargueSerializer
+
+
+class SeguimientoCargueProcedimientoViewSet(viewsets.ModelViewSet):
+    queryset = SeguimientoCargueProcedimiento.objects.all()
+    serializer_class = SeguimientoCargueProcedimientoSerializer
 
 
 class CiudadCatalogoViewSet(viewsets.ModelViewSet):

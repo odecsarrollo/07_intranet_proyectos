@@ -13,6 +13,11 @@ class SeguimientoCargue(models.Model):
     fecha = models.DateTimeField()
     fecha_final = models.DateTimeField(null=True)
 
+    class Meta:
+        permissions = [
+            ("list_seguimientocargue", "Can list seguimientos cargues"),
+        ]
+
 
 class SeguimientoCargueProcedimiento(models.Model):
     cargue_contro = models.ForeignKey(SeguimientoCargue, on_delete=models.PROTECT, related_name='procedimientos')

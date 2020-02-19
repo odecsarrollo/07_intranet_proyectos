@@ -11,6 +11,8 @@ export const MENU_ADMIN_PERMISSIONS = {
     menu_admin_geografia: 'menu_admin_geografia',
     menu_admin_listas_precios: 'menu_admin_listas_precios',
     menu_admin_items: 'menu_admin_items',
+    menu_admin_seguimientos_cargues: 'menu_admin_seguimientos_cargues',
+    menu_admin_configuracion_costos: 'menu_admin_configuracion_costos',
 };
 export const MENU_PROYECTOS_PERMISSIONS = {
     menu_proyectos_proyectos: 'menu_proyectos_proyectos',

@@ -14,6 +14,7 @@ const MenuAdmin = memo(props => {
         menu_admin_geografia = false,
         menu_admin_listas_precios = false,
         menu_admin_items = false,
+        menu_admin_seguimientos_cargues = false,
     } = permisos_menu;
     return (
         <Fragment>
@@ -49,6 +50,12 @@ const MenuAdmin = memo(props => {
                 link='/app/admin/listas_precios/dashboard'
                 texto='Listas Precios'
                 icono='map'
+            />}
+            {menu_admin_seguimientos_cargues && <DrawerListItem
+                size='lg'
+                link='/app/admin/seguimientos_cargues/list'
+                texto='Seguimiento Cargues'
+                icono='search'
             />}
         </Fragment>
     )

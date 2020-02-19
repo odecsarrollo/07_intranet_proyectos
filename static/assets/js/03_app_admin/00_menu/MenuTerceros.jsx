@@ -5,17 +5,19 @@ import ListCollapse from './../../00_utilities/components/ui/drawer/drawer_list_
 const MenuTerceros = memo(props => {
     const {permisos_menu} = props;
     const {
-        admin_terceros_usuarios,
-        admin_terceros_costos_nomina,
-        admin_terceros_clientes,
-        admin_terceros_colaboradores,
+        admin_terceros_usuarios = false,
+        admin_terceros_costos_nomina = false,
+        admin_terceros_clientes = false,
+        admin_terceros_colaboradores = false,
+        menu_admin_terceros_costos_nomina = false,
     } = permisos_menu;
     return (
         (
             admin_terceros_usuarios ||
             admin_terceros_costos_nomina ||
             admin_terceros_clientes ||
-            admin_terceros_colaboradores
+            admin_terceros_colaboradores ||
+            menu_admin_terceros_costos_nomina
         ) &&
         <ListCollapse icono='users' texto='Terceros'>
             {admin_terceros_usuarios &&

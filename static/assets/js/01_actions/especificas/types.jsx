@@ -1,3 +1,8 @@
+export const SEGUIMIENTO_CARGUE_TYPES = {
+    fetch_all: 'fetch_seguimientos_cargues',
+    clear: 'clear_seguimientos_cargues',
+};
+
 export const FACTURA_TYPES = {
     create: 'create_factura',
     delete: 'delete_factura',

@@ -1,3 +1,8 @@
+export const SEGUIMIENTOS_CARGUES = {
+    list: 'list_seguimientocargue',
+    detail: 'view_seguimientocargue',
+};
+
 export const FACTURAS = {
     add: 'add_facturadetalle',
     delete: 'delete_facturadetalle',

@@ -27,6 +27,8 @@ import ConfiguracionCostosDashboard from "./especificas/configuraciones/containe
 import ItemsDashboard from "./especificas/items/ItemDashboard";
 import ImportacionesDashboard
     from "./especificas/importaciones/ImportacionDashboard";
+import SeguimientosCargues
+    from "./especificas/seguimientos_cargues/SeguimientoCargueCRUD";
 import ListasPreciosDashboard
     from "./especificas/listas_precios/ListaPrecioDashboard";
 import useTengoPermisos from "../00_utilities/hooks/useTengoPermisos";
@@ -63,6 +65,7 @@ const AdminApp = memo(props => {
                     <Route exact path='/app/admin/importaciones/dashboard' component={ImportacionesDashboard}/>
                     <Route exact path='/app/admin/listas_precios/dashboard' component={ListasPreciosDashboard}/>
                     <Route exact path='/app/admin/colaboradoresn/dashboard' component={ColaboradoresNDashBoard}/>
+                    <Route exact path='/app/admin/seguimientos_cargues/list' component={SeguimientosCargues}/>
                 </Switch>
             </DrawerMenu>
         </Loading>

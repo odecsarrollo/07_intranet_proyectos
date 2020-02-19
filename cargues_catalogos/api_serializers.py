@@ -1,6 +1,49 @@
 from rest_framework import serializers
 
-from .models import CiudadCatalogo, ItemsCatalogo
+from .models import CiudadCatalogo, ItemsCatalogo, SeguimientoCargue, SeguimientoCargueProcedimiento
+
+
+class SeguimientoCargueProcedimientoSerializer(serializers.ModelSerializer):
+    tiempo = serializers.SerializerMethodField()
+
+    def get_tiempo(self, obj):
+        if obj.fecha_final:
+            return (obj.fecha_final - obj.fecha).total_seconds() / 60.0
+        return None
+    class Meta:
+        model = SeguimientoCargueProcedimiento
+        fields = [
+            'id',
+            'procedimiento_nombre',
+            'tabla',
+            'tarea',
+            'tiempo',
+            'fecha',
+            'fecha_final',
+            'numero_filas',
+        ]
+        read_only_fields = fields
+
+
+class SeguimientoCargueSerializer(serializers.ModelSerializer):
+    procedimientos = SeguimientoCargueProcedimientoSerializer(many=True)
+    tiempo = serializers.SerializerMethodField()
+
+    def get_tiempo(self, obj):
+        if obj.fecha_final:
+            return (obj.fecha_final - obj.fecha).total_seconds() / 60.0
+        return None
+
+    class Meta:
+        model = SeguimientoCargue
+        fields = [
+            'id',
+            'fecha',
+            'fecha_final',
+            'procedimientos',
+            'tiempo',
+        ]
+        read_only_fields = fields
 
 
 class ItemsCatalogoSerializer(serializers.ModelSerializer):

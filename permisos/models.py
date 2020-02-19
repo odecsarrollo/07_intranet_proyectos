@@ -39,6 +39,8 @@ class MenuAdminPermission(models.Model):
             ('menu_admin_geografia', 'Menu Admin Geografía'),
             ('menu_admin_items', 'Menu Admin Items'),
             ('menu_admin_listas_precios', 'Menu Admin Listas Precios'),
+            ('menu_admin_seguimientos_cargues', 'Menu Admin Seguimientos Cargues'),
+            ('menu_admin_configuracion_costos', 'Menu Admin Configuracion Costos'),
         )
 
 
