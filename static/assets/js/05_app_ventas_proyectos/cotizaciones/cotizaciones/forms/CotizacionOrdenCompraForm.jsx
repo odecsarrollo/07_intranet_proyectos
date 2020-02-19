@@ -24,7 +24,8 @@ let CotizacionOrdenCompraForm = (props) => {
         initialValues,
         handleSubmit,
         classes,
-        read_only
+        read_only,
+        change
     } = props;
     const {to_string, id, orden_compra_archivo_url, orden_compra_archivo_size, orden_compra_archivo_filename} = initialValues;
     const [show_limpiar, setShowLimpiar] = useState(false);
@@ -66,12 +67,17 @@ let CotizacionOrdenCompraForm = (props) => {
     };
 
     const onSiLimpiarCondicionInicio = () => dispatch(actions.limpiarCondicionInicioCotizacion(id, null, true, {callback: () => setShowLimpiar(false)}));
-    const {orden_compra_fecha, valor_orden_compra, orden_compra_nro} = initialValues;
+    const {orden_compra_fecha, valor_orden_compra, orden_compra_nro, valor_ofertado} = initialValues;
     return <div className={`${read_only ? 'col-12 col-sm-6 col-md-4' : 'col-6'}`}>
         <div className="card p-4 m-1">
             <Typography variant="body1" gutterBottom color="primary">
-                ORDEN DE COMPRA
+                ORDEN DE COMPRA <small>(Valor Ofertado: {pesosColombianos(valor_ofertado)} <FontAwesomeIcon
+                    className='puntero'
+                    icon='paste'
+                    onClick={() => change('valor_orden_compra', valor_ofertado)}/>)
+            </small>
             </Typography>
+
             {show_limpiar && <SiNoDialog
                 onSi={onSiLimpiarCondicionInicio}
                 onNo={() => setShowLimpiar(false)}

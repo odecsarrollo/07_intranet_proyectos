@@ -98,6 +98,7 @@ import {
     faChevronDown,
     faLink,
     faEraser,
+    faPaste,
 } from '@fortawesome/pro-solid-svg-icons';
 
 library.add(
@@ -166,6 +167,7 @@ library.add(
     faChevronDown,
     faLink,
     faEraser,
+    faPaste
 );
 
 const theme = createMuiTheme({
