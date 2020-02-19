@@ -1,6 +1,6 @@
 import React, {memo, useState, Fragment} from "react";
 import CotizacionDetailAddItemNoListaPrecio from "./CotizacionDetailAddItemNoListaPrecio";
-import CotizadorListaPrecio from './CotizadorListaPrecio'
+import ListaPrecio from '../../lista_precios/ListaPrecio'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -64,7 +64,7 @@ const CotizadorAdicionarItem = memo(props => {
                             <Tab>Item Personalizado</Tab>
                         </TabList>
                         <TabPanel>
-                            <CotizadorListaPrecio
+                            <ListaPrecio
                                 adicionarItem={adicionarItem}
                             />
                         </TabPanel>

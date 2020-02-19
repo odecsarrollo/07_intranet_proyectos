@@ -33,6 +33,7 @@ import indigo from '@material-ui/core/colors/indigo';
 import {library} from '@fortawesome/fontawesome-svg-core'
 
 import {
+    faBarcode,
     faAddressBook,
     faWrench,
     faCogs,
@@ -100,6 +101,7 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 
 library.add(
+    faBarcode,
     faAddressBook,
     faWrench,
     faCogs,

@@ -7,6 +7,7 @@ import Tabla from './CotizacionComponenteCRUDTabla';
 import crudHOC from '../../00_utilities/components/HOC_CRUD2';
 import useTengoPermisos from "../../00_utilities/hooks/useTengoPermisos";
 import CotizacionEdicionList from "./CotizacionEdicionList";
+import ListaPrecio from "../lista_precios/ListaPrecio";
 
 const CRUD = crudHOC(CreateForm, Tabla);
 const Cotizaciones = memo(props => {
