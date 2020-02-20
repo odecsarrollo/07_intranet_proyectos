@@ -37,7 +37,7 @@ const Tabla = memo(props => {
                             maxWidth: 350,
                             minWidth: 350,
                             filterable: true,
-                            filterMethod: (filter, row) => row._original.to_string.includes(filter.value.toUpperCase())
+                            filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase()),
                         },
                         {
                             Header: "Nombre",
@@ -45,7 +45,7 @@ const Tabla = memo(props => {
                             minWidth: 400,
                             maxWidth: 400,
                             filterable: true,
-                            filterMethod: (filter, row) => row._original.to_string.includes(filter.value.toUpperCase()),
+                            filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase()),
                             Cell: row => <div style={{
                                 fontSize: '0.8rem',
                                 whiteSpace: 'normal'

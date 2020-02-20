@@ -59,20 +59,22 @@ const Tabla = memo(props => {
                                 accessor: "cliente_nombre",
                                 maxWidth: 250,
                                 minWidth: 250,
+                                filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase()),
                                 filterable: true
                             },
                             {
                                 Header: "Estado",
                                 accessor: "estado_display",
                                 maxWidth: 80,
-                                minWidth: 80,
-                                filterable: true
+                                minWidth: 80
                             },
                             {
                                 Header: "Ciudad",
+                                accessor: "ciudad_nombre",
                                 maxWidth: 250,
                                 minWidth: 250,
                                 filterable: true,
+                                filterMethod: (filter, row) => `${row._original.pais_nombre}-${row._original.departamento_nombre}-${row._original.ciudad_nombre}`.includes(filter.value.toUpperCase()),
                                 Cell: row => `${row.original.pais_nombre}-${row.original.departamento_nombre}-${row.original.ciudad_nombre}`
                             },
                             {
@@ -80,6 +82,8 @@ const Tabla = memo(props => {
                                 maxWidth: 200,
                                 minWidth: 200,
                                 filterable: true,
+                                accessor: "contacto",
+                                filterMethod: (filter, row) => `${row._original.contacto_nombres} ${row._original.contacto_apellidos}`.includes(filter.value.toUpperCase()),
                                 Cell: row => `${row.original.contacto_nombres} ${row.original.contacto_apellidos}`
                             },
                             {
@@ -87,14 +91,16 @@ const Tabla = memo(props => {
                                 accessor: "responsable_username",
                                 maxWidth: 80,
                                 minWidth: 80,
-                                filterable: true
+                                filterable: true,
+                                filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase())
                             },
                             {
                                 Header: "Creado Por",
                                 accessor: "creado_por_username",
                                 maxWidth: 80,
                                 minWidth: 80,
-                                filterable: true
+                                filterable: true,
+                                filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase())
                             },
                             {
                                 Header: "Valor Total",

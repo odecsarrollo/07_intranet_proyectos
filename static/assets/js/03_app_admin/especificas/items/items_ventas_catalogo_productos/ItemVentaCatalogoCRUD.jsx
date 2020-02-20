@@ -1,4 +1,4 @@
-import React, {memo, useEffect} from 'react';
+import React, {memo, useEffect, useState} from 'react';
 import CreateForm from './forms/ItemVentaCatalogoCRUDForm';
 import Tabla from './ItemVentaCatalogoCRUDTabla';
 import crudHOC from '../../../../00_utilities/components/HOC_CRUD2';
@@ -12,15 +12,16 @@ const CRUD = crudHOC(CreateForm, Tabla);
 
 const List = memo((props) => {
     const dispatch = useDispatch();
+    const [origen_seleccionado, setOrigenSeleccionado] = useState('LP_INTRANET');
     const cargarDatos = () => {
-        dispatch(actions.fetchItemsVentasCatalogos());
+        dispatch(actions.fetchItemsVentasCatalogosxOrigen(origen_seleccionado));
     };
     useEffect(() => {
         cargarDatos();
         return () => {
             dispatch(actions.clearItemsVentasCatalogos());
         };
-    }, []);
+    }, [origen_seleccionado]);
     const list = useSelector(state => state.catalogos_productos_items_ventas);
     const permisos = useTengoPermisos(ITEMS_VENTAS_CATALOGOS);
     const method_pool = {
@@ -31,6 +32,8 @@ const List = memo((props) => {
     };
     return (
         <CRUD
+            setOrigenSeleccionado={setOrigenSeleccionado}
+            origen_seleccionado={origen_seleccionado}
             method_pool={method_pool}
             list={list}
             permisos_object={permisos}

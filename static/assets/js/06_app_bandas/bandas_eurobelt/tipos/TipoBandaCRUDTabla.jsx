@@ -32,16 +32,16 @@ const Tabla = memo(props => {
                         {
                             Header: "Nombre",
                             maxWidth: 220,
+                            accessor: "to_string",
                             filterable: true,
-                            filterMethod: (filter, row) => row._original.to_string.includes(filter.value.toUpperCase()),
-                            Cell: row => `${row.original.to_string}`
+                            filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase()),
                         },
                         {
                             Header: "Nomenclatura",
                             maxWidth: 110,
                             accessor: "nomenclatura",
                             filterable: true,
-                            filterMethod: (filter, row) => row.value.includes(filter.value.toUpperCase()),
+                            filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase()),
                             Cell: row => `${row.value}`
                         }
                     ]

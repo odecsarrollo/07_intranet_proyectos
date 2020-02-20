@@ -38,25 +38,22 @@ const Tabla = memo(props => {
                         {
                             Header: "Nit",
                             accessor: "nit",
-                            maxWidth: 150,
+                            maxWidth: 100,
                             filterable: true,
-                            filterMethod: (filter, row) => {
-                                return row[filter.id] && row[filter.id].includes(filter.value.toUpperCase())
-                            }
+                            filterMethod: (filter, row) => row[filter.id] && row[filter.id].includes(filter.value.toUpperCase())
                         },
                         {
                             Header: "Nombre",
                             accessor: "nombre",
-                            maxWidth: 400,
+                            maxWidth: 300,
                             filterable: true,
-                            filterMethod: (filter, row) => {
-                                return row[filter.id].includes(filter.value.toUpperCase())
-                            }
+                            filterMethod: (filter, row) => row[filter.id].includes(filter.value.toUpperCase())
                         },
                         {
                             Header: "Creado",
                             accessor: "nueva_desde_cotizacion",
-                            maxWidth: 100,
+                            maxWidth: 50,
+                            minWidth: 50,
                             Cell: row => <div>{row.value && <FontAwesomeIcon icon={'check'}/>}</div>
                         },
                         {
@@ -66,9 +63,26 @@ const Tabla = memo(props => {
                             minWidth: 100,
                         },
                         {
-                            Header: "Sincronizado",
+                            Header: "Vend. Componentes",
+                            accessor: "colaborador_componentes_nombre",
+                            maxWidth: 200,
+                            minWidth: 200,
+                            filterable: true,
+                            filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase()),
+                        },
+                        {
+                            Header: "Vend. Proyectos",
+                            accessor: "colaborador_proyectos_nombre",
+                            maxWidth: 200,
+                            minWidth: 200,
+                            filterable: true,
+                            filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase()),
+                        },
+                        {
+                            Header: "Sincr.",
                             accessor: "sincronizado_sistemas_informacion",
-                            maxWidth: 100,
+                            maxWidth: 50,
+                            minWidth: 50,
                             Cell: row => <div>{row.value && <FontAwesomeIcon icon={'check'}/>}</div>
                         },
                     ]

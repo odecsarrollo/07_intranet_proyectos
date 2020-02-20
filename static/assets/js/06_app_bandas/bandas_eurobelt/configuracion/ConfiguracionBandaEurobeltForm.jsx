@@ -27,6 +27,8 @@ let Form = memo(props => {
                     </div>
                     <MyCombobox
                         className="col-6 col-md-4"
+                        label='Cat. Aleta'
+                        label_space_xs={4}
                         name='categoria_aleta'
                         busy={false}
                         autoFocus={false}
@@ -44,6 +46,8 @@ let Form = memo(props => {
                     <MyCombobox
                         className="col-6 col-md-4"
                         name='categoria_empujador'
+                        label='Cat. Empujador'
+                        label_space_xs={4}
                         busy={false}
                         autoFocus={false}
                         data={_.map(_.orderBy(categorias, ['nombre'], ['asc']), e => {
@@ -60,6 +64,8 @@ let Form = memo(props => {
                     <MyCombobox
                         className="col-6 col-md-4"
                         name='categoria_varilla'
+                        label='Cat. Varilla'
+                        label_space_xs={4}
                         busy={false}
                         autoFocus={false}
                         data={_.map(_.orderBy(categorias, ['nombre'], ['asc']), e => {
@@ -76,6 +82,8 @@ let Form = memo(props => {
                     <MyCombobox
                         className="col-6 col-md-4"
                         name='categoria_banda'
+                        label='Cat. Banda'
+                        label_space_xs={4}
                         busy={false}
                         autoFocus={false}
                         data={_.map(_.orderBy(categorias, ['nombre'], ['asc']), e => {
@@ -92,6 +100,8 @@ let Form = memo(props => {
                     <MyCombobox
                         className="col-6 col-md-4"
                         name='categoria_tapa'
+                        label='Cat. Tapa'
+                        label_space_xs={4}
                         busy={false}
                         autoFocus={false}
                         data={_.map(_.orderBy(categorias, ['nombre'], ['asc']), e => {
@@ -108,6 +118,8 @@ let Form = memo(props => {
                     <MyCombobox
                         className="col-6 col-md-4"
                         name='categoria_modulo'
+                        label='Cat. Modulo'
+                        label_space_xs={4}
                         busy={false}
                         autoFocus={false}
                         data={_.map(_.orderBy(categorias, ['nombre'], ['asc']), e => {
@@ -128,6 +140,8 @@ let Form = memo(props => {
                     </div>
                     <div className="col-12">
                         <MyCombobox
+                            label='Fabricante'
+                            label_space_xs={4}
                             className="col-6 col-md-4"
                             name='fabricante'
                             busy={false}

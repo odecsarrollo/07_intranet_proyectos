@@ -29,3 +29,10 @@ class ItemVentaCatalogoViewSet(viewsets.ModelViewSet):
         qs = query_varios_campos(self.queryset, search_fields, parametro)
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
+
+    @action(detail=False, http_method_names=['get', ])
+    def listar_x_origen(self, request):
+        origen = request.GET.get('origen')
+        qs = self.queryset.filter(origen=origen)
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)

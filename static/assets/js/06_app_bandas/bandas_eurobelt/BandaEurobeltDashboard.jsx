@@ -11,10 +11,29 @@ import BloqueSeries from "./series/SerieCRUD";
 import BloqueCategorias from "./categorias_dos/CategoriaDosCRUD";
 import Configuracion from "./configuracion/ConfiguracionBandaEurobelt";
 import Typography from "@material-ui/core/Typography";
+import {
+    BANDAS_EUROBELT,
+    BANDA_EUROBELT_COMPONENTES,
+    BANDA_EUROBELT_CATEGORIAS_DOS,
+    BANDA_EUROBELT_COLORES,
+    BANDA_EUROBELT_TIPOS,
+    BANDA_EUROBELT_SERIES,
+    BANDA_EUROBELT_MATERIALES,
+    CONFIGURACION_BANDA_EUROBELT
+} from '../../permisos/index';
+import useTengoPermisos from "../../00_utilities/hooks/useTengoPermisos";
 
 const ItemsDashboard = memo((props) => {
     const singular_name = 'Panel Banda Eurobelt';
     const [slideIndex, setSlideIndex] = useState(0);
+    const permisos_bandas = useTengoPermisos(BANDAS_EUROBELT);
+    const permisos_componentes = useTengoPermisos(BANDA_EUROBELT_COMPONENTES);
+    const permisos_categoria_dos = useTengoPermisos(BANDA_EUROBELT_CATEGORIAS_DOS);
+    const permisos_colores = useTengoPermisos(BANDA_EUROBELT_COLORES);
+    const permisos_tipos = useTengoPermisos(BANDA_EUROBELT_TIPOS);
+    const permisos_series = useTengoPermisos(BANDA_EUROBELT_SERIES);
+    const permisos_materiales = useTengoPermisos(BANDA_EUROBELT_MATERIALES);
+    const permisos_configuracion = useTengoPermisos(CONFIGURACION_BANDA_EUROBELT);
     return (
         <Fragment>
             <Typography variant="h5" gutterBottom color="primary">
@@ -34,14 +53,14 @@ const ItemsDashboard = memo((props) => {
                 <Tab label="Categorias Dos"/>
                 <Tab label="Configuración"/>
             </Tabs>
-            {slideIndex === 0 && <BloqueBandas history={props.history}/>}
-            {slideIndex === 1 && <BloqueComponentes/>}
-            {slideIndex === 2 && <BloqueTipos/>}
-            {slideIndex === 3 && <BloqueMateriales/>}
-            {slideIndex === 4 && <BloqueColores/>}
-            {slideIndex === 5 && <BloqueSeries/>}
-            {slideIndex === 6 && <BloqueCategorias/>}
-            {slideIndex === 7 && <Configuracion/>}
+            {slideIndex === 0 && <BloqueBandas permisos={permisos_bandas} history={props.history}/>}
+            {slideIndex === 1 && <BloqueComponentes permisos={permisos_componentes}/>}
+            {slideIndex === 2 && <BloqueTipos permisos={permisos_tipos}/>}
+            {slideIndex === 3 && <BloqueMateriales permisos={permisos_materiales}/>}
+            {slideIndex === 4 && <BloqueColores permisos={permisos_colores}/>}
+            {slideIndex === 5 && <BloqueSeries permisos={permisos_series}/>}
+            {slideIndex === 6 && <BloqueCategorias permisos={permisos_categoria_dos}/>}
+            {slideIndex === 7 && <Configuracion permisos={permisos_configuracion}/>}
         </Fragment>
     )
 });

@@ -3,17 +3,14 @@ import CreateForm from './forms/SerieCRUDForm';
 import Tabla from './SerieCRUDTabla';
 import crudHOC from '../../../00_utilities/components/HOC_CRUD2';
 import * as actions from "../../../01_actions/01_index";
-import {useDispatch} from "react-redux/es/hooks/useDispatch";
-import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
-import {BANDA_EUROBELT_SERIES} from "../../../permisos";
-import {useSelector} from "react-redux/es/hooks/useSelector";
+import {useDispatch, useSelector} from "react-redux";
 
 
 const CRUD = crudHOC(CreateForm, Tabla);
 
 const List = memo(props => {
     const dispatch = useDispatch();
-    const permisos = useTengoPermisos(BANDA_EUROBELT_SERIES);
+    const {permisos} = props;
     const series = useSelector(state => state.banda_eurobelt_series);
     const method_pool = {
         fetchObjectMethod: (id, options) => dispatch(actions.fetchBandaEurobeltSerie(id, options)),

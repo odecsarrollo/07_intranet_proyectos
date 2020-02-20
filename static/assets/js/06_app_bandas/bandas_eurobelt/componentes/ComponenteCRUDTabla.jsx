@@ -35,7 +35,8 @@ const Tabla = memo(props => {
                             Header: "Referencia",
                             accessor: "referencia",
                             maxWidth: 100,
-                            filterable: true
+                            filterable: true,
+                            filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase()),
                         },
                         {
                             Header: "Nombre",
@@ -43,6 +44,7 @@ const Tabla = memo(props => {
                             maxWidth: 300,
                             minWidth: 300,
                             filterable: true,
+                            filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase()),
                             Cell: row => {
                                 return (
                                     <div style={{
@@ -61,7 +63,8 @@ const Tabla = memo(props => {
                             Header: "Moneda",
                             accessor: "moneda_nombre",
                             maxWidth: 90,
-                            filterable: true
+                            filterable: true,
+                            filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase()),
                         },
                         {
                             Header: "Tasa",

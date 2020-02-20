@@ -24,6 +24,15 @@ export const horaFormatoUno = (fecha) => {
     return `${dateTime.hours()}:${dateTime.minutes()}`;
 };
 
+// lunes a viernes 7:30 - 5:00 sin o con citas
+// sabados de 9 - 12
+// propietario con runt
+// formulario tramite runt
+// 4179967 - numero tarjeta
+// formato para autorizacion para tramitar
+// de 3 a 72
+// https://serviciosdetransito.com/modules/consulta_tramite/
+
 export const fechaToYMD = (fecha) => fecha.getFullYear() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getDate();
 
 export const formatBytes = (bytes, decimals = 3) => {
