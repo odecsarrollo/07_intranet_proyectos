@@ -6,6 +6,7 @@ import ReactTable from "react-table";
 import {Link} from "react-router-dom";
 import {pesosColombianos} from "../../../00_utilities/common";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import Checkbox from "@material-ui/core/Checkbox";
 
 function areEqual(prevProps, nextProps) {
     return prevProps.list === nextProps.list
@@ -17,7 +18,8 @@ const Tabla = memo(props => {
     const {
         singular_name,
         onDelete,
-        permisos_object
+        permisos_object,
+        updateItem
     } = props;
     return (
         <ReactTable
@@ -112,6 +114,21 @@ const Tabla = memo(props => {
                 {
                     Header: "Opciones",
                     columns: [
+                        {
+                            Header: "Activo",
+                            accessor: "activo",
+                            maxWidth: 50,
+                            Cell: row => (
+                                <div className='text-center' style={{width: '100%'}}>
+                                    <Checkbox
+                                        style={{margin: 0, padding: 0}}
+                                        color='primary'
+                                        checked={row.value}
+                                        onChange={() => updateItem({...row.original, activo: !row.value})}
+                                    />
+                                </div>
+                            )
+                        },
                         {
                             Header: "Elimi.",
                             show: permisos_object.delete,

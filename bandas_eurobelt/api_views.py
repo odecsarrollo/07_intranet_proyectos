@@ -187,6 +187,13 @@ class BandaEurobeltViewSet(viewsets.ModelViewSet):
         return super().update(request, *args, **kwargs)
 
     @action(detail=False, http_method_names=['get', ])
+    def listar_x_componente(self, request):
+        componente_id = request.GET.get('componente_id')
+        qs = self.queryset.filter(componentes__id=componente_id)
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, http_method_names=['get', ])
     def listar_x_parametro(self, request):
         parametro = request.GET.get('parametro')
         search_fields = ['nombre', 'referencia']

@@ -371,6 +371,7 @@ class BandaEurobeltSerializer(serializers.ModelSerializer):
             'aleta_alto',
             'aleta_identacion',
             'nombre',
+            'activo',
             'referencia',
         ]
         extra_kwargs = {
@@ -429,6 +430,7 @@ class BandaEurobeltSerializer(serializers.ModelSerializer):
         con_aleta = validated_data.get('con_aleta', False)
         con_empujador = validated_data.get('con_empujador', False)
         con_torneado_varilla = validated_data.get('con_torneado_varilla', False)
+        activo = validated_data.get('activo', False)
         serie = validated_data.get('serie', None)
         color = validated_data.get('color', None)
         tipo = validated_data.get('tipo', None)
@@ -455,6 +457,7 @@ class BandaEurobeltSerializer(serializers.ModelSerializer):
             banda_eurobelt_id=instance.id,
             tipo_id=tipo.id,
             con_empujador=con_empujador,
+            activo=activo,
             con_aleta=con_aleta,
             con_torneado_varilla=con_torneado_varilla,
             serie_id=serie.id,

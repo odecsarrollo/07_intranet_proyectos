@@ -122,6 +122,7 @@ def componente_banda_eurobelt_crear_actualizar(
 
 def banda_eurobelt_crear_actualizar(
         con_aleta: bool,
+        activo: bool,
         con_empujador: bool,
         con_torneado_varilla: bool,
         ancho: float,
@@ -152,6 +153,7 @@ def banda_eurobelt_crear_actualizar(
         banda_eurobelt = BandaEurobelt()
     banda_eurobelt.con_empujador = con_empujador
     banda_eurobelt.con_aleta = con_aleta
+    banda_eurobelt.activo = activo
     banda_eurobelt.con_torneado_varilla = con_torneado_varilla
     banda_eurobelt.color_id = color_id
     banda_eurobelt.largo = largo

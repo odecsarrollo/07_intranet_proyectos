@@ -9,6 +9,23 @@ import {
 
 const current_url_api = 'banda_eurobelt_bandas';
 
+export function fetchBandasEurobeltxComponente(componente_id, options_action = {}) {
+    return function (dispatch) {
+        const FULL_URL = `${current_url_api}/listar_x_componente/?componente_id=${componente_id}`;
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
+        };
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        return fetchListGetURLParameters(FULL_URL, options);
+    }
+}
+
 export function fetchBandasEurobeltxParametro(parametro, options_action = {}) {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/listar_x_parametro/?parametro=${parametro}`;

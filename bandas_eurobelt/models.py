@@ -246,6 +246,7 @@ class BandaEurobelt(models.Model):
     empujador_filas_empujador = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     aleta_alto = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     aleta_identacion = models.CharField(max_length=100, null=True, blank=True)
+    activo = models.BooleanField(default=True)
     objects = BandaEurobeltManager()
 
     def set_referencia_nombre(self):
