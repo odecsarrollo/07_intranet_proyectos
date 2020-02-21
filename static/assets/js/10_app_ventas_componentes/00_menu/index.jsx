@@ -37,6 +37,8 @@ const Menu = () => {
             icono='barcode'
         />
         {mostrar_lista_precios && <DialogListaPrecio
+            con_precios={true}
+            con_costos={false}
             is_open={mostrar_lista_precios}
             handleCloseModal={() => setMostrarListaPrecios(false)}
         />}

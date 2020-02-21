@@ -323,6 +323,8 @@ class BandaEurobeltSerializer(serializers.ModelSerializer):
     rentabilidad = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     costo_cop = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     costo_cop_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    costo_cop_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    costo_cop_aereo_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     precio_base = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     precio_base_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     cantidad_componentes = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
@@ -343,6 +345,8 @@ class BandaEurobeltSerializer(serializers.ModelSerializer):
             'con_empujador',
             'costo_cop',
             'costo_cop_aereo',
+            'costo_cop_mano_obra',
+            'costo_cop_aereo_mano_obra',
             'precio_base',
             'precio_base_aereo',
             'rentabilidad',

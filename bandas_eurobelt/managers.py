@@ -56,6 +56,15 @@ class BandaEurobeltManager(models.Manager):
                 ),
                 output_field=DecimalField(max_digits=12, decimal_places=2)
             ),
+            costo_cop_aereo=ExpressionWrapper(
+                Sum(
+                    F('cantidad') *
+                    F('componente__margen__proveedor__moneda__cambio') *
+                    F('componente__margen__proveedor__factor_importacion_aereo') *
+                    F('componente__costo')
+                ),
+                output_field=DecimalField(max_digits=12, decimal_places=2)
+            ),
             precio_base=ExpressionWrapper(
                 Sum(
                     (
@@ -85,11 +94,20 @@ class BandaEurobeltManager(models.Manager):
         ).annotate(
             cantidad_componentes=Subquery(componentes.values('cantidad_componentes')),
             costo_cop=Subquery(componentes.values('costo_cop')),
+            costo_cop_aereo=Subquery(componentes.values('costo_cop_aereo')),
             precio_base=Subquery(componentes.values('precio_base')),
             precio_base_aereo=Subquery(componentes.values('precio_base_aereo')),
         ).annotate(
             precio_mano_obra=ExpressionWrapper(
                 F('precio_base') * (F('costo_ensamblado__porcentaje') / 100),
+                output_field=DecimalField(max_digits=12, decimal_places=2)
+            ),
+            costo_cop_mano_obra=ExpressionWrapper(
+                F('costo_cop') + F('precio_mano_obra'),
+                output_field=DecimalField(max_digits=12, decimal_places=2)
+            ),
+            costo_cop_aereo_mano_obra=ExpressionWrapper(
+                F('costo_cop_aereo') + F('precio_mano_obra'),
                 output_field=DecimalField(max_digits=12, decimal_places=2)
             ),
             precio_con_mano_obra=ExpressionWrapper(
