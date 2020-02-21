@@ -43,11 +43,30 @@ def componente_banda_eurobelt_adicionar_quitar_serie_compatible(
     componente = ComponenteBandaEurobelt.objects.get(pk=componente_id)
     serie_en_compatibles = componente.series_compatibles.filter(pk=serie_id)
     if serie_en_compatibles.exists():
+        qs_tiene_bandas_serie = BandaEurobelt.objects.filter(serie_id=serie_id, componentes__id=componente_id)
+        if qs_tiene_bandas_serie.exists():
+            raise ValidationError({
+                '_error': 'No se puede quitar la seríe relacionada en este componente porque existen bandas (%s) de dicha serie con el componente' % qs_tiene_bandas_serie.count()})
         componente.series_compatibles.remove(serie_id)
     else:
         componente.series_compatibles.add(serie_id)
     componente = ComponenteBandaEurobelt.objects.get(pk=componente_id)
     componente.set_nombre()
+    return componente
+
+
+def componente_banda_eurobelt_activar_desactivar(
+        componente_id: int,
+        valor: bool
+) -> ComponenteBandaEurobelt:
+    componente = ComponenteBandaEurobelt.objects.get(pk=componente_id)
+    if not valor:
+        bandas = componente.bandas
+        if bandas.exists():
+            raise ValidationError({
+                '_error': 'No se puede desactivar este componente porque existen bandas (%s) que lo utilizan' % bandas.count()})
+    componente.activo = valor
+    componente.save()
     return componente
 
 
@@ -193,12 +212,16 @@ def banda_eurobelt_adicionar_componente(
         cortado_a: str,
 ) -> BandaEurobelt:
     banda = BandaEurobelt.objects.get(pk=banda_id)
-    componente = EnsambladoBandaEurobelt()
-    componente.cortado_a = cortado_a
-    componente.cantidad = cantidad
-    componente.componente_id = componente_id
-    componente.banda = banda
-    componente.save()
+    componente = ComponenteBandaEurobelt.objects.get(pk=componente_id)
+    if not componente.activo:
+        raise ValidationError({
+            '_error': 'El componente que desea adicionar se encuentra inactivo, no se pueden crear bandas con componentes inactivos'})
+    ensamblado_componente = EnsambladoBandaEurobelt()
+    ensamblado_componente.cortado_a = cortado_a
+    ensamblado_componente.cantidad = cantidad
+    ensamblado_componente.componente_id = componente_id
+    ensamblado_componente.banda = banda
+    ensamblado_componente.save()
     banda = BandaEurobelt.objects.get(pk=banda_id)
     return banda
 

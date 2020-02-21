@@ -290,8 +290,23 @@ class SerieViewSet(viewsets.ModelViewSet):
 
 
 class ComponenteViewSet(viewsets.ModelViewSet):
-    queryset = ComponenteBandaEurobelt.objects.all()
+    queryset = ComponenteBandaEurobelt.objects.select_related(
+        'material',
+        'margen',
+        'margen__proveedor',
+        'margen__proveedor__moneda',
+        'margen__categoria',
+        'color',
+        'tipo_banda'
+    ).all()
     serializer_class = ComponenteSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        componente = self.get_object()
+        if componente.bandas.exists():
+            raise ValidationError({
+                '_error': 'El componente no puede ser eliminado porque existen bandas (%s) que lo contienen' % componente.bandas.count()})
+        return super().destroy(request, *args, **kwargs)
 
     @action(detail=True, methods=['post'])
     def adicionar_quitar_serie_compatible(self, request, pk=None):
@@ -301,6 +316,18 @@ class ComponenteViewSet(viewsets.ModelViewSet):
         componente = componente_banda_eurobelt_adicionar_quitar_serie_compatible(
             componente_id=componente.id,
             serie_id=serie_id
+        )
+        serializer = self.get_serializer(componente)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def activar_o_desactivar(self, request, pk=None):
+        from .services import componente_banda_eurobelt_activar_desactivar
+        componente = self.get_object()
+        valor = False if self.request.POST.get('valor', None) == 'false' else True
+        componente = componente_banda_eurobelt_activar_desactivar(
+            componente_id=componente.id,
+            valor=valor
         )
         serializer = self.get_serializer(componente)
         return Response(serializer.data)

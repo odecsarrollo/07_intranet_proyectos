@@ -18,7 +18,10 @@ const AddEnsambladoForm = memo(props => {
         <div className='row'>
             <div className="col-12">
                 <Combobox
-                    data={_.map(componentes, c => ({nombre: `${c.referencia} - ${c.nombre}`, id: c.id}))}
+                    data={_.map(_.pickBy(componentes, e => e.activo), c => ({
+                        nombre: `${c.referencia} - ${c.nombre}`,
+                        id: c.id
+                    }))}
                     onChange={(e) => setComponenteId(e.id)}
                     value={componente_id}
                     placeholder='Seleccionar Componente'
@@ -27,8 +30,7 @@ const AddEnsambladoForm = memo(props => {
                     filter='contains'
                 />
             </div>
-            {componente_id &&
-            <Fragment>
+            {componente_id && <Fragment>
                 <div className="col-md-4">
                     <TextField
                         fullWidth={true}
@@ -50,19 +52,16 @@ const AddEnsambladoForm = memo(props => {
                         onChange={v => setCortadoA(v.target.value)}
                     />
                 </div>
-            </Fragment>
-            }
+            </Fragment>}
             <div className="col-12">
-                {componente_id && cortado_a && cantidad > 0 &&
-                <Button
+                {componente_id && cortado_a && cantidad > 0 && <Button
                     color="primary"
                     variant="contained"
                     className='ml-3'
                     onClick={() => agregarComponente(componente_id, cantidad, cortado_a)}
                 >
                     Adicionar
-                </Button>
-                }
+                </Button>}
                 <Button
                     color="secondary"
                     variant="contained"

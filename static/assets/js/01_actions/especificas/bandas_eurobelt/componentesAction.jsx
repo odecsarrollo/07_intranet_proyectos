@@ -94,3 +94,15 @@ export const adicionarQuitarSerieCompatibleComponente = (id, serie_id, options_a
         return callApiMethodPostParameters(current_url_api, id, 'adicionar_quitar_serie_compatible', params, options)
     }
 };
+
+export const activarDesactivarComponente = (id, valor, options_action = {}) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        params.append('valor', valor);
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: response})
+        };
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'activar_o_desactivar', params, options)
+    }
+};

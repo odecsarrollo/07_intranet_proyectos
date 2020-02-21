@@ -139,6 +139,14 @@ class ComponenteSerializer(serializers.ModelSerializer):
         max_digits=10,
         decimal_places=2
     )
+    proveedor_nombre = serializers.CharField(
+        source='margen.proveedor.nombre',
+        read_only=True
+    )
+    categoria_nombre = serializers.CharField(
+        source='margen.categoria.nombre',
+        read_only=True
+    )
     factor_importacion = serializers.DecimalField(
         source='margen.proveedor.factor_importacion',
         read_only=True,
@@ -226,6 +234,8 @@ class ComponenteSerializer(serializers.ModelSerializer):
             'categoria_dos',
             'material',
             'material_nombre',
+            'proveedor_nombre',
+            'categoria_nombre',
             'precio_base',
             'precio_base_aereo',
             'rentabilidad',
@@ -245,6 +255,7 @@ class ComponenteSerializer(serializers.ModelSerializer):
             'series_compatibles',
             'item_sistema_informacion',
             'costo',
+            'activo',
         ]
         extra_kwargs = {
             'nombre': {'read_only': True},

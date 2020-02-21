@@ -72,6 +72,22 @@ const Tabla = memo(props => {
                                 filterMethod: (filter, row) => row._original.referencia.includes(filter.value.toUpperCase())
                             },
                             {
+                                Header: "Proveedor",
+                                accessor: "proveedor_nombre",
+                                maxWidth: 100,
+                                minWidth: 100,
+                                filterable: true,
+                                filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase()),
+                            },
+                            {
+                                Header: "Categoria",
+                                accessor: "categoria_nombre",
+                                maxWidth: 150,
+                                minWidth: 150,
+                                filterable: true,
+                                filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase()),
+                            },
+                            {
                                 Header: "U.M",
                                 maxWidth: 80,
                                 accessor: "unidad_medida",

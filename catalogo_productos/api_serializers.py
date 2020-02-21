@@ -43,6 +43,14 @@ class ItemVentaCatalogoSerializer(serializers.ModelSerializer):
         max_digits=12,
         decimal_places=2
     )
+    proveedor_nombre = serializers.CharField(
+        source='margen.proveedor.nombre',
+        read_only=True
+    )
+    categoria_nombre = serializers.CharField(
+        source='margen.categoria.nombre',
+        read_only=True
+    )
     referencia = serializers.SerializerMethodField()
     nombre = serializers.SerializerMethodField()
     unidad_medida = serializers.SerializerMethodField()
@@ -90,6 +98,8 @@ class ItemVentaCatalogoSerializer(serializers.ModelSerializer):
             'costo_catalogo',
             'moneda_nombre',
             'moneda_tasa',
+            'proveedor_nombre',
+            'categoria_nombre',
             'to_string',
             'unidad_medida',
             'unidad_medida_catalogo',

@@ -150,6 +150,7 @@ class ComponenteBandaEurobelt(models.Model):
     )
     costo = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     nombre = models.CharField(max_length=400, null=True)
+    activo = models.BooleanField(default=True)
     objects = ComponenteManager()
 
     def set_nombre(self):

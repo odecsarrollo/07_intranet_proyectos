@@ -22,6 +22,10 @@ const List = memo(props => {
         dispatch(actions.fetchBandaEurobeltComponentes())
     };
 
+    const activarDesactivarComponente = (componente_id, valor) => {
+        dispatch(actions.activarDesactivarComponente(componente_id, valor))
+    };
+
     useEffect(() => {
         cargarDatos();
         return () => {
@@ -36,6 +40,7 @@ const List = memo(props => {
             plural_name=''
             singular_name='Componente'
             cargarDatos={cargarDatos}
+            activarDesactivarComponente={activarDesactivarComponente}
         />
     )
 });
