@@ -31,6 +31,14 @@ class ItemVentaCatalogoViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @action(detail=False, http_method_names=['get', ])
+    def listar_x_parametro_activos(self, request):
+        parametro = request.GET.get('parametro')
+        search_fields = ['nombre_catalogo', 'referencia_catalogo']
+        qs = query_varios_campos(self.queryset, search_fields, parametro).filter(activo=True)
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, http_method_names=['get', ])
     def listar_x_origen(self, request):
         origen = request.GET.get('origen')
         qs = self.queryset.filter(origen=origen)

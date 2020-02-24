@@ -36,7 +36,7 @@ class FacturaDetalle(TimeStampedModel):
     sistema_informacion = models.ForeignKey(SistemaInformacionOrigen, on_delete=models.PROTECT)
     documento_id = models.BigIntegerField(null=True, db_index=True)
     ciudad = models.ForeignKey(CiudadCatalogo, null=True, on_delete=models.PROTECT)
-    fecha_documento = models.DateField(null=True)
+    fecha_documento = models.DateTimeField(null=True)
     direccion_despacho = models.CharField(max_length=400, null=True)
     tipo_documento = models.CharField(max_length=3, null=True)
     nro_documento = models.CharField(max_length=10, null=True)
@@ -53,6 +53,12 @@ class FacturaDetalle(TimeStampedModel):
 
     class Meta:
         unique_together = [('sistema_informacion', 'tipo_documento', 'nro_documento')]
+        permissions = [
+            ("list_facturadetalle", "Can list factura detalle"),
+            ("see_costos_facturadetalle", "Can see costos factura detalle"),
+            ("see_rentabilidad_facturadetalle", "Can see rentabilidad factura detalle"),
+            ("see_descuentos_facturadetalle", "Can see descuentos factura detalle"),
+        ]
 
 
 class MovimientoVentaDetalle(models.Model):
@@ -74,3 +80,6 @@ class MovimientoVentaDetalle(models.Model):
 
     class Meta:
         unique_together = [('factura', 'item')]
+        permissions = [
+            ("list_movimientoventadetalle", "Can list movimiento venta detalle"),
+        ]

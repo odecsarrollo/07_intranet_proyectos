@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../../../01_actions/01_index";
 import {CLIENTES} from "../../../../permisos";
 import CreateForm from './forms/ClienteCRUDForm';
-import Tabla from './ClienteTabla';
+import Tabla from './ClienteCRUDTabla';
 import crudHOC from '../../../../00_utilities/components/hoc_crud';
 import useTengoPermisos from "../../../../00_utilities/hooks/useTengoPermisos";
 import FusionarCliente from "./ClienteFusionar";

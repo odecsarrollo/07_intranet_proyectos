@@ -3,6 +3,8 @@ import Typography from "@material-ui/core/Typography";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import CotizacionCRUDFormDialog from "./forms/CotizacionCRUDFormDialog";
 import MyDialogButtonDelete from "../../../00_utilities/components/ui/dialog/delete_dialog";
+import HistoricoPrecio from "../../../03_app_admin/especificas/clientes/clientes/ClienteHistoricoPrecios";
+import {Link} from "react-router-dom";
 
 const styles = {
     texto_principal: {
@@ -21,6 +23,7 @@ const styles = {
 const CotizacionDetailInfo = memo(props => {
     const [show_cotizacion_informacion_dialog, setShowCotizacionInformacionDialog] = useState(false);
     const {cotizacion, contacto, onSubmitCotizacion, cargarDatos, editable, onDelete} = props;
+    console.log(cotizacion)
     return (
         <Fragment>
             {show_cotizacion_informacion_dialog &&
@@ -53,9 +56,11 @@ const CotizacionDetailInfo = memo(props => {
             <Typography variant="body1" gutterBottom color="primary" style={styles.texto_principal}>
                 Cliente:
             </Typography>
-            <Typography variant="body1" style={styles.texto_secondario} gutterBottom color="secondary">
-                {cotizacion.cliente_nombre}
-            </Typography>
+            <Link to={`/app/ventas_componentes/clientes/clientes/detail/${cotizacion.cliente}`}>
+                <Typography variant="body1" style={styles.texto_secondario} gutterBottom color="secondary">
+                    {cotizacion.cliente_nombre}
+                </Typography>
+            </Link>
             <Typography variant="body1" gutterBottom color="primary" style={styles.texto_principal}>
                 Ciudad:
             </Typography>
@@ -124,13 +129,11 @@ const CotizacionDetailInfo = memo(props => {
                     {cotizacion.responsable_nombre}
                 </Typography>
             </div>}
-            {editable && !cotizacion.nro_consecutivo &&
-            <MyDialogButtonDelete
+            {editable && !cotizacion.nro_consecutivo && <MyDialogButtonDelete
                 element_name={`Cotización para ${cotizacion.cliente_nombre}`}
                 element_type='Cotización'
                 tamano_icono='2x'
-                onDelete={onDelete}/>
-            }
+                onDelete={onDelete}/>}
         </Fragment>
     )
 

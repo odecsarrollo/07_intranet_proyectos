@@ -90,15 +90,24 @@ const Tabla = memo(props => {
                             {
                                 Header: "Referencia",
                                 accessor: "referencia",
-                                maxWidth: 100,
+                                maxWidth: 120,
+                                minWidth: 120,
                                 filterable: true,
                                 filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase()),
+                                Cell: row => {
+                                    return (
+                                        <div style={{
+                                            fontSize: '0.7rem',
+                                            whiteSpace: 'normal'
+                                        }}>{row.value}</div>
+                                    )
+                                }
                             },
                             {
                                 Header: "Nombre",
                                 accessor: "nombre",
-                                maxWidth: 300,
-                                minWidth: 300,
+                                maxWidth: 250,
+                                minWidth: 250,
                                 filterable: true,
                                 filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase()),
                                 Cell: row => {
@@ -113,77 +122,88 @@ const Tabla = memo(props => {
                             {
                                 Header: "Proveedor",
                                 accessor: "proveedor_nombre",
-                                maxWidth: 100,
-                                minWidth: 100,
+                                maxWidth: 90,
+                                minWidth: 90,
                                 filterable: true,
                                 filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase()),
+                                Cell: row => {
+                                    return (
+                                        <div style={{
+                                            fontSize: '0.7rem',
+                                            whiteSpace: 'normal'
+                                        }}>{row.value}</div>
+                                    )
+                                }
                             },
                             {
                                 Header: "Categoria",
                                 accessor: "categoria_nombre",
-                                maxWidth: 150,
-                                minWidth: 150,
+                                maxWidth: 90,
+                                minWidth: 90,
                                 filterable: true,
                                 filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase()),
                             },
                             {
                                 Header: "Costo",
                                 accessor: "costo",
-                                maxWidth: 60
-                            },
-                            {
-                                Header: "Moneda",
-                                accessor: "moneda_nombre",
-                                maxWidth: 90,
-                                filterable: true,
-                                filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase()),
+                                maxWidth: 80,
+                                minWidth: 80,
+                                Cell: row => <div
+                                    className="text-right">{`${row.value} ${row.original.moneda_nombre}`}</div>
                             },
                             {
                                 Header: "Tasa",
                                 accessor: "moneda_tasa",
-                                maxWidth: 80,
-                                minWidth: 80,
-                                Cell: row => pesosColombianos(row.value)
+                                maxWidth: 50,
+                                minWidth: 50,
+                                Cell: row => <div className="text-right">{pesosColombianos(row.value)}</div>
                             },
                             {
-                                Header: "Fact. Impor",
+                                Header: "F. Imp.",
                                 accessor: "factor_importacion",
-                                maxWidth: 80,
-                                minWidth: 80,
+                                maxWidth: 50,
+                                minWidth: 50,
+                                Cell: row => <div className="text-right">{row.value}</div>
                             },
                             {
                                 Header: "Costo COP",
                                 accessor: "costo_cop",
-                                maxWidth: 80,
-                                minWidth: 80,
-                                Cell: row => pesosColombianos(row.value)
+                                maxWidth: 70,
+                                minWidth: 70,
+                                Cell: row => <div className="text-right">{pesosColombianos(row.value)}</div>
                             },
                             {
                                 Header: "Margen U.",
                                 accessor: "margen_utilidad",
                                 maxWidth: 80,
                                 minWidth: 80,
-                                Cell: row => `${parseFloat(row.value).toFixed(1)}%`
+                                Cell: row => <div className="text-right">{`${parseFloat(row.value).toFixed(1)}%`}</div>
                             },
                             {
                                 Header: "Precio Base",
                                 accessor: "precio_base",
                                 maxWidth: 80,
                                 minWidth: 80,
-                                Cell: row => pesosColombianos(row.value)
+                                Cell: row => <div className="text-right">{pesosColombianos(row.value)}</div>
                             },
                             {
                                 Header: "Rentabilidad",
                                 accessor: "rentabilidad",
                                 maxWidth: 80,
                                 minWidth: 80,
-                                Cell: row => pesosColombianos(row.value)
+                                Cell: row => <div className="text-right">{pesosColombianos(row.value)}</div>
                             },
+
+                        ]
+                    },
+                    {
+                        Header: "Opciones",
+                        columns: [
                             {
-                                Header: "Activo",
+                                Header: "Act.",
                                 accessor: "activo",
-                                maxWidth: 60,
-                                minWidth: 60,
+                                maxWidth: 40,
+                                minWidth: 40,
                                 Cell: row => (
                                     <div className='text-center' style={{width: '100%'}}>
                                         <Checkbox
@@ -195,16 +215,11 @@ const Tabla = memo(props => {
                                     </div>
                                 )
                             },
-
-                        ]
-                    },
-                    {
-                        Header: "Opciones",
-                        columns: [
                             {
                                 Header: "Bandas",
                                 accessor: "id",
                                 maxWidth: 50,
+                                minWidth: 50,
                                 Cell: row => <CustomIconTable
                                     icon='conveyor-belt'
                                     onClick={() => setIdComponenteSeleccionado(row.value)}
@@ -213,7 +228,7 @@ const Tabla = memo(props => {
                             {
                                 Header: "Elimi.",
                                 show: permisos_object.delete,
-                                maxWidth: 45,
+                                maxWidth: 40,
                                 Cell: row =>
                                     !row.original.es_cguno &&
                                     <MyDialogButtonDelete
@@ -228,7 +243,7 @@ const Tabla = memo(props => {
                             {
                                 Header: "Editar",
                                 show: permisos_object.change,
-                                maxWidth: 45,
+                                maxWidth: 40,
                                 Cell: row =>
                                     <IconButtonTableEdit
                                         onClick={() => {

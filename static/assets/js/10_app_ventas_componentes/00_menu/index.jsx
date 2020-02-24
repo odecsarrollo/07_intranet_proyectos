@@ -14,7 +14,7 @@ const Menu = () => {
     return (<Fragment>
         {menu_ventas_componentes_cotizaciones && <DrawerListItem
             size='lg'
-            link='/app/ventas_componentes/clientes/clientes/list'
+            link='/app/ventas_componentes/clientes/list'
             texto='Clientes'
             icono='user'
         />}

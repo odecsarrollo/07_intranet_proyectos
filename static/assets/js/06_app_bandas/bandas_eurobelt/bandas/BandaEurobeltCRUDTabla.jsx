@@ -40,74 +40,85 @@ const Tabla = memo(props => {
                             minWidth: 350,
                             filterable: true,
                             filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase()),
+                            Cell: row => {
+                                return (
+                                    <div style={{
+                                        fontSize: '0.7rem',
+                                        whiteSpace: 'normal'
+                                    }}>{row.value}</div>
+                                )
+                            }
                         },
                         {
                             Header: "Nombre",
                             accessor: "to_string",
-                            minWidth: 400,
-                            maxWidth: 400,
+                            minWidth: 300,
+                            maxWidth: 300,
                             filterable: true,
                             filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase()),
                             Cell: row => <div style={{
-                                fontSize: '0.8rem',
+                                fontSize: '0.7rem',
                                 whiteSpace: 'normal'
                             }}>{row.value}</div>
                         },
                         {
                             Header: "Costo",
                             accessor: "costo_cop",
-                            minWidth: 80,
-                            maxWidth: 80,
-                            Cell: row => `${pesosColombianos(row.value)}`
+                            minWidth: 70,
+                            maxWidth: 70,
+                            Cell: row => <div className="text-right">{pesosColombianos(row.value)}</div>
                         },
                         {
                             Header: "Precio",
                             accessor: "precio_base",
                             minWidth: 80,
                             maxWidth: 80,
-                            Cell: row => `${pesosColombianos(row.value)}`
+                            Cell: row => <div className="text-right">{pesosColombianos(row.value)}</div>
                         },
                         {
-                            Header: "Vlr. Mano Obra",
+                            Header: "Cos. MO",
                             accessor: "precio_mano_obra",
-                            minWidth: 80,
-                            maxWidth: 80,
-                            Cell: row => `${pesosColombianos(row.value)}`
+                            minWidth: 60,
+                            maxWidth: 60,
+                            Cell: row => <div className="text-right">{pesosColombianos(row.value)}</div>
                         },
                         {
-                            Header: "Precio con Mano Obra",
+                            Header: "Prec. + M.O",
                             accessor: "precio_con_mano_obra",
-                            minWidth: 80,
-                            maxWidth: 80,
-                            Cell: row => `${pesosColombianos(row.value)}`
+                            minWidth: 70,
+                            maxWidth: 70,
+                            Cell: row => <div className="text-right">{pesosColombianos(row.value)}</div>
                         },
                         {
                             Header: "Rentabilidad",
                             accessor: "rentabilidad",
                             minWidth: 80,
                             maxWidth: 80,
-                            Cell: row => `${pesosColombianos(row.value)}`
+                            Cell: row => <div className="text-right">{pesosColombianos(row.value)}</div>
                         },
                         {
-                            Header: "Empuja.",
+                            Header: "Emp.",
                             accessor: "con_empujador",
-                            minWidth: 50,
-                            maxWidth: 50,
-                            Cell: row => <div>{row.value && <FontAwesomeIcon icon={'check'}/>}</div>
+                            minWidth: 40,
+                            maxWidth: 40,
+                            Cell: row => <div className='text-center'>{row.value &&
+                            <FontAwesomeIcon icon={'check'}/>}</div>
                         }, ,
                         {
                             Header: "Aleta",
                             accessor: "con_aleta",
-                            minWidth: 50,
-                            maxWidth: 50,
-                            Cell: row => <div>{row.value && <FontAwesomeIcon icon={'check'}/>}</div>
+                            minWidth: 40,
+                            maxWidth: 40,
+                            Cell: row => <div className='text-center'>{row.value &&
+                            <FontAwesomeIcon icon={'check'}/>}</div>
                         },
                         {
-                            Header: "Torn.V",
+                            Header: "Tor.V",
                             accessor: "con_torneado_varilla",
-                            minWidth: 50,
-                            maxWidth: 50,
-                            Cell: row => <div>{row.value && <FontAwesomeIcon icon={'check'}/>}</div>
+                            minWidth: 40,
+                            maxWidth: 40,
+                            Cell: row => <div className='text-center'>{row.value &&
+                            <FontAwesomeIcon icon={'check'}/>}</div>
                         }
                     ]
                 },

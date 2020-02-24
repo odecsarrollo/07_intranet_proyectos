@@ -1,7 +1,7 @@
 import React, {Fragment, Component} from 'react';
 import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
 import {Provider} from 'react-redux';
-import {createStore, applyMiddleware, combineReducers} from 'redux';
+import {createStore, applyMiddleware} from 'redux';
 import ReduxPromise from 'redux-promise';
 import thunk from 'redux-thunk';
 import reducers from './02_reducers/index';

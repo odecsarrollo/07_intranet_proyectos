@@ -87,6 +87,7 @@ import cotizacionesComponentesItems from './especificas/cotizaciones_componentes
 import correosAplicacionesReducer from './especificas/correos_servicios/correosAplicacionesReducer';
 
 import facturaCargueDetalleReducer from './especificas/cargues_detalles/facturasReducer';
+import itemsFacturaCargueDetalleReducer from './especificas/cargues_detalles/itemFacturaReducer';
 
 import seguimientoCargueReducer from './especificas/cargues_catalogos/seguimientoCargueReducer';
 
@@ -173,6 +174,8 @@ const rootReducer = combineReducers({
         correos_aplicaciones: correosAplicacionesReducer,
 
         facturas: facturaCargueDetalleReducer,
+        facturas_items: itemsFacturaCargueDetalleReducer,
+
         seguimientos_cargues: seguimientoCargueReducer
     })
 ;

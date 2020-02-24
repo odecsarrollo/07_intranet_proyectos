@@ -201,6 +201,14 @@ class BandaEurobeltViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
+    @action(detail=False, http_method_names=['get', ])
+    def listar_x_parametro_activos(self, request):
+        parametro = request.GET.get('parametro')
+        search_fields = ['nombre', 'referencia']
+        qs = query_varios_campos(self.queryset, search_fields, parametro).filter(activo=True)
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)
+
     @action(detail=True, methods=['post'])
     def adicionar_componente(self, request, pk=None):
         from .services import banda_eurobelt_adicionar_componente
@@ -344,6 +352,14 @@ class ComponenteViewSet(viewsets.ModelViewSet):
         parametro = request.GET.get('parametro')
         search_fields = ['nombre', 'referencia']
         qs = query_varios_campos(self.queryset, search_fields, parametro)
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, http_method_names=['get', ])
+    def listar_x_parametro_activos(self, request):
+        parametro = request.GET.get('parametro')
+        search_fields = ['nombre', 'referencia']
+        qs = query_varios_campos(self.queryset, search_fields, parametro).filter(activo=True)
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 

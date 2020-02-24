@@ -15,9 +15,7 @@ const BotoneriaModalForm = (props) => {
     } = props;
     return (
         <div>
-            {
-                mostrar_submit &&
-                <Button
+            {mostrar_submit && <Button
                     color="primary"
                     variant="contained"
                     type='submit'
@@ -25,8 +23,7 @@ const BotoneriaModalForm = (props) => {
                     disabled={submitting || pristine}
                 >
                     {submit_text_boton ? submit_text_boton : initialValues ? 'Guardar ' : 'Crear '}
-                </Button>
-            }
+                </Button>}
             {mostrar_limpiar && <Button
                 color="secondary"
                 variant="contained"

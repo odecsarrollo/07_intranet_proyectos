@@ -45,7 +45,6 @@ InformationDisplayDialog.propTypes = {
     titulo_text: PropTypes.string,
     context_text: PropTypes.string,
     onCerrar: PropTypes.func.isRequired,
-    children: PropTypes.object.isRequired,
 };
 
 export default InformationDisplayDialog;

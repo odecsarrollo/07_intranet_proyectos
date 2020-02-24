@@ -137,6 +137,11 @@ class ItemCotizacionComponente(TimeStampedModel):
     valor_total = models.DecimalField(max_digits=18, decimal_places=2)
     transporte_tipo = models.CharField(null=True, max_length=100)
 
+    class Meta:
+        permissions = [
+            ("list_itemcotizacioncomponente", "Can list items cotizaciones componentes")
+        ]
+
     @property
     def tiempo_entrega(self):
         dias = self.dias_entrega

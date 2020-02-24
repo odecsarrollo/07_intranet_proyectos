@@ -82,13 +82,13 @@ const ListaPrecio = memo(props => {
 
     const consultarItems = () => {
         if (con_bandas) {
-            dispatch(actions.fetchBandasEurobeltxParametro(busqueda));
+            dispatch(actions.fetchBandasEurobeltxParametroActivos(busqueda));
         }
         if (con_componentes) {
-            dispatch(actions.fetchBandaEurobeltComponentesxParametro(busqueda));
+            dispatch(actions.fetchBandaEurobeltComponentesxParametroActivos(busqueda));
         }
         if (con_articulos_venta_catalogo) {
-            dispatch(actions.fetchItemsVentasCatalogosxParametro(busqueda));
+            dispatch(actions.fetchItemsVentasCatalogosxParametroActivos(busqueda));
         }
     };
     return (
@@ -136,8 +136,7 @@ const ListaPrecio = memo(props => {
 
                     />
                 </div>
-            </Fragment>
-            }
+            </Fragment>}
         </div>
     )
 });

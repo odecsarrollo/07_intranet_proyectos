@@ -2,7 +2,8 @@ import {FACTURA_TYPES as TYPES} from '../../00_types';
 import {
     fetchListGet,
     updateObject,
-    fetchObject, fetchListGetURLParameters,
+    fetchObject,
+    fetchListGetURLParameters,
 } from '../../00_general_fuctions'
 
 const current_url_api = 'cargues_detalles_facturas';
@@ -32,6 +33,20 @@ export const fetchFacturasCliente = (cliente_id, options_action = {}) => {
             clear_action_type: limpiar_coleccion ? TYPES.clear : null
         };
         return fetchListGetURLParameters(`${current_url_api}/facturas_por_cliente/?cliente_id=${cliente_id}`, options);
+    }
+};
+export const fetchFacturasComponentesTrimestre = (options_action = {}) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
+        };
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches, ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        return fetchListGet(`${current_url_api}/facturacion_componentes_trimestre`, options);
     }
 };
 export const fetchFactura = (id, options_action = {}) => {

@@ -12,18 +12,20 @@ const CRUD = crudHOC(CreateForm, Tabla);
 const ClienteDetailDashboardCRUDContactos = memo(props => {
     const dispatch = useDispatch();
     const {cliente_id, cargarCliente} = props;
+    const permisos = useTengoPermisos(CONTACTOS_CLIENTES);
     const cargarDatos = () => {
-        const callback = () => dispatch(actions.fetchContactosClientes_por_cliente(cliente_id));
-        cargarCliente(callback);
+        if (permisos.list) {
+            const callback = () => dispatch(actions.fetchContactosClientes_por_cliente(cliente_id));
+            cargarCliente(callback);
+        }
     };
     useEffect(() => {
         cargarDatos();
         return () => {
             dispatch(actions.clearContactosClientes());
         };
-    }, []);
+    }, [permisos.list]);
     const list = useSelector(state => state.clientes_contactos);
-    const permisos = useTengoPermisos(CONTACTOS_CLIENTES);
     const method_pool = {
         fetchObjectMethod: (id, options) => dispatch(actions.fetchContactoCliente(id, options)),
         deleteObjectMethod: (id, options) => dispatch(actions.deleteContactoCliente(id, options)),

@@ -68,6 +68,7 @@ class ClienteBiable(TimeStampedModel):
             ['list_clientebiable', 'Puede listar clientes'],
             ['detail_clientebiable', 'Puede ver detalle cliente'],
             ['can_fusionar_clientebiable', 'Puede Fusionar clientes'],
+            ['can_consultar_historico_precios_clientebiable', 'Puede Consultar Historico Precios'],
             ['can_cambiar_vendedor_componentes_clientebiable', 'Puede Cambiar Vendedor Componentes'],
             ['can_cambiar_vendedor_proyectos_clientebiable', 'Puede Cambiar Vendedor Proyectos'],
         ]

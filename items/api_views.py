@@ -20,14 +20,6 @@ class CategoriaProductoViewSet(viewsets.ModelViewSet):
     ).all()
     serializer_class = CategoriaProductoSerializer
 
-    def dispatch(self, *args, **kwargs):
-        response = super().dispatch(*args, **kwargs)
-        # For debugging purposes only.
-        from django.db import connection
-        for query in connection.queries:
-            print(query['sql'])
-        return response
-
     def retrieve(self, request, *args, **kwargs):
         self.serializer_class = CategoriaProductoConDetalleSerializer
         return super().retrieve(request, *args, **kwargs)

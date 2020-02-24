@@ -276,13 +276,29 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
 
 
 class ItemCotizacionComponenteViewSet(viewsets.ModelViewSet):
-    queryset = ItemCotizacionComponente.objects.select_related('forma_pago', 'forma_pago__canal').all()
+    queryset = ItemCotizacionComponente.objects.select_related(
+        'forma_pago',
+        'forma_pago__canal',
+        'cotizacion'
+    ).all()
     serializer_class = ItemCotizacionComponenteSerializer
 
     @action(detail=False, http_method_names=['get', ])
-    def items_por_cliente_por_codigo(self, request):
-        cliente_id = self.request.GET.get('cli ente_id')
-        item_id = self.request.GET.get('item_id')
-        lista = self.queryset.filter(cliente_id=cliente_id, item_id=item_id)
+    def items_por_cliente_historico(self, request):
+        cliente_id = self.request.GET.get('cliente_id')
+        parametro = self.request.GET.get('parametro')
+        lista = self.queryset.filter(
+            Q(cotizacion__cliente_id=cliente_id) &
+            (
+                    Q(descripcion__icontains=parametro) |
+                    Q(referencia__icontains=parametro) |
+                    Q(articulo_catalogo__item_sistema_informacion__descripcion__icontains=parametro) |
+                    Q(articulo_catalogo__item_sistema_informacion__id_referencia__icontains=parametro) |
+                    Q(banda_eurobelt__referencia__icontains=parametro) |
+                    Q(banda_eurobelt__nombre__icontains=parametro) |
+                    Q(componente_eurobelt__nombre__icontains=parametro) |
+                    Q(componente_eurobelt__referencia__icontains=parametro)
+            )
+        ).distinct()
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)

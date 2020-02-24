@@ -22,7 +22,7 @@ const Menu = () => {
         />
         {menu_ventas_proyectos_clientes && <DrawerListItem
             size='lg'
-            link='/app/ventas_proyectos/clientes/clientes/list'
+            link='/app/ventas_proyectos/clientes/list'
             texto='Clientes'
             icono='user'
         />}

@@ -132,7 +132,7 @@ const Tabla = memo(props => {
                             show: permisos_object.detail,
                             maxWidth: 60,
                             Cell: row =>
-                                <Link to={`/app/${modulo}/clientes/clientes/detail/${row.original.id}`}>
+                                <Link to={`/app/${modulo}/clientes/detail/${row.original.id}`}>
                                     <IconButtonTableSee/>
                                 </Link>
 

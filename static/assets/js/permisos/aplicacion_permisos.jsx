@@ -3,12 +3,19 @@ export const SEGUIMIENTOS_CARGUES = {
     detail: 'view_seguimientocargue',
 };
 
+export const ITEMS_FACTURAS = {
+    list: 'list_movimientoventadetalle'
+};
+
 export const FACTURAS = {
     add: 'add_facturadetalle',
     delete: 'delete_facturadetalle',
     change: 'change_facturadetalle',
     list: 'list_facturadetalle',
     detail: 'view_facturadetalle',
+    ver_costos: 'see_costos_facturadetalle',
+    ver_rentabilidad: 'see_rentabilidad_facturadetalle',
+    ver_descuentos: 'see_descuentos_facturadetalle',
 };
 
 export const COLABORADORESN = {
@@ -381,6 +388,7 @@ export const CLIENTES = {
     fusionar: 'can_fusionar_clientebiable',
     cambiar_vendedor_componentes: 'can_cambiar_vendedor_componentes_clientebiable',
     cambiar_vendedor_proyectos: 'can_cambiar_vendedor_proyectos_clientebiable',
+    consultar_historico_precios: 'can_consultar_historico_precios_clientebiable',
 };
 
 export const COTIZACIONES = {

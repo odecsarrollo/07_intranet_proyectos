@@ -4,7 +4,7 @@ import * as actions from '../../../01_actions/01_index';
 import {SinObjeto} from "../../../00_utilities/templates/fragmentos";
 import ValidarPermisos from "../../../permisos/validar_permisos";
 import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
-import {COTIZACIONES_COMPONENTES} from "../../../permisos";
+import {COTIZACIONES_COMPONENTES, CLIENTES} from "../../../permisos";
 import Typography from "@material-ui/core/Typography";
 import CotizacionDetailAdjuntoList from './CotizacionDetailAdjuntoList.jsx'
 import CotizacionEdicionList from '../CotizacionEdicionList.jsx'
@@ -16,6 +16,7 @@ import PrinJs from "print-js";
 import Button from "@material-ui/core/Button";
 import CotizacionDetailBotoneriaEstado from "./CotizacionDetailBotoneriaEstado";
 import CargarDatos from "../../../00_utilities/components/system/cargar_datos";
+import HistoricoPrecio from "../../../03_app_admin/especificas/clientes/clientes/ClienteHistoricoPrecios";
 
 const Detail = memo(props => {
     const dispatch = useDispatch();
@@ -25,6 +26,7 @@ const Detail = memo(props => {
     const cotizacion = cotizaciones[id];
     const contactos = useSelector(state => state.clientes_contactos);
     const permisos = useTengoPermisos(COTIZACIONES_COMPONENTES);
+    const permisos_clientes = useTengoPermisos(CLIENTES);
     const cargarDatos = () => {
         const cargarContacto = (
             contacto_id
@@ -130,6 +132,13 @@ const Detail = memo(props => {
                                 contacto={contacto_cotizacion}
                                 cotizacion_componente={cotizacion}
                             />
+                            {permisos_clientes.consultar_historico_precios && <div>
+                                Consulte aquí los precios anteriores...
+                                <HistoricoPrecio
+                                    id_cotizacion_ignorar={cotizacion.id}
+                                    cliente={{id: cotizacion.cliente, to_string: cotizacion.cliente_nombre}}/>
+                            </div>}
+
                         </div>
                     </div>
                 </div>

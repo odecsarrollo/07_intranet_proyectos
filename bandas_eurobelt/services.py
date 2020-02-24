@@ -122,7 +122,6 @@ def componente_banda_eurobelt_crear_actualizar(
 
 def banda_eurobelt_crear_actualizar(
         con_aleta: bool,
-        activo: bool,
         con_empujador: bool,
         con_torneado_varilla: bool,
         ancho: float,
@@ -141,6 +140,7 @@ def banda_eurobelt_crear_actualizar(
         empujador_identacion: float = None,
         empujador_filas_entre_empujador: float = None,
         empujador_filas_empujador: float = None,
+        activo: bool = True,
 ) -> BandaEurobelt:
     costo_ensamblado = BandaEurobeltCostoEnsamblado.objects.filter(
         con_aleta=con_aleta,

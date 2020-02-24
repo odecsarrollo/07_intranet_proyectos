@@ -56,6 +56,8 @@ class CotizacionComponenteAdjuntoSerializer(serializers.ModelSerializer):
 class ItemCotizacionComponenteSerializer(serializers.ModelSerializer):
     forma_pago_nombre = serializers.CharField(source='forma_pago.forma', read_only=True)
     canal_nombre = serializers.CharField(source='forma_pago.canal.nombre', read_only=True)
+    cotizacion_nro_consecutivo = serializers.CharField(source='cotizacion.nro_consecutivo', read_only=True)
+    cotizacion_fecha = serializers.DateTimeField(source='cotizacion.created', read_only=True)
 
     def update(self, instance, validated_data):
         cantidad = validated_data.get('cantidad')
@@ -73,6 +75,8 @@ class ItemCotizacionComponenteSerializer(serializers.ModelSerializer):
         fields = [
             'url',
             'id',
+            'cotizacion_nro_consecutivo',
+            'cotizacion_fecha',
             'componente_eurobelt',
             'posicion',
             'banda_eurobelt',
