@@ -11,15 +11,16 @@ const InformationDisplayDialog = (props) => {
     const {
         is_open,
         onCerrar,
-        cerrar_text,
         titulo_text,
         fullScreen = false,
         fullWidth = false,
-        context_text = 'Cerrar',
+        context_text = '',
+        cerrar_text = 'Cerrar',
+        scroll = 'paper',
         children,
     } = props;
     return (
-        <Dialog open={is_open} fullScreen={fullScreen} fullWidth={fullWidth}>
+        <Dialog open={is_open} fullScreen={fullScreen} fullWidth={fullWidth} scroll={scroll}>
             {titulo_text && <DialogTitle id="responsive-dialog-title">{titulo_text}</DialogTitle>}
             <DialogContent>
                 {context_text && <DialogContentText>{context_text}</DialogContentText>}

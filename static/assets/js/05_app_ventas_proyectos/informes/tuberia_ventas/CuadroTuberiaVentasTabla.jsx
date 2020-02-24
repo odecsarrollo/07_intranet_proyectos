@@ -1,66 +1,117 @@
-import React, {memo} from 'react';
+import React, {memo, useEffect} from 'react';
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
+import crudHOC from "../../../00_utilities/components/HOC_CRUD2";
+import InformationDisplayDialog from "../../../00_utilities/components/ui/dialog/InformationDisplayDialog";
+
+import Table from "react-table";
+import selectTableHOC from "react-table/lib/hoc/selectTable";
 import {pesosColombianos} from "../../../00_utilities/common";
-import {Link} from "react-router-dom";
+
+const SelectTable = selectTableHOC(Table);
+
+const Tabla = (props) => {
+    let data = props.list;
+    const {
+        selection,
+        getTrGroupProps,
+        isSelected,
+        toggleAll,
+        checkboxTable,
+        selectAll,
+        toggleSelection,
+        rowFn,
+        singular_name,
+        campo_valor,
+    } = props;
+    const valor = data.reduce((suma, elemento) => parseFloat(suma) + parseFloat(elemento[campo_valor]), 0);
+    return (
+        <div>
+            <SelectTable
+                ref={r => checkboxTable.current = r}
+                getTrGroupProps={getTrGroupProps}
+                selection={selection}
+                selectType="checkbox"
+                isSelected={isSelected}
+                selectAll={selectAll}
+                toggleSelection={toggleSelection}
+                toggleAll={toggleAll}
+                keyField="id"
+                previousText='Anterior'
+                nextText='Siguiente'
+                pageText='Página'
+                ofText='de'
+                rowsText='filas'
+                getTrProps={rowFn}
+                data={data}
+                noDataText={`No hay elementos para mostrar tipo ${singular_name}`}
+                columns={[
+                    {
+                        Header: "Cotización",
+                        accessor: "nro_cotizacion",
+                        filterable: true,
+                        maxWidth: 100,
+                        filterMethod: (filter, row) => `${row._original.unidad_negocio}-${row._original.nro_cotizacion}`.includes(filter.value.toUpperCase()),
+                        Cell: row => <div>{row.original.unidad_negocio}-{row.original.nro_cotizacion}</div>
+                    },
+                    {
+                        Header: "Cliente",
+                        accessor: "cliente_nombre",
+                        filterable: true,
+                        maxWidth: 300,
+                        filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase()),
+                    },
+                    {
+                        Header: "Valor",
+                        maxWidth: 150,
+                        Footer: <div className='text-right'>{pesosColombianos(valor)}</div>,
+                        Cell: row => <div className='text-right'>{pesosColombianos(row.original[campo_valor])}</div>
+                    }
+                ]}
+                defaultPageSize={data.length}
+                className="-striped -highlight tabla-maestra"
+            />
+        </div>
+    )
+};
+
+
+const CRUD = crudHOC(null, Tabla);
+const List = memo((props) => {
+    const {campo_valor, list, plural_name} = props;
+    const method_pool = {
+        fetchObjectMethod: null,
+        deleteObjectMethod: null,
+        createObjectMethod: null,
+        updateObjectMethod: null,
+    };
+    return (
+        <CRUD
+            permisos_object={{list: true, delete: false, change: false, add: false}}
+            method_pool={method_pool}
+            list={list}
+            campo_valor={campo_valor}
+            plural_name={plural_name}
+            singular_name='Cotizacion'
+        />
+    )
+});
 
 const InformeTunelVentasTabla = memo(props => {
     const {cotizaciones_seleccionardas: {campo_valor, lista, estado, responsable}, limpiarLista} = props;
-    const valor = lista.reduce((suma, elemento) => parseFloat(suma) + parseFloat(elemento[campo_valor]), 0);
-    return (
-        <Dialog
-            scroll='paper'
-            fullScreen={false}
-            open={lista.length > 0}
-        >
-            <DialogTitle id="responsive-dialog-title">
-                {responsable} - {estado}
-            </DialogTitle>
-            <DialogContent>
-                <table className='table table-striped'>
-                    <thead>
-                    <tr>
-                        <th>Cotización</th>
-                        <th>Cliente</th>
-                        <th>Valor</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {lista.map(i => <tr key={i.id}>
-                        <td>
-                            <Link to={`/app/ventas_proyectos/cotizaciones/cotizaciones/detail/${i.id}`}
-                                  target={'_blank'}>
-                                {i.unidad_negocio}-{i.nro_cotizacion}
-                            </Link>
-                        </td>
-                        <td>{i.cliente_nombre}</td>
-                        <td style={{textAlign: 'right'}}> {pesosColombianos(i[campo_valor])}</td>
-                    </tr>)}
-                    </tbody>
-                    <tfoot>
-                    <tr>
-                        <td>Total</td>
-                        <td></td>
-                        <td>{pesosColombianos(valor)}</td>
-                    </tr>
-                    </tfoot>
-                </table>
-            </DialogContent>
-            <DialogActions>
-                <Button
-                    color="secondary"
-                    variant="contained"
-                    className='ml-3'
-                    onClick={limpiarLista}
-                >
-                    Cerrar
-                </Button>
-            </DialogActions>
-        </Dialog>
-    )
+    return <InformationDisplayDialog
+        onCerrar={limpiarLista}
+        is_open={lista.length > 0}
+        fullScreen={true}
+        scroll='paper'
+        cerrar_text='Cerrar'
+        titulo_text={`${responsable} - ${estado}`}
+    >
+        <List list={lista} campo_valor={campo_valor} plural_name={`Tuveria Ventas ${responsable}_${estado}`}/>
+    </InformationDisplayDialog>
 });
 
 
