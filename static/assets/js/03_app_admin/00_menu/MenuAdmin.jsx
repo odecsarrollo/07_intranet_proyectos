@@ -57,6 +57,12 @@ const MenuAdmin = memo(props => {
                 texto='Seguimiento Cargues'
                 icono='search'
             />}
+            <DrawerListItem
+                size='lg'
+                link='/app/admin/sistemas_informacion/facturas/list'
+                texto='Facturas'
+                icono='search'
+            />
         </Fragment>
     )
 });

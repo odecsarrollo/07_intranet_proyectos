@@ -10,7 +10,7 @@ const FacturaDetailInfo = (props) => {
                 <Typography variant="body1" gutterBottom color="primary">
                     Cliente:
                 </Typography>
-                <Link to={`/app/ventas_componentes/clientes/clientes/detail/${cliente}`} target='_blank'>
+                <Link to={`/app/ventas_componentes/clientes/detail/${cliente}`} target='_blank'>
                     <Typography variant="body1" gutterBottom color="secondary">
                         {cliente_nombre}
                     </Typography>

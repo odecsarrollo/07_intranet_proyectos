@@ -14,6 +14,7 @@ export const MyFormTagModal = (props) => {
         modal_open,
         element_type,
         fullScreen = false,
+        fullWidth = false,
         modelStyle,
         mostrar_submit = true,
         mostrar_limpiar = true,
@@ -24,6 +25,7 @@ export const MyFormTagModal = (props) => {
         <MyDialogCreate
             element_type={`${submit_text_boton ? submit_text_boton : initialValues ? 'Editar ' : 'Crear '} ${element_type}`}
             is_open={modal_open}
+            fullWidth={fullWidth}
             fullScreen={fullScreen}
             modelStyle={modelStyle}
         >

@@ -3,7 +3,7 @@ import * as actions from "../../../../01_actions/01_index";
 import {useSelector, useDispatch} from "react-redux";
 import useTengoPermisos from "../../../../00_utilities/hooks/useTengoPermisos";
 import {FACTURAS} from "../../../../permisos";
-import FacturaTabla from "../../../../11_app_sistemas_informacion/facturacion/FacturaTabla";
+import FacturaCRUDTabla from "../../../../11_app_sistemas_informacion/facturacion/FacturaCRUDTabla";
 import ValidarPermisos from "../../../../permisos/validar_permisos";
 
 const ClienteDetailDashboardFacturacion = (props) => {
@@ -21,7 +21,7 @@ const ClienteDetailDashboardFacturacion = (props) => {
         return () => dispatch(actions.clearFacturas())
     }, [permisos.list]);
     return <ValidarPermisos can_see={permisos.list} nombre='Facturas de cliente'>
-        <FacturaTabla list={_.map(facturas)} permisos_object={permisos}/>
+        <FacturaCRUDTabla list={_.map(facturas)} permisos_object={permisos}/>
     </ValidarPermisos>
 };
 

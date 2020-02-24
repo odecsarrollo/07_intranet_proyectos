@@ -11,11 +11,13 @@ class MyDialogCreate extends Component {
             element_type,
             is_open,
             fullScreen = true,
+            fullWidth = false,
         } = this.props;
         return (
             <Dialog
                 fullScreen={fullScreen}
                 open={is_open}
+                fullWidth={fullWidth}
             >
                 <DialogTitle id="responsive-dialog-title">
                     {element_type}

@@ -5,7 +5,7 @@ import * as _ from 'lodash';
 import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
 import {pesosColombianos} from "../00_utilities/common";
 import InformationDisplayDialog from "../00_utilities/components/ui/dialog/InformationDisplayDialog";
-import FacturaTabla from "../11_app_sistemas_informacion/facturacion/FacturaTabla";
+import FacturaCRUDTabla from "../11_app_sistemas_informacion/facturacion/FacturaCRUDTabla";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import useTengoPermisos from "../00_utilities/hooks/useTengoPermisos";
 import {FACTURAS} from "../permisos";
@@ -112,7 +112,7 @@ const PodioVentaComponente = (props) => {
                 }
             })}
             {vendedor_seleccionado_filtro &&
-            <FacturaTabla
+            <FacturaCRUDTabla
                 list={facturacion_a_mostrar.facturas_colaborador[vendedor_seleccionado_filtro]}
                 permisos_object={permisos_facturas}
             />}

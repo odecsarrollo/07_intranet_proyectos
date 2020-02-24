@@ -41,7 +41,17 @@ class FacturaDetalle(TimeStampedModel):
     tipo_documento = models.CharField(max_length=3, null=True)
     nro_documento = models.CharField(max_length=10, null=True)
     cliente = models.ForeignKey(ClienteBiable, on_delete=models.PROTECT, null=True, related_name='compras_componentes')
-    colaborador = models.ForeignKey(Colaborador, on_delete=models.PROTECT, null=True, related_name='ventas_componentes')
+    colaborador = models.ForeignKey(
+        Colaborador,
+        on_delete=models.PROTECT,
+        null=True,
+        related_name='ventas_vendedor_original'
+    )
+    colaborador_original = models.ForeignKey(
+        Colaborador,
+        on_delete=models.PROTECT, null=True,
+        related_name='ventas_vendedor_sistema'
+    )
     venta_bruta = models.DecimalField(max_digits=18, decimal_places=4)
     dscto_netos = models.DecimalField(max_digits=18, decimal_places=4)
     costo_total = models.DecimalField(max_digits=18, decimal_places=4)

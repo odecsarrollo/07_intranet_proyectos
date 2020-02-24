@@ -76,6 +76,7 @@ class FacturalDetalleSerializer(serializers.ModelSerializer):
             'cliente_nit',
             'cliente_nombre',
         ]
+        extra_kwargs = {'items': {'read_only': True}}
 
 
 class FacturalDetalleConDetalleSerializer(FacturalDetalleSerializer):

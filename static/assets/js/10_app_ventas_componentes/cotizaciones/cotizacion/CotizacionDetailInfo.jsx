@@ -56,7 +56,7 @@ const CotizacionDetailInfo = memo(props => {
             <Typography variant="body1" gutterBottom color="primary" style={styles.texto_principal}>
                 Cliente:
             </Typography>
-            <Link to={`/app/ventas_componentes/clientes/clientes/detail/${cotizacion.cliente}`}>
+            <Link to={`/app/ventas_componentes/clientes/detail/${cotizacion.cliente}`}>
                 <Typography variant="body1" style={styles.texto_secondario} gutterBottom color="secondary">
                     {cotizacion.cliente_nombre}
                 </Typography>
