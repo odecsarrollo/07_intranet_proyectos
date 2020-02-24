@@ -24,6 +24,7 @@ class ItemsLiteralDetalle(models.Model):
     )
     cantidad = models.DecimalField(decimal_places=4, max_digits=20, default=0)
     costo_total = models.DecimalField(decimal_places=4, max_digits=20, default=0)
+    estado = models.IntegerField(default=3)
 
     class Meta:
         unique_together = [('item', 'literal', 'lapso')]
