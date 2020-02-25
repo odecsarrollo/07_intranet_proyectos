@@ -96,3 +96,15 @@ class ContactoClienteViewSet(viewsets.ModelViewSet):
         )
         serializer = self.get_serializer(contacto)
         return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def fusionar_contactos(self, request, pk=None):
+        from .services import fusionar_contactos
+        contacto_a_eliminar_id = request.POST.get('contacto_a_eliminar_id', None)
+        contacto_permanece = fusionar_contactos(
+            contacto_que_permanece_id=pk,
+            contacto_a_eliminar_id=contacto_a_eliminar_id
+        )
+        return Response(
+            {'result': 'La fusión se ha realizado con éxito para el contacto %s %s' % (
+                contacto_permanece.nombres, contacto_permanece.apellidos)})

@@ -34,6 +34,7 @@ import {library} from '@fortawesome/fontawesome-svg-core'
 
 import {
     faBarcode,
+    faReceipt,
     faAddressBook,
     faWrench,
     faCogs,
@@ -127,6 +128,7 @@ library.add(
     faUsers,
     faUser,
     faLock,
+    faReceipt,
     faObjectGroup,
     faUserHardHat,
     faSuitcase,

@@ -24,6 +24,15 @@ export const createContactoClienteCotizacionComponentes = (values, options_actio
     }
 };
 
+export const fusionarContactosCliente = (contacto_que_permanece_id, contacto_a_eliminar_id, options_action = {}) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        params.append('contacto_a_eliminar_id', contacto_a_eliminar_id);
+        const options = {...options_action, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, contacto_que_permanece_id, 'fusionar_contactos', params, options)
+    }
+};
+
 
 export const createContactoCliente = (values, options_action = {}) => {
     return (dispatch) => {

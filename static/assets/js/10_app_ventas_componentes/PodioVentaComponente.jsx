@@ -17,11 +17,12 @@ const PodioVentaComponente = (props) => {
     const [vendedor_seleccionado_filtro, setVendedorSeleccionadoFiltro] = useState(null);
     let facturacion = useSelector(state => state.facturas);
     const permisos_facturas = useTengoPermisos(FACTURAS);
-    const vendedores = _.mapKeys(_.map(facturacion, f => ({
-        id: f.colaborador,
-        nombre: `${f.vendedor_nombre}`,
+    let vendedores = _.mapKeys(_.map(facturacion, f => ({
+        id: `${f.colaborador ? f.colaborador : -1}`,
+        nombre: `${f.colaborador ? f.vendedor_nombre : 'SIN DEFINIR'}`,
         color: '#' + Math.floor(Math.random() * 16777215).toString(16)
     })), 'id');
+
 
     facturacion = _.map(_.orderBy(facturacion, ['fecha_documento'], ['asc']), f => {
         const ano = new Date(f.fecha_documento).getFullYear();
@@ -30,6 +31,7 @@ const PodioVentaComponente = (props) => {
         const fecha_lapso = new Date(`${ano}/${mes}/01`);
         return {...f, ano, mes, lapso, fecha_lapso}
     });
+
     facturacion = _.groupBy(facturacion, 'fecha_lapso');
     let facturacion_por_fecha_lapso = {};
     _.mapKeys(facturacion, (v, k) => {
@@ -47,7 +49,10 @@ const PodioVentaComponente = (props) => {
     });
     facturacion_por_fecha_lapso = _.map(facturacion_por_fecha_lapso, f => {
         let facturacion_por_colaborador = {};
-        _.mapKeys(_.groupBy(f.facturas_lapso, 'colaborador'), (v, k) => {
+        _.mapKeys(_.groupBy(f.facturas_lapso.map(e => ({
+            ...e,
+            colaborador: [e.colaborador ? e.colaborador : -1]
+        })), 'colaborador'), (v, k) => {
             const venta_bruta_total_colaborador = v.reduce((uno, dos) => uno + (parseFloat(dos.venta_bruta)), 0);
             facturacion_por_colaborador = {
                 ...facturacion_por_colaborador,
@@ -69,8 +74,8 @@ const PodioVentaComponente = (props) => {
         _.map(f.facturas_lapso, e => {
             linea = {
                 ...linea,
-                [e.id]: parseFloat((e.venta_bruta_total_colaborador / 1000000).toFixed(2)),
-                facturas_colaborador: {...linea.facturas_colaborador, [e.id]: e.facturas_colaborador}
+                [e.id ? e.id : -1]: parseFloat((e.venta_bruta_total_colaborador / 1000000).toFixed(2)),
+                facturas_colaborador: {...linea.facturas_colaborador, [e.id ? e.id : -1]: e.facturas_colaborador}
             }
         });
         data_nueva = [...data_nueva, linea];
@@ -101,7 +106,7 @@ const PodioVentaComponente = (props) => {
             <div>Seleccionar Vendedor...</div>
             {_.map(vendedores, ven => {
                 const facturacion_colaborador = facturacion_a_mostrar.facturas_colaborador[ven.id];
-                if (facturacion_colaborador.length > 0) {
+                if (facturacion_colaborador && facturacion_colaborador.length > 0) {
                     return <div
                         className='puntero'
                         key={ven.id}

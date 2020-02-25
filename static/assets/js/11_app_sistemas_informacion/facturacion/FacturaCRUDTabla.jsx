@@ -1,6 +1,6 @@
 import React, {memo} from "react";
 import ReactTable from "react-table";
-import {fechaHoraFormatoUno, pesosColombianos} from "../../00_utilities/common";
+import {fechaFormatoUno, fechaHoraFormatoUno, pesosColombianos} from "../../00_utilities/common";
 import {makeStyles} from "@material-ui/core";
 import {Link} from "react-router-dom";
 import IconButtonTableSee from "../../00_utilities/components/ui/icon/table_icon_button_detail";
@@ -14,7 +14,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const FacturaCRUDTabla = memo(props => {
-    const data = _.orderBy(props.list, ['fecha_documento'], ['desc']);
+    let data = _.orderBy(props.list, ['fecha_documento'], ['desc']);
+    data = data.map(f => ({
+        ...f,
+        porcentaje_rentabilidad: parseFloat(((f.rentabilidad / f.venta_bruta)) * 100).toFixed(2),
+        ano: new Date(f.fecha_documento).getFullYear()
+    }));
     const {
         permisos_object,
         onSelectItemEdit
@@ -43,7 +48,17 @@ const FacturaCRUDTabla = memo(props => {
                             accessor: 'fecha_documento',
                             maxWidth: 150,
                             minWidth: 150,
-                            Cell: row => <div>{fechaHoraFormatoUno(row.value)}</div>
+                            filterable: true,
+                            filterMethod: (filter, row) => `${fechaFormatoUno(row._original.fecha_documento).toString()}`.includes(filter.value.toLowerCase()),
+                            Cell: row => <div>{fechaFormatoUno(row.value)}</div>
+                        },
+                        {
+                            Header: "Año",
+                            accessor: 'ano',
+                            maxWidth: 70,
+                            minWidth: 70,
+                            filterable: true,
+                            Cell: row => <div className='text-right'>{row.value}</div>
                         },
                         {
                             Header: "Cliente",
@@ -97,6 +112,14 @@ const FacturaCRUDTabla = memo(props => {
                             minWidth: 80,
                             Footer: <div className='text-right'>{pesosColombianos(rentabilidad)}</div>,
                             Cell: row => <div className='text-right'>{pesosColombianos(row.value)}</div>
+                        },
+                        {
+                            Header: "% Rent.",
+                            accessor: "porcentaje_rentabilidad",
+                            show: permisos_object.ver_rentabilidad,
+                            maxWidth: 80,
+                            minWidth: 80,
+                            Cell: row => <div className='text-right'>{row.value}%</div>
                         },
                     ]
                 },

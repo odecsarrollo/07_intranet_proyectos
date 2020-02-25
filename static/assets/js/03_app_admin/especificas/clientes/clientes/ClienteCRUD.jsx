@@ -12,7 +12,6 @@ const CRUD = crudHOC(CreateForm, Tabla);
 const List = memo(props => {
     const dispatch = useDispatch();
     const {modulo = 'ventas_proyectos'} = props;
-    console.log(props);
     const cargarDatos = () => {
         dispatch(actions.fetchClientes());
     };

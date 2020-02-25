@@ -1,4 +1,4 @@
-import React, {memo, useEffect} from 'react';
+import React, {memo, useEffect, Fragment} from 'react';
 import CreateForm from './forms/ClienteDetailDashboardCRUDContactoForm';
 import Tabla from './ClienteDetailDashboardCRUDContactosTabla';
 import crudHOC from '../../../../00_utilities/components/HOC_CRUD2';
@@ -6,6 +6,7 @@ import * as actions from "../../../../01_actions/01_index";
 import {useSelector, useDispatch} from "react-redux";
 import useTengoPermisos from "../../../../00_utilities/hooks/useTengoPermisos";
 import {CONTACTOS_CLIENTES} from "../../../../permisos";
+import ContactoFusionar from "./ContactoFusionar";
 
 const CRUD = crudHOC(CreateForm, Tabla);
 
@@ -33,15 +34,18 @@ const ClienteDetailDashboardCRUDContactos = memo(props => {
         updateObjectMethod: (id, item, options) => dispatch(actions.updateContactoCliente(id, item, options)),
     };
     return (
-        <CRUD
-            posSummitMethod={() => cargarDatos()}
-            cliente_id={cliente_id}
-            method_pool={method_pool}
-            list={list}
-            permisos_object={permisos}
-            singular_name='Contacto'
-            cargarDatos={cargarDatos}
-        />
+        <Fragment>
+            <ContactoFusionar contactos={list} cargarContactos={cargarDatos}/>
+            <CRUD
+                posSummitMethod={() => cargarDatos()}
+                cliente_id={cliente_id}
+                method_pool={method_pool}
+                list={list}
+                permisos_object={permisos}
+                singular_name='Contacto'
+                cargarDatos={cargarDatos}
+            />
+        </Fragment>
     )
 });
 

@@ -42,11 +42,10 @@ class FacturaDetalleViewSet(viewsets.ModelViewSet):
         current_date = timezone.datetime.now()
         current_quarter = int(ceil(current_date.month / 3))
         colaboradores = self.queryset.values_list('colaborador_id', flat=True).filter(
-            tipo_documento__in=['FV', 'FEV']).exclude(colaborador_id__isnull=True).distinct()
+            tipo_documento__in=['FV', 'FEV']).distinct()
         lista = self.queryset.filter(
-            tipo_documento__in=['FV', 'FEV', 'NCE', 'NV'],
-            colaborador_id__in=colaboradores,
-            fecha_documento__quarter=current_quarter
+            Q(tipo_documento__in=['FV', 'FEV', 'NCE', 'NV']) &
+            (Q(colaborador_id__in=colaboradores) | Q(colaborador_id__isnull=True))
         )
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)

@@ -136,8 +136,9 @@ def fusionar_contactos(
         contacto_que_permanece_id: int,
         contacto_a_eliminar_id: int
 ) -> ContactoCliente:
+    if contacto_que_permanece_id == contacto_a_eliminar_id:
+        raise ValidationError({'_error': 'Los contactos a fusionar no pueden ser los mismos registros'})
     contacto_eliminar = ContactoCliente.objects.get(pk=contacto_a_eliminar_id)
-
     for cotizacion in contacto_eliminar.cotizaciones_componentes.all():
         cotizacion.contacto_id = contacto_que_permanece_id
         cotizacion.save()
