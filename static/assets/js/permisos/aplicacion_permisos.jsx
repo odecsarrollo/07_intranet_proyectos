@@ -415,6 +415,7 @@ export const CONTACTOS_CLIENTES = {
     change: 'change_contactocliente',
     list: 'list_contactocliente',
     detail: 'view_contactocliente',
+    fusionar: 'can_fusionar_contactocliente',
 };
 
 export const CONFIGURACIONES_COSTOS = {

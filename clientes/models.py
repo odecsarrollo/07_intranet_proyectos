@@ -98,4 +98,5 @@ class ContactoCliente(TimeStampedModel):
     class Meta:
         permissions = [
             ['list_contactocliente', 'Puede listar contactos clientes'],
+            ['can_fusionar_contactocliente', 'Puede Fusionar contactos clientes'],
         ]

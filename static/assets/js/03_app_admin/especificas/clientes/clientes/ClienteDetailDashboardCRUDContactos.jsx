@@ -35,7 +35,7 @@ const ClienteDetailDashboardCRUDContactos = memo(props => {
     };
     return (
         <Fragment>
-            <ContactoFusionar contactos={list} cargarContactos={cargarDatos}/>
+            {permisos.fusionar && <ContactoFusionar contactos={list} cargarContactos={cargarDatos}/>}
             <CRUD
                 posSummitMethod={() => cargarDatos()}
                 cliente_id={cliente_id}
