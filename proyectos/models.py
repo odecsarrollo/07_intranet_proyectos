@@ -11,13 +11,14 @@ class Proyecto(models.Model):
         Cotizacion,
         related_name='proyectos'
     )
-    id_proyecto = models.CharField(max_length=15, unique=True)
+    id_proyecto = models.CharField(max_length=15, unique=True, db_index=True)
     fecha_prometida = models.DateField(null=True, blank=True)
     abierto = models.BooleanField(default=True)
     costo_materiales = models.DecimalField(decimal_places=2, max_digits=12, default=0)
     en_cguno = models.BooleanField(default=True)
     nombre = models.CharField(max_length=200, null=True, blank=True)
-    cliente = models.ForeignKey(ClienteBiable, on_delete=models.PROTECT, null=True, blank=True, related_name='proyectos')
+    cliente = models.ForeignKey(ClienteBiable, on_delete=models.PROTECT, null=True, blank=True,
+                                related_name='proyectos')
     cotizacion_componentes_nro_cotizacion = models.CharField(null=True, blank=True, max_length=20)
     cotizacion_componentes_precio_venta = models.DecimalField(decimal_places=2, default=0, max_digits=12)
     cotizacion_componentes_nro_orden_compra = models.CharField(null=True, blank=True, max_length=20)
@@ -46,7 +47,7 @@ class Proyecto(models.Model):
 
 
 class Literal(models.Model):
-    id_literal = models.CharField(max_length=15, unique=True)
+    id_literal = models.CharField(max_length=15, unique=True, db_index=True)
     proyecto = models.ForeignKey(Proyecto, related_name='mis_literales', on_delete=models.CASCADE)
     descripcion = models.CharField(max_length=300, null=True, blank=True)
     costo_materiales = models.DecimalField(decimal_places=2, max_digits=12, default=0, null=True, blank=True)
