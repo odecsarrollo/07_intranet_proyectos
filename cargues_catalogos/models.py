@@ -151,8 +151,8 @@ class ColaboradorCatalogo(models.Model):
 class ClienteCatalogo(TimeStampedModel):
     sistema_informacion = models.ForeignKey(SistemaInformacionOrigen, on_delete=models.PROTECT)
     tercero_id = models.BigIntegerField(null=True)
-    nit = models.CharField(max_length=20)
-    nombre = models.CharField(max_length=120)
+    nit = models.CharField(max_length=20, db_index=True)
+    nombre = models.CharField(max_length=200)
     cliente = models.ForeignKey(
         ClienteBiable,
         on_delete=models.PROTECT,

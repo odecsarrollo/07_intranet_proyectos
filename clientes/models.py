@@ -36,7 +36,7 @@ class GrupoCliente(models.Model):
 
 # Realmente cliente contacto
 class ClienteBiable(TimeStampedModel):
-    nit = models.CharField(max_length=20, null=True)
+    nit = models.CharField(max_length=20, null=True, db_index=True)
     nombre = models.CharField(max_length=200)
     forma_pago = models.CharField(max_length=120, null=True)
 
