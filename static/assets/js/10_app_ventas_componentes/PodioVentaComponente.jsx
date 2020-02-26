@@ -9,14 +9,19 @@ import FacturaCRUDTabla from "../11_app_sistemas_informacion/facturacion/Factura
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import useTengoPermisos from "../00_utilities/hooks/useTengoPermisos";
 import {FACTURAS} from "../permisos";
+import IconButton from "@material-ui/core/IconButton";
 
 const PodioVentaComponente = (props) => {
     const dispatch = useDispatch();
+    const [ver_sin_definir, setVerSinDefinir] = useState(false);
     const [mostrar_facturacion, setMostrarFacturacion] = useState(false);
     const [facturacion_a_mostrar, setFacturacionAMostrar] = useState(null);
     const [vendedor_seleccionado_filtro, setVendedorSeleccionadoFiltro] = useState(null);
     let facturacion = useSelector(state => state.facturas);
     const permisos_facturas = useTengoPermisos(FACTURAS);
+    if (!ver_sin_definir) {
+        facturacion = _.pickBy(facturacion, e => e.colaborador);
+    }
     let vendedores = _.mapKeys(_.map(facturacion, f => ({
         id: `${f.colaborador ? f.colaborador : -1}`,
         nombre: `${f.colaborador ? f.vendedor_nombre : 'SIN DEFINIR'}`,
@@ -91,7 +96,7 @@ const PodioVentaComponente = (props) => {
     useEffect(() => {
         dispatch(actions.fetchFacturasComponentesTrimestre());
     }, []);
-    return <Fragment>
+    return <div className='row'>
         {mostrar_facturacion && <InformationDisplayDialog
             fullScreen={true}
             is_open={mostrar_facturacion}
@@ -122,43 +127,53 @@ const PodioVentaComponente = (props) => {
                 permisos_object={permisos_facturas}
             />}
         </InformationDisplayDialog>}
-        <BarChart
-            barCategoryGap='20%'
-            barGap={0}
-            width={500}
-            height={200}
-            data={data_nueva}
-            margin={{
-                top: 30, right: 30, left: 20, bottom: 5,
-            }}
-        >
-            <CartesianGrid vertical={false}/>
-            <XAxis
-                dataKey="name"
-                label={{value: 'Vendedores', position: 'insideBottomRight', offset: 0}}
-            />
-            <YAxis
-                label={{value: 'Ventas', position: 'insideTop', offset: -25}}
-                unit=' mill.'
-                tickFormatter={e => pesosColombianos(e)}
-            />
-            <Tooltip/>
-            <Legend/>
-            {_.map(vendedores, v => {
-                    return <Bar
-                        onClick={e => onClickBarras(e)}
-                        background={true}
-                        key={v.id}
-                        dataKey={v.id}
-                        name={v.nombre}
-                        legendType='circle'
-                        unit=' Millones'
-                        fill={v.color}
-                    />
-                }
-            )}
-        </BarChart>
-    </Fragment>
+        <div className="col-12">
+            <BarChart
+                barCategoryGap='20%'
+                barGap={0}
+                width={500}
+                height={200}
+                data={data_nueva}
+                margin={{
+                    top: 30, right: 30, left: 20, bottom: 5,
+                }}
+            >
+                <CartesianGrid vertical={false}/>
+                <XAxis
+                    dataKey="name"
+                    label={{value: 'Vendedores', position: 'insideBottomRight', offset: 0}}
+                />
+                <YAxis
+                    label={{value: 'Ventas', position: 'insideTop', offset: -25}}
+                    unit=' mill.'
+                    tickFormatter={e => pesosColombianos(e)}
+                />
+                <Tooltip/>
+                <Legend/>
+                {_.map(vendedores, v => {
+                        return <Bar
+                            onClick={e => onClickBarras(e)}
+                            background={true}
+                            key={v.id}
+                            dataKey={v.id}
+                            name={v.nombre}
+                            legendType='circle'
+                            unit=' Millones'
+                            fill={v.color}
+                        />
+                    }
+                )}
+            </BarChart>
+        </div>
+        <div className='col-12 text-center'>
+            <FontAwesomeIcon
+                className='puntero'
+                onClick={() => setVerSinDefinir(!ver_sin_definir)}
+                icon={ver_sin_definir ? `eye-slash` : 'eye'}
+                size='2x'
+            /> {ver_sin_definir ? `Ocultar` : 'Ver'} sin Definir
+        </div>
+    </div>
 };
 
 export default PodioVentaComponente;

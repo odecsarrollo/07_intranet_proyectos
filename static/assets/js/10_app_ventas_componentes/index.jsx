@@ -3,8 +3,11 @@ import PodioVentaComponente from "./PodioVentaComponente";
 
 const App = memo(props => {
     return (
-        <div className='text-center'>
-            <PodioVentaComponente/>
+        <div className='row'>
+            <div className="col-12 col-md-6 col-xl-4">
+                <PodioVentaComponente/>
+            </div>
+
         </div>
     )
 });
