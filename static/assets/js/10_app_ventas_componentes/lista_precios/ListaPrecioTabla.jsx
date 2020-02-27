@@ -23,6 +23,7 @@ const CotizadorListaPrecioTablaItem = memo(props => {
         origen,
         costo_cop,
         costo_cop_aereo,
+        unidades_disponibles,
     } = item;
     const adicionarItemConPrecio = (precio, transporte_tipo) => {
         if (!adicionarItem || precio <= 0) {
@@ -45,6 +46,7 @@ const CotizadorListaPrecioTablaItem = memo(props => {
             <td>{item_referencia}</td>
             <td>{item_descripcion}</td>
             <td>{item_unidad_medida}</td>
+            <td>{unidades_disponibles}</td>
             {con_precios && <Fragment>
                 <td>
                 <span className={adicionarItem ? 'puntero' : ''}
@@ -94,6 +96,7 @@ const ListaPrecioTabla = memo(props => {
                 <th style={table.td}>Referencia</th>
                 <th style={table.td}>Descripción</th>
                 <th style={table.td}>Uni. Med</th>
+                <th style={table.td}>Inve.</th>
                 {con_precios && <Fragment>
                     <th style={table.td}>$Vlr. Marítimo</th>
                     <th style={table.td}>$Vlr. Aéreo</th>

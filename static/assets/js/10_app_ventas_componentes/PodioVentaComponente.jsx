@@ -1,4 +1,4 @@
-import React, {useEffect, useState, Fragment} from 'react';
+import React, {useEffect, useState} from 'react';
 import * as actions from '../01_actions/01_index';
 import {useDispatch, useSelector} from 'react-redux';
 import * as _ from 'lodash';
@@ -9,10 +9,11 @@ import FacturaCRUDTabla from "../11_app_sistemas_informacion/facturacion/Factura
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import useTengoPermisos from "../00_utilities/hooks/useTengoPermisos";
 import {FACTURAS} from "../permisos";
-import IconButton from "@material-ui/core/IconButton";
+import Typography from "@material-ui/core/Typography";
 
 const PodioVentaComponente = (props) => {
     const dispatch = useDispatch();
+    const {solo_totales = false, titulo, solo_notas = false} = props;
     const [ver_sin_definir, setVerSinDefinir] = useState(false);
     const [mostrar_facturacion, setMostrarFacturacion] = useState(false);
     const [facturacion_a_mostrar, setFacturacionAMostrar] = useState(null);
@@ -21,6 +22,13 @@ const PodioVentaComponente = (props) => {
     const permisos_facturas = useTengoPermisos(FACTURAS);
     if (!ver_sin_definir) {
         facturacion = _.pickBy(facturacion, e => e.colaborador);
+    }
+    if (solo_notas) {
+        facturacion = _.pickBy(facturacion, e => (e.tipo_documento === 'NV' || e.tipo_documento === 'NCE'));
+    }
+    if (solo_totales) {
+        facturacion = _.map(facturacion, f => ({...f, colaborador: 1, vendedor_nombre: 'Todos'}));
+        facturacion = _.mapKeys(facturacion, 'id');
     }
     let vendedores = _.mapKeys(_.map(facturacion, f => ({
         id: `${f.colaborador ? f.colaborador : -1}`,
@@ -124,14 +132,17 @@ const PodioVentaComponente = (props) => {
             {vendedor_seleccionado_filtro &&
             <FacturaCRUDTabla
                 list={facturacion_a_mostrar.facturas_colaborador[vendedor_seleccionado_filtro]}
-                permisos_object={permisos_facturas}
+                permisos_object={{...permisos_facturas, change: false, delete: false}}
             />}
         </InformationDisplayDialog>}
-        <div className="col-12">
+        <div className="col-12 text-center">
+            <Typography variant="h6" color="primary" noWrap>
+                {titulo}
+            </Typography>
             <BarChart
                 barCategoryGap='20%'
                 barGap={0}
-                width={500}
+                width={400}
                 height={200}
                 data={data_nueva}
                 margin={{

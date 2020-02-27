@@ -94,7 +94,6 @@ class ItemVentaCatalogoSerializer(serializers.ModelSerializer):
             'item_sistema_informacion',
             'referencia',
             'nombre',
-            # 'costo',
             'costo_catalogo',
             'moneda_nombre',
             'moneda_tasa',
@@ -111,6 +110,7 @@ class ItemVentaCatalogoSerializer(serializers.ModelSerializer):
             'proveedor_importacion_nombre',
             'margen',
             'activo',
+            'unidades_disponibles',
             'origen',
             'id_procedencia',
             'margen_deseado',
@@ -120,4 +120,3 @@ class ItemVentaCatalogoSerializer(serializers.ModelSerializer):
             'precio_base',
             'precio_base_aereo',
         ]
-        # extra_kwargs = {'literales_autorizados': {'read_only': True}}

@@ -48,6 +48,7 @@ const ListaPrecio = memo(props => {
             costo_cop: b.costo_cop_mano_obra,
             costo_cop_aereo: b.costo_cop_aereo_mano_obra,
             origen: 'Bandas Eurobelt',
+            unidades_disponibles: 'N.A',
         }));
 
         componentes_eurobelt = _.map(componentes_eurobelt, b => ({
@@ -62,6 +63,7 @@ const ListaPrecio = memo(props => {
             costo_cop: b.costo_cop,
             costo_cop_aereo: b.costo_cop_aereo,
             origen: 'Componentes Eurobelt',
+            unidades_disponibles: 'N.A',
         }));
 
         articulos_catalogos = _.map(articulos_catalogos, b => ({
@@ -76,6 +78,7 @@ const ListaPrecio = memo(props => {
             costo_cop: b.costo_cop,
             costo_cop_aereo: b.costo_cop_aereo,
             origen: `Catalogo ${b.origen}`,
+            unidades_disponibles: b.unidades_disponibles,
         }));
         todos_los_items = _.orderBy([...bandas_eurobelt, ...componentes_eurobelt, ...articulos_catalogos], ['item_descripcion'], ['asc']);
     }

@@ -4,7 +4,7 @@ import {MyCombobox} from '../../../../00_utilities/components/ui/forms/fields';
 import {useDispatch, useSelector} from "react-redux";
 import {MyFormTagModal} from '../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import * as actions from '../../../../01_actions/01_index';
-import validate from './forms/validate_fusionar_cliente';
+import validate from './forms/validate_fusionar_contacto';
 
 const selector = formValueSelector('contactoFusionForm');
 let Form = memo(props => {

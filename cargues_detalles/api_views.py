@@ -39,12 +39,13 @@ class FacturaDetalleViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, http_method_names=['get', ])
     def facturacion_componentes_trimestre(self, request):
-        current_date = timezone.datetime.now()
-        current_quarter = int(ceil(current_date.month / 3))
+        import datetime
+        before_date = datetime.datetime.now() - datetime.timedelta(days=100)
         colaboradores = self.queryset.values_list('colaborador_id', flat=True).filter(
             tipo_documento__in=['FV', 'FEV']).distinct()
         lista = self.queryset.filter(
             Q(tipo_documento__in=['FV', 'FEV', 'NCE', 'NV']) &
+            Q(fecha_documento__gte=datetime.datetime(before_date.year, before_date.month, 1).date()) &
             (Q(colaborador_id__in=colaboradores) | Q(colaborador_id__isnull=True))
         )
         serializer = self.get_serializer(lista, many=True)
