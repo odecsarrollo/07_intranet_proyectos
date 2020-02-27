@@ -15,6 +15,14 @@ class SeguimientoCargueViewSet(viewsets.ModelViewSet):
     queryset = SeguimientoCargue.objects.prefetch_related('procedimientos').order_by('-fecha').all()[:60]
     serializer_class = SeguimientoCargueSerializer
 
+    def list(self, request, *args, **kwargs):
+        ids_a_mantener = list(SeguimientoCargue.objects.values_list('id', flat=True).order_by('-id').all()[:100])
+        qs_a_borrar = SeguimientoCargue.objects.exclude(id__in=ids_a_mantener)
+        for seguimiento in qs_a_borrar.all():
+            for procedimiento in seguimiento.procedimientos.all():
+                procedimiento.delete()
+        return super().list(request, *args, **kwargs)
+
 
 class SeguimientoCargueProcedimientoViewSet(viewsets.ModelViewSet):
     queryset = SeguimientoCargueProcedimiento.objects.all()

@@ -14,6 +14,10 @@ export const REGEX_CORREO_ELECTRONICO = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\
 export const pesosColombianos = (plata) => formatMoney(Number(plata), "$", 0, ".", ",");
 export const numeroFormato = (valor, decimales = 4) => formatNumber(Number(valor), decimales, ".", ",");
 export const fechaFormatoUno = (fecha) => moment.tz(fecha, "America/Bogota").format('MMMM D [de] YYYY');
+export const fechaHoraFormatoUnoSinTZ = (fecha) => {
+    const fecha_date = new Date(fecha);
+    return `${fecha_date.getDate()}/${fecha_date.getMonth()}/${fecha_date.getFullYear()} ${fecha_date.getHours()}:${fecha_date.getMinutes()}`
+};
 export const fechaFormatoDos = (fecha) => moment.tz(fecha, "America/Bogota").format('DD/MM/YYYY');
 export const fechaHoraFormatoUno = (fecha) => {
     const dateTime = moment.tz(fecha, "America/Bogota");
