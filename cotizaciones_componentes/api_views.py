@@ -46,6 +46,19 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
         raise ValidationError({'_error': 'Imposible eliminar cotización, ya ha sido enviada'})
 
     @action(detail=True, methods=['post'])
+    def relacionar_factura(self, request, pk=None):
+        from .services import relacionar_cotizacion_con_factura
+        factura_id = request.POST.get('factura_id')
+        accion = request.POST.get('accion')
+        cotizacion, factura = relacionar_cotizacion_con_factura(
+            cotizacion_componente_id=pk,
+            factura_id=factura_id,
+            accion=accion
+        )
+        serializer = self.get_serializer(cotizacion)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
     def asignar_consecutivo(self, request, pk=None):
         from .services import cotizacion_componentes_asignar_nro_consecutivo
         cotizacion_componente = self.get_object()

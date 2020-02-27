@@ -51,6 +51,19 @@ class FacturaDetalleViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
+    @action(detail=True, methods=['post'])
+    def relacionar_cotizacion_componente(self, request, pk=None):
+        from cotizaciones_componentes.services import relacionar_cotizacion_con_factura
+        cotizacion_componente_id = request.POST.get('cotizacion_componente_id')
+        accion = request.POST.get('accion')
+        cotizacion, factura = relacionar_cotizacion_con_factura(
+            cotizacion_componente_id=cotizacion_componente_id,
+            factura_id=pk,
+            accion=accion
+        )
+        serializer = self.get_serializer(factura)
+        return Response(serializer.data)
+
 
 class MovimientoVentaDetalleViewSet(viewsets.ModelViewSet):
     queryset = MovimientoVentaDetalle.objects.select_related(

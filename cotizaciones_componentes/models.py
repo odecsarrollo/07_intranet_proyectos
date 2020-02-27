@@ -5,6 +5,7 @@ from model_utils.models import TimeStampedModel
 from clientes.models import ContactoCliente, ClienteBiable
 from cotizaciones_componentes.managers import CotizacionComponenteManager
 from geografia.models import Ciudad
+from cargues_detalles.models import FacturaDetalle
 from listas_precios.models import FormaPagoCanal
 from bandas_eurobelt.models import BandaEurobelt, ComponenteBandaEurobelt
 from catalogo_productos.models import ItemVentaCatalogo
@@ -42,6 +43,7 @@ class CotizacionComponente(TimeStampedModel):
     razon_rechazo = models.TextField(null=True)
     es_crm_anterior = models.BooleanField(default=False)
     objects = CotizacionComponenteManager()
+    facturas = models.ManyToManyField(FacturaDetalle, related_name='cotizaciones_componentes')
 
     @property
     def pdf(self) -> 'CotizacionComponenteDocumento':

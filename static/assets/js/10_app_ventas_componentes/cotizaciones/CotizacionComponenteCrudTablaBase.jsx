@@ -1,10 +1,11 @@
-import React, {memo} from "react";
+import React, {memo, Fragment} from "react";
 import MyDialogButtonDelete from '../../00_utilities/components/ui/dialog/delete_dialog';
 import IconButtonTableSee from "../../00_utilities/components/ui/icon/table_icon_button_detail";
 
 import ReactTable from "react-table";
 import {Link} from "react-router-dom";
 import {pesosColombianos} from "../../00_utilities/common";
+import DialogRelacionarFactura from "../../00_utilities/components/ui/search_and_select/SearchAndSelect";
 
 const Tabla = memo(props => {
     const data = _.map(_.pickBy(_.orderBy(props.list, ['nro_consecutivo'], ['desc']), e => e.estado !== 'INI'));

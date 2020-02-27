@@ -6,6 +6,7 @@ import * as actions from "../../01_actions/01_index";
 import Combobox from "react-widgets/lib/Combobox";
 import ListaPrecioTabla from './ListaPrecioTabla';
 import PropTypes from "prop-types";
+import {fechaFormatoUno} from "../../00_utilities/common";
 
 const ListaPrecio = memo(props => {
     const dispatch = useDispatch();
@@ -49,6 +50,7 @@ const ListaPrecio = memo(props => {
             costo_cop_aereo: b.costo_cop_aereo_mano_obra,
             origen: 'Bandas Eurobelt',
             unidades_disponibles: 'N.A',
+            fecha_ultima_entrada: 'N.A',
         }));
 
         componentes_eurobelt = _.map(componentes_eurobelt, b => ({
@@ -64,6 +66,7 @@ const ListaPrecio = memo(props => {
             costo_cop_aereo: b.costo_cop_aereo,
             origen: 'Componentes Eurobelt',
             unidades_disponibles: 'N.A',
+            fecha_ultima_entrada: 'N.A',
         }));
 
         articulos_catalogos = _.map(articulos_catalogos, b => ({
@@ -78,7 +81,8 @@ const ListaPrecio = memo(props => {
             costo_cop: b.costo_cop,
             costo_cop_aereo: b.costo_cop_aereo,
             origen: `Catalogo ${b.origen}`,
-            unidades_disponibles: b.unidades_disponibles,
+            unidades_disponibles: b.origen === 'LP_INTRANET' ? 'N.A' : b.unidades_disponibles,
+            fecha_ultima_entrada: b.origen === 'LP_INTRANET' ? 'N.A' : fechaFormatoUno(b.fecha_ultima_entrada),
         }));
         todos_los_items = _.orderBy([...bandas_eurobelt, ...componentes_eurobelt, ...articulos_catalogos], ['item_descripcion'], ['asc']);
     }

@@ -3,7 +3,7 @@ import {
     fetchListGet,
     updateObject,
     fetchObject,
-    fetchListGetURLParameters,
+    fetchListGetURLParameters, callApiMethodPostParameters,
 } from '../../00_general_fuctions'
 
 const current_url_api = 'cargues_detalles_facturas';
@@ -21,6 +21,19 @@ export const fetchFacturas = (options_action = {}) => {
         return fetchListGet(current_url_api, options);
     }
 };
+
+export const relacionarCotizacionComponenteFactura = (id, cotizacion_componente_id, options_action = {}) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        params.append('cotizacion_componente_id', cotizacion_componente_id);
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: response})
+        };
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'relacionar_cotizacion_componente', params, options)
+    }
+};
+
 export const fetchFacturasCliente = (cliente_id, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {

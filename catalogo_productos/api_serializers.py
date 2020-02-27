@@ -114,6 +114,7 @@ class ItemVentaCatalogoSerializer(serializers.ModelSerializer):
             'origen',
             'id_procedencia',
             'margen_deseado',
+            'fecha_ultima_entrada',
             'costo',
             'costo_cop',
             'costo_cop_aereo',

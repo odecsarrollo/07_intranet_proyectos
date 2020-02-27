@@ -12,6 +12,7 @@ from rest_framework.exceptions import ValidationError
 from contabilidad_anticipos.models import ProformaConfiguracion
 from envios_emails.models import CotizacionComponenteEnvio
 from envios_emails.services import generar_base_pdf
+from cargues_detalles.models import FacturaDetalle
 from .models import (
     CotizacionComponente,
     ItemCotizacionComponente,
@@ -20,6 +21,26 @@ from .models import (
 )
 from catalogo_productos.models import ItemVentaCatalogo
 from bandas_eurobelt.models import BandaEurobelt, ComponenteBandaEurobelt
+
+
+def relacionar_cotizacion_con_factura(
+        cotizacion_componente_id: int,
+        factura_id: int,
+        accion: str
+) -> (CotizacionComponente, FacturaDetalle):
+    factura = FacturaDetalle.objects.get(pk=factura_id)
+    cotizacion = CotizacionComponente.objects.get(pk=cotizacion_componente_id)
+    user_responsable_cotizacion = cotizacion.responsable if cotizacion.responsable else cotizacion.creado_por
+    user_vendedor_factura = factura.colaborador.usuario if factura.colaborador and factura.colaborador.usuario else None
+    if accion == 'add':
+        if user_responsable_cotizacion != user_vendedor_factura:
+            raise ValidationError({'_error': 'El vendedor que cotizó no es el mismo que vendió, por favor revisar'})
+        cotizacion.facturas.add(factura)
+    if accion == 'rem':
+        cotizacion.facturas.add(factura)
+    factura = FacturaDetalle.objects.get(pk=factura_id)
+    cotizacion = CotizacionComponente.objects.get(pk=cotizacion_componente_id)
+    return cotizacion, factura
 
 
 def cotizacion_componentes_cambiar_estado(
