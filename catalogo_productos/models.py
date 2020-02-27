@@ -39,6 +39,7 @@ class ItemVentaCatalogo(models.Model):
     origen = models.CharField(max_length=20, default='LP_INTRANET')
     id_procedencia = models.CharField(max_length=1, null=True, blank=True)
     unidades_disponibles = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    fecha_ultima_entrada = models.DateField(null=True)
 
     objects = ItemVentaCatalogoManager()
 
