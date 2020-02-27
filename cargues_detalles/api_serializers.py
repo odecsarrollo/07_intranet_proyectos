@@ -24,7 +24,7 @@ class MovimientoVentaDetalleSerializer(serializers.ModelSerializer):
     referencia_item = serializers.CharField(source='item.id_referencia', read_only=True)
     factura_tipo = serializers.CharField(source='factura.tipo_documento', read_only=True)
     factura_nro = serializers.CharField(source='factura.nro_documento', read_only=True)
-    factura_fecha = serializers.CharField(source='factura.fecha_documento', read_only=True)
+    factura_fecha = serializers.DateField(source='factura.fecha_documento', read_only=True)
 
     class Meta:
         model = MovimientoVentaDetalle
@@ -77,6 +77,7 @@ class FacturalDetalleSerializer(serializers.ModelSerializer):
             'cliente_nombre',
         ]
         extra_kwargs = {'items': {'read_only': True}}
+        read_only_fields = fields
 
 
 class FacturalDetalleConDetalleSerializer(FacturalDetalleSerializer):
