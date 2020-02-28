@@ -15,13 +15,24 @@ from .api_serializers import (
 
 
 class CotizacionComponenteViewSet(viewsets.ModelViewSet):
-    queryset = CotizacionComponente.objects.prefetch_related(
-        'items',
-        'seguimientos',
-        'seguimientos__documento_cotizacion'
-    ).select_related(
+    queryset = CotizacionComponente.objects.select_related(
         'responsable',
         'creado_por',
+        'cliente',
+        'cliente__canal',
+        'ciudad',
+        'contacto',
+        'ciudad__departamento',
+        'ciudad__departamento__pais',
+    ).prefetch_related(
+        'items',
+        'items__forma_pago',
+        'items__forma_pago__canal',
+        'adjuntos',
+        'envios_emails',
+        'seguimientos',
+        'seguimientos__creado_por',
+        'seguimientos__documento_cotizacion',
     ).annotate(
         valor_total=Coalesce(Sum('items__valor_total'), 0)
     ).all()
@@ -232,6 +243,20 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
                 (Q(responsable__isnull=True) & Q(creado_por=user)) |
                 (Q(responsable__isnull=False) & Q(responsable=user))
             )
+
+        serializer = self.get_serializer(lista, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, http_method_names=['get', ])
+    def cotizaciones_consulta_para_relacionar_factura(self, request):
+        parametro = self.request.GET.get('parametro')
+        lista = CotizacionComponente.objects.filter(
+            Q(estado__in=['PRO', 'FIN']) &
+            (
+                    Q(nro_consecutivo__icontains=parametro) |
+                    Q(cliente__nombre__icontains=parametro)
+            )
+        )
 
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)

@@ -10,6 +10,7 @@ class SeguimientoCargueProcedimientoSerializer(serializers.ModelSerializer):
         if obj.fecha_final:
             return (obj.fecha_final - obj.fecha).total_seconds() / 60.0
         return None
+
     class Meta:
         model = SeguimientoCargueProcedimiento
         fields = [

@@ -20,6 +20,7 @@ class ItemVentaCatalogoViewSet(viewsets.ModelViewSet):
         'margen',
         'margen__proveedor',
         'margen__proveedor__moneda',
+        'margen__categoria'
     ).exclude(sistema_informacion=1).all()
     serializer_class = ItemVentaCatalogoSerializer
 

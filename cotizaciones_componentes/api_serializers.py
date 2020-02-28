@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from envios_emails.api_serializers import CotizacionComponenteEnvioSerializer
+from intranet_proyectos.general_mixins.custom_serializer_mixins import CustomSerializerMixin
 from .models import (
     CotizacionComponente,
     ItemCotizacionComponente,
@@ -53,7 +54,7 @@ class CotizacionComponenteAdjuntoSerializer(serializers.ModelSerializer):
         ]
 
 
-class ItemCotizacionComponenteSerializer(serializers.ModelSerializer):
+class ItemCotizacionComponenteSerializer(CustomSerializerMixin, serializers.ModelSerializer):
     forma_pago_nombre = serializers.CharField(source='forma_pago.forma', read_only=True)
     canal_nombre = serializers.CharField(source='forma_pago.canal.nombre', read_only=True)
     cotizacion_nro_consecutivo = serializers.CharField(source='cotizacion.nro_consecutivo', read_only=True)
@@ -213,7 +214,16 @@ class CotizacionComponenteSerializer(serializers.ModelSerializer):
 
 
 class CotizacionComponenteConDetalleSerializer(CotizacionComponenteSerializer):
-    items = ItemCotizacionComponenteSerializer(many=True, read_only=True)
+    items = ItemCotizacionComponenteSerializer(
+        many=True,
+        read_only=True,
+        context={
+            'quitar_campos': [
+                'cotizacion_nro_consecutivo',
+                'cotizacion_fecha'
+            ]
+        }
+    )
     adjuntos = CotizacionComponenteAdjuntoSerializer(many=True, read_only=True)
     envios_emails = CotizacionComponenteEnvioSerializer(many=True, read_only=True)
     seguimientos = CotizacionComponenteSeguimientoSerializer(many=True, read_only=True)
