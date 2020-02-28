@@ -45,6 +45,6 @@ class ItemVentaCatalogoViewSet(viewsets.ModelViewSet):
     @action(detail=False, http_method_names=['get', ])
     def listar_x_origen(self, request):
         origen = request.GET.get('origen')
-        qs = self.queryset.filter(origen=origen)[:1000]
+        qs = self.queryset.filter(origen=origen)
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
