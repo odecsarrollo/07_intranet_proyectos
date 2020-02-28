@@ -27,18 +27,14 @@ class ItemVentaCatalogoSerializer(serializers.ModelSerializer):
         max_digits=12,
         decimal_places=2
     )
-    proveedor_importacion_nombre = serializers.CharField(
-        source='proveedor_importacion.nombre',
-        read_only=True
-    )
     proveedor_importacion_fi = serializers.DecimalField(
-        source='proveedor_importacion.factor_importacion',
+        source='margen.proveedor.factor_importacion',
         read_only=True,
         max_digits=12,
         decimal_places=2
     )
     proveedor_importacion_fi_aereo = serializers.DecimalField(
-        source='proveedor_importacion.factor_importacion_aereo',
+        source='margen.proveedor.factor_importacion_aereo',
         read_only=True,
         max_digits=12,
         decimal_places=2
@@ -107,7 +103,6 @@ class ItemVentaCatalogoSerializer(serializers.ModelSerializer):
             'proveedor_importacion',
             'proveedor_importacion_fi',
             'proveedor_importacion_fi_aereo',
-            'proveedor_importacion_nombre',
             'margen',
             'activo',
             'unidades_disponibles',

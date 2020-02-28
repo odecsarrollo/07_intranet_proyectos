@@ -14,13 +14,10 @@ from .api_serializers import (
 
 class ItemVentaCatalogoViewSet(viewsets.ModelViewSet):
     queryset = ItemVentaCatalogo.objects.select_related(
-        'sistema_informacion',
-        'item_sistema_informacion',
-        'proveedor_importacion',
-        'margen',
         'margen__proveedor',
         'margen__proveedor__moneda',
-    ).exclude(sistema_informacion=1).all()
+        'margen__categoria',
+    ).exclude(sistema_informacion=1)
     serializer_class = ItemVentaCatalogoSerializer
 
     @action(detail=False, http_method_names=['get', ])
@@ -48,6 +45,6 @@ class ItemVentaCatalogoViewSet(viewsets.ModelViewSet):
     @action(detail=False, http_method_names=['get', ])
     def listar_x_origen(self, request):
         origen = request.GET.get('origen')
-        qs = self.queryset.filter(origen=origen)
+        qs = self.queryset.filter(origen=origen)[:1000]
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
