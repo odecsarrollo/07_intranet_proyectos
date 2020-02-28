@@ -5,7 +5,7 @@ import {makeStyles} from "@material-ui/core";
 import ListItem from "@material-ui/core/ListItem";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import ListItemText from "@material-ui/core/ListItemText";
-import {horaFormatoUno, fechaHoraFormatoUno, fechaHoraFormatoUnoSinTZ} from "../../../00_utilities/common";
+import {horaFormatoUno, fechaHoraFormatoUno} from "../../../00_utilities/common";
 import ReactTable from "react-table";
 
 const useStyles = makeStyles(theme => ({
@@ -55,8 +55,8 @@ const Tabla = memo(props => {
     return (
         <div>
             {_.map(data, e => {
-                const fecha_inicial = `Fecha Inicial: ${fechaHoraFormatoUnoSinTZ(e.fecha)}`;
-                const fecha_final = e.fecha_final ? `Fecha Final: ${fechaHoraFormatoUnoSinTZ(e.fecha_final)}${e.fecha_final ? ` (${e.tiempo.toFixed(2)} minutos)` : ''}` : 'Error';
+                const fecha_inicial = `Fecha Inicial: ${fechaHoraFormatoUno(e.fecha)}`;
+                const fecha_final = e.fecha_final ? `Fecha Final: ${fechaHoraFormatoUno(e.fecha_final)}${e.fecha_final ? ` (${e.tiempo.toFixed(2)} minutos)` : ''}` : 'Error';
                 return (
                     <ListCollapse key={e.id}
                                   texto={`${fecha_inicial}, ${fecha_final}`}

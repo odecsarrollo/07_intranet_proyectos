@@ -5,6 +5,8 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
+import PropTypes from "prop-types";
+import DetailInfoItem from "../detail_layout/DetailInfoItem";
 
 const ItemSeleccion = memo(props => {
     const [seleccionado, setSeleccionado] = useState(false);
@@ -86,18 +88,15 @@ const DialogSeleccionar = memo(props => {
                 {
                     campo_busqueda.length > min_caracteres &&
                     <Fragment>
-                        {onSearch &&
-                        <Button
+                        {onSearch && <Button
                             color="primary"
                             variant="contained"
                             onClick={() => buscarProyecto(campo_busqueda)}
                             className='ml-3'
                         >
                             Buscar
-                        </Button>
-                        }
-                        {listado &&
-                        <div className="row" style={{width: '600px'}}>
+                        </Button>}
+                        {listado && <div className="row" style={{width: '600px'}}>
                             {listado.map(e => {
                                 return (
                                     <ItemSeleccion
@@ -115,8 +114,7 @@ const DialogSeleccionar = memo(props => {
                 }
             </DialogContent>
             <DialogActions>
-                {onCancelar &&
-                <Button
+                {onCancelar && <Button
                     color="secondary"
                     variant="contained"
                     onClick={onCancelar}
@@ -128,5 +126,21 @@ const DialogSeleccionar = memo(props => {
     )
 
 });
+
+DialogSeleccionar.propTypes = {
+    min_caracteres: PropTypes.number,
+    placeholder: PropTypes.string.isRequired,
+    selected_item_text: PropTypes.string,
+    id_text: PropTypes.string,
+    select_boton_text: PropTypes.string,
+    titulo_modal: PropTypes.string,
+    onUnMount: PropTypes.func,
+    onMount: PropTypes.func,
+    onSearch: PropTypes.func.isRequired,
+    onSelect: PropTypes.func.isRequired,
+    open: PropTypes.bool.isRequired,
+    onCancelar: PropTypes.func.isRequired,
+    listado: PropTypes.array.isRequired,
+};
 
 export default DialogSeleccionar;

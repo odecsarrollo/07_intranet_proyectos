@@ -165,6 +165,22 @@ export const fetchCotizacionesComponentes_por_estado = (estado, options_action =
     }
 };
 
+export const fetchCotizacionesComponentesParaRelacionarFactura = (parametro, options_action = {}) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
+        };
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        return fetchListGetURLParameters(`${current_url_api}/cotizaciones_consulta_para_relacionar_factura/?parametro=${parametro}`, options);
+    }
+};
+
 export const fetchCotizacionesComponentesEdicionAsesor = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
