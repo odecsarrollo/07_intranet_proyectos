@@ -33,6 +33,7 @@ import indigo from '@material-ui/core/colors/indigo';
 import {library} from '@fortawesome/fontawesome-svg-core'
 
 import {
+    faCodeMerge,
     faEyeSlash,
     faBarcode,
     faReceipt,
@@ -171,7 +172,8 @@ library.add(
     faChevronDown,
     faLink,
     faEraser,
-    faPaste
+    faPaste,
+    faCodeMerge
 );
 
 const theme = createMuiTheme({

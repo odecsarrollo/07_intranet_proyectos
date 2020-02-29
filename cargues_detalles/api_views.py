@@ -22,7 +22,8 @@ class FacturaDetalleViewSet(viewsets.ModelViewSet):
         'cliente',
         'colaborador',
     ).prefetch_related(
-        'items'
+        'items',
+        'cotizaciones_componentes'
     ).all()
     serializer_class = FacturalDetalleSerializer
 

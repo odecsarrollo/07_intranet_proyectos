@@ -78,7 +78,7 @@ class ItemVentaCatalogoSerializer(serializers.ModelSerializer):
         if obj.unidad_medida_catalogo:
             return obj.unidad_medida_catalogo
         elif obj.item_sistema_informacion:
-            return obj.item_sistema_informacion.unidad_medida
+            return obj.item_sistema_informacion.unidad_medida_inventario
         return 'ASIGNAR DESCRIPCION'
 
     class Meta:

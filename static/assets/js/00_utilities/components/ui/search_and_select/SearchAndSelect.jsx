@@ -49,6 +49,7 @@ const DialogSeleccionar = memo(props => {
         onSelect,
         onSearch = null,
         placeholder = 'Colocar Place Holder',
+        exclude_ids = [],
         onCancelar = null,
         selected_item_text = 'nombre',
         select_boton_text,
@@ -57,6 +58,9 @@ const DialogSeleccionar = memo(props => {
         onMount = null,
     } = props;
     let {listado = []} = props;
+    if (exclude_ids.length > 0) {
+        listado = listado.filter(e => !exclude_ids.includes(e[id_text]));
+    }
     useEffect(() => {
         if (onMount) {
             onMount()
@@ -136,6 +140,7 @@ DialogSeleccionar.propTypes = {
     titulo_modal: PropTypes.string,
     onUnMount: PropTypes.func,
     onMount: PropTypes.func,
+    exclude_ids: PropTypes.array,
     onSearch: PropTypes.func.isRequired,
     onSelect: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,

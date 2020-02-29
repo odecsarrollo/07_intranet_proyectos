@@ -75,8 +75,12 @@ class FacturalDetalleSerializer(serializers.ModelSerializer):
             'cliente',
             'cliente_nit',
             'cliente_nombre',
+            'cotizaciones_componentes',
         ]
-        extra_kwargs = {'items': {'read_only': True}}
+        extra_kwargs = {
+            'items': {'read_only': True},
+            'cotizaciones_componentes': {'read_only': True},
+        }
         read_only_fields = fields
 
 

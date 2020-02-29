@@ -22,10 +22,11 @@ export const fetchFacturas = (options_action = {}) => {
     }
 };
 
-export const relacionarCotizacionComponenteFactura = (id, cotizacion_componente_id, options_action = {}) => {
+export const relacionarCotizacionComponenteFactura = (id, cotizacion_componente_id, accion, options_action = {}) => {
     return (dispatch) => {
         let params = new URLSearchParams();
         params.append('cotizacion_componente_id', cotizacion_componente_id);
+        params.append('accion', accion);
         const dispatches = (response) => {
             dispatch({type: TYPES.update, payload: response})
         };

@@ -36,13 +36,15 @@ const FacturaCRUDTabla = memo(props => {
     const costo_total = data.map(f => parseFloat(f.costo_total)).reduce((uno, dos) => uno + dos, 0);
     const cotizaciones = useSelector(state => state.cotizaciones_componentes);
     const buscarCotizacionComponentes = (parametro) => dispatch(actions.fetchCotizacionesComponentesParaRelacionarFactura(parametro));
-    const onRelacionarFactura = (cotizacion) => console.log(`va a relacionar la factura con id ${factura_a_relacionar} con la cotizacion ${cotizacion}`);
+    const onRelacionarFactura = (cotizacion) => dispatch(actions.relacionarCotizacionComponenteFactura(factura_a_relacionar, cotizacion, 'add'));
     return (
         <Fragment>
             {factura_a_relacionar && <DialogRelacionarCotizacionComponentes
+                exclude_ids={_.mapKeys(props.list, 'id')[factura_a_relacionar].cotizaciones_componentes}
                 placeholder='Cotización a buscar'
                 id_text='id'
-                selected_item_text='id_literal'
+                min_caracteres={3}
+                selected_item_text='nro_consecutivo'
                 onSearch={buscarCotizacionComponentes}
                 onSelect={onRelacionarFactura}
                 onCancelar={() => setFacturaARelacionar(null)}
@@ -175,18 +177,18 @@ const FacturaCRUDTabla = memo(props => {
                                         }}/>
 
                             },
-                            {
-                                Header: "R. Cot.",
-                                accessor: 'id',
-                                maxWidth: 45,
-                                Cell: row =>
-                                    <CustomIconTable
-                                        icon='eye'
-                                        onClick={() => {
-                                            setFacturaARelacionar(row.value);
-                                        }}/>
-
-                            }
+                            // {
+                            //     Header: "R. Cot.",
+                            //     accessor: 'id',
+                            //     maxWidth: 45,
+                            //     Cell: row =>
+                            //         <CustomIconTable
+                            //             icon='code-merge'
+                            //             onClick={() => {
+                            //                 setFacturaARelacionar(row.value);
+                            //             }}/>
+                            //
+                            // }
                         ]
                     }
                 ]}

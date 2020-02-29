@@ -33,6 +33,12 @@ def relacionar_cotizacion_con_factura(
     user_responsable_cotizacion = cotizacion.responsable if cotizacion.responsable else cotizacion.creado_por
     user_vendedor_factura = factura.colaborador.usuario if factura.colaborador and factura.colaborador.usuario else None
     if accion == 'add':
+        cliente_factura = factura.cliente
+        cliente_cotizacion = cotizacion.cliente
+        if cliente_cotizacion != cliente_factura:
+            raise ValidationError({
+                '_error': 'El clientes %s de la cotización no corresponde con el cliente %s de la factura' % (
+                    cliente_cotizacion.nombre, cliente_factura.nombre)})
         if user_responsable_cotizacion != user_vendedor_factura:
             raise ValidationError({'_error': 'El vendedor que cotizó no es el mismo que vendió, por favor revisar'})
         cotizacion.facturas.add(factura)
