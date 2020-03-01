@@ -144,6 +144,11 @@ def cotizacion_componentes_adicionar_item(
         item.banda_eurobelt = banda_eurobelt
     if tipo_item == 'ArticuloCatalogo':
         articulo_catalogo = ItemVentaCatalogo.objects.get(pk=id_item)
+        if articulo_catalogo.item_sistema_informacion:
+            if articulo_catalogo.item_sistema_informacion.ultimo_costo > float(precio_unitario):
+                raise ValidationError({
+                    '_error': 'Existe un problema de margen, por favor revisar. El costo en siesa cloud es mayor que el precio de venta unitario de la lista de precios'
+                })
         item.articulo_catalogo = articulo_catalogo
     if tipo_item == 'ComponenteEurobelt':
         componente_eurobelt = ComponenteBandaEurobelt.objects.get(pk=id_item)
