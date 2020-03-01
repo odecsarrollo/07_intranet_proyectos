@@ -7,7 +7,7 @@ import {pesosColombianos} from "../../../../00_utilities/common";
 import Checkbox from "@material-ui/core/Checkbox";
 
 function areEqual(prevProps, nextProps) {
-    return prevProps.list === nextProps.list
+    return prevProps.list === nextProps.list && prevProps.origen_seleccionado === nextProps.origen_seleccionado
 }
 
 const Tabla = memo(props => {
@@ -50,7 +50,7 @@ const Tabla = memo(props => {
                             {
                                 Header: "Id",
                                 accessor: "id",
-                                maxWidth: 40
+                                maxWidth: 70
                             },
                             {
                                 Header: "Nombre",
@@ -94,9 +94,9 @@ const Tabla = memo(props => {
                                 Cell: row => row.value
                             },
                             {
-                                Header: "Costo MO",
-                                minWidth: 70,
-                                maxWidth: 70,
+                                Header: "Costo Mon.",
+                                maxWidth: 90,
+                                minWidth: 90,
                                 accessor: "costo",
                                 Cell: row => <div className='text-right'>
                                     {row.value} {row.original.moneda_nombre}
@@ -121,10 +121,23 @@ const Tabla = memo(props => {
                             },
                             {
                                 Header: "Costo",
-                                maxWidth: 80,
+                                maxWidth: 90,
+                                minWidth: 90,
                                 accessor: "costo_cop",
-                                Cell: row => <div className='text-right'>
+                                Cell: row => <div className='text-right'
+                                                  style={{color: row.original.costo_a_usar === row.value ? 'red' : ''}}>
                                     {pesosColombianos(row.value)} COP
+                                </div>
+                            },
+                            {
+                                Header: "Costo Siesa",
+                                maxWidth: 90,
+                                minWidth: 90,
+                                accessor: "costo_sistema_informacion",
+                                Cell: row => <div className='text-right'
+                                                  style={{color: row.original.costo_a_usar === row.value ? 'red' : ''}}
+                                >
+                                    {row.original.item_sistema_informacion ? (row.value > 0 ? `${pesosColombianos(row.value)} COP` : 'N.A') : 'N.A'}
                                 </div>
                             },
                             {
@@ -138,7 +151,8 @@ const Tabla = memo(props => {
                             },
                             {
                                 Header: "Cos. Aereo",
-                                maxWidth: 80,
+                                maxWidth: 90,
+                                minWidth: 90,
                                 accessor: "costo_cop_aereo",
                                 Cell: row => <div className='text-right'>
                                     {pesosColombianos(row.value)} COP
@@ -155,7 +169,8 @@ const Tabla = memo(props => {
                             },
                             {
                                 Header: "Pre. Base.",
-                                maxWidth: 80,
+                                maxWidth: 90,
+                                minWidth: 90,
                                 accessor: "precio_base",
                                 Cell: row => <div className='text-right'>
                                     {pesosColombianos(row.value)} COP
@@ -163,7 +178,8 @@ const Tabla = memo(props => {
                             },
                             {
                                 Header: "Pre. Bas. Aer",
-                                maxWidth: 80,
+                                maxWidth: 90,
+                                minWidth: 90,
                                 accessor: "precio_base_aereo",
                                 Cell: row => <div className='text-right'>
                                     {pesosColombianos(row.value)} COP

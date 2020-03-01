@@ -16,11 +16,9 @@ class SeguimientoCargueViewSet(viewsets.ModelViewSet):
     serializer_class = SeguimientoCargueSerializer
 
     def list(self, request, *args, **kwargs):
-        ids_a_mantener = list(SeguimientoCargue.objects.values_list('id', flat=True).order_by('-id').all()[:100])
-        qs_a_borrar = SeguimientoCargue.objects.exclude(id__in=ids_a_mantener)
-        for seguimiento in qs_a_borrar.all():
-            for procedimiento in seguimiento.procedimientos.all():
-                procedimiento.delete()
+        ids_a_mantener = list(SeguimientoCargue.objects.values_list('id', flat=True).order_by('-id').all()[:80])
+        SeguimientoCargueProcedimiento.objects.exclude(cargue_contro_id__in=ids_a_mantener).delete()
+        SeguimientoCargue.objects.exclude(id__in=ids_a_mantener).delete()
         return super().list(request, *args, **kwargs)
 
 

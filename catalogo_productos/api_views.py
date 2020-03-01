@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Q, F
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -45,6 +45,15 @@ class ItemVentaCatalogoViewSet(viewsets.ModelViewSet):
     @action(detail=False, http_method_names=['get', ])
     def listar_x_origen(self, request):
         origen = request.GET.get('origen')
-        qs = self.queryset.filter(origen=origen)
+        parametro = request.GET.get('parametro', None)
+        con_costos_mayores_sistema_informacion = request.GET.get('con_costos_mayores_sistema_informacion', False)
+        search_fields = ['nombre_catalogo', 'referencia_catalogo', 'proveedor_importacion__nombre']
+        qs = self.queryset
+        if parametro and parametro.upper() != 'TODO':
+            qs = query_varios_campos(self.queryset, search_fields, parametro)
+        # if con_costos_mayores_sistema_informacion:
+        # qs = qs.filter(item_sistema_informacion__isnull=False)
+        qs = qs.filter(origen=origen)
+
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)

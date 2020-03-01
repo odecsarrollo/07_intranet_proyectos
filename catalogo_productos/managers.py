@@ -12,6 +12,13 @@ class ItemVentaCatalogoManager(models.Manager):
                 When(origen='LP_INTRANET', then='costo_catalogo'),
                 default='item_sistema_informacion__ultimo_costo'
             ),
+            costo_sistema_informacion=Case(
+                When(
+                    item_sistema_informacion__unidad_medida_inventario=F('unidad_medida_catalogo'),
+                    then='item_sistema_informacion__ultimo_costo'
+                ),
+                default=0
+            ),
             costo_cop=ExpressionWrapper(
                 F('margen__proveedor__moneda__cambio') * F('margen__proveedor__factor_importacion') * F('costo'),
                 output_field=DecimalField(max_digits=12, decimal_places=2)
@@ -20,12 +27,27 @@ class ItemVentaCatalogoManager(models.Manager):
                 F('margen__proveedor__moneda__cambio') * F('margen__proveedor__factor_importacion_aereo') * F('costo'),
                 output_field=DecimalField(max_digits=12, decimal_places=2)
             ),
+            costo_a_usar=Case(
+                When(
+                    costo_sistema_informacion__gte=F('costo_cop'),
+                    item_sistema_informacion__unidad_medida_inventario=F('unidad_medida_catalogo'),
+                    then='costo_sistema_informacion'
+                ),
+                default='costo_cop'
+            ),
+            costo_a_usar_aereo=Case(
+                When(
+                    costo_sistema_informacion__gte=F('costo_cop_aereo'),
+                    item_sistema_informacion__unidad_medida_inventario=F('unidad_medida_catalogo'),
+                    then='costo_sistema_informacion'),
+                default='costo_cop_aereo'
+            ),
             precio_base=ExpressionWrapper(
-                Sum(F('costo_cop') / (1 - (F('margen__margen_deseado') / 100))),
+                Sum(F('costo_a_usar') / (1 - (F('margen__margen_deseado') / 100))),
                 output_field=DecimalField(max_digits=12, decimal_places=2)
             ),
             precio_base_aereo=ExpressionWrapper(
-                Sum(F('costo_cop_aereo') / (1 - (F('margen__margen_deseado') / 100))),
+                Sum(F('costo_a_usar_aereo') / (1 - (F('margen__margen_deseado') / 100))),
                 output_field=DecimalField(max_digits=12, decimal_places=2)
             ),
             rentabilidad=ExpressionWrapper(

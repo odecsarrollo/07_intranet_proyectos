@@ -1,4 +1,4 @@
-import React, {memo, useEffect, useState} from 'react';
+import React, {memo, useEffect, useState, Fragment} from 'react';
 import CreateForm from './forms/ItemVentaCatalogoCRUDForm';
 import Tabla from './ItemVentaCatalogoCRUDTabla';
 import crudHOC from '../../../../00_utilities/components/HOC_CRUD2';
@@ -7,21 +7,21 @@ import * as actions from "../../../../01_actions/01_index";
 import {useSelector} from "react-redux/es/hooks/useSelector";
 import useTengoPermisos from "../../../../00_utilities/hooks/useTengoPermisos";
 import {ITEMS_VENTAS_CATALOGOS} from "../../../../permisos";
+import BuquedaTextoPorMetodo from "../../../../00_utilities/components/BuquedaTextoPorMetodo";
 
 const CRUD = crudHOC(CreateForm, Tabla);
 
 const List = memo((props) => {
     const dispatch = useDispatch();
     const [origen_seleccionado, setOrigenSeleccionado] = useState('LP_INTRANET');
-    const cargarDatos = () => {
-        dispatch(actions.fetchItemsVentasCatalogosxOrigen(origen_seleccionado));
+    const busquedaItem = (parametro) => {
+        dispatch(actions.fetchItemsVentasCatalogosxOrigen(origen_seleccionado, parametro));
     };
     useEffect(() => {
-        cargarDatos();
         return () => {
             dispatch(actions.clearItemsVentasCatalogos());
         };
-    }, [origen_seleccionado]);
+    }, []);
     const list = useSelector(state => state.catalogos_productos_items_ventas);
     const permisos = useTengoPermisos(ITEMS_VENTAS_CATALOGOS);
     const method_pool = {
@@ -31,16 +31,21 @@ const List = memo((props) => {
         updateObjectMethod: (id, item, options) => dispatch(actions.updateItemVentaCatalogo(id, item, options)),
     };
     return (
-        <CRUD
-            setOrigenSeleccionado={setOrigenSeleccionado}
-            origen_seleccionado={origen_seleccionado}
-            method_pool={method_pool}
-            list={list}
-            permisos_object={permisos}
-            plural_name='Items Ventas'
-            singular_name=''
-            cargarDatos={cargarDatos}
-        />
+        <Fragment>
+            <BuquedaTextoPorMetodo onBuscar={busquedaItem} placeholder='A buscar...'/>
+            <CRUD
+                setOrigenSeleccionado={(origen) => {
+                    setOrigenSeleccionado(origen);
+                    dispatch(actions.clearItemsVentasCatalogos());
+                }}
+                origen_seleccionado={origen_seleccionado}
+                method_pool={method_pool}
+                list={list}
+                permisos_object={permisos}
+                plural_name=''
+                singular_name='Item Venta'
+            />
+        </Fragment>
     )
 });
 

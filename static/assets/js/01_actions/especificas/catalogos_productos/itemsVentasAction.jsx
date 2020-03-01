@@ -43,9 +43,12 @@ export function fetchItemsVentasCatalogosxParametroActivos(parametro, options_ac
     }
 }
 
-export function fetchItemsVentasCatalogosxOrigen(origen, options_action = {}) {
+export function fetchItemsVentasCatalogosxOrigen(origen, parametro = null, options_action = {}) {
     return function (dispatch) {
-        const FULL_URL = `${current_url_api}/listar_x_origen/?origen=${origen}`;
+        let FULL_URL = `${current_url_api}/listar_x_origen/?origen=${origen}`;
+        if (parametro) {
+            FULL_URL = `${FULL_URL}&parametro=${parametro}`;
+        }
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
         };

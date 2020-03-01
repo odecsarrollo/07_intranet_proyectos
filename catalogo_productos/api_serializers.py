@@ -10,6 +10,9 @@ class ItemVentaCatalogoSerializer(serializers.ModelSerializer):
     costo_cop = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     precio_base = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     costo_cop_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    costo_a_usar = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    costo_a_usar_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    costo_sistema_informacion = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     precio_base_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     margen_deseado = serializers.DecimalField(
         source='margen.margen_deseado',
@@ -91,6 +94,7 @@ class ItemVentaCatalogoSerializer(serializers.ModelSerializer):
             'referencia',
             'nombre',
             'costo_catalogo',
+            'costo_sistema_informacion',
             'moneda_nombre',
             'moneda_tasa',
             'proveedor_nombre',
@@ -111,6 +115,8 @@ class ItemVentaCatalogoSerializer(serializers.ModelSerializer):
             'margen_deseado',
             'fecha_ultima_entrada',
             'costo',
+            'costo_a_usar',
+            'costo_a_usar_aereo',
             'costo_cop',
             'costo_cop_aereo',
             'precio_base',
