@@ -52,7 +52,7 @@ class ItemVentaCatalogoViewSet(viewsets.ModelViewSet):
         if parametro and parametro.upper() != 'TODO':
             qs = query_varios_campos(self.queryset, search_fields, parametro)
         # if con_costos_mayores_sistema_informacion:
-        # qs = qs.filter(item_sistema_informacion__isnull=False)
+        qs = qs.filter(item_sistema_informacion__isnull=False)
         qs = qs.filter(origen=origen)
 
         serializer = self.get_serializer(qs, many=True)

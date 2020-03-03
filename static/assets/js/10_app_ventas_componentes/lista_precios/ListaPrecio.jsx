@@ -81,7 +81,7 @@ const ListaPrecio = memo(props => {
             costo_cop: b.costo_cop,
             costo_cop_aereo: b.costo_cop_aereo,
             origen: `Catalogo ${b.origen}`,
-            unidades_disponibles: b.origen === 'LP_INTRANET' ? 'N.A' : b.unidades_disponibles,
+            unidades_disponibles: (b.origen === 'LP_INTRANET' && (!b.item_sistema_informacion || (b.item_sistema_informacion && b.unidades_disponibles >= 0))) ? 'N.A' : b.unidades_disponibles,
             fecha_ultima_entrada: b.origen === 'LP_INTRANET' ? 'N.A' : fechaFormatoUno(b.fecha_ultima_entrada),
         }));
         todos_los_items = _.orderBy([...bandas_eurobelt, ...componentes_eurobelt, ...articulos_catalogos], ['item_descripcion'], ['asc']);

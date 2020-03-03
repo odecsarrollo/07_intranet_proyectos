@@ -56,12 +56,11 @@ class FacturalDetalleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FacturaDetalle
-        fields = [
+        read_only_fields = [
             'id',
             'sistema_informacion',
             'items',
             'venta_bruta',
-            'colaborador',
             'dscto_netos',
             'vendedor_nombre',
             'vendedor_apellido',
@@ -77,11 +76,11 @@ class FacturalDetalleSerializer(serializers.ModelSerializer):
             'cliente_nombre',
             'cotizaciones_componentes',
         ]
+        fields = ['colaborador'] + read_only_fields
         extra_kwargs = {
             'items': {'read_only': True},
             'cotizaciones_componentes': {'read_only': True},
         }
-        read_only_fields = fields
 
 
 class FacturalDetalleConDetalleSerializer(FacturalDetalleSerializer):
