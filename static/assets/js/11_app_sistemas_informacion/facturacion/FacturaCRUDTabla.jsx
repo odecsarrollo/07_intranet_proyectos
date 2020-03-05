@@ -177,18 +177,18 @@ const FacturaCRUDTabla = memo(props => {
                                         }}/>
 
                             },
-                            // {
-                            //     Header: "R. Cot.",
-                            //     accessor: 'id',
-                            //     maxWidth: 45,
-                            //     Cell: row =>
-                            //         <CustomIconTable
-                            //             icon='code-merge'
-                            //             onClick={() => {
-                            //                 setFacturaARelacionar(row.value);
-                            //             }}/>
-                            //
-                            // }
+                            {
+                                Header: "R. Cot.",
+                                accessor: 'id',
+                                maxWidth: 45,
+                                Cell: row =>
+                                    <CustomIconTable
+                                        icon='code-merge'
+                                        onClick={() => {
+                                            setFacturaARelacionar(row.value);
+                                        }}/>
+
+                            }
                         ]
                     }
                 ]}

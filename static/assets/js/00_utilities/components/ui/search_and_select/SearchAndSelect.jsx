@@ -70,11 +70,9 @@ const DialogSeleccionar = memo(props => {
                 onUnMount();
             }
         }
-    }, [])
+    }, []);
     const [campo_busqueda, setCampoBusqueda] = useState('');
-    const buscarProyecto = (busqueda) => {
-        onSearch(busqueda);
-    };
+    const buscarProyecto = (busqueda) => onSearch(busqueda);
     return (
         <Dialog
             open={open}

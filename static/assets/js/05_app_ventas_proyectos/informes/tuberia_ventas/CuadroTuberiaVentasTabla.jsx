@@ -1,9 +1,4 @@
-import React, {memo, useEffect} from 'react';
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import Button from "@material-ui/core/Button";
+import React, {memo} from 'react';
 import crudHOC from "../../../00_utilities/components/HOC_CRUD2";
 import InformationDisplayDialog from "../../../00_utilities/components/ui/dialog/InformationDisplayDialog";
 
@@ -54,6 +49,7 @@ const Tabla = (props) => {
                         accessor: "nro_cotizacion",
                         filterable: true,
                         maxWidth: 100,
+                        minWidth: 100,
                         filterMethod: (filter, row) => `${row._original.unidad_negocio}-${row._original.nro_cotizacion}`.includes(filter.value.toUpperCase()),
                         Cell: row => <div>{row.original.unidad_negocio}-{row.original.nro_cotizacion}</div>
                     },
@@ -62,11 +58,25 @@ const Tabla = (props) => {
                         accessor: "cliente_nombre",
                         filterable: true,
                         maxWidth: 300,
+                        minWidth: 300,
                         filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase()),
+                    },
+                    {
+                        Header: "Descripción",
+                        accessor: "descripcion_cotizacion",
+                        filterable: true,
+                        maxWidth: 400,
+                        minWidth: 400,
+                        filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase()),
+                        Cell: row => <div style={{
+                            fontSize: '0.6rem',
+                            whiteSpace: 'normal'
+                        }}>{row.value}</div>
                     },
                     {
                         Header: "Valor",
                         maxWidth: 150,
+                        minWidth: 150,
                         Footer: <div className='text-right'>{pesosColombianos(valor)}</div>,
                         Cell: row => <div className='text-right'>{pesosColombianos(row.original[campo_valor])}</div>
                     }
@@ -110,7 +120,7 @@ const InformeTunelVentasTabla = memo(props => {
         cerrar_text='Cerrar'
         titulo_text={`${responsable} - ${estado}`}
     >
-        <List list={lista} campo_valor={campo_valor} plural_name={`Tuveria Ventas ${responsable}_${estado}`}/>
+        <List list={lista} campo_valor={campo_valor} plural_name={`Tuberia Ventas ${responsable}_${estado}`}/>
     </InformationDisplayDialog>
 });
 

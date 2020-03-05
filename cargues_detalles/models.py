@@ -68,6 +68,7 @@ class FacturaDetalle(TimeStampedModel):
             ("see_costos_facturadetalle", "Can see costos factura detalle"),
             ("see_rentabilidad_facturadetalle", "Can see rentabilidad factura detalle"),
             ("see_descuentos_facturadetalle", "Can see descuentos factura detalle"),
+            ("relacionar_cotizacion_componentes_facturadetalle", "Can relacionar cotizacion componentes"),
         ]
 
 
