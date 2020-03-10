@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from intranet_proyectos.general_mixins.custom_serializer_mixins import CustomSerializerMixin
 from .models import ItemsLiteralDetalle, FacturaDetalle, MovimientoVentaDetalle
 from cargues_catalogos.api_serializers import ItemsCatalogoSerializer
 
@@ -19,7 +20,7 @@ class ItemsLiteralDetalleSerializer(serializers.ModelSerializer):
         ]
 
 
-class MovimientoVentaDetalleSerializer(serializers.ModelSerializer):
+class MovimientoVentaDetalleSerializer(CustomSerializerMixin, serializers.ModelSerializer):
     descripcion_item = serializers.CharField(source='item.descripcion', read_only=True)
     referencia_item = serializers.CharField(source='item.id_referencia', read_only=True)
     factura_tipo = serializers.CharField(source='factura.tipo_documento', read_only=True)
@@ -84,4 +85,8 @@ class FacturalDetalleSerializer(serializers.ModelSerializer):
 
 
 class FacturalDetalleConDetalleSerializer(FacturalDetalleSerializer):
-    items = MovimientoVentaDetalleSerializer(many=True, read_only=True)
+    items = MovimientoVentaDetalleSerializer(many=True, read_only=True, context={'quitar_campos': [
+        'factura_tipo',
+        'factura_nro',
+        'factura_fecha',
+    ]})

@@ -18,13 +18,11 @@ class FacturaDetalleViewSet(viewsets.ModelViewSet):
     queryset = FacturaDetalle.objects.select_related(
         'cliente',
         'colaborador',
-    ).prefetch_related(
-        'items',
-        'cotizaciones_componentes'
     ).all()
     serializer_class = FacturalDetalleSerializer
 
     def retrieve(self, request, *args, **kwargs):
+        self.queryset = self.queryset.prefetch_related('items__item')
         self.serializer_class = FacturalDetalleConDetalleSerializer
         return super().retrieve(request, *args, **kwargs)
 
