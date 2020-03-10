@@ -14,10 +14,17 @@ let Form = memo(props => {
     const dispatch = useDispatch();
     const margenes_proveedores = useSelector(state => state.margenes_proveedores);
     const proveedores_importaciones = useSelector(state => state.proveedores_importaciones);
+    const unidades_medida = useSelector(state => state.unidades_medidas);
     useEffect(() => {
-        const cargarProveedores = () => dispatch(actions.fetchProveedoresImportaciones());
+        const cargarUnidadesMedidas = () => {
+            if (!initialValues || (initialValues && initialValues.origen === 'LP_INTRANET')) {
+                dispatch(actions.fetchUnidadesMedidasCatalogos())
+            }
+        };
+        const cargarProveedores = () => dispatch(actions.fetchProveedoresImportaciones({callback: cargarUnidadesMedidas}));
         dispatch(actions.fetchMargenesProvedores({callback: cargarProveedores}));
         return () => {
+            dispatch(actions.clearUnidadesMedidasCatalogos());
             dispatch(actions.clearMargenesProvedores());
             dispatch(actions.clearProveedoresImportaciones());
         }
@@ -70,6 +77,23 @@ let Form = memo(props => {
                 nombre='Costo'
                 name='costo_catalogo'
                 case='U'/>
+            <MyCombobox
+                data={_.map(unidades_medida, u => {
+                    return (
+                        {
+                            name: `${u.to_string}`,
+                            id: u.id
+                        }
+                    )
+                })}
+                name='unidad_medida_en_inventario'
+                readOnly={!editable}
+                textField='name'
+                valuesField='id'
+                className='col-12'
+                placeholder='Unidad de Medida en Inventario'
+                filter='contains'
+            />
             <MyCombobox
                 data={_.map(proveedores_importaciones, u => {
                     return (

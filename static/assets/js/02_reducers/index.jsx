@@ -46,6 +46,7 @@ import sistemaInformacionOrigenReducer from './especificas/sistema_informacion_o
 import paisesReducer from './especificas/geografia/paisesReducer';
 import ciudadesReducer from './especificas/geografia/ciudadesReducer';
 import ciudadesCatagolosReducer from './especificas/cargues_catalogos/ciudadesCarguesCatalogosReducer';
+import unidadesMedidasCatagolosReducer from './especificas/cargues_catalogos/unidadesMedidasCatalogosReducer';
 import departamentosReducer from './especificas/geografia/departamentosReducer';
 import categoriaProductoReducer from './especificas/items/categoriaProductoReducer';
 import monedasCambiosReducer from './especificas/importaciones/monedasCambiosReducer';
@@ -137,6 +138,7 @@ const rootReducer = combineReducers({
 
         sistemas_informacion_reducer: sistemaInformacionOrigenReducer,
 
+        unidades_medidas: unidadesMedidasCatagolosReducer,
         ciudades_catalogos: ciudadesCatagolosReducer,
         geografia_ciudades: ciudadesReducer,
         geografia_departamentos: departamentosReducer,

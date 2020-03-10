@@ -10,15 +10,35 @@ from .models import (
 
 
 class UnidadMedidaCatalogoSerializer(serializers.ModelSerializer):
+    new_id = serializers.CharField(required=False)
+    to_string = serializers.SerializerMethodField()
+
+    def get_to_string(self, obj):
+        return obj.descripcion
+
+    def create(self, validated_data):
+        id = validated_data.get('new_id', None)
+        descripcion = validated_data.get('descripcion', None)
+        decimales = validated_data.get('decimales', None)
+        unidad_medida = UnidadMedidaCatalogo.objects.create(
+            id=id,
+            descripcion=descripcion,
+            decimales=decimales,
+            sincronizado_sistema_informacion=False
+        )
+        return unidad_medida
+
     class Meta:
         model = UnidadMedidaCatalogo
         fields = [
             'id',
+            'new_id',
             'descripcion',
-            'nomenclatura',
+            'to_string',
             'decimales',
             'sincronizado_sistema_informacion',
         ]
+        extra_kwargs = {'id': {'read_only': True}}
 
 
 class SeguimientoCargueProcedimientoSerializer(serializers.ModelSerializer):
@@ -77,6 +97,7 @@ class ItemsCatalogoSerializer(serializers.ModelSerializer):
             'nombre_tercero',
             'desc_item_padre',
             'unidad_medida_inventario',
+            'unidad_medida_en_inventario',
             'id_procedencia',
             'ultimo_costo',
             'sistema_informacion',

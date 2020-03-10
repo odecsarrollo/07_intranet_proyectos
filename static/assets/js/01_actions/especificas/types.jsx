@@ -1,3 +1,12 @@
+export const UNIDAD_MEDIDA_CATALOGO_TYPES = {
+    create: 'create_unidad_medida_catalogo',
+    delete: 'delete_unidad_medida_catalogo',
+    fetch_all: 'fetch_unidades_medidas_catalogos',
+    fetch: 'fetch_unidad_medida_catalogo',
+    clear: 'clear_unidades_medidas_catalogos',
+    update: 'update_unidad_medida_catalogo',
+};
+
 export const SEGUIMIENTO_CARGUE_TYPES = {
     fetch_all: 'fetch_seguimientos_cargues',
     clear: 'clear_seguimientos_cargues',

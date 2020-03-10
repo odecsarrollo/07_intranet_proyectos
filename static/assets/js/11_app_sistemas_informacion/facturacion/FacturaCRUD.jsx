@@ -17,7 +17,7 @@ const List = memo(props => {
         }
     };
     useEffect(() => {
-        cargarDatos();
+        //cargarDatos();
         return () => {
             dispatch(actions.clearFacturas());
         };
@@ -31,6 +31,7 @@ const List = memo(props => {
     };
     return (
         <CRUD
+            con_busqueda_rango={true}
             method_pool={method_pool}
             list={list}
             permisos_object={permisos}

@@ -68,3 +68,4 @@ export * from './cargues_detalles/facturasAction';
 export * from './cargues_detalles/itemFacturaAction';
 
 export * from './cargues_catalogos/seguimientoCargueActions';
+export * from './cargues_catalogos/unidadesMedidasCatalogosAction';

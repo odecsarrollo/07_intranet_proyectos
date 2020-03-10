@@ -7,19 +7,16 @@ import {pesosColombianos} from "../00_utilities/common";
 import InformationDisplayDialog from "../00_utilities/components/ui/dialog/InformationDisplayDialog";
 import FacturaCRUDTabla from "../11_app_sistemas_informacion/facturacion/FacturaCRUDTabla";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import useTengoPermisos from "../00_utilities/hooks/useTengoPermisos";
-import {FACTURAS} from "../permisos";
 import Typography from "@material-ui/core/Typography";
 
 const PodioVentaComponente = (props) => {
     const dispatch = useDispatch();
-    const {solo_totales = false, titulo, solo_notas = false} = props;
+    const {solo_totales = false, titulo, solo_notas = false, cargar_facturacion, permisos_facturas} = props;
     const [ver_sin_definir, setVerSinDefinir] = useState(false);
     const [mostrar_facturacion, setMostrarFacturacion] = useState(false);
     const [facturacion_a_mostrar, setFacturacionAMostrar] = useState(null);
     const [vendedor_seleccionado_filtro, setVendedorSeleccionadoFiltro] = useState(null);
     let facturacion = useSelector(state => state.facturas);
-    const permisos_facturas = useTengoPermisos(FACTURAS);
     if (!ver_sin_definir) {
         facturacion = _.pickBy(facturacion, e => e.colaborador);
     }
@@ -102,7 +99,9 @@ const PodioVentaComponente = (props) => {
     };
 
     useEffect(() => {
-        dispatch(actions.fetchFacturasComponentesTrimestre());
+        if (cargar_facturacion) {
+            dispatch(actions.fetchFacturasComponentesTrimestre());
+        }
     }, []);
     return <div className='row'>
         {mostrar_facturacion && <InformationDisplayDialog

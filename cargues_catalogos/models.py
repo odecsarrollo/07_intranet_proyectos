@@ -35,6 +35,11 @@ class UnidadMedidaCatalogo(models.Model):
     decimales = models.PositiveIntegerField(default=0)
     sincronizado_sistema_informacion = models.BooleanField(default=0)
 
+    class Meta:
+        permissions = [
+            ("list_unidadmedidacatalogo", "Can list unidades medidas catalogo"),
+        ]
+
 
 class CargoColaboradorCatalogo(models.Model):
     cargo_id = models.PositiveIntegerField()
@@ -199,6 +204,7 @@ class ItemsCatalogo(models.Model):
 
     desc_item_padre = models.CharField(max_length=400)
     unidad_medida_inventario = models.CharField(max_length=6)
+    unidad_medida_en_inventario = models.ForeignKey(UnidadMedidaCatalogo, null=True, on_delete=models.PROTECT)
     id_procedencia = models.CharField(max_length=1)
 
     class Meta:

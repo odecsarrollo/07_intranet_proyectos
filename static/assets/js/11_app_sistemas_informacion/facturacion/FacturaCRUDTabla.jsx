@@ -8,6 +8,7 @@ import IconButtonTableSee from "../../00_utilities/components/ui/icon/table_icon
 import CustomIconTable from "../../00_utilities/components/ui/icon/CustomIconTable";
 import IconButtonTableEdit from "../../00_utilities/components/ui/icon/table_icon_button_edit";
 import DialogRelacionarCotizacionComponentes from "../../00_utilities/components/ui/search_and_select/SearchAndSelect";
+import RangoFechaDate from "../../00_utilities/components/filtros/RangoFechaDate";
 import * as actions from "../../01_actions/01_index";
 
 const useStyles = makeStyles(theme => ({
@@ -28,13 +29,15 @@ const FacturaCRUDTabla = memo(props => {
     }));
     const {
         permisos_object,
-        onSelectItemEdit
+        onSelectItemEdit,
+        con_busqueda_rango = false
     } = props;
     const classes = useStyles();
     const venta_bruta = data.map(f => parseFloat(f.venta_bruta)).reduce((uno, dos) => uno + dos, 0);
     const rentabilidad = data.map(f => parseFloat(f.rentabilidad)).reduce((uno, dos) => uno + dos, 0);
     const costo_total = data.map(f => parseFloat(f.costo_total)).reduce((uno, dos) => uno + dos, 0);
     const cotizaciones = useSelector(state => state.cotizaciones_componentes);
+    const onBuscarCotizacion = (fecha_inicial, fecha_final) => dispatch(actions.fetchFacturasPorRangoFecha(fecha_inicial, fecha_final));
     const buscarCotizacionComponentes = (parametro) => dispatch(actions.fetchCotizacionesComponentesParaRelacionarFactura(parametro));
     const onRelacionarFactura = (cotizacion) => dispatch(actions.relacionarCotizacionComponenteFactura(factura_a_relacionar, cotizacion, 'add'));
     return (
@@ -54,6 +57,7 @@ const FacturaCRUDTabla = memo(props => {
                 titulo_modal={'Relacionar Cotización'}
                 onUnMount={() => dispatch(actions.clearCotizacionesComponentes())}
             />}
+            {con_busqueda_rango && <RangoFechaDate onFiltarPorRangoMethod={onBuscarCotizacion}/>}
             <ReactTable
                 data={data}
                 columns={[

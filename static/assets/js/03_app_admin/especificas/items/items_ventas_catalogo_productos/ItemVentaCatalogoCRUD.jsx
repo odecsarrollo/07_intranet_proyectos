@@ -7,7 +7,7 @@ import * as actions from "../../../../01_actions/01_index";
 import {useSelector} from "react-redux/es/hooks/useSelector";
 import useTengoPermisos from "../../../../00_utilities/hooks/useTengoPermisos";
 import {ITEMS_VENTAS_CATALOGOS} from "../../../../permisos";
-import BuquedaTextoPorMetodo from "../../../../00_utilities/components/BuquedaTextoPorMetodo";
+import BuquedaTextoPorMetodo from "../../../../00_utilities/components/filtros/BuquedaTextoPorMetodo";
 
 const CRUD = crudHOC(CreateForm, Tabla);
 

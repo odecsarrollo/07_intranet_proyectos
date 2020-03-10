@@ -101,6 +101,7 @@ class ItemVentaCatalogoSerializer(serializers.ModelSerializer):
             'categoria_nombre',
             'to_string',
             'unidad_medida',
+            'unidad_medida_en_inventario',
             'unidad_medida_catalogo',
             'nombre_catalogo',
             'referencia_catalogo',

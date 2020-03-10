@@ -49,6 +49,22 @@ export const fetchFacturasCliente = (cliente_id, options_action = {}) => {
         return fetchListGetURLParameters(`${current_url_api}/facturas_por_cliente/?cliente_id=${cliente_id}`, options);
     }
 };
+
+export const fetchFacturasPorRangoFecha = (fecha_inicial, fecha_final, options_action = {}) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
+        };
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches, ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        return fetchListGetURLParameters(`${current_url_api}/facturacion_por_rango_fechas/?fecha_inicial=${fecha_inicial}&fecha_final=${fecha_final}`, options);
+    }
+};
+
 export const fetchFacturasComponentesTrimestre = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {

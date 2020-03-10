@@ -1,5 +1,5 @@
 from django.db import models
-from cargues_catalogos.models import ItemsCatalogo
+from cargues_catalogos.models import ItemsCatalogo, UnidadMedidaCatalogo
 from catalogo_productos.managers import ItemVentaCatalogoManager
 from importaciones.models import MargenProvedor, ProveedorImportacion
 from sistema_informacion_origen.models import SistemaInformacionOrigen
@@ -21,6 +21,7 @@ class ItemVentaCatalogo(models.Model):
     referencia_catalogo = models.CharField(max_length=100, null=True)
     nombre_catalogo = models.CharField(max_length=200, null=True)
     unidad_medida_catalogo = models.CharField(max_length=100, null=True)
+    unidad_medida_en_inventario = models.ForeignKey(UnidadMedidaCatalogo, null=True, on_delete=models.PROTECT)
     costo_catalogo = models.DecimalField(max_digits=18, decimal_places=4, default=0)
     proveedor_importacion = models.ForeignKey(
         ProveedorImportacion,

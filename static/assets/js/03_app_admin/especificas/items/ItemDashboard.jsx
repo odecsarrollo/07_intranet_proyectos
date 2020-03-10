@@ -4,6 +4,7 @@ import Tab from '@material-ui/core/Tab';
 
 import BloqueCategorias from "./categorias/CategoriaCRUDList";
 import BloqueItemsVentas from "./items_ventas_catalogo_productos/ItemVentaCatalogoCRUD";
+import BloqueUnidadesMedidas from "./unidades_medidas/UnidadMedidaCatalogoCRUD";
 import Typography from "@material-ui/core/Typography";
 
 const ItemsDashboard = memo(props => {
@@ -20,10 +21,12 @@ const ItemsDashboard = memo(props => {
                   value={slideIndex}
             >
                 <Tab label="Categorías"/>
+                <Tab label="Unidades Medidas"/>
                 <Tab label="Items Ventas Catalogo"/>
             </Tabs>
             {slideIndex === 0 && <BloqueCategorias/>}
-            {slideIndex === 1 && <BloqueItemsVentas/>}
+            {slideIndex === 1 && <BloqueUnidadesMedidas/>}
+            {slideIndex === 2 && <BloqueItemsVentas/>}
         </Fragment>
     )
 });

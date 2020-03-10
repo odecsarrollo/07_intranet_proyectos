@@ -1,3 +1,11 @@
+export const UNIDADES_MEDIDAS_CATALOGOS = {
+    add: 'add_unidadmedidacatalogo',
+    delete: 'delete_unidadmedidacatalogo',
+    change: 'change_unidadmedidacatalogo',
+    list: 'list_unidadmedidacatalogo',
+    detail: 'view_unidadmedidacatalogo',
+};
+
 export const SEGUIMIENTOS_CARGUES = {
     list: 'list_seguimientocargue',
     detail: 'view_seguimientocargue',
