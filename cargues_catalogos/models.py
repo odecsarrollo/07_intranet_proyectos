@@ -33,6 +33,7 @@ class UnidadMedidaCatalogo(models.Model):
     id = models.CharField(max_length=6, primary_key=True)
     descripcion = models.CharField(max_length=100)
     decimales = models.PositiveIntegerField(default=0)
+    sincronizado_sistema_informacion = models.BooleanField(default=0)
 
 
 class CargoColaboradorCatalogo(models.Model):

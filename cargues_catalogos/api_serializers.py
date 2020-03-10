@@ -17,6 +17,7 @@ class UnidadMedidaCatalogoSerializer(serializers.ModelSerializer):
             'descripcion',
             'nomenclatura',
             'decimales',
+            'sincronizado_sistema_informacion',
         ]
 
 
