@@ -2,13 +2,20 @@ from rest_framework import viewsets
 from .models import (
     CiudadCatalogo,
     SeguimientoCargueProcedimiento,
-    SeguimientoCargue
+    SeguimientoCargue,
+    UnidadMedidaCatalogo
 )
 from .api_serializers import (
     CiudadCatalogoSerializer,
     SeguimientoCargueSerializer,
-    SeguimientoCargueProcedimientoSerializer
+    SeguimientoCargueProcedimientoSerializer,
+    UnidadMedidaCatalogoSerializer
 )
+
+
+class UnidadMedidaCatalogoViewSet(viewsets.ModelViewSet):
+    queryset = UnidadMedidaCatalogo.objects.all()
+    serializer_class = UnidadMedidaCatalogoSerializer
 
 
 class SeguimientoCargueViewSet(viewsets.ModelViewSet):

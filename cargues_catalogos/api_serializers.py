@@ -1,6 +1,23 @@
 from rest_framework import serializers
 
-from .models import CiudadCatalogo, ItemsCatalogo, SeguimientoCargue, SeguimientoCargueProcedimiento
+from .models import (
+    CiudadCatalogo,
+    ItemsCatalogo,
+    SeguimientoCargue,
+    SeguimientoCargueProcedimiento,
+    UnidadMedidaCatalogo
+)
+
+
+class UnidadMedidaCatalogoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UnidadMedidaCatalogo
+        fields = [
+            'id',
+            'descripcion',
+            'nomenclatura',
+            'decimales',
+        ]
 
 
 class SeguimientoCargueProcedimientoSerializer(serializers.ModelSerializer):

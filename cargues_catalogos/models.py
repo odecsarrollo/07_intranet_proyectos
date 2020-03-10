@@ -29,6 +29,12 @@ class SeguimientoCargueProcedimiento(models.Model):
     numero_filas = models.BigIntegerField()
 
 
+class UnidadMedidaCatalogo(models.Model):
+    descripcion = models.CharField(max_length=100)
+    nomenclatura = models.CharField(max_length=100)
+    decimales = models.PositiveIntegerField(default=0)
+
+
 class CargoColaboradorCatalogo(models.Model):
     cargo_id = models.PositiveIntegerField()
     descripcion = models.CharField(max_length=300, null=True, blank=True)
