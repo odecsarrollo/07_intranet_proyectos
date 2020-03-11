@@ -183,7 +183,7 @@ class ClienteCatalogo(TimeStampedModel):
 class ItemsCatalogo(models.Model):
     sistema_informacion = models.ForeignKey(SistemaInformacionOrigen, on_delete=models.PROTECT)
     id_item = models.PositiveIntegerField(db_index=True)
-    id_referencia = models.CharField(max_length=20)
+    id_referencia = models.CharField(max_length=40)
     descripcion = models.CharField(max_length=40)
     descripcion_dos = models.CharField(max_length=40)
     activo = models.BooleanField(default=True)
