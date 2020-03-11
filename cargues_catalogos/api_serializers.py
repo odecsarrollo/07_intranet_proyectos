@@ -80,6 +80,7 @@ class SeguimientoCargueSerializer(serializers.ModelSerializer):
             'id',
             'fecha',
             'fecha_final',
+            'descripcion',
             'procedimientos',
             'tiempo',
         ]

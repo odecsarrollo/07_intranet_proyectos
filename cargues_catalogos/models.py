@@ -12,6 +12,7 @@ from colaboradores.models import Colaborador
 class SeguimientoCargue(models.Model):
     fecha = models.DateTimeField()
     fecha_final = models.DateTimeField(null=True)
+    descripcion = models.CharField(max_length=400, default='Cargue Completo')
 
     class Meta:
         permissions = [

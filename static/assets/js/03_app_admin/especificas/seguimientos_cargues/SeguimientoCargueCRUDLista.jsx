@@ -59,7 +59,7 @@ const Tabla = memo(props => {
                 const fecha_final = e.fecha_final ? `Fecha Final: ${fechaHoraFormatoUno(e.fecha_final)}${e.fecha_final ? ` (${e.tiempo.toFixed(2)} minutos)` : ''}` : 'Error';
                 return (
                     <ListCollapse key={e.id}
-                                  texto={`${fecha_inicial}, ${fecha_final}`}
+                                  texto={`${e.descripcion} - ${fecha_inicial}, ${fecha_final}`}
                     >
                         <ReactTable
                             data={e.procedimientos}
