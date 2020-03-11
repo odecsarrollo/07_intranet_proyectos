@@ -65,20 +65,8 @@ let Form = memo(props => {
                 nombre='Referencia'
                 name='referencia_catalogo'
                 case='U'/>
-            <MyTextFieldSimple
-                className="col-12 col-md-4 pl-2"
-                disabled={!editable}
-                nombre='U.M'
-                name='unidad_medida_catalogo'
-                case='U'/>
-            <MyTextFieldSimple
-                disabled={!editable}
-                className="col-12 col-md-3 pl-2"
-                nombre='Costo'
-                name='costo_catalogo'
-                case='U'/>
             <MyCombobox
-                data={_.map(unidades_medida, u => {
+                data={_.map(_.pickBy(unidades_medida, e => e.activo), u => {
                     return (
                         {
                             name: `${u.to_string}`,
@@ -90,10 +78,16 @@ let Form = memo(props => {
                 readOnly={!editable}
                 textField='name'
                 valuesField='id'
-                className='col-12'
+                className="col-12 col-md-4 pl-2"
                 placeholder='Unidad de Medida en Inventario'
                 filter='contains'
             />
+            <MyTextFieldSimple
+                disabled={!editable}
+                className="col-12 col-md-3 pl-2"
+                nombre='Costo'
+                name='costo_catalogo'
+                case='U'/>
             <MyCombobox
                 data={_.map(proveedores_importaciones, u => {
                     return (

@@ -46,8 +46,8 @@ const CotizadorListaPrecioTablaItem = memo(props => {
             <td>{tipo_item}</td>
             <td>{item_referencia}</td>
             <td>{item_descripcion}</td>
-            <td>{item_unidad_medida}</td>
             <td>{unidades_disponibles}</td>
+            <td>{item_unidad_medida}</td>
             <td>{fecha_ultima_entrada}</td>
             {con_precios && <Fragment>
                 <td>
@@ -97,8 +97,8 @@ const ListaPrecioTabla = memo(props => {
                 <th style={table.td}>Tipo</th>
                 <th style={table.td}>Referencia</th>
                 <th style={table.td}>Descripción</th>
-                <th style={table.td}>Uni. Med</th>
                 <th style={table.td}>Inv.</th>
+                <th style={table.td}>Uni. Med</th>
                 <th style={table.td}>Inv. Fecha Entr.</th>
                 {con_precios && <Fragment>
                     <th style={table.td}>$Vlr. Marítimo</th>

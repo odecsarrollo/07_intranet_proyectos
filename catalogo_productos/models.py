@@ -20,7 +20,6 @@ class ItemVentaCatalogo(models.Model):
     )
     referencia_catalogo = models.CharField(max_length=100, null=True)
     nombre_catalogo = models.CharField(max_length=200, null=True)
-    unidad_medida_catalogo = models.CharField(max_length=100, null=True)
     unidad_medida_en_inventario = models.ForeignKey(UnidadMedidaCatalogo, null=True, on_delete=models.PROTECT)
     costo_catalogo = models.DecimalField(max_digits=18, decimal_places=4, default=0)
     proveedor_importacion = models.ForeignKey(

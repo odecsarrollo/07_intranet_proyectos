@@ -34,6 +34,7 @@ class UnidadMedidaCatalogo(models.Model):
     descripcion = models.CharField(max_length=100)
     decimales = models.PositiveIntegerField(default=0)
     sincronizado_sistema_informacion = models.BooleanField(default=0)
+    activo = models.BooleanField(default=False)
 
     class Meta:
         permissions = [
@@ -203,7 +204,6 @@ class ItemsCatalogo(models.Model):
     color = models.CharField(max_length=30, null=True)
 
     desc_item_padre = models.CharField(max_length=400)
-    unidad_medida_inventario = models.CharField(max_length=6)
     unidad_medida_en_inventario = models.ForeignKey(UnidadMedidaCatalogo, null=True, on_delete=models.PROTECT)
     id_procedencia = models.CharField(max_length=1)
 

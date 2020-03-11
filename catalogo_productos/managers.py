@@ -14,7 +14,7 @@ class ItemVentaCatalogoManager(models.Manager):
             ),
             costo_sistema_informacion=Case(
                 When(
-                    item_sistema_informacion__unidad_medida_inventario=F('unidad_medida_catalogo'),
+                    item_sistema_informacion__unidad_medida_en_inventario=F('unidad_medida_en_inventario'),
                     then='item_sistema_informacion__ultimo_costo'
                 ),
                 default=0
@@ -30,7 +30,7 @@ class ItemVentaCatalogoManager(models.Manager):
             costo_a_usar=Case(
                 When(
                     costo_sistema_informacion__gte=F('costo_cop'),
-                    item_sistema_informacion__unidad_medida_inventario=F('unidad_medida_catalogo'),
+                    item_sistema_informacion__unidad_medida_en_inventario=F('unidad_medida_en_inventario'),
                     then='costo_sistema_informacion'
                 ),
                 default='costo_cop'
@@ -38,7 +38,7 @@ class ItemVentaCatalogoManager(models.Manager):
             costo_a_usar_aereo=Case(
                 When(
                     costo_sistema_informacion__gte=F('costo_cop_aereo'),
-                    item_sistema_informacion__unidad_medida_inventario=F('unidad_medida_catalogo'),
+                    item_sistema_informacion__unidad_medida_en_inventario=F('unidad_medida_en_inventario'),
                     then='costo_sistema_informacion'),
                 default='costo_cop_aereo'
             ),

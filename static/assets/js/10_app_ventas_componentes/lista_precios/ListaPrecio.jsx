@@ -1,4 +1,4 @@
-import React, {memo, useState, useEffect, Fragment, useContext} from 'react';
+import React, {memo, useState, useEffect, Fragment} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -37,53 +37,59 @@ const ListaPrecio = memo(props => {
     let todos_los_items = [];
     if ((con_precios && forma_pago) || (con_costos && !con_precios)) {
         const porcentaje = forma_pago ? forma_pago.porcentaje / 100 : 0;
-        bandas_eurobelt = _.map(bandas_eurobelt, b => ({
-            tipo_item: 'BandaEurobelt',
-            precio_unitario: Math.ceil((b.precio_con_mano_obra * (1 + porcentaje)) / 1000) * 1000,
-            precio_unitario_aereo: Math.ceil((b.precio_con_mano_obra_aereo * (1 + porcentaje)) / 1000) * 1000,
-            item_descripcion: b.nombre.toUpperCase(),
-            item_referencia: b.referencia.toUpperCase(),
-            item_unidad_medida: `${(b.largo / 1000)} Metro(s)`,
-            id_item: b.id,
-            forma_pago_id: forma_pago && forma_pago.id,
-            costo_cop: b.costo_cop_mano_obra,
-            costo_cop_aereo: b.costo_cop_aereo_mano_obra,
-            origen: 'Bandas Eurobelt',
-            unidades_disponibles: 'N.A',
-            fecha_ultima_entrada: 'N.A',
-        }));
+        bandas_eurobelt = _.map(bandas_eurobelt, b => {
+            return ({
+                tipo_item: 'BandaEurobelt',
+                precio_unitario: Math.ceil((b.precio_con_mano_obra * (1 + porcentaje)) / 10) * 10,
+                precio_unitario_aereo: Math.ceil((Math.max(b.precio_con_mano_obra_aereo, b.precio_con_mano_obra) * (1 + porcentaje)) / 10) * 10,
+                item_descripcion: b.nombre.toUpperCase(),
+                item_referencia: b.referencia.toUpperCase(),
+                item_unidad_medida: `${(b.largo / 1000)} Metro(s)`,
+                id_item: b.id,
+                forma_pago_id: forma_pago && forma_pago.id,
+                costo_cop: b.costo_cop_mano_obra,
+                costo_cop_aereo: Math.max(b.costo_cop_mano_obra, b.costo_cop_aereo_mano_obra),
+                origen: 'Bandas Eurobelt',
+                unidades_disponibles: 'N.A',
+                fecha_ultima_entrada: 'N.A',
+            })
+        });
 
-        componentes_eurobelt = _.map(componentes_eurobelt, b => ({
-            tipo_item: 'ComponenteEurobelt',
-            precio_unitario: Math.ceil((b.precio_base * (1 + porcentaje)) / 1000) * 1000,
-            precio_unitario_aereo: Math.ceil((b.precio_base_aereo * (1 + porcentaje) / 1000)) * 1000,
-            item_descripcion: b.nombre.toUpperCase(),
-            item_referencia: b.referencia.toUpperCase(),
-            item_unidad_medida: 'Unidad',
-            id_item: b.id,
-            forma_pago_id: forma_pago && forma_pago.id,
-            costo_cop: b.costo_cop,
-            costo_cop_aereo: b.costo_cop_aereo,
-            origen: 'Componentes Eurobelt',
-            unidades_disponibles: 'N.A',
-            fecha_ultima_entrada: 'N.A',
-        }));
+        componentes_eurobelt = _.map(componentes_eurobelt, b => {
+            return ({
+                tipo_item: 'ComponenteEurobelt',
+                precio_unitario: Math.ceil((b.precio_base * (1 + porcentaje)) / 10) * 10,
+                precio_unitario_aereo: Math.ceil((Math.max(b.precio_base_aereo, b.precio_base) * (1 + porcentaje) / 10)) * 10,
+                item_descripcion: b.nombre.toUpperCase(),
+                item_referencia: b.referencia.toUpperCase(),
+                item_unidad_medida: 'Unidad',
+                id_item: b.id,
+                forma_pago_id: forma_pago && forma_pago.id,
+                costo_cop: b.costo_cop,
+                costo_cop_aereo: Math.max(b.costo_cop, b.costo_cop_aereo),
+                origen: 'Componentes Eurobelt',
+                unidades_disponibles: 'N.A',
+                fecha_ultima_entrada: 'N.A',
+            })
+        });
 
-        articulos_catalogos = _.map(articulos_catalogos, b => ({
-            tipo_item: 'ArticuloCatalogo',
-            precio_unitario: Math.ceil((b.precio_base * (1 + porcentaje)) / 1000) * 1000,
-            precio_unitario_aereo: Math.ceil((b.precio_base_aereo * (1 + porcentaje) / 1000)) * 1000,
-            item_descripcion: b.nombre.toUpperCase(),
-            item_referencia: b.referencia.toUpperCase(),
-            item_unidad_medida: b.unidad_medida_catalogo,
-            id_item: b.id,
-            forma_pago_id: forma_pago && forma_pago.id,
-            costo_cop: b.costo_cop,
-            costo_cop_aereo: b.costo_cop_aereo,
-            origen: `Catalogo ${b.origen}`,
-            unidades_disponibles: (b.origen === 'LP_INTRANET' && (!b.item_sistema_informacion || (b.item_sistema_informacion && b.unidades_disponibles >= 0))) ? 'N.A' : b.unidades_disponibles,
-            fecha_ultima_entrada: b.origen === 'LP_INTRANET' ? 'N.A' : fechaFormatoUno(b.fecha_ultima_entrada),
-        }));
+        articulos_catalogos = _.map(articulos_catalogos, b => {
+            return ({
+                tipo_item: 'ArticuloCatalogo',
+                precio_unitario: Math.ceil((b.precio_base * (1 + porcentaje)) / 10) * 10,
+                precio_unitario_aereo: Math.ceil((Math.max(b.precio_base_aereo, b.precio_base) * (1 + porcentaje) / 10)) * 10,
+                item_descripcion: b.nombre.toUpperCase(),
+                item_referencia: b.referencia.toUpperCase(),
+                item_unidad_medida: b.unidad_medida_catalogo,
+                id_item: b.id,
+                forma_pago_id: forma_pago && forma_pago.id,
+                costo_cop: b.costo_cop,
+                costo_cop_aereo: Math.max(b.costo_cop, b.costo_cop_aereo),
+                origen: `Catalogo ${b.origen}`,
+                unidades_disponibles: (b.origen === 'LP_INTRANET' && (!b.item_sistema_informacion || (b.item_sistema_informacion && b.unidades_disponibles >= 0))) ? 'N.A' : b.unidades_disponibles,
+                fecha_ultima_entrada: b.origen === 'LP_INTRANET' ? 'N.A' : fechaFormatoUno(b.fecha_ultima_entrada),
+            })
+        });
         todos_los_items = _.orderBy([...bandas_eurobelt, ...componentes_eurobelt, ...articulos_catalogos], ['item_descripcion'], ['asc']);
     }
 
