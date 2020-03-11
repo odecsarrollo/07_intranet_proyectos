@@ -8,6 +8,10 @@ import InformationDisplayDialog from "../00_utilities/components/ui/dialog/Infor
 import FacturaCRUDTabla from "../11_app_sistemas_informacion/facturacion/FacturaCRUDTabla";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Typography from "@material-ui/core/Typography";
+import crudHOC from "../00_utilities/components/HOC_CRUD2";
+import CreateForm from '../11_app_sistemas_informacion/facturacion/forms/FacturaCRUDForm';
+
+const CRUD = crudHOC(CreateForm, FacturaCRUDTabla);
 
 const PodioVentaComponente = (props) => {
     const dispatch = useDispatch();
@@ -32,6 +36,13 @@ const PodioVentaComponente = (props) => {
         nombre: `${f.colaborador ? f.vendedor_nombre : 'SIN DEFINIR'}`,
         color: '#' + Math.floor(Math.random() * 16777215).toString(16)
     })), 'id');
+
+    const method_pool = {
+        fetchObjectMethod: (id, options) => dispatch(actions.fetchFactura(id, options)),
+        deleteObjectMethod: null,
+        createObjectMethod: null,
+        updateObjectMethod: (id, item, options) => dispatch(actions.updateFactura(id, item, options)),
+    };
 
 
     facturacion = _.map(_.orderBy(facturacion, ['fecha_documento'], ['asc']), f => {
@@ -129,9 +140,13 @@ const PodioVentaComponente = (props) => {
                 }
             })}
             {vendedor_seleccionado_filtro &&
-            <FacturaCRUDTabla
+            <CRUD
+                con_busqueda_rango={false}
+                method_pool={method_pool}
                 list={facturacion_a_mostrar.facturas_colaborador[vendedor_seleccionado_filtro]}
-                permisos_object={{...permisos_facturas, change: false, delete: false}}
+                permisos_object={{...permisos_facturas, delete: false, change: false}}
+                plural_name='Facturas'
+                singular_name='Factura'
             />}
         </InformationDisplayDialog>}
         <div className="col-12 text-center">

@@ -10,7 +10,10 @@ import IconButtonTableEdit from "../../00_utilities/components/ui/icon/table_ico
 import DialogRelacionarCotizacionComponentes from "../../00_utilities/components/ui/search_and_select/SearchAndSelect";
 import RangoFechaDate from "../../00_utilities/components/filtros/RangoFechaDate";
 import * as actions from "../../01_actions/01_index";
+import selectTableHOC from "react-table/lib/hoc/selectTable";
+import Table from "react-table";
 
+const SelectTable = selectTableHOC(Table);
 const useStyles = makeStyles(theme => ({
     texto_largo: {
         fontSize: '0.7rem',
@@ -30,7 +33,16 @@ const FacturaCRUDTabla = memo(props => {
     const {
         permisos_object,
         onSelectItemEdit,
-        con_busqueda_rango = false
+        con_busqueda_rango = false,
+        selection,
+        getTrGroupProps,
+        isSelected,
+        toggleAll,
+        checkboxTable,
+        selectAll,
+        toggleSelection,
+        rowFn,
+        singular_name,
     } = props;
     const classes = useStyles();
     const venta_bruta = data.map(f => parseFloat(f.venta_bruta)).reduce((uno, dos) => uno + dos, 0);
@@ -58,8 +70,24 @@ const FacturaCRUDTabla = memo(props => {
                 onUnMount={() => dispatch(actions.clearCotizacionesComponentes())}
             />}
             {con_busqueda_rango && <RangoFechaDate onFiltarPorRangoMethod={onBuscarCotizacion}/>}
-            <ReactTable
+            <SelectTable
+                ref={r => checkboxTable.current = r}
+                getTrGroupProps={getTrGroupProps}
+                selection={selection}
+                selectType="checkbox"
+                isSelected={isSelected}
+                selectAll={selectAll}
+                toggleSelection={toggleSelection}
+                toggleAll={toggleAll}
+                keyField="id"
+                previousText='Anterior'
+                nextText='Siguiente'
+                pageText='Página'
+                ofText='de'
+                rowsText='filas'
+                getTrProps={rowFn}
                 data={data}
+                noDataText={`No hay elementos para mostrar tipo ${singular_name}`}
                 columns={[
                     {
                         Header: "Caracteristicas",

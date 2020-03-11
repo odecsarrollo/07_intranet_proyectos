@@ -11,13 +11,7 @@ const CRUD = crudHOC(CreateForm, Tabla);
 const List = memo(props => {
     const dispatch = useDispatch();
     const permisos = useTengoPermisos(FACTURAS);
-    const cargarDatos = () => {
-        if (permisos.list) {
-            dispatch(actions.fetchFacturas());
-        }
-    };
     useEffect(() => {
-        //cargarDatos();
         return () => {
             dispatch(actions.clearFacturas());
         };
@@ -37,7 +31,6 @@ const List = memo(props => {
             permisos_object={permisos}
             plural_name='Facturas'
             singular_name='Factura'
-            cargarDatos={cargarDatos}
         />
     )
 });
