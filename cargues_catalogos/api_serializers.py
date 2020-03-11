@@ -87,7 +87,7 @@ class SeguimientoCargueSerializer(serializers.ModelSerializer):
 
 
 class ItemsCatalogoSerializer(serializers.ModelSerializer):
-    unidad_medida_inventario = serializers.CharField(source='unidad_medida_en_inventario.descripcion', read_only=True)
+    unidad_medida_inventario = serializers.CharField(source='unidad_medida_en_inventario.id', read_only=True)
 
     class Meta:
         model = ItemsCatalogo

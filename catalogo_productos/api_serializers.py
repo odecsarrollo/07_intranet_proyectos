@@ -14,7 +14,7 @@ class ItemVentaCatalogoSerializer(serializers.ModelSerializer):
     costo_a_usar_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     costo_sistema_informacion = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     precio_base_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
-    unidad_medida_catalogo = serializers.CharField(source='unidad_medida_en_inventario.descripcion', read_only=True)
+    unidad_medida_catalogo = serializers.CharField(source='unidad_medida_en_inventario.id', read_only=True)
     margen_deseado = serializers.DecimalField(
         source='margen.margen_deseado',
         read_only=True,
