@@ -56,6 +56,7 @@ const DialogSeleccionar = memo(props => {
         titulo_modal = 'Colocar título a modal',
         onUnMount = null,
         onMount = null,
+        texto_cancelar = 'Cancelar',
     } = props;
     let {listado = []} = props;
     if (exclude_ids.length > 0) {
@@ -81,14 +82,15 @@ const DialogSeleccionar = memo(props => {
                 {titulo_modal}
             </DialogTitle>
             <DialogContent>
+                {min_caracteres > 0 &&
                 <TextField
                     id="text-field-controlled"
                     placeholder={placeholder}
                     value={campo_busqueda}
                     onChange={(v) => setCampoBusqueda(v.target.value)}
-                />
+                />}
                 {
-                    campo_busqueda.length > min_caracteres &&
+                    campo_busqueda.length >= min_caracteres &&
                     <Fragment>
                         {onSearch && <Button
                             color="primary"
@@ -121,7 +123,7 @@ const DialogSeleccionar = memo(props => {
                     variant="contained"
                     onClick={onCancelar}
                 >
-                    Cancelar
+                    {texto_cancelar}
                 </Button>}
             </DialogActions>
         </Dialog>
@@ -133,13 +135,14 @@ DialogSeleccionar.propTypes = {
     min_caracteres: PropTypes.number,
     placeholder: PropTypes.string.isRequired,
     selected_item_text: PropTypes.string,
+    texto_cancelar: PropTypes.string,
     id_text: PropTypes.string,
     select_boton_text: PropTypes.string,
     titulo_modal: PropTypes.string,
     onUnMount: PropTypes.func,
     onMount: PropTypes.func,
     exclude_ids: PropTypes.array,
-    onSearch: PropTypes.func.isRequired,
+    onSearch: PropTypes.func,
     onSelect: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
     onCancelar: PropTypes.func.isRequired,

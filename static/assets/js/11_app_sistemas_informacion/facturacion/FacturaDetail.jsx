@@ -20,6 +20,12 @@ const FacturaDetail = (props) => {
     if (!factura) {
         return <div>Cargando...</div>
     }
+    const items_cotizaciones_componentes = factura.cotizaciones_componentes.map(f => ({
+        label: f.nro_consecutivo.toString(),
+        id: f.id,
+        link: `/app/ventas_componentes/cotizaciones/detail/${f.id}`,
+        className: 'col-12 col-md-4 col-xl-3'
+    }));
     return <ValidarPermisos can_see={permisos.detail} nombre='Factura de cliente'>
         <DetailLayout
             titulo={`Factura ${factura.tipo_documento}-${factura.nro_documento}`}
@@ -36,6 +42,13 @@ const FacturaDetail = (props) => {
                     text_value: fechaHoraFormatoUno(factura.fecha_documento),
                     className: 'col-12 col-md-4 col-xl-3'
                 }
+            ]}
+            info_list_items_link={[
+                {
+                    titulo: 'Cotizaciones Relacionadas',
+                    items: items_cotizaciones_componentes,
+                    className: 'col-12'
+                },
             ]}
         >
             <FacturaDetailTabla factura={factura} list={factura.items} permisos_factura={permisos}/>

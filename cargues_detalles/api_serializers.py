@@ -3,6 +3,7 @@ from rest_framework import serializers
 from intranet_proyectos.general_mixins.custom_serializer_mixins import CustomSerializerMixin
 from .models import ItemsLiteralDetalle, FacturaDetalle, MovimientoVentaDetalle
 from cargues_catalogos.api_serializers import ItemsCatalogoSerializer
+from cotizaciones_componentes.models import CotizacionComponente
 
 
 class ItemsLiteralDetalleSerializer(serializers.ModelSerializer):
@@ -49,11 +50,22 @@ class MovimientoVentaDetalleSerializer(CustomSerializerMixin, serializers.ModelS
         read_only_fields = fields
 
 
+class CotizacionComponenteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CotizacionComponente
+        fields = [
+            'id',
+            'nro_consecutivo',
+        ]
+        read_only_fields = fields
+
+
 class FacturalDetalleSerializer(serializers.ModelSerializer):
     vendedor_nombre = serializers.CharField(source='colaborador.nombres', read_only=True)
     vendedor_apellido = serializers.CharField(source='colaborador.apellidos', read_only=True)
     cliente_nombre = serializers.CharField(source='cliente.nombre', read_only=True)
     cliente_nit = serializers.CharField(source='cliente.nit', read_only=True)
+    cotizaciones_componentes = CotizacionComponenteSerializer(many=True, read_only=True)
 
     class Meta:
         model = FacturaDetalle
@@ -80,7 +92,6 @@ class FacturalDetalleSerializer(serializers.ModelSerializer):
         fields = ['colaborador'] + read_only_fields
         extra_kwargs = {
             'items': {'read_only': True},
-            'cotizaciones_componentes': {'read_only': True},
         }
 
 

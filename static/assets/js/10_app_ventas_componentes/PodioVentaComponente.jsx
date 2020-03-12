@@ -20,6 +20,7 @@ const PodioVentaComponente = (props) => {
     const [mostrar_facturacion, setMostrarFacturacion] = useState(false);
     const [facturacion_a_mostrar, setFacturacionAMostrar] = useState(null);
     const [vendedor_seleccionado_filtro, setVendedorSeleccionadoFiltro] = useState(null);
+    let facturas = useSelector(state => state.facturas);
     let facturacion = useSelector(state => state.facturas);
     if (!ver_sin_definir) {
         facturacion = _.pickBy(facturacion, e => e.colaborador);
@@ -114,6 +115,7 @@ const PodioVentaComponente = (props) => {
             dispatch(actions.fetchFacturasComponentesTrimestre());
         }
     }, []);
+    const id_facturas_seleccionadas = vendedor_seleccionado_filtro && facturacion_a_mostrar ? facturacion_a_mostrar.facturas_colaborador[vendedor_seleccionado_filtro].map(f => f.id) : [];
     return <div className='row'>
         {mostrar_facturacion && <InformationDisplayDialog
             fullScreen={true}
@@ -139,11 +141,10 @@ const PodioVentaComponente = (props) => {
                     </div>
                 }
             })}
-            {vendedor_seleccionado_filtro &&
-            <CRUD
+            {vendedor_seleccionado_filtro && <CRUD
                 con_busqueda_rango={false}
                 method_pool={method_pool}
-                list={facturacion_a_mostrar.facturas_colaborador[vendedor_seleccionado_filtro]}
+                list={_.pickBy(facturas, f => id_facturas_seleccionadas.includes(f.id))}
                 permisos_object={{...permisos_facturas, delete: false, change: false}}
                 plural_name='Facturas'
                 singular_name='Factura'

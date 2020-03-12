@@ -248,24 +248,27 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @action(detail=False, http_method_names=['get', ])
-    def cotizaciones_consulta_para_relacionar_factura(self, request):
-        parametro = self.request.GET.get('parametro')
-        lista = CotizacionComponente.objects.filter(
-            Q(estado__in=['PRO', 'FIN']) &
-            (
-                    Q(nro_consecutivo__icontains=parametro) |
-                    Q(cliente__nombre__icontains=parametro)
-            )
-        )
-
-        serializer = self.get_serializer(lista, many=True)
-        return Response(serializer.data)
-
-    @action(detail=False, http_method_names=['get', ])
     def cotizaciones_por_cliente(self, request):
         cliente_id = self.request.GET.get('cliente_id')
         self.serializer_class = CotizacionComponenteConDetalleSerializer
         lista = self.queryset.filter(cliente_id=cliente_id)
+        serializer = self.get_serializer(lista, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, http_method_names=['get', ])
+    def cotizaciones_por_cliente_para_relacionar_factura(self, request):
+        cliente_id = self.request.GET.get('cliente_id')
+        self.serializer_class = CotizacionComponenteConDetalleSerializer
+        lista = self.queryset.filter(
+            Q(cliente_id=cliente_id) &
+            Q(estado__in=['PRO', 'FIN'])
+        )
+        user = self.request.user
+        if not user.is_superuser:
+            lista = lista.filter(
+                (Q(responsable__isnull=True) & Q(creado_por=user)) |
+                (Q(responsable__isnull=False) & Q(responsable=user))
+            )
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 

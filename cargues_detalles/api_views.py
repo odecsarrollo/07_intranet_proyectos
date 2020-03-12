@@ -18,7 +18,7 @@ class FacturaDetalleViewSet(viewsets.ModelViewSet):
     queryset = FacturaDetalle.objects.select_related(
         'cliente',
         'colaborador',
-    ).prefetch_related('items', 'cotizaciones_componentes').all()
+    ).prefetch_related('cotizaciones_componentes', 'items')
     serializer_class = FacturalDetalleSerializer
 
     def retrieve(self, request, *args, **kwargs):
@@ -51,7 +51,10 @@ class FacturaDetalleViewSet(viewsets.ModelViewSet):
     def facturacion_por_rango_fechas(self, request):
         fecha_inicial = self.request.GET.get('fecha_inicial')
         fecha_final = self.request.GET.get('fecha_final')
-        lista = self.queryset.filter(fecha_documento__gte=fecha_inicial, fecha_documento__lte=fecha_final)
+        lista = self.queryset.filter(
+            fecha_documento__gte=fecha_inicial,
+            fecha_documento__lte=fecha_final
+        )
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
@@ -63,7 +66,8 @@ class FacturaDetalleViewSet(viewsets.ModelViewSet):
         cotizacion, factura = relacionar_cotizacion_con_factura(
             cotizacion_componente_id=cotizacion_componente_id,
             factura_id=pk,
-            accion=accion
+            accion=accion,
+            usuario_id=self.request.user.id
         )
         serializer = self.get_serializer(factura)
         return Response(serializer.data)

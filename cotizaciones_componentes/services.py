@@ -26,13 +26,20 @@ from bandas_eurobelt.models import BandaEurobelt, ComponenteBandaEurobelt
 def relacionar_cotizacion_con_factura(
         cotizacion_componente_id: int,
         factura_id: int,
-        accion: str
+        accion: str,
+        usuario_id: int = None
 ) -> (CotizacionComponente, FacturaDetalle):
     factura = FacturaDetalle.objects.get(pk=factura_id)
     cotizacion = CotizacionComponente.objects.get(pk=cotizacion_componente_id)
     user_responsable_cotizacion = cotizacion.responsable if cotizacion.responsable else cotizacion.creado_por
     user_vendedor_factura = factura.colaborador.usuario if factura.colaborador and factura.colaborador.usuario else None
+    usuario = User.objects.get(pk=usuario_id)
     if accion == 'add':
+
+        if not (usuario_id == user_responsable_cotizacion.id or usuario.is_superuser):
+            raise ValidationError({
+                '_error': 'Sólo el vendedor responsable o un super usuario puede crear la relación de la cotización con la factura'})
+
         cliente_factura = factura.cliente
         cliente_cotizacion = cotizacion.cliente
         if cliente_cotizacion != cliente_factura:
@@ -43,7 +50,10 @@ def relacionar_cotizacion_con_factura(
             raise ValidationError({'_error': 'El vendedor que cotizó no es el mismo que vendió, por favor revisar'})
         cotizacion.facturas.add(factura)
     if accion == 'rem':
-        cotizacion.facturas.add(factura)
+        if not (usuario_id == user_responsable_cotizacion.id or usuario.is_superuser):
+            raise ValidationError({
+                '_error': 'Sólo el vendedor responsable o un super usuario puede quitar la relación de la cotización con la factura'})
+        cotizacion.facturas.remove(factura)
     factura = FacturaDetalle.objects.get(pk=factura_id)
     cotizacion = CotizacionComponente.objects.get(pk=cotizacion_componente_id)
     return cotizacion, factura

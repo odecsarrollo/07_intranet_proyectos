@@ -1,5 +1,4 @@
 import React, {memo, useState, Fragment} from "react";
-import ReactTable from "react-table";
 import {fechaFormatoUno, pesosColombianos} from "../../00_utilities/common";
 import {makeStyles} from "@material-ui/core";
 import {Link} from "react-router-dom";
@@ -12,6 +11,8 @@ import RangoFechaDate from "../../00_utilities/components/filtros/RangoFechaDate
 import * as actions from "../../01_actions/01_index";
 import selectTableHOC from "react-table/lib/hoc/selectTable";
 import Table from "react-table";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import SiNoDialog from "../../00_utilities/components/ui/dialog/SiNoDialog";
 
 const SelectTable = selectTableHOC(Table);
 const useStyles = makeStyles(theme => ({
@@ -25,6 +26,9 @@ const FacturaCRUDTabla = memo(props => {
     const dispatch = useDispatch();
     let data = _.orderBy(props.list, ['nro_documento', 'fecha_documento'], ['desc', 'desc']);
     const [factura_a_relacionar, setFacturaARelacionar] = useState(null);
+    const [cotizacion_seleccionada_id, setCotizacionSeleccionadaId] = useState(null);
+    const [show_quitar_cotizacion, setShowQuitarCotizacion] = useState(false);
+    const [show_relacionar_cotizacion, setShowRelacionarCotizacion] = useState(false);
     data = data.map(f => ({
         ...f,
         porcentaje_rentabilidad: parseFloat(((f.rentabilidad / f.venta_bruta)) * 100).toFixed(2),
@@ -50,23 +54,48 @@ const FacturaCRUDTabla = memo(props => {
     const costo_total = data.map(f => parseFloat(f.costo_total)).reduce((uno, dos) => uno + dos, 0);
     const cotizaciones = useSelector(state => state.cotizaciones_componentes);
     const onBuscarCotizacion = (fecha_inicial, fecha_final) => dispatch(actions.fetchFacturasPorRangoFecha(fecha_inicial, fecha_final));
-    const buscarCotizacionComponentes = (parametro) => dispatch(actions.fetchCotizacionesComponentesParaRelacionarFactura(parametro));
     const onRelacionarFactura = (cotizacion) => dispatch(actions.relacionarCotizacionComponenteFactura(factura_a_relacionar, cotizacion, 'add'));
+    const onQuitarCotizacion = () => dispatch(actions.relacionarCotizacionComponenteFactura(factura_a_relacionar, cotizacion_seleccionada_id, 'rem', {
+        callback: () => {
+            setShowQuitarCotizacion(false);
+            setCotizacionSeleccionadaId(false);
+        }
+    }));
     return (
         <Fragment>
-            {factura_a_relacionar && <DialogRelacionarCotizacionComponentes
-                exclude_ids={_.mapKeys(props.list, 'id')[factura_a_relacionar].cotizaciones_componentes}
+            {show_quitar_cotizacion &&
+            <SiNoDialog
+                onSi={onQuitarCotizacion}
+                onNo={() => {
+                    setShowQuitarCotizacion(false);
+                    setCotizacionSeleccionadaId(null);
+                }}
+                is_open={show_quitar_cotizacion}
+                titulo='Quitar Cotización'
+            >
+                Desea quitar la cotización?
+            </SiNoDialog>}
+            {show_relacionar_cotizacion && <DialogRelacionarCotizacionComponentes
+                exclude_ids={_.mapKeys(props.list, 'id')[factura_a_relacionar].cotizaciones_componentes.map(e => e.id)}
                 placeholder='Cotización a buscar'
+                texto_cancelar='Cerrar'
                 id_text='id'
-                min_caracteres={3}
-                selected_item_text='nro_consecutivo'
-                onSearch={buscarCotizacionComponentes}
+                min_caracteres={0}
+                selected_item_text='texto'
+                onSearch={null}
                 onSelect={onRelacionarFactura}
-                onCancelar={() => setFacturaARelacionar(null)}
-                listado={_.map(cotizaciones)}
-                open={factura_a_relacionar !== null}
+                onCancelar={() => {
+                    setShowRelacionarCotizacion(false);
+                    setFacturaARelacionar(null);
+                    dispatch(actions.clearCotizacionesComponentes())
+                }}
+                listado={_.map(cotizaciones, c => ({
+                    id: c.id,
+                    texto: `${c.cliente_nombre.substring(0, 15)}... (${c.nro_consecutivo})`
+                }))}
+                open={show_relacionar_cotizacion}
                 select_boton_text='Relacionar'
-                titulo_modal={'Relacionar Cotización'}
+                titulo_modal={`Relacionar Cotización de ${_.mapKeys(props.list, 'id')[factura_a_relacionar].cliente_nombre}`}
                 onUnMount={() => dispatch(actions.clearCotizacionesComponentes())}
             />}
             {con_busqueda_rango && <RangoFechaDate onFiltarPorRangoMethod={onBuscarCotizacion}/>}
@@ -178,6 +207,26 @@ const FacturaCRUDTabla = memo(props => {
                                 minWidth: 80,
                                 Cell: row => <div className='text-right'>{row.value}%</div>
                             },
+                            {
+                                Header: "Cotizaciones",
+                                accessor: "cotizaciones_componentes",
+                                maxWidth: 80,
+                                minWidth: 80,
+                                Cell: row => <div className='row text-center'>
+                                    {row.value.map(c => <div className="col-12" key={c.id}>
+                                        <Link to={`/app/ventas_componentes/cotizaciones/detail/${c.id}`}
+                                              target='_blank'>
+                                            {c.nro_consecutivo}
+                                        </Link>
+                                        <FontAwesomeIcon icon={'times'} className='puntero m-1' size='sm'
+                                                         onClick={() => {
+                                                             setFacturaARelacionar(row.original.id);
+                                                             setCotizacionSeleccionadaId(c.id);
+                                                             setShowQuitarCotizacion(true)
+                                                         }}/>
+                                    </div>)}
+                                </div>
+                            },
                         ]
                     },
                     {
@@ -217,7 +266,9 @@ const FacturaCRUDTabla = memo(props => {
                                     <CustomIconTable
                                         icon='code-merge'
                                         onClick={() => {
+                                            setShowRelacionarCotizacion(true);
                                             setFacturaARelacionar(row.value);
+                                            dispatch(actions.fetchCotizacionesComponentesClienteParaRelacionarFactura(_.mapKeys(props.list, 'id')[row.value].cliente))
                                         }}/>
 
                             }
