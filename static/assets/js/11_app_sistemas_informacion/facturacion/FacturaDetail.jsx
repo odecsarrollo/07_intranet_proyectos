@@ -30,7 +30,12 @@ const FacturaDetail = (props) => {
         <DetailLayout
             titulo={`Factura ${factura.tipo_documento}-${factura.nro_documento}`}
             info_items={[
-                {label: 'Cliente', text_value: factura.cliente_nombre, className: 'col-12 col-md-4 col-xl-3'},
+                {
+                    label: 'Cliente',
+                    text_value: factura.cliente_nombre,
+                    className: 'col-12 col-md-4 col-xl-3',
+                    link: `/app/ventas_componentes/clientes/detail/${factura.cliente}`
+                },
                 {label: 'Nit', text_value: factura.cliente_nit, className: 'col-12 col-md-4 col-xl-3'},
                 {
                     label: 'Vendedor',

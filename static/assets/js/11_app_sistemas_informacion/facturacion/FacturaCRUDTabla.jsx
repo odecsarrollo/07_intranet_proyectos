@@ -13,6 +13,8 @@ import selectTableHOC from "react-table/lib/hoc/selectTable";
 import Table from "react-table";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import SiNoDialog from "../../00_utilities/components/ui/dialog/SiNoDialog";
+import useTengoPermisos from "../../00_utilities/hooks/useTengoPermisos";
+import {CLIENTES} from "../../permisos";
 
 const SelectTable = selectTableHOC(Table);
 const useStyles = makeStyles(theme => ({
@@ -28,7 +30,9 @@ const FacturaCRUDTabla = memo(props => {
     const [factura_a_relacionar, setFacturaARelacionar] = useState(null);
     const [cotizacion_seleccionada_id, setCotizacionSeleccionadaId] = useState(null);
     const [show_quitar_cotizacion, setShowQuitarCotizacion] = useState(false);
+    const [show_relacionar_cotizacion_confirmacion, setShowRelacionarCotizacionConfirmacion] = useState(false);
     const [show_relacionar_cotizacion, setShowRelacionarCotizacion] = useState(false);
+    const permisos_cliente = useTengoPermisos(CLIENTES);
     data = data.map(f => ({
         ...f,
         porcentaje_rentabilidad: parseFloat(((f.rentabilidad / f.venta_bruta)) * 100).toFixed(2),
@@ -54,17 +58,21 @@ const FacturaCRUDTabla = memo(props => {
     const costo_total = data.map(f => parseFloat(f.costo_total)).reduce((uno, dos) => uno + dos, 0);
     const cotizaciones = useSelector(state => state.cotizaciones_componentes);
     const onBuscarCotizacion = (fecha_inicial, fecha_final) => dispatch(actions.fetchFacturasPorRangoFecha(fecha_inicial, fecha_final));
-    const onRelacionarFactura = (cotizacion) => dispatch(actions.relacionarCotizacionComponenteFactura(factura_a_relacionar, cotizacion, 'add'));
+    const onRelacionarFactura = () => dispatch(actions.relacionarCotizacionComponenteFactura(factura_a_relacionar, cotizacion_seleccionada_id, 'add', {
+        callback: () => {
+            setShowRelacionarCotizacionConfirmacion(false);
+            setCotizacionSeleccionadaId(null);
+        }
+    }));
     const onQuitarCotizacion = () => dispatch(actions.relacionarCotizacionComponenteFactura(factura_a_relacionar, cotizacion_seleccionada_id, 'rem', {
         callback: () => {
             setShowQuitarCotizacion(false);
-            setCotizacionSeleccionadaId(false);
+            setCotizacionSeleccionadaId(null);
         }
     }));
     return (
         <Fragment>
-            {show_quitar_cotizacion &&
-            <SiNoDialog
+            {show_quitar_cotizacion && <SiNoDialog
                 onSi={onQuitarCotizacion}
                 onNo={() => {
                     setShowQuitarCotizacion(false);
@@ -75,6 +83,21 @@ const FacturaCRUDTabla = memo(props => {
             >
                 Desea quitar la cotización?
             </SiNoDialog>}
+            {show_relacionar_cotizacion_confirmacion && <SiNoDialog
+                onSi={onRelacionarFactura}
+                onNo={() => {
+                    setShowRelacionarCotizacionConfirmacion(false);
+                    setCotizacionSeleccionadaId(null)
+                }}
+                is_open={show_relacionar_cotizacion_confirmacion}
+                titulo={`Confirmar Relacionar Cotización de ${cotizaciones[cotizacion_seleccionada_id].cliente_nombre}`}
+            >
+                Desea realmente relacionar la cotización {cotizaciones[cotizacion_seleccionada_id].nro_consecutivo} con
+                estado {cotizaciones[cotizacion_seleccionada_id].estado_display}?
+                {cotizaciones[cotizacion_seleccionada_id].estado !== 'FIN' && <div style={{color: 'red'}}>
+                    EL ESTADO DE LA COTIZACIÓN SE PASARÁ A Entragada Totalmente, esta de acuerdo?
+                </div>}
+            </SiNoDialog>}
             {show_relacionar_cotizacion && <DialogRelacionarCotizacionComponentes
                 exclude_ids={_.mapKeys(props.list, 'id')[factura_a_relacionar].cotizaciones_componentes.map(e => e.id)}
                 placeholder='Cotización a buscar'
@@ -83,7 +106,10 @@ const FacturaCRUDTabla = memo(props => {
                 min_caracteres={0}
                 selected_item_text='texto'
                 onSearch={null}
-                onSelect={onRelacionarFactura}
+                onSelect={cotizacion_id => {
+                    setCotizacionSeleccionadaId(cotizacion_id);
+                    setShowRelacionarCotizacionConfirmacion(true);
+                }}
                 onCancelar={() => {
                     setShowRelacionarCotizacion(false);
                     setFacturaARelacionar(null);
@@ -153,7 +179,13 @@ const FacturaCRUDTabla = memo(props => {
                                 minWidth: 250,
                                 filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase()),
                                 filterable: true,
-                                Cell: row => <div className={classes.texto_largo}>{row.value}</div>
+                                Cell: row => <div className={classes.texto_largo}>
+                                    {permisos_cliente.detail ?
+                                        <Link to={`/app/ventas_componentes/clientes/detail/${row.original.cliente}`}
+                                              target='_blank'>
+                                            {row.value}
+                                        </Link> : row.value}
+                                </div>
                             },
                             {
                                 Header: "Vendedor",
@@ -220,8 +252,8 @@ const FacturaCRUDTabla = memo(props => {
                                         </Link>
                                         <FontAwesomeIcon icon={'times'} className='puntero m-1' size='sm'
                                                          onClick={() => {
-                                                             setFacturaARelacionar(row.original.id);
                                                              setCotizacionSeleccionadaId(c.id);
+                                                             setFacturaARelacionar(row.original.id);
                                                              setShowQuitarCotizacion(true)
                                                          }}/>
                                     </div>)}

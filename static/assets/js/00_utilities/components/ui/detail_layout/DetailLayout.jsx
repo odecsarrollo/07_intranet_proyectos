@@ -57,6 +57,7 @@ const DetailLayout = (props) => {
                         text_value={i.text_value}
                         icon_value={i.icon_value}
                         className={i.className}
+                        link={i.link}
                     />
                 )}
             </div>

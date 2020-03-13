@@ -48,6 +48,8 @@ def relacionar_cotizacion_con_factura(
                     cliente_cotizacion.nombre, cliente_factura.nombre)})
         if user_responsable_cotizacion != user_vendedor_factura:
             raise ValidationError({'_error': 'El vendedor que cotizó no es el mismo que vendió, por favor revisar'})
+        cotizacion.estado = 'FIN'
+        cotizacion.save()
         cotizacion.facturas.add(factura)
     if accion == 'rem':
         if not (usuario_id == user_responsable_cotizacion.id or usuario.is_superuser):
@@ -71,6 +73,10 @@ def cotizacion_componentes_cambiar_estado(
     cambio_estado = nuevo_estado != estado_actual
     estado_actual_display = cotizacion_componente.get_estado_display()
     if cambio_estado:
+        if cotizacion_componente.facturas.exists() and nuevo_estado != 'FIN':
+            raise ValidationError({
+                '_error': 'No es posible cambiar de estado la cotización, esta ya tiene (%s) facturas relacionadas' % cotizacion_componente.facturas.count()
+            })
         if nuevo_estado == 'ENV':
             error = False
         elif estado_actual == 'ENV':
@@ -85,7 +91,7 @@ def cotizacion_componentes_cambiar_estado(
         elif estado_actual in ['ELI', 'FIN']:
             error = True
 
-        if usuario.is_superuser:
+        if not usuario.is_superuser:
             if nuevo_estado != 'ENV':
                 if cotizacion_componente.responsable is not None and usuario != cotizacion_componente.responsable:
                     cotizacion_componente.estado = nuevo_estado

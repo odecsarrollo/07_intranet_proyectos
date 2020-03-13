@@ -5,6 +5,16 @@ import IconButtonTableSee from "../../00_utilities/components/ui/icon/table_icon
 import ReactTable from "react-table";
 import {Link} from "react-router-dom";
 import {pesosColombianos} from "../../00_utilities/common";
+import useTengoPermisos from "../../00_utilities/hooks/useTengoPermisos";
+import {CLIENTES} from "../../permisos";
+import {makeStyles} from "@material-ui/core";
+
+const useStyles = makeStyles(theme => ({
+    texto_largo: {
+        fontSize: '0.7rem',
+        whiteSpace: 'normal'
+    },
+}));
 
 const Tabla = memo(props => {
     const data = _.map(_.pickBy(_.orderBy(props.list, ['nro_consecutivo'], ['desc']), e => e.estado !== 'INI'));
@@ -14,6 +24,8 @@ const Tabla = memo(props => {
         permisos_object,
         nro_filas = 100
     } = props;
+    const classes = useStyles();
+    const permisos_cliente = useTengoPermisos(CLIENTES);
     return <ReactTable
         data={data}
         columns={[
@@ -37,7 +49,14 @@ const Tabla = memo(props => {
                         maxWidth: 250,
                         minWidth: 250,
                         filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase()),
-                        filterable: true
+                        filterable: true,
+                        Cell: row => <div className={classes.texto_largo}>
+                            {permisos_cliente.detail ?
+                                <Link to={`/app/ventas_componentes/clientes/detail/${row.original.cliente}`}
+                                      target='_blank'>
+                                    {row.value}
+                                </Link> : row.value}
+                        </div>
                     },
                     {
                         Header: "Estado",
