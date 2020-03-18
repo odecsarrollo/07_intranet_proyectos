@@ -1,7 +1,7 @@
 from django.db.models import Q, Sum
 from django.db.models.functions import Coalesce
 from django.http import HttpResponse
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
@@ -15,6 +15,7 @@ from .api_serializers import (
 
 
 class CotizacionComponenteViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
     queryset = CotizacionComponente.objects.select_related(
         'responsable',
         'creado_por',

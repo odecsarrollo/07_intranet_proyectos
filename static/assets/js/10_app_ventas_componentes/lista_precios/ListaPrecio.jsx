@@ -40,8 +40,8 @@ const ListaPrecio = memo(props => {
         bandas_eurobelt = _.map(bandas_eurobelt, b => {
             return ({
                 tipo_item: 'BandaEurobelt',
-                precio_unitario: Math.ceil((b.precio_con_mano_obra * (1 + porcentaje)) / 10) * 10,
-                precio_unitario_aereo: Math.ceil((Math.max(b.precio_con_mano_obra_aereo, b.precio_con_mano_obra) * (1 + porcentaje)) / 10) * 10,
+                precio_unitario: Math.ceil((b.precio_con_mano_obra * (1 + porcentaje)) / 100) * 100,
+                precio_unitario_aereo: Math.ceil((Math.max(b.precio_con_mano_obra_aereo, b.precio_con_mano_obra) * (1 + porcentaje)) / 100) * 100,
                 item_descripcion: b.nombre.toUpperCase(),
                 item_referencia: b.referencia.toUpperCase(),
                 item_unidad_medida: `${(b.largo / 1000)} Metro(s)`,
@@ -58,8 +58,8 @@ const ListaPrecio = memo(props => {
         componentes_eurobelt = _.map(componentes_eurobelt, b => {
             return ({
                 tipo_item: 'ComponenteEurobelt',
-                precio_unitario: Math.ceil((b.precio_base * (1 + porcentaje)) / 10) * 10,
-                precio_unitario_aereo: Math.ceil((Math.max(b.precio_base_aereo, b.precio_base) * (1 + porcentaje) / 10)) * 10,
+                precio_unitario: Math.ceil((b.precio_base * (1 + porcentaje)) / 100) * 100,
+                precio_unitario_aereo: Math.ceil((Math.max(b.precio_base_aereo, b.precio_base) * (1 + porcentaje) / 100)) * 100,
                 item_descripcion: b.nombre.toUpperCase(),
                 item_referencia: b.referencia.toUpperCase(),
                 item_unidad_medida: 'Unidad',
@@ -76,8 +76,8 @@ const ListaPrecio = memo(props => {
         articulos_catalogos = _.map(articulos_catalogos, b => {
             return ({
                 tipo_item: 'ArticuloCatalogo',
-                precio_unitario: Math.ceil((b.precio_base * (1 + porcentaje)) / 10) * 10,
-                precio_unitario_aereo: Math.ceil((Math.max(b.precio_base_aereo, b.precio_base) * (1 + porcentaje) / 10)) * 10,
+                precio_unitario: Math.ceil((b.precio_base * (1 + porcentaje)) / 100) * 100,
+                precio_unitario_aereo: Math.ceil((Math.max(b.precio_base_aereo, b.precio_base) * (1 + porcentaje) / 100)) * 100,
                 item_descripcion: b.nombre.toUpperCase(),
                 item_referencia: b.referencia.toUpperCase(),
                 item_unidad_medida: b.unidad_medida_catalogo,

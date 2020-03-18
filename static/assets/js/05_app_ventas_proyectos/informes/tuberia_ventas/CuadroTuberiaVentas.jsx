@@ -132,9 +132,10 @@ const InformeTunelVentas = memo(props => {
                 <thead>
                 <tr>
                     <th>Responsable</th>
-                    {_.map(orden_estados, e => <th key={e.id}>{e.nombre}</th>)}
-                    <th>Total de la Tubería</th>
+                    {_.map(_.omit(orden_estados, 'Cierre (Aprobado)'), e => <th key={e.id}>{e.nombre}</th>)}
                     <th>Cierre (Aprobado) Mes Actual</th>
+                    <th>Total de la Tubería</th>
+                    <th>Cierre Trimestre (Aprobado)</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -193,23 +194,6 @@ const InformeTunelVentas = memo(props => {
                             <div>
                                 {pesosColombianos(orden_cinco)}
                             </div>
-
-                        </td>
-                        <td className='text-center puntero' onClick={() => filtro_cotizaciones('Cierre (Aprobado)', r)}>
-                            <div>
-                                {_.size(_.pickBy(cotizaciones_x_responsable, e => e.orden === 6))}
-                            </div>
-                            <div>
-                                {pesosColombianos(orden_seis)}
-                            </div>
-                        </td>
-                        <td className='text-center' style={{fontWeight: 'bold'}}>
-                            <div>
-                                {_.size(cotizaciones_x_responsable)}
-                            </div>
-                            <div>
-                                {pesosColombianos(total_valor)}
-                            </div>
                         </td>
                         <td className='text-center puntero'
                             onClick={() => filtro_cotizaciones('Cierre (Aprobado)', r, true)}
@@ -219,6 +203,22 @@ const InformeTunelVentas = memo(props => {
                             </div>
                             <div>
                                 {pesosColombianos(orden_seis_mes)}
+                            </div>
+                        </td>
+                        <td className='text-center' style={{fontWeight: 'bold'}}>
+                            <div>
+                                {_.size(cotizaciones_x_responsable) - _.size(_.pickBy(cotizaciones_x_responsable, e => e.orden === 6))}
+                            </div>
+                            <div>
+                                {pesosColombianos(total_valor - orden_seis)}
+                            </div>
+                        </td>
+                        <td className='text-center puntero' onClick={() => filtro_cotizaciones('Cierre (Aprobado)', r)}>
+                            <div>
+                                {_.size(_.pickBy(cotizaciones_x_responsable, e => e.orden === 6))}
+                            </div>
+                            <div>
+                                {pesosColombianos(orden_seis)}
                             </div>
                         </td>
                     </tr>
@@ -260,23 +260,23 @@ const InformeTunelVentas = memo(props => {
                             {pesosColombianos(valores_5.total)}
                         </div>
                     </td>
-                    <td className='text-center'>
-                        <div>
-                            {valores_6.cantidad}<br/>
-                            {pesosColombianos(valores_6.total)}
-                        </div>
-                    </td>
-                    <td className='text-center'>
-                        <div>
-                            {cantidades_totales}<br/>
-                            {pesosColombianos(valores_totales)}
-                        </div>
-                    </td>
                     <td className='text-center'
                         style={{backgroundColor: 'gray', color: 'white', fontWeight: 'bold'}}>
                         <div>
                             {valores_mes.cantidad}<br/>
                             {pesosColombianos(valores_mes.total)}
+                        </div>
+                    </td>
+                    <td className='text-center'>
+                        <div>
+                            {cantidades_totales - valores_6.cantidad}<br/>
+                            {pesosColombianos(valores_totales - valores_6.total)}
+                        </div>
+                    </td>
+                    <td className='text-center'>
+                        <div>
+                            {valores_6.cantidad}<br/>
+                            {pesosColombianos(valores_6.total)}
                         </div>
                     </td>
                 </tr>
