@@ -1,4 +1,4 @@
-import React, {memo, useContext, useState} from "react";
+import React, {memo, useContext, useState, Fragment} from "react";
 import {useDispatch} from 'react-redux';
 import StylesContext from "../../../00_utilities/contexts/StylesContext";
 import {pesosColombianos} from "../../../00_utilities/common";
@@ -9,6 +9,8 @@ import * as actions from "../../../01_actions/01_index";
 
 import {SortableContainer, SortableElement, SortableHandle} from 'react-sortable-hoc';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import classNames from "classnames";
+import PropTypes from "prop-types";
 
 const DragHandle = SortableHandle(() => <FontAwesomeIcon
     icon={'arrows-alt'}
@@ -27,7 +29,102 @@ const useStyles = makeStyles(theme => ({
         borderRadius: '5px',
         backgroundColor: theme.palette.primary.light
     },
+    textFieldPersonalizado: {
+        margin: '2px',
+        padding: 0,
+        paddingLeft: 5,
+        borderRight: '1px solid black',
+        borderLeft: '1px solid black',
+        borderTop: '1px solid black',
+        borderRadius: '5px',
+        backgroundColor: theme.palette.primary.light
+    },
+    campo_personalizado: {
+        color: 'red'
+    },
+    icono_reset_value: {
+        color: 'red'
+    },
 }));
+
+const CotizacionDetailItemsTablaItemEdit = props => {
+    const {
+        nombre_atributo_actual,
+        nombre_atributo_a_cambiar,
+        setAtributoACambiar,
+        item,
+        guarda_original,
+        multiline,
+        tipo,
+        cargarDatos
+    } = props;
+    const dispatch = useDispatch();
+    const [valor, setValor] = useState(item[nombre_atributo_actual]);
+    const classes = useStyles();
+    const personalizarItemCaracteristica = () => {
+        const callback = () => {
+            cargarDatos();
+            setAtributoACambiar(null)
+        };
+        if ((tipo === 'float' && parseFloat(item[nombre_atributo_actual]) === parseFloat(valor)) ||
+            (tipo === 'string' && item[nombre_atributo_actual] === valor)) {
+            setAtributoACambiar(null)
+        } else {
+            dispatch(actions.personalizarItemCotizacionComponente(
+                item.id,
+                nombre_atributo_actual,
+                tipo === 'string' ? valor : null,
+                tipo === 'float' ? valor : null,
+                {callback}
+            ));
+        }
+    };
+    return <div className='row'>
+        {nombre_atributo_actual === nombre_atributo_a_cambiar ?
+            <TextField
+                fullWidth={true}
+                className={classes.textFieldPersonalizado}
+                multiline={multiline}
+                onBlur={() => personalizarItemCaracteristica()}
+                value={valor}
+                onDoubleClick={() => setValor(item[nombre_atributo_actual])}
+                onChange={(e) => {
+                    setValor(tipo === 'string' ? e.target.value.toUpperCase() : e.target.value)
+                }}
+            /> :
+            <Fragment>
+                <div
+                    className={guarda_original ? classNames(classes.campo_personalizado, 'puntero col-12') : 'puntero col-12'}>
+                    <span onDoubleClick={() => setAtributoACambiar(nombre_atributo_actual)}>
+                        {tipo === 'float' ? pesosColombianos(item[nombre_atributo_actual]) : item[nombre_atributo_actual]}
+                    </span>
+                </div>
+                {guarda_original && <div className={classNames(classes.icono_reset_value, 'text-right col-12')}>
+                    <FontAwesomeIcon
+                        onDoubleClick={() => {
+                            setValor(item[`${nombre_atributo_actual}_ori`]);
+                            personalizarItemCaracteristica();
+                        }}
+                        icon={'history'}
+                        className={'puntero'}
+                        size='sm'
+                    />
+                </div>}
+            </Fragment>
+        }
+    </div>
+};
+
+CotizacionDetailItemsTablaItemEdit.propTypes = {
+    nombre_atributo_actual: PropTypes.string.isRequired,
+    nombre_atributo_a_cambiar: PropTypes.string,
+    tipo: PropTypes.string.isRequired,
+    setAtributoACambiar: PropTypes.func.isRequired,
+    cargarDatos: PropTypes.func.isRequired,
+    guarda_original: PropTypes.bool.isRequired,
+    multiline: PropTypes.bool.isRequired,
+    item: PropTypes.object.isRequired
+};
 
 const CotizacionDetailItemsTablaItem = memo(props => {
     const {item, editable, cargarDatos} = props;
@@ -36,6 +133,7 @@ const CotizacionDetailItemsTablaItem = memo(props => {
     const [dias_entrega, setDiasEntrega] = useState(item.dias_entrega);
     const {table} = useContext(StylesContext);
     const classes = useStyles();
+    const [nombre_atributo_a_cambiar, setAtributoACambiar] = useState(null);
     const tipo = () => {
         const es_articulo_catalogo = !!item.articulo_catalogo;
         const es_banda_eurobelt = !!item.banda_eurobelt;
@@ -65,7 +163,6 @@ const CotizacionDetailItemsTablaItem = memo(props => {
             callback: () => cargarDatos()
         }
     ));
-
     return (
         <tr style={{...table.tr}}>
             <td style={table.td}>
@@ -76,11 +173,53 @@ const CotizacionDetailItemsTablaItem = memo(props => {
             <td style={{...table.td, fontSize: '0.5rem'}}>{item.canal_nombre} {item.forma_pago_nombre}</td>
             <td style={{...table.td, fontSize: '0.5rem'}}>{tipo()}</td>
             <td style={{...table.td, fontSize: '0.7rem', wordBreak: 'break-all'}}>
-                {item.referencia}
+                <CotizacionDetailItemsTablaItemEdit
+                    cargarDatos={cargarDatos}
+                    multiline={true}
+                    nombre_atributo_actual='referencia'
+                    item={item}
+                    guarda_original={item.referencia_ori !== null}
+                    nombre_atributo_a_cambiar={nombre_atributo_a_cambiar}
+                    setAtributoACambiar={setAtributoACambiar}
+                    tipo='string'
+                />
             </td>
-            <td style={{...table.td, fontSize: '0.7rem'}}>{item.descripcion}</td>
-            <td style={{...table.td, fontSize: '0.7rem'}}>{item.unidad_medida}</td>
-            <td style={table.td_right}>{pesosColombianos(item.precio_unitario)}</td>
+            <td style={{...table.td, fontSize: '0.7rem'}}>
+                <CotizacionDetailItemsTablaItemEdit
+                    cargarDatos={cargarDatos}
+                    multiline={true}
+                    nombre_atributo_actual='descripcion'
+                    item={item}
+                    guarda_original={item.descripcion_ori !== null}
+                    nombre_atributo_a_cambiar={nombre_atributo_a_cambiar}
+                    setAtributoACambiar={setAtributoACambiar}
+                    tipo='string'
+                />
+            </td>
+            <td style={{...table.td, fontSize: '0.7rem'}}>
+                <CotizacionDetailItemsTablaItemEdit
+                    cargarDatos={cargarDatos}
+                    multiline={true}
+                    nombre_atributo_actual='unidad_medida'
+                    item={item}
+                    guarda_original={item.unidad_medida_ori !== null}
+                    nombre_atributo_a_cambiar={nombre_atributo_a_cambiar}
+                    setAtributoACambiar={setAtributoACambiar}
+                    tipo='string'
+                />
+            </td>
+            <td style={table.td_right}>
+                <CotizacionDetailItemsTablaItemEdit
+                    cargarDatos={cargarDatos}
+                    multiline={true}
+                    nombre_atributo_actual='precio_unitario'
+                    item={item}
+                    guarda_original={item.precio_unitario_ori !== -1}
+                    nombre_atributo_a_cambiar={nombre_atributo_a_cambiar}
+                    setAtributoACambiar={setAtributoACambiar}
+                    tipo='float'
+                />
+            </td>
             <td style={{...table.td, width: '70px'}}>
                 <TextField
                     disabled={!editable}
@@ -116,13 +255,22 @@ const CotizacionDetailItemsTablaItem = memo(props => {
             </td>
             <td style={table.td}>{item.transporte_tipo}</td>
             {editable &&
-            <td style={table.td}>
-                <MyDialogButtonDelete
-                    onDelete={() => eliminarItem(item.cotizacion, item.id)}
-                    element_name={item.referencia}
-                    element_type='Item Cotización'
-                />
-            </td>
+            <Fragment>
+                <td style={table.td}>
+                    <MyDialogButtonDelete
+                        onDelete={() => eliminarItem(item.cotizacion, item.id)}
+                        element_name={item.referencia}
+                        element_type='Item Cotización'
+                    />
+                </td>
+                <td style={table.td} className='text-center'>
+                    {item.verificar_personalizacion && <Fragment>
+                        {item.verificada_personalizacion ?
+                            <FontAwesomeIcon icon={'check-circle'} size='sm'/> :
+                            <FontAwesomeIcon icon={'times-circle'} size='sm'/>}
+                    </Fragment>}
+                </td>
+            </Fragment>
             }
         </tr>
     )
@@ -201,9 +349,8 @@ const CotizacionDetailItemsTabla = memo(props => {
                 <th style={table.td}>$ Total</th>
                 <th style={table.td}>T. Ent</th>
                 <th style={table.td}>Tipo Transporte</th>
-                {editable &&
-                <th style={table.td}>Eli.</th>
-                }
+                {editable && <th style={table.td}>Eli.</th>}
+                {editable && <th style={table.td}>Veri.</th>}
             </tr>
             </thead>
             <SortableList
@@ -226,9 +373,8 @@ const CotizacionDetailItemsTabla = memo(props => {
                 <td style={table.td_right}>{pesosColombianos(valor_total)}</td>
                 <td style={table.td}></td>
                 <td style={table.td}></td>
-                {editable &&
-                <td style={table.td}></td>
-                }
+                {editable && <td style={table.td}></td>}
+                {editable && <td style={table.td}></td>}
             </tr>
             </tfoot>
         </table>

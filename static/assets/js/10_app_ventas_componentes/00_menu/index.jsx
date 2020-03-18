@@ -36,6 +36,12 @@ const Menu = () => {
             texto='Lista Precios'
             icono='barcode'
         />
+        <DrawerListItem
+            size='lg'
+            link='/app/ventas_componentes/configuracion/dashboard'
+            texto='Configuraciones'
+            icono='wrench'
+        />
         {mostrar_lista_precios && <DialogListaPrecio
             con_precios={true}
             con_costos={false}

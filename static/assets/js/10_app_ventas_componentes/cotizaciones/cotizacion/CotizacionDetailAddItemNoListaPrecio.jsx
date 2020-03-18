@@ -1,6 +1,4 @@
 import React, {memo} from "react";
-import Typography from "@material-ui/core/Typography";
-
 import {reduxForm} from 'redux-form';
 import {MyTextFieldSimple} from '../../../00_utilities/components/ui/forms/fields';
 import BotoneriaModalForm from "../../../00_utilities/components/ui/forms/botoneria_modal_form";

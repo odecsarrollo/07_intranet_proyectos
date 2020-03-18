@@ -20,7 +20,7 @@ import HistoricoPrecio from "../../../03_app_admin/especificas/clientes/clientes
 
 const Detail = memo(props => {
     const dispatch = useDispatch();
-    const {id} = props.match.params;
+        const {id} = props.match.params;
     const {history} = props;
     const cotizaciones = useSelector(state => state.cotizaciones_componentes);
     const cotizacion = cotizaciones[id];
@@ -71,8 +71,10 @@ const Detail = memo(props => {
     };
     const generarNroConsecutivo = () => dispatch(actions.asignarNroConsecutivoCotizacionComponente(id));
     const onDeleteCotizacion = () => dispatch(actions.deleteCotizacionComponente(id, {callback: () => history.push('/app/ventas_componentes/cotizaciones/list')}));
+    const onSolicitarConfirmacionItems = () => dispatch(actions.solicitarItemsParaConfirmarCotizacionComponente(id));
 
     const editable = cotizacion.estado === 'INI';
+    const items_para_verificar = _.size(cotizacion.items.filter(i => i.verificar_personalizacion && !i.verificada_personalizacion && !i.verificacion_solicitada));
     return (
         <ValidarPermisos can_see={permisos.detail} nombre='detalles de cotización'>
             <div className="row">
@@ -97,6 +99,15 @@ const Detail = memo(props => {
                                     valor_total={cotizacion.valor_total}
                                     cantidad_items={cotizacion.cantidad_items}
                                 />
+                                {items_para_verificar > 0 && <div className='m-2'>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={onSolicitarConfirmacionItems}
+                                    >
+                                        Solicitar Verificación Items
+                                    </Button>
+                                </div>}
                             </div>
                             <div className="col-12">
                                 <CotizacionDetailAdjuntoList
@@ -148,12 +159,12 @@ const Detail = memo(props => {
                 >
                     Imprimir Cotización
                 </Button>
-                {!cotizacion.nro_consecutivo && <Button
-                    color="primary"
-                    onClick={() => generarNroConsecutivo()}
-                >
-                    Generar Consecutivo
-                </Button>}
+                {/*{!cotizacion.nro_consecutivo && <Button*/}
+                {/*    color="primary"*/}
+                {/*    onClick={() => generarNroConsecutivo()}*/}
+                {/*>*/}
+                {/*    Generar Consecutivo*/}
+                {/*</Button>}*/}
             </div>
             <CargarDatos cargarDatos={cargarDatos}/>
         </ValidarPermisos>

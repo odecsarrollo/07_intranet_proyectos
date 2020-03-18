@@ -8,7 +8,8 @@ import {
     callApiMethodPostParameters,
     callApiMethodPostParametersPDF,
     callApiMethodPost,
-    uploadArchivo, fetchListGetURLParameters
+    uploadArchivo,
+    fetchListGetURLParameters
 } from '../../00_general_fuctions'
 
 const current_url_api = 'cotizaciones_componentes';
@@ -269,13 +270,24 @@ export const enviarCotizacionComponente = (id, valores, options_action) => {
     }
 };
 
+export const solicitarItemsParaConfirmarCotizacionComponente = (id, options_action) => {
+    return function (dispatch) {
+        let params = new URLSearchParams();
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch, payload: response})
+        };
+        const options = {...options_action, dispatch_method: dispatch, dispatches};
+        return callApiMethodPostParameters(current_url_api, id, 'enviar_solicitud_confirmacion_items', params, options)
+    }
+};
+
 export const asignarNroConsecutivoCotizacionComponente = (id, options_action) => {
     return function (dispatch) {
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch, payload: response})
         };
         const options = {...options_action, dispatch_method: dispatch, dispatches};
-        return callApiMethodPost(current_url_api, id, 'asignar_consecutivo', options)
+        return callApiMethodPost(current_url_api, id, 'cotizacion_componentes_solicitar_verificacion_items', options)
     }
 };
 

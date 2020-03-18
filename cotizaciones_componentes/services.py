@@ -5,11 +5,13 @@ from django.contrib.auth.models import User
 from django.core.files import File
 from django.core.mail import EmailMultiAlternatives
 from django.db.models import Q
+from django.http import HttpRequest
 from django.template.loader import render_to_string
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError
 
 from contabilidad_anticipos.models import ProformaConfiguracion
+from correos_servicios.models import CorreoAplicacion
 from envios_emails.models import CotizacionComponenteEnvio
 from envios_emails.services import generar_base_pdf
 from cargues_detalles.models import FacturaDetalle
@@ -73,6 +75,15 @@ def cotizacion_componentes_cambiar_estado(
     cambio_estado = nuevo_estado != estado_actual
     estado_actual_display = cotizacion_componente.get_estado_display()
     if cambio_estado:
+        items_esperando_verificacion = cotizacion_componente.items.filter(
+            verificada_personalizacion=False,
+            verificar_personalizacion=True
+        )
+        if estado_actual == 'INI' and items_esperando_verificacion.exists():
+            cotizacion_componente.estado = nuevo_estado
+            raise ValidationError({
+                '_error': 'No es posible carmbiar al estado %s una cotización que tiene items personalizados por ser verificados' % cotizacion_componente.get_estado_display()
+            })
         if cotizacion_componente.facturas.exists() and nuevo_estado != 'FIN':
             raise ValidationError({
                 '_error': 'No es posible cambiar de estado la cotización, esta ya tiene (%s) facturas relacionadas' % cotizacion_componente.facturas.count()
@@ -137,6 +148,75 @@ def cotizacion_componentes_asignar_nro_consecutivo(
     return cotizacion_componente
 
 
+def cotizacion_componentes_item_verificar(
+        item_cotizacion_componente_id: int,
+        usuario_id: int
+) -> ItemCotizacionComponente:
+    item = ItemCotizacionComponente.objects.get(pk=item_cotizacion_componente_id)
+    if not item.verificar_personalizacion:
+        ValidationError({'_error': 'Este item no requiere ya verificación, consultar con el vendedor'})
+    item.verifico_usuario_id = usuario_id
+    item.verifico_fecha = timezone.now()
+    item.save()
+    return item
+
+
+def cotizacion_componentes_solicitar_verificacion_items(
+        cotizacion_id: int,
+        usuario_id: int,
+        request
+) -> CotizacionComponente:
+    cotizacion_componente = CotizacionComponente.objects.get(pk=cotizacion_id)
+    items_para_solicitar_verificacion = cotizacion_componente.items.filter(
+        verificar_personalizacion=True,
+        verificada_personalizacion=False,
+        verificacion_solicitada=False,
+    )
+    if items_para_solicitar_verificacion.exists():
+        correos = CorreoAplicacion.objects.filter(
+            aplicacion='CORREO_COTIZACION_COMPONENTE_VERIFICAR_ITEM_PERSONALIZADO'
+        )
+        usuario = User.objects.get(pk=usuario_id)
+        nombre_usuario = usuario.mi_colaborador.full_name if hasattr(usuario, 'mi_colaborador') else usuario.username
+        correo_from = usuario.email if usuario.email else 'noreply@odecopack.com'
+        correos_to = list(correos.values_list('email', flat=True).filter(tipo='TO'))
+        correos_cc = list(correos.values_list('email', flat=True).filter(tipo='CC'))
+        correos_bcc = list(correos.values_list('email', flat=True).filter(tipo='BCC'))
+        context = {
+            "fecha": timezone.now(),
+            "items_para_verificar": items_para_solicitar_verificacion.all(),
+            "cotizacion": cotizacion_componente,
+            "nombre_usuario": nombre_usuario,
+            "dominio": request.META['HTTP_ORIGIN'],
+        }
+        text_content = render_to_string(
+            'emails/cotizacion_componente/solicitud_verificacion_items_cotizacion.html',
+            context=context
+        )
+        msg = EmailMultiAlternatives(
+            'Verificar Items Componentes',
+            text_content,
+            bcc=correos_bcc,
+            cc=correos_cc,
+            from_email=correo_from,
+            to=correos_to
+        )
+        msg.attach_alternative(text_content, "text/html")
+        try:
+            msg.send()
+            items_para_solicitar_verificacion.update(
+                verificacion_solicitada=True,
+                verificacion_solicitada_fecha=timezone.now(),
+                verificacion_solicitada_usuario=usuario
+            )
+        except Exception as e:
+            raise ValidationError(
+                {'_error': 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e})
+
+        cotizacion_componente = CotizacionComponente.objects.get(pk=cotizacion_id)
+        return cotizacion_componente
+
+
 def cotizacion_componentes_adicionar_item(
         tipo_item: str,
         cotizacion_componente_id: int,
@@ -153,8 +233,11 @@ def cotizacion_componentes_adicionar_item(
         raise ValidationError({
             '_error': 'Si es un item que no esta en la lista de precios, debe de ingresar la descripción, referencia y unidad de medida'
         })
+
     cotizacion_componente = CotizacionComponente.objects.get(pk=cotizacion_componente_id)
     item = ItemCotizacionComponente()
+    if id_item is None:
+        item.verificar_personalizacion = True
     if tipo_item == 'BandaEurobelt':
         banda_eurobelt = BandaEurobelt.objects.get(pk=id_item)
         item.banda_eurobelt = banda_eurobelt
@@ -202,6 +285,66 @@ def cotizacion_componentes_item_actualizar_item(
     return item
 
 
+def cotizacion_componentes_item_personalizar_item(
+        item_componente_id: int,
+        caracteristica_a_cambiar: str,
+        valor_string: str = None,
+        valor_float: float = None,
+) -> ItemCotizacionComponente:
+    listado_string = ['referencia', 'descripcion', 'unidad_medida']
+    listado_float = ['precio_unitario']
+
+    if caracteristica_a_cambiar not in listado_string + listado_float:
+        raise ValidationError({'_error': 'La caracteristica %s no es un atributo valido' % caracteristica_a_cambiar})
+
+    item = ItemCotizacionComponente.objects.get(pk=item_componente_id)
+    cotizacion = item.cotizacion
+    if cotizacion.estado != 'INI':
+        raise ValidationError({
+            '_error': 'La cotización se encuentra en estado %s. Sólo las cotizacione en Edición pueden personalizar items' % cotizacion.get_estado_display()})
+
+    if item.verificada_personalizacion:
+        usuario_verificador = item.verifico_usuario.username if item.verifico_usuario else 'SIN USUARIO'
+        raise ValidationError({
+            '_error': 'El item ya a sido verificado por %s, ya no se puede cambiar' % usuario_verificador})
+
+    esta_en_lista_de_precios = item.banda_eurobelt is not None or item.componente_eurobelt is not None or item.articulo_catalogo is not None
+
+    valor_campo = getattr(item, caracteristica_a_cambiar)
+    valor_nuevo = valor_string if caracteristica_a_cambiar in listado_string else valor_float
+    cambia_valor = valor_campo != valor_nuevo
+    es_string = valor_string is not None
+
+    if not cambia_valor:
+        return item
+    else:
+        setattr(item, caracteristica_a_cambiar, valor_nuevo)
+        nombre_campo_ori = '%s_ori' % caracteristica_a_cambiar
+        valor_campo_ori = getattr(item, nombre_campo_ori)
+        guarda_original = (caracteristica_a_cambiar in listado_string and valor_campo_ori is not None) or (
+                caracteristica_a_cambiar in listado_float and float(valor_campo_ori) > 0.00)
+
+        if guarda_original:
+            if (not es_string and float(valor_campo_ori) == float(valor_nuevo)) or (
+                    es_string and valor_campo_ori == valor_nuevo):
+                if caracteristica_a_cambiar in listado_float:
+                    setattr(item, nombre_campo_ori, -1)
+                elif caracteristica_a_cambiar in listado_string:
+                    setattr(item, nombre_campo_ori, None)
+        else:
+            if esta_en_lista_de_precios:
+                setattr(item, nombre_campo_ori, valor_campo)
+        if caracteristica_a_cambiar == 'precio_unitario':
+            item.valor_total = float(item.cantidad) * float(valor_nuevo)
+    if esta_en_lista_de_precios:
+        if item.referencia_ori or item.descripcion_ori or item.unidad_medida_ori or item.precio_unitario_ori != -1:
+            item.verificar_personalizacion = True
+        else:
+            item.verificar_personalizacion = False
+    item.save()
+    return item
+
+
 def cotizacion_componentes_item_eliminar(
         item_componente_id: int
 ):
@@ -245,10 +388,6 @@ def cotizacion_componentes_enviar(
     if cotizacion.estado not in ['INI', 'ENV', 'REC']:
         raise ValidationError({'_error': 'No es posible enviar una cotización en estado %s' % cotizacion.estado})
 
-    cotizacion_componentes_asignar_nro_consecutivo(
-        cotizacion_componente_id=cotizacion_componente_id
-    )
-
     if cotizacion.nro_consecutivo is None:
         cotizacion = cotizacion_componentes_asignar_nro_consecutivo(
             cotizacion_componente_id=cotizacion.id
@@ -256,6 +395,11 @@ def cotizacion_componentes_enviar(
     version = cotizacion.versiones.count() + 1
 
     if cotizacion.estado == 'INI':
+        cotizacion = cotizacion_componentes_cambiar_estado(
+            cotizacion_componente_id=cotizacion.id,
+            nuevo_estado='ENV',
+            usuario=request.user
+        )
         cotizacion.estado = 'ENV'
         if cotizacion.responsable is None:
             if cotizacion.cliente.colaborador_componentes:

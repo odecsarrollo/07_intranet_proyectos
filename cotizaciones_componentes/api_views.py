@@ -1,7 +1,7 @@
 from django.db.models import Q, Sum
 from django.db.models.functions import Coalesce
 from django.http import HttpResponse
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
@@ -15,6 +15,7 @@ from .api_serializers import (
 
 
 class CotizacionComponenteViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
     queryset = CotizacionComponente.objects.select_related(
         'responsable',
         'creado_por',
@@ -90,6 +91,18 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
             nuevo_estado=nuevo_estado,
             razon_rechazo=razon_rechazo,
             usuario=self.request.user
+        )
+        self.serializer_class = CotizacionComponenteConDetalleSerializer
+        serializer = self.get_serializer(cotizacion_componente)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def enviar_solicitud_confirmacion_items(self, request, pk=None):
+        from .services import cotizacion_componentes_solicitar_verificacion_items
+        cotizacion_componente = cotizacion_componentes_solicitar_verificacion_items(
+            cotizacion_id=pk,
+            usuario_id=request.user.id,
+            request=request
         )
         self.serializer_class = CotizacionComponenteConDetalleSerializer
         serializer = self.get_serializer(cotizacion_componente)
@@ -342,4 +355,19 @@ class ItemCotizacionComponenteViewSet(viewsets.ModelViewSet):
             )
         ).distinct()
         serializer = self.get_serializer(lista, many=True)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def personalizar_item_cotizacion(self, request, pk=None):
+        from .services import cotizacion_componentes_item_personalizar_item
+        caracteristica_a_cambiar = self.request.POST.get('caracteristica_a_cambiar', None)
+        valor_string = self.request.POST.get('valor_string', None)
+        valor_float = self.request.POST.get('valor_float', None)
+        item = cotizacion_componentes_item_personalizar_item(
+            item_componente_id=pk,
+            caracteristica_a_cambiar=caracteristica_a_cambiar,
+            valor_string=valor_string,
+            valor_float=valor_float
+        )
+        serializer = self.get_serializer(item)
         return Response(serializer.data)

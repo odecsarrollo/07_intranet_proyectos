@@ -4,7 +4,7 @@ import {
     updateObject,
     fetchObject,
     deleteObject,
-    createObject, fetchListGetURLParameters,
+    createObject, fetchListGetURLParameters, callApiMethodPostParameters,
 } from '../../00_general_fuctions'
 
 const current_url_api = 'cotizaciones_componentes_items';
@@ -78,5 +78,23 @@ export const updateItemCotizacionComponente = (id, values, options_action = {}) 
         };
         const options = {dispatches, ...options_action, dispatch_method: dispatch};
         return updateObject(current_url_api, id, values, options);
+    }
+};
+
+export const personalizarItemCotizacionComponente = (id, caracteristica_a_cambiar, valor_string = null, valor_float = null, options_action = {}) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        params.append('caracteristica_a_cambiar', caracteristica_a_cambiar);
+        if (valor_string) {
+            params.append('valor_string', valor_string);
+        }
+        if (valor_float) {
+            params.append('valor_float', valor_float);
+        }
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: response})
+        };
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'personalizar_item_cotizacion', params, options)
     }
 };

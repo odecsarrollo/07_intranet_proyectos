@@ -1,0 +1,156 @@
+{% load static l10n humanize %}
+<style>
+    @page {
+        text-align: justify;
+        font-family: Arial;
+        size: 21.6cm 27.9cm;
+        margin: 4cm 0.7cm 4cm 0.7cm;
+        @bottom-center {
+            font-size: 1rem;
+            content: "Página " counter(page) " de " counter(pages);
+        }
+    }
+
+    h1 {
+        font-size: 16px;
+    }
+
+    h2 {
+        font-size: 14px;
+    }
+
+    h3 {
+        font-size: 12px;
+    }
+
+    p {
+        font-size: 10px;
+    }
+
+    table {
+        font-size: 9px;
+    }
+
+    .img-circle {
+        border-radius: 50%;
+    }
+
+    #email_body {
+        padding: 20px;
+    }
+
+    #email_body #email_header {
+        margin: 20px;
+        height: 100px;
+        width: 190px;
+        background-repeat: no-repeat;
+    }
+
+    #email_body #email_header {
+        margin: 10px;
+    }
+
+    #email_body #email_header .info_cotizacion h6,
+    #email_body #email_header .info_cotizacion h4 {
+        margin: 5px;
+        padding: 0;
+    }
+
+    #email_body #email_coti_condiciones_comerciales {
+        background-color: #f0f8ff;
+        margin-top: 10px;
+        padding: 10px;
+        font-size: 10px;
+    }
+
+    #email_body #email_coti_condiciones_comerciales h5,
+    #email_body #email_coti_condiciones_comerciales h4 {
+        margin: 5px;
+        padding: 0;
+    }
+
+    footer {
+        background-color: #df5e00;
+    }
+
+    footer p {
+        margin: 5px;
+        padding: 0;
+        color: white;
+    }
+
+    #email_body footer {
+        text-align: center;
+    }
+
+    #orden table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    #orden th,
+    #orden td {
+        text-align: left;
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    #orden tr:nth-child(even) {
+        background-color: #f2f2f2
+    }
+
+    #orden table, #orden td, #orden th {
+        border: 1px solid black;
+    }
+
+    #orden .table .numero {
+        text-align: right;
+    }
+
+    .texto_mensaje {
+        font-size: 12px;
+        padding: 10px;
+        text-align: justify;
+    }
+
+    .firma p {
+        font-size: 9px;
+        margin: 5px;
+        padding: 0;
+    }
+</style>
+<body id="email_body">
+<header>
+    Solicitud de Verificación
+</header>
+<div class="texto_mensaje">
+    Hoy {{ fecha }}, {{ nombre_usuario }} ha solicitado, para poder proceder con una cotización, la verificación de los
+    siguientes items:
+</div>
+<div id="orden" style="overflow-x:auto;">
+    <table class="table table-striped tabla">
+        <tr>
+            <th>Forma Pago</th>
+            <th>Referencia</th>
+            <th>Descripción</th>
+            <th>Unid</th>
+            <th>$Unitario</th>
+            <th>Ir a Verificar</th>
+        </tr>
+        {% for item in items_para_verificar %}
+            <tr>
+                <td style="max-width: 4cm">{{ item.forma_pago.canal.nombre }} {{ item.forma_pago.forma }}</td>
+                <td style="max-width: 4cm">{{ item.referencia }}</td>
+                <td style="max-width: 8cm">{{ item.descripcion|title }}</td>
+                <td>{{ item.unidad_medida }} </td>
+                <td class="numero">{{ item.precio_unitario|floatformat:2|intcomma }} </td>
+                <td>
+                    {% localize off %}
+                        <a href="{{ dominio }}/app/ventas_componentes/cotizaciones/items/verificar/{{ item.id }}">Verificar</a>
+                    {% endlocalize %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+</body>

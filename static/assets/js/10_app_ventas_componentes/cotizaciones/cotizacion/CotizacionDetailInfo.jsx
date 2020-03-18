@@ -23,7 +23,6 @@ const styles = {
 const CotizacionDetailInfo = memo(props => {
     const [show_cotizacion_informacion_dialog, setShowCotizacionInformacionDialog] = useState(false);
     const {cotizacion, contacto, onSubmitCotizacion, cargarDatos, editable, onDelete} = props;
-    console.log(cotizacion)
     return (
         <Fragment>
             {show_cotizacion_informacion_dialog &&
