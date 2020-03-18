@@ -8,7 +8,8 @@ export const API_REST_ACTIONS = {
 export const LOADING = {
     loading: 'is_loading',
     stop: 'in_not_loading',
-    error: 'error_loading'
+    error: 'error_loading',
+    reset: 'reset_loading',
 };
 
 export const PERMISO_TYPES = {

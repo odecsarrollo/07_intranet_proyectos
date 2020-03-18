@@ -56,7 +56,10 @@ export function createRequest(request, options = {}) {
                             throw new SubmissionError(error.response.data)
                         }
                     } else if (error.response.status === 401) {
-
+                        const {response: {data: {detail}}} = error;
+                        if (detail === 'Las credenciales de autenticación no se proveyeron.') {
+                            dispatch_method(actions.mostrar_error_loading('Debe de autenticarse de nuevo', 'Problemas de Autenticación!'))
+                        }
                     } else if (error.response.status === 403) {
                         dispatch_method(actions.mostrar_error_loading(error.response.data['detail'], `${error.response.status}: ${error.response.statusText}`));
                         dispatch_method(actions.notificarErrorAction(error.response.data['detail']));
@@ -90,6 +93,22 @@ export function fetchApiRestGet(url, options, token = null) {
     }
     axios_instance.defaults.headers = headers;
     const request = axios_instance.get(FULL_URL);
+    return createRequest(request, {...options, mensaje_cargando});
+}
+
+export function fetchListPostURLParameters(url, method, values, options) {
+    console.log(`%cAPI METODO ${method.toUpperCase()} CON PARMAETROS - %c${url.toUpperCase()} - %cID`, 'color:red', 'color:blue', 'color:green');
+    const mensaje_cargando = `Ejecutando ${method.toUpperCase()} en ${url.toUpperCase()}`;
+    axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+    axios_instance.defaults.xsrfCookieName = "csrftoken";
+    const headers = {};
+    if (localStorage.token) {
+        headers["Authorization"] = `Token ${localStorage.token}`;
+    }
+    headers["Content-Type"] = 'application/x-www-form-urlencoded;charset=UTF-8';
+    axios_instance.defaults.headers = headers;
+    const FULL_URL = `${url}/${method}/`;
+    const request = axios_instance.post(FULL_URL, values);
     return createRequest(request, {...options, mensaje_cargando});
 }
 

@@ -61,7 +61,6 @@ const IndexApp = memo(props => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
-    const {is_superuser} = mi_cuenta;
     const [prueba, setPrueba] = useState(false);
     const permisos_modulos = useTengoPermisos(MODULO_PERMISSIONS);
     const {

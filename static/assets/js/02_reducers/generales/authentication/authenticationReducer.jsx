@@ -1,7 +1,7 @@
 const initialState = {
-    token: localStorage.getItem("token"),
     mi_cuenta: JSON.parse(localStorage.getItem("mi_cuenta")),
     mis_permisos: JSON.parse(localStorage.getItem("mis_permisos")),
+    token: localStorage.getItem("token"),
     isAuthenticated: null,
     isLoading: true,
     user: null,
@@ -22,7 +22,13 @@ export default function auth(state = initialState, action) {
                 isLoading: false,
                 user: action.user,
             };
-
+        case 'NOT_USER_LOADED':
+            return {
+                ...state,
+                isAuthenticated: false,
+                isLoading: false,
+                user: null,
+            };
         case 'LOGIN_SUCCESSFUL':
             localStorage.setItem("token", action.data.token);
             localStorage.setItem("mi_cuenta", action.data.mi_cuenta ? JSON.stringify(action.data.mi_cuenta) : null);

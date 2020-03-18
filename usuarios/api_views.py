@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User, Permission, Group
 from django.db.models import Q
 from knox.models import AuthToken
+from knox.settings import knox_settings
 from rest_framework import viewsets, generics, permissions, serializers
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -126,45 +127,63 @@ class UsuarioViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-class LoginAPI(generics.GenericAPIView):
-    serializer_class = LoginUserSerializer
+# class LoginAPI(generics.GenericAPIView):
+#     serializer_class = LoginUserSerializer
+#
+#     def post(self, request, *args, **kwargs):
+#         serializer = self.get_serializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         user = serializer.validated_data
+#         tokens = AuthToken.objects.filter(user=user)
+#         tokens.delete()
+#
+#         if user.is_superuser:
+#             permissions_list = None
+#         else:
+#             permissions_list = Permission.objects.select_related(
+#                 'plus',
+#                 'content_type'
+#             ).filter(
+#                 Q(user=user) |
+#                 Q(group__user=user)
+#             ).distinct()
+#         _, token = AuthToken.objects.create(user)
+#         return Response({
+#             "user": UserSerializer(user, context=self.get_serializer_context()).data,
+#             "token": token,
+#             "mi_cuenta": UsuarioConDetalleSerializer(
+#                 user,
+#                 context=self.get_serializer_context()
+#             ).data,
+#             "mis_permisos": PermissionSerializer(
+#                 permissions_list,
+#                 context=self.get_serializer_context(),
+#                 many=True
+#             ).data,
+#         })
 
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+
+class LoginViewSet(viewsets.ModelViewSet):
+    serializer_class = LoginUserSerializer
+    queryset = User.objects.all()
+
+    @action(detail=False, methods=['post'], permission_classes=[permissions.AllowAny])
+    def login(self, request) -> Response:
+        serializer = self.get_serializer(data=self.request.POST)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data
         tokens = AuthToken.objects.filter(user=user)
         tokens.delete()
-
-        if user.is_superuser:
-            permissions_list = None
-        else:
-            permissions_list = Permission.objects.select_related(
-                'plus',
-                'content_type'
-            ).filter(
-                Q(user=user) |
-                Q(group__user=user)
-            ).distinct()
         _, token = AuthToken.objects.create(user)
         return Response({
             "user": UserSerializer(user, context=self.get_serializer_context()).data,
             "token": token,
-            "mi_cuenta": UsuarioConDetalleSerializer(
-                user,
-                context=self.get_serializer_context()
-            ).data,
-            "mis_permisos": PermissionSerializer(
-                permissions_list,
-                context=self.get_serializer_context(),
-                many=True
-            ).data,
         })
 
-
-class UserAPI(generics.RetrieveAPIView):
-    permission_classes = [permissions.IsAuthenticated, ]
-    serializer_class = UserSerializer
-
-    def get_object(self):
-        return self.request.user
+    @action(detail=False, methods=['get'], permission_classes=[permissions.AllowAny, ])
+    def cargar_usuario(self, request) -> Response:
+        if self.request.user.is_anonymous:
+            serializer = UsuarioConDetalleSerializer(None, context={'request': request})
+            return Response(serializer.data)
+        serializer = UsuarioConDetalleSerializer(self.request.user, context={'request': request})
+        return Response(serializer.data)

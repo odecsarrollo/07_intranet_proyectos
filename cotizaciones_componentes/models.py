@@ -135,8 +135,17 @@ class ItemCotizacionComponente(TimeStampedModel):
     descripcion_ori = models.CharField(max_length=400, null=True)
     referencia_ori = models.CharField(max_length=150, null=True)
     unidad_medida_ori = models.CharField(max_length=120, null=True)
-    precio_unitario_ori = models.DecimalField(max_digits=18, decimal_places=2, default=0)
+    precio_unitario_ori = models.DecimalField(max_digits=18, decimal_places=2, default=-1)
     costo_ori = models.DecimalField(max_digits=18, decimal_places=2, default=0)
+    verificar_personalizacion = models.BooleanField(default=0)
+    verificada_personalizacion = models.BooleanField(default=0)
+    verifico_usuario = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        null=True,
+        related_name='cotizacion_componentes_items_verificados'
+    )
+    verifico_fecha = models.DateTimeField(null=True)
 
     descripcion = models.CharField(max_length=400, null=True)
     referencia = models.CharField(max_length=150, null=True)
@@ -145,6 +154,15 @@ class ItemCotizacionComponente(TimeStampedModel):
     precio_unitario = models.DecimalField(max_digits=18, decimal_places=2)
     valor_total = models.DecimalField(max_digits=18, decimal_places=2)
     transporte_tipo = models.CharField(null=True, max_length=100)
+
+    verificacion_solicitada = models.BooleanField(default=0)
+    verificacion_solicitada_fecha = models.DateTimeField(null=True)
+    verificacion_solicitada_usuario = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        null=True,
+        related_name='cotizacion_componentes_items_verificaciones_solicitadas'
+    )
 
     class Meta:
         permissions = [

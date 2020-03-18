@@ -1,10 +1,12 @@
 import React, {memo} from 'react';
-import {useSelector} from "react-redux";
+import {useSelector, useDispatch} from "react-redux";
 import {Redirect} from "react-router-dom";
 import ErrorBoundary from './ErrorBoundary';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {makeStyles, withStyles} from "@material-ui/core/styles/index";
+import {makeStyles} from "@material-ui/core/styles/index";
+import * as actions from '../../../01_actions/01_index';
 import Typography from '@material-ui/core/Typography';
+import classNames from 'classnames';
 
 const useStyles = makeStyles(theme => ({
     loadingOverloadUno: {
@@ -31,7 +33,7 @@ const useStyles = makeStyles(theme => ({
         zIndex: 1400,
         backgroundColor: theme.palette.primary.dark,
         padding: '0.5rem',
-        color: 'white'
+        color: 'white',
     },
     loadingOverloadTresError: {
         maxHeight: '400px',
@@ -46,12 +48,20 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: theme.palette.error.dark,
         padding: '0.5rem',
         color: 'white'
+    },
+    div_loading_close_boton: {
+        textAlign: 'right',
+    },
+    loading_close_boton: {
+        position: 'relative',
+        left: '0px'
     }
 }));
 
 
 const LoadingOverlay = memo((props) => {
     const classes = useStyles();
+    const dispatch = useDispatch();
     const esta_cargando = useSelector(state => state.esta_cargando);
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
     if (!isAuthenticated) {
@@ -74,7 +84,20 @@ const LoadingOverlay = memo((props) => {
                 <div className={classes.loadingOverloadDos} style={style.loadingOverloadDos}>
                     <div
                         className={error ? classes.loadingOverloadTresError : classes.loadingOverloadTres}
-                        style={style.loadingOverloadTres}>
+                        style={{...style.loadingOverloadTres}}>
+                        {error && <div className={classes.div_loading_close_boton}>
+                            <FontAwesomeIcon
+                                className={classNames('puntero', classes.loading_close_boton)}
+                                icon={'times'}
+                                size='2x'
+                                onClick={() => {
+                                    if (_.has(mensajes, 'Debe de autenticarse de nuevo')) {
+                                        dispatch(actions.loadUser());
+                                    }
+                                    dispatch(actions.resetLoading());
+                                }}
+                            />
+                        </div>}
                         {
                             error ?
                                 <FontAwesomeIcon icon={'exclamation-circle'} size='2x'/> :

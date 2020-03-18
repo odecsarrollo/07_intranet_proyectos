@@ -1,4 +1,4 @@
-import React, {Fragment, Component} from 'react';
+import React, {Fragment, Component, Suspense, useEffect} from 'react';
 import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import {createStore, applyMiddleware} from 'redux';
@@ -9,6 +9,7 @@ import {connect} from "react-redux";
 import {hot} from 'react-hot-loader';
 import StylesContextProvider from './00_utilities/contexts/StylesContextProvider';
 import Notification from './00_utilities/components/system/Notifications';
+import {ProvideAuth, useAuth} from "./00_utilities/hooks";
 
 import * as actions from "./01_actions/01_index";
 
@@ -229,68 +230,50 @@ import AppContabilidad from './08_app_contabilidad/App';
 import AppSistemas from './09_app_sistemas/App';
 import Login from './authentication/login/containers/login';
 
-
-class RootContainerComponent extends Component {
-    componentDidMount() {
-        this.props.loadUser();
+let ContainerRoot = () => {
+    const authentication = useAuth();
+    const {auth: {isAuthenticated, isLoading}} = authentication;
+    if (isLoading) {
+        return <div>Esta cargando...</div>
     }
+    return (
+        <Fragment>
+            <Notification/>
+            {!isAuthenticated && <Login/>}
+            {isAuthenticated && <Suspense fallback={<div>Loading...</div>}>
+                <Switch>
+                    <Route path='/app/admin' component={AppAdmin}/>
+                    <Route path='/app/proyectos' component={AppProyectos}/>
+                    <Route path='/app/ventas_proyectos' component={AppVentasProyectos}/>
+                    <Route path='/app/ventas_componentes' component={AppVentasComponentes}/>
+                    <Route path='/app/bandas' component={AppBandas}/>
+                    <Route path='/app/medios' component={AppMedios}/>
+                    <Route path='/app/contabilidad' component={AppContabilidad}/>
+                    <Route path='/app/sistemas' component={AppSistemas}/>
+                    <Route path='/app' component={AppIndex}/>
+                    <Route path='/' component={AppIndex}/>
+                </Switch>
+            </Suspense>}
+        </Fragment>
+    )
+};
 
-    PrivateRoute = ({component: ChildComponent, ...rest}) => {
-        return <Route {...rest} render={props => {
-            if (this.props.auth.isLoading) {
-                return <em>Loading...</em>;
-            } else if (!this.props.auth.isAuthenticated) {
-                return <Redirect to="/app/login"/>;
-            } else {
-                return <ChildComponent {...props} />
-            }
-        }}/>
-    };
+ContainerRoot = hot(module)(ContainerRoot);
 
-    render() {
-        let {PrivateRoute} = this;
-        return (
-            <BrowserRouter>
-                <Fragment>
-                    <Notification/>
-                    <Switch>
-                        <PrivateRoute exact path='/' component={AppIndex}/>
-                        <PrivateRoute exact path='/app' component={AppIndex}/>
-                        <Route path='/app/login' component={Login}/>
-                        <PrivateRoute path='/app/admin' component={AppAdmin}/>
-                        <PrivateRoute path='/app/proyectos' component={AppProyectos}/>
-                        <PrivateRoute path='/app/ventas_proyectos' component={AppVentasProyectos}/>
-                        <PrivateRoute path='/app/ventas_componentes' component={AppVentasComponentes}/>
-                        <PrivateRoute path='/app/bandas' component={AppBandas}/>
-                        <PrivateRoute path='/app/medios' component={AppMedios}/>
-                        <PrivateRoute path='/app/contabilidad' component={AppContabilidad}/>
-                        <PrivateRoute path='/app/sistemas' component={AppSistemas}/>
-                    </Switch>
-                </Fragment>
-            </BrowserRouter>
-        )
-    }
-}
-
-function mapPropsToState(state, ownProps) {
-    return {
-        auth: state.auth,
-        api_rest_results: state.api_rest_results,
-    }
-}
-
-let RootContainer = hot(module)(connect(mapPropsToState, actions)(RootContainerComponent));
-
-export default class App extends Component {
-    render() {
-        return (
-            <Provider store={store}>
+const App = () => {
+    return (
+        <Provider store={store}>
+            <ProvideAuth>
                 <MuiThemeProvider theme={theme}>
                     <StylesContextProvider>
-                        <RootContainer/>
+                        <BrowserRouter>
+                            <ContainerRoot/>
+                        </BrowserRouter>
                     </StylesContextProvider>
                 </MuiThemeProvider>
-            </Provider>
-        )
-    }
-}
+            </ProvideAuth>
+        </Provider>
+    )
+};
+
+export default App;

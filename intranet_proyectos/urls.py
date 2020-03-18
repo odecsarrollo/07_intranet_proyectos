@@ -20,10 +20,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 from .api_urls import router
 from index.views import IndexView
+from knox.views import LogoutView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/auth/', include('usuarios.urls')),
+    path('api/auth/logout', LogoutView.as_view()),
     path('api/', include(router.urls)),
     url(r'^app/*', IndexView.as_view(), name='index'),
     path('', include('index.urls')),
@@ -32,6 +33,7 @@ urlpatterns = [
 
 if settings.DEBUG:
     from rest_framework.schemas import get_schema_view
+
     schema_view = get_schema_view(title="Example API")
     urlpatterns = [
                       url('^schema$', schema_view),

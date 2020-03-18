@@ -94,7 +94,25 @@ class ItemCotizacionComponenteSerializer(CustomSerializerMixin, serializers.Mode
             'cantidad',
             'precio_unitario',
             'valor_total',
+            'descripcion_ori',
+            'referencia_ori',
+            'unidad_medida_ori',
+            'costo_ori',
+            'precio_unitario_ori',
+            'verificar_personalizacion',
+            'verificada_personalizacion',
+            'verificacion_solicitada',
         ]
+        extra_kwargs = {
+            'descripcion_ori': {'read_only': True},
+            'referencia_ori': {'read_only': True},
+            'unidad_medida_ori': {'read_only': True},
+            'costo_ori': {'read_only': True},
+            'precio_unitario_ori': {'read_only': True},
+            'verificar_personalizacion': {'read_only': True},
+            'verificada_personalizacion': {'read_only': True},
+            'verificacion_solicitada': {'read_only': True},
+        }
 
 
 class CotizacionComponenteSeguimientoSerializer(serializers.ModelSerializer):
