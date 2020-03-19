@@ -23,7 +23,6 @@ const styles = {
 const CotizacionDetailInfo = memo(props => {
     const [show_cotizacion_informacion_dialog, setShowCotizacionInformacionDialog] = useState(false);
     const {cotizacion, contacto, onSubmitCotizacion, cargarDatos, editable, onDelete} = props;
-    console.log(cotizacion)
     return (
         <Fragment>
             {show_cotizacion_informacion_dialog &&
@@ -67,16 +66,14 @@ const CotizacionDetailInfo = memo(props => {
             <Typography variant="body1" style={styles.texto_secondario} gutterBottom color="secondary">
                 {`${cotizacion.ciudad_nombre} - ${cotizacion.departamento_nombre} - ${cotizacion.pais_nombre}`}
             </Typography>
-            {contacto &&
-            <Fragment>
+            {contacto && <Fragment>
                 <Typography variant="body1" gutterBottom color="primary" style={styles.texto_principal}>
                     Contacto:
                 </Typography>
                 <Typography variant="body1" style={styles.texto_secondario} gutterBottom color="secondary">
                     {contacto.full_nombre}
                 </Typography>
-                {contacto.telefono &&
-                <div>
+                {contacto.telefono && <div>
                     <Typography variant="overline" color="inherit" gutterBottom style={styles.texto_secondario}>
                         <FontAwesomeIcon
                             icon={'phone'}
@@ -84,8 +81,7 @@ const CotizacionDetailInfo = memo(props => {
                         /> {contacto.telefono}
                     </Typography>
                 </div>}
-                {contacto.telefono_2 &&
-                <div>
+                {contacto.telefono_2 && <div>
                     <Typography variant="overline" color="inherit" gutterBottom style={styles.texto_secondario}>
                         <FontAwesomeIcon
                             icon={'phone'}
@@ -93,8 +89,7 @@ const CotizacionDetailInfo = memo(props => {
                         /> {contacto.telefono_2}
                     </Typography>
                 </div>}
-                {contacto.correo_electronico &&
-                <div>
+                {contacto.correo_electronico && <div>
                     <Typography variant="overline" color="inherit" gutterBottom style={styles.texto_secondario}>
                         <FontAwesomeIcon
                             icon={'at'}
@@ -102,8 +97,7 @@ const CotizacionDetailInfo = memo(props => {
                         /> {contacto.correo_electronico.toString().toLowerCase()}
                     </Typography>
                 </div>}
-                {contacto.correo_electronico_2 &&
-                <div>
+                {contacto.correo_electronico_2 && <div>
                     <Typography variant="overline" color="inherit" gutterBottom style={styles.texto_secondario}>
                         <FontAwesomeIcon
                             icon={'at'}
@@ -111,8 +105,7 @@ const CotizacionDetailInfo = memo(props => {
                         /> {contacto.correo_electronico_2.toString().toLowerCase()}
                     </Typography>
                 </div>}
-                {cotizacion.observaciones &&
-                <div>
+                {cotizacion.observaciones && <div>
                     <Typography variant="body1" gutterBottom color="primary" style={styles.texto_principal}>
                         Observaciones:
                     </Typography>
@@ -136,7 +129,6 @@ const CotizacionDetailInfo = memo(props => {
                 onDelete={onDelete}/>}
         </Fragment>
     )
-
 });
 
 export default CotizacionDetailInfo;

@@ -8,6 +8,7 @@ from .models import (
     CotizacionComponenteAdjunto,
     CotizacionComponenteSeguimiento
 )
+from clientes.api_serializers import ContactoClienteSerializer
 
 
 class CotizacionComponenteAdjuntoSerializer(serializers.ModelSerializer):

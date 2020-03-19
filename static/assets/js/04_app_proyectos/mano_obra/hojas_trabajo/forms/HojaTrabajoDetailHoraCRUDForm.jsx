@@ -8,6 +8,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {MyFormTagModal} from '../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import validate from './validate_horas';
 import * as actions from '../../../../01_actions/01_index';
+import {useAuth} from "../../../../00_utilities/hooks";
 
 let Form = memo(props => {
     const dispatch = useDispatch();
@@ -26,11 +27,11 @@ let Form = memo(props => {
 
     const proyectos_list = useSelector(state => state.proyectos);
     const literales_list = useSelector(state => state.literales);
-
-    const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
+    const authentication = useAuth();
+    const {auth: {user: {colaborador}}} = authentication;
     const autogestion_horas_trabajadas = !!(
-        mi_cuenta.colaborador &&
-        mi_cuenta.colaborador.autogestion_horas_trabajadas
+        colaborador &&
+        colaborador.autogestion_horas_trabajadas
     );
 
     const verificado = initialValues ? initialValues.verificado : false;

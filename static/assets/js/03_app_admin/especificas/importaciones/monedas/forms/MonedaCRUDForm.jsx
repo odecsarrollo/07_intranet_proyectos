@@ -38,8 +38,13 @@ class Form extends Component {
                     case='U'/>
                 <MyTextFieldSimple
                     className="col-12"
-                    nombre='Tasa de Cambio'
+                    nombre='Factor Conversion a COP'
                     name='cambio'
+                    type='number'/>
+                <MyTextFieldSimple
+                    className="col-12"
+                    nombre='Factor Conversion a USD'
+                    name='cambio_a_usd'
                     type='number'/>
             </MyFormTagModal>
         )

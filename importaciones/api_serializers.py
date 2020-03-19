@@ -16,6 +16,7 @@ class MonedaCambioSerializer(serializers.ModelSerializer):
             'id',
             'nombre',
             'cambio',
+            'cambio_a_usd',
             'to_string',
         ]
 

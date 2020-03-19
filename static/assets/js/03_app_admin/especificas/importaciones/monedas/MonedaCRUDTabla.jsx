@@ -3,7 +3,7 @@ import MyDialogButtonDelete from '../../../../00_utilities/components/ui/dialog/
 import IconButtonTableEdit from '../../../../00_utilities/components/ui/icon/table_icon_button_edit';
 
 import ReactTable from "react-table";
-import {pesosColombianos} from "../../../../00_utilities/common";
+import {formatoMoneda} from "../../../../00_utilities/common";
 
 class Tabla extends React.Component {
     render() {
@@ -37,10 +37,16 @@ class Tabla extends React.Component {
                                 Cell: row => `${row.original.to_string}`
                             },
                             {
-                                Header: "Cambio",
+                                Header: "En Pesos",
                                 maxWidth: 110,
                                 accessor: "cambio",
-                                Cell: row => `${pesosColombianos(row.value)}`
+                                Cell: row => `${formatoMoneda(row.value, '$', 0, 'COP')}`
+                            },
+                            {
+                                Header: "En Dolares",
+                                maxWidth: 110,
+                                accessor: "cambio_a_usd",
+                                Cell: row => `${formatoMoneda(row.value, '$', 5, 'USD')}`
                             }
                         ]
                     },

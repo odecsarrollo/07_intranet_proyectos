@@ -71,8 +71,7 @@ const CotizacionDetailBotoneriaEstado = memo(props => {
     };
 
     return <Fragment>
-        {show_enviar &&
-        <CotizacionEnviarFormDialog
+        {show_enviar && <CotizacionEnviarFormDialog
             singular_name='Cotización'
             contacto={contacto}
             modal_open={show_enviar}

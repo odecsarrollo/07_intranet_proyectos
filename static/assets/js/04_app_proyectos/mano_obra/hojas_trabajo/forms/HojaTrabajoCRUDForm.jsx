@@ -10,6 +10,7 @@ import {MyFormTagModal} from '../../../../00_utilities/components/ui/forms/MyFor
 import validate from './validate_hoja';
 import moment from "moment-timezone";
 import {fechaToYMD} from "../../../../00_utilities/common";
+import {useAuth} from "../../../../00_utilities/hooks";
 
 let Form = memo(props => {
     const dispatch = useDispatch();
@@ -34,21 +35,22 @@ let Form = memo(props => {
             dispatch(actions.clearColaboradores());
         };
     }, []);
-    const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
     let fecha_cierre_costos = new Date(1900, 0, 1);
 
     if (configuracion_costos) {
         const cierre_costos = moment(configuracion_costos.fecha_cierre).tz('America/Bogota').toDate();
         fecha_cierre_costos = new Date(cierre_costos.getFullYear(), cierre_costos.getMonth(), cierre_costos.getDate())
     }
+    const authentication = useAuth();
+    const {auth: {user, user: {colaborador}}} = authentication;
     return (
         <MyFormTagModal
             onCancel={onCancel}
             onSubmit={handleSubmit((v) => {
                 const fecha = fechaToYMD(v.fecha);
                 if (!permisos_object.add_para_otros) {
-                    if (mi_cuenta.colaborador) {
-                        onSubmit({...v, colaborador: mi_cuenta.colaborador.id, fecha})
+                    if (colaborador) {
+                        onSubmit({...v, colaborador: colaborador.id, fecha})
                     }
                 } else {
                     onSubmit({...v, fecha})
@@ -67,7 +69,7 @@ let Form = memo(props => {
                     data={_.map(_.pickBy(_.orderBy(colaboradores_list, ['nombres'], ['asc']), a => {
                         return (
                             a.autogestion_horas_trabajadas === false ||
-                            a.usuario === mi_cuenta.id
+                            a.usuario === user.id
                         )
                     }), e => {
                         return (
