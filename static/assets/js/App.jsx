@@ -1,35 +1,28 @@
-import React, {Fragment, Component, Suspense, useEffect} from 'react';
-import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
+import React, {Fragment, Suspense} from 'react';
+import {BrowserRouter, Switch, Route} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import {createStore, applyMiddleware} from 'redux';
 import ReduxPromise from 'redux-promise';
 import thunk from 'redux-thunk';
 import reducers from './02_reducers/index';
-import {connect} from "react-redux";
 import {hot} from 'react-hot-loader';
 import StylesContextProvider from './00_utilities/contexts/StylesContextProvider';
 import Notification from './00_utilities/components/system/Notifications';
 import {ProvideAuth, useAuth} from "./00_utilities/hooks";
 
-import * as actions from "./01_actions/01_index";
-
 import "react-table/react-table.css";
 import 'react-widgets/dist/css/react-widgets.css';
 import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/js/bootstrap';
 import 'jquery/dist/jquery.js';
 import 'popper.js/dist/popper.js';
 import 'tether/dist/js/tether';
-import 'bootstrap/dist/js/bootstrap';
 import './../../css/custom.css';
 
 import {createMuiTheme, MuiThemeProvider} from '@material-ui/core/styles';
 import red from '@material-ui/core/colors/red';
 import orange from '@material-ui/core/colors/orange';
 import indigo from '@material-ui/core/colors/indigo';
-
-//import {faSpinnerThird, faWrench} from '@fortawesome/pro-regular-svg-icons';
-//import {fal} from '@fortawesome/pro-light-svg-icons';
-//import {fab} from '@fortawesome/free-brands-svg-icons';
 
 import {library} from '@fortawesome/fontawesome-svg-core'
 
@@ -229,6 +222,7 @@ import AppMedios from './07_app_medios/App';
 import AppContabilidad from './08_app_contabilidad/App';
 import AppSistemas from './09_app_sistemas/App';
 import Login from './authentication/login/containers/login';
+import AppCuenta from './authentication/mi_cuenta/Dashboard';
 
 let ContainerRoot = () => {
     const authentication = useAuth();
@@ -250,6 +244,7 @@ let ContainerRoot = () => {
                     <Route path='/app/medios' component={AppMedios}/>
                     <Route path='/app/contabilidad' component={AppContabilidad}/>
                     <Route path='/app/sistemas' component={AppSistemas}/>
+                    <Route path='/app/cuenta' component={AppCuenta}/>
                     <Route path='/app' component={AppIndex}/>
                     <Route path='/' component={AppIndex}/>
                 </Switch>

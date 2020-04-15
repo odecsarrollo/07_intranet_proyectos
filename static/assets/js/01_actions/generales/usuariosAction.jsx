@@ -14,6 +14,17 @@ import {
 
 const current_url_api = 'usuarios';
 
+export const cambiarContrasenaUsuario = (id, password_old, password, password_2, options_action = {}) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        params.append('password_old', password_old);
+        params.append('password', password);
+        params.append('password_2', password_2);
+        const options = {...options_action, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'cambiar_contrasena', params, options)
+    }
+};
+
 export function fetchUsuariosxPermiso(permiso_nombre, options_action = {}) {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/listar_x_permiso/?permiso_nombre=${permiso_nombre}`;

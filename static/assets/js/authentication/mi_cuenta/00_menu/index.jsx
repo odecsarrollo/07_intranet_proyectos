@@ -4,7 +4,7 @@ import DrawerListItem from '../../../00_utilities/components/ui/drawer/drawer_li
 const Menu = () => <Fragment>
     <DrawerListItem
         size='lg'
-        link='/app/mi_cuenta/seguridad'
+        link='/app/cuenta/seguridad'
         texto='Seguridad'
         icono='shield-check'
     />

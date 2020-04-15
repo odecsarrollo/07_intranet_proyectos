@@ -1,13 +1,9 @@
-import React, {Component, Fragment} from 'react';
+import React, {Component} from 'react';
 import FormAddFase from './forms/add_fase_form';
 import FaseLiteral from './seguimiento_literal_fase';
 import {connect} from "react-redux";
 import * as actions from "../../../../01_actions/01_index";
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
-import {permisosAdapterDos} from "../../../../00_utilities/common";
-import {
-    PROYECTOS as proyectos_permisos_view,
-} from "../../../../permisos";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 import MiembroLiteral from './adicionar_miembro';

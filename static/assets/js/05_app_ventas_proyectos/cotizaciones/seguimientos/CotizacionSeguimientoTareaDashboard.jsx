@@ -7,7 +7,6 @@ import moment from 'moment-timezone';
 import momentLocaliser from "react-widgets-moment";
 
 import {COTIZACIONES} from "../../../permisos";
-import {permisosAdapterDos} from "../../../00_utilities/common";
 
 moment.tz.setDefault("America/Bogota");
 moment.locale('es');

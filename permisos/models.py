@@ -13,6 +13,7 @@ class AditionalDefaultPermission(models.Model):
         managed = False
         permissions = (
             ('list_user', 'Can list user'),
+            ('can_change_user_password', 'Puede cambiar password de usuario'),
             ('list_permission', 'Can list permission'),
             ('list_group', 'Can list group'),
             ('detail_user', 'Can detail user'),

@@ -33,6 +33,7 @@ const validate = values => {
     if (values.horas && values.horas > 23) {
         errors.horas = 'No se pueden exceder las 19 horas en un registro de horas de trabajo'
     }
+
     return errors;
 };
 

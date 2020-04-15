@@ -69,6 +69,16 @@ class UsuarioViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @action(detail=True, methods=['post'])
+    def cambiar_contrasena(self, request, pk=None):
+        from .services import user_cambiar_contrasena
+        usuario = self.get_object()
+        password_old = request.POST.get('password_old')
+        password = request.POST.get('password')
+        password_2 = request.POST.get('password_2')
+        user_cambiar_contrasena(usuario.id, password_old, password, password_2)
+        return Response({'result': 'La contraseña se ha cambiado correctamente'})
+
+    @action(detail=True, methods=['post'])
     def adicionar_permiso(self, request, pk=None):
         usuario = self.get_object()
         id_permiso = int(request.POST.get('id_permiso'))
@@ -170,8 +180,10 @@ class LoginViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['post'], permission_classes=[permissions.AllowAny])
     def login(self, request) -> Response:
         serializer = self.get_serializer(data=self.request.POST)
+        print(serializer)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data
+        print(user)
         tokens = AuthToken.objects.filter(user=user)
         tokens.delete()
         _, token = AuthToken.objects.create(user)

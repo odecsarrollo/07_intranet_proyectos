@@ -60,7 +60,6 @@ const useStyles = makeStyles(theme => ({
 const IndexApp = memo(props => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
     const [prueba, setPrueba] = useState(false);
     const permisos_modulos = useTengoPermisos(MODULO_PERMISSIONS);
     const {
@@ -130,6 +129,12 @@ const IndexApp = memo(props => {
                         icono='coins'
                         classes={classes}
                     />}
+                    <Boton
+                        nombre='Mi Cuenta'
+                        link='/app/cuenta/'
+                        icono='user'
+                        classes={classes}
+                    />
                     <div className='col-12'>
                         <div className="row">
                             <div className="col-4"></div>

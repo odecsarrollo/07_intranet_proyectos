@@ -39,6 +39,8 @@ export function createRequest(request, options = {}) {
                 callback(response.data)
             }
         }).catch(error => {
+                console.log(error);
+                console.log(error.response);
                 if (callback_error) {
                     callback_error(error)
                 }

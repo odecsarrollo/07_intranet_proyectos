@@ -12,6 +12,7 @@ const CRUD = crudHOC(CreateForm, Tabla);
 
 import moment from "moment/moment";
 import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
+import {useAuth} from "../../../00_utilities/hooks";
 
 const HojaTrabajoCRUD = memo(props => {
     const dispatch = useDispatch();
@@ -26,8 +27,7 @@ const HojaTrabajoCRUD = memo(props => {
         const hoy = date_today.format('YYYY-MM-DD');
         const hace_un_mes = date_today.add({days: -30}).format('YYYY-MM-DD');
         const fecha_inicial = add_para_otros ? hoy : hace_un_mes;
-        const cargarMiCuenta = () => dispatch(actions.fetchMiCuenta());
-        const cargarHojasTrabajoHoy = () => dispatch(actions.fetchHojasTrabajosxFechas(fecha_inicial, hoy, {callback: cargarMiCuenta}));
+        const cargarHojasTrabajoHoy = () => dispatch(actions.fetchHojasTrabajosxFechas(fecha_inicial, hoy));
         dispatch(actions.fetchConfiguracionesCostos({callback: cargarHojasTrabajoHoy}));
 
     };
@@ -45,14 +45,15 @@ const HojaTrabajoCRUD = memo(props => {
         createObjectMethod: (item, options) => dispatch(actions.createHojaTrabajo(item, options)),
         updateObjectMethod: (id, item, options) => dispatch(actions.updateHojaTrabajo(id, item, options)),
     };
-    const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
+    const authentication = useAuth();
+    const {auth: {user: {colaborador}}} = authentication;
 
     const can_add = permisos.add &&
         (
             permisos.add_para_otros ||
             (
-                mi_cuenta.colaborador &&
-                mi_cuenta.colaborador.autogestion_horas_trabajadas
+                colaborador &&
+                colaborador.autogestion_horas_trabajadas
             )
         );
 

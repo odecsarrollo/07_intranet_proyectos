@@ -8,14 +8,14 @@ import Menu from './00_menu/MenuAdmin';
 import App1 from "./index";
 import PermisosList from "./generales/permisos/containers/PermisoList";
 import GruposPermisosList from "./generales/permisos/containers/GrupoPermisoList";
-import UsuariosList from "./generales/usuarios/containers/UsuarioListContainer";
+import UsuariosList from "./generales/usuarios/UsuarioCRUD";
 import ColaboradoresDashBoard
     from "./especificas/cguno/colaboradores/dashboard/containers/ColaboradorDashboard";
 import ColaboradoresNDashBoard from "./especificas/colaboradores/ColaboradorCRUD";
 import ColaboradoresDetail from "./especificas/cguno/colaboradores/colaboradores/containers/base_detail";
 import ColaboradoresCostosNominaList
     from "./especificas/cguno/colaboradores/costos_nomina/containers/CostoNominaListContainer";
-import UsuariosDetail from "./generales/usuarios/containers/UsuarioDetail";
+import UsuariosDetail from "./generales/usuarios/UsuarioDetail";
 import ClientesList from "./especificas/clientes/clientes/ClienteCRUD";
 import ClientesDashboard from "./especificas/clientes/PanelClienteDashboard";
 import SistemaInformacionOrigenList

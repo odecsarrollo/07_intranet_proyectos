@@ -47,7 +47,7 @@ class ConfiguracionBandaEurobeltViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         configuracion = ConfiguracionBandaEurobelt.objects.first()
         if not configuracion:
-            ConfiguracionBandaEurobelt.objects.create()
+            configuracion = ConfiguracionBandaEurobelt.objects.create()
         return super().list(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):

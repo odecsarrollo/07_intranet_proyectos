@@ -300,6 +300,7 @@ export const USUARIOS = {
     change: 'change_user',
     list: 'list_user',
     detail: 'view_user',
+    change_user_password: 'can_change_user_password',
     make_user_superuser: 'make_user_superuser',
     make_user_staff: 'make_user_staff',
     make_user_active: 'make_user_active',

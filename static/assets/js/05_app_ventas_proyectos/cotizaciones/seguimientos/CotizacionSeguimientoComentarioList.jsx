@@ -4,6 +4,7 @@ import FormComentario from "./forms/CotizacionSeguimientoComentarioForm";
 
 import moment from 'moment-timezone';
 import momentLocaliser from "react-widgets-moment";
+import {useAuth} from "../../../00_utilities/hooks";
 
 moment.tz.setDefault("America/Bogota");
 moment.locale('es');
@@ -11,11 +12,12 @@ momentLocaliser(moment);
 
 const Comentario = memo(props => {
     const {comentario, eliminarSeguimiento} = props;
-    const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
+    const authentication = useAuth();
+    const {auth: {user}} = authentication;
     const ahora = moment(new Date);
     const creacion = moment(comentario.created);
     const tiempo_creacion = ahora.diff(creacion, "minutes");
-    const es_usuario_que_creo = mi_cuenta.id === comentario.creado_por;
+    const es_usuario_que_creo = user.id === comentario.creado_por;
     const puede_borrar_comentario = es_usuario_que_creo && tiempo_creacion < 4;
     return (
         <div className="card mt-2">

@@ -1,9 +1,6 @@
 import React, {Fragment, memo, useEffect} from 'react';
 import {reduxForm} from 'redux-form';
-import {
-    MyCombobox,
-    MyTextFieldSimple,
-} from '../../../../00_utilities/components/ui/forms/fields';
+import {MyCombobox, MyTextFieldSimple} from '../../../../00_utilities/components/ui/forms/fields';
 import {useDispatch, useSelector} from "react-redux";
 import {MyFormTagModal} from '../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import validate from './validate_horas';
@@ -24,13 +21,10 @@ let Form = memo(props => {
         singular_name,
         hoja_trabajo,
     } = props;
-
     const proyectos_list = useSelector(state => state.proyectos);
     const literales_list = useSelector(state => state.literales);
-
     const authentication = useAuth();
     const {auth: {user: {colaborador}}} = authentication;
-
     const autogestion_horas_trabajadas = !!(
         colaborador &&
         colaborador.autogestion_horas_trabajadas
@@ -151,8 +145,7 @@ let Form = memo(props => {
 
                         </div>
                     </Fragment> :
-                    <span>Esta verificado, no se puede cambiar</span>
-            }
+                    <span>Esta verificado, no se puede cambiar</span>}
         </MyFormTagModal>
     )
 });

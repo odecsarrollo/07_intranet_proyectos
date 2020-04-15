@@ -2,12 +2,14 @@ import React, {useState, Fragment, memo} from 'react';
 import {fechaHoraFormatoUno, fechaFormatoUno} from "../../../00_utilities/common";
 import FormTarea from "./forms/CotizacionSeguimientoTareaForm";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome/index';
+import {useAuth} from "../../../00_utilities/hooks";
 
 const Tarea = memo(props => {
     const {tarea, eliminarSeguimiento, actualizarSeguimiento, cotizacion} = props;
-    const mi_cuenta = JSON.parse(localStorage.getItem('mi_cuenta'));
-    const es_usuario_que_creo = mi_cuenta.id === tarea.creado_por;
-    const es_responsable = cotizacion.responsable === mi_cuenta.id;
+    const authentication = useAuth();
+    const {auth: {user}} = authentication;
+    const es_usuario_que_creo = user.id === tarea.creado_por;
+    const es_responsable = cotizacion.responsable === user.id;
     const puede_cambiar_estado_tarea = es_usuario_que_creo || es_responsable;
     return (
         <div className="card mt-2">

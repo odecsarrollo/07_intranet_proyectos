@@ -8,8 +8,8 @@ import {
     MANOS_OBRAS_HOJAS_TRABAJOS,
     MANOS_OBRAS_HORAS_HOJAS_TRABAJOS
 } from "../../../permisos";
-import CreateForm from './forms/HojaTrabajoDetailHoraCRUDForm';
-import Tabla from './HojaTrabajoDetailHoraCRUDTabla';
+import CreateForm from '../horas_hojas_trabajo/forms/HojaTrabajoDetailHoraCRUDForm';
+import Tabla from '../horas_hojas_trabajo/HoraHojaTrabajoCRUDTabla';
 import crudHOC from '../../../00_utilities/components/HOC_CRUD2';
 import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
 
@@ -88,6 +88,8 @@ const Detail = memo(props => {
                 posCreateMethod={(r) => dispatch(actions.fetchHojaTrabajo(r.hoja))}
                 posUpdateMethod={(r) => dispatch(actions.fetchHojaTrabajo(r.hoja))}
                 posDeleteMethod={() => dispatch(actions.fetchHojaTrabajo(id))}
+                show_colaborador={false}
+                show_fecha={false}
                 method_pool={method_pool}
                 list={_.mapKeys(mis_horas_trabajadas, 'id')}
                 permisos_object={{
