@@ -93,4 +93,7 @@ class MovimientoVentaDetalle(models.Model):
         unique_together = [('factura', 'item')]
         permissions = [
             ("list_movimientoventadetalle", "Can list movimiento venta detalle"),
+            ("see_costos_movimientoventadetalle", "Can see movimiento venta detalle"),
+            ("see_rentabilidad_movimientoventadetalle", "Can see movimiento venta detalle"),
+            ("see_descuentos_movimientoventadetalle", "Can see movimiento venta detalle"),
         ]

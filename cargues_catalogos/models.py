@@ -204,6 +204,7 @@ class ItemsCatalogo(models.Model):
     material = models.CharField(max_length=100, null=True)
     color = models.CharField(max_length=30, null=True)
 
+    marca = models.CharField(max_length=200, null=True)
     desc_item_padre = models.CharField(max_length=400)
     unidad_medida_en_inventario = models.ForeignKey(UnidadMedidaCatalogo, null=True, on_delete=models.PROTECT)
     id_procedencia = models.CharField(max_length=1)

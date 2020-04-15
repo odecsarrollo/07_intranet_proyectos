@@ -76,9 +76,22 @@ class FacturaDetalleViewSet(viewsets.ModelViewSet):
 class MovimientoVentaDetalleViewSet(viewsets.ModelViewSet):
     queryset = MovimientoVentaDetalle.objects.select_related(
         'item',
-        'factura'
+        'factura',
+        'factura__cliente',
+        'factura__colaborador'
     ).all()
     serializer_class = MovimientoVentaDetalleSerializer
+
+    @action(detail=False, http_method_names=['get', ])
+    def por_rango_fechas(self, request):
+        fecha_inicial = self.request.GET.get('fecha_inicial')
+        fecha_final = self.request.GET.get('fecha_final')
+        lista = self.queryset.filter(
+            factura__fecha_documento__gte=fecha_inicial,
+            factura__fecha_documento__lte=fecha_final
+        )
+        serializer = self.get_serializer(lista, many=True)
+        return Response(serializer.data)
 
     @action(detail=False, http_method_names=['get', ])
     def items_por_cliente_historico(self, request):

@@ -43,6 +43,7 @@ class MenuAdminPermission(models.Model):
             ('menu_admin_seguimientos_cargues', 'Menu Admin Seguimientos Cargues'),
             ('menu_admin_configuracion_costos', 'Menu Admin Configuracion Costos'),
             ('menu_admin_facturas', 'Menu Admin Facturas'),
+            ('menu_admin_sistema_informacion_reporte_venta_items', 'Menu Admin Sis. Inf. Repo. Venta Items'),
         )
 
 

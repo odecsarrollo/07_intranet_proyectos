@@ -33,6 +33,7 @@ import ListasPreciosDashboard
     from "./especificas/listas_precios/ListaPrecioDashboard";
 
 import FacturaCRUD from "../11_app_sistemas_informacion/facturacion/FacturaCRUD";
+import ItemVendidoCRUD from "../11_app_sistemas_informacion/reportes/ItemVendidoCRUD";
 
 import useTengoPermisos from "../00_utilities/hooks/useTengoPermisos";
 
@@ -53,7 +54,9 @@ const AdminApp = memo(props => {
                     <Route exact path='/app/admin/' component={App1}/>
                     <Route exact path='/app/admin/sistemas_informacion/list'
                            component={SistemaInformacionOrigenList}/>
-                    <Route exact path='/app/admin/sistemas_informacion/facturas/list' component={FacturaCRUD}/>
+                    <Route exact path='/app/admin/sistemas_informacion/reportes/facturas' component={FacturaCRUD}/>
+                    <Route exact path='/app/admin/sistemas_informacion/reportes/ventas_items'
+                           component={ItemVendidoCRUD}/>
                     <Route exact path='/app/admin/geografia/list' component={GeografiaList}/>
                     <Route exact path='/app/admin/permisos/list' component={PermisosList}/>
                     <Route exact path='/app/admin/grupos_permisos/list' component={GruposPermisosList}/>

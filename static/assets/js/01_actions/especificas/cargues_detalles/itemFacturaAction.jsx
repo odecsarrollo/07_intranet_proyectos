@@ -19,6 +19,22 @@ export const fetchItemsFacturas = (options_action = {}) => {
         return fetchListGet(current_url_api, options);
     }
 };
+
+export const fetchItemsFacturasPorRangoFecha = (fecha_inicial, fecha_final, options_action = {}) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
+        };
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches, ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        return fetchListGetURLParameters(`${current_url_api}/por_rango_fechas/?fecha_inicial=${fecha_inicial}&fecha_final=${fecha_final}`, options);
+    }
+};
+
 export const fetchItemFactura = (id, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {

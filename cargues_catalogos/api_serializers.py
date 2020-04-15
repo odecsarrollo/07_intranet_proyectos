@@ -97,6 +97,7 @@ class ItemsCatalogoSerializer(serializers.ModelSerializer):
             'id_referencia',
             'descripcion',
             'descripcion_dos',
+            'marca',
             'activo',
             'nombre_tercero',
             'desc_item_padre',

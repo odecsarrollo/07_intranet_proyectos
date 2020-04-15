@@ -24,9 +24,14 @@ class ItemsLiteralDetalleSerializer(serializers.ModelSerializer):
 class MovimientoVentaDetalleSerializer(CustomSerializerMixin, serializers.ModelSerializer):
     descripcion_item = serializers.CharField(source='item.descripcion', read_only=True)
     referencia_item = serializers.CharField(source='item.id_referencia', read_only=True)
+    marca = serializers.CharField(source='item.marca', read_only=True)
     factura_tipo = serializers.CharField(source='factura.tipo_documento', read_only=True)
     factura_nro = serializers.CharField(source='factura.nro_documento', read_only=True)
     factura_fecha = serializers.DateField(source='factura.fecha_documento', read_only=True)
+    cliente_id = serializers.CharField(source='factura.cliente_id', read_only=True)
+    cliente_nombre = serializers.CharField(source='factura.cliente.nombre', read_only=True)
+    vendedor_nombre = serializers.CharField(source='factura.colaborador.nombres', read_only=True)
+    vendedor_apellido = serializers.CharField(source='factura.colaborador.apellidos', read_only=True)
 
     class Meta:
         model = MovimientoVentaDetalle
@@ -35,10 +40,15 @@ class MovimientoVentaDetalleSerializer(CustomSerializerMixin, serializers.ModelS
             'precio_uni',
             'cantidad',
             'descripcion_item',
+            'vendedor_nombre',
+            'vendedor_apellido',
+            'cliente_id',
+            'cliente_nombre',
             'referencia_item',
             'factura',
             'factura_tipo',
             'factura_fecha',
+            'marca',
             'factura_nro',
             'venta_bruta',
             'dscto_netos',

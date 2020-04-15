@@ -1,6 +1,7 @@
 import React, {Fragment, memo} from 'react';
 import MenuTerceros from './MenuTerceros';
 import MenuPermisos from './MenuPermisos';
+import MenuInformesSistemaInformacion from './MenuInformesSistemaInformacion';
 import MenuConfiguraciones from './MenuConfiguraciones';
 import DrawerListItem from '../../00_utilities/components/ui/drawer/drawer_list_item';
 import useTengoPermisos from "../../00_utilities/hooks/useTengoPermisos";
@@ -15,13 +16,13 @@ const MenuAdmin = memo(props => {
         menu_admin_listas_precios = false,
         menu_admin_items = false,
         menu_admin_seguimientos_cargues = false,
-        menu_admin_facturas = false,
     } = permisos_menu;
     return (
         <Fragment>
             <MenuTerceros permisos_menu={permisos_menu}/>
             <MenuPermisos permisos_menu={permisos_menu}/>
             <MenuConfiguraciones permisos_menu={permisos_menu}/>
+            <MenuInformesSistemaInformacion permisos_menu={permisos_menu}/>
             {menu_admin_sistemas_informacion && <DrawerListItem
                 size='lg'
                 link='/app/admin/sistemas_informacion/list'
@@ -57,12 +58,6 @@ const MenuAdmin = memo(props => {
                 link='/app/admin/seguimientos_cargues/list'
                 texto='Seguimiento Cargues'
                 icono='search'
-            />}
-            {menu_admin_facturas && <DrawerListItem
-                size='lg'
-                link='/app/admin/sistemas_informacion/facturas/list'
-                texto='Facturas'
-                icono='receipt'
             />}
         </Fragment>
     )
