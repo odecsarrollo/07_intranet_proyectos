@@ -24,6 +24,7 @@ class ItemsLiteralDetalleSerializer(serializers.ModelSerializer):
 class MovimientoVentaDetalleSerializer(CustomSerializerMixin, serializers.ModelSerializer):
     descripcion_item = serializers.CharField(source='item.descripcion', read_only=True)
     referencia_item = serializers.CharField(source='item.id_referencia', read_only=True)
+    nombre_tercero = serializers.CharField(source='item.nombre_tercero', read_only=True)
     marca = serializers.CharField(source='item.marca', read_only=True)
     factura_tipo = serializers.CharField(source='factura.tipo_documento', read_only=True)
     factura_nro = serializers.CharField(source='factura.nro_documento', read_only=True)
@@ -44,6 +45,7 @@ class MovimientoVentaDetalleSerializer(CustomSerializerMixin, serializers.ModelS
             'vendedor_apellido',
             'cliente_id',
             'cliente_nombre',
+            'nombre_tercero',
             'referencia_item',
             'factura',
             'factura_tipo',

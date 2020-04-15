@@ -122,6 +122,13 @@ const ItemVendidoCRUDTabla = memo(props => {
                                 filterable: true
                             },
                             {
+                                Header: "Tercero",
+                                accessor: 'nombre_tercero',
+                                maxWidth: 150,
+                                minWidth: 150,
+                                filterable: true
+                            },
+                            {
                                 Header: "Cliente",
                                 accessor: "cliente_nombre",
                                 maxWidth: 250,

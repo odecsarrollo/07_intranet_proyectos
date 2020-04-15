@@ -81,8 +81,7 @@
   },
   "scripts": {
     "dev": "node server.js",
-    "build_prod": "./node_modules/.bin/webpack --config webpack.prod.config.js --watch",
-    "deploy": "eb deploy"
+    "build_prod": "./node_modules/.bin/webpack --config webpack.prod.config.js"
   },
   "repository": {
     "type": "git",
