@@ -33,6 +33,8 @@ class MovimientoVentaDetalleSerializer(CustomSerializerMixin, serializers.ModelS
     cliente_nombre = serializers.CharField(source='factura.cliente.nombre', read_only=True)
     vendedor_nombre = serializers.CharField(source='factura.colaborador.nombres', read_only=True)
     vendedor_apellido = serializers.CharField(source='factura.colaborador.apellidos', read_only=True)
+    unidad_medida_nombre = serializers.CharField(source='unidad_medida.descripcion', read_only=True)
+
 
     class Meta:
         model = MovimientoVentaDetalle
@@ -58,6 +60,8 @@ class MovimientoVentaDetalleSerializer(CustomSerializerMixin, serializers.ModelS
             'rentabilidad',
             'imp_netos',
             'venta_neto',
+            'unidad_medida',
+            'unidad_medida_nombre',
         ]
         read_only_fields = fields
 

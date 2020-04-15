@@ -2,7 +2,7 @@ import React, {memo, Fragment} from "react";
 import {fechaFormatoUno, pesosColombianos} from "../../00_utilities/common";
 import {makeStyles} from "@material-ui/core";
 import {Link} from "react-router-dom";
-import {useSelector, useDispatch} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import RangoFechaDate from "../../00_utilities/components/filtros/RangoFechaDate";
 import * as actions from "../../01_actions/01_index";
 import selectTableHOC from "react-table/lib/hoc/selectTable";
@@ -28,8 +28,6 @@ const ItemVendidoCRUDTabla = memo(props => {
         ano: new Date(f.factura_fecha).getFullYear()
     }));
     const {
-        permisos_object,
-        onSelectItemEdit,
         con_busqueda_rango = false,
         selection,
         getTrGroupProps,
@@ -84,6 +82,14 @@ const ItemVendidoCRUDTabla = memo(props => {
                                 accessor: 'descripcion_item',
                                 maxWidth: 300,
                                 minWidth: 300,
+                                filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase()),
+                                filterable: true
+                            },
+                            {
+                                Header: "U.M",
+                                accessor: 'unidad_medida_nombre',
+                                maxWidth: 100,
+                                minWidth: 100,
                                 filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase()),
                                 filterable: true
                             },
@@ -152,6 +158,22 @@ const ItemVendidoCRUDTabla = memo(props => {
                                 filterable: true,
                                 Cell: row => <div
                                     className={classes.texto_largo}>{row.original.vendedor_nombre} {row.original.vendedor_apellido} </div>
+                            },
+                            {
+                                Header: "$Precio Uni",
+                                accessor: "precio_uni",
+                                maxWidth: 80,
+                                minWidth: 80,
+                                //Footer: <div className='text-right'>{pesosColombianos(venta_bruta)}</div>,
+                                Cell: row => <div className='text-right'>{pesosColombianos(row.value)}</div>
+                            },
+                            {
+                                Header: "#Cant.",
+                                accessor: "cantidad",
+                                maxWidth: 80,
+                                minWidth: 80,
+                                //Footer: <div className='text-right'>{pesosColombianos(venta_bruta)}</div>,
+                                Cell: row => <div className='text-right'>{row.value}</div>
                             },
                             {
                                 Header: "$Valor Bruto",

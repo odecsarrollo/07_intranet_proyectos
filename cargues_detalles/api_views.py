@@ -78,7 +78,8 @@ class MovimientoVentaDetalleViewSet(viewsets.ModelViewSet):
         'item',
         'factura',
         'factura__cliente',
-        'factura__colaborador'
+        'factura__colaborador',
+        'unidad_medida'
     ).all()
     serializer_class = MovimientoVentaDetalleSerializer
 

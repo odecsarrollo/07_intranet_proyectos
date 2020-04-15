@@ -11,6 +11,7 @@ from cargues_catalogos.models import (
 from proyectos.models import Literal
 from colaboradores.models import Colaborador
 from clientes.models import ClienteBiable
+from cargues_catalogos.models import UnidadMedidaCatalogo
 
 
 class ItemsLiteralDetalle(models.Model):
@@ -80,6 +81,7 @@ class MovimientoVentaDetalle(models.Model):
         on_delete=models.PROTECT
     )
     item = models.ForeignKey(ItemsCatalogo, null=True, related_name='ventas', on_delete=models.PROTECT)
+    unidad_medida = models.ForeignKey(UnidadMedidaCatalogo, null=True, related_name='ventas', on_delete=models.PROTECT)
     precio_uni = models.DecimalField(max_digits=18, decimal_places=4, default=0)
     cantidad = models.DecimalField(max_digits=18, decimal_places=4, default=0)
     venta_bruta = models.DecimalField(max_digits=18, decimal_places=4, default=0)
