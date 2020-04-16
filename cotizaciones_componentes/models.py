@@ -51,7 +51,8 @@ class CotizacionComponente(TimeStampedModel):
 
     class Meta:
         permissions = [
-            ("list_cotizacioncomponente", "Can list cotizaciones componentes")
+            ("list_cotizacioncomponente", "Can list cotizaciones componentes"),
+            ("list_todos_vendedores_cotizacioncomponente", "Can list cotizaciones componentes otros vendedores"),
         ]
 
 
