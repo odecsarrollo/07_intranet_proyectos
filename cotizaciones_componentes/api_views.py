@@ -242,7 +242,7 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
 
         ver_todas = request.user.has_perm('cotizaciones_componentes.list_todos_vendedores_cotizacioncomponente')
 
-        if not user.is_superuser or not ver_todas:
+        if not (user.is_superuser or ver_todas):
             lista = lista.filter(
                 (Q(responsable__isnull=True) & Q(creado_por=user)) |
                 (Q(responsable__isnull=False) & Q(responsable=user))
