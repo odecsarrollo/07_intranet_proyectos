@@ -280,14 +280,11 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
     def cotizaciones_en_edicion_asesor(self, request):
         user = self.request.user
         self.serializer_class = CotizacionComponenteConDetalleSerializer
-        lista = self.queryset
+        lista = self.queryset.filter(estado='INI')
         if not user.is_superuser:
-            lista = lista.filter(
-                Q(estado='INI') &
-                (
-                        (Q(responsable__isnull=True) & Q(creado_por=user)) |
-                        (Q(responsable__isnull=False) & Q(responsable=user))
-                )
+            lista = self.queryset.filter(estado='INI').filter(
+                (Q(responsable__isnull=True) & Q(creado_por=user)) |
+                (Q(responsable__isnull=False) & Q(responsable=user))
             )
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)

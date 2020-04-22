@@ -1,4 +1,4 @@
-import React, {memo, useContext, useState} from "react";
+import React, {memo, useContext, useState, useEffect} from "react";
 import {useDispatch} from 'react-redux';
 import StylesContext from "../../../00_utilities/contexts/StylesContext";
 import {pesosColombianos} from "../../../00_utilities/common";
@@ -32,10 +32,26 @@ const useStyles = makeStyles(theme => ({
 const CotizacionDetailItemsTablaItem = memo(props => {
     const {item, editable, cargarDatos} = props;
     const dispatch = useDispatch();
+    const [error, setError] = useState(null);
     const [cantidad, setCantidad] = useState(item.cantidad);
     const [dias_entrega, setDiasEntrega] = useState(item.dias_entrega);
     const {table} = useContext(StylesContext);
     const classes = useStyles();
+
+    useEffect(() => {
+        if (error !== null) {
+            setCantidad(item.cantidad);
+            setDiasEntrega(item.dias_entrega);
+            dispatch(actions.notificarErrorAction('Hubo un error, comunicarse con el adminsitrador del sistema'));
+            let error_text = '';
+            _.mapKeys(error, (v, k) => {
+                error_text = error_text !== '' ? `${error_text}, ${k}: ${v}` : `${k}: ${v}`;
+            });
+            dispatch(actions.notificarErrorAction(error_text));
+            setError(null);
+        }
+    }, [error]);
+
     const tipo = () => {
         const es_articulo_catalogo = !!item.articulo_catalogo;
         const es_banda_eurobelt = !!item.banda_eurobelt;
@@ -55,14 +71,22 @@ const CotizacionDetailItemsTablaItem = memo(props => {
         cotizacion_componente_id,
         id_item_cotizacion,
         {
-            callback: () => cargarDatos()
+            callback: () => cargarDatos(),
+            callback_error: (res) => {
+                cargarDatos();
+                setError(res.response.data)
+            }
         }
     ));
     const cambiarItem = (id_item_cotizacion, item) => dispatch(actions.updateItemCotizacionComponente(
         id_item_cotizacion,
         item,
         {
-            callback: () => cargarDatos()
+            callback: () => cargarDatos(),
+            callback_error: (res) => {
+                cargarDatos();
+                setError(res.response.data)
+            }
         }
     ));
 
@@ -90,7 +114,10 @@ const CotizacionDetailItemsTablaItem = memo(props => {
                     onChange={e => setCantidad(e.target.value)}
                     onBlur={e => {
                         if (parseFloat(item.cantidad) !== parseFloat(e.target.value)) {
-                            cambiarItem(item.id, {...item, cantidad});
+                            cambiarItem(item.id, {
+                                ...item,
+                                cantidad
+                            });
                         }
                     }}
                     type='number'
