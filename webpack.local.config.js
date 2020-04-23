@@ -13,6 +13,7 @@ config.entry = {
     ]
 };
 config.mode = "development";
+config.devtool = 'eval-source-map';
 
 config.output.publicPath = 'http://localhost:3000/static/assets/bundles/deve/';
 config.output.path = path.resolve(__dirname, './static/assets/bundles/deve/');

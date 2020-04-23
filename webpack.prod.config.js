@@ -9,9 +9,9 @@ var OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 config.output.path = path.resolve(__dirname, './static/assets/bundles/dist');
 config.output.filename = "[name]-[hash].js";
 config.mode = "production";
+config.devtool = 'source-map';
 config.plugins = config.plugins.concat([
     new BundleTracker({filename: './webpack-stats-prod.json'}),
-    // removes a lot of debugging code in React
     new webpack.optimize.OccurrenceOrderPlugin(),
     new TerserPlugin({
         parallel: true,

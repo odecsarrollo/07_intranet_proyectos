@@ -32,7 +32,7 @@ export default function auth(state = initialState, action) {
         case 'LOGIN_SUCCESSFUL':
             localStorage.setItem("token", action.data.token);
             localStorage.setItem("mi_cuenta", action.data.mi_cuenta ? JSON.stringify(action.data.mi_cuenta) : null);
-            localStorage.setItem("mis_permisos", action.data.mis_permisos ? JSON.stringify(action.data.mis_permisos) : null);
+            localStorage.setItem("mis_permisos", []);
             return {...state, ...action.data, isAuthenticated: true, isLoading: false, errors: null};
 
         case 'AUTHENTICATION_ERROR':

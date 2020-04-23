@@ -1,6 +1,6 @@
 import os
-
-if os.environ.get('DJANGO_CONFIGURATION') == 'Local':
+print(os.environ['DJANGO_CONFIGURATION'])
+if os.environ['DJANGO_CONFIGURATION'] == 'Local':
     from .local import *
-if os.environ.get('DJANGO_CONFIGURATION') == 'Production':
+if os.environ['DJANGO_CONFIGURATION'] == 'Production':
     from .production import *
