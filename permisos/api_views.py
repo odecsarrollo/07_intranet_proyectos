@@ -16,8 +16,7 @@ class PermissionViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def mis_permisos(self, request):
         if request.user.is_superuser:
-            permissions_list = Permission.objects.all()
-            serializer = self.get_serializer(permissions_list, many=True)
+            serializer = self.get_serializer(self.queryset, many=True)
             return Response(serializer.data)
         permissions_list = self.queryset.filter(
             Q(user=request.user) |

@@ -76,7 +76,7 @@ const Tabla = memo((props) => {
                                 Cell: row => {
                                     const proyectos = row.original.proyectos;
                                     return (
-                                        <div>{proyectos.map(p =>
+                                        <div>{proyectos && proyectos.map(p =>
                                             <div key={p.id}>
                                                 <Link
                                                     to={`/app/proyectos/proyectos/detail/${p.id}`}>
@@ -107,7 +107,7 @@ const Tabla = memo((props) => {
                                                     {cotizacion_inicial.unidad_negocio}-{cotizacion_inicial.nro_cotizacion}
                                                 </Link>
                                             </div>}
-                                            {cotizaciones_adicionales.length > 0 &&
+                                            {cotizaciones_adicionales &&
                                             cotizaciones_adicionales.map(c =>
                                                 <div key={c.id}>
                                                     <Link
