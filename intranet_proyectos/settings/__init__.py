@@ -1,5 +1,4 @@
 import os
-print(os.environ['DJANGO_CONFIGURATION'])
 if os.environ['DJANGO_CONFIGURATION'] == 'Local':
     from .local import *
 if os.environ['DJANGO_CONFIGURATION'] == 'Production':

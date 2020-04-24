@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path
 
 from .views import (
     IndexView
@@ -7,5 +7,4 @@ from .views import (
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
     path('app/*', IndexView.as_view(), name='index'),
-    path('accounts/', include('registration.backends.default.urls')),
 ]

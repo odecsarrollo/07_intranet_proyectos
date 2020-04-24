@@ -21,7 +21,6 @@ ALLOWED_HOSTS = ['*']
 DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.sites',
-    'registration',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -61,7 +60,6 @@ MY_APPS = [
 THIRD_PART_APPS = [
     'imagekit',
     'model_utils',
-    'crispy_forms',
     'rest_framework',
     'knox',
     'webpack_loader',

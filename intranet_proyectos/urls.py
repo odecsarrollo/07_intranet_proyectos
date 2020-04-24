@@ -32,11 +32,5 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
-    from rest_framework.schemas import get_schema_view
-
-    schema_view = get_schema_view(title="Example API")
-    urlpatterns = [
-                      url('^schema$', schema_view),
-                  ] + urlpatterns
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

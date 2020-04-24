@@ -137,42 +137,6 @@ class UsuarioViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-# class LoginAPI(generics.GenericAPIView):
-#     serializer_class = LoginUserSerializer
-#
-#     def post(self, request, *args, **kwargs):
-#         serializer = self.get_serializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         user = serializer.validated_data
-#         tokens = AuthToken.objects.filter(user=user)
-#         tokens.delete()
-#
-#         if user.is_superuser:
-#             permissions_list = None
-#         else:
-#             permissions_list = Permission.objects.select_related(
-#                 'plus',
-#                 'content_type'
-#             ).filter(
-#                 Q(user=user) |
-#                 Q(group__user=user)
-#             ).distinct()
-#         _, token = AuthToken.objects.create(user)
-#         return Response({
-#             "user": UserSerializer(user, context=self.get_serializer_context()).data,
-#             "token": token,
-#             "mi_cuenta": UsuarioConDetalleSerializer(
-#                 user,
-#                 context=self.get_serializer_context()
-#             ).data,
-#             "mis_permisos": PermissionSerializer(
-#                 permissions_list,
-#                 context=self.get_serializer_context(),
-#                 many=True
-#             ).data,
-#         })
-
-
 class LoginViewSet(viewsets.ModelViewSet):
     serializer_class = LoginUserSerializer
     queryset = User.objects.all()
@@ -180,10 +144,8 @@ class LoginViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['post'], permission_classes=[permissions.AllowAny])
     def login(self, request) -> Response:
         serializer = self.get_serializer(data=self.request.POST)
-        print(serializer)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data
-        print(user)
         tokens = AuthToken.objects.filter(user=user)
         tokens.delete()
         _, token = AuthToken.objects.create(user)
