@@ -20,6 +20,7 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
         'responsable',
         'creado_por',
         'cliente',
+        'cliente__colaborador_componentes',
         'cliente__canal',
         'ciudad',
         'contacto',
@@ -30,7 +31,7 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
         'items__forma_pago',
         'items__forma_pago__canal',
         'adjuntos',
-        'envios_emails',
+        'versiones',
         'seguimientos',
         'seguimientos__creado_por',
         'seguimientos__documento_cotizacion',
@@ -73,9 +74,8 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def asignar_consecutivo(self, request, pk=None):
         from .services import cotizacion_componentes_asignar_nro_consecutivo
-        cotizacion_componente = self.get_object()
         cotizacion_componente = cotizacion_componentes_asignar_nro_consecutivo(
-            cotizacion_componente_id=cotizacion_componente.id)
+            cotizacion_componente=self.get_object())
         self.serializer_class = CotizacionComponenteConDetalleSerializer
         serializer = self.get_serializer(cotizacion_componente)
         return Response(serializer.data)
@@ -96,10 +96,11 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(cotizacion_componente)
         return Response(serializer.data)
 
+    # TODO: Mejorar este método, muchos queries a la hora de enviar
     @action(detail=True, methods=['post'])
     def enviar(self, request, pk=None):
+        self.serializer_class = CotizacionComponenteConDetalleSerializer
         from .services import cotizacion_componentes_enviar
-        cotizacion_componente = self.get_object()
         email_uno = request.POST.get('email_uno', None)
         email_dos = request.POST.get('email_dos', None)
         email_tres = request.POST.get('email_tres', None)
@@ -119,21 +120,20 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
             emails_destino.append(email_asesor)
 
         cotizacion_componente = cotizacion_componentes_enviar(
-            cotizacion_componente_id=cotizacion_componente.id,
+            cotizacion_componente=self.queryset.get(pk=pk),
             request=request,
             emails_destino=emails_destino
         )
-        self.serializer_class = CotizacionComponenteConDetalleSerializer
+        cotizacion_componente.refresh_from_db()
         serializer = self.get_serializer(cotizacion_componente)
         return Response(serializer.data)
 
     @action(detail=True, methods=['post'])
     def imprimir(self, request, pk=None):
         from .services import cotizacion_componentes_generar_pdf
-        cotizacion = self.get_object()
         response = HttpResponse(content_type='application/pdf')
         output = cotizacion_componentes_generar_pdf(
-            cotizacion_id=cotizacion.id,
+            cotizacion_componente=self.queryset.get(pk=pk),
             request=request
         )
         response.write(output.getvalue())

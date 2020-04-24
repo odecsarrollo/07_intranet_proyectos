@@ -72,6 +72,7 @@ const IndexApp = memo(props => {
         modulo_contabilidad,
         modulo_bandas_eurobelt
     } = permisos_modulos;
+    console.log(permisos_modulos);
     return <Loading>
         <div className="mt-3">
             <div className="container text-center">
