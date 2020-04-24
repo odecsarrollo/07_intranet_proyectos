@@ -58,7 +58,7 @@ pypiwin32==223
 python-dateutil==2.7.3
 pytz==2018.7
 pywin32==224
-PyYAML==3.12
+PyYAML==5.1
 requests==2.18.4
 s3transfer==0.1.13
 semantic-version==2.5.0
