@@ -1,0 +1,28 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+awsebcli = "*"
+
+[packages]
+django = "==2.2.6"
+djangorestframework = "==3.9.4"
+django-webpack-loader = "==0.6.0"
+django-storages = "==1.7.1"
+django-silk = "==3.0.2"
+django-rest-knox = "==4.1.0"
+django-model-utils = "==3.1.1"
+django-imagekit = "==4.0.2"
+pilkit = "*"
+pillow = "*"
+weasyprint = "==0.42.3"
+boto3 = "==1.9.195"
+django-reversion = "==3.0.4"
+django-cors-headers = "==3.0.1"
+mysqlclient = "==1.4.2.post1"
+pypdf2 = "==1.26.0"
+
+[requires]
+python_version = "3.6"
