@@ -13,7 +13,7 @@ const Menu = () => <Fragment>
         size='lg'
         link='/app/contabilidad/anticipos'
         texto='Contabilidad Anticipos'
-        icono='home'
+        icono='receipt'
     />
 </Fragment>;
 
