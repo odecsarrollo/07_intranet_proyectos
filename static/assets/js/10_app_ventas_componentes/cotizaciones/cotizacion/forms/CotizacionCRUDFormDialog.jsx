@@ -98,8 +98,8 @@ let CotizacionCRUDFormDialog = memo(props => {
                     busy={false}
                     autoFocus={false}
                     data={[
-                        {'name': 'COP', 'id': 'COP'},
-                        {'name': 'USD', 'id': 'USD'}
+                        {'name': 'COP', 'id': 'COP'}
+                        //{'name': 'USD', 'id': 'USD'}
                     ]}
                     textField='name'
                     filter='contains'

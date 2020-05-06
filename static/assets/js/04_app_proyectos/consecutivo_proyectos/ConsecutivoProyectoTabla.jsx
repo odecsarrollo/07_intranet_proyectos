@@ -1,7 +1,9 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
+import {useDispatch} from "react-redux";
 import {Link} from "react-router-dom";
 import TextField from '@material-ui/core/TextField';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import * as actions from "../../01_actions/01_index";
 import CotizacionAbrirCarpetaLista from "../proyectos/proyectos/ProyectoCrearDesdeCotizacion";
 import useTengoPermisos from "../../00_utilities/hooks/useTengoPermisos";
 import {COTIZACIONES, PROYECTOS} from "../../permisos";
@@ -113,13 +115,36 @@ const ConsecutivoProyectoTablaItem = props => {
 };
 
 const ConsecutivoProyectoTabla = (props) => {
-    let {list, cargarDatosConsecutivoProyectos} = props;
+    let {list} = props;
     const [busqueda, setBusqueda] = useState('');
-    const [busqueda_tipo_proyecto, setBusquedaTipoProyecto] = useState('TODO');
-    const [busqueda_abierto, setBusquedaAbierto] = useState('TODO');
-    const opciones = _.uniq(_.map(list, e => e.id_proyecto.substring(0, 2)));
+    const [busqueda_tipo_proyecto, setBusquedaTipoProyecto] = useState('OP');
+    const [busqueda_abierto, setBusquedaAbierto] = useState('SI');
+    const [rangos_proyectos, setRangosProyectos] = useState({});
+    const [rango_actual, setRangoActual] = useState(null);
+    const opciones = ['OP', 'OS', 'OO'];
     const permisos_cotizaciones = useTengoPermisos(COTIZACIONES);
     const permisos_proyectos = useTengoPermisos(PROYECTOS);
+
+    const dispatch = useDispatch();
+    const cargarDatos = () => {
+        dispatch(actions.fetchProyectosConsecutivo(busqueda_tipo_proyecto, busqueda_abierto, rango_actual))
+    };
+    useEffect(() => {
+        dispatch(actions.fetchProyectosConsecutivosRangos({
+            callback: res => {
+                setRangosProyectos(res.lista);
+                setRangoActual(res.lista[busqueda_tipo_proyecto][0])
+            }
+        }))
+    }, []);
+
+    useEffect(() => {
+        if (rango_actual) {
+            cargarDatos();
+        }
+        return () => dispatch(actions.clearProyectos());
+    }, [rango_actual, busqueda_abierto]);
+
     if (busqueda_tipo_proyecto !== 'TODO') {
         list = _.pickBy(list, proyecto => proyecto.id_proyecto.substring(0, 2) === busqueda_tipo_proyecto)
     }
@@ -157,7 +182,6 @@ const ConsecutivoProyectoTabla = (props) => {
             {(permisos_cotizaciones.list_cotizaciones_abrir_carpeta ||
                 permisos_cotizaciones.list_cotizaciones_notificaciones_consecutivo_proyectos) &&
             <CotizacionAbrirCarpetaLista
-                cargarDatosConsecutivoProyectos={cargarDatosConsecutivoProyectos}
                 literales_sin_sincronizar={literales_sin_sincronizar}
             />}
             <div className="row">
@@ -195,22 +219,39 @@ const ConsecutivoProyectoTabla = (props) => {
                         >
                             <span
                                 className='puntero'
-                                onClick={() => setBusquedaTipoProyecto(o)}>
+                                onClick={() => {
+                                    setBusquedaTipoProyecto(o);
+                                    setRangoActual(null);
+                                }}>
+                                {o}
+                            </span>
+                        </div>)}
+                    </div>
+                    {rangos_proyectos[busqueda_tipo_proyecto] && <div className="row">
+                        <div className="col-3">Rango Consecutivo:</div>
+                        {rangos_proyectos[busqueda_tipo_proyecto].map(o => <div
+                            key={o}
+                            className='col-1'
+                            style={{backgroundColor: rango_actual === o ? '#ff9800' : 'transparent'}}
+                        >
+                            <span
+                                className='puntero'
+                                onClick={() => setRangoActual(o)}>
                                 {o}
                             </span>
                         </div>)}
                         <div
                             className="col-1"
-                            style={{backgroundColor: busqueda_tipo_proyecto === 'TODO' ? '#ff9800' : 'transparent'}}
+                            style={{backgroundColor: rango_actual === 'TODO' ? '#ff9800' : 'transparent'}}
                         >
                             <span
                                 className='puntero'
-                                onClick={() => setBusquedaTipoProyecto('TODO')}
+                                onClick={() => setRangoActual('TODO')}
                             >
                                 TODO
                             </span>
                         </div>
-                    </div>
+                    </div>}
                     <div className="row">
                         <div className="col-3">Nro Proyectos:</div>
                         {_.size(list)}

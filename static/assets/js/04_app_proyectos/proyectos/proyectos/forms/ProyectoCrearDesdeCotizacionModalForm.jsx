@@ -13,6 +13,7 @@ const selector = formValueSelector('proyectoCrearDesdeCotizacionModalForm');
 let ProyectoCrearDesdeCotizacionModalForm = memo(props => {
     const {
         pristine,
+        cargarDatos,
         submitting,
         reset,
         initialValues,
@@ -54,7 +55,7 @@ let ProyectoCrearDesdeCotizacionModalForm = memo(props => {
                 onSelect={relacionarQuitarProyecto}
                 onCancelar={() => setOpenRelacionar(false)}
                 onMount={() => dispatch(actions.clearProyectos())}
-                onUnMount={() => dispatch(actions.fetchProyectosConsecutivo())}
+                onUnMount={() => cargarDatos()}
                 listado={_.map(proyectos_list)}
                 open={open_relacionar}
                 select_boton_text='Relacionar'

@@ -107,8 +107,21 @@ export const fetchProyectosConCotizaciones = (options_action = {}) => {
     }
 };
 
+export const fetchProyectosConsecutivosRangos = (options_action = {}) => {
+    return function (dispatch) {
+        const FULL_URL = `${current_url_api}/listar_rangos_consecutivos_por_ano`;
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        return fetchListGet(FULL_URL, options);
+    }
+};
 
-export const fetchProyectosConsecutivo = (options_action = {}) => {
+
+export const fetchProyectosConsecutivo = (tipo_proyecto, abierto, rango_actual, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
@@ -120,7 +133,7 @@ export const fetchProyectosConsecutivo = (options_action = {}) => {
             dispatch_method: dispatch,
             clear_action_type: limpiar_coleccion ? TYPES.clear : null
         };
-        return fetchListGet(`${current_url_api}/listar_consecutivo_proyectos`, options);
+        return fetchListGetURLParameters(`${current_url_api}/listar_consecutivo_proyectos/?rango_actual=${rango_actual}&tipo_proyecto=${tipo_proyecto}&abierto=${abierto}`, options);
     }
 };
 

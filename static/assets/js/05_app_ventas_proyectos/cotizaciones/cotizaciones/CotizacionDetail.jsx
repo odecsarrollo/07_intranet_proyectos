@@ -102,11 +102,11 @@ const Detail = memo(props => {
                             <CotizacionCondicionInicioProyecto cotizacion={object}/>
                         </TabPanel>}
                         {permisos.change && <TabPanel>
-                            <CotizacionForm
+                            {object.responsable && <CotizacionForm
                                 initialValues={object}
                                 onSubmit={guardarCambiosCotizacion}
                                 permisos={permisos}
-                            />
+                            />}
                         </TabPanel>}
                         {permisos_archivos_cotizacion.list && <TabPanel>
                             <CotizacionDetailDocumento

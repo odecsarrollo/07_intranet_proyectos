@@ -123,7 +123,24 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @action(detail=False, http_method_names=['get', ])
+    def listar_rangos_consecutivos_por_ano(self, request):
+        listado = []
+        qs = Proyecto.objects.values_list('id_proyecto', flat=True).exclude(id_proyecto__in=['OP99999', 'OP10168'])
+        [listado.append(x[0:4]) for x in qs.all()]
+        listado_dic = {}
+        for x in set(listado):
+            if x[0:2] not in listado_dic:
+                listado_dic[x[0:2]] = [x]
+            else:
+                listado_dic[x[0:2]].append(x)
+                listado_dic[x[0:2]].sort(reverse=True)
+        return Response({'lista': listado_dic})
+
+    @action(detail=False, http_method_names=['get', ])
     def listar_consecutivo_proyectos(self, request):
+        tipo_proyecto = request.GET.get('tipo_proyecto')
+        abierto = request.GET.get('abierto')
+        rango_actual = request.GET.get('rango_actual')
         qs = Proyecto.objects.select_related('cliente').prefetch_related(
             'cotizaciones',
             'cotizaciones__cotizaciones_adicionales',
@@ -133,7 +150,13 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
             'mis_literales__cotizaciones',
             'mis_literales__cotizaciones__cotizacion_inicial',
             'mis_literales__cotizaciones__cotizaciones_adicionales',
-        ).all()
+        )
+        if rango_actual != 'TODO':
+            qs = qs.filter(id_proyecto__startswith=rango_actual[0:4])
+        if tipo_proyecto != 'TODO':
+            qs = qs.filter(id_proyecto__startswith=tipo_proyecto)
+        if abierto != 'TODO':
+            qs = qs.filter(abierto=abierto == 'SI')
         self.serializer_class = ConsecutivoProyectoSerializer
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
