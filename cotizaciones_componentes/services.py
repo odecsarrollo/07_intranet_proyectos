@@ -144,6 +144,9 @@ def cotizacion_componentes_adicionar_item(
         item_referencia: str,
         item_unidad_medida: str,
         tipo_transporte: str,
+        tasa: float = 0,
+        moneda_origen: str = None,
+        moneda_origen_costo: float = 0,
         forma_pago_id: int = None,
         id_item: int = None,
 ) -> CotizacionComponente:
@@ -160,7 +163,13 @@ def cotizacion_componentes_adicionar_item(
     if tipo_item == 'ArticuloCatalogo':
         articulo_catalogo = ItemVentaCatalogo.objects.get(pk=id_item)
         if articulo_catalogo.item_sistema_informacion:
-            if articulo_catalogo.item_sistema_informacion.ultimo_costo > float(precio_unitario):
+            siesa_cloud_ultimo_costo = articulo_catalogo.item_sistema_informacion.ultimo_costo
+            if cotizacion_componente.moneda != 'COP':
+                tasa_inversa = articulo_catalogo.margen.proveedor.moneda.cambio
+                tasa_usd = articulo_catalogo.margen.proveedor.moneda.cambio_a_usd
+                siesa_cloud_ultimo_costo = siesa_cloud_ultimo_costo / tasa_inversa
+                siesa_cloud_ultimo_costo = siesa_cloud_ultimo_costo * tasa_usd
+            if siesa_cloud_ultimo_costo > float(precio_unitario):
                 raise ValidationError({
                     '_error': 'Existe un problema de margen, por favor revisar. El costo en siesa cloud es mayor que el precio de venta unitario de la lista de precios'
                 })
@@ -170,7 +179,13 @@ def cotizacion_componentes_adicionar_item(
         item.componente_eurobelt = componente_eurobelt
 
     posicion = cotizacion_componente.items.count() + 1
+    if cotizacion_componente.moneda == 'COP':
+        item.tasa_cambio_a_pesos = tasa
+    else:
+        item.tasa_cambio_a_dolares = tasa
     item.posicion = posicion
+    item.moneda_origen = moneda_origen
+    item.moneda_origen_costo = moneda_origen_costo
     item.descripcion = item_descripcion
     item.referencia = item_referencia
     item.unidad_medida = item_unidad_medida

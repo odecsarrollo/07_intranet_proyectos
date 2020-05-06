@@ -11,6 +11,7 @@ export const REGEX_SOLO_NUMEROS = /^-{0,1}\d+$/;
 export const REGEX_SOLO_LETRAS = /^[a-zA-Z]+$/;
 export const REGEX_CORREO_ELECTRONICO = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
+export const formatoDinero = (plata, simbolo, precision) => formatMoney(Number(plata), simbolo, precision, ".", ",");
 export const pesosColombianos = (plata) => formatMoney(Number(plata), "$", 0, ".", ",");
 export const formatoMoneda = (valor, simbolo, decimales, nombre_moneda = null) => `${formatMoney(Number(valor), simbolo, decimales, ".", ",")}${nombre_moneda ? ` ${nombre_moneda}` : ''}`;
 export const numeroFormato = (valor, decimales = 4) => formatNumber(Number(valor), decimales, ".", ",");

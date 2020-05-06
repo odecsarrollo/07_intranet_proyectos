@@ -1,6 +1,6 @@
 import React, {memo, useContext, Fragment} from 'react';
 import StylesContext from "../../00_utilities/contexts/StylesContext";
-import {pesosColombianos} from "../../00_utilities/common";
+import {formatoMoneda} from "../../00_utilities/common";
 import PropTypes from "prop-types";
 import * as _ from 'lodash';
 
@@ -9,7 +9,8 @@ const CotizadorListaPrecioTablaItem = memo(props => {
         item,
         con_precios,
         con_costos,
-        adicionarItem = null
+        adicionarItem = null,
+        moneda
     } = props;
     const {
         item_descripcion,
@@ -21,10 +22,13 @@ const CotizadorListaPrecioTablaItem = memo(props => {
         id_item,
         forma_pago_id,
         origen,
-        costo_cop,
-        costo_cop_aereo,
+        costo,
+        costo_aereo,
         unidades_disponibles,
         fecha_ultima_entrada,
+        tasa,
+        moneda_origen,
+        moneda_origen_costo,
     } = item;
     const adicionarItemConPrecio = (precio, transporte_tipo) => {
         if (!adicionarItem || precio <= 0) {
@@ -37,6 +41,9 @@ const CotizadorListaPrecioTablaItem = memo(props => {
             item_referencia,
             item_unidad_medida,
             transporte_tipo,
+            tasa,
+            moneda_origen,
+            moneda_origen_costo,
             id_item,
             forma_pago_id
         )
@@ -53,19 +60,19 @@ const CotizadorListaPrecioTablaItem = memo(props => {
                 <td>
                 <span className={adicionarItem ? 'puntero' : ''}
                       onClick={() => adicionarItem ? adicionarItemConPrecio(precio_unitario, 'CONVENCIONAL') : null}>
-                    {pesosColombianos(precio_unitario)}
+                    {formatoMoneda(precio_unitario, '$', moneda === 'COP' ? 0 : 2)} {moneda}
                 </span>
                 </td>
                 <td>
                 <span className={adicionarItem ? 'puntero' : ''}
                       onClick={() => adicionarItem ? adicionarItemConPrecio(precio_unitario_aereo, 'AEREO') : null}>
-                    {pesosColombianos(precio_unitario_aereo)}
+                    {formatoMoneda(precio_unitario_aereo, '$', moneda === 'COP' ? 0 : 2)} {moneda}
                 </span>
                 </td>
             </Fragment>}
             {con_costos && <Fragment>
-                <td>{pesosColombianos(costo_cop)}</td>
-                <td>{pesosColombianos(costo_cop_aereo)}</td>
+                <td>{formatoMoneda(costo, '$', moneda === 'COP' ? 0 : 2)}{moneda}</td>
+                <td>{formatoMoneda(costo_aereo, '$', moneda === 'COP' ? 0 : 2)} {moneda}</td>
             </Fragment>}
             <td>{origen}</td>
         </tr>
@@ -89,6 +96,7 @@ const ListaPrecioTabla = memo(props => {
         adicionarItem = null,
         con_costos = true,
         con_precios = true,
+        moneda,
     } = props;
     return (
         <table className='table table-striped table-responsive' style={table}>
@@ -113,6 +121,7 @@ const ListaPrecioTabla = memo(props => {
             </thead>
             <tbody>
             {items.map(i => <CotizadorListaPrecioTablaItem
+                moneda={moneda}
                 con_precios={con_precios}
                 con_costos={con_costos}
                 key={`${i.tipo_item}-${i.id_item}`}

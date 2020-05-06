@@ -48,6 +48,9 @@ export const adicionarItemCotizacionComponente = (
     item_referencia,
     item_unidad_medida,
     tipo_transporte,
+    tasa = null,
+    moneda_origen = null,
+    moneda_origen_costo = null,
     id_item = null,
     forma_pago_id = null,
     options_action = {},
@@ -60,6 +63,15 @@ export const adicionarItemCotizacionComponente = (
         params.append('item_referencia', item_referencia);
         params.append('item_unidad_medida', item_unidad_medida);
         params.append('tipo_transporte', tipo_transporte);
+        if (tasa) {
+            params.append('tasa', tasa);
+        }
+        if (moneda_origen) {
+            params.append('moneda_origen', moneda_origen);
+        }
+        if (moneda_origen_costo) {
+            params.append('moneda_origen_costo', moneda_origen_costo);
+        }
         if (id_item) {
             params.append('id_item', id_item);
         }

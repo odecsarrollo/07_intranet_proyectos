@@ -3,7 +3,7 @@ import MyDialogButtonDelete from '../../../../00_utilities/components/ui/dialog/
 import IconButtonTableEdit from '../../../../00_utilities/components/ui/icon/table_icon_button_edit';
 
 import ReactTable from "react-table";
-import {pesosColombianos} from "../../../../00_utilities/common";
+import {formatoMoneda, pesosColombianos} from "../../../../00_utilities/common";
 import Checkbox from "@material-ui/core/Checkbox";
 
 function areEqual(prevProps, nextProps) {
@@ -103,14 +103,6 @@ const Tabla = memo(props => {
                                 </div>
                             },
                             {
-                                Header: "TRM",
-                                maxWidth: 80,
-                                accessor: "moneda_tasa",
-                                Cell: row => <div className='text-right'>
-                                    {pesosColombianos(row.value)} COP
-                                </div>
-                            },
-                            {
                                 Header: "FI",
                                 maxWidth: 40,
                                 minWidth: 40,
@@ -149,6 +141,19 @@ const Tabla = memo(props => {
                                     {row.value}
                                 </div>
                             },
+                        ]
+                    },
+                    {
+                        Header: "PESOS COLOMBIANOS",
+                        columns: [
+                            {
+                                Header: "TRM",
+                                maxWidth: 80,
+                                accessor: "moneda_tasa",
+                                Cell: row => <div className='text-right'>
+                                    {pesosColombianos(row.value)} COP
+                                </div>
+                            },
                             {
                                 Header: "Cos. Aereo",
                                 maxWidth: 90,
@@ -183,6 +188,65 @@ const Tabla = memo(props => {
                                 accessor: "precio_base_aereo",
                                 Cell: row => <div className='text-right'>
                                     {pesosColombianos(row.value)} COP
+                                </div>
+                            },
+                        ]
+                    },
+                    {
+                        Header: "DOLARES AMERICANOS",
+                        columns: [
+                            {
+                                Header: "TRM",
+                                maxWidth: 80,
+                                accessor: "moneda_tasa_usd",
+                                Cell: row => <div className='text-right'>
+                                    {formatoMoneda(row.value, '$', 2)} USD
+                                </div>
+                            },
+                            {
+                                Header: "Costo USD",
+                                maxWidth: 90,
+                                minWidth: 90,
+                                accessor: "costo_usd",
+                                Cell: row => <div className='text-right'
+                                                  style={{color: row.original.costo_a_usar === row.value ? 'red' : ''}}>
+                                    {formatoMoneda(row.value, '$', 2)} USD
+                                </div>
+                            },
+                            {
+                                Header: "Cos. Aereo USD",
+                                maxWidth: 90,
+                                minWidth: 90,
+                                accessor: "costo_usd_aereo",
+                                Cell: row => <div className='text-right'>
+                                    {formatoMoneda(row.value, '$', 2)} USD
+                                </div>
+                            },
+                            {
+                                Header: "MGN",
+                                maxWidth: 50,
+                                minWidth: 50,
+                                accessor: "margen_deseado",
+                                Cell: row => <div className='text-right'>
+                                    {row.value}%
+                                </div>
+                            },
+                            {
+                                Header: "Pre. Base. USD",
+                                maxWidth: 90,
+                                minWidth: 90,
+                                accessor: "precio_base_usd",
+                                Cell: row => <div className='text-right'>
+                                    {formatoMoneda(row.value, '$', 2)} USD
+                                </div>
+                            },
+                            {
+                                Header: "Pre. Bas. Aer",
+                                maxWidth: 90,
+                                minWidth: 90,
+                                accessor: "precio_base_aereo_usd",
+                                Cell: row => <div className='text-right'>
+                                    {formatoMoneda(row.value, '$', 2)} USD
                                 </div>
                             },
                         ]

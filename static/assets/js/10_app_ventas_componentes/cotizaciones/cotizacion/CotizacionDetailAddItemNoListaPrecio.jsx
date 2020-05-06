@@ -27,6 +27,9 @@ let Form = memo(props => {
                     v.item_unidad_medida,
                     'PERSONALIZADO',
                     null,
+                    'PERSONALIZADO',
+                    null,
+                    null,
                     null,
                     cerrarDialog
                 );

@@ -8,7 +8,6 @@ from .models import (
     CotizacionComponenteAdjunto,
     CotizacionComponenteSeguimiento
 )
-from clientes.api_serializers import ContactoClienteSerializer
 
 
 class CotizacionComponenteAdjuntoSerializer(serializers.ModelSerializer):
@@ -90,6 +89,8 @@ class ItemCotizacionComponenteSerializer(CustomSerializerMixin, serializers.Mode
             'canal_nombre',
             'dias_entrega',
             'descripcion',
+            'tasa_cambio_a_dolares',
+            'tasa_cambio_a_pesos',
             'referencia',
             'unidad_medida',
             'cantidad',
@@ -198,6 +199,7 @@ class CotizacionComponenteSerializer(serializers.ModelSerializer):
             'observaciones',
             'cantidad_items',
             'nro_consecutivo',
+            'moneda',
             'version',
             'cliente',
             'cliente_nombre',

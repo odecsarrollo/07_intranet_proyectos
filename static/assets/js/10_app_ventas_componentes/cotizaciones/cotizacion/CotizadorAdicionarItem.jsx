@@ -24,6 +24,9 @@ const CotizadorAdicionarItem = memo(props => {
         item_referencia,
         item_unidad_medida,
         tipo_transporte = 'NO APLICA',
+        tasa,
+        moneda_origen,
+        moneda_origen_costo,
         item_id = null,
         forma_pago_id = null,
         callback = null
@@ -37,6 +40,9 @@ const CotizadorAdicionarItem = memo(props => {
                 item_referencia,
                 item_unidad_medida,
                 tipo_transporte,
+                tasa,
+                moneda_origen,
+                moneda_origen_costo,
                 item_id,
                 forma_pago_id,
                 {callback}
@@ -66,6 +72,7 @@ const CotizadorAdicionarItem = memo(props => {
                         </TabList>
                         <TabPanel>
                             <ListaPrecio
+                                moneda={cotizacion_componente.moneda}
                                 con_precios={true}
                                 con_costos={false}
                                 adicionarItem={adicionarItem}

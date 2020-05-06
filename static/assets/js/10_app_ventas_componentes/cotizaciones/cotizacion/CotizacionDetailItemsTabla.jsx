@@ -1,7 +1,7 @@
 import React, {memo, useContext, useState, useEffect} from "react";
 import {useDispatch} from 'react-redux';
 import StylesContext from "../../../00_utilities/contexts/StylesContext";
-import {pesosColombianos} from "../../../00_utilities/common";
+import {formatoMoneda} from "../../../00_utilities/common";
 import TextField from "@material-ui/core/TextField";
 import {makeStyles} from '@material-ui/core/styles';
 import MyDialogButtonDelete from "../../../00_utilities/components/ui/dialog/delete_dialog";
@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const CotizacionDetailItemsTablaItem = memo(props => {
-    const {item, editable, cargarDatos} = props;
+    const {item, editable, cargarDatos, moneda} = props;
     const dispatch = useDispatch();
     const [error, setError] = useState(null);
     const [cantidad, setCantidad] = useState(item.cantidad);
@@ -104,7 +104,7 @@ const CotizacionDetailItemsTablaItem = memo(props => {
             </td>
             <td style={{...table.td, fontSize: '0.7rem'}}>{item.descripcion}</td>
             <td style={{...table.td, fontSize: '0.7rem'}}>{item.unidad_medida}</td>
-            <td style={table.td_right}>{pesosColombianos(item.precio_unitario)}</td>
+            <td style={table.td_right}>{formatoMoneda(item.precio_unitario, '$', moneda === 'COP' ? 0 : 2)}</td>
             <td style={{...table.td, width: '70px'}}>
                 <TextField
                     disabled={!editable}
@@ -124,7 +124,7 @@ const CotizacionDetailItemsTablaItem = memo(props => {
                     margin="normal"
                 />
             </td>
-            <td style={table.td_right}>{pesosColombianos(item.valor_total)}</td>
+            <td style={table.td_right}>{formatoMoneda(item.valor_total, '$', moneda === 'COP' ? 0 : 2)}</td>
             <td style={{...table.td, width: '45px'}}>
                 <TextField
                     disabled={!editable}
@@ -155,8 +155,9 @@ const CotizacionDetailItemsTablaItem = memo(props => {
     )
 });
 
-const SortableItem = SortableElement(({item, cargarDatos, editable}) =>
+const SortableItem = SortableElement(({item, cargarDatos, editable, moneda}) =>
     <CotizacionDetailItemsTablaItem
+        moneda={moneda}
         item={item}
         editable={editable}
         cargarDatos={cargarDatos}
@@ -234,6 +235,7 @@ const CotizacionDetailItemsTabla = memo(props => {
             </tr>
             </thead>
             <SortableList
+                moneda={cotizacion_componente.moneda}
                 useDragHandle
                 onSortEnd={onSortEnd}
                 cargarDatos={cargarDatos}
@@ -250,7 +252,7 @@ const CotizacionDetailItemsTabla = memo(props => {
                 <td style={table.td}></td>
                 <td style={table.td}></td>
                 <td style={table.td} className='text-center'>{cantidad_items}</td>
-                <td style={table.td_right}>{pesosColombianos(valor_total)}</td>
+                <td style={table.td_right}>{formatoMoneda(valor_total, '$', cotizacion_componente.moneda === 'COP' ? 0 : 2)}</td>
                 <td style={table.td}></td>
                 <td style={table.td}></td>
                 {editable &&

@@ -67,15 +67,13 @@ let CotizacionCRUDFormDialog = memo(props => {
         }));
     return (
         <Fragment>
-            {crear_ubicacion &&
-            <CrearUbicacionForm
+            {crear_ubicacion && <CrearUbicacionForm
                 modal_open={crear_ubicacion}
                 onCancel={() => setCrearUbicacion(false)}
                 onSubmit={onSubmitCiudad}
                 singular_name='Ubicación'
             />}
-            {crear_contacto &&
-            <CrearContactoForm
+            {crear_contacto && <CrearContactoForm
                 initialValues={{cliente}}
                 modal_open={crear_contacto}
                 onCancel={() => setCrearContacto(false)}
@@ -93,6 +91,21 @@ let CotizacionCRUDFormDialog = memo(props => {
                 pristine={pristine}
                 element_type={singular_name}
             >
+                <MyCombobox
+                    label='Moneda'
+                    className="col-12"
+                    name='moneda'
+                    busy={false}
+                    autoFocus={false}
+                    data={[
+                        {'name': 'COP', 'id': 'COP'},
+                        {'name': 'USD', 'id': 'USD'}
+                    ]}
+                    textField='name'
+                    filter='contains'
+                    valuesField='id'
+                    placeholder='Seleccione Moneda...'
+                />
                 <MyCombobox
                     label='Cliente'
                     className="col-12"

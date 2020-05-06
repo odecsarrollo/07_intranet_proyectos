@@ -53,6 +53,12 @@ const CotizacionDetailInfo = memo(props => {
                 {cotizacion.razon_rechazo}
             </Typography>
             <Typography variant="body1" gutterBottom color="primary" style={styles.texto_principal}>
+                Moneda:
+            </Typography>
+            <Typography variant="body1" style={styles.texto_secondario} gutterBottom color="secondary">
+                {cotizacion.moneda}
+            </Typography>
+            <Typography variant="body1" gutterBottom color="primary" style={styles.texto_principal}>
                 Cliente:
             </Typography>
             <Link to={`/app/ventas_componentes/clientes/detail/${cotizacion.cliente}`}>

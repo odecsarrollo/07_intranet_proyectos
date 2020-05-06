@@ -4,7 +4,7 @@ import IconButtonTableSee from '../../../00_utilities/components/ui/icon/table_i
 
 import ReactTable from "react-table";
 import {Link} from "react-router-dom";
-import {pesosColombianos} from "../../../00_utilities/common";
+import {pesosColombianos, formatoDinero} from "../../../00_utilities/common";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Checkbox from "@material-ui/core/Checkbox";
 
@@ -62,48 +62,13 @@ const Tabla = memo(props => {
                             }}>{row.value}</div>
                         },
                         {
-                            Header: "Costo",
-                            accessor: "costo_cop",
-                            minWidth: 70,
-                            maxWidth: 70,
-                            Cell: row => <div className="text-right">{pesosColombianos(row.value)}</div>
-                        },
-                        {
-                            Header: "Precio",
-                            accessor: "precio_base",
-                            minWidth: 80,
-                            maxWidth: 80,
-                            Cell: row => <div className="text-right">{pesosColombianos(row.value)}</div>
-                        },
-                        {
-                            Header: "Cos. MO",
-                            accessor: "precio_mano_obra",
-                            minWidth: 60,
-                            maxWidth: 60,
-                            Cell: row => <div className="text-right">{pesosColombianos(row.value)}</div>
-                        },
-                        {
-                            Header: "Prec. + M.O",
-                            accessor: "precio_con_mano_obra",
-                            minWidth: 70,
-                            maxWidth: 70,
-                            Cell: row => <div className="text-right">{pesosColombianos(row.value)}</div>
-                        },
-                        {
-                            Header: "Rentabilidad",
-                            accessor: "rentabilidad",
-                            minWidth: 80,
-                            maxWidth: 80,
-                            Cell: row => <div className="text-right">{pesosColombianos(row.value)}</div>
-                        },
-                        {
                             Header: "Emp.",
                             accessor: "con_empujador",
                             minWidth: 40,
                             maxWidth: 40,
                             Cell: row => <div className='text-center'>{row.value &&
                             <FontAwesomeIcon icon={'check'}/>}</div>
-                        }, ,
+                        },
                         {
                             Header: "Aleta",
                             accessor: "con_aleta",
@@ -121,6 +86,78 @@ const Tabla = memo(props => {
                             <FontAwesomeIcon icon={'check'}/>}</div>
                         }
                     ]
+                },
+                {
+                    Header: "PESOS COLOMBIANOS",
+                    columns: [
+                        {
+                            Header: "Costo",
+                            accessor: "costo_cop",
+                            minWidth: 70,
+                            maxWidth: 70,
+                            Cell: row => <div className="text-right">{pesosColombianos(row.value)}</div>
+                        },
+                        {
+                            Header: "Precio",
+                            accessor: "precio_base",
+                            minWidth: 80,
+                            maxWidth: 80,
+                            Cell: row => <div className="text-right">{pesosColombianos(row.value)}</div>
+                        },
+                        {
+                            Header: "Val. MO",
+                            accessor: "precio_mano_obra",
+                            minWidth: 60,
+                            maxWidth: 60,
+                            Cell: row => <div className="text-right">{pesosColombianos(row.value)}</div>
+                        },
+                        {
+                            Header: "Total",
+                            accessor: "precio_con_mano_obra",
+                            minWidth: 70,
+                            maxWidth: 70,
+                            Cell: row => <div className="text-right">{pesosColombianos(row.value)}</div>
+                        },
+                        {
+                            Header: "Rentabilidad",
+                            accessor: "rentabilidad",
+                            minWidth: 80,
+                            maxWidth: 80,
+                            Cell: row => <div className="text-right">{pesosColombianos(row.value)}</div>
+                        },
+                    ]
+                },
+                {
+                    Header: "DOLARES AMERICANOS",
+                    columns: [
+                        {
+                            Header: "Costo USD",
+                            accessor: "costo_usd",
+                            minWidth: 70,
+                            maxWidth: 70,
+                            Cell: row => <div className="text-right">{formatoDinero(row.value, '$', 2)}</div>
+                        },
+                        {
+                            Header: "Precio USD",
+                            accessor: "precio_base_usd",
+                            minWidth: 80,
+                            maxWidth: 80,
+                            Cell: row => <div className="text-right">{formatoDinero(row.value, '$', 2)}</div>
+                        },
+                        {
+                            Header: "Val. MO USD",
+                            accessor: "precio_mano_obra_usd",
+                            minWidth: 60,
+                            maxWidth: 60,
+                            Cell: row => <div className="text-right">{formatoDinero(row.value, '$', 2)}</div>
+                        },
+                        {
+                            Header: "Total USD",
+                            accessor: "precio_con_mano_obra_usd",
+                            minWidth: 70,
+                            maxWidth: 70,
+                            Cell: row => <div className="text-right">{formatoDinero(row.value, '$', 2)}</div>
+                        },]
                 },
                 {
                     Header: "Opciones",

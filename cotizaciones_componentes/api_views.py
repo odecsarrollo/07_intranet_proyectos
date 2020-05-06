@@ -183,6 +183,9 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
         item_descripcion = request.POST.get('item_descripcion')
         item_referencia = request.POST.get('item_referencia')
         item_unidad_medida = request.POST.get('item_unidad_medida')
+        tasa = request.POST.get('tasa', 0)
+        moneda_origen = request.POST.get('moneda_origen')
+        moneda_origen_costo = request.POST.get('moneda_origen_costo', 0)
         id_item = request.POST.get('id_item', None)
         forma_pago_id = request.POST.get('forma_pago_id', None)
         tipo_transporte = request.POST.get('tipo_transporte', None)
@@ -196,7 +199,10 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
             item_referencia=item_referencia,
             item_unidad_medida=item_unidad_medida,
             forma_pago_id=forma_pago_id,
-            tipo_transporte=tipo_transporte
+            tipo_transporte=tipo_transporte,
+            tasa=tasa,
+            moneda_origen=moneda_origen,
+            moneda_origen_costo=moneda_origen_costo
         )
         self.serializer_class = CotizacionComponenteConDetalleSerializer
         serializer = self.get_serializer(cotizacion_componente)

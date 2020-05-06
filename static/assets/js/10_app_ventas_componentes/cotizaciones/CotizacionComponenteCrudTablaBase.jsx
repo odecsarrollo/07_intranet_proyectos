@@ -4,7 +4,7 @@ import IconButtonTableSee from "../../00_utilities/components/ui/icon/table_icon
 
 import ReactTable from "react-table";
 import {Link} from "react-router-dom";
-import {pesosColombianos} from "../../00_utilities/common";
+import {formatoMoneda} from "../../00_utilities/common";
 import useTengoPermisos from "../../00_utilities/hooks/useTengoPermisos";
 import {CLIENTES} from "../../permisos";
 import {makeStyles} from "@material-ui/core";
@@ -99,11 +99,20 @@ const Tabla = memo(props => {
                         filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase())
                     },
                     {
+                        Header: "Moneda",
+                        accessor: "moneda",
+                        maxWidth: 80,
+                        minWidth: 80,
+                        filterable: true,
+                        filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase())
+                    },
+                    {
                         Header: "Valor Total",
                         accessor: "valor_total",
                         maxWidth: 80,
                         minWidth: 80,
-                        Cell: row => <div className='text-right'>{pesosColombianos(row.value)}</div>
+                        Cell: row => <div
+                            className='text-right'>{formatoMoneda(row.value, '$', row.original.moneda === 'COP' ? 0 : 2)}</div>
                     },
                 ]
             },

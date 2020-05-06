@@ -123,14 +123,8 @@ class SerieSerializer(serializers.ModelSerializer):
 
 
 class ComponenteSerializer(serializers.ModelSerializer):
-    costo_cop = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
-    costo_cop_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
-    rentabilidad = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
-    precio_base = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
-    precio_base_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     material_nombre = serializers.CharField(source='material.nombre', read_only=True)
     moneda_nombre = serializers.CharField(source='margen.proveedor.moneda.nombre', read_only=True)
-    moneda_tasa = serializers.CharField(source='margen.proveedor.moneda.cambio', read_only=True)
     color_nombre = serializers.CharField(source='color.nombre', read_only=True)
     tipo_banda_nombre = serializers.CharField(source='tipo_banda.nombre', read_only=True)
     margen_utilidad = serializers.DecimalField(
@@ -154,7 +148,33 @@ class ComponenteSerializer(serializers.ModelSerializer):
         max_digits=10
     )
 
+    moneda_tasa = serializers.DecimalField(
+        source='margen.proveedor.moneda.cambio',
+        read_only=True,
+        max_digits=12,
+        decimal_places=2
+    )
+    moneda_tasa_usd = serializers.DecimalField(
+        source='margen.proveedor.moneda.cambio_a_usd',
+        read_only=True,
+        max_digits=12,
+        decimal_places=2
+    )
+
     to_string = serializers.SerializerMethodField()
+
+    # Modeda pesos colombianos
+    costo_cop = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    costo_cop_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    rentabilidad = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    precio_base = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    precio_base_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+
+    # Modeda dolares americanos
+    costo_usd = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    costo_usd_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    precio_base_usd = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    precio_base_usd_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
 
     def get_to_string(self, obj):
         return obj.nombre
@@ -229,6 +249,7 @@ class ComponenteSerializer(serializers.ModelSerializer):
             'moneda_nombre',
             'nombre',
             'moneda_tasa',
+            'moneda_tasa_usd',
             'margen_utilidad',
             'categoria',
             'categoria_dos',
@@ -236,12 +257,7 @@ class ComponenteSerializer(serializers.ModelSerializer):
             'material_nombre',
             'proveedor_nombre',
             'categoria_nombre',
-            'precio_base',
-            'precio_base_aereo',
-            'rentabilidad',
             'factor_importacion',
-            'costo_cop',
-            'costo_cop_aereo',
             'color',
             'color_nombre',
             'to_string',
@@ -256,6 +272,19 @@ class ComponenteSerializer(serializers.ModelSerializer):
             'item_sistema_informacion',
             'costo',
             'activo',
+
+            # Modeda dolares americanos
+            'costo_usd',
+            'costo_usd_aereo',
+            'precio_base_usd',
+            'precio_base_usd_aereo',
+
+            # Modeda pesos colombianos
+            'precio_base',
+            'precio_base_aereo',
+            'rentabilidad',
+            'costo_cop',
+            'costo_cop_aereo',
         ]
         extra_kwargs = {
             'nombre': {'read_only': True},
@@ -320,6 +349,22 @@ class EnsambladoBandaEurobeltSerializer(serializers.ModelSerializer):
 
 
 class BandaEurobeltSerializer(serializers.ModelSerializer):
+    cantidad_componentes = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    costo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    to_string = serializers.SerializerMethodField()
+
+    moneda_tasa = serializers.DecimalField(
+        read_only=True,
+        max_digits=12,
+        decimal_places=2
+    )
+    moneda_tasa_usd = serializers.DecimalField(
+        read_only=True,
+        max_digits=12,
+        decimal_places=2
+    )
+
+    # Modeda pesos colombianos
     rentabilidad = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     costo_cop = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     costo_cop_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
@@ -327,11 +372,20 @@ class BandaEurobeltSerializer(serializers.ModelSerializer):
     costo_cop_aereo_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     precio_base = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     precio_base_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
-    cantidad_componentes = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     precio_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     precio_con_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     precio_con_mano_obra_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
-    to_string = serializers.SerializerMethodField()
+
+    # Modeda dolares americanos
+    costo_usd = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    costo_usd_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    precio_base_usd = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    precio_base_usd_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    precio_mano_obra_usd = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    costo_usd_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    precio_con_mano_obra_usd = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    costo_usd_aereo_mano_obra = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    precio_con_mano_obra_aereo_usd = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
 
     def get_to_string(self, instance):
         return instance.nombre
@@ -343,21 +397,12 @@ class BandaEurobeltSerializer(serializers.ModelSerializer):
             'to_string',
             'id',
             'con_empujador',
-            'costo_cop',
-            'costo_cop_aereo',
-            'costo_cop_mano_obra',
-            'costo_cop_aereo_mano_obra',
-            'precio_base',
-            'precio_base_aereo',
-            'rentabilidad',
-            'precio_mano_obra',
-            'precio_con_mano_obra',
-            'precio_con_mano_obra_aereo',
             'cantidad_componentes',
             'con_aleta',
             'con_torneado_varilla',
             'costo_ensamblado',
             'serie',
+            'costo',
             'color',
             'material',
             'ancho',
@@ -377,6 +422,31 @@ class BandaEurobeltSerializer(serializers.ModelSerializer):
             'nombre',
             'activo',
             'referencia',
+            'moneda_tasa',
+            'moneda_tasa_usd',
+
+            # Modeda dolares americanos
+            'costo_usd',
+            'costo_usd_aereo',
+            'precio_base_usd',
+            'precio_base_usd_aereo',
+            'precio_mano_obra_usd',
+            'costo_usd_mano_obra',
+            'precio_con_mano_obra_usd',
+            'costo_usd_aereo_mano_obra',
+            'precio_con_mano_obra_aereo_usd',
+
+            # Modeda pesos colombianos
+            'costo_cop',
+            'costo_cop_aereo',
+            'costo_cop_mano_obra',
+            'costo_cop_aereo_mano_obra',
+            'precio_base',
+            'precio_base_aereo',
+            'rentabilidad',
+            'precio_mano_obra',
+            'precio_con_mano_obra',
+            'precio_con_mano_obra_aereo',
         ]
         extra_kwargs = {
             'costo_ensamblado': {'read_only': True},

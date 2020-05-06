@@ -5,7 +5,7 @@ import CustomIconTable from '../../../00_utilities/components/ui/icon/CustomIcon
 import InformationDisplayDialog from '../../../00_utilities/components/ui/dialog/InformationDisplayDialog';
 
 import ReactTable from "react-table";
-import {pesosColombianos} from "../../../00_utilities/common";
+import {formatoDinero, pesosColombianos} from "../../../00_utilities/common";
 import Checkbox from "@material-ui/core/Checkbox";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../../01_actions/01_index";
@@ -165,6 +165,11 @@ const Tabla = memo(props => {
                                 minWidth: 50,
                                 Cell: row => <div className="text-right">{row.value}</div>
                             },
+                        ]
+                    },
+                    {
+                        Header: "PESOS COLOMBIANOS",
+                        columns: [
                             {
                                 Header: "Costo COP",
                                 accessor: "costo_cop",
@@ -193,7 +198,32 @@ const Tabla = memo(props => {
                                 minWidth: 80,
                                 Cell: row => <div className="text-right">{pesosColombianos(row.value)}</div>
                             },
-
+                        ]
+                    },
+                    {
+                        Header: "DOLARES AMERICANOS",
+                        columns: [
+                            {
+                                Header: "Costo USD",
+                                accessor: "costo_usd",
+                                maxWidth: 70,
+                                minWidth: 70,
+                                Cell: row => <div className="text-right">{formatoDinero(row.value, '$', 2)}</div>
+                            },
+                            {
+                                Header: "Margen U.",
+                                accessor: "margen_utilidad",
+                                maxWidth: 80,
+                                minWidth: 80,
+                                Cell: row => <div className="text-right">{formatoDinero(row.value, '$', 2)}</div>
+                            },
+                            {
+                                Header: "Precio Base USD",
+                                accessor: "precio_base_usd",
+                                maxWidth: 80,
+                                minWidth: 80,
+                                Cell: row => <div className="text-right">{formatoDinero(row.value, '$', 2)}</div>
+                            }
                         ]
                     },
                     {

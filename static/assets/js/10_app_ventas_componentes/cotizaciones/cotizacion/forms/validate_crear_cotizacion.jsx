@@ -4,6 +4,7 @@ const validate = values => {
         'cliente',
         'contacto',
         'ciudad',
+        'moneda',
     ];
     requiredFields.map(field => {
         if (!values[field]) {

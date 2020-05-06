@@ -34,6 +34,7 @@ class CotizacionComponente(TimeStampedModel):
         on_delete=models.PROTECT,
         null=True
     )
+    moneda = models.CharField(max_length=3, default='COP')
     nro_consecutivo = models.PositiveIntegerField(null=True)
     cliente = models.ForeignKey(ClienteBiable, related_name='cotizaciones_componentes', on_delete=models.PROTECT)
     contacto = models.ForeignKey(ContactoCliente, related_name='cotizaciones_componentes', on_delete=models.PROTECT)
@@ -132,7 +133,10 @@ class ItemCotizacionComponente(TimeStampedModel):
     )
 
     dias_entrega = models.PositiveIntegerField(default=0)
-
+    moneda_origen = models.CharField(max_length=20, null=True)
+    moneda_origen_costo = models.DecimalField(max_digits=18, decimal_places=2, default=0)
+    tasa_cambio_a_dolares = models.DecimalField(max_digits=18, decimal_places=7, default=0)
+    tasa_cambio_a_pesos = models.DecimalField(max_digits=18, decimal_places=7, default=0)
     descripcion_ori = models.CharField(max_length=400, null=True)
     referencia_ori = models.CharField(max_length=150, null=True)
     unidad_medida_ori = models.CharField(max_length=120, null=True)

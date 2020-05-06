@@ -6,6 +6,7 @@ from .models import (
 
 
 class ItemVentaCatalogoSerializer(serializers.ModelSerializer):
+    # Moneda Pesos Colombianos
     costo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     costo_cop = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     precio_base = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
@@ -14,6 +15,14 @@ class ItemVentaCatalogoSerializer(serializers.ModelSerializer):
     costo_a_usar_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     costo_sistema_informacion = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     precio_base_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    # Moneda Dolares Américanos
+    costo_usd = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    costo_usd_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    costo_a_usar_usd = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    costo_a_usar_aereo_usd = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    precio_base_usd = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    precio_base_aereo_usd = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+
     unidad_medida_catalogo = serializers.CharField(source='unidad_medida_en_inventario.id', read_only=True)
     margen_deseado = serializers.DecimalField(
         source='margen.margen_deseado',
@@ -27,6 +36,12 @@ class ItemVentaCatalogoSerializer(serializers.ModelSerializer):
     )
     moneda_tasa = serializers.DecimalField(
         source='margen.proveedor.moneda.cambio',
+        read_only=True,
+        max_digits=12,
+        decimal_places=2
+    )
+    moneda_tasa_usd = serializers.DecimalField(
+        source='margen.proveedor.moneda.cambio_a_usd',
         read_only=True,
         max_digits=12,
         decimal_places=2
@@ -98,6 +113,7 @@ class ItemVentaCatalogoSerializer(serializers.ModelSerializer):
             'costo_sistema_informacion',
             'moneda_nombre',
             'moneda_tasa',
+            'moneda_tasa_usd',
             'proveedor_nombre',
             'categoria_nombre',
             'to_string',
@@ -123,4 +139,11 @@ class ItemVentaCatalogoSerializer(serializers.ModelSerializer):
             'costo_cop_aereo',
             'precio_base',
             'precio_base_aereo',
+
+            'costo_usd',
+            'costo_usd_aereo',
+            'costo_a_usar_usd',
+            'costo_a_usar_aereo_usd',
+            'precio_base_usd',
+            'precio_base_aereo_usd',
         ]
