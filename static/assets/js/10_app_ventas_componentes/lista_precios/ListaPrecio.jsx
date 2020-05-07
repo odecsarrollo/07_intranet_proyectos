@@ -78,7 +78,7 @@ const ListaPrecio = memo(props => {
             const precio_base_aereo = moneda === 'COP' ? b.precio_base_aereo : b.precio_base_usd_aereo;
             const costo = moneda === 'COP' ? b.costo_cop : b.costo_usd;
             const costo_aereo = moneda === 'COP' ? b.costo_cop_aereo : b.costo_usd_aereo;
-            const tasa = moneda === 'COP' ? b.moneda_tasa : b.moneda_tasa_usd;
+            const tasa = moneda === 'COP' ? b.tasa : b.tasa_usd;
 
             return ({
                 tipo_item: 'ComponenteEurobelt',
@@ -105,7 +105,7 @@ const ListaPrecio = memo(props => {
             const precio_base = moneda === 'COP' ? b.precio_base : b.precio_base_usd;
             const costo = moneda === 'COP' ? b.costo_cop : b.costo_usd;
             const costo_aereo = moneda === 'COP' ? b.costo_cop_aereo : b.costo_usd_aereo;
-            const tasa = moneda === 'COP' ? b.moneda_tasa : b.moneda_tasa_usd;
+            const tasa = moneda === 'COP' ? b.tasa : b.tasa_usd;
             return ({
                 tipo_item: 'ArticuloCatalogo',
                 precio_unitario: formatRoundNumbers(precio_base * (1 + porcentaje)),

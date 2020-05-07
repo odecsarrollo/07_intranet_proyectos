@@ -52,7 +52,6 @@ const Lista = (props) => {
     const [notificacion_seleccionada, setNotificacionSeleccionada] = useState(null);
     const classes = useStyles();
     const dispatch = useDispatch();
-    console.log(literales_sin_sincronizar)
     const onAbrirModal = id_cotizacion => {
         setShowVerificar(true);
         setNotificacionSeleccionada(id_cotizacion);
@@ -229,10 +228,10 @@ const Lista = (props) => {
 const CRUD = crudHOC(CreateForm, Lista);
 
 const CotizacionAbrirCarpetaLista = memo(props => {
-    const {cargarDatosConsecutivoProyectos, literales_sin_sincronizar = []} = props;
+    const {literales_sin_sincronizar = []} = props;
+    const [lista_consulta, setLista] = useState({})
     const permisos_object = useTengoPermisos(COTIZACIONES);
-    let lista = useSelector(state => state.cotizaciones);
-    lista = _.pickBy(lista, c => !c.revisada);
+    const lista = _.pickBy(lista_consulta, c => !c.revisada);
     const dispatch = useDispatch();
 
     const createProyecto = (item, options) => dispatch(actions.createProyecto({...item, en_cguno: false}, options));
@@ -243,7 +242,12 @@ const CotizacionAbrirCarpetaLista = memo(props => {
         createObjectMethod: (item, options) => createProyecto(item, options),
         updateObjectMethod: null,
     };
-    const cargarDatos = (callback = null) => dispatch(actions.fetchCotizacionesPidiendoCarpeta({callback}));
+    const cargarDatos = () => dispatch(actions.fetchCotizacionesPidiendoCarpeta({
+        callback: response => {
+            setLista(_.mapKeys(response, 'id'));
+            console.log('cargó las carpetas')
+        }
+    }));
 
     useEffect(() => {
         cargarDatos();
@@ -252,12 +256,11 @@ const CotizacionAbrirCarpetaLista = memo(props => {
 
     return (
         <CRUD
-            cargarDatos={() => {
-                cargarDatos(cargarDatosConsecutivoProyectos)
-            }}
+            cargarDatos={cargarDatos}
             posCreateMethod={(item) => {
                 window.open(`/app/proyectos/proyectos/detail/${item.id}`, "_blank");
-                cargarDatos(cargarDatosConsecutivoProyectos);
+                dispatch(actions.fetchProyectoConsecutivoId(item.id));
+                cargarDatos();
             }}
             method_pool={method_pool}
             literales_sin_sincronizar={literales_sin_sincronizar}

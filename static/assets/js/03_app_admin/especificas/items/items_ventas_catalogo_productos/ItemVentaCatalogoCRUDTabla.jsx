@@ -149,7 +149,7 @@ const Tabla = memo(props => {
                             {
                                 Header: "TRM",
                                 maxWidth: 80,
-                                accessor: "moneda_tasa",
+                                accessor: "tasa",
                                 Cell: row => <div className='text-right'>
                                     {pesosColombianos(row.value)} COP
                                 </div>
@@ -198,9 +198,9 @@ const Tabla = memo(props => {
                             {
                                 Header: "TRM",
                                 maxWidth: 80,
-                                accessor: "moneda_tasa_usd",
+                                accessor: "tasa_usd",
                                 Cell: row => <div className='text-right'>
-                                    {formatoMoneda(row.value, '$', 2)} USD
+                                    {formatoMoneda(row.value, '$', 6)} USD
                                 </div>
                             },
                             {

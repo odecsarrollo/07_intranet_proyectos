@@ -34,17 +34,15 @@ class ItemVentaCatalogoSerializer(serializers.ModelSerializer):
         source='margen.proveedor.moneda.nombre',
         read_only=True
     )
-    moneda_tasa = serializers.DecimalField(
-        source='margen.proveedor.moneda.cambio',
+    tasa = serializers.DecimalField(
         read_only=True,
         max_digits=12,
         decimal_places=2
     )
-    moneda_tasa_usd = serializers.DecimalField(
-        source='margen.proveedor.moneda.cambio_a_usd',
+    tasa_usd = serializers.DecimalField(
         read_only=True,
         max_digits=12,
-        decimal_places=2
+        decimal_places=6
     )
     proveedor_importacion_fi = serializers.DecimalField(
         source='margen.proveedor.factor_importacion',
@@ -112,8 +110,6 @@ class ItemVentaCatalogoSerializer(serializers.ModelSerializer):
             'costo_catalogo',
             'costo_sistema_informacion',
             'moneda_nombre',
-            'moneda_tasa',
-            'moneda_tasa_usd',
             'proveedor_nombre',
             'categoria_nombre',
             'to_string',
@@ -139,6 +135,7 @@ class ItemVentaCatalogoSerializer(serializers.ModelSerializer):
             'costo_cop_aereo',
             'precio_base',
             'precio_base_aereo',
+            'tasa',
 
             'costo_usd',
             'costo_usd_aereo',
@@ -146,4 +143,6 @@ class ItemVentaCatalogoSerializer(serializers.ModelSerializer):
             'costo_a_usar_aereo_usd',
             'precio_base_usd',
             'precio_base_aereo_usd',
+            'tasa_usd',
+
         ]

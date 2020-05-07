@@ -195,12 +195,8 @@ export const setRevisadoCotizacion = (id, options_action = {}) => {
 export const fetchCotizacionesPidiendoCarpeta = (options_action = {}) => {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/listar_cotizacion_abrir_carpeta`;
-        const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
-        };
         const {limpiar_coleccion = true} = options_action;
         const options = {
-            dispatches,
             ...options_action,
             dispatch_method: dispatch,
             clear_action_type: limpiar_coleccion ? TYPES.clear : null

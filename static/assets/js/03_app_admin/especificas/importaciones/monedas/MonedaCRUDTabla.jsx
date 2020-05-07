@@ -43,11 +43,33 @@ class Tabla extends React.Component {
                                 Cell: row => `${formatoMoneda(row.value, '$', 0, 'COP')}`
                             },
                             {
+                                Header: "Variacion %",
+                                maxWidth: 80,
+                                accessor: "variacion",
+                                Cell: row => `${row.value}%`
+                            },
+                            {
+                                Header: "Variacion $",
+                                maxWidth: 80,
+                                Cell: row => `${formatoMoneda(row.original.cambio * (row.original.variacion / 100), '$', 0, 'COP')}`
+                            },
+                            {
                                 Header: "En Dolares",
                                 maxWidth: 110,
                                 accessor: "cambio_a_usd",
                                 Cell: row => `${formatoMoneda(row.value, '$', 5, 'USD')}`
-                            }
+                            },
+                            {
+                                Header: "Variacion USD %",
+                                maxWidth: 80,
+                                accessor: "variacion_usd",
+                                Cell: row => `${row.value}%`
+                            },
+                            {
+                                Header: "Variacion $",
+                                maxWidth: 120,
+                                Cell: row => `${formatoMoneda(row.original.cambio_a_usd * (row.original.variacion_usd / 100), '$', 6, 'USD')}`
+                            },
                         ]
                     },
                     {

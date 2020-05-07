@@ -10,7 +10,9 @@ import reversion
 class MonedaCambio(models.Model):
     nombre = models.CharField(max_length=20, unique=True)
     cambio = models.DecimalField(max_digits=18, decimal_places=4, default=0)
+    variacion = models.DecimalField(max_digits=6, decimal_places=4, default=0)
     cambio_a_usd = models.DecimalField(max_digits=18, decimal_places=7, default=0)
+    variacion_usd = models.DecimalField(max_digits=6, decimal_places=4, default=0)
 
     class Meta:
         permissions = [

@@ -161,6 +161,22 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
+    @action(detail=True, methods=['post'])
+    def listar_consecutivo_proyectos_id(self, request, pk=None):
+        qs = Proyecto.objects.select_related('cliente').prefetch_related(
+            'cotizaciones',
+            'cotizaciones__cotizaciones_adicionales',
+            'mis_literales',
+            'mis_literales__disenador',
+            'mis_literales__disenador',
+            'mis_literales__cotizaciones',
+            'mis_literales__cotizaciones__cotizacion_inicial',
+            'mis_literales__cotizaciones__cotizaciones_adicionales',
+        ).get(pk=pk)
+        self.serializer_class = ConsecutivoProyectoSerializer
+        serializer = self.get_serializer(qs)
+        return Response(serializer.data)
+
     @action(detail=False, http_method_names=['get', ])
     def listar_proyectos_x_parametro(self, request):
         parametro = request.GET.get('parametro')

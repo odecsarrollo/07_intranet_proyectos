@@ -28,13 +28,21 @@ let ProyectoCrearDesdeCotizacionModalForm = memo(props => {
     const dispatch = useDispatch();
     const myValues = useSelector(state => selector(state, 'nro_automatico', ''));
     const [open_relacionar, setOpenRelacionar] = useState(false);
+    const [listado_proyectos, setListadoProyectos] = useState([]);
     const relacionarQuitarProyecto = (proyecto_id) => {
-        dispatch(actions.relacionarQuitarProyectoaCotizacion(initialValues.cotizacion, proyecto_id, {callback: onCancel}))
+        dispatch(actions.relacionarQuitarProyectoaCotizacion(initialValues.cotizacion, proyecto_id, {
+            callback: () => {
+                dispatch(actions.fetchProyectoConsecutivoId(proyecto_id));
+                onCancel();
+                cargarDatos();
+            }
+        }))
     };
     const buscarProyecto = (busqueda) => {
-        dispatch(actions.fetchProyectosxParametro(busqueda));
+        dispatch(actions.fetchProyectosxParametro(busqueda, {
+            callback: response => setListadoProyectos(response, 'id')
+        }));
     };
-    let proyectos_list = useSelector(state => state.proyectos);
     return (
         <MyFormTagModal
             onCancel={onCancel}
@@ -54,9 +62,8 @@ let ProyectoCrearDesdeCotizacionModalForm = memo(props => {
                 onSearch={buscarProyecto}
                 onSelect={relacionarQuitarProyecto}
                 onCancelar={() => setOpenRelacionar(false)}
-                onMount={() => dispatch(actions.clearProyectos())}
-                onUnMount={() => cargarDatos()}
-                listado={_.map(proyectos_list)}
+                //onUnMount={() => cargarDatos()}
+                listado={listado_proyectos}
                 open={open_relacionar}
                 select_boton_text='Relacionar'
                 titulo_modal={'Relacionar Proyecto'}
@@ -73,7 +80,6 @@ let ProyectoCrearDesdeCotizacionModalForm = memo(props => {
                         size='2x'
                         onClick={() => {
                             setOpenRelacionar(true);
-                            dispatch(actions.clearProyectos())
                         }}
                     />
                 </div>

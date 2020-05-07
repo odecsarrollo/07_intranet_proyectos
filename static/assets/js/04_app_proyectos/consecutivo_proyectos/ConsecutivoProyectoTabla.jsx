@@ -163,7 +163,7 @@ const ConsecutivoProyectoTabla = (props) => {
 
     if (busqueda !== '') {
         list = _.pickBy(list, proyecto => {
-                const contiene = texto => texto.toLowerCase().includes(busqueda.toLowerCase());
+                const contiene = texto => texto && texto.toLowerCase().includes(busqueda.toLowerCase());
                 const tiene_proyecto = contiene(proyecto.id_proyecto);
                 const tiene_cotizacion = proyecto.cotizaciones.filter(c => contiene(c.orden_compra_nro) || contiene(`${c.unidad_negocio}-${c.nro_cotizacion}`)).length > 0;
                 const tiene_literal = proyecto.mis_literales.filter(l => {

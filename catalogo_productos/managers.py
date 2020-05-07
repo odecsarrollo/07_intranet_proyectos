@@ -8,6 +8,11 @@ class ItemVentaCatalogoManager(models.Manager):
             'margen',
             'proveedor_importacion'
         ).annotate(
+            tasa=ExpressionWrapper(
+                F('margen__proveedor__moneda__cambio') * (
+                        1 + (F('margen__proveedor__moneda__variacion') / 100)),
+                output_field=DecimalField(max_digits=12, decimal_places=2)
+            ),
             costo=Case(
                 When(origen='LP_INTRANET', then='costo_catalogo'),
                 default='item_sistema_informacion__ultimo_costo'
@@ -21,11 +26,11 @@ class ItemVentaCatalogoManager(models.Manager):
             ),
             # Moneda Pesos Colombianos
             costo_cop=ExpressionWrapper(
-                F('margen__proveedor__moneda__cambio') * F('margen__proveedor__factor_importacion') * F('costo'),
+                F('tasa') * F('margen__proveedor__factor_importacion') * F('costo'),
                 output_field=DecimalField(max_digits=12, decimal_places=2)
             ),
             costo_cop_aereo=ExpressionWrapper(
-                F('margen__proveedor__moneda__cambio') * F('margen__proveedor__factor_importacion_aereo') * F('costo'),
+                F('tasa') * F('margen__proveedor__factor_importacion_aereo') * F('costo'),
                 output_field=DecimalField(max_digits=12, decimal_places=2)
             ),
             costo_a_usar=Case(
@@ -56,32 +61,32 @@ class ItemVentaCatalogoManager(models.Manager):
                 output_field=DecimalField(max_digits=12, decimal_places=2)
             ),
             # Moneda Dólares Americanos
+            tasa_usd=ExpressionWrapper(
+                F('margen__proveedor__moneda__cambio_a_usd') * (
+                        1 + (F('margen__proveedor__moneda__variacion_usd') / 100)),
+                output_field=DecimalField(max_digits=12, decimal_places=2)
+            ),
             costo_usd=ExpressionWrapper(
-                F('margen__proveedor__moneda__cambio_a_usd') * F('margen__proveedor__factor_importacion') * F('costo'),
+                F('tasa_usd') * F('margen__proveedor__factor_importacion') * F('costo'),
                 output_field=DecimalField(max_digits=12, decimal_places=2)
             ),
             costo_usd_aereo=ExpressionWrapper(
-                F('margen__proveedor__moneda__cambio_a_usd') * F('margen__proveedor__factor_importacion_aereo') * F(
-                    'costo'),
+                F('tasa_usd') * F('margen__proveedor__factor_importacion_aereo') * F('costo'),
                 output_field=DecimalField(max_digits=12, decimal_places=2)
             ),
             costo_a_usar_usd=Case(
                 When(
-                    costo_usd__lte=(F('costo_sistema_informacion') / F('margen__proveedor__moneda__cambio')) * F(
-                        'margen__proveedor__moneda__cambio_a_usd'),
+                    costo_sistema_informacion__gte=F('costo_cop'),
                     item_sistema_informacion__unidad_medida_en_inventario=F('unidad_medida_en_inventario'),
-                    then=(F('costo_sistema_informacion') / F('margen__proveedor__moneda__cambio')) * F(
-                        'margen__proveedor__moneda__cambio_a_usd')
+                    then=(F('costo_sistema_informacion') / F('margen__proveedor__moneda__cambio')) * F('tasa_usd')
                 ),
                 default='costo_usd'
             ),
             costo_a_usar_aereo_usd=Case(
                 When(
-                    costo_usd_aereo__lte=(F('costo_sistema_informacion') / F('margen__proveedor__moneda__cambio')) * F(
-                        'margen__proveedor__moneda__cambio_a_usd'),
+                    costo_sistema_informacion__gte=F('costo_cop_aereo'),
                     item_sistema_informacion__unidad_medida_en_inventario=F('unidad_medida_en_inventario'),
-                    then=(F('costo_sistema_informacion') / F('margen__proveedor__moneda__cambio')) * F(
-                        'margen__proveedor__moneda__cambio_a_usd')
+                    then=(F('costo_sistema_informacion') / F('margen__proveedor__moneda__cambio')) * F('tasa_usd')
                 ),
                 default='costo_usd_aereo'
             ),

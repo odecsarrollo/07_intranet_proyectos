@@ -46,7 +46,8 @@ WEBPACK_LOADER = {
     }
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 EMAIL_HOST = get_secret("EMAIL_SERVER", "EMAIL_HOST")
 

@@ -5,7 +5,7 @@ import CustomIconTable from '../../../00_utilities/components/ui/icon/CustomIcon
 import InformationDisplayDialog from '../../../00_utilities/components/ui/dialog/InformationDisplayDialog';
 
 import ReactTable from "react-table";
-import {formatoDinero, pesosColombianos} from "../../../00_utilities/common";
+import {formatoDinero, formatoMoneda, pesosColombianos} from "../../../00_utilities/common";
 import Checkbox from "@material-ui/core/Checkbox";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../../01_actions/01_index";
@@ -152,13 +152,6 @@ const Tabla = memo(props => {
                                     className="text-right">{`${row.value} ${row.original.moneda_nombre}`}</div>
                             },
                             {
-                                Header: "Tasa",
-                                accessor: "moneda_tasa",
-                                maxWidth: 50,
-                                minWidth: 50,
-                                Cell: row => <div className="text-right">{pesosColombianos(row.value)}</div>
-                            },
-                            {
                                 Header: "F. Imp.",
                                 accessor: "factor_importacion",
                                 maxWidth: 50,
@@ -171,11 +164,19 @@ const Tabla = memo(props => {
                         Header: "PESOS COLOMBIANOS",
                         columns: [
                             {
+                                Header: "Tasa",
+                                accessor: "tasa",
+                                maxWidth: 50,
+                                minWidth: 50,
+                                Cell: row => <div
+                                    className="text-right">{formatoMoneda(row.value, '$', 0)}</div>
+                            },
+                            {
                                 Header: "Costo COP",
                                 accessor: "costo_cop",
                                 maxWidth: 70,
                                 minWidth: 70,
-                                Cell: row => <div className="text-right">{pesosColombianos(row.value)}</div>
+                                Cell: row => <div className="text-right">{formatoMoneda(row.value, '$', 0)}</div>
                             },
                             {
                                 Header: "Margen U.",
@@ -189,20 +190,28 @@ const Tabla = memo(props => {
                                 accessor: "precio_base",
                                 maxWidth: 80,
                                 minWidth: 80,
-                                Cell: row => <div className="text-right">{pesosColombianos(row.value)}</div>
+                                Cell: row => <div className="text-right">{formatoMoneda(row.value, '$', 0)}</div>
                             },
                             {
                                 Header: "Rentabilidad",
                                 accessor: "rentabilidad",
                                 maxWidth: 80,
                                 minWidth: 80,
-                                Cell: row => <div className="text-right">{pesosColombianos(row.value)}</div>
+                                Cell: row => <div className="text-right">{formatoMoneda(row.value, '$', 0)}</div>
                             },
                         ]
                     },
                     {
                         Header: "DOLARES AMERICANOS",
                         columns: [
+                            {
+                                Header: "Tasa USD",
+                                accessor: "tasa_usd",
+                                maxWidth: 50,
+                                minWidth: 50,
+                                Cell: row => <div
+                                    className="text-right">{formatoMoneda(row.value, '$', 2)}</div>
+                            },
                             {
                                 Header: "Costo USD",
                                 accessor: "costo_usd",

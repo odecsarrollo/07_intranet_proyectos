@@ -148,14 +148,13 @@ class ComponenteSerializer(serializers.ModelSerializer):
         max_digits=10
     )
 
-    moneda_tasa = serializers.DecimalField(
-        source='margen.proveedor.moneda.cambio',
+    tasa = serializers.DecimalField(
         read_only=True,
         max_digits=12,
         decimal_places=2
     )
-    moneda_tasa_usd = serializers.DecimalField(
-        source='margen.proveedor.moneda.cambio_a_usd',
+
+    tasa_usd = serializers.DecimalField(
         read_only=True,
         max_digits=12,
         decimal_places=2
@@ -248,8 +247,6 @@ class ComponenteSerializer(serializers.ModelSerializer):
             'descripcion_adicional',
             'moneda_nombre',
             'nombre',
-            'moneda_tasa',
-            'moneda_tasa_usd',
             'margen_utilidad',
             'categoria',
             'categoria_dos',
@@ -278,6 +275,7 @@ class ComponenteSerializer(serializers.ModelSerializer):
             'costo_usd_aereo',
             'precio_base_usd',
             'precio_base_usd_aereo',
+            'tasa',
 
             # Modeda pesos colombianos
             'precio_base',
@@ -285,6 +283,7 @@ class ComponenteSerializer(serializers.ModelSerializer):
             'rentabilidad',
             'costo_cop',
             'costo_cop_aereo',
+            'tasa_usd',
         ]
         extra_kwargs = {
             'nombre': {'read_only': True},

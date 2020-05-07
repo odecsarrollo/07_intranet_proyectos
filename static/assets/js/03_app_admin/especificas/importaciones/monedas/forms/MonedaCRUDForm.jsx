@@ -43,9 +43,20 @@ class Form extends Component {
                     type='number'/>
                 <MyTextFieldSimple
                     className="col-12"
+                    nombre='Variacion Precio %'
+                    name='variacion'
+                    type='number'/>
+                <MyTextFieldSimple
+                    className="col-12"
                     nombre='Factor Conversion a USD'
                     name='cambio_a_usd'
                     type='number'/>
+                <MyTextFieldSimple
+                    className="col-12"
+                    nombre='Variacion Precio USD %'
+                    name='variacion_usd'
+                    type='number'
+                />
             </MyFormTagModal>
         )
     }

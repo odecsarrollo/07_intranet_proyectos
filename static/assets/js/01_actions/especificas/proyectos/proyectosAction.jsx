@@ -17,15 +17,9 @@ const current_url_api = 'proyectos';
 export function fetchProyectosxParametro(parametro, options_action = {}) {
     return function (dispatch) {
         const FULL_URL = `${current_url_api}/listar_proyectos_x_parametro/?parametro=${parametro}`;
-        const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
-        };
-        const {limpiar_coleccion = true} = options_action;
         const options = {
-            dispatches,
             ...options_action,
-            dispatch_method: dispatch,
-            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+            dispatch_method: dispatch
         };
         return fetchListGetURLParameters(FULL_URL, options);
     }
@@ -134,6 +128,20 @@ export const fetchProyectosConsecutivo = (tipo_proyecto, abierto, rango_actual, 
             clear_action_type: limpiar_coleccion ? TYPES.clear : null
         };
         return fetchListGetURLParameters(`${current_url_api}/listar_consecutivo_proyectos/?rango_actual=${rango_actual}&tipo_proyecto=${tipo_proyecto}&abierto=${abierto}`, options);
+    }
+};
+
+export const fetchProyectoConsecutivoId = (id, options_action = {}) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: {...response, ...options_action}})
+        };
+        const options = {
+            dispatches,
+            ...options_action,
+            dispatch_method: dispatch
+        };
+        return callApiMethodPost(current_url_api, id, 'listar_consecutivo_proyectos_id', options);
     }
 };
 
