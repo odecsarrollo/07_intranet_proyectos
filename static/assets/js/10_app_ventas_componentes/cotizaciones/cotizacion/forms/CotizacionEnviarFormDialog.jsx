@@ -1,6 +1,11 @@
-import React, {memo} from 'react';
+import React, {memo, Fragment} from 'react';
 import {reduxForm} from 'redux-form';
-import {MyCheckboxSimple, MyTextFieldSimple} from '../../../../00_utilities/components/ui/forms/fields';
+import {fechaToYMD} from "../../../../00_utilities/common";
+import {
+    MyCheckboxSimple,
+    MyTextFieldSimple,
+    MyDateTimePickerField
+} from '../../../../00_utilities/components/ui/forms/fields';
 import validate from './validate';
 import {MyFormTagModal} from '../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import {useAuth} from "../../../../00_utilities/hooks";
@@ -17,6 +22,7 @@ let CotizacionEnviarFormDialog = memo(props => {
         modal_open,
         singular_name,
         contacto,
+        estado_cotizacion,
     } = props;
     const {
         correo_electronico,
@@ -32,6 +38,10 @@ let CotizacionEnviarFormDialog = memo(props => {
                 let envio = v.email_uno ? {...v, email_uno: correo_electronico} : _.omit(v, 'email_uno');
                 envio = envio.email_dos ? {...envio, email_dos: correo_electronico_2} : _.omit(envio, 'email_dos');
                 envio = envio.email_asesor ? {...envio, email_asesor: email} : _.omit(envio, 'email_asesor');
+                envio = envio.fecha_verificacion_proximo_seguimiento ? {
+                    ...envio,
+                    fecha_verificacion_proximo_seguimiento: fechaToYMD(envio.fecha_verificacion_proximo_seguimiento)
+                } : envio;
                 return onSubmit(envio)
             })}
             reset={reset}
@@ -41,18 +51,15 @@ let CotizacionEnviarFormDialog = memo(props => {
             pristine={pristine}
             element_type={singular_name}
         >
-            {correo_electronico &&
-            <MyCheckboxSimple
+            {correo_electronico && <MyCheckboxSimple
                 label={correo_electronico.toString().toLowerCase()}
                 name='email_uno'
                 className='col-12'/>}
-            {correo_electronico_2 &&
-            <MyCheckboxSimple
+            {correo_electronico_2 && <MyCheckboxSimple
                 label={correo_electronico_2.toString().toLowerCase()}
                 name='email_dos'
                 className='col-12'/>}
-            {email &&
-            <MyCheckboxSimple
+            {email && <MyCheckboxSimple
                 label={email.toString().toLowerCase()}
                 name='email_asesor'
                 className='col-12'/>}
@@ -68,6 +75,17 @@ let CotizacionEnviarFormDialog = memo(props => {
                 nombre='Email Adicional'
                 type='email'
             />
+            {estado_cotizacion === 'INI' && <Fragment>
+                <MyDateTimePickerField
+                    name='fecha_verificacion_proximo_seguimiento'
+                    label='Fecha verificación'
+                    className='col-12'
+                    label_space_xs={4}
+                    min={new Date()}
+                    max={new Date(3000, 1, 1)}
+                />
+                <div style={{height: '300px'}}/>
+            </Fragment>}
         </MyFormTagModal>
     )
 });

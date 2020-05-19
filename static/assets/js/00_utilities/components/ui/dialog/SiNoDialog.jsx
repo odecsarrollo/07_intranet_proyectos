@@ -31,6 +31,7 @@ const SiNoDialog = (props) => {
     const {
         titulo,
         is_open,
+        can_on_si = true,
         onSi,
         onNo,
         children,
@@ -38,6 +39,7 @@ const SiNoDialog = (props) => {
         on_no_texto = 'No',
         texto_verificacion_comprobacion = null,
     } = props;
+    console.log(can_on_si, 'pueda darle si')
     const [texto_verificacion, setTextoVerificacion] = useState('');
     const valido = texto_verificacion_comprobacion ? texto_verificacion_comprobacion === texto_verificacion : true;
     return (
@@ -73,7 +75,7 @@ const SiNoDialog = (props) => {
                     color="primary"
                     variant="contained"
                     onClick={onSi}
-                    disabled={!valido}
+                    disabled={!(valido && can_on_si)}
                 >
                     {on_si_texto}
                     <FontAwesomeIcon
@@ -106,6 +108,7 @@ SiNoDialog.propTypes = {
     onSi: PropTypes.func,
     onNo: PropTypes.func,
     titulo: PropTypes.string,
-    is_open: PropTypes.bool
+    is_open: PropTypes.bool,
+    can_on_si: PropTypes.bool,
 };
 export default SiNoDialog;

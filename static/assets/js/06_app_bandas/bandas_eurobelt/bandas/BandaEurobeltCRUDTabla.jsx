@@ -84,6 +84,13 @@ const Tabla = memo(props => {
                             maxWidth: 40,
                             Cell: row => <div className='text-center'>{row.value &&
                             <FontAwesomeIcon icon={'check'}/>}</div>
+                        },
+                        {
+                            Header: "Costo",
+                            accessor: "costo_banda",
+                            minWidth: 70,
+                            maxWidth: 70,
+                            Cell: row => <div className="text-right">{formatoDinero(row.value, '‎€', 4)}</div>
                         }
                     ]
                 },
@@ -91,7 +98,7 @@ const Tabla = memo(props => {
                     Header: "PESOS COLOMBIANOS",
                     columns: [
                         {
-                            Header: "Costo",
+                            Header: "Costo COP",
                             accessor: "costo_cop",
                             minWidth: 70,
                             maxWidth: 70,
@@ -135,28 +142,28 @@ const Tabla = memo(props => {
                             accessor: "costo_usd",
                             minWidth: 70,
                             maxWidth: 70,
-                            Cell: row => <div className="text-right">{formatoDinero(row.value, '$', 2)}</div>
+                            Cell: row => <div className="text-right">{formatoDinero(row.value, '$', 4)}</div>
                         },
                         {
                             Header: "Precio USD",
                             accessor: "precio_base_usd",
                             minWidth: 80,
                             maxWidth: 80,
-                            Cell: row => <div className="text-right">{formatoDinero(row.value, '$', 2)}</div>
+                            Cell: row => <div className="text-right">{formatoDinero(row.value, '$', 4)}</div>
                         },
                         {
                             Header: "Val. MO USD",
                             accessor: "precio_mano_obra_usd",
                             minWidth: 60,
                             maxWidth: 60,
-                            Cell: row => <div className="text-right">{formatoDinero(row.value, '$', 2)}</div>
+                            Cell: row => <div className="text-right">{formatoDinero(row.value, '$', 4)}</div>
                         },
                         {
                             Header: "Total USD",
                             accessor: "precio_con_mano_obra_usd",
                             minWidth: 70,
                             maxWidth: 70,
-                            Cell: row => <div className="text-right">{formatoDinero(row.value, '$', 2)}</div>
+                            Cell: row => <div className="text-right">{formatoDinero(row.value, '$', 4)}</div>
                         },]
                 },
                 {

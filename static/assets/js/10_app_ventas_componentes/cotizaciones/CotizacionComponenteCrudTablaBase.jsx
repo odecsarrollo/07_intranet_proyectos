@@ -91,6 +91,45 @@ const Tabla = memo(props => {
                         filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase())
                     },
                     {
+                        Header: "Estado",
+                        accessor: "estado_display",
+                        maxWidth: 100,
+                        filterable: true,
+                        filterMethod: (filter, row) => {
+                            return row[filter.id].toUpperCase().includes(filter.value.toUpperCase())
+                        },
+                        Cell: row => {
+                            return (
+                                <div
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        borderRadius: '2px',
+                                    }}
+                                >
+                                    <div
+                                        style={{
+                                            width: `${row.original.porcentaje_seguimineto > 100 ? 100 : row.original.porcentaje_seguimineto}%`,
+                                            height: '100%',
+                                            padding: '2px',
+                                            backgroundColor: row.original && row.original.color_seguimiento,
+                                            borderRadius: '2px',
+                                            transition: 'all .2s ease-out'
+                                        }}
+                                    >
+                                        {row.value}
+                                        {
+                                            row.original.porcentaje_seguimineto > 0 &&
+                                            <div className='text-right'>
+                                                {row.original.porcentaje_seguimineto}%
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            )
+                        }
+                    },
+                    {
                         Header: "Creado Por",
                         accessor: "creado_por_username",
                         maxWidth: 80,

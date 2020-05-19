@@ -12,6 +12,7 @@ const validate = values => {
         'razon_rechazada',
         'fecha',
         'descripcion',
+        'fecha_verificacion_proximo_seguimiento',
     ];
     requiredFields.map(field => {
         if (!values[field]) {

@@ -2,7 +2,7 @@ import React, {memo, useState, Fragment} from "react";
 import {fechaFormatoUno, pesosColombianos} from "../../00_utilities/common";
 import {makeStyles} from "@material-ui/core";
 import {Link} from "react-router-dom";
-import {useSelector, useDispatch} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import IconButtonTableSee from "../../00_utilities/components/ui/icon/table_icon_button_detail";
 import CustomIconTable from "../../00_utilities/components/ui/icon/CustomIconTable";
 import IconButtonTableEdit from "../../00_utilities/components/ui/icon/table_icon_button_edit";
@@ -30,6 +30,7 @@ const FacturaCRUDTabla = memo(props => {
     const [factura_a_relacionar, setFacturaARelacionar] = useState(null);
     const [cotizacion_seleccionada_id, setCotizacionSeleccionadaId] = useState(null);
     const [show_quitar_cotizacion, setShowQuitarCotizacion] = useState(false);
+    const [cotizaciones, setCotizaciones] = useState({});
     const [show_relacionar_cotizacion_confirmacion, setShowRelacionarCotizacionConfirmacion] = useState(false);
     const [show_relacionar_cotizacion, setShowRelacionarCotizacion] = useState(false);
     const permisos_cliente = useTengoPermisos(CLIENTES);
@@ -56,10 +57,11 @@ const FacturaCRUDTabla = memo(props => {
     const venta_bruta = data.map(f => parseFloat(f.venta_bruta)).reduce((uno, dos) => uno + dos, 0);
     const rentabilidad = data.map(f => parseFloat(f.rentabilidad)).reduce((uno, dos) => uno + dos, 0);
     const costo_total = data.map(f => parseFloat(f.costo_total)).reduce((uno, dos) => uno + dos, 0);
-    const cotizaciones = useSelector(state => state.cotizaciones_componentes);
     const onBuscarCotizacion = (fecha_inicial, fecha_final) => dispatch(actions.fetchFacturasPorRangoFecha(fecha_inicial, fecha_final));
     const onRelacionarFactura = () => dispatch(actions.relacionarCotizacionComponenteFactura(factura_a_relacionar, cotizacion_seleccionada_id, 'add', {
         callback: () => {
+            dispatch(actions.fetchCotizacionesComponentes(cotizacion_seleccionada_id));
+            dispatch(actions.fetchFactura(factura_a_relacionar));
             setShowRelacionarCotizacionConfirmacion(false);
             setCotizacionSeleccionadaId(null);
         }
@@ -113,7 +115,6 @@ const FacturaCRUDTabla = memo(props => {
                 onCancelar={() => {
                     setShowRelacionarCotizacion(false);
                     setFacturaARelacionar(null);
-                    dispatch(actions.clearCotizacionesComponentes())
                 }}
                 listado={_.map(cotizaciones, c => ({
                     id: c.id,
@@ -122,7 +123,6 @@ const FacturaCRUDTabla = memo(props => {
                 open={show_relacionar_cotizacion}
                 select_boton_text='Relacionar'
                 titulo_modal={`Relacionar Cotización de ${_.mapKeys(props.list, 'id')[factura_a_relacionar].cliente_nombre}`}
-                onUnMount={() => dispatch(actions.clearCotizacionesComponentes())}
             />}
             {con_busqueda_rango && <RangoFechaDate onFiltarPorRangoMethod={onBuscarCotizacion}/>}
             <SelectTable
@@ -300,7 +300,10 @@ const FacturaCRUDTabla = memo(props => {
                                         onClick={() => {
                                             setShowRelacionarCotizacion(true);
                                             setFacturaARelacionar(row.value);
-                                            dispatch(actions.fetchCotizacionesComponentesClienteParaRelacionarFactura(_.mapKeys(props.list, 'id')[row.value].cliente))
+                                            dispatch(actions.fetchCotizacionesComponentesClienteParaRelacionarFactura(
+                                                _.mapKeys(props.list, 'id')[row.value].cliente,
+                                                {callback: res => setCotizaciones(_.mapKeys(res, 'id'))}
+                                            ))
                                         }}/>
 
                             }

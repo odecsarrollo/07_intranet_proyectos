@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import * as actions from '../01_actions/01_index';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import * as _ from 'lodash';
 import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
 import {pesosColombianos} from "../00_utilities/common";
@@ -15,13 +15,13 @@ const CRUD = crudHOC(CreateForm, FacturaCRUDTabla);
 
 const PodioVentaComponente = (props) => {
     const dispatch = useDispatch();
-    const {solo_totales = false, titulo, solo_notas = false, cargar_facturacion, permisos_facturas} = props;
+    const {solo_totales = false, titulo, solo_notas = false, permisos_facturas} = props;
+    let {facturas} = props;
     const [ver_sin_definir, setVerSinDefinir] = useState(false);
     const [mostrar_facturacion, setMostrarFacturacion] = useState(false);
     const [facturacion_a_mostrar, setFacturacionAMostrar] = useState(null);
     const [vendedor_seleccionado_filtro, setVendedorSeleccionadoFiltro] = useState(null);
-    let facturas = useSelector(state => state.facturas);
-    let facturacion = useSelector(state => state.facturas);
+    let facturacion = facturas;
     if (!ver_sin_definir) {
         facturacion = _.pickBy(facturacion, e => e.colaborador);
     }
@@ -109,12 +109,6 @@ const PodioVentaComponente = (props) => {
             setVendedorSeleccionadoFiltro(null);
         }
     };
-
-    useEffect(() => {
-        if (cargar_facturacion) {
-            dispatch(actions.fetchFacturasComponentesTrimestre());
-        }
-    }, []);
     const id_facturas_seleccionadas = vendedor_seleccionado_filtro && facturacion_a_mostrar ? facturacion_a_mostrar.facturas_colaborador[vendedor_seleccionado_filtro].map(f => f.id) : [];
     return <div className='row'>
         {mostrar_facturacion && <InformationDisplayDialog

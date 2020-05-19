@@ -6,6 +6,7 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
+from .api_serializers import CotizacionComponenteTuberiaVentasSerializer
 from .models import CotizacionComponente, ItemCotizacionComponente, CotizacionComponenteAdjunto
 from .api_serializers import (
     CotizacionComponenteSerializer,
@@ -86,12 +87,15 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
         cotizacion_componente = self.get_object()
         nuevo_estado = request.POST.get('nuevo_estado', None)
         razon_rechazo = request.POST.get('razon_rechazo', None)
+        fecha_verificacion_proximo_seguimiento = request.POST.get('fecha_verificacion_proximo_seguimiento', None)
         cotizacion_componente = cotizacion_componentes_cambiar_estado(
             cotizacion_componente_id=cotizacion_componente.id,
             nuevo_estado=nuevo_estado,
             razon_rechazo=razon_rechazo,
-            usuario=self.request.user
+            usuario=self.request.user,
+            fecha_verificacion_proximo_seguimiento=fecha_verificacion_proximo_seguimiento
         )
+        cotizacion_componente.refresh_from_db()
         self.serializer_class = CotizacionComponenteConDetalleSerializer
         serializer = self.get_serializer(cotizacion_componente)
         return Response(serializer.data)
@@ -106,6 +110,7 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
         email_tres = request.POST.get('email_tres', None)
         email_cuatro = request.POST.get('email_cuatro', None)
         email_asesor = request.POST.get('email_asesor', None)
+        fecha_verificacion_proximo_seguimiento = request.POST.get('fecha_verificacion_proximo_seguimiento', None)
 
         emails_destino = []
         if email_uno:
@@ -122,7 +127,8 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
         cotizacion_componente = cotizacion_componentes_enviar(
             cotizacion_componente=self.queryset.get(pk=pk),
             request=request,
-            emails_destino=emails_destino
+            emails_destino=emails_destino,
+            fecha_verificacion_proximo_seguimiento=fecha_verificacion_proximo_seguimiento
         )
         cotizacion_componente.refresh_from_db()
         serializer = self.get_serializer(cotizacion_componente)
@@ -266,12 +272,28 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @action(detail=False, http_method_names=['get', ])
+    def cotizaciones_tuberia_ventas(self, request):
+        self.serializer_class = CotizacionComponenteTuberiaVentasSerializer
+        lista = CotizacionComponente.objects.prefetch_related(
+            'responsable',
+            'responsable__mi_colaborador',
+            'creado_por',
+            'cliente',
+        ).exclude(estado__in=[
+            'INI',
+            'ELI',
+            'FIN'
+        ])
+        serializer = self.get_serializer(lista, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, http_method_names=['get', ])
     def cotizaciones_por_cliente_para_relacionar_factura(self, request):
         cliente_id = self.request.GET.get('cliente_id')
         self.serializer_class = CotizacionComponenteConDetalleSerializer
         lista = self.queryset.filter(
             Q(cliente_id=cliente_id) &
-            Q(estado__in=['PRO', 'FIN'])
+            Q(estado__in=['PRO', 'FIN', 'ENV', 'REC'])
         )
         user = self.request.user
         if not user.is_superuser:

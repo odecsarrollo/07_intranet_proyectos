@@ -1,3 +1,4 @@
+import moment from "moment-timezone";
 import React, {memo, useState, Fragment} from "react";
 import {useDispatch} from 'react-redux';
 import * as actions from '../../../01_actions/01_index';
@@ -9,6 +10,8 @@ import {notificarAction} from "../../../01_actions/01_index";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {makeStyles} from '@material-ui/core/styles';
 import clsx from 'clsx';
+import DateTimePicker from 'react-widgets/lib/DateTimePicker';
+import {fechaToYMD} from "../../../00_utilities/common";
 
 const useStyles = makeStyles(theme => ({
     button: {
@@ -46,6 +49,21 @@ const BotonCotizacion = memo(props => {
     )
 });
 
+const FechaProximoSeguimiento = props => {
+    const {onChange, value} = props;
+    return <div>
+        <label><strong>Fecha próximo Seguimiento</strong></label>
+        <DateTimePicker
+            onChange={(v) => onChange(v)}
+            format={"YYYY-MM-DD"}
+            time={false}
+            max={new Date(3000, 1, 1)}
+            min={new Date()}
+            value={value}
+        />
+        <div style={{height: '250px'}}/>
+    </div>
+}
 
 const CotizacionDetailBotoneriaEstado = memo(props => {
     const {cotizacion_componente: {id, estado, items}, contacto, cargarDatos} = props;
@@ -54,8 +72,18 @@ const CotizacionDetailBotoneriaEstado = memo(props => {
     const [show_terminar, setShowTerminar] = useState(false);
     const [show_editar_confirmacion, setShowEditarConfirmacion] = useState(false);
     const [show_enviar, setShowEnviar] = useState(false);
+    const [show_recibida, setShowRecibida] = useState(false);
+    const [fecha_proximo_seguimiento, setFechaProximoSeguimiento] = useState(null);
     const dispatch = useDispatch();
-    const setEstado = (estado_nuevo, razon_rechazo = null, callback = null) => dispatch(actions.cambiarEstadoCotizacionComponente(id, estado_nuevo, razon_rechazo, {callback}));
+    const setEstado = (
+        estado_nuevo,
+        razon_rechazo = null,
+        callback = null
+    ) => {
+        return dispatch(
+            actions.cambiarEstadoCotizacionComponente(id, estado_nuevo, razon_rechazo, fechaToYMD(fecha_proximo_seguimiento), {callback})
+        )
+    };
 
     const enviarCotizacion = (valores) => {
         dispatch(actions.enviarCotizacionComponente(
@@ -75,11 +103,13 @@ const CotizacionDetailBotoneriaEstado = memo(props => {
             singular_name='Cotización'
             contacto={contacto}
             modal_open={show_enviar}
+            estado_cotizacion={estado}
             onCancel={() => setShowEnviar(false)}
             onSubmit={enviarCotizacion}
         />}
         {show_terminar &&
         <SiNoDialog
+            can_on_si={fecha_proximo_seguimiento !== null}
             onSi={() => {
                 setEstado(
                     'FIN',
@@ -114,8 +144,8 @@ const CotizacionDetailBotoneriaEstado = memo(props => {
         >
             Deséa EDITAR esta cotización?
         </SiNoDialog>}
-        {show_en_proceso &&
-        <SiNoDialog
+        {show_en_proceso && <SiNoDialog
+            can_on_si={fecha_proximo_seguimiento !== null}
             onSi={() => {
                 setEstado(
                     'PRO',
@@ -126,14 +156,39 @@ const CotizacionDetailBotoneriaEstado = memo(props => {
                     }
                 )
             }}
-            onNo={() => setShowEnProceso(false)}
+            onNo={() => {
+                setShowEnProceso(false);
+                setFechaProximoSeguimiento(null);
+            }}
             is_open={show_en_proceso}
             titulo='Cambiar a estado en proceso'
         >
             Deséa pasar esta cotización a estado EN PROCESO?
+            <FechaProximoSeguimiento onChange={setFechaProximoSeguimiento} value={fecha_proximo_seguimiento}/>
         </SiNoDialog>}
-        {show_rechazada &&
-        <CotizacionRechazadaFormDialog
+        {show_recibida && <SiNoDialog
+            onSi={() => {
+                setEstado(
+                    'REC',
+                    null,
+                    () => {
+                        cargarDatos();
+                        setShowRecibida(false);
+                    }
+                )
+            }}
+            can_on_si={fecha_proximo_seguimiento !== null}
+            onNo={() => {
+                setShowRecibida(false);
+                setFechaProximoSeguimiento(null);
+            }}
+            is_open={show_recibida}
+            titulo='Cambiar a estado recibida'
+        >
+            Deséa pasar esta cotización a estado RECIBIDA?
+            <FechaProximoSeguimiento onChange={setFechaProximoSeguimiento} value={fecha_proximo_seguimiento}/>
+        </SiNoDialog>}
+        {show_rechazada && <CotizacionRechazadaFormDialog
             singular_name='Cotización Rechazada'
             modal_open={show_rechazada}
             onCancel={() => setShowRechazada(false)}
@@ -169,7 +224,7 @@ const CotizacionDetailBotoneriaEstado = memo(props => {
                     icono='edit'/>}
                 {estado === 'ENV' &&
                 <BotonCotizacion
-                    onClick={() => setEstado('REC', null, () => cargarDatos())}
+                    onClick={() => setShowRecibida(true)}
                     nombre='Recibida'
                 />}
                 {estado === 'PRO' &&

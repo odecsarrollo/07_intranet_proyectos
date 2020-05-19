@@ -157,7 +157,7 @@ class ComponenteSerializer(serializers.ModelSerializer):
     tasa_usd = serializers.DecimalField(
         read_only=True,
         max_digits=12,
-        decimal_places=2
+        decimal_places=4
     )
 
     to_string = serializers.SerializerMethodField()
@@ -170,10 +170,10 @@ class ComponenteSerializer(serializers.ModelSerializer):
     precio_base_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
 
     # Modeda dolares americanos
-    costo_usd = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
-    costo_usd_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
-    precio_base_usd = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
-    precio_base_usd_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    costo_usd = serializers.DecimalField(max_digits=12, decimal_places=4, read_only=True)
+    costo_usd_aereo = serializers.DecimalField(max_digits=12, decimal_places=4, read_only=True)
+    precio_base_usd = serializers.DecimalField(max_digits=12, decimal_places=4, read_only=True)
+    precio_base_usd_aereo = serializers.DecimalField(max_digits=12, decimal_places=4, read_only=True)
 
     def get_to_string(self, obj):
         return obj.nombre
@@ -349,7 +349,8 @@ class EnsambladoBandaEurobeltSerializer(serializers.ModelSerializer):
 
 class BandaEurobeltSerializer(serializers.ModelSerializer):
     cantidad_componentes = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
-    costo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    costo = serializers.DecimalField(max_digits=12, decimal_places=4, read_only=True)
+    costo_banda = serializers.DecimalField(max_digits=12, decimal_places=4, read_only=True)
     to_string = serializers.SerializerMethodField()
 
     moneda_tasa = serializers.DecimalField(
@@ -423,6 +424,7 @@ class BandaEurobeltSerializer(serializers.ModelSerializer):
             'referencia',
             'moneda_tasa',
             'moneda_tasa_usd',
+            'costo_banda',
 
             # Modeda dolares americanos
             'costo_usd',

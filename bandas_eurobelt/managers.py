@@ -45,23 +45,23 @@ class ComponenteManager(models.Manager):
             tasa_usd=ExpressionWrapper(
                 F('margen__proveedor__moneda__cambio_a_usd') * (
                         1 + (F('margen__proveedor__moneda__variacion_usd') / 100)),
-                output_field=DecimalField(max_digits=12, decimal_places=2)
+                output_field=DecimalField(max_digits=12, decimal_places=4)
             ),
             costo_usd=ExpressionWrapper(
                 F('tasa_usd') * F('margen__proveedor__factor_importacion') * F('costo'),
-                output_field=DecimalField(max_digits=12, decimal_places=2)
+                output_field=DecimalField(max_digits=12, decimal_places=4)
             ),
             costo_usd_aereo=ExpressionWrapper(
                 F('tasa_usd') * F('margen__proveedor__factor_importacion_aereo') * F('costo'),
-                output_field=DecimalField(max_digits=12, decimal_places=2)
+                output_field=DecimalField(max_digits=12, decimal_places=4)
             ),
             precio_base_usd=ExpressionWrapper(
                 Sum(F('costo_usd') / (1 - (F('margen__margen_deseado') / 100))),
-                output_field=DecimalField(max_digits=12, decimal_places=2)
+                output_field=DecimalField(max_digits=12, decimal_places=4)
             ),
             precio_base_usd_aereo=ExpressionWrapper(
                 Sum(F('costo_usd_aereo') / (1 - (F('margen__margen_deseado') / 100))),
-                output_field=DecimalField(max_digits=12, decimal_places=2)
+                output_field=DecimalField(max_digits=12, decimal_places=4)
             ),
         ).all()
         return qs
@@ -84,7 +84,7 @@ class BandaEurobeltManager(models.Manager):
                     F('cantidad') *
                     F('componente__costo')
                 ),
-                output_field=DecimalField(max_digits=12, decimal_places=2)
+                output_field=DecimalField(max_digits=12, decimal_places=4)
             ),
             # Moneda Pesos Colombianos
             costo_cop=ExpressionWrapper(
@@ -99,8 +99,8 @@ class BandaEurobeltManager(models.Manager):
             costo_cop_aereo=ExpressionWrapper(
                 Sum(
                     F('tasa') *
-                    F('cantidad') *
                     F('componente__margen__proveedor__factor_importacion_aereo') *
+                    F('cantidad') *
                     F('componente__costo')
                 ),
                 output_field=DecimalField(max_digits=12, decimal_places=2)
@@ -109,8 +109,8 @@ class BandaEurobeltManager(models.Manager):
                 Sum(
                     (
                             F('tasa') *
-                            F('cantidad') *
                             F('componente__margen__proveedor__factor_importacion') *
+                            F('cantidad') *
                             F('componente__costo')
                     ) / (1 - (F('componente__margen__margen_deseado') / 100))
                 ),
@@ -120,8 +120,8 @@ class BandaEurobeltManager(models.Manager):
                 Sum(
                     (
                             F('tasa') *
-                            F('cantidad') *
                             F('componente__margen__proveedor__factor_importacion_aereo') *
+                            F('cantidad') *
                             F('componente__costo')
                     ) / (1 - (F('componente__margen__margen_deseado') / 100))
                 ),
@@ -131,47 +131,47 @@ class BandaEurobeltManager(models.Manager):
             tasa_usd=ExpressionWrapper(
                 F('componente__margen__proveedor__moneda__cambio_a_usd') * (
                         1 + (F('componente__margen__proveedor__moneda__variacion_usd') / 100)),
-                output_field=DecimalField(max_digits=12, decimal_places=2)
+                output_field=DecimalField(max_digits=12, decimal_places=4)
             ),
             costo_usd=ExpressionWrapper(
                 Sum(
                     F('tasa_usd') *
-                    F('cantidad') *
                     F('componente__margen__proveedor__factor_importacion') *
+                    F('cantidad') *
                     F('componente__costo')
                 ),
-                output_field=DecimalField(max_digits=12, decimal_places=2)
+                output_field=DecimalField(max_digits=12, decimal_places=4)
             ),
             costo_usd_aereo=ExpressionWrapper(
                 Sum(
                     F('tasa_usd') *
-                    F('cantidad') *
                     F('componente__margen__proveedor__factor_importacion_aereo') *
+                    F('cantidad') *
                     F('componente__costo')
                 ),
-                output_field=DecimalField(max_digits=12, decimal_places=2)
+                output_field=DecimalField(max_digits=12, decimal_places=4)
             ),
             precio_base_usd=ExpressionWrapper(
                 Sum(
                     (
                             F('tasa_usd') *
-                            F('cantidad') *
                             F('componente__margen__proveedor__factor_importacion') *
+                            F('cantidad') *
                             F('componente__costo')
                     ) / (1 - (F('componente__margen__margen_deseado') / 100))
                 ),
-                output_field=DecimalField(max_digits=12, decimal_places=2)
+                output_field=DecimalField(max_digits=12, decimal_places=4)
             ),
             precio_base_usd_aereo=ExpressionWrapper(
                 Sum(
                     (
                             F('tasa_usd') *
-                            F('cantidad') *
                             F('componente__margen__proveedor__factor_importacion_aereo') *
+                            F('cantidad') *
                             F('componente__costo')
                     ) / (1 - (F('componente__margen__margen_deseado') / 100))
                 ),
-                output_field=DecimalField(max_digits=12, decimal_places=2)
+                output_field=DecimalField(max_digits=12, decimal_places=4)
             )
         ).filter(banda_id=OuterRef('id'))
 
@@ -192,6 +192,10 @@ class BandaEurobeltManager(models.Manager):
             moneda_tasa_usd=Subquery(componentes.values('tasa_usd')),
             moneda_tasa=Subquery(componentes.values('tasa'))
         ).annotate(
+            costo_banda=ExpressionWrapper(
+                Subquery(componentes.values('costo')),
+                output_field=DecimalField(max_digits=12, decimal_places=4)
+            ),
             costo=ExpressionWrapper(
                 Subquery(componentes.values('costo')) * (F('costo_ensamblado__porcentaje') / 100),
                 output_field=DecimalField(max_digits=12, decimal_places=2)
@@ -224,23 +228,23 @@ class BandaEurobeltManager(models.Manager):
             # Moneda Dolares Americanos
             precio_mano_obra_usd=ExpressionWrapper(
                 F('precio_base_usd') * (F('costo_ensamblado__porcentaje') / 100),
-                output_field=DecimalField(max_digits=12, decimal_places=2)
+                output_field=DecimalField(max_digits=12, decimal_places=4)
             ),
             costo_usd_mano_obra=ExpressionWrapper(
                 F('costo_usd') + F('precio_mano_obra_usd'),
-                output_field=DecimalField(max_digits=12, decimal_places=2)
+                output_field=DecimalField(max_digits=12, decimal_places=4)
             ),
             precio_con_mano_obra_usd=ExpressionWrapper(
                 F('precio_base_usd') + F('precio_mano_obra_usd'),
-                output_field=DecimalField(max_digits=12, decimal_places=2)
+                output_field=DecimalField(max_digits=12, decimal_places=4)
             ),
             costo_usd_aereo_mano_obra=ExpressionWrapper(
                 F('costo_usd_aereo') + F('precio_mano_obra_usd'),
-                output_field=DecimalField(max_digits=12, decimal_places=2)
+                output_field=DecimalField(max_digits=12, decimal_places=4)
             ),
             precio_con_mano_obra_aereo_usd=ExpressionWrapper(
                 F('precio_base_usd_aereo') + F('precio_mano_obra_usd'),
-                output_field=DecimalField(max_digits=12, decimal_places=2)
+                output_field=DecimalField(max_digits=12, decimal_places=4)
             ),
         ).all()
         return qs

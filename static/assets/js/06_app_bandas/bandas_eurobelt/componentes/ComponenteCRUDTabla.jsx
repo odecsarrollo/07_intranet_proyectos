@@ -210,28 +210,28 @@ const Tabla = memo(props => {
                                 maxWidth: 50,
                                 minWidth: 50,
                                 Cell: row => <div
-                                    className="text-right">{formatoMoneda(row.value, '$', 2)}</div>
+                                    className="text-right">{formatoMoneda(row.value, '$', 4)}</div>
                             },
                             {
                                 Header: "Costo USD",
                                 accessor: "costo_usd",
                                 maxWidth: 70,
                                 minWidth: 70,
-                                Cell: row => <div className="text-right">{formatoDinero(row.value, '$', 2)}</div>
+                                Cell: row => <div className="text-right">{formatoDinero(row.value, '$', 4)}</div>
                             },
                             {
                                 Header: "Margen U.",
                                 accessor: "margen_utilidad",
                                 maxWidth: 80,
                                 minWidth: 80,
-                                Cell: row => <div className="text-right">{formatoDinero(row.value, '$', 2)}</div>
+                                Cell: row => <div className="text-right">{formatoDinero(row.value, '$', 4)}</div>
                             },
                             {
                                 Header: "Precio Base USD",
                                 accessor: "precio_base_usd",
                                 maxWidth: 80,
                                 minWidth: 80,
-                                Cell: row => <div className="text-right">{formatoDinero(row.value, '$', 2)}</div>
+                                Cell: row => <div className="text-right">{formatoDinero(row.value, '$', 4)}</div>
                             }
                         ]
                     },

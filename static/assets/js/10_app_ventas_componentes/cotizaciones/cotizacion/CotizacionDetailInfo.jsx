@@ -1,6 +1,7 @@
 import React, {memo, useState, Fragment} from "react";
 import Typography from "@material-ui/core/Typography";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {fechaFormatoUno} from "../../../00_utilities/common";
 import CotizacionCRUDFormDialog from "./forms/CotizacionCRUDFormDialog";
 import MyDialogButtonDelete from "../../../00_utilities/components/ui/dialog/delete_dialog";
 import HistoricoPrecio from "../../../03_app_admin/especificas/clientes/clientes/ClienteHistoricoPrecios";
@@ -23,6 +24,7 @@ const styles = {
 const CotizacionDetailInfo = memo(props => {
     const [show_cotizacion_informacion_dialog, setShowCotizacionInformacionDialog] = useState(false);
     const {cotizacion, contacto, onSubmitCotizacion, cargarDatos, editable, onDelete} = props;
+    const con_fecha_seguimiento = cotizacion.porcentaje_seguimineto >= 1;
     return (
         <Fragment>
             {show_cotizacion_informacion_dialog &&
@@ -46,9 +48,40 @@ const CotizacionDetailInfo = memo(props => {
                     onClick={() => setShowCotizacionInformacionDialog(true)}
                 />}
             </Typography>
-            <Typography variant="h4" gutterBottom color="secondary">
+
+            <Typography variant="h4" gutterBottom color="secondary" className='pb-0 mb-0'>
                 {cotizacion.estado_display}
             </Typography>
+            {con_fecha_seguimiento && <Fragment>
+                <div
+                    style={{
+                        border: '1px solid black',
+                        width: '100%',
+                        borderRadius: '4px',
+                    }}
+                >
+                    <div
+                        style={{
+                            width: `${cotizacion.porcentaje_seguimineto > 100 ? 100 : cotizacion.porcentaje_seguimineto}%`,
+                            padding: '2px',
+                            borderRadius: '4px',
+                            backgroundColor: cotizacion.color_seguimiento,
+                            transition: 'all .2s ease-out'
+                        }}
+                    >
+                        <span><strong>{cotizacion.porcentaje_seguimineto}%</strong></span>
+                    </div>
+
+                </div>
+                <div className="row">
+                    <div className='col-6 text-left'>
+                        {fechaFormatoUno(cotizacion.fecha_verificacion_cambio_estado)}
+                    </div>
+                    <div className='col-6 text-right'>
+                        {fechaFormatoUno(cotizacion.fecha_verificacion_proximo_seguimiento)}
+                    </div>
+                </div>
+            </Fragment>}
             <Typography variant="body1" gutterBottom color="secondary" style={styles.texto_secondario}>
                 {cotizacion.razon_rechazo}
             </Typography>

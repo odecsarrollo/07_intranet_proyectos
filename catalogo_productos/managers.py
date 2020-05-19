@@ -64,15 +64,15 @@ class ItemVentaCatalogoManager(models.Manager):
             tasa_usd=ExpressionWrapper(
                 F('margen__proveedor__moneda__cambio_a_usd') * (
                         1 + (F('margen__proveedor__moneda__variacion_usd') / 100)),
-                output_field=DecimalField(max_digits=12, decimal_places=2)
+                output_field=DecimalField(max_digits=12, decimal_places=4)
             ),
             costo_usd=ExpressionWrapper(
                 F('tasa_usd') * F('margen__proveedor__factor_importacion') * F('costo'),
-                output_field=DecimalField(max_digits=12, decimal_places=2)
+                output_field=DecimalField(max_digits=12, decimal_places=4)
             ),
             costo_usd_aereo=ExpressionWrapper(
                 F('tasa_usd') * F('margen__proveedor__factor_importacion_aereo') * F('costo'),
-                output_field=DecimalField(max_digits=12, decimal_places=2)
+                output_field=DecimalField(max_digits=12, decimal_places=4)
             ),
             costo_a_usar_usd=Case(
                 When(
@@ -92,11 +92,11 @@ class ItemVentaCatalogoManager(models.Manager):
             ),
             precio_base_usd=ExpressionWrapper(
                 Sum(F('costo_a_usar_usd') / (1 - (F('margen__margen_deseado') / 100))),
-                output_field=DecimalField(max_digits=12, decimal_places=2)
+                output_field=DecimalField(max_digits=12, decimal_places=4)
             ),
             precio_base_aereo_usd=ExpressionWrapper(
                 Sum(F('costo_a_usar_aereo_usd') / (1 - (F('margen__margen_deseado') / 100))),
-                output_field=DecimalField(max_digits=12, decimal_places=2)
+                output_field=DecimalField(max_digits=12, decimal_places=4)
             ),
         ).all()
         return qs

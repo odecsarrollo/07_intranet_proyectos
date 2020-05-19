@@ -64,6 +64,7 @@ def relacionar_cotizacion_con_factura(
 def cotizacion_componentes_cambiar_estado(
         cotizacion_componente_id: int,
         nuevo_estado: str,
+        fecha_verificacion_proximo_seguimiento: datetime,
         usuario: User,
         razon_rechazo: str = None,
 ) -> CotizacionComponente:
@@ -72,6 +73,10 @@ def cotizacion_componentes_cambiar_estado(
     error = True
     cambio_estado = nuevo_estado != estado_actual
     estado_actual_display = cotizacion_componente.get_estado_display()
+
+    if fecha_verificacion_proximo_seguimiento is None:
+        raise ValidationError({'_error': 'No se digitó la fecha de seguimiento para la cotización'})
+
     if cambio_estado:
         if cotizacion_componente.facturas.exists() and nuevo_estado != 'FIN':
             raise ValidationError({
@@ -105,6 +110,8 @@ def cotizacion_componentes_cambiar_estado(
                 {'_error': 'No se puede cambiar una cotización en estado %s a %s' % (estado_actual, nuevo_estado)})
 
         cotizacion_componente.estado = nuevo_estado
+        cotizacion_componente.fecha_verificacion_proximo_seguimiento = fecha_verificacion_proximo_seguimiento
+        cotizacion_componente.fecha_verificacion_cambio_estado = timezone.now().date()
         if nuevo_estado == 'ELI':
             cotizacion_componente.razon_rechazo = razon_rechazo
         if nuevo_estado != 'ELI':
@@ -254,6 +261,7 @@ def cotizacion_componentes_enviar(
         request,
         cotizacion_componente: CotizacionComponente,
         emails_destino: list = None,
+        fecha_verificacion_proximo_seguimiento: datetime = None,
 ) -> CotizacionComponente:
     if cotizacion_componente.estado not in ['INI', 'ENV', 'REC']:
         raise ValidationError(
@@ -268,6 +276,10 @@ def cotizacion_componentes_enviar(
             cotizacion_componente=cotizacion_componente
         )
     version = cotizacion_componente.versiones.count() + 1
+
+    if fecha_verificacion_proximo_seguimiento:
+        cotizacion_componente.fecha_verificacion_proximo_seguimiento = fecha_verificacion_proximo_seguimiento
+        cotizacion_componente.fecha_verificacion_cambio_estado = timezone.now().date()
 
     if cotizacion_componente.estado == 'INI':
         cotizacion_componente.estado = 'ENV'

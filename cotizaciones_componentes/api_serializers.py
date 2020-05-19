@@ -1,3 +1,4 @@
+from django.utils import timezone
 from rest_framework import serializers
 
 from envios_emails.api_serializers import CotizacionComponenteEnvioSerializer
@@ -182,12 +183,22 @@ class CotizacionComponenteSerializer(serializers.ModelSerializer):
     responsable_username = serializers.CharField(source='responsable.username', read_only=True)
     responsable_nombre = serializers.CharField(source='responsable.get_full_name', read_only=True)
     creado_por_username = serializers.CharField(source='creado_por.username', read_only=True)
+    fecha_verificacion_proximo_seguimiento = serializers.DateField(
+        format="%Y-%m-%d",
+        input_formats=['%Y-%m-%dT%H:%M:%S.%fZ', 'iso-8601'],
+        allow_null=True,
+        required=False
+    )
 
     def get_version(self, obj):
         return None
 
     def get_estado_display(self, obj):
         return obj.get_estado_display()
+
+    def update(self, instance, validated_data):
+        print('entro a update')
+        return super().update(instance, validated_data)
 
     class Meta:
         model = CotizacionComponente
@@ -198,7 +209,11 @@ class CotizacionComponenteSerializer(serializers.ModelSerializer):
             'valor_total',
             'observaciones',
             'cantidad_items',
+            'color_seguimiento',
+            'porcentaje_seguimineto',
             'nro_consecutivo',
+            'fecha_verificacion_cambio_estado',
+            'fecha_verificacion_proximo_seguimiento',
             'moneda',
             'version',
             'cliente',
@@ -232,6 +247,41 @@ class CotizacionComponenteSerializer(serializers.ModelSerializer):
             'observaciones': {'allow_blank': True},
             'razon_rechazo': {'allow_blank': True},
         }
+
+
+class CotizacionComponenteTuberiaVentasSerializer(serializers.ModelSerializer):
+    cantidad_items = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    valor_total = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    responsable_username = serializers.CharField(source='responsable.username', read_only=True)
+    responsable_nombre = serializers.CharField(source='responsable.get_full_name', read_only=True)
+    colaborador = serializers.IntegerField(source='responsable.mi_colaborador.id', read_only=True)
+    creado_por_username = serializers.CharField(source='creado_por.username', read_only=True)
+    cliente_nombre = serializers.CharField(source='cliente.nombre', read_only=True)
+
+    class Meta:
+        model = CotizacionComponente
+        fields = [
+            'url',
+            'id',
+            'created',
+            'valor_total',
+            'cantidad_items',
+            'color_seguimiento',
+            'porcentaje_seguimineto',
+            'nro_consecutivo',
+            'fecha_verificacion_cambio_estado',
+            'fecha_verificacion_proximo_seguimiento',
+            'moneda',
+            'cliente',
+            'cliente_nombre',
+            'estado',
+            'get_estado_display',
+            'colaborador',
+            'responsable_nombre',
+            'responsable_username',
+            'creado_por_username'
+        ]
+        read_only_fields = fields
 
 
 class CotizacionComponenteConDetalleSerializer(CotizacionComponenteSerializer):

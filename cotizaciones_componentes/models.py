@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils import timezone
 from model_utils.models import TimeStampedModel
 
 from clientes.models import ContactoCliente, ClienteBiable
@@ -43,12 +44,57 @@ class CotizacionComponente(TimeStampedModel):
     observaciones = models.TextField(null=True)
     razon_rechazo = models.TextField(null=True)
     es_crm_anterior = models.BooleanField(default=False)
+
+    fecha_verificacion_cambio_estado = models.DateField(null=True, db_column='fec_ver_cam_est')
+    fecha_verificacion_proximo_seguimiento = models.DateField(null=True, db_column='fec_ver_pro_seg')
+
     objects = CotizacionComponenteManager()
     facturas = models.ManyToManyField(FacturaDetalle, related_name='cotizaciones_componentes')
 
     @property
     def pdf(self) -> 'CotizacionComponenteDocumento':
         return self.versiones.last()
+
+    @property
+    def color_seguimiento(self):
+        fecha_ini = self.fecha_verificacion_cambio_estado
+        fecha_seg = self.fecha_verificacion_proximo_seguimiento
+        fecha_act = timezone.datetime.now().date()
+        if self.estado in ['INI', 'ELI']:
+            return None
+        if fecha_ini and fecha_seg:
+            delta = (fecha_act - fecha_ini).days
+            dias = (fecha_seg - fecha_ini).days
+            if dias == 0:
+                porcentaje = 1
+            else:
+                porcentaje = delta / dias
+            if porcentaje >= 0.9:
+                return 'tomato'
+            elif porcentaje > 0.66:
+                return 'yellow'
+            else:
+                return 'lightgreen'
+        if not self.fecha_verificacion_cambio_estado:
+            return None
+
+    @property
+    def porcentaje_seguimineto(self):
+        fecha_ini = self.fecha_verificacion_cambio_estado
+        fecha_seg = self.fecha_verificacion_proximo_seguimiento
+        if self.estado in ['INI', 'ELI']:
+            return None
+        if fecha_ini and fecha_seg:
+            fecha_act = timezone.datetime.now().date()
+            delta = (fecha_act - fecha_ini).days
+            dias = (fecha_seg - fecha_ini).days
+            if dias == 0:
+                porcentaje = 1
+            else:
+                porcentaje = delta / dias
+            return round(porcentaje * 100, 2)
+        else:
+            return None
 
     class Meta:
         permissions = [

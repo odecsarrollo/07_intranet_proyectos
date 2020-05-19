@@ -16,12 +16,12 @@ class ItemVentaCatalogoSerializer(serializers.ModelSerializer):
     costo_sistema_informacion = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     precio_base_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     # Moneda Dolares Américanos
-    costo_usd = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
-    costo_usd_aereo = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
-    costo_a_usar_usd = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
-    costo_a_usar_aereo_usd = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
-    precio_base_usd = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
-    precio_base_aereo_usd = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    costo_usd = serializers.DecimalField(max_digits=12, decimal_places=4, read_only=True)
+    costo_usd_aereo = serializers.DecimalField(max_digits=12, decimal_places=4, read_only=True)
+    costo_a_usar_usd = serializers.DecimalField(max_digits=12, decimal_places=4, read_only=True)
+    costo_a_usar_aereo_usd = serializers.DecimalField(max_digits=12, decimal_places=4, read_only=True)
+    precio_base_usd = serializers.DecimalField(max_digits=12, decimal_places=4, read_only=True)
+    precio_base_aereo_usd = serializers.DecimalField(max_digits=12, decimal_places=4, read_only=True)
 
     unidad_medida_catalogo = serializers.CharField(source='unidad_medida_en_inventario.id', read_only=True)
     margen_deseado = serializers.DecimalField(

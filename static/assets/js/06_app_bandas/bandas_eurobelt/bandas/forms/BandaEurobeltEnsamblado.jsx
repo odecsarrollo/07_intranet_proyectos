@@ -5,7 +5,7 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import StylesContext from '../../../../00_utilities/contexts/StylesContext';
 import {useDispatch} from "react-redux/es/hooks/useDispatch";
-import {pesosColombianos} from "../../../../00_utilities/common";
+import {formatoDinero, formatoMoneda, pesosColombianos} from "../../../../00_utilities/common";
 import * as actions from "../../../../01_actions/01_index";
 import MyDialogButtonDelete from "../../../../00_utilities/components/ui/dialog/delete_dialog";
 
@@ -88,7 +88,9 @@ const GrupoEnsamblado = memo(props => {
         setCategoriaAAgregar,
     } = props;
     const ensamblado_lista = _.pickBy(ensamblado_banda, e => e.componente && e.componente.categoria === id_categoria);
-    const costo_total = _.map(ensamblado_lista).reduce((uno, dos) => uno + (parseFloat(dos.componente.costo_cop) * parseFloat(dos.cantidad)), 0);
+    const costo_total = _.map(ensamblado_lista).reduce((uno, dos) => uno + (parseFloat(dos.componente.costo) * parseFloat(dos.cantidad)), 0);
+    const costo_total_cop = _.map(ensamblado_lista).reduce((uno, dos) => uno + (parseFloat(dos.componente.costo_cop) * parseFloat(dos.cantidad)), 0);
+    const costo_total_usd = _.map(ensamblado_lista).reduce((uno, dos) => uno + (parseFloat(dos.componente.costo_usd) * parseFloat(dos.cantidad)), 0);
     const cantidad = _.map(ensamblado_lista).reduce((uno, dos) => uno + (parseFloat(dos.cantidad)), 0);
     const {table} = useContext(StylesContext);
 
@@ -123,8 +125,7 @@ const GrupoEnsamblado = memo(props => {
                     setCategoriaAAgregar(null);
                     setOpenAddlEnsamblado(false);
                 }}
-            />
-            }
+            />}
             {_.size(ensamblado_lista) > 0 &&
             <table className='table table-striped table-responsive' style={table}>
                 <thead>
@@ -133,8 +134,12 @@ const GrupoEnsamblado = memo(props => {
                     <th style={table.td}>Componente</th>
                     <th style={table.td}>Cortado A</th>
                     <th style={table.td}>Cantidad</th>
-                    <th style={table.td}>Costo</th>
-                    <th style={table.td}>Costo Total</th>
+                    <th style={table.td}>Costo EUR</th>
+                    <th style={table.td}>Costo EUR Total</th>
+                    <th style={table.td}>Costo USD</th>
+                    <th style={table.td}>Costo USD Total</th>
+                    <th style={table.td}>Costo COP</th>
+                    <th style={table.td}>Costo COP Total</th>
                     <th style={table.td}>Delete</th>
                 </tr>
                 </thead>
@@ -145,9 +150,17 @@ const GrupoEnsamblado = memo(props => {
                     <td style={table.td}>{e.cortado_a}</td>
                     <td style={table.td} className='text-center'>{e.cantidad}</td>
                     <td style={table.td}
-                        className='text-right'>{pesosColombianos(parseFloat(e.componente.costo_cop))}</td>
+                        className='text-right'>{formatoMoneda(parseFloat(e.componente.costo), '‎€', 4, 'EUR')}</td>
                     <td style={table.td}
-                        className='text-right'>{pesosColombianos(parseFloat(e.componente.costo_cop) * parseFloat(e.cantidad))}</td>
+                        className='text-right'>{formatoMoneda(parseFloat(e.componente.costo) * parseFloat(e.cantidad), '‎€', 4, 'EUR')}</td>
+                    <td style={table.td}
+                        className='text-right'>{formatoMoneda(parseFloat(e.componente.costo_usd), '‎$', 2, 'USD')}</td>
+                    <td style={table.td}
+                        className='text-right'>{formatoMoneda(parseFloat(e.componente.costo_usd) * parseFloat(e.cantidad), '$', 4, 'USD')}</td>
+                    <td style={table.td}
+                        className='text-right'>{formatoMoneda(parseFloat(e.componente.costo_cop), '‎$', 0, 'COP')}</td>
+                    <td style={table.td}
+                        className='text-right'>{formatoMoneda(parseFloat(e.componente.costo_cop) * parseFloat(e.cantidad), '$', 0, 'COP')}</td>
                     <td style={table.td} className='text-center'>
                         <MyDialogButtonDelete
                             onDelete={() => {
@@ -166,7 +179,11 @@ const GrupoEnsamblado = memo(props => {
                     </td>
                     <td style={table.td} className='text-center'>{cantidad}</td>
                     <td style={table.td}></td>
-                    <td style={table.td} className='text-right'>{pesosColombianos(costo_total)}</td>
+                    <td style={table.td} className='text-right'>{formatoMoneda(costo_total, '‎‎€', 4, 'EUR')}</td>
+                    <td style={table.td}></td>
+                    <td style={table.td} className='text-right'>{formatoMoneda(costo_total_usd, '‎$', 4, 'USD')}</td>
+                    <td style={table.td}></td>
+                    <td style={table.td} className='text-right'>{formatoMoneda(costo_total_cop, '‎$', 0, 'COP')}</td>
                 </tr>
                 </tfoot>
             </table>
@@ -199,7 +216,8 @@ const BandaEurobeltEnsamblado = memo(props => {
     return (
         <div className='col-12'>
             <Typography variant="h4" color="primary" noWrap>
-                Ensamblado ({pesosColombianos(banda.costo_cop)})
+                Ensamblado
+                ({formatoMoneda(banda.costo_banda, '‎€', 4, 'EUR')}, {formatoMoneda(banda.costo_cop, '$', 0, 'COP')})
             </Typography>
             <div className="row pl-4">
                 {con_empujador &&

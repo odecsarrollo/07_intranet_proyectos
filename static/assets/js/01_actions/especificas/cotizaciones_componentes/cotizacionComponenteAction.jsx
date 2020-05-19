@@ -179,15 +179,9 @@ export const fetchCotizacionesComponentes_por_estado = (estado, options_action =
 
 export const fetchCotizacionesComponentesClienteParaRelacionarFactura = (cliente_id, options_action = {}) => {
     return (dispatch) => {
-        const dispatches = (response) => {
-            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
-        };
-        const {limpiar_coleccion = true} = options_action;
         const options = {
-            dispatches,
             ...options_action,
-            dispatch_method: dispatch,
-            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+            dispatch_method: dispatch
         };
         return fetchListGetURLParameters(`${current_url_api}/cotizaciones_por_cliente_para_relacionar_factura/?cliente_id=${cliente_id}`, options);
     }
@@ -205,6 +199,21 @@ export const fetchCotizacionesComponentesEdicionAsesor = (options_action = {}) =
             clear_action_type: limpiar_coleccion ? TYPES.clear : null
         };
         return fetchListGet(`${current_url_api}/cotizaciones_en_edicion_asesor`, options);
+    }
+};
+
+export const fetchCotizacionesComponentesTuberiaVentas = (options_action = {}) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
+        };
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches, ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        return fetchListGet(`${current_url_api}/cotizaciones_tuberia_ventas`, options);
     }
 };
 
@@ -252,12 +261,15 @@ export const uploadCotizacionComponente = (id, values, options_action = {}) => {
     }
 };
 
-export const cambiarEstadoCotizacionComponente = (id, nuevo_estado, razon_rechazo = null, options_action) => {
+export const cambiarEstadoCotizacionComponente = (id, nuevo_estado, razon_rechazo = null, fecha_seguimiento, options_action) => {
     return function (dispatch) {
         let params = new URLSearchParams();
         params.append('nuevo_estado', nuevo_estado);
         if (razon_rechazo) {
             params.append('razon_rechazo', razon_rechazo);
+        }
+        if (fecha_seguimiento) {
+            params.append('fecha_verificacion_proximo_seguimiento', fecha_seguimiento);
         }
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch, payload: response})
