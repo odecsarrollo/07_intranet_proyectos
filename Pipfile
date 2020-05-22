@@ -23,6 +23,7 @@ django-reversion = "==3.0.4"
 django-cors-headers = "==3.0.1"
 mysqlclient = "==1.4.2.post1"
 pypdf2 = "==1.26.0"
+cairocffi = "==1.0.2"
 
 [requires]
 python_version = "3.6"
