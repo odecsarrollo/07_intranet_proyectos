@@ -11,7 +11,7 @@ import CotizacionSeguimientoFormDialog from "./forms/CotizacionSeguimientoFormDi
 import Typography from '@material-ui/core/Typography';
 import clsx from "clsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {fechaHoraFormatoUno, formatBytes} from "../../../00_utilities/common";
+import {fechaHoraFormatoUno, fechaToYMD, formatBytes} from "../../../00_utilities/common";
 import * as actions from '../../../01_actions/01_index';
 import moment from "moment-timezone";
 
@@ -72,6 +72,9 @@ const CotizacionDetailSeguimientoItem = memo(props => {
         if (tipo_seguimiento === 'EST') {
             return 'exchange-alt'
         }
+        if (tipo_seguimiento === 'SEG') {
+            return 'abacus'
+        }
         return 'thumbs-up'
     };
     const getFecha = () => {
@@ -79,7 +82,7 @@ const CotizacionDetailSeguimientoItem = memo(props => {
     };
     const onOpenUrl = (url) => window.open(url, '_blank');
 
-    const puede_eliminar = tipo_seguimiento !== 'ENV' && tipo_seguimiento !== 'EST';
+    const puede_eliminar = tipo_seguimiento !== 'ENV' && tipo_seguimiento !== 'EST' && tipo_seguimiento !== 'SEG';
     return (
         <Fragment>
             <ListItem alignItems="flex-start" style={{margin: 0, padding: 0}}>
@@ -123,17 +126,13 @@ const CotizacionDetailSeguimientoItem = memo(props => {
                             >
                                 <span>{getFecha()} </span>
                             </Typography>
-                        </Fragment>
-                    }
+                        </Fragment>}
                 />
-                {
-                    puede_eliminar &&
-                    <MyDialogButtonDelete
-                        onDelete={() => eliminarSeguimiento(id)}
-                        element_name='Seguimiento Cotización'
-                        element_type='Seguimiento Cotización'
-                    />
-                }
+                {puede_eliminar && <MyDialogButtonDelete
+                    onDelete={() => eliminarSeguimiento(id)}
+                    element_name='Seguimiento Cotización'
+                    element_type='Seguimiento Cotización'
+                />}
             </ListItem>
             <Divider variant="middle" component="li"/>
         </Fragment>
@@ -154,6 +153,7 @@ const CotizacionDetailSeguimiento = memo(props => {
                 tipo_seguimiento,
                 v.descripcion,
                 moment(v.fecha).format('YYYY-MM-DDTHH:mm:00Z'),
+                fechaToYMD(v.fecha_verificacion_proximo_seguimiento),
                 {
                     callback: () => {
                         cargarDatos();
@@ -223,11 +223,20 @@ const CotizacionDetailSeguimiento = memo(props => {
                         setShowAddSeguimiento(true);
                     }}
                 />
+                <FontAwesomeIcon
+                    icon='abacus'
+                    size='3x'
+                    className='ml-3 puntero'
+                    onClick={() => {
+                        setTipoSeguimiento('SEG');
+                        setShowAddSeguimiento(true);
+                    }}
+                />
             </div>}
             <div style={{height: ver_todo ? '100%' : '300px', overflow: ver_todo ? null : 'scroll'}} className='col-12'>
                 <List className={classes.list.root}>
                     {_.orderBy(
-                        seguimientos, ['fecha'], ['desc']).map(
+                        seguimientos, ['id','fecha'], ['desc','desc']).map(
                         item =>
                             <CotizacionDetailSeguimientoItem
                                 eliminarSeguimiento={eliminarSeguimiento}

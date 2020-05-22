@@ -28,14 +28,20 @@ def relacionar_cotizacion_con_factura(
         factura_id: int,
         accion: str,
         usuario_id: int = None
-) -> (CotizacionComponente, FacturaDetalle):
-    factura = FacturaDetalle.objects.get(pk=factura_id)
-    cotizacion = CotizacionComponente.objects.get(pk=cotizacion_componente_id)
+):
+    factura = FacturaDetalle.objects.select_related(
+        'cliente',
+        'colaborador',
+        'colaborador__usuario',
+    ).get(pk=factura_id)
+    cotizacion = CotizacionComponente.objects.select_related(
+        'responsable',
+        'creado_por'
+    ).get(pk=cotizacion_componente_id)
     user_responsable_cotizacion = cotizacion.responsable if cotizacion.responsable else cotizacion.creado_por
     user_vendedor_factura = factura.colaborador.usuario if factura.colaborador and factura.colaborador.usuario else None
     usuario = User.objects.get(pk=usuario_id)
     if accion == 'add':
-
         if not (usuario_id == user_responsable_cotizacion.id or usuario.is_superuser):
             raise ValidationError({
                 '_error': 'Sólo el vendedor responsable o un super usuario puede crear la relación de la cotización con la factura'})
@@ -48,17 +54,35 @@ def relacionar_cotizacion_con_factura(
                     cliente_cotizacion.nombre, cliente_factura.nombre)})
         if user_responsable_cotizacion != user_vendedor_factura:
             raise ValidationError({'_error': 'El vendedor que cotizó no es el mismo que vendió, por favor revisar'})
+        estado_anterior = cotizacion.estado
         cotizacion.estado = 'FIN'
         cotizacion.save()
         cotizacion.facturas.add(factura)
+        cotizacion_componentes_add_seguimiento(
+            cotizacion_componente_id=cotizacion_componente_id,
+            estado_anterior=estado_anterior,
+            tipo_seguimiento='EST',
+            descripcion='Se relaciona con factura %s-%s' % (factura.tipo_documento, factura.nro_documento),
+            creado_por=usuario
+        )
     if accion == 'rem':
         if not (usuario_id == user_responsable_cotizacion.id or usuario.is_superuser):
             raise ValidationError({
                 '_error': 'Sólo el vendedor responsable o un super usuario puede quitar la relación de la cotización con la factura'})
+        ultimo_seguimiento = CotizacionComponenteSeguimiento.objects.filter(
+            cotizacion_componente=cotizacion,
+            tipo_seguimiento='EST'
+        ).last()
+        cotizacion.estado = ultimo_seguimiento.estado_anterior if ultimo_seguimiento is not None and ultimo_seguimiento.estado_anterior is not None else cotizacion.estado
+        cotizacion.save()
         cotizacion.facturas.remove(factura)
-    factura = FacturaDetalle.objects.get(pk=factura_id)
-    cotizacion = CotizacionComponente.objects.get(pk=cotizacion_componente_id)
-    return cotizacion, factura
+        cotizacion_componentes_add_seguimiento(
+            cotizacion_componente_id=cotizacion_componente_id,
+            tipo_seguimiento='EST',
+            descripcion='Se quita relacion con factura %s-%s y se regresa al estado anterior %s' % (
+                factura.tipo_documento, factura.nro_documento, cotizacion.get_estado_display()),
+            creado_por=usuario
+        )
 
 
 def cotizacion_componentes_cambiar_estado(
@@ -74,7 +98,7 @@ def cotizacion_componentes_cambiar_estado(
     cambio_estado = nuevo_estado != estado_actual
     estado_actual_display = cotizacion_componente.get_estado_display()
 
-    if fecha_verificacion_proximo_seguimiento is None:
+    if fecha_verificacion_proximo_seguimiento is None and nuevo_estado != 'INI':
         raise ValidationError({'_error': 'No se digitó la fecha de seguimiento para la cotización'})
 
     if cambio_estado:
@@ -121,7 +145,8 @@ def cotizacion_componentes_cambiar_estado(
             cotizacion_componente_id=cotizacion_componente_id,
             tipo_seguimiento='EST',
             descripcion='Cambio a estado %s' % (cotizacion_componente.get_estado_display()),
-            creado_por=usuario
+            creado_por=usuario,
+            estado_anterior=estado_actual
         )
     return cotizacion_componente
 
@@ -260,16 +285,13 @@ def cotizacion_componentes_item_cambiar_posicion(
 def cotizacion_componentes_enviar(
         request,
         cotizacion_componente: CotizacionComponente,
+        no_enviar: bool,
         emails_destino: list = None,
         fecha_verificacion_proximo_seguimiento: datetime = None,
 ) -> CotizacionComponente:
     if cotizacion_componente.estado not in ['INI', 'ENV', 'REC']:
         raise ValidationError(
             {'_error': 'No es posible enviar una cotización en estado %s' % cotizacion_componente.estado})
-
-    cotizacion_componentes_asignar_nro_consecutivo(
-        cotizacion_componente=cotizacion_componente
-    )
 
     if cotizacion_componente.nro_consecutivo is None:
         cotizacion_componente = cotizacion_componentes_asignar_nro_consecutivo(
@@ -340,33 +362,43 @@ def cotizacion_componentes_enviar(
         cotizacion_componente.nro_consecutivo,
         cotizacion_componente.pdf.version
     )
-    msg = EmailMultiAlternatives(
-        nombre_cotizacion,
-        text_content,
-        from_email='%s <%s>' % (email_alias, email_from),
-        to=emails_destino
-    )
-    msg.attach_alternative(text_content, "text/html")
-    msg.attach('%s.pdf' % nombre_cotizacion, cotizacion_componente.pdf.pdf_cotizacion.read())
-    archivos_para_enviar = cotizacion_componente.adjuntos.filter(Q(imagen='') | Q(imagen=None))
-    imagenes_para_enviar = cotizacion_componente.adjuntos.filter(Q(adjunto='') | Q(adjunto=None))
-    [msg.attach('%s.%s' % (adjunto.nombre_adjunto, adjunto.adjunto.name.split('.')[-1]), adjunto.adjunto.read()) for
-     adjunto in archivos_para_enviar]
-    [msg.attach('%s.%s' % (adjunto.nombre_adjunto, adjunto.imagen.name.split('.')[-1]), adjunto.imagen.read()) for
-     adjunto in imagenes_para_enviar]
-    try:
-        msg.send()
+    if not no_enviar:
+        msg = EmailMultiAlternatives(
+            nombre_cotizacion,
+            text_content,
+            from_email='%s <%s>' % (email_alias, email_from),
+            to=emails_destino
+        )
+        msg.attach_alternative(text_content, "text/html")
+        msg.attach('%s.pdf' % nombre_cotizacion, cotizacion_componente.pdf.pdf_cotizacion.read())
+        archivos_para_enviar = cotizacion_componente.adjuntos.filter(Q(imagen='') | Q(imagen=None))
+        imagenes_para_enviar = cotizacion_componente.adjuntos.filter(Q(adjunto='') | Q(adjunto=None))
+        [msg.attach('%s.%s' % (adjunto.nombre_adjunto, adjunto.adjunto.name.split('.')[-1]), adjunto.adjunto.read()) for
+         adjunto in archivos_para_enviar]
+        [msg.attach('%s.%s' % (adjunto.nombre_adjunto, adjunto.imagen.name.split('.')[-1]), adjunto.imagen.read()) for
+         adjunto in imagenes_para_enviar]
+        try:
+            msg.send()
+            cotizacion_componentes_add_seguimiento(
+                cotizacion_componente_id=cotizacion_componente.id,
+                tipo_seguimiento='ENV',
+                descripcion='Envío de correo para %s desde %s' % (emails_destino, email_from),
+                creado_por=request.user,
+                fecha=timezone.now(),
+                pdf_cotizacion_id=cotizacion_componente.pdf.id
+            )
+        except Exception as e:
+            raise ValidationError(
+                {'_error': 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e})
+    else:
         cotizacion_componentes_add_seguimiento(
             cotizacion_componente_id=cotizacion_componente.id,
             tipo_seguimiento='ENV',
-            descripcion='Envío de correo para %s desde %s' % (emails_destino, email_from),
+            descripcion='Se descarga y no envia por correo',
             creado_por=request.user,
             fecha=timezone.now(),
             pdf_cotizacion_id=cotizacion_componente.pdf.id
         )
-    except Exception as e:
-        raise ValidationError(
-            {'_error': 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e})
     return cotizacion_componente
 
 
@@ -394,7 +426,9 @@ def cotizacion_componentes_add_seguimiento(
         descripcion: str,
         creado_por: User,
         fecha: datetime = timezone.now(),
-        pdf_cotizacion_id: int = None
+        pdf_cotizacion_id: int = None,
+        fecha_verificacion_proximo_seguimiento: datetime = None,
+        estado_anterior: str = None
 ) -> CotizacionComponenteSeguimiento:
     seguimiento = CotizacionComponenteSeguimiento()
     seguimiento.cotizacion_componente_id = cotizacion_componente_id
@@ -403,7 +437,16 @@ def cotizacion_componentes_add_seguimiento(
     seguimiento.fecha = fecha
     seguimiento.creado_por = creado_por
     seguimiento.documento_cotizacion_id = pdf_cotizacion_id
+    if tipo_seguimiento == 'EST':
+        seguimiento.estado_anterior = estado_anterior
     seguimiento.save()
+
+    if tipo_seguimiento == 'SEG':
+        cotizacion = CotizacionComponente.objects.get(pk=cotizacion_componente_id)
+        cotizacion.fecha_verificacion_proximo_seguimiento = fecha_verificacion_proximo_seguimiento
+        cotizacion.fecha_verificacion_cambio_estado = timezone.now().date()
+        cotizacion.save()
+
     return seguimiento
 
 

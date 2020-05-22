@@ -18,7 +18,10 @@ class FacturaDetalleViewSet(viewsets.ModelViewSet):
     queryset = FacturaDetalle.objects.select_related(
         'cliente',
         'colaborador',
-    ).prefetch_related('cotizaciones_componentes', 'items')
+    ).prefetch_related(
+        'cotizaciones_componentes',
+        'items'
+    )
     serializer_class = FacturalDetalleSerializer
 
     def retrieve(self, request, *args, **kwargs):
@@ -63,13 +66,13 @@ class FacturaDetalleViewSet(viewsets.ModelViewSet):
         from cotizaciones_componentes.services import relacionar_cotizacion_con_factura
         cotizacion_componente_id = request.POST.get('cotizacion_componente_id')
         accion = request.POST.get('accion')
-        cotizacion, factura = relacionar_cotizacion_con_factura(
+        relacionar_cotizacion_con_factura(
             cotizacion_componente_id=cotizacion_componente_id,
             factura_id=pk,
             accion=accion,
             usuario_id=self.request.user.id
         )
-        serializer = self.get_serializer(factura)
+        serializer = self.get_serializer(self.get_object())
         return Response(serializer.data)
 
 

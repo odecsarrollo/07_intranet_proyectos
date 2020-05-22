@@ -27,8 +27,8 @@ const Menu = () => {
         <DrawerListItem
             size='lg'
             link='/app/ventas_componentes'
-            texto='Principal'
-            icono='home'
+            texto='Estadisticas'
+            icono='analytics'
         />
         <DrawerListItem
             size='lg'

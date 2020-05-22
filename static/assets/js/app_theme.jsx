@@ -84,6 +84,8 @@ import {
     faLink,
     faEraser,
     faPaste,
+    faAnalytics,
+    faAbacus
 } from '@fortawesome/pro-solid-svg-icons';
 import {far} from "@fortawesome/pro-regular-svg-icons";
 
@@ -158,7 +160,9 @@ library.add(
     faLink,
     faEraser,
     faPaste,
-    faCodeMerge
+    faCodeMerge,
+    faAnalytics,
+    faAbacus
 );
 
 

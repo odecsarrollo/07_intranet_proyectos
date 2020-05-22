@@ -92,6 +92,7 @@ export const adicionarSeguimientoCotizacionComponente = (
     tipo_seguimiento,
     descripcion,
     fecha = null,
+    fecha_verificacion_proximo_seguimiento = null,
     options_action = {},
 ) => {
     return (dispatch) => {
@@ -101,6 +102,9 @@ export const adicionarSeguimientoCotizacionComponente = (
         if (fecha) {
             console.log(typeof fecha)
             params.append('fecha', fecha);
+        }
+        if (fecha_verificacion_proximo_seguimiento) {
+            params.append('fecha_verificacion_proximo_seguimiento', fecha_verificacion_proximo_seguimiento);
         }
         const dispatches = (response) => {
             dispatch({type: TYPES.update, payload: response})

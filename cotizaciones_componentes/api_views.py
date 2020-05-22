@@ -20,6 +20,7 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
     queryset = CotizacionComponente.objects.select_related(
         'responsable',
         'creado_por',
+        'creado_por',
         'cliente',
         'cliente__colaborador_componentes',
         'cliente__canal',
@@ -34,6 +35,9 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
         'adjuntos',
         'versiones',
         'seguimientos',
+        'envios_emails',
+        'envios_emails__creado_por',
+        'envios_emails__archivo',
         'seguimientos__creado_por',
         'seguimientos__documento_cotizacion',
     ).annotate(
@@ -64,12 +68,12 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
         from .services import relacionar_cotizacion_con_factura
         factura_id = request.POST.get('factura_id')
         accion = request.POST.get('accion')
-        cotizacion, factura = relacionar_cotizacion_con_factura(
+        relacionar_cotizacion_con_factura(
             cotizacion_componente_id=pk,
             factura_id=factura_id,
             accion=accion
         )
-        serializer = self.get_serializer(cotizacion)
+        serializer = self.get_serializer(self.get_object())
         return Response(serializer.data)
 
     @action(detail=True, methods=['post'])
@@ -84,20 +88,18 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def cambiar_estado(self, request, pk=None):
         from .services import cotizacion_componentes_cambiar_estado
-        cotizacion_componente = self.get_object()
         nuevo_estado = request.POST.get('nuevo_estado', None)
         razon_rechazo = request.POST.get('razon_rechazo', None)
         fecha_verificacion_proximo_seguimiento = request.POST.get('fecha_verificacion_proximo_seguimiento', None)
-        cotizacion_componente = cotizacion_componentes_cambiar_estado(
-            cotizacion_componente_id=cotizacion_componente.id,
+        cotizacion_componentes_cambiar_estado(
+            cotizacion_componente_id=pk,
             nuevo_estado=nuevo_estado,
             razon_rechazo=razon_rechazo,
             usuario=self.request.user,
             fecha_verificacion_proximo_seguimiento=fecha_verificacion_proximo_seguimiento
         )
-        cotizacion_componente.refresh_from_db()
         self.serializer_class = CotizacionComponenteConDetalleSerializer
-        serializer = self.get_serializer(cotizacion_componente)
+        serializer = self.get_serializer(self.get_object())
         return Response(serializer.data)
 
     # TODO: Mejorar este método, muchos queries a la hora de enviar
@@ -110,6 +112,7 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
         email_tres = request.POST.get('email_tres', None)
         email_cuatro = request.POST.get('email_cuatro', None)
         email_asesor = request.POST.get('email_asesor', None)
+        no_enviar = request.POST.get('no_enviar', None)
         fecha_verificacion_proximo_seguimiento = request.POST.get('fecha_verificacion_proximo_seguimiento', None)
 
         emails_destino = []
@@ -124,14 +127,14 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
         if email_asesor:
             emails_destino.append(email_asesor)
 
-        cotizacion_componente = cotizacion_componentes_enviar(
+        cotizacion_componentes_enviar(
             cotizacion_componente=self.queryset.get(pk=pk),
+            no_enviar=no_enviar,
             request=request,
             emails_destino=emails_destino,
             fecha_verificacion_proximo_seguimiento=fecha_verificacion_proximo_seguimiento
         )
-        cotizacion_componente.refresh_from_db()
-        serializer = self.get_serializer(cotizacion_componente)
+        serializer = self.get_serializer(self.get_object())
         return Response(serializer.data)
 
     @action(detail=True, methods=['post'])
@@ -154,15 +157,17 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
         tipo_seguimiento = request.POST.get('tipo_seguimiento')
         descripcion = request.POST.get('descripcion')
         fecha = request.POST.get('fecha', None)
-        # ['%Y-%m-%dT%H:%M:%S.%fZ', 'iso-8601']
+        fecha_verificacion_proximo_seguimiento = request.POST.get('fecha_verificacion_proximo_seguimiento', None)
         from .services import cotizacion_componentes_add_seguimiento
         cotizacion_componentes_add_seguimiento(
             cotizacion_componente_id=cotizacion_componente.id,
             tipo_seguimiento=tipo_seguimiento,
             descripcion=descripcion,
             creado_por=self.request.user,
-            fecha=fecha
+            fecha=fecha,
+            fecha_verificacion_proximo_seguimiento=fecha_verificacion_proximo_seguimiento
         )
+        cotizacion_componente.refresh_from_db()
         self.serializer_class = CotizacionComponenteConDetalleSerializer
         serializer = self.get_serializer(cotizacion_componente)
         return Response(serializer.data)

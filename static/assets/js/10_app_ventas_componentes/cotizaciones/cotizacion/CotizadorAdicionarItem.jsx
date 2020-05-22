@@ -10,7 +10,6 @@ import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import Button from '@material-ui/core/Button';
 import * as actions from "../../../01_actions/01_index";
 import {useDispatch} from "react-redux";
-import DialogListaPrecio from "../../lista_precios/DialogListaPrecios";
 
 const CotizadorAdicionarItem = memo(props => {
     const [show_adicionar_item, setShowAdicionarItem] = useState(false);

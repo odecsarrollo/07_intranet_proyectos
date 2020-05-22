@@ -237,6 +237,7 @@ class CotizacionComponenteSeguimiento(TimeStampedModel):
         ('COM', 'Comentario'),
         ('EST', 'Cambio Estado'),
         ('ENV', 'Envio Correo'),
+        ('SEG', 'Seguimiento'),
     )
     cotizacion_componente = models.ForeignKey(
         CotizacionComponente,
@@ -254,6 +255,7 @@ class CotizacionComponenteSeguimiento(TimeStampedModel):
         on_delete=models.PROTECT
     )
     descripcion = models.TextField()
+    estado_anterior = models.CharField(max_length=3, null=True, blank=True)
     fecha = models.DateTimeField()
     creado_por = models.ForeignKey(
         User,

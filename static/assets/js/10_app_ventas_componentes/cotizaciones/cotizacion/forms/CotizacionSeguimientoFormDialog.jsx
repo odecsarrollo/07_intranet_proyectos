@@ -35,6 +35,9 @@ let CotizacionSeguimientoFormDialog = memo(props => {
         if (tipo_seguimiento === 'EST') {
             return 'exchange-alt'
         }
+        if (tipo_seguimiento === 'SEG') {
+            return 'abacus'
+        }
         return 'thumbs-up'
     };
 
@@ -48,7 +51,10 @@ let CotizacionSeguimientoFormDialog = memo(props => {
         if (tipo_seguimiento === 'COM') {
             return 'COMENTARIO'
         }
-        return 'thumbs-up'
+        if (tipo_seguimiento === 'SEG') {
+            return 'NUEVA FECHA SEGUIMIENTO'
+        }
+        return ''
     };
 
     return (
@@ -65,7 +71,7 @@ let CotizacionSeguimientoFormDialog = memo(props => {
         >
             <div className="col-12">
                 <div className="row">
-                    {tipo_seguimiento !== 'COM' &&
+                    {tipo_seguimiento !== 'COM' && tipo_seguimiento !== 'SEG' &&
                     <MyDateTimePickerField
                         time={true}
                         className='col-8'
@@ -74,6 +80,16 @@ let CotizacionSeguimientoFormDialog = memo(props => {
                         name='fecha'
                         min={new Date(cotizacion_componente.created)}
                         max={new Date()}
+                    />}
+                    {tipo_seguimiento === 'SEG' &&
+                    <MyDateTimePickerField
+                        time={false}
+                        className='col-8'
+                        label='Fecha Proximo Seguimiento'
+                        label_space_xs={4}
+                        name='fecha_verificacion_proximo_seguimiento'
+                        min={new Date()}
+                        max={new Date(3000, 1, 1)}
                     />}
                     <div className="col-2">
                         <FontAwesomeIcon

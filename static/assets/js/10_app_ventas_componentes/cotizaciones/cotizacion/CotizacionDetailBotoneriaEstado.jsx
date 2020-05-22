@@ -81,17 +81,34 @@ const CotizacionDetailBotoneriaEstado = memo(props => {
         callback = null
     ) => {
         return dispatch(
-            actions.cambiarEstadoCotizacionComponente(id, estado_nuevo, razon_rechazo, fechaToYMD(fecha_proximo_seguimiento), {callback})
+            actions.cambiarEstadoCotizacionComponente(
+                id,
+                estado_nuevo,
+                razon_rechazo,
+                fecha_proximo_seguimiento ? fechaToYMD(fecha_proximo_seguimiento) : null,
+                {callback}
+            )
         )
     };
 
-    const enviarCotizacion = (valores) => {
+    const enviarCotizacion = (valores, no_enviar) => {
         dispatch(actions.enviarCotizacionComponente(
             id,
             valores,
             {
-                callback: () => {
-                    dispatch(notificarAction('La cotización se ha enviado correctamente'));
+                callback: (res) => {
+                    if (no_enviar) {
+                        const {archivo_url, archivo_name} = res.envios_emails.slice(-1)[0];
+                        const link = document.createElement('a');
+                        link.href = archivo_url;
+                        link.setAttribute('download', archivo_name);
+                        document.body.appendChild(link);
+                        link.click();
+
+                    } else {
+                        dispatch(notificarAction('La cotización se ha enviado correctamente'));
+                    }
+                    setFechaProximoSeguimiento(null);
                     return setShowEnviar(false);
                 }
             })
@@ -117,6 +134,7 @@ const CotizacionDetailBotoneriaEstado = memo(props => {
                     () => {
                         cargarDatos();
                         setShowTerminar(false);
+                        setFechaProximoSeguimiento(null);
                     }
                 )
             }}
@@ -135,6 +153,7 @@ const CotizacionDetailBotoneriaEstado = memo(props => {
                     () => {
                         cargarDatos();
                         setShowEditarConfirmacion(false);
+                        setFechaProximoSeguimiento(null);
                     }
                 )
             }}
@@ -153,6 +172,7 @@ const CotizacionDetailBotoneriaEstado = memo(props => {
                     () => {
                         cargarDatos();
                         setShowEnProceso(false);
+                        setFechaProximoSeguimiento(null);
                     }
                 )
             }}
@@ -174,6 +194,7 @@ const CotizacionDetailBotoneriaEstado = memo(props => {
                     () => {
                         cargarDatos();
                         setShowRecibida(false);
+                        setFechaProximoSeguimiento(null);
                     }
                 )
             }}

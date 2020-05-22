@@ -45,7 +45,6 @@ const TuberiaVentaComponenteTablaTotales = props => {
 const TuberiaVentaComponenteTablaItemDialog = props => {
     const {is_open, items, onCancel, moneda, son_facturas = false} = props;
     const columna_valor = son_facturas ? 'venta_bruta' : 'valor_total';
-    //nro_consecutivo
     return <Dialog
         scroll='paper'
         open={is_open}

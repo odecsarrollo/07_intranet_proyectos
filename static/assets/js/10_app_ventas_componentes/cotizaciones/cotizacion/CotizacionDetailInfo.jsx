@@ -24,7 +24,7 @@ const styles = {
 const CotizacionDetailInfo = memo(props => {
     const [show_cotizacion_informacion_dialog, setShowCotizacionInformacionDialog] = useState(false);
     const {cotizacion, contacto, onSubmitCotizacion, cargarDatos, editable, onDelete} = props;
-    const con_fecha_seguimiento = cotizacion.porcentaje_seguimineto >= 1;
+    const con_fecha_seguimiento = cotizacion.porcentaje_seguimineto >= 0 && cotizacion.estado !== 'FIN' && cotizacion.estado !== 'INI' && cotizacion.estado !== 'ELI';
     return (
         <Fragment>
             {show_cotizacion_informacion_dialog &&
@@ -68,8 +68,10 @@ const CotizacionDetailInfo = memo(props => {
                             backgroundColor: cotizacion.color_seguimiento,
                             transition: 'all .2s ease-out'
                         }}
+                        className='text-right'
                     >
-                        <span><strong>{cotizacion.porcentaje_seguimineto}%</strong></span>
+                        <span><strong>{cotizacion.porcentaje_seguimineto}% </strong></span>
+                        Hoy
                     </div>
 
                 </div>
