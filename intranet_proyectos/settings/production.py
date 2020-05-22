@@ -1,6 +1,6 @@
 from .base import *
 
-DEBUG = False
+DEBUG = True
 ADMINS = (
     (os.environ['ADMIN_NAME'], os.environ['ADMIN_EMAIL']),
 )
