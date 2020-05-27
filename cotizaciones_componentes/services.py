@@ -98,7 +98,7 @@ def cotizacion_componentes_cambiar_estado(
     cambio_estado = nuevo_estado != estado_actual
     estado_actual_display = cotizacion_componente.get_estado_display()
 
-    if fecha_verificacion_proximo_seguimiento is None and nuevo_estado != 'INI':
+    if fecha_verificacion_proximo_seguimiento is None and nuevo_estado not in ['INI', 'ELI']:
         raise ValidationError({'_error': 'No se digitó la fecha de seguimiento para la cotización'})
 
     if cambio_estado:
