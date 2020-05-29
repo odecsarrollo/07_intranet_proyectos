@@ -1,5 +1,7 @@
 import React, {useState, memo} from "react";
+import DateTimePicker from "react-widgets/lib/DateTimePicker";
 import MyDialogButtonDelete from '../../../00_utilities/components/ui/dialog/delete_dialog';
+import SiNoDialog from "../../../00_utilities/components/ui/dialog/SiNoDialog";
 import IconButtonTableSee from '../../../00_utilities/components/ui/icon/table_icon_button_detail';
 import {Link} from 'react-router-dom'
 
@@ -7,7 +9,7 @@ import Table from "react-table";
 import selectTableHOC from "react-table/lib/hoc/selectTable";
 
 const SelectTable = selectTableHOC(Table);
-import {fechaFormatoUno, pesosColombianos} from "../../../00_utilities/common";
+import {fechaFormatoUno, fechaToYMD, pesosColombianos} from "../../../00_utilities/common";
 import {makeStyles} from "@material-ui/core";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -15,7 +17,8 @@ import Badge from "@material-ui/core/Badge/Badge";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import clsx from "clsx";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-
+import * as actions from "../../../01_actions/01_index";
+import {useDispatch} from "react-redux";
 
 function areEqual(prevProps, nextProps) {
     return prevProps.list === nextProps.list && prevProps.selection === nextProps.selection
@@ -80,6 +83,47 @@ const TablaNotificacionDocumentoFaltante = (props) => {
     )
 };
 
+const FechaProximoSeguimiento = props => {
+    const {cotizacion, setCotizacionSeleccionada} = props;
+    const dispatch = useDispatch();
+    const [fecha_proximo_seguimiento, setFechaProximoSeguimiento] = useState(null);
+    return <SiNoDialog
+        can_on_si={fecha_proximo_seguimiento !== null}
+        onSi={() => {
+            dispatch(
+                actions.cambiarFechaProximoSeguimientoCotizacion(
+                    cotizacion.id,
+                    fechaToYMD(fecha_proximo_seguimiento),
+                    {
+                        callback: () => {
+                            setCotizacionSeleccionada(null);
+                        }
+                    }
+                )
+            )
+        }}
+        onNo={() => {
+            setCotizacionSeleccionada(null);
+        }}
+        is_open={true}
+        titulo='Cambiar fecha próximo seguimiento'
+    >
+        Deséa cambiar la fecha de próximo seguimiento?
+        <div>
+            <label><strong>Fecha próximo Seguimiento</strong></label>
+            <DateTimePicker
+                onChange={(v) => setFechaProximoSeguimiento(v)}
+                format={"YYYY-MM-DD"}
+                time={false}
+                max={new Date(3000, 1, 1)}
+                min={new Date()}
+                value={fecha_proximo_seguimiento}
+            />
+        </div>
+        <div style={{height: '250px'}}/>
+    </SiNoDialog>
+};
+
 const Tabla = memo((props) => {
     const {
         selection,
@@ -103,9 +147,11 @@ const Tabla = memo((props) => {
         data = _.orderBy(_.pickBy(props.list, e => e.color_tuberia_ventas === color), ['nro_cotizacion'], ['desc']);
     }
     const colores = _.uniq(_.map(props.list, e => e.color_tuberia_ventas).filter(h => h));
-
+    const [cotizacion_seleccionada, setCotizacionSeleccionada] = useState(null);
     return (
         <div className='row'>
+            {cotizacion_seleccionada && <FechaProximoSeguimiento cotizacion={props.list[cotizacion_seleccionada]}
+                                                                 setCotizacionSeleccionada={setCotizacionSeleccionada}/>}
             {_.size(con_documentos_faltantes) > 0 && <div className="col-12">
                 <TablaNotificacionDocumentoFaltante lista={con_documentos_faltantes}/>
             </div>}
@@ -264,6 +310,8 @@ const Tabla = memo((props) => {
                                                     height: '100%',
                                                     borderRadius: '2px',
                                                 }}
+                                                className={'puntero'}
+                                                onClick={() => setCotizacionSeleccionada(row.original.id)}
                                             >
                                                 <div
                                                     style={{

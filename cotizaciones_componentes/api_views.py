@@ -102,6 +102,21 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(self.get_object())
         return Response(serializer.data)
 
+    @action(detail=True, methods=['post'])
+    def cambiar_fecha_proximo_seguimiento_lista(self, request, pk=None):
+        from .services import cotizacion_componentes_cambiar_fecha_proximo_seguimiento
+        fecha_verificacion_proximo_seguimiento = request.POST.get('fecha_verificacion_proximo_seguimiento', None)
+        fecha_proximo_seguimiento_descripcion = request.POST.get('fecha_proximo_seguimiento_descripcion', None)
+
+        cotizacion_componentes_cambiar_fecha_proximo_seguimiento(
+            cotizacion_componente_id=pk,
+            usuario=self.request.user,
+            fecha_verificacion_proximo_seguimiento=fecha_verificacion_proximo_seguimiento,
+            fecha_proximo_seguimiento_descripcion=fecha_proximo_seguimiento_descripcion
+        )
+        serializer = self.get_serializer(self.get_object())
+        return Response(serializer.data)
+
     # TODO: Mejorar este método, muchos queries a la hora de enviar
     @action(detail=True, methods=['post'])
     def enviar(self, request, pk=None):

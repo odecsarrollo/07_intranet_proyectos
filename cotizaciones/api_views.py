@@ -36,6 +36,18 @@ class CondicionInicioProyectoCotizacionViewSet(viewsets.ModelViewSet):
 class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
     queryset = Cotizacion.sumatorias.all()
     serializer_class = CotizacionSerializer
+    list_queryset = Cotizacion.objects.select_related(
+        'cliente',
+        'contacto_cliente',
+        'cotizacion_inicial__cliente',
+        'cotizacion_inicial__contacto_cliente',
+        'responsable'
+    ).prefetch_related(
+        'proyectos',
+        'cotizaciones_adicionales__contacto_cliente',
+        'cotizacion_inicial__cotizaciones_adicionales',
+        'cotizaciones_adicionales__cotizaciones_adicionales'
+    ).all()
 
     def retrieve(self, request, *args, **kwargs):
         self.serializer_class = CotizacionConDetalleSerializer
@@ -63,19 +75,21 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         self.serializer_class = CotizacionListSerializer
-        self.queryset = Cotizacion.objects.select_related(
-            'cliente',
-            'contacto_cliente',
-            'cotizacion_inicial__cliente',
-            'cotizacion_inicial__contacto_cliente',
-            'responsable'
-        ).prefetch_related(
-            'proyectos',
-            'cotizaciones_adicionales__contacto_cliente',
-            'cotizacion_inicial__cotizaciones_adicionales',
-            'cotizaciones_adicionales__cotizaciones_adicionales'
-        ).all()
+        self.queryset = self.list_queryset
         return super().list(request, *args, **kwargs)
+
+    @action(detail=True, methods=['post'])
+    def cambiar_fecha_proximo_seguimiento(self, request, pk=None):
+        self.serializer_class = CotizacionConDetalleSerializer
+        fecha_limite_segumiento_estado = request.POST.get('fecha_limite_segumiento_estado', None)
+        from .services import cotizacion_cambiar_fecha_proximo_seguimiento
+        cotizacion_cambiar_fecha_proximo_seguimiento(
+            cotizacion_id=pk,
+            fecha_limite_segumiento_estado=fecha_limite_segumiento_estado,
+            usuario=self.request.user
+        )
+        serializer = self.get_serializer(self.get_object())
+        return Response(serializer.data)
 
     @action(detail=False, http_method_names=['get', ])
     def cotizaciones_con_proyectos(self, request):

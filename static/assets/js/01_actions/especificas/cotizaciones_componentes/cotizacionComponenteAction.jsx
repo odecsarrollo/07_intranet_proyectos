@@ -307,6 +307,19 @@ export const asignarNroConsecutivoCotizacionComponente = (id, options_action) =>
     }
 };
 
+export const cambiarFechaProximoSeguimientoCotizacionComponente = (id, fecha_proximo_seguimiento_descripcion, fecha_seguimiento, options_action) => {
+    return function (dispatch) {
+        let params = new URLSearchParams();
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch, payload: response})
+        };
+        params.append('fecha_verificacion_proximo_seguimiento', fecha_seguimiento);
+        params.append('fecha_proximo_seguimiento_descripcion', fecha_proximo_seguimiento_descripcion);
+        const options = {...options_action, dispatch_method: dispatch, dispatches};
+        return callApiMethodPostParameters(current_url_api, id, 'cambiar_fecha_proximo_seguimiento_lista', params, options)
+    }
+};
+
 export const updateCotizacionComponente = (id, values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {

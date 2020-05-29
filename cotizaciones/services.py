@@ -133,6 +133,22 @@ def cotizacion_verificar_condicion_inicio_proyecto_si_estan_completas(
     return cotizacion
 
 
+def cotizacion_cambiar_fecha_proximo_seguimiento(
+        cotizacion_id: int,
+        fecha_limite_segumiento_estado: datetime,
+        usuario: User
+) -> Cotizacion:
+    cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
+    if not (cotizacion.responsable == usuario or usuario.is_superuser):
+        raise ValidationError({
+            '_error': 'Sólo el responsable de la cotización (%s) o el administrador del sistema pueden cambiar la fecha de verificación del próximo seguimiento' % cotizacion.responsable})
+
+    cotizacion.fecha_cambio_estado = timezone.now().date()
+    cotizacion.fecha_limite_segumiento_estado = datetime.datetime.strptime(fecha_limite_segumiento_estado, "%Y-%m-%d")
+    cotizacion.save()
+    return cotizacion
+
+
 def condicion_inicio_proyecto_cotizacion_actualizar(
         condicion_inicio_cotizacion_id: int,
         fecha_entrega: datetime.date,

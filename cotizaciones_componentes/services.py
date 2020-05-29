@@ -85,6 +85,36 @@ def relacionar_cotizacion_con_factura(
         )
 
 
+def cotizacion_componentes_cambiar_fecha_proximo_seguimiento(
+        cotizacion_componente_id: int,
+        usuario: User,
+        fecha_verificacion_proximo_seguimiento: datetime,
+        fecha_proximo_seguimiento_descripcion: str
+) -> CotizacionComponente:
+    cotizacion_componente = CotizacionComponente.objects.get(pk=cotizacion_componente_id)
+    fecha_anterior = cotizacion_componente.fecha_verificacion_proximo_seguimiento
+    if (fecha_proximo_seguimiento_descripcion == '' or fecha_verificacion_proximo_seguimiento is None):
+        raise ValidationError({'_error': 'Por favor colobar el motivo de cambio'})
+    if not (cotizacion_componente.responsable == usuario or usuario.is_superuser):
+        raise ValidationError({
+            '_error': 'Sólo el responsable de la cotización (%s) o el administrador del sistema pueden cambiar la fecha de verificación del próximo seguimiento' % cotizacion_componente.responsable})
+    if cotizacion_componente.estado not in ['ENV', 'REC', 'PRO']:
+        raise ValidationError({
+            '_error': 'Las cotizaciones en estado %s no se les puede modificar fechas de próximo seguimiento' % cotizacion_componente.get_estado_display()})
+    cotizacion_componentes_add_seguimiento(
+        cotizacion_componente_id=cotizacion_componente_id,
+        tipo_seguimiento='SEG',
+        descripcion='Cambio fecha de próximo seguimiento de %s a %s. %s' % (
+            fecha_anterior,
+            cotizacion_componente.fecha_verificacion_proximo_seguimiento,
+            fecha_proximo_seguimiento_descripcion
+        ),
+        creado_por=usuario,
+        fecha_verificacion_proximo_seguimiento=fecha_verificacion_proximo_seguimiento
+    )
+    return cotizacion_componente
+
+
 def cotizacion_componentes_cambiar_estado(
         cotizacion_componente_id: int,
         nuevo_estado: str,
@@ -97,6 +127,10 @@ def cotizacion_componentes_cambiar_estado(
     error = True
     cambio_estado = nuevo_estado != estado_actual
     estado_actual_display = cotizacion_componente.get_estado_display()
+
+    if not (cotizacion_componente.responsable == usuario or usuario.is_superuser):
+        raise ValidationError({
+            '_error': 'Sólo el responsable de la cotización (%s) o el administrador del sistema pueden cambiar el estado' % cotizacion_componente.responsable})
 
     if fecha_verificacion_proximo_seguimiento is None and nuevo_estado not in ['INI', 'ELI']:
         raise ValidationError({'_error': 'No se digitó la fecha de seguimiento para la cotización'})

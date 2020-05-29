@@ -105,6 +105,17 @@ export const quitarCondicionInicioProyectoCotizacion = (id, condicion_inicio_pro
         return callApiMethodPostParameters(current_url_api, id, 'adicionar_quitar_condicion_inicio', params, options)
     }
 };
+export const cambiarFechaProximoSeguimientoCotizacion = (id, fecha_limite_segumiento_estado, options_action = {}) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        params.append('fecha_limite_segumiento_estado', fecha_limite_segumiento_estado);
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch, payload: response})
+        };
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'cambiar_fecha_proximo_seguimiento', params, options)
+    }
+};
 
 
 export const relacionarQuitarProyectoaCotizacion = (id, proyecto_id, options_action = {}) => {
