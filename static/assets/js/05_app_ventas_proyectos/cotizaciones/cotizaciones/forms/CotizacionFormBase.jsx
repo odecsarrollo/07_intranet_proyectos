@@ -109,11 +109,16 @@ const FormBaseCotizacion = (props) => {
         if (cotizacion_a_relacionar) {
             dispatch(actions.fetchContactosClientes_por_cliente(cotizacion_a_relacionar.cliente, {
                 callback: () => {
-                    props.change('cliente', cotizacion_a_relacionar.cliente);
+                    change('cliente', cotizacion_a_relacionar.cliente);
                 }
             }));
         }
     }, [cotizacion_inicial]);
+    useEffect(() => {
+        if (myValues.unidad_negocio !== 'ADI') {
+            change('cotizacion_inicial', null)
+        }
+    }, [myValues.unidad_negocio]);
     return (
         <Fragment>
             {buscar_cotizacion_inicial_modal_open && <DialogSeleccionar
@@ -163,12 +168,6 @@ const FormBaseCotizacion = (props) => {
                                 autoFocus={false}
                                 data={tipo_negocio}
                                 readOnly={(item && es_adicional) || cerrado}
-                                onSelect={(e) => {
-                                    const {text} = e;
-                                    if (text !== 'ADI - ADICIONAL') {
-                                        change('cotizacion_inicial', null)
-                                    }
-                                }}
                                 textField='text'
                                 filter='contains'
                                 valuesField='id'

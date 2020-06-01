@@ -14,13 +14,14 @@ let Form = memo(props => {
         pristine,
         submitting,
         reset,
+        change,
         initialValues,
         onSubmit,
         handleSubmit,
         permisos = null,
     } = props;
     const dispatch = useDispatch();
-    const myValues = useSelector(state => selector(state, 'estado', 'valor_ofertado', 'cliente', 'unidad_negocio', 'cotizacion_inicial'));
+    const myValues = useSelector(state => selector(state, 'estado', 'valor_ofertado', 'cliente', 'unidad_negocio', 'cotizacion_inicial', 'unidad_negocio'));
     const usuarios_list = useSelector(state => state.usuarios);
 
     useEffect(() => {
@@ -36,6 +37,7 @@ let Form = memo(props => {
         }))}>
             <div className="row pl-3 pr-5">
                 <FormBaseCotizacion
+                    change={change}
                     item={initialValues}
                     myValues={myValues}
                     permisos={permisos}
