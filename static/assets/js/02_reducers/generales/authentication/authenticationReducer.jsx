@@ -1,10 +1,27 @@
+import axios from "axios";
+
 const initialState = {
     mi_cuenta: JSON.parse(localStorage.getItem("mi_cuenta")),
     mis_permisos: JSON.parse(localStorage.getItem("mis_permisos")),
     token: localStorage.getItem("token"),
     isAuthenticated: null,
     isLoading: true,
-    user: null,
+    user: {
+        username: null,
+        email: null,
+        date_of_birth: null,
+        first_name: null,
+        is_staff: false,
+        is_active: false,
+        is_superuser: false,
+        last_name: null,
+        password: null,
+        profile_image_url: null,
+        to_string: null,
+        user_permissions: null,
+        groups: null,
+        id: null
+    },
     errors: {},
 };
 
@@ -23,6 +40,9 @@ export default function auth(state = initialState, action) {
                 user: action.user,
             };
         case 'NOT_USER_LOADED':
+            axios.defaults.headers = _.omit(axios.defaults.headers, 'Authorization');
+            localStorage.removeItem("token");
+            localStorage.removeItem("my_permissions");
             return {
                 ...state,
                 isAuthenticated: false,
@@ -30,27 +50,27 @@ export default function auth(state = initialState, action) {
                 user: null,
             };
         case 'LOGIN_SUCCESSFUL':
-            localStorage.setItem("token", action.data.token);
+            const token = action.data.token;
+            localStorage.setItem("token", token);
             localStorage.setItem("mi_cuenta", action.data.mi_cuenta ? JSON.stringify(action.data.mi_cuenta) : null);
             localStorage.setItem("mis_permisos", []);
+            axios.defaults.headers["Authorization"] = `Token ${token}`;
             return {...state, ...action.data, isAuthenticated: true, isLoading: false, errors: null};
 
         case 'AUTHENTICATION_ERROR':
         case 'LOGIN_FAILED':
         case 'LOGOUT_SUCCESSFUL':
+            axios.defaults.headers = _.omit(axios.defaults.headers, 'Authorization');
             localStorage.removeItem("token");
             localStorage.removeItem("mi_cuenta");
             localStorage.removeItem("mis_permisos");
-            return {
+            return _.omit({
                 ...state,
                 errors: action.data,
-                token: null,
-                user: null,
+                user: initialState.user,
                 isAuthenticated: false,
                 isLoading: false,
-                mi_cuenta: null,
-                mis_permisos: null
-            };
+            }, ['token', 'my_permissions', 'mi_cuenta']);
 
         default:
             return state;

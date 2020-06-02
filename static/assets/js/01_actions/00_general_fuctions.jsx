@@ -59,7 +59,8 @@ export function createRequest(request, options = {}) {
                         }
                     } else if (error.response.status === 401) {
                         const {response: {data: {detail}}} = error;
-                        if (detail === 'Las credenciales de autenticación no se proveyeron.') {
+                        const detalles_requieren_login_otra_vez = ['Token inválido.', 'Las credenciales de autenticación no se proveyeron.']
+                        if (detalles_requieren_login_otra_vez.includes(detail)) {
                             dispatch_method(actions.mostrar_error_loading('Debe de autenticarse de nuevo', 'Problemas de Autenticación!'))
                         }
                     } else if (error.response.status === 403) {
@@ -104,9 +105,6 @@ export function fetchListPostURLParameters(url, method, values, options) {
     axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
     axios_instance.defaults.xsrfCookieName = "csrftoken";
     const headers = {};
-    if (localStorage.token) {
-        headers["Authorization"] = `Token ${localStorage.token}`;
-    }
     headers["Content-Type"] = 'application/x-www-form-urlencoded;charset=UTF-8';
     axios_instance.defaults.headers = headers;
     const FULL_URL = `${url}/${method}/`;
@@ -120,9 +118,6 @@ export function fetchListGet(url, options) {
     const mensaje_cargando = `Consultando ${url.toUpperCase()}`;
     const FULL_URL = `${url}/?format=json`;
     const headers = {"Content-Type": "application/json"};
-    if (localStorage.token) {
-        headers["Authorization"] = `Token ${localStorage.token}`;
-    }
     axios_instance.defaults.headers = headers;
     const request = axios_instance.get(FULL_URL);
     return createRequest(request, {...options, mensaje_cargando});
@@ -133,9 +128,6 @@ export function fetchListGetURLParameters(url, options) {
     const mensaje_cargando = `Consultando ${url.toUpperCase()}`;
     const FULL_URL = `${url}&format=json`;
     const headers = {"Content-Type": "application/json"};
-    if (localStorage.token) {
-        headers["Authorization"] = `Token ${localStorage.token}`;
-    }
     axios_instance.defaults.headers = headers;
     const request = axios_instance.get(FULL_URL);
     return createRequest(request, {...options, mensaje_cargando});
@@ -147,9 +139,6 @@ export function fetchObject(url, id, options) {
     const FULL_URL = `${url}/${id}/?format=json`;
     const request = axios_instance.get(FULL_URL);
     const headers = {"Content-Type": "application/json"};
-    if (localStorage.token) {
-        headers["Authorization"] = `Token ${localStorage.token}`;
-    }
     axios_instance.defaults.headers = headers;
     return createRequest(request, {...options, mensaje_cargando});
 }
@@ -161,9 +150,6 @@ export function updateObject(url, id, values, options, config = null) {
     axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
     axios_instance.defaults.xsrfCookieName = "csrftoken";
     const headers = {"Content-Type": "application/json"};
-    if (localStorage.token) {
-        headers["Authorization"] = `Token ${localStorage.token}`;
-    }
     axios_instance.defaults.headers = headers;
     const FULL_URL = `${url}/${id}/`;
     const request = axios_instance.put(FULL_URL, values, config);
@@ -177,9 +163,6 @@ export function createObject(url, values, options) {
     axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
     axios_instance.defaults.xsrfCookieName = "csrftoken";
     const headers = {"Content-Type": "application/json"};
-    if (localStorage.token) {
-        headers["Authorization"] = `Token ${localStorage.token}`;
-    }
     axios_instance.defaults.headers = headers;
     const FULL_URL = `${url}/`;
     const request = axios_instance.post(FULL_URL, values);
@@ -192,11 +175,6 @@ export function deleteObject(url, id, options) {
     const mensaje_cargando = `Eliminando elemento en ${url.toUpperCase()}`;
     axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
     axios_instance.defaults.xsrfCookieName = "csrftoken";
-    const headers = {"Content-Type": "application/json"};
-    if (localStorage.token) {
-        headers["Authorization"] = `Token ${localStorage.token}`;
-    }
-    axios_instance.defaults.headers = headers;
     const FULL_URL = `${url}/${id}/`;
     const request = axios_instance.delete(FULL_URL);
     return createRequest(request, {...options, mensaje_cargando});
@@ -208,10 +186,7 @@ export function uploadArchivo(url, id, method, values, options) {
     axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
     axios_instance.defaults.xsrfCookieName = "csrftoken";
     const headers = {};
-    if (localStorage.token) {
-        headers["Authorization"] = `Token ${localStorage.token}`;
-        headers["Content-Type"] = 'application/x-www-form-urlencoded;charset=UTF-8';
-    }
+    headers["Content-Type"] = 'application/x-www-form-urlencoded;charset=UTF-8';
     axios_instance.defaults.headers = headers;
     const FULL_URL = `${url}/${id}/${method}/`;
     const request = axios_instance.post(FULL_URL, values, {responseType: 'arraybuffer'});
@@ -223,11 +198,6 @@ export function callApiMethodPost(url, id, method, options) {
     const mensaje_cargando = `Ejecutando ${method.toUpperCase()} en ${url.toUpperCase()}`;
     axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
     axios_instance.defaults.xsrfCookieName = "csrftoken";
-    const headers = {};
-    if (localStorage.token) {
-        headers["Authorization"] = `Token ${localStorage.token}`;
-    }
-    axios_instance.defaults.headers = headers;
     const FULL_URL = `${url}/${id}/${method}/`;
     const request = axios_instance.post(FULL_URL);
     return createRequest(request, {...options, mensaje_cargando});
@@ -240,10 +210,7 @@ export function callApiMethodPostParameters(url, id = null, method, values, opti
     axios_instance.defaults.xsrfCookieName = "csrftoken";
     const {content_type = null} = options;
     const headers = {};
-    if (localStorage.token) {
-        headers["Authorization"] = `Token ${localStorage.token}`;
-        headers["Content-Type"] = content_type ? content_type : 'application/x-www-form-urlencoded;charset=UTF-8';
-    }
+    headers["Content-Type"] = content_type ? content_type : 'application/x-www-form-urlencoded;charset=UTF-8';
     axios_instance.defaults.headers = headers;
     var FULL_URL = null;
     if (id) {
