@@ -1,14 +1,9 @@
 import {makeStyles} from "@material-ui/core";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import Typography from "@material-ui/core/Typography";
 import classNames from "classnames";
 import React, {Fragment, useState} from "react";
-import {Link} from "react-router-dom";
 import {formatoMoneda} from "../../../00_utilities/common";
+import InformeTunelVentasTabla from "./CuadroTuberiaVentasTabla";
 
 
 const useStyles = makeStyles(theme => ({
@@ -42,66 +37,8 @@ const TuberiaVentaComponenteTablaTotales = props => {
     return null
 };
 
-const TuberiaVentaComponenteTablaItemDialog = props => {
-    const {is_open, items, onCancel, moneda, son_facturas = false} = props;
-    const columna_valor = son_facturas ? 'venta_bruta' : 'valor_total';
-    return <Dialog
-        scroll='paper'
-        open={is_open}
-    >
-        <DialogTitle id="responsive-dialog-title">
-            {son_facturas ? 'Facturas' : 'Cotizaciones'}
-        </DialogTitle>
-        <DialogContent>
-            <table className='table table-striped'>
-                <thead>
-                <tr>
-                    <th>Cliente</th>
-                    <th>Valor</th>
-                    <th>Cotizacion</th>
-                </tr>
-                </thead>
-                <tbody>
-                {items.map(i => <tr key={i.id}>
-                    <td>{i.cliente_nombre}</td>
-                    <td>
-                        {formatoMoneda(i[columna_valor], '$', moneda === 'COP' ? 0 : 2)}
-                    </td>
-                    <td>
-                        {!son_facturas ?
-                            <Link to={`/app/ventas_componentes/cotizaciones/detail/${i.id}`} target={'_blank'}>
-                                {i.nro_consecutivo}
-                            </Link> :
-                            <Fragment>
-                                {i.cotizaciones_componentes.map(n => <div>
-                                    <Link key={n.id} to={`/app/ventas_componentes/cotizaciones/detail/${n.id}`}
-                                          target={'_blank'}>
-                                        {n.nro_consecutivo}
-                                    </Link>
-                                </div>)}
-                            </Fragment>
-                        }
-                    </td>
-                </tr>)}
-
-                </tbody>
-            </table>
-        </DialogContent>
-        <DialogActions>
-            <Button
-                color="secondary"
-                variant="contained"
-                className='ml-3'
-                onClick={onCancel}
-            >
-                Cancelar
-            </Button>
-        </DialogActions>
-    </Dialog>
-};
-
 const TuberiaVentaComponenteTablaItem = props => {
-    let {items, color = null, moneda, son_facturas = false} = props;
+    let {items, color = null, moneda, son_facturas = false, vendedor} = props;
     const [is_open, setIsOpen] = useState(false);
     const columna_valor = son_facturas ? 'venta_bruta' : 'valor_total';
     if (items && items.length > 0) {
@@ -125,12 +62,13 @@ const TuberiaVentaComponenteTablaItem = props => {
                         {formatoMoneda(items.reduce((uno, dos) => uno + dos[columna_valor], 0), '$', moneda === 'COP' ? 0 : 2)}
                     </div>
                 </div>
-                {is_open && <TuberiaVentaComponenteTablaItemDialog
+                {is_open && <InformeTunelVentasTabla
+                    vendedor={vendedor}
                     son_facturas={son_facturas}
                     moneda={moneda}
+                    cotizaciones_seleccionardas={items}
+                    cerrar={() => setIsOpen(false)}
                     is_open={is_open}
-                    items={items}
-                    onCancel={() => setIsOpen(false)}
                 />}
             </Fragment>}
         </Fragment>
@@ -144,6 +82,7 @@ const TuberiaVentaComponenteFila = props => {
         <tr className={classes.tr}>
             <td className={classes.td}>{vendedor}</td>
             <td className={classes.td}>{colores.map(color => <TuberiaVentaComponenteTablaItem
+                vendedor={vendedor}
                 key={color}
                 items={cotizaciones_por_estado['ENV']}
                 color={color}
@@ -151,6 +90,7 @@ const TuberiaVentaComponenteFila = props => {
             />)}
             </td>
             <td className={classes.td}>{colores.map(color => <TuberiaVentaComponenteTablaItem
+                vendedor={vendedor}
                 key={color}
                 items={cotizaciones_por_estado['REC']}
                 color={color}
@@ -158,6 +98,7 @@ const TuberiaVentaComponenteFila = props => {
             />)}
             </td>
             <td className={classes.td}>{colores.map(color => <TuberiaVentaComponenteTablaItem
+                vendedor={vendedor}
                 key={color}
                 items={cotizaciones_por_estado['PRO']}
                 color={color}
@@ -166,6 +107,7 @@ const TuberiaVentaComponenteFila = props => {
             </td>
             <td className={classes.td}>
                 <TuberiaVentaComponenteTablaItem
+                    vendedor={vendedor}
                     son_facturas={true}
                     items={facturas}
                     moneda={moneda}
@@ -186,7 +128,6 @@ const TuberiaVentaComponenteDivisa = props => {
     colaboradores = _.mapKeys(colaboradores, 'colaborador');
     const fecha_hoy = new Date();
     let facturacion_mes = _.pickBy(facturas, f => {
-        //return (new Date(f.fecha_documento).getMonth() === 2)
         return (new Date(f.fecha_documento).getMonth() === fecha_hoy.getMonth())
     })
 
@@ -228,8 +169,8 @@ const TuberiaVentaComponenteDivisa = props => {
                     <th>Vendedor</th>
                     <th style={{textAlign: 'center'}}>Enviada</th>
                     <th style={{textAlign: 'center'}}>Recibida</th>
-                    <th style={{textAlign: 'center'}}>En Proceso</th>
-                    <th style={{textAlign: 'center'}}>Venta Mes</th>
+                    <th style={{textAlign: 'center'}}>Aceptada</th>
+                    <th style={{textAlign: 'center'}}>Facturado</th>
                 </tr>
                 </thead>
                 <tbody>

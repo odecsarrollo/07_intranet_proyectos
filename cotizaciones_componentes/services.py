@@ -145,11 +145,14 @@ def cotizacion_componentes_cambiar_estado(
         elif estado_actual == 'ENV':
             if nuevo_estado == 'REC':
                 error = False
+        elif estado_actual == 'APL':
+            if nuevo_estado in ['REC', 'PRO', 'ELI', 'INI']:
+                error = False
         elif estado_actual == 'REC':
-            if nuevo_estado in ['INI', 'PRO', 'ELI']:
+            if nuevo_estado in ['INI', 'PRO', 'ELI', 'APL']:
                 error = False
         elif estado_actual == 'PRO':
-            if nuevo_estado in ['ELI', 'FIN']:
+            if nuevo_estado in ['ELI', 'FIN', 'APL']:
                 error = False
         elif estado_actual in ['ELI', 'FIN']:
             error = True
@@ -164,8 +167,10 @@ def cotizacion_componentes_cambiar_estado(
                                 estado_actual_display, cotizacion_componente.get_estado_display())})
 
         if error:
+            cotizacion_componente.estado = nuevo_estado
             raise ValidationError(
-                {'_error': 'No se puede cambiar una cotización en estado %s a %s' % (estado_actual, nuevo_estado)})
+                {'_error': 'No se puede cambiar una cotización en estado %s a %s' % (
+                    estado_actual_display, cotizacion_componente.get_estado_display())})
 
         cotizacion_componente.estado = nuevo_estado
         cotizacion_componente.fecha_verificacion_proximo_seguimiento = fecha_verificacion_proximo_seguimiento

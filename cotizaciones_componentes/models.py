@@ -22,6 +22,7 @@ class CotizacionComponente(TimeStampedModel):
         ('PRO', 'En Proceso'),
         ('FIN', 'Entragada Totalmente'),
         ('ELI', 'Rechazada'),
+        ('APL', 'Aplazada'),
     )
     responsable = models.ForeignKey(
         User,

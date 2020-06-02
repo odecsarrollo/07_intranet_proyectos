@@ -15,6 +15,7 @@ const TablaCotizacionesDashboard = memo(props => {
         {indice: 3, nombre: 'Recibida', codigo: 'REC'},
         {indice: 4, nombre: 'Terminada', codigo: 'FIN'},
         {indice: 5, nombre: 'Rechazada', codigo: 'ELI'},
+        {indice: 5, nombre: 'Aplazada', codigo: 'APL'},
     ];
     return (
         <div>

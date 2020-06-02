@@ -67,6 +67,7 @@ const FechaProximoSeguimiento = props => {
 
 const CotizacionDetailBotoneriaEstado = memo(props => {
     const {cotizacion_componente: {id, estado, items}, contacto, cargarDatos} = props;
+    const [show_aplazada, setShowAplazada] = useState(false);
     const [show_rechazada, setShowRechazada] = useState(false);
     const [show_en_proceso, setShowEnProceso] = useState(false);
     const [show_terminar, setShowTerminar] = useState(false);
@@ -186,6 +187,29 @@ const CotizacionDetailBotoneriaEstado = memo(props => {
             Deséa pasar esta cotización a estado EN PROCESO?
             <FechaProximoSeguimiento onChange={setFechaProximoSeguimiento} value={fecha_proximo_seguimiento}/>
         </SiNoDialog>}
+        {show_aplazada && <SiNoDialog
+            can_on_si={fecha_proximo_seguimiento !== null}
+            onSi={() => {
+                setEstado(
+                    'APL',
+                    null,
+                    () => {
+                        cargarDatos();
+                        setShowAplazada(false);
+                        setFechaProximoSeguimiento(null);
+                    }
+                )
+            }}
+            onNo={() => {
+                setShowAplazada(false);
+                setFechaProximoSeguimiento(null);
+            }}
+            is_open={show_aplazada}
+            titulo='Cambiar a estado Aplazado'
+        >
+            Deséa pasar esta cotización a estado Aplazada?
+            <FechaProximoSeguimiento onChange={setFechaProximoSeguimiento} value={fecha_proximo_seguimiento}/>
+        </SiNoDialog>}
         {show_recibida && <SiNoDialog
             onSi={() => {
                 setEstado(
@@ -225,28 +249,32 @@ const CotizacionDetailBotoneriaEstado = memo(props => {
 
         <div className="col-12">
             <div className="row">
-                {estado === 'REC' &&
-                <BotonCotizacion
+                {(estado === 'REC' || estado === 'APL') && <BotonCotizacion
+                    onClick={() => setShowEditarConfirmacion(true)}
+                    nombre='Editar'
+                    icono='edit'/>}
+                {(estado === 'ENV' || estado === 'APL') && <BotonCotizacion
+                    onClick={() => setShowRecibida(true)}
+                    nombre='Recibida'
+                />}
+                {(estado === 'REC' || estado === 'APL') && <BotonCotizacion
                     onClick={() => setShowEnProceso(true)}
                     icono='thumbs-up'
                     nombre='En Proceso'
                 />}
-                {(estado === 'REC' || estado === 'PRO') &&
+                {(estado === 'REC' || estado === 'PRO' || estado === 'APL') &&
                 <BotonCotizacion
                     icono='thumbs-down'
                     onClick={() => setShowRechazada(true)}
                     color='secondary'
                     nombre='Rechazada'
                 />}
-                {estado === 'REC' &&
+                {(estado === 'REC' || estado === 'PRO') &&
                 <BotonCotizacion
-                    onClick={() => setShowEditarConfirmacion(true)}
-                    nombre='Editar'
-                    icono='edit'/>}
-                {estado === 'ENV' &&
-                <BotonCotizacion
-                    onClick={() => setShowRecibida(true)}
-                    nombre='Recibida'
+                    icono='thumbs-down'
+                    onClick={() => setShowAplazada(true)}
+                    color='secondary'
+                    nombre='Aplazada'
                 />}
                 {estado === 'PRO' &&
                 <BotonCotizacion

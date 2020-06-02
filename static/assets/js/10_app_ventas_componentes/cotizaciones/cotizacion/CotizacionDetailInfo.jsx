@@ -4,7 +4,6 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {fechaFormatoUno} from "../../../00_utilities/common";
 import CotizacionCRUDFormDialog from "./forms/CotizacionCRUDFormDialog";
 import MyDialogButtonDelete from "../../../00_utilities/components/ui/dialog/delete_dialog";
-import HistoricoPrecio from "../../../03_app_admin/especificas/clientes/clientes/ClienteHistoricoPrecios";
 import {Link} from "react-router-dom";
 
 const styles = {

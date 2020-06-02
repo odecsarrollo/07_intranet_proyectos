@@ -163,7 +163,7 @@ const Tabla = memo(props => {
                             },
                             Cell: row => {
                                 const estado = row.original.estado;
-                                const puede_cambiar_estado = ['PRO', 'ENV', 'REC'].includes(estado);
+                                const puede_cambiar_estado = ['PRO', 'ENV', 'REC', 'APL'].includes(estado);
                                 return (
                                     <div
                                         style={{
