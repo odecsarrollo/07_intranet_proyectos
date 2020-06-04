@@ -153,7 +153,7 @@ const CotizacionDetailSeguimiento = memo(props => {
                 tipo_seguimiento,
                 v.descripcion,
                 moment(v.fecha).format('YYYY-MM-DDTHH:mm:00Z'),
-                fechaToYMD(v.fecha_verificacion_proximo_seguimiento),
+                v.fecha_verificacion_proximo_seguimiento ? fechaToYMD(v.fecha_verificacion_proximo_seguimiento) : null,
                 {
                     callback: () => {
                         cargarDatos();
@@ -236,7 +236,7 @@ const CotizacionDetailSeguimiento = memo(props => {
             <div style={{height: ver_todo ? '100%' : '300px', overflow: ver_todo ? null : 'scroll'}} className='col-12'>
                 <List className={classes.list.root}>
                     {_.orderBy(
-                        seguimientos, ['id','fecha'], ['desc','desc']).map(
+                        seguimientos, ['id', 'fecha'], ['desc', 'desc']).map(
                         item =>
                             <CotizacionDetailSeguimientoItem
                                 eliminarSeguimiento={eliminarSeguimiento}
