@@ -98,7 +98,7 @@ def cotizacion_componentes_cambiar_fecha_proximo_seguimiento(
     if not (cotizacion_componente.responsable == usuario or usuario.is_superuser):
         raise ValidationError({
             '_error': 'Sólo el responsable de la cotización (%s) o el administrador del sistema pueden cambiar la fecha de verificación del próximo seguimiento' % cotizacion_componente.responsable})
-    if cotizacion_componente.estado not in ['ENV', 'REC', 'PRO']:
+    if cotizacion_componente.estado not in ['ENV', 'REC', 'PRO', 'APL']:
         raise ValidationError({
             '_error': 'Las cotizaciones en estado %s no se les puede modificar fechas de próximo seguimiento' % cotizacion_componente.get_estado_display()})
     cotizacion_componentes_add_seguimiento(
