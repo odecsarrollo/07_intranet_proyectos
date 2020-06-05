@@ -135,6 +135,18 @@ class Cotizacion(TimeStampedModel):
         return False
 
 
+class CotizacionOrdenCompra(TimeStampedModel):
+    def archivo_upload_to(instance, filename):
+        nro_cotizacion = instance.cotizacion.id
+        return "documentos/cotizaciones/%s/%s" % (nro_cotizacion, filename)
+
+    cotizacion = models.ForeignKey(Cotizacion, related_name='ordenes_compra', on_delete=models.PROTECT)
+    valor_orden_compra = models.DecimalField(max_digits=20, decimal_places=2, default=0)
+    orden_compra_nro = models.CharField(max_length=100, null=True)
+    orden_compra_fecha = models.DateField(null=True)
+    orden_compra_archivo = models.FileField(null=True, upload_to=archivo_upload_to)
+
+
 class SeguimientoCotizacion(TimeStampedModel):
     TIPO_SEGUIMIENTO_CHOICE = (
         (0, 'Comentario'),
