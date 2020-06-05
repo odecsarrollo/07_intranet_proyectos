@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, {memo} from 'react';
 import {useSelector, useDispatch} from "react-redux";
 import {Redirect} from "react-router-dom";
@@ -92,6 +93,7 @@ const LoadingOverlay = memo((props) => {
                                 size='2x'
                                 onClick={() => {
                                     if (_.has(mensajes, 'Debe de autenticarse de nuevo')) {
+                                        axios.defaults.headers = _.omit(axios.defaults.headers, 'Authorization');
                                         dispatch(actions.loadUser());
                                     }
                                     dispatch(actions.resetLoading());

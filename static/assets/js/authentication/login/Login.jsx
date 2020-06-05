@@ -24,7 +24,6 @@ let Login = props => {
     } = props;
 
     const auth = useSelector(state => state.auth);
-    const esta_cargando = useSelector(state => state.esta_cargando);
 
     if (auth.isAuthenticated) {
         return <Redirect to="/"/>
@@ -39,7 +38,6 @@ let Login = props => {
                 <MyTextFieldSimple
                     name='username'
                     nombre='Nombre de Usuario'
-                    disabled={esta_cargando.cargando}
                     className='col-12'
                     onChange={() => {
                         dispatch(actions.clear_authentication_errors());
@@ -50,7 +48,6 @@ let Login = props => {
                     nombre='Contraseña'
                     className='col-12'
                     type='password'
-                    disabled={esta_cargando.cargando}
                     autoFocus={true}
                     onChange={() => {
                         dispatch(actions.clear_authentication_errors());
@@ -70,7 +67,7 @@ let Login = props => {
                     variant="contained"
                     className='ml-3'
                     color='primary'
-                    disabled={submitting || pristine || esta_cargando.cargando}
+                    disabled={submitting || pristine}
                     type='submit'
                 >
                     Ingresar
@@ -81,7 +78,7 @@ let Login = props => {
                     variant="contained"
                     className='ml-3'
                     onClick={reset}
-                    disabled={submitting || pristine || esta_cargando.cargando}
+                    disabled={submitting || pristine}
                 >
                     Limpiar
                 </Button>
