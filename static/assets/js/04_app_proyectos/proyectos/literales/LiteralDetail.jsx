@@ -1,7 +1,7 @@
 import React, {Fragment, memo} from 'react';
 import {fechaFormatoUno, pesosColombianos} from "../../../00_utilities/common";
-import TablaProyectoLiteralesMateriales from './ProyectoLiteralMaterialTabla';
-import TablaProyectoLiteralesManoObra from './ProyectoLiteralManoObraTabla';
+import {ListadoMaterialesLiteralTabla} from './ProyectoLiteralMaterialTabla';
+import {ListadoManoObralLiteralTabla} from './ProyectoLiteralManoObraTabla';
 import SeguimientoLiteral from '../seguimientos_proyectos/components/seguimiento_literal';
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
@@ -128,13 +128,13 @@ const Detail = memo(props => {
                     {permisos_archivos_literal.list && <Tab>Documentos</Tab>}
                 </TabList>
                 <TabPanel>
-                    <TablaProyectoLiteralesMateriales
+                    <ListadoMaterialesLiteralTabla
                         materiales={materiales}
                         permisos_proyecto={permisos_proyecto}
                     />
                 </TabPanel>
                 <TabPanel>
-                    <TablaProyectoLiteralesManoObra
+                    <ListadoManoObralLiteralTabla
                         horas_iniciales={mis_horas_trabajadas_iniciales}
                         horas={mis_horas_trabajadas}
                     />

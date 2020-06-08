@@ -65,6 +65,18 @@ const Tabla = (props) => {
                         </div>
                     },
                     {
+                        Header: 'Factura',
+                        maxWidth: 100,
+                        minWidth: 100,
+                        show: son_facturas,
+                        Cell: row => <div>
+                            <Link key={row.original.id}
+                                  to={`/app/ventas_componentes/facturas/detail/${row.original.id}`} target={'_blank'}>
+                                {row.original.tipo_documento}-{row.original.nro_documento}
+                            </Link>
+                        </div>
+                    },
+                    {
                         Header: son_facturas ? 'Facturas' : 'Cotización',
                         maxWidth: 100,
                         minWidth: 100,

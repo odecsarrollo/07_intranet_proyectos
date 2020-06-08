@@ -84,6 +84,14 @@ const TuberiaVentaComponenteFila = props => {
             <td className={classes.td}>{colores.map(color => <TuberiaVentaComponenteTablaItem
                 vendedor={vendedor}
                 key={color}
+                items={cotizaciones_por_estado['APL']}
+                color={color}
+                moneda={moneda}
+            />)}
+            </td>
+            <td className={classes.td}>{colores.map(color => <TuberiaVentaComponenteTablaItem
+                vendedor={vendedor}
+                key={color}
                 items={cotizaciones_por_estado['ENV']}
                 color={color}
                 moneda={moneda}
@@ -167,6 +175,7 @@ const TuberiaVentaComponenteDivisa = props => {
                 <thead>
                 <tr className={classes.tr}>
                     <th>Vendedor</th>
+                    <th style={{textAlign: 'center'}}>Aplazada</th>
                     <th style={{textAlign: 'center'}}>Enviada</th>
                     <th style={{textAlign: 'center'}}>Recibida</th>
                     <th style={{textAlign: 'center'}}>Aceptada</th>
@@ -187,6 +196,13 @@ const TuberiaVentaComponenteDivisa = props => {
                 <tfoot>
                 <tr className={classes.tr}>
                     <td className={classes.td}>Total</td>
+                    <td className={classes.td}>
+                        <TuberiaVentaComponenteTablaTotales
+                            estado={'APL'}
+                            items={_.map(cotizaciones)}
+                            moneda={divisa}
+                        />
+                    </td>
                     <td className={classes.td}>
                         <TuberiaVentaComponenteTablaTotales
                             estado={'ENV'}

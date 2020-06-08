@@ -1,75 +1,156 @@
 import React, {memo} from 'react';
-import {fechaFormatoDos, pesosColombianos, numeroFormato} from '../../../00_utilities/common';
-import {ListaBusqueda} from '../../../00_utilities/utiles';
+import {numeroFormato, formatoMoneda} from '../../../00_utilities/common';
+import crudHOC from "../../../00_utilities/components/HOC_CRUD2";
+import selectTableHOC from "react-table/lib/hoc/selectTable";
+import Table from "react-table";
 
-const ItemTabla = memo((props) => {
-    const {material, material: {item}, ultimo_costo_item_biable} = props;
+const SelectTable = selectTableHOC(Table);
+const Tabla = (props) => {
+    let data = props.list;
+    const {
+        selection,
+        getTrGroupProps,
+        isSelected,
+        toggleAll,
+        checkboxTable,
+        selectAll,
+        toggleSelection,
+        rowFn,
+        singular_name,
+        permisos_object
+    } = props;
+    const costo_total = data.reduce((suma, elemento) => parseFloat(suma) + parseFloat(elemento['costo_total']), 0);
     return (
-        <tr>
-            <td>{fechaFormatoDos(material.lapso)}</td>
-            <td>{item.id_item}</td>
-            <td>{item.id_referencia}</td>
-            <td>{item.descripcion}</td>
-            <td>{numeroFormato(material.cantidad)}</td>
-            <td>{item.unidad_medida_inventario}</td>
-            <td>{item.sistema_informacion === 1 ? 'CGUno' : 'Siesa Cloud'}</td>
-            {ultimo_costo_item_biable && <td>{pesosColombianos(material.costo_total)}</td>}
-        </tr>
+        <div>
+            <SelectTable
+                ref={r => checkboxTable.current = r}
+                getTrGroupProps={getTrGroupProps}
+                selection={selection}
+                selectType="checkbox"
+                isSelected={isSelected}
+                selectAll={selectAll}
+                toggleSelection={toggleSelection}
+                toggleAll={toggleAll}
+                keyField="id"
+                previousText='Anterior'
+                nextText='Siguiente'
+                pageText='Página'
+                ofText='de'
+                rowsText='filas'
+                getTrProps={rowFn}
+                data={data}
+                noDataText={`No hay elementos para mostrar tipo ${singular_name}`}
+                columns={[
+                    {
+                        Header: "Lapso",
+                        accessor: "lapso",
+                        filterable: true,
+                        maxWidth: 100,
+                        minWidth: 100
+                    },
+                    {
+                        Header: "Id Item",
+                        accessor: "id_item",
+                        filterable: true,
+                        maxWidth: 80,
+                        minWidth: 80,
+                        filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase())
+                    },
+                    {
+                        Header: "Referencia",
+                        accessor: "id_referencia",
+                        filterable: true,
+                        maxWidth: 80,
+                        minWidth: 80,
+                        filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase())
+                    },
+                    {
+                        Header: "Nombre",
+                        accessor: "descripcion",
+                        filterable: true,
+                        maxWidth: 250,
+                        minWidth: 250,
+                        filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase()),
+                    },
+                    {
+                        Header: "Cantidad",
+                        accessor: "cantidad",
+                        maxWidth: 80,
+                        minWidth: 80,
+                        Cell: row => <div className='text-right'>{numeroFormato(row.value)}</div>
+                    },
+                    {
+                        Header: "Uni. Inv",
+                        accessor: "unidad_medida_inventario",
+                        filterable: true,
+                        maxWidth: 80,
+                        minWidth: 80,
+                        filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase())
+                    },
+                    {
+                        Header: "Origen",
+                        accessor: "sistema_informacion",
+                        maxWidth: 80,
+                        minWidth: 80,
+                        Cell: row => <div>{row.value === 1 ? 'CGUno' : 'Siesa Cloud'}</div>
+                    },
+                    {
+                        Header: "Costo Total",
+                        Footer: <div className='text-right'>{formatoMoneda(costo_total, '$', 0)}</div>,
+                        show: permisos_object.ultimo_costo_item_biable,
+                        accessor: "costo_total",
+                        maxWidth: 80,
+                        minWidth: 80,
+                        Cell: row => <div className='text-right'>{formatoMoneda(row.value, "$", 0)}</div>
+                    },
+                ]}
+                defaultPageSize={data.length}
+                className="-striped -highlight tabla-maestra"
+            />
+        </div>
+    )
+};
+
+const CRUD = crudHOC(null, Tabla);
+
+const List = memo((props) => {
+    const {list, permisos_proyecto} = props;
+    const method_pool = {
+        fetchObjectMethod: null,
+        deleteObjectMethod: null,
+        createObjectMethod: null,
+        updateObjectMethod: null,
+    };
+    return (
+        <CRUD
+            permisos_object={{...permisos_proyecto, list: true, delete: false, change: false, add: false}}
+            method_pool={method_pool}
+            list={list}
+            plural_name=''
+            singular_name='Material'
+        />
     )
 });
 
-const buscarBusqueda = (lista, busqueda) => {
-    return _.pickBy(lista, (material) => {
-        return (
-            material.item && (
-                material.item.descripcion.toUpperCase().includes(busqueda.toUpperCase()) ||
-                material.item.id_referencia.toUpperCase().includes(busqueda.toUpperCase()) ||
-                fechaFormatoDos(material.lapso).toUpperCase().includes(busqueda.toUpperCase()) ||
-                material.item.id_item.toString().toUpperCase().includes(busqueda.toUpperCase())
-            )
-        )
-    });
-};
-
-const Tabla = (props) => {
-    let {materiales, permisos_proyecto} = props;
-    return (
-        <ListaBusqueda>
-            {
-                busqueda => {
-                    const listado_materiales = buscarBusqueda(_.orderBy(materiales, ['lapso'], ['desc']), busqueda);
-                    return (
-                        <table className="table table-responsive table-striped tabla-maestra">
-                            <thead>
-                            <tr>
-                                <th>Lapso</th>
-                                <th>Id CGUNO</th>
-                                <th>Referencia</th>
-                                <th>Nombre</th>
-                                <th>Cantidad</th>
-                                <th>Unidad</th>
-                                <th>Origen</th>
-                                {permisos_proyecto.ultimo_costo_item_biable && <th>Costo Total</th>}
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {_.map(listado_materiales, material => {
-                                return <ItemTabla
-                                    key={material.id}
-                                    material={material}
-                                    ultimo_costo_item_biable={permisos_proyecto.ultimo_costo_item_biable}
-                                />
-                            })}
-                            </tbody>
-                            <tfoot>
-
-                            </tfoot>
-                        </table>
-                    )
-                }
-            }
-        </ListaBusqueda>
+const ListadoMaterialesLiteralTabla = memo(props => {
+    const {materiales, permisos_proyecto} = props;
+    const materiales_flat = materiales.map(
+        m => ({
+            id: m.id,
+            costo_total: m.costo_total,
+            cantidad: m.cantidad,
+            lapso: m.lapso,
+            unidad_medida_inventario: m.item.unidad_medida_inventario,
+            id_item: m.item.id_item,
+            id_referencia: m.item.id_referencia,
+            descripcion: m.item.descripcion,
+            sistema_informacion: m.item.sistema_informacion,
+        })
     )
-};
+    return <List
+        permisos_proyecto={permisos_proyecto}
+        list={materiales_flat}
+    />
+});
 
-export default Tabla;
+export {ListadoMaterialesLiteralTabla}

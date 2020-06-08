@@ -1,7 +1,141 @@
 import React, {Fragment, memo} from 'react';
-import {ListaBusqueda} from '../../../00_utilities/utiles';
-import {fechaFormatoUno, pesosColombianos} from "../../../00_utilities/common";
+import {fechaFormatoUno, formatoMoneda, pesosColombianos} from "../../../00_utilities/common";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+
+
+import crudHOC from "../../../00_utilities/components/HOC_CRUD2";
+import selectTableHOC from "react-table/lib/hoc/selectTable";
+import Table from "react-table";
+
+const SelectTable = selectTableHOC(Table);
+
+const Tabla = (props) => {
+    let data = props.list;
+    console.log(data)
+    const {
+        selection,
+        getTrGroupProps,
+        isSelected,
+        toggleAll,
+        checkboxTable,
+        selectAll,
+        toggleSelection,
+        rowFn,
+        singular_name
+    } = props;
+    const costo_total = data.reduce((suma, elemento) => parseFloat(suma) + parseFloat(elemento['costo_total']), 0);
+    return (
+        <div>
+            <SelectTable
+                ref={r => checkboxTable.current = r}
+                getTrGroupProps={getTrGroupProps}
+                selection={selection}
+                selectType="checkbox"
+                isSelected={isSelected}
+                selectAll={selectAll}
+                toggleSelection={toggleSelection}
+                toggleAll={toggleAll}
+                keyField="id"
+                previousText='Anterior'
+                nextText='Siguiente'
+                pageText='Página'
+                ofText='de'
+                rowsText='filas'
+                getTrProps={rowFn}
+                data={data}
+                noDataText={`No hay elementos para mostrar tipo ${singular_name}`}
+                columns={[
+                    {
+                        Header: "Colaborador",
+                        accessor: "colaborador_nombre",
+                        filterable: true,
+                        maxWidth: 250,
+                        minWidth: 250,
+                        filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase())
+                    },
+                    {
+                        Header: "Centro Costo",
+                        accessor: "centro_costo_nombre",
+                        filterable: true,
+                        maxWidth: 200,
+                        minWidth: 200,
+                        filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase())
+                    },
+                    {
+                        Header: "Fecha",
+                        accessor: "fecha",
+                        filterable: true,
+                        maxWidth: 150,
+                        minWidth: 150,
+                        filterMethod: (filter, row) => row[filter.id] && row[filter.id].toUpperCase().includes(filter.value.toUpperCase())
+                    },
+                    {
+                        Header: "Tiempo",
+                        maxWidth: 150,
+                        minWidth: 150,
+                        Cell: row => <div>{row.original.horas} horas y {row.original.minutos} minutos</div>
+                    },
+                    {
+                        Header: "Valor Hora",
+                        accessor: "tasa_valor_hora",
+                        maxWidth: 80,
+                        minWidth: 80,
+                        Cell: row => <div className='text-right'>{pesosColombianos(row.value)}</div>
+                    },
+                    {
+                        Header: "Costo Total",
+                        accessor: "costo_total",
+                        Footer: <div className='text-right'>{formatoMoneda(costo_total, '$', 0)}</div>,
+                        maxWidth: 80,
+                        minWidth: 80,
+                        Cell: row => <div className='text-right'>{pesosColombianos(row.value)}</div>
+                    },
+                    {
+                        Header: "Verificado",
+                        accessor: "verificado",
+                        maxWidth: 80,
+                        minWidth: 80,
+                        Cell: row => row.value && <FontAwesomeIcon
+                            icon={'check-circle'}
+                            style={{color: 'green'}}
+                        />
+                    },
+                    {
+                        Header: "Inicial",
+                        accessor: "inicial",
+                        maxWidth: 80,
+                        minWidth: 80,
+                        Cell: row => row.value && <FontAwesomeIcon
+                            icon={'check-circle'}
+                            style={{color: 'green'}}
+                        />
+                    },
+                ]}
+                defaultPageSize={data.length}
+                className="-striped -highlight tabla-maestra"
+            />
+        </div>
+    )
+};
+const CRUD = crudHOC(null, Tabla);
+const List = memo((props) => {
+    const {list, permisos_proyecto} = props;
+    const method_pool = {
+        fetchObjectMethod: null,
+        deleteObjectMethod: null,
+        createObjectMethod: null,
+        updateObjectMethod: null,
+    };
+    return (
+        <CRUD
+            permisos_object={{...permisos_proyecto, list: true, delete: false, change: false, add: false}}
+            method_pool={method_pool}
+            list={list}
+            plural_name=''
+            singular_name='Mano Obra'
+        />
+    )
+});
 
 const ItemTablaCentroCosto = (props) => {
     const {item} = props;
@@ -14,50 +148,8 @@ const ItemTablaCentroCosto = (props) => {
     )
 };
 
-const ItemTablaManoObra = memo((props) => {
-    const {item} = props;
-    const style_inicial = {backgroundColor: 'black', color: 'white', fontWeight: 'bold'};
-    return (
-        <tr style={item.inicial ? style_inicial : null}>
-            <td>{item.colaborador_nombre}</td>
-            <td>{item.centro_costo_nombre}</td>
-            <td>{item.fecha}</td>
-            <td>{item.horas} horas y {item.minutos} minutos</td>
-            <td>{pesosColombianos(item.tasa_valor_hora)}</td>
-            <td>{pesosColombianos(item.costo_total)}</td>
-            <td>
-                {
-                    item.verificado &&
-                    <FontAwesomeIcon
-                        icon={'check-circle'}
-                        style={{color: 'green'}}
-                    />
-                }
-            </td>
-            <td>
-                {
-                    item.inicial &&
-                    <FontAwesomeIcon
-                        icon={'check-circle'}
-                        style={{color: 'green'}}
-                    />
-                }
-            </td>
-        </tr>
-    )
-});
 
-const buscarBusqueda = (lista, busqueda) => {
-    return _.pickBy(lista, (item) => {
-        return (
-            (item.colaborador_nombre && item.colaborador_nombre.toUpperCase().includes(busqueda.toUpperCase())) ||
-            (item.inicial && busqueda.toUpperCase().includes('INICIAL')) ||
-            (item.centro_costo_nombre && item.centro_costo_nombre.toUpperCase().includes(busqueda.toUpperCase()))
-        )
-    });
-};
-
-const Tabla = memo((props) => {
+const ListadoManoObralLiteralTabla = memo(props => {
     const {horas_iniciales, horas} = props;
 
     const union_cc = _.map(horas, e => {
@@ -120,55 +212,26 @@ const Tabla = memo((props) => {
 
     const todas_horas = _.concat(union_horas, union_horas_iniciales);
 
-    return (
-        <Fragment>
-            <table className="table table-responsive table-striped tabla-maestra">
-                <thead>
-                <tr>
-                    <th>Centro de Costo</th>
-                    <th>Costo Total</th>
-                    <th>Tiempo Total</th>
-                </tr>
-                </thead>
-                <tbody>
-                {centros_costos_list.map(e => <ItemTablaCentroCosto key={e.nombre} item={e}/>)}
-                </tbody>
-                <tfoot>
-                </tfoot>
-            </table>
-            <ListaBusqueda>
-                {
-                    busqueda => {
-                        const listado_mano_obra = buscarBusqueda(todas_horas, busqueda);
-                        return (
-                            <table className="table table-responsive table-striped tabla-maestra">
-                                <thead>
-                                <tr>
-                                    <th>Colaborador</th>
-                                    <th>Centro de Costo</th>
-                                    <th>Fecha</th>
-                                    <th>Tiempo</th>
-                                    <th>Valor Hora</th>
-                                    <th>Costo Total</th>
-                                    <th>Estado</th>
-                                    <th>Inicial</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {_.map(_.orderBy(listado_mano_obra, ['inicial', 'fecha', 'colaborador_nombre'], ['asc', 'desc', 'asc']), item => {
-                                    return <ItemTablaManoObra key={item.id} item={item}/>
-                                })}
-                                </tbody>
-                                <tfoot>
 
-                                </tfoot>
-                            </table>
-                        )
-                    }
-                }
-            </ListaBusqueda>
-        </Fragment>
-    )
+    return <Fragment>
+        <table className="table table-responsive table-striped tabla-maestra">
+            <thead>
+            <tr>
+                <th>Centro de Costo</th>
+                <th>Costo Total</th>
+                <th>Tiempo Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            {centros_costos_list.map(e => <ItemTablaCentroCosto key={e.nombre} item={e}/>)}
+            </tbody>
+            <tfoot>
+            </tfoot>
+        </table>
+        <List
+            list={todas_horas}
+        />
+    </Fragment>
 });
 
-export default Tabla;
+export {ListadoManoObralLiteralTabla}
