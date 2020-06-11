@@ -122,7 +122,7 @@ const Detail = memo(props => {
             <Tabs>
                 <TabList>
                     <Tab>Materiales</Tab>
-                    <Tab>Mano Obra</Tab>
+                    <Tab>Mano de Obra</Tab>
                     <Tab>Seguimiento</Tab>
                     {permisos_literales.change && <Tab>Editar</Tab>}
                     {permisos_archivos_literal.list && <Tab>Documentos</Tab>}

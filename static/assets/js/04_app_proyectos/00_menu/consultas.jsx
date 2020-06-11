@@ -28,12 +28,12 @@ const MenuConsultas = () => (
             texto='Reporte Costos Proyectos 1'
             type='main'
         />*/}
-        <DrawerListItem
-            size='1x'
-            link='/app/proyectos/proyectos/reporte_dos'
-            texto='Reporte Costos Proyectos 2'
-            type='main'
-        />
+        {/*<DrawerListItem*/}
+        {/*    size='1x'*/}
+        {/*    link='/app/proyectos/proyectos/reporte_dos'*/}
+        {/*    texto='Reporte Costos Proyectos 2'*/}
+        {/*    type='main'*/}
+        {/*/>*/}
         {/*        <DrawerListItem
             size='1x'
             link='/app/proyectos/proyectos/reporte_tres'
