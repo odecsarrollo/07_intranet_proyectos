@@ -47,8 +47,8 @@ const PodioVentaComponente = (props) => {
 
 
     facturacion = _.map(_.orderBy(facturacion, ['fecha_documento'], ['asc']), f => {
-        const ano = new Date(f.fecha_documento).getFullYear();
-        const mes = new Date(f.fecha_documento).getMonth() + 1;
+        const ano = new Date(f.fecha_documento).getUTCFullYear();
+        const mes = new Date(f.fecha_documento).getUTCMonth() + 1;
         const lapso = `${ano}-${mes}`;
         const fecha_lapso = new Date(`${ano}/${mes}/01`);
         return {...f, ano, mes, lapso, fecha_lapso}
@@ -57,8 +57,8 @@ const PodioVentaComponente = (props) => {
     facturacion = _.groupBy(facturacion, 'fecha_lapso');
     let facturacion_por_fecha_lapso = {};
     _.mapKeys(facturacion, (v, k) => {
-        const ano = new Date(k).getFullYear();
-        const mes = new Date(k).getMonth() + 1;
+        const ano = new Date(k).getUTCFullYear();
+        const mes = new Date(k).getUTCMonth() + 1;
         facturacion_por_fecha_lapso = {
             ...facturacion_por_fecha_lapso,
             [k]: {lapso: `${ano}/${mes}`, facturas_lapso: v, fecha_lapso: k}

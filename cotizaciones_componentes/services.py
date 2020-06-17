@@ -180,6 +180,10 @@ def cotizacion_componentes_cambiar_estado(
         cotizacion_componente.fecha_verificacion_cambio_estado = timezone.now().date()
 
         if nuevo_estado in ['PRO', 'FIN']:
+            if nuevo_estado == 'PRO' and (
+                    orden_compra_valor is None or orden_compra_valor <= 0 or orden_compra_nro is None or orden_compra_fecha is None):
+                raise ValidationError(
+                    {'_error': 'No se puede pasar a estado %s si no se coloca la información de la orden de compra'})
             cotizacion_componente.orden_compra_fecha = orden_compra_fecha
             cotizacion_componente.orden_compra_nro = orden_compra_nro
             cotizacion_componente.orden_compra_valor = orden_compra_valor

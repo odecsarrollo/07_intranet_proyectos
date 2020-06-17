@@ -59,7 +59,7 @@ const InformeVentaFacturacion = (props) => {
             moneda: 'COP',
             tipo_documento: f.unidad_negocio,
             nro_documento: `${f.unidad_negocio}-${f.nro_cotizacion}`,
-            valor: es_venta ? f.valor_total_orden_compra_cotizaciones : f.valor_ofertado,
+            valor: es_venta ? f.valor_orden_compra : f.valor_ofertado,
             estado: f.estado,
             cliente: f.cliente_nombre,
             cliente_nit: f.cliente_nit,
