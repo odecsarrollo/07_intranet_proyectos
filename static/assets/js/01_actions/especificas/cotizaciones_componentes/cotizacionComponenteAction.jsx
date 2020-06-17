@@ -206,6 +206,33 @@ export const fetchCotizacionesComponentesEdicionAsesor = (options_action = {}) =
     }
 };
 
+export const fetchCotizacionesComponentesPorAnoMes = (filtro, options_action = {}) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
+        };
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches, ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        let months = '['
+        let years = '['
+        filtro.months.map(m =>
+            months = `${months}${m},`
+        )
+        months = `${months}]`.replace(',]', ']').replace('[', '').replace(']', '')
+
+        filtro.years.map(y =>
+            years = `${years}${y},`
+        )
+        years = `${years}]`.replace(',]', ']').replace('[', '').replace(']', '')
+        let filtro_url = `months=${months}&years=${years}`;
+        return fetchListGetURLParameters(`${current_url_api}/cotizaciones_por_ano_mes/?${filtro_url}`, options);
+    }
+};
+
 export const fetchCotizacionesComponentesTuberiaVentas = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
@@ -265,7 +292,16 @@ export const uploadCotizacionComponente = (id, values, options_action = {}) => {
     }
 };
 
-export const cambiarEstadoCotizacionComponente = (id, nuevo_estado, razon_rechazo = null, fecha_seguimiento, options_action) => {
+export const cambiarEstadoCotizacionComponente = (
+    id,
+    nuevo_estado,
+    razon_rechazo = null,
+    fecha_seguimiento,
+    orden_compra_fecha = null,
+    orden_compra_nro = null,
+    orden_compra_valor = null,
+    options_action
+) => {
     return function (dispatch) {
         let params = new URLSearchParams();
         params.append('nuevo_estado', nuevo_estado);
@@ -274,6 +310,15 @@ export const cambiarEstadoCotizacionComponente = (id, nuevo_estado, razon_rechaz
         }
         if (fecha_seguimiento) {
             params.append('fecha_verificacion_proximo_seguimiento', fecha_seguimiento);
+        }
+        if (orden_compra_fecha) {
+            params.append('orden_compra_fecha', orden_compra_fecha);
+        }
+        if (orden_compra_nro) {
+            params.append('orden_compra_nro', orden_compra_nro);
+        }
+        if (orden_compra_valor) {
+            params.append('orden_compra_valor', orden_compra_valor);
         }
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch, payload: response})

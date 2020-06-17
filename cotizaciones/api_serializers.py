@@ -11,7 +11,9 @@ from .models import (
     SeguimientoCotizacion,
     ArchivoCotizacion,
     CondicionInicioProyecto,
-    CondicionInicioProyectoCotizacion
+    CondicionInicioProyectoCotizacion,
+    CotizacionOrdenCompra,
+    CotizacionOrdenCompraPlanPago
 )
 
 
@@ -284,23 +286,35 @@ class CotizacionSerializer(serializers.ModelSerializer):
 
     def get_orden_compra_archivo_url(self, obj):
         if obj.orden_compra_archivo:
-            return obj.orden_compra_archivo.url
+            try:
+                return obj.orden_compra_archivo.url
+            except FileNotFoundError:
+                return None
         return None
 
     def get_orden_compra_archivo_extension(self, obj):
         if obj.orden_compra_archivo:
-            extension = obj.orden_compra_archivo.url.split('.')[-1]
-            return extension.title()
+            try:
+                extension = obj.orden_compra_archivo.url.split('.')[-1]
+                return extension.title()
+            except FileNotFoundError:
+                return None
         return None
 
     def get_orden_compra_archivo_size(self, obj):
         if obj.orden_compra_archivo:
-            return obj.orden_compra_archivo.size
+            try:
+                return obj.orden_compra_archivo.size
+            except FileNotFoundError:
+                return None
         return None
 
     def get_orden_compra_archivo_filename(self, obj):
         if obj.orden_compra_archivo:
-            return obj.orden_compra_archivo.name.split('/')[-1]
+            try:
+                return obj.orden_compra_archivo.name.split('/')[-1]
+            except FileNotFoundError:
+                return None
         return None
 
     class Meta:
@@ -362,6 +376,7 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'es_adicional',
             'literales',
             'dias_para_vencer',
+            'ordenes_compra',
         ]
         extra_kwargs = {
             'literales': {'read_only': True},
@@ -390,6 +405,7 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'fecha_entrega_pactada',
             'dias_para_vencer',
             'orden_compra_archivo',
+            'ordenes_compra',
         ]
 
 
@@ -537,6 +553,7 @@ class CotizacionListSerializer(serializers.ModelSerializer):
     porcentaje_tuberia_ventas = serializers.SerializerMethodField()
 
     cliente_nombre = serializers.CharField(source='cliente.nombre', read_only=True)
+    cliente_nit = serializers.CharField(source='cliente.nit', read_only=True)
     contacto_cliente_nombre = serializers.CharField(source='contacto_cliente.full_nombre', read_only=True)
     responsable_actual = serializers.CharField(source='responsable.username', read_only=True)
     responsable_actual_nombre = serializers.CharField(source='responsable.get_full_name', read_only=True)
@@ -600,6 +617,7 @@ class CotizacionListSerializer(serializers.ModelSerializer):
             'estado',
             'orden_compra_fecha',
             'cliente_nombre',
+            'cliente_nit',
             'cliente',
             'contacto_cliente',
             'contacto_cliente_nombre',
@@ -704,6 +722,34 @@ class ArchivoCotizacionSerializer(serializers.ModelSerializer):
         }
 
 
+class CotizacionOrdenCompraPlanPagosSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CotizacionOrdenCompraPlanPago
+        fields = [
+            'id',
+            'fecha',
+            'porcentaje',
+            'valor'
+        ]
+        read_only_fields = fields
+
+
+class CotizacionOrdenCompraSerializer(serializers.ModelSerializer):
+    planes_pagos = CotizacionOrdenCompraPlanPagosSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = CotizacionOrdenCompra
+        fields = [
+            'id',
+            'valor_orden_compra',
+            'orden_compra_nro',
+            'orden_compra_fecha',
+            'orden_compra_archivo',
+            'planes_pagos',
+        ]
+        read_only_fields = fields
+
+
 class CotizacionConDetalleSerializer(CotizacionSerializer):
     literales = LiteralCotizacionConDetalle(many=True, read_only=True)
     proyectos = ProyectoCotizacionConDetalleSerializer(many=True, read_only=True)
@@ -716,3 +762,4 @@ class CotizacionConDetalleSerializer(CotizacionSerializer):
         context={'quitar_campos': ['cliente_nombre', 'cliente']}
     )
     mis_documentos = ArchivoCotizacionSerializer(many=True, read_only=True)
+    ordenes_compra = CotizacionOrdenCompraSerializer(many=True, read_only=True)

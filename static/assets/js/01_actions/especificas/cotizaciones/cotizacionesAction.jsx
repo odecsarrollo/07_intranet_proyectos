@@ -92,6 +92,42 @@ export const adicionarCondicionInicioProyectoCotizacion = (id, condicion_inicio_
     }
 };
 
+export const adicionarOrdenCompraCotizacion = (id, values, options_action = {}) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: response})
+        };
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'adicionar_orden_compra', values, options)
+    }
+};
+
+export const fetchCotizacionesPorAnoMes = (filtro, options_action = {}) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
+        };
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches, ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        let months = '['
+        let years = '['
+        filtro.months.map(m =>
+            months = `${months}${m},`
+        )
+        months = `${months}]`.replace(',]', ']').replace('[', '').replace(']', '')
+
+        filtro.years.map(y =>
+            years = `${years}${y},`
+        )
+        years = `${years}]`.replace(',]', ']').replace('[', '').replace(']', '')
+        let filtro_url = `months=${months}&years=${years}`;
+        return fetchListGetURLParameters(`${current_url_api}/cotizaciones_por_ano_mes/?${filtro_url}`, options);
+    }
+};
 
 export const quitarCondicionInicioProyectoCotizacion = (id, condicion_inicio_proyecto_id, options_action = {}) => {
     return (dispatch) => {

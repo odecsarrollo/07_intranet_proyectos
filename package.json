@@ -30,6 +30,7 @@
     "react-input-color": "^2.0.14",
     "react-notification-system": "^0.2.17",
     "react-notification-system-redux": "^2.0.0",
+    "react-pivottable": "^0.10.0",
     "react-router-dom": "^5.1.2",
     "react-safe-html": "^0.6.1",
     "react-tabs": "^2.2.1",

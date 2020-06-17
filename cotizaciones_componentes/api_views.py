@@ -85,9 +85,26 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(cotizacion_componente)
         return Response(serializer.data)
 
+    @action(detail=False, http_method_names=['get', ])
+    def cotizaciones_por_ano_mes(self, request):
+        months = self.request.GET.get('months').split(',')
+        years = self.request.GET.get('years').split(',')
+        lista = self.queryset.filter(
+            (
+                    Q(orden_compra_fecha__year__in=years) &
+                    Q(orden_compra_fecha__month__in=months) &
+                    Q(estado='PRO')
+            ) | Q(estado__in=['ENV', 'REC'])
+        )
+        serializer = self.get_serializer(lista, many=True)
+        return Response(serializer.data)
+
     @action(detail=True, methods=['post'])
     def cambiar_estado(self, request, pk=None):
         from .services import cotizacion_componentes_cambiar_estado
+        orden_compra_fecha = request.POST.get('orden_compra_fecha', None)
+        orden_compra_nro = request.POST.get('orden_compra_nro', None)
+        orden_compra_valor = request.POST.get('orden_compra_valor', 0)
         nuevo_estado = request.POST.get('nuevo_estado', None)
         razon_rechazo = request.POST.get('razon_rechazo', None)
         fecha_verificacion_proximo_seguimiento = request.POST.get('fecha_verificacion_proximo_seguimiento', None)
@@ -96,7 +113,10 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
             nuevo_estado=nuevo_estado,
             razon_rechazo=razon_rechazo,
             usuario=self.request.user,
-            fecha_verificacion_proximo_seguimiento=fecha_verificacion_proximo_seguimiento
+            fecha_verificacion_proximo_seguimiento=fecha_verificacion_proximo_seguimiento,
+            orden_compra_nro=orden_compra_nro,
+            orden_compra_valor=orden_compra_valor,
+            orden_compra_fecha=orden_compra_fecha
         )
         self.serializer_class = CotizacionComponenteConDetalleSerializer
         serializer = self.get_serializer(self.get_object())

@@ -1,7 +1,7 @@
 import React, {memo, useState, Fragment} from "react";
 import Typography from "@material-ui/core/Typography";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {fechaFormatoUno} from "../../../00_utilities/common";
+import {fechaFormatoUno, formatoMoneda, pesosColombianos} from "../../../00_utilities/common";
 import CotizacionCRUDFormDialog from "./forms/CotizacionCRUDFormDialog";
 import MyDialogButtonDelete from "../../../00_utilities/components/ui/dialog/delete_dialog";
 import {Link} from "react-router-dom";
@@ -105,6 +105,24 @@ const CotizacionDetailInfo = memo(props => {
             </Typography>
             <Typography variant="body1" style={styles.texto_secondario} gutterBottom color="secondary">
                 {`${cotizacion.ciudad_nombre} - ${cotizacion.departamento_nombre} - ${cotizacion.pais_nombre}`}
+            </Typography>
+            <Typography variant="body1" gutterBottom color="primary" style={styles.texto_principal}>
+                Nro. Orden Compra:
+            </Typography>
+            <Typography variant="body1" style={styles.texto_secondario} gutterBottom color="secondary">
+                {cotizacion.orden_compra_nro}
+            </Typography>
+            <Typography variant="body1" gutterBottom color="primary" style={styles.texto_principal}>
+                $ Orden Compra:
+            </Typography>
+            <Typography variant="body1" style={styles.texto_secondario} gutterBottom color="secondary">
+                {formatoMoneda(cotizacion.orden_compra_valor, '$', cotizacion.moneda === 'COP' ? 0 : 2, cotizacion.moneda)}
+            </Typography>
+            <Typography variant="body1" gutterBottom color="primary" style={styles.texto_principal}>
+                Fecha Orden Compra:
+            </Typography>
+            <Typography variant="body1" style={styles.texto_secondario} gutterBottom color="secondary">
+                {fechaFormatoUno(cotizacion.orden_compra_fecha)}
             </Typography>
             {contacto && <Fragment>
                 <Typography variant="body1" gutterBottom color="primary" style={styles.texto_principal}>

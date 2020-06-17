@@ -29,6 +29,9 @@ class FacturaDetalleViewSet(viewsets.ModelViewSet):
         self.serializer_class = FacturalDetalleConDetalleSerializer
         return super().retrieve(request, *args, **kwargs)
 
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
     @action(detail=False, http_method_names=['get', ])
     def facturas_por_cliente(self, request):
         cliente_id = self.request.GET.get('cliente_id')
@@ -47,6 +50,14 @@ class FacturaDetalleViewSet(viewsets.ModelViewSet):
             Q(fecha_documento__gte=datetime.datetime(before_date.year, before_date.month, 1).date()) &
             (Q(colaborador_id__in=colaboradores) | Q(colaborador_id__isnull=True))
         )
+        serializer = self.get_serializer(lista, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, http_method_names=['get', ])
+    def facturacion_por_ano_mes(self, request):
+        months = self.request.GET.get('months').split(',')
+        years = self.request.GET.get('years').split(',')
+        lista = self.queryset.filter(fecha_documento__year__in=years, fecha_documento__month__in=months)
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 

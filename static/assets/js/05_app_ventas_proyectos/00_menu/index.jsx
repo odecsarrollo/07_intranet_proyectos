@@ -54,8 +54,8 @@ const Menu = () => {
             con_costos={true}
             con_precios={false}
             con_bandas={true}
-            con_componentes={false}
-            con_articulos_venta_catalogo={false}
+            con_componentes={true}
+            con_articulos_venta_catalogo={true}
             is_open={mostrar_lista_precios}
             handleCloseModal={() => setMostrarListaPrecios(false)}
         />

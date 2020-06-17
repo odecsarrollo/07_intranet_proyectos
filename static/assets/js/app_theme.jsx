@@ -6,6 +6,7 @@ import 'jquery/dist/jquery.js';
 import 'popper.js/dist/popper.js';
 import 'tether/dist/js/tether';
 import './../../css/custom.css';
+import 'react-pivottable/pivottable.css';
 
 import {createMuiTheme} from '@material-ui/core/styles';
 import red from '@material-ui/core/colors/red';

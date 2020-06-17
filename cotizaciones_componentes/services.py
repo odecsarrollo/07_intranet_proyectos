@@ -121,6 +121,9 @@ def cotizacion_componentes_cambiar_estado(
         fecha_verificacion_proximo_seguimiento: datetime,
         usuario: User,
         razon_rechazo: str = None,
+        orden_compra_fecha: datetime = None,
+        orden_compra_nro: str = None,
+        orden_compra_valor: float = None,
 ) -> CotizacionComponente:
     cotizacion_componente = CotizacionComponente.objects.get(pk=cotizacion_componente_id)
     estado_actual = cotizacion_componente.estado
@@ -175,6 +178,16 @@ def cotizacion_componentes_cambiar_estado(
         cotizacion_componente.estado = nuevo_estado
         cotizacion_componente.fecha_verificacion_proximo_seguimiento = fecha_verificacion_proximo_seguimiento
         cotizacion_componente.fecha_verificacion_cambio_estado = timezone.now().date()
+
+        if nuevo_estado in ['PRO', 'FIN']:
+            cotizacion_componente.orden_compra_fecha = orden_compra_fecha
+            cotizacion_componente.orden_compra_nro = orden_compra_nro
+            cotizacion_componente.orden_compra_valor = orden_compra_valor
+        else:
+            cotizacion_componente.orden_compra_fecha = None
+            cotizacion_componente.orden_compra_nro = None
+            cotizacion_componente.orden_compra_valor = 0
+
         if nuevo_estado == 'ELI':
             cotizacion_componente.razon_rechazo = razon_rechazo
         if nuevo_estado != 'ELI':

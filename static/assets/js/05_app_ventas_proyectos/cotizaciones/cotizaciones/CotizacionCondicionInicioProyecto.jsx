@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch} from "react-redux/es/hooks/useDispatch";
 import * as actions from "../../../01_actions/01_index";
 import {useSelector} from "react-redux/es/hooks/useSelector";
@@ -6,6 +6,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import CotizacionCondicionInicioProyectoItemForm from './forms/CotizacionCondicionInicioProyectoItemForm';
 import CotizacionOrdenCompraForm from './forms/CotizacionOrdenCompraForm';
+import OrdenCompraAddForm from "./forms/OrdenCompraAddForm";
 import {makeStyles} from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
@@ -38,8 +39,11 @@ const useStyles = makeStyles(theme => ({
 const CotizacionCondicionInicioProyecto = props => {
     const dispatch = useDispatch();
     const classes = useStyles();
+    const [mostrar_add_nueva_orden_compra, setMostrarAddNuevaOrdenCompra] = useState(false);
     const {cotizacion, cotizacion: {condiciones_inicio_cotizacion, orden_compra_fecha, valor_orden_compra, orden_compra_nro, orden_compra_archivo}} = props;
     const cerrado = cotizacion.estado === 'Cierre (Aprobado)';
+
+
     let list = useSelector(state => state.condiciones_inicios_proyectos);
     const read_only_orden_compra = (orden_compra_fecha && valor_orden_compra > 0 && orden_compra_nro && orden_compra_archivo);
     const cargarDatos = () => {
@@ -54,7 +58,15 @@ const CotizacionCondicionInicioProyecto = props => {
     const condiciones_inicio_cotizacion_seleccionadas = _.orderBy(_.map(condiciones_inicio_cotizacion, c => c.condicion_inicio_proyecto), ['require_documento'], ['desc']);
     list = _.map(list, e => ({...e, esta_activo: condiciones_inicio_cotizacion_seleccionadas.includes(e.id)}));
     list = _.orderBy(list, ['esta_activo'], ['desc']);
+
     return <div className='row'>
+        {mostrar_add_nueva_orden_compra && <OrdenCompraAddForm
+            cotizacion={cotizacion}
+            modal_open={mostrar_add_nueva_orden_compra}
+            singular_name='Orden Compra'
+            onCancel={() => setMostrarAddNuevaOrdenCompra(false)}
+        />}
+        {/*<span onClick={() => setMostrarAddNuevaOrdenCompra(true)}>Adicionar Orden Compra</span>*/}
         <div className="col-12">
             <p style={{color: 'red'}}>
                 Aquí debe definir TODOS los documentos que configuran el inicio del proyecto. Automáticamente al guardar
@@ -63,7 +75,11 @@ const CotizacionCondicionInicioProyecto = props => {
                 correspondientes.
             </p>
         </div>
-        <CotizacionOrdenCompraForm initialValues={cotizacion} read_only={read_only_orden_compra} classes={classes}/>
+        <CotizacionOrdenCompraForm
+            initialValues={cotizacion}
+            read_only={read_only_orden_compra}
+            classes={classes}
+        />
         {_.map(list, c => {
             const accion = () => c.esta_activo ? dispatch(actions.quitarCondicionInicioProyectoCotizacion(cotizacion.id, c.id)) : dispatch(actions.adicionarCondicionInicioProyectoCotizacion(cotizacion.id, c.id));
             return (

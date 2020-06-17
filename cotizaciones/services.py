@@ -14,6 +14,7 @@ from clientes.models import ClienteBiable
 from reversion.models import Version
 from cotizaciones.models import CondicionInicioProyecto, CondicionInicioProyectoCotizacion
 from correos_servicios.models import CorreoAplicacion
+from .models import CotizacionOrdenCompra
 
 
 def condicion_inicio_proyecto_crear_actualizar(
@@ -180,6 +181,23 @@ def cotizacion_condicion_inicio_orden_compra_actualizar(
     cotizacion.save()
     cotizacion = cotizacion_verificar_condicion_inicio_proyecto_si_estan_completas(cotizacion_id=cotizacion_id)
     return cotizacion
+
+
+def cotizacion_add_orden_compra(
+        cotizacion_id: int,
+        orden_compra_nro: str,
+        valor_orden_compra: float,
+        orden_compra_fecha: datetime,
+        orden_compra_archivo
+) -> CotizacionOrdenCompra:
+    orden_compra = CotizacionOrdenCompra.objects.create(
+        orden_compra_nro=orden_compra_nro,
+        valor_orden_compra=valor_orden_compra,
+        orden_compra_fecha=orden_compra_fecha,
+        orden_compra_archivo=orden_compra_archivo,
+        cotizacion_id=cotizacion_id
+    )
+    return orden_compra
 
 
 def cotizacion_limpiar_condicion_inicio_proyecto(

@@ -65,6 +65,33 @@ export const fetchFacturasPorRangoFecha = (fecha_inicial, fecha_final, options_a
     }
 };
 
+export const fetchFacturasPorAnoMes = (filtro, options_action = {}) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
+        };
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches, ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        let months = '['
+        let years = '['
+        filtro.months.map(m =>
+            months = `${months}${m},`
+        )
+        months = `${months}]`.replace(',]', ']').replace('[', '').replace(']', '')
+
+        filtro.years.map(y =>
+            years = `${years}${y},`
+        )
+        years = `${years}]`.replace(',]', ']').replace('[', '').replace(']', '')
+        let filtro_url = `months=${months}&years=${years}`;
+        return fetchListGetURLParameters(`${current_url_api}/facturacion_por_ano_mes/?${filtro_url}`, options);
+    }
+};
+
 export const fetchFacturasComponentesTrimestre = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {

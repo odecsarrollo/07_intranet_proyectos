@@ -1,3 +1,4 @@
+import {Typography} from "@material-ui/core";
 import moment from "moment-timezone";
 import React, {memo, useState, Fragment} from "react";
 import {useDispatch} from 'react-redux';
@@ -49,19 +50,21 @@ const BotonCotizacion = memo(props => {
     )
 });
 
-const FechaProximoSeguimiento = props => {
-    const {onChange, value} = props;
+const FechaSiNoDialog = props => {
+    const {onChange, value, calendar_space = true, label = 'Fecha próximo Seguimiento', min = new Date()} = props;
     return <div>
-        <label><strong>Fecha próximo Seguimiento</strong></label>
+        <label>
+            <strong>{label}</strong>
+        </label>
         <DateTimePicker
             onChange={(v) => onChange(v)}
             format={"YYYY-MM-DD"}
             time={false}
             max={new Date(3000, 1, 1)}
-            min={new Date()}
+            min={min}
             value={value}
         />
-        <div style={{height: '250px'}}/>
+        {calendar_space && <div style={{height: '250px'}}/>}
     </div>
 }
 
@@ -75,6 +78,9 @@ const CotizacionDetailBotoneriaEstado = memo(props => {
     const [show_enviar, setShowEnviar] = useState(false);
     const [show_recibida, setShowRecibida] = useState(false);
     const [fecha_proximo_seguimiento, setFechaProximoSeguimiento] = useState(null);
+    const [fecha_orden_compra, setFechaOrdenCompra] = useState(null);
+    const [nro_orden_compra, setNroOrdenCompra] = useState(null);
+    const [valor_orden_compra, setValorOrdenCompra] = useState(null);
     const dispatch = useDispatch();
     const setEstado = (
         estado_nuevo,
@@ -87,6 +93,9 @@ const CotizacionDetailBotoneriaEstado = memo(props => {
                 estado_nuevo,
                 razon_rechazo,
                 fecha_proximo_seguimiento ? fechaToYMD(fecha_proximo_seguimiento) : null,
+                fecha_orden_compra ? fechaToYMD(fecha_orden_compra) : null,
+                nro_orden_compra,
+                valor_orden_compra,
                 {callback}
             )
         )
@@ -165,7 +174,7 @@ const CotizacionDetailBotoneriaEstado = memo(props => {
             Deséa EDITAR esta cotización?
         </SiNoDialog>}
         {show_en_proceso && <SiNoDialog
-            can_on_si={fecha_proximo_seguimiento !== null}
+            can_on_si={fecha_proximo_seguimiento !== null && fecha_orden_compra !== null && nro_orden_compra && valor_orden_compra}
             onSi={() => {
                 setEstado(
                     'PRO',
@@ -174,18 +183,54 @@ const CotizacionDetailBotoneriaEstado = memo(props => {
                         cargarDatos();
                         setShowEnProceso(false);
                         setFechaProximoSeguimiento(null);
+                        setFechaOrdenCompra(null);
+                        setNroOrdenCompra(null);
+                        setValorOrdenCompra(null);
                     }
                 )
             }}
             onNo={() => {
                 setShowEnProceso(false);
                 setFechaProximoSeguimiento(null);
+                setFechaOrdenCompra(null);
+                setNroOrdenCompra(null);
+                setValorOrdenCompra(null);
             }}
             is_open={show_en_proceso}
             titulo='Cambiar a estado en proceso'
         >
             Deséa pasar esta cotización a estado EN PROCESO?
-            <FechaProximoSeguimiento onChange={setFechaProximoSeguimiento} value={fecha_proximo_seguimiento}/>
+            <FechaSiNoDialog
+                onChange={setFechaProximoSeguimiento}
+                value={fecha_proximo_seguimiento}
+                calendar_space={false}
+            />
+            <div style={{border: '1px solid black', padding: '10px', marginTop: '5px'}}>
+                <Typography variant='h6' color='primary'>Orden Compra</Typography>
+                <div className="row">
+                    <div className="col-4">Valor</div>
+                    <div className="col-8">
+                        <input
+                            type='number'
+                            onChange={(event) => setValorOrdenCompra(event.target.value)}
+                            value={valor_orden_compra}
+                        />
+                    </div>
+                    <div className="col-4">Nro. Orden Compra</div>
+                    <div className="col-8">
+                        <input
+                            onChange={(event) => setNroOrdenCompra(event.target.value)}
+                            value={nro_orden_compra}
+                        />
+                    </div>
+                </div>
+                <FechaSiNoDialog
+                    onChange={setFechaOrdenCompra}
+                    value={fecha_orden_compra}
+                    min={null}
+                    label='Fecha Orden de Compra'
+                />
+            </div>
         </SiNoDialog>}
         {show_aplazada && <SiNoDialog
             can_on_si={fecha_proximo_seguimiento !== null}
@@ -208,7 +253,7 @@ const CotizacionDetailBotoneriaEstado = memo(props => {
             titulo='Cambiar a estado Aplazado'
         >
             Deséa pasar esta cotización a estado Aplazada?
-            <FechaProximoSeguimiento onChange={setFechaProximoSeguimiento} value={fecha_proximo_seguimiento}/>
+            <FechaSiNoDialog onChange={setFechaProximoSeguimiento} value={fecha_proximo_seguimiento}/>
         </SiNoDialog>}
         {show_recibida && <SiNoDialog
             onSi={() => {
@@ -231,7 +276,7 @@ const CotizacionDetailBotoneriaEstado = memo(props => {
             titulo='Cambiar a estado recibida'
         >
             Deséa pasar esta cotización a estado RECIBIDA?
-            <FechaProximoSeguimiento onChange={setFechaProximoSeguimiento} value={fecha_proximo_seguimiento}/>
+            <FechaSiNoDialog onChange={setFechaProximoSeguimiento} value={fecha_proximo_seguimiento}/>
         </SiNoDialog>}
         {show_rechazada && <CotizacionRechazadaFormDialog
             singular_name='Cotización Rechazada'

@@ -1,4 +1,3 @@
-from django.utils import timezone
 from rest_framework import serializers
 
 from envios_emails.api_serializers import CotizacionComponenteEnvioSerializer
@@ -173,6 +172,7 @@ class CotizacionComponenteSerializer(serializers.ModelSerializer):
     cantidad_items = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     valor_total = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     cliente_nombre = serializers.CharField(source='cliente.nombre', read_only=True)
+    cliente_nit = serializers.CharField(source='cliente.nit', read_only=True)
     pais_nombre = serializers.CharField(source='ciudad.departamento.pais.nombre', read_only=True)
     departamento_nombre = serializers.CharField(source='ciudad.departamento.nombre', read_only=True)
     ciudad_nombre = serializers.CharField(source='ciudad.nombre', read_only=True)
@@ -218,6 +218,7 @@ class CotizacionComponenteSerializer(serializers.ModelSerializer):
             'version',
             'cliente',
             'cliente_nombre',
+            'cliente_nit',
             'contacto',
             'contacto_nombres',
             'contacto_apellidos',
@@ -235,15 +236,23 @@ class CotizacionComponenteSerializer(serializers.ModelSerializer):
             'envios_emails',
             'seguimientos',
             'items',
+            'orden_compra_nro',
+            'orden_compra_fecha',
+            'orden_compra_valor',
+        ]
+        read_only_fields = [
+            'orden_compra_nro',
+            'orden_compra_fecha',
+            'orden_compra_valor',
+            'created',
+            'responsable_username',
+            'creado_por_username',
+            'envios_emails',
+            'items',
+            'seguimientos',
+            'adjuntos',
         ]
         extra_kwargs = {
-            'responsable_username': {'read_only': True},
-            'creado_por_username': {'read_only': True},
-            'envios_emails': {'read_only': True},
-            'items': {'read_only': True},
-            'seguimientos': {'read_only': True},
-            'created': {'read_only': True},
-            'adjuntos': {'read_only': True},
             'observaciones': {'allow_blank': True},
             'razon_rechazo': {'allow_blank': True},
         }

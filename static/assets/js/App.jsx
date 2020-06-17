@@ -18,6 +18,7 @@ import AppBandas from './06_app_bandas/App';
 import AppMedios from './07_app_medios/App';
 import AppContabilidad from './08_app_contabilidad/App';
 import AppSistemas from './09_app_sistemas/App';
+import AppGerencia from './12_gerencia/App';
 import AppCuenta from './authentication/mi_cuenta/Dashboard';
 
 let App = () => {
@@ -38,6 +39,7 @@ let App = () => {
                                     <Route path='/app/contabilidad' component={AppContabilidad}/>
                                     <Route path='/app/sistemas' component={AppSistemas}/>
                                     <Route path='/app/cuenta' component={AppCuenta}/>
+                                    <Route path='/app/gerencia' component={AppGerencia}/>
                                     <Route path='/app' component={AppIndex}/>
                                     <Route path='/' component={AppIndex}/>
                                 </Switch>

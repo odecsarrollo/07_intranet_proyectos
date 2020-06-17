@@ -70,9 +70,9 @@ const IndexApp = memo(props => {
         modulo_medios,
         modulo_sistemas,
         modulo_contabilidad,
-        modulo_bandas_eurobelt
+        modulo_bandas_eurobelt,
+        modulo_gerencia
     } = permisos_modulos;
-    console.log(permisos_modulos);
     return <Loading>
         <div className="mt-3">
             <div className="container text-center">
@@ -127,6 +127,12 @@ const IndexApp = memo(props => {
                     {modulo_contabilidad && <Boton
                         nombre='Contabilidad'
                         link='/app/contabilidad/'
+                        icono='coins'
+                        classes={classes}
+                    />}
+                    {modulo_gerencia && <Boton
+                        nombre='Gerencia'
+                        link='/app/gerencia/'
                         icono='coins'
                         classes={classes}
                     />}

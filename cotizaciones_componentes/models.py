@@ -52,6 +52,10 @@ class CotizacionComponente(TimeStampedModel):
     objects = CotizacionComponenteManager()
     facturas = models.ManyToManyField(FacturaDetalle, related_name='cotizaciones_componentes')
 
+    orden_compra_nro = models.CharField(max_length=120, null=True)
+    orden_compra_fecha = models.DateField(max_length=120, null=True)
+    orden_compra_valor = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+
     @property
     def pdf(self) -> 'CotizacionComponenteDocumento':
         return self.versiones.last()

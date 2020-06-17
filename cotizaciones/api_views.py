@@ -1,3 +1,4 @@
+import json
 from math import ceil
 from django.db.models import Q, When, Case, DecimalField, Value, F, Count
 from django.db.models.functions import Coalesce
@@ -78,6 +79,27 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
         self.queryset = self.list_queryset
         return super().list(request, *args, **kwargs)
 
+    @action(detail=False, http_method_names=['get', ])
+    def cotizaciones_por_ano_mes(self, request):
+        months = self.request.GET.get('months').split(',')
+        years = self.request.GET.get('years').split(',')
+        lista = self.queryset.filter(
+            Q(
+                orden_compra_fecha__year__in=years,
+                orden_compra_fecha__month__in=months,
+                estado='Cierre (Aprobado)'
+            ) |
+            Q(
+                estado__in=[
+                    'Cotización Enviada',
+                    'Evaluación Técnica y Económica',
+                    'Aceptación de Terminos y Condiciones'
+                ]
+            )
+        )
+        serializer = self.get_serializer(lista, many=True)
+        return Response(serializer.data)
+
     @action(detail=True, methods=['post'])
     def cambiar_fecha_proximo_seguimiento(self, request, pk=None):
         self.serializer_class = CotizacionConDetalleSerializer
@@ -88,6 +110,32 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
             fecha_limite_segumiento_estado=fecha_limite_segumiento_estado,
             usuario=self.request.user
         )
+        serializer = self.get_serializer(self.get_object())
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def adicionar_orden_compra(self, request, pk=None):
+        self.serializer_class = CotizacionConDetalleSerializer
+        orden_compra_archivo = request.FILES.get('orden_compra_archivo')
+        orden_compra_fecha = request.POST.get('orden_compra_fecha', None)
+        valor_orden_compra = request.POST.get('valor_orden_compra', None)
+        orden_compra_nro = request.POST.get('orden_compra_nro', None)
+        plan_pago = request.POST.get('plan_pago', None)
+        from .services import cotizacion_add_orden_compra
+        orden_compra = cotizacion_add_orden_compra(
+            cotizacion_id=pk,
+            orden_compra_fecha=orden_compra_fecha,
+            orden_compra_nro=orden_compra_nro,
+            valor_orden_compra=valor_orden_compra,
+            orden_compra_archivo=orden_compra_archivo
+        )
+        planes_de_pagos = json.loads(plan_pago)
+        for pp in json.loads(plan_pago):
+            orden_compra.planes_pagos.create(
+                fecha=planes_de_pagos[pp].get('fecha'),
+                porcentaje=planes_de_pagos[pp].get('porcentaje'),
+                valor=planes_de_pagos[pp].get('valor')
+            )
         serializer = self.get_serializer(self.get_object())
         return Response(serializer.data)
 
