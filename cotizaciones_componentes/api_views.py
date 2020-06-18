@@ -104,7 +104,7 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
         from .services import cotizacion_componentes_cambiar_estado
         orden_compra_fecha = request.POST.get('orden_compra_fecha', None)
         orden_compra_nro = request.POST.get('orden_compra_nro', None)
-        orden_compra_valor = request.POST.get('orden_compra_valor', 0)
+        orden_compra_valor = float(request.POST.get('orden_compra_valor', 0))
         nuevo_estado = request.POST.get('nuevo_estado', None)
         razon_rechazo = request.POST.get('razon_rechazo', None)
         fecha_verificacion_proximo_seguimiento = request.POST.get('fecha_verificacion_proximo_seguimiento', None)
