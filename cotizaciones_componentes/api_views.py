@@ -93,7 +93,7 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
             (
                     Q(orden_compra_fecha__year__in=years) &
                     Q(orden_compra_fecha__month__in=months) &
-                    Q(estado='PRO')
+                    Q(estado__in=['PRO', 'FIN'])
             ) | Q(estado__in=['ENV', 'REC'])
         )
         serializer = self.get_serializer(lista, many=True)

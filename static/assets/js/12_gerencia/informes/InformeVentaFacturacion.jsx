@@ -71,7 +71,7 @@ const InformeVentaFacturacion = (props) => {
         })
     });
     let data_cotizaciones_componentes = _.map(cotizaciones_componentes, f => {
-        const es_venta = f.estado === 'PRO';
+        const es_venta = f.estado === 'PRO' || f.estado === 'FIN';
         return ({
             origen: es_venta ? 'Ventas' : 'Cotizaciones',
             linea: 'Componentes',
