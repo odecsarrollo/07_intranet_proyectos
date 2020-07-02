@@ -61,6 +61,7 @@ class FacturaDetalle(TimeStampedModel):
     venta_neto = models.DecimalField(max_digits=18, decimal_places=4)
     sucursal = models.ForeignKey(SucursalCatalogo, null=True, related_name='facturas', on_delete=models.PROTECT)
     activa = models.BooleanField(default=True)
+    no_afecta_ingreso = models.BooleanField(default=False)
 
     class Meta:
         unique_together = [('sistema_informacion', 'tipo_documento', 'nro_documento')]
@@ -70,6 +71,7 @@ class FacturaDetalle(TimeStampedModel):
             ("see_rentabilidad_facturadetalle", "Can see rentabilidad factura detalle"),
             ("see_descuentos_facturadetalle", "Can see descuentos factura detalle"),
             ("relacionar_cotizacion_componentes_facturadetalle", "Can relacionar cotizacion componentes"),
+            ("set_no_afecta_ingreso_facturadetalle", "Definir si afecta ingreso factura detalle"),
         ]
 
 
@@ -90,6 +92,7 @@ class MovimientoVentaDetalle(models.Model):
     rentabilidad = models.DecimalField(max_digits=18, decimal_places=4, default=0)
     imp_netos = models.DecimalField(max_digits=18, decimal_places=4, default=0)
     venta_neto = models.DecimalField(max_digits=18, decimal_places=4, default=0)
+    no_afecta_ingreso = models.BooleanField(default=False)
 
     class Meta:
         unique_together = [('factura', 'item')]
@@ -98,4 +101,5 @@ class MovimientoVentaDetalle(models.Model):
             ("see_costos_movimientoventadetalle", "Can see movimiento venta detalle"),
             ("see_rentabilidad_movimientoventadetalle", "Can see movimiento venta detalle"),
             ("see_descuentos_movimientoventadetalle", "Can see movimiento venta detalle"),
+            ("set_no_afecta_ingreso_movimientoventadetalle", "Definir si afecta ingreso movimiento venta detalle"),
         ]

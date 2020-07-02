@@ -1,7 +1,9 @@
+import Checkbox from "@material-ui/core/Checkbox";
 import React, {memo} from "react";
 import ReactTable from "react-table";
 import {pesosColombianos} from "../../00_utilities/common";
 import {makeStyles} from "@material-ui/core";
+import * as actions from "../../01_actions/01_index";
 
 const useStyles = makeStyles(theme => ({
     texto_largo: {
@@ -15,6 +17,7 @@ const FacturaDetailTabla = memo(props => {
     const {permisos_factura} = props;
     const {venta_bruta, costo_total, rentabilidad} = props.factura;
     const classes = useStyles();
+
     return (
         <ReactTable
             data={data}

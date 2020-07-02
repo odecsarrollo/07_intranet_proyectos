@@ -35,7 +35,6 @@ class MovimientoVentaDetalleSerializer(CustomSerializerMixin, serializers.ModelS
     vendedor_apellido = serializers.CharField(source='factura.colaborador.apellidos', read_only=True)
     unidad_medida_nombre = serializers.CharField(source='unidad_medida.descripcion', read_only=True)
 
-
     class Meta:
         model = MovimientoVentaDetalle
         fields = [
@@ -52,6 +51,7 @@ class MovimientoVentaDetalleSerializer(CustomSerializerMixin, serializers.ModelS
             'factura',
             'factura_tipo',
             'factura_fecha',
+            'no_afecta_ingreso',
             'marca',
             'factura_nro',
             'venta_bruta',
@@ -82,6 +82,7 @@ class FacturalDetalleSerializer(serializers.ModelSerializer):
     cliente_nombre = serializers.CharField(source='cliente.nombre', read_only=True)
     cliente_nit = serializers.CharField(source='cliente.nit', read_only=True)
     cotizaciones_componentes = CotizacionComponenteSerializer(many=True, read_only=True)
+    valor_total_items = serializers.DecimalField(read_only=True, decimal_places=0, max_digits=12)
 
     class Meta:
         model = FacturaDetalle
@@ -90,6 +91,7 @@ class FacturalDetalleSerializer(serializers.ModelSerializer):
             'sistema_informacion',
             'items',
             'venta_bruta',
+            'valor_total_items',
             'dscto_netos',
             'vendedor_nombre',
             'vendedor_apellido',

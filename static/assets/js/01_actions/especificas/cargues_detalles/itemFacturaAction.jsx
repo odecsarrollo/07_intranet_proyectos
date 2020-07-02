@@ -1,6 +1,8 @@
 import {ITEM_FACTURA_TYPES as TYPES} from '../../00_types';
 import {
-    fetchListGet, fetchListGetURLParameters,
+    callApiMethodPostParameters,
+    fetchListGet,
+    fetchListGetURLParameters,
     fetchObject,
 } from '../../00_general_fuctions'
 
@@ -19,6 +21,19 @@ export const fetchItemsFacturas = (options_action = {}) => {
         return fetchListGet(current_url_api, options);
     }
 };
+
+export const setNoAfectaIngresoItemFactura = (id, valor, options_action = {}) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        params.append('valor', valor);
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: response})
+        };
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'no_afecta_ingreso', params, options)
+    }
+};
+
 
 export const fetchItemsFacturasPorRangoFecha = (fecha_inicial, fecha_final, options_action = {}) => {
     return (dispatch) => {

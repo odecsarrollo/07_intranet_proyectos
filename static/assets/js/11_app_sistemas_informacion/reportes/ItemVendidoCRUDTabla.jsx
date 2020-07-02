@@ -1,3 +1,4 @@
+import Checkbox from "@material-ui/core/Checkbox";
 import React, {memo, Fragment} from "react";
 import {fechaFormatoUno, pesosColombianos} from "../../00_utilities/common";
 import {makeStyles} from "@material-ui/core";
@@ -44,6 +45,7 @@ const ItemVendidoCRUDTabla = memo(props => {
     // const rentabilidad = data.map(f => parseFloat(f.rentabilidad)).reduce((uno, dos) => uno + dos, 0);
     // const costo_total = data.map(f => parseFloat(f.costo_total)).reduce((uno, dos) => uno + dos, 0);
     const onBuscarItems = (fecha_inicial, fecha_final) => dispatch(actions.fetchItemsFacturasPorRangoFecha(fecha_inicial, fecha_final));
+    const onNoAfectaIngreso = (movimiento_venta_id, valor) => dispatch(actions.setNoAfectaIngresoItemFactura(movimiento_venta_id, valor));
     return (
         <Fragment>
             {con_busqueda_rango && <RangoFechaDate onFiltarPorRangoMethod={onBuscarItems}/>}
@@ -104,11 +106,11 @@ const ItemVendidoCRUDTabla = memo(props => {
                             },
                             {
                                 Header: "Fecha Documento",
-                                accessor: 'fecha_documento',
+                                accessor: 'factura_fecha',
                                 maxWidth: 150,
                                 minWidth: 150,
                                 filterable: true,
-                                filterMethod: (filter, row) => `${fechaFormatoUno(row._original.fecha_documento).toString()}`.includes(filter.value.toLowerCase()),
+                                filterMethod: (filter, row) => `${fechaFormatoUno(row._original.factura_fecha).toString()}`.includes(filter.value.toLowerCase()),
                                 Cell: row => <div>{fechaFormatoUno(row.value)}</div>
                             },
                             {
@@ -166,6 +168,21 @@ const ItemVendidoCRUDTabla = memo(props => {
                                 minWidth: 80,
                                 //Footer: <div className='text-right'>{pesosColombianos(venta_bruta)}</div>,
                                 Cell: row => <div className='text-right'>{pesosColombianos(row.value)}</div>
+                            },
+                            {
+                                Header: "No Afecta Ingreso",
+                                accessor: "no_afecta_ingreso",
+                                maxWidth: 120,
+                                Cell: row => (
+                                    <div className='text-center' style={{width: '100%'}}>
+                                        <Checkbox
+                                            style={{margin: 0, padding: 0}}
+                                            color='primary'
+                                            checked={row.value}
+                                            onChange={(e, valor) => onNoAfectaIngreso(row.original.id, valor)}
+                                        />
+                                    </div>
+                                )
                             },
                             {
                                 Header: "#Cant.",

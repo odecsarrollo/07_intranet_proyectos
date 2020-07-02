@@ -1,4 +1,9 @@
+from django.db.models import DecimalField
+from django.db.models import ExpressionWrapper
+from django.db.models import OuterRef
 from django.db.models import Q
+from django.db.models import Subquery
+from django.db.models import Sum
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -55,9 +60,25 @@ class FacturaDetalleViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, http_method_names=['get', ])
     def facturacion_por_ano_mes(self, request):
+        items = MovimientoVentaDetalle.objects.values('factura_id').filter(
+            no_afecta_ingreso=False,
+            factura_id=OuterRef('id')
+        ).annotate(
+            total_items=ExpressionWrapper(
+                Sum('venta_bruta'),
+                output_field=DecimalField(max_digits=12)
+            )
+        )
         months = self.request.GET.get('months').split(',')
         years = self.request.GET.get('years').split(',')
-        lista = self.queryset.filter(fecha_documento__year__in=years, fecha_documento__month__in=months)
+        lista = self.queryset.annotate(
+            valor_total_items=ExpressionWrapper(
+                Subquery(items.values('total_items')),
+                output_field=DecimalField(max_digits=12)
+            )
+        ).filter(
+            fecha_documento__year__in=years, fecha_documento__month__in=months
+        )
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
@@ -106,6 +127,17 @@ class MovimientoVentaDetalleViewSet(viewsets.ModelViewSet):
             factura__fecha_documento__lte=fecha_final
         )
         serializer = self.get_serializer(lista, many=True)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def no_afecta_ingreso(self, request, pk=None):
+        from cargues_detalles.services import set_afecta_ingreso_movimiento_venta
+        valor = request.POST.get('valor') == 'true'
+        set_afecta_ingreso_movimiento_venta(
+            movimiento_venta_id=pk,
+            valor=valor
+        )
+        serializer = self.get_serializer(self.get_object())
         return Response(serializer.data)
 
     @action(detail=False, http_method_names=['get', ])

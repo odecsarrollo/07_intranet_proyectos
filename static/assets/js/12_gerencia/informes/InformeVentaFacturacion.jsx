@@ -37,12 +37,12 @@ const InformeVentaFacturacion = (props) => {
             linea = 'Componentes'
         }
         return ({
-            origen: 'Facturación',
+            tipo: 'Facturación',
             linea,
             moneda: 'COP',
             tipo_documento: f.tipo_documento,
             nro_documento: `${f.tipo_documento}-${f.nro_documento}`,
-            valor: f.venta_bruta,
+            valor: f.valor_total_items,
             estado: 'Facturado',
             cliente: f.cliente_nombre,
             cliente_nit: f.cliente_nit,
@@ -55,7 +55,7 @@ const InformeVentaFacturacion = (props) => {
     let data_cotizaciones_proyectos = _.map(cotizaciones_proyectos, f => {
         const es_venta = f.estado === 'Cierre (Aprobado)';
         return ({
-            origen: es_venta ? 'Ventas' : 'Cotizaciones',
+            tipo: es_venta ? 'Ventas' : 'Cotizaciones',
             linea: 'Proyectos',
             moneda: 'COP',
             tipo_documento: f.unidad_negocio,
@@ -73,7 +73,7 @@ const InformeVentaFacturacion = (props) => {
     let data_cotizaciones_componentes = _.map(cotizaciones_componentes, f => {
         const es_venta = f.estado === 'PRO' || f.estado === 'FIN';
         return ({
-            origen: es_venta ? 'Ventas' : 'Cotizaciones',
+            tipo: es_venta ? 'Ventas' : 'Cotizaciones',
             linea: 'Componentes',
             tipo_documento: 'CB',
             moneda: f.moneda,
@@ -91,7 +91,7 @@ const InformeVentaFacturacion = (props) => {
     data = [...data_facturacion, ...data_cotizaciones_proyectos, ...data_cotizaciones_componentes]
     const [table_state, setTableState] = useState({
         rows: ["vendedor"],
-        cols: ['year', 'month'],
+        cols: ['year', 'month', 'tipo'],
         vals: ["valor"],
         aggregatorName: "Sum"
     });

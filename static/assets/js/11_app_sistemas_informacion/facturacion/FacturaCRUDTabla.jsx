@@ -1,3 +1,4 @@
+import Checkbox from "@material-ui/core/Checkbox";
 import React, {memo, useState, Fragment} from "react";
 import {fechaFormatoUno, pesosColombianos} from "../../00_utilities/common";
 import {makeStyles} from "@material-ui/core";
@@ -72,6 +73,7 @@ const FacturaCRUDTabla = memo(props => {
             setCotizacionSeleccionadaId(null);
         }
     }));
+
     return (
         <Fragment>
             {show_quitar_cotizacion && <SiNoDialog

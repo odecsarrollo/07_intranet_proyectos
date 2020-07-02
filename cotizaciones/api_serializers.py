@@ -763,3 +763,25 @@ class CotizacionConDetalleSerializer(CotizacionSerializer):
     )
     mis_documentos = ArchivoCotizacionSerializer(many=True, read_only=True)
     ordenes_compra = CotizacionOrdenCompraSerializer(many=True, read_only=True)
+
+
+class CotizacionInformeGerenciaSerializer(serializers.ModelSerializer):
+    '''Para el reporete de gerencia'''
+    cliente_nombre = serializers.CharField(source='cliente.nombre', read_only=True)
+    cliente_nit = serializers.CharField(source='cliente.nit', read_only=True)
+    responsable_actual_nombre = serializers.CharField(source='responsable.get_full_name', read_only=True)
+
+    class Meta:
+        model = Cotizacion
+        fields = [
+            'id',
+            'unidad_negocio',
+            'estado',
+            'valor_ofertado',
+            'valor_orden_compra',
+            'cliente_nombre',
+            'cliente_nit',
+            'responsable_actual_nombre',
+            'orden_compra_fecha',
+        ]
+        read_only_fields = fields

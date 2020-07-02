@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from reversion.views import RevisionMixin
 
 from intranet_proyectos.utils_queryset import query_varios_campos
+from .api_serializers import CotizacionInformeGerenciaSerializer
 from .models import Cotizacion, SeguimientoCotizacion, ArchivoCotizacion, CondicionInicioProyecto, \
     CondicionInicioProyectoCotizacion
 from .api_serializers import (
@@ -47,7 +48,8 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
         'proyectos',
         'cotizaciones_adicionales__contacto_cliente',
         'cotizacion_inicial__cotizaciones_adicionales',
-        'cotizaciones_adicionales__cotizaciones_adicionales'
+        'cotizaciones_adicionales__cotizaciones_adicionales',
+        'ordenes_compra'
     ).all()
 
     def retrieve(self, request, *args, **kwargs):
@@ -61,6 +63,7 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
         ).prefetch_related(
             'proyectos',
             'literales',
+            'ordenes_compra',
             'condiciones_inicio_cotizacion',
             'cotizacion_inicial__cotizaciones_adicionales',
             'cotizaciones_adicionales__contacto_cliente',
@@ -83,6 +86,11 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
     def cotizaciones_por_ano_mes(self, request):
         months = self.request.GET.get('months').split(',')
         years = self.request.GET.get('years').split(',')
+        self.serializer_class = CotizacionInformeGerenciaSerializer
+        self.queryset = Cotizacion.objects.select_related(
+            'cliente',
+            'responsable'
+        ).all()
         lista = self.queryset.filter(
             Q(
                 orden_compra_fecha__year__in=years,

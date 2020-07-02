@@ -22,7 +22,6 @@ from .models import (
 from catalogo_productos.models import ItemVentaCatalogo
 from bandas_eurobelt.models import BandaEurobelt, ComponenteBandaEurobelt
 
-
 def relacionar_cotizacion_con_factura(
         cotizacion_componente_id: int,
         factura_id: int,

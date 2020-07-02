@@ -16,6 +16,7 @@ export const ITEM_FACTURA_TYPES = {
     fetch_all: 'fetch_items_facturas',
     fetch: 'fetch_item_factura',
     clear: 'clear_items_facturas',
+    update: 'update_items_facturas',
 };
 
 export const FACTURA_TYPES = {
