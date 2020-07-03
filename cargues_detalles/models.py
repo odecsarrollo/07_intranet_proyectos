@@ -39,6 +39,7 @@ class FacturaDetalle(TimeStampedModel):
     ciudad = models.ForeignKey(CiudadCatalogo, null=True, on_delete=models.PROTECT)
     fecha_documento = models.DateField(null=True)
     direccion_despacho = models.CharField(max_length=400, null=True)
+    tipo_documento_real = models.CharField(max_length=3, null=True)
     tipo_documento = models.CharField(max_length=3, null=True)
     nro_documento = models.CharField(max_length=10, null=True)
     cliente = models.ForeignKey(ClienteBiable, on_delete=models.PROTECT, null=True, related_name='compras_componentes')
