@@ -65,7 +65,7 @@ class FacturaDetalle(TimeStampedModel):
     no_afecta_ingreso = models.BooleanField(default=False)
 
     class Meta:
-        # unique_together = [('sistema_informacion', 'tipo_documento_original', 'nro_documento')]
+        unique_together = [('sistema_informacion', 'tipo_documento_original', 'nro_documento')]
         permissions = [
             ("list_facturadetalle", "Can list factura detalle"),
             ("see_costos_facturadetalle", "Can see costos factura detalle"),
