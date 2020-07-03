@@ -101,7 +101,7 @@ class FacturalDetalleSerializer(serializers.ModelSerializer):
             'imp_netos',
             'venta_neto',
             'tipo_documento',
-            'tipo_documento_real',
+            'tipo_documento_original',
             'nro_documento',
             'cliente',
             'cliente_nit',

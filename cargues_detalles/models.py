@@ -39,8 +39,6 @@ class FacturaDetalle(TimeStampedModel):
     ciudad = models.ForeignKey(CiudadCatalogo, null=True, on_delete=models.PROTECT)
     fecha_documento = models.DateField(null=True)
     direccion_despacho = models.CharField(max_length=400, null=True)
-    tipo_documento_real = models.CharField(max_length=3, null=True)
-    tipo_documento = models.CharField(max_length=3, null=True)
     nro_documento = models.CharField(max_length=10, null=True)
     cliente = models.ForeignKey(ClienteBiable, on_delete=models.PROTECT, null=True, related_name='compras_componentes')
     colaborador = models.ForeignKey(
@@ -54,6 +52,8 @@ class FacturaDetalle(TimeStampedModel):
         on_delete=models.PROTECT, null=True,
         related_name='ventas_vendedor_sistema'
     )
+    tipo_documento = models.CharField(max_length=3, null=True)
+    tipo_documento_original = models.CharField(max_length=3, null=True)
     venta_bruta = models.DecimalField(max_digits=18, decimal_places=4)
     dscto_netos = models.DecimalField(max_digits=18, decimal_places=4)
     costo_total = models.DecimalField(max_digits=18, decimal_places=4)
@@ -65,7 +65,7 @@ class FacturaDetalle(TimeStampedModel):
     no_afecta_ingreso = models.BooleanField(default=False)
 
     class Meta:
-        unique_together = [('sistema_informacion', 'tipo_documento', 'nro_documento')]
+        unique_together = [('sistema_informacion', 'tipo_documento_original', 'nro_documento')]
         permissions = [
             ("list_facturadetalle", "Can list factura detalle"),
             ("see_costos_facturadetalle", "Can see costos factura detalle"),
