@@ -32,9 +32,9 @@ const InformeVentaFacturacion = (props) => {
     let data_facturacion = _.map(facturas, f => {
         let linea = 'Notas';
         let tipo_documento = f.tipo_documento.toString().replace(' ', '');
-        if (['FEY', 'FY', 'NV'].includes(tipo_documento)) {
+        if (['FEY', 'FY', 'NY'].includes(tipo_documento)) {
             linea = 'Proyectos'
-        } else if (['FEV', 'FV', 'NY'].includes(tipo_documento)) {
+        } else if (['FEV', 'FV', 'NV'].includes(tipo_documento)) {
             linea = 'Componentes'
         }
         return ({
