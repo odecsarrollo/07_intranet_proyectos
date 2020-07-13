@@ -30,6 +30,14 @@ const Menu = () => {
             texto='Estadisticas'
             icono='analytics'
         />
+        {/*{menu_ventas_componentes_configuraciones && */}
+        <DrawerListItem
+            size='lg'
+            link='/app/ventas_componentes/configuracion/dashboard'
+            texto='Configuraciones'
+            icono='wrench'
+        />
+        {/*}*/}
         <DrawerListItem
             size='lg'
             onClick={() => setMostrarListaPrecios(true)}

@@ -17,12 +17,16 @@ const ComponenteConfiguracionDashboard = () => {
                   onChange={(event, index) => setSlideIndex(index)}
                   value={slideIndex}
             >
-                <Tab label="Correos Verificación Items Personalizados"/>
+                <Tab label="Correos Notificación Orden Compra"/>
             </Tabs>
-            {slideIndex === 0 && <CorreoCRUD aplicacion='CORREO_COTIZACION_COMPONENTE_VERIFICAR_ITEM_PERSONALIZADO'
+            {slideIndex === 0 && <CorreoCRUD aplicacion='CORREO_NOTIFICACION_NUEVA_OC_COMPONENTE'
                                              plural_name=''
-                                             singular_name='Correo Verificación Item Personalizado'
-                                             exclude_tipo_correo={['FROM', 'BCC']}/>}
+                                             singular_name='Correo Notificacion Orden Compra Nueva'
+                                             exclude_tipo_correo={['BCC', 'CC']}/>}
+            {/*{slideIndex === 0 && <CorreoCRUD aplicacion='CORREO_COTIZACION_COMPONENTE_VERIFICAR_ITEM_PERSONALIZADO'*/}
+            {/*                                 plural_name=''*/}
+            {/*                                 singular_name='Correo Verificación Item Personalizado'*/}
+            {/*                                 exclude_tipo_correo={['FROM', 'BCC']}/>}*/}
         </Fragment>
     )
 };

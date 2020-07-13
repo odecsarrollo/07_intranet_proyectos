@@ -2,6 +2,7 @@ import React from 'react';
 import {Route, Switch} from 'react-router-dom';
 import Loading from '../00_utilities/components/system/LoadingOverlay';
 import DrawerMenu from '../00_utilities/components/ui/drawer/drawer_menu';
+import ConfiguracionDashboard from "../10_app_ventas_componentes/configuracion/ConfiguracionDashboard";
 
 import Menu from './00_menu/index';
 import AppIndex from './index';
@@ -19,6 +20,8 @@ const App = () => {
                     <Route exact path='/app/ventas_componentes/' component={AppIndex}/>
                     <Route exact path='/app/ventas_componentes/cotizaciones/list'
                            component={CotizadorDashboard}/>
+                    <Route exact path='/app/ventas_componentes/configuracion/dashboard'
+                           component={ConfiguracionDashboard}/>
                     <Route exact path='/app/ventas_componentes/cotizaciones/detail/:id'
                            component={CotizacionDetail}/>
                     <Route exact path='/app/ventas_componentes/clientes/detail/:id'

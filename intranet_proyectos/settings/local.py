@@ -48,6 +48,8 @@ WEBPACK_LOADER = {
     }
 }
 
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 

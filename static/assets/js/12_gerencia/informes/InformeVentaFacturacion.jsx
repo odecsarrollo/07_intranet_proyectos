@@ -68,9 +68,9 @@ const InformeVentaFacturacion = (props) => {
             Cliente: f.cliente_nombre,
             "Cliente Nit": f.cliente_nit,
             Vendedor: f.responsable_actual_nombre ? f.responsable_actual_nombre : 'Sin Asignar',
-            Mes: es_venta ? new Date(f.orden_compra_fecha).getUTCMonth() + 1 : 'Cotización',
-            "Año": es_venta ? new Date(f.orden_compra_fecha).getUTCFullYear() : 'Cotización',
-            "Día": es_venta ? new Date(f.orden_compra_fecha).getUTCDate() : 'Cotización'
+            Mes: es_venta ? new Date(f.orden_compra_fecha).getUTCMonth() + 1 : 'N.A',
+            "Año": es_venta ? new Date(f.orden_compra_fecha).getUTCFullYear() : 'N.A',
+            "Día": es_venta ? new Date(f.orden_compra_fecha).getUTCDate() : 'N.A'
         })
     });
     let data_cotizaciones_componentes = _.map(cotizaciones_componentes, f => {
@@ -82,14 +82,14 @@ const InformeVentaFacturacion = (props) => {
             Estado: f.estado_display,
             "Nro Documento": f.nro_consecutivo,
             "Facturación": 0,
-            Ventas: 0,
-            Cotizaciones: es_venta ? f.orden_compra_valor : f.valor_total,
+            Ventas: es_venta ? f.orden_compra_valor : 0,
+            Cotizaciones: !es_venta ? f.valor_total : 0,
             Cliente: f.cliente_nombre,
             "Cliente Nit": f.cliente_nit,
             Vendedor: f.responsable_nombre ? f.responsable_nombre : 'Sin Asignar',
-            Mes: es_venta ? new Date(f.orden_compra_fecha).getUTCMonth() + 1 : 'Cotización',
-            "Año": es_venta ? new Date(f.orden_compra_fecha).getUTCFullYear() : 'Cotización',
-            "Día": es_venta ? new Date(f.orden_compra_fecha).getUTCDate() : 'Cotización'
+            Mes: es_venta ? new Date(f.orden_compra_fecha).getUTCMonth() + 1 : 'N.A',
+            "Año": es_venta ? new Date(f.orden_compra_fecha).getUTCFullYear() : 'N.A',
+            "Día": es_venta ? new Date(f.orden_compra_fecha).getUTCDate() : 'N.A'
         })
     });
     data = [...data_facturacion, ...data_cotizaciones_proyectos, ...data_cotizaciones_componentes]

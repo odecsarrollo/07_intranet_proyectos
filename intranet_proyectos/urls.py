@@ -22,7 +22,10 @@ from .api_urls import router
 from index.views import IndexView
 from knox.views import LogoutView
 
+from .views import send_emails
+
 urlpatterns = [
+    url(r'^send_emails$', send_emails),
     path('admin/', admin.site.urls),
     path('api/auth/logout', LogoutView.as_view()),
     path('api/', include(router.urls)),

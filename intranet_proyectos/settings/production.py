@@ -2,7 +2,7 @@ from .base import *
 
 DEBUG = False
 ADMINS = (
-    (os.environ['ADMIN_NAME'], os.environ['ADMIN_EMAIL']),
+    (os.environ.get('ADMIN_NAME'), os.environ.get('ADMIN_EMAIL')),
 )
 MANAGERS = ADMINS
 
@@ -10,11 +10,11 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = INSTALLED_APPS + ['storages']
 
-SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
-AWS_STORAGE_BUCKET_NAME = os.environ['S3_BUCKET_NAME']
-AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY']
-AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
+AWS_STORAGE_BUCKET_NAME = os.environ.get('S3_BUCKET_NAME')
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 AWS_S3_HOST = 's3-us-west-2.amazonaws.com'
 AWS_IS_GZIPPED = True
@@ -67,16 +67,16 @@ MEDIAFILES_LOCATION = 'media'
 MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
 DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
 
-# DATABASE_ROUTERS = ['intranet_proyectos.settings.database_router.PrimaryReplicaRouter']
+# DATABASE_ROUTERS = ['intranet_proyectos.settings.database_router.PrimaryReplicaRouter')
 
 DATABASES = {
     'default': {
-        'ENGINE': os.environ['DB_ENGINE'],
-        'NAME': os.environ['DB_NAME'],
-        'USER': os.environ['DB_USER'],
-        'PASSWORD': os.environ['DB_PASSWORD'],
-        'HOST': os.environ['DB_HOST'],
-        'PORT': os.environ['DB_PORT'],
+        'ENGINE': os.environ.get('DB_ENGINE'),
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT'),
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
         }
@@ -84,23 +84,23 @@ DATABASES = {
 }
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-EMAIL_HOST = os.environ['EMAIL_HOST']
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
 
-EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
-EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 
-EMAIL_PORT = os.environ['EMAIL_PORT']
+EMAIL_PORT = os.environ.get('EMAIL_PORT')
 
 EMAIL_SUBJECT_PREFIX = '[%s] ' % 'Proyectos'
 
-EMAIL_USE_TLS = str_to_bool(os.environ['EMAIL_USE_TLS'])
+EMAIL_USE_TLS = str_to_bool(os.environ.get('EMAIL_USE_TLS'))
 
-SERVER_EMAIL = os.environ["SERVER_EMAIL"]
+SERVER_EMAIL = os.environ.get("SERVER_EMAIL")
 
-EMAIL_USE_SSL = str_to_bool(os.environ["EMAIL_USE_SSL"])
+EMAIL_USE_SSL = str_to_bool(os.environ.get("EMAIL_USE_SSL"))
 
-DEFAULT_FROM_EMAIL = os.environ["DEFAULT_FROM_EMAIL"]
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
 
 WEBPACK_LOADER = {
     'DEFAULT': {
