@@ -17,7 +17,7 @@
     "ajv-keywords": "^3.4.0",
     "crud-django-reactjs": "^1.0.17",
     "jquery": "^3.4.1",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.19",
     "moment": "^2.19.1",
     "moment-timezone": "^0.5.25",
     "npm": "^5.6.0",
