@@ -70,3 +70,13 @@ SERVER_EMAIL = get_secret("EMAIL_SERVER", "SERVER_EMAIL")
 EMAIL_USE_SSL = str_to_bool(get_secret("EMAIL_SERVER", "EMAIL_USE_SSL"))
 
 DEFAULT_FROM_EMAIL = get_secret("EMAIL_SERVER", "DEFAULT_FROM_EMAIL")
+
+AWS_ACCESS_KEY_ID = get_secret("AWS", "AWS_ACCESS_KEY")
+
+AWS_SECRET_ACCESS_KEY = get_secret("AWS", "AWS_SECRET_ACCESS_KEY")
+
+broker_url = 'sqs://%s:%s@' % (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
+broker_transport_options = {
+    'region': 'us-east-1',
+    'queue_name_prefix': 'celery-'
+}

@@ -65,6 +65,7 @@ def cotizacion_envio_correo_notificacion_condiciones_inicio_completas(
         "condiciones_inicio_cotizacion": cotizacion.condiciones_inicio_cotizacion.order_by('fecha_entrega').all()
     }
     text_content = render_to_string('emails/cotizacion_proyecto/correo_base.html', context=context)
+    from intranet_proyectos.services import send_sms
     msg = EmailMultiAlternatives(
         asunto,
         text_content,
@@ -90,6 +91,23 @@ def cotizacion_envio_correo_notificacion_condiciones_inicio_completas(
             msg.attach(nombre_archivo, condicion.documento.read())
     try:
         msg.send()
+    except Exception as e:
+        raise ValidationError(
+            {'_error': 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e})
+    try:
+        nombre_colaborador = ' %s' % cotizacion.responsable.colaborador.full_name if hasattr(
+            cotizacion.responsable,
+            'responsable'
+        ) else ' %s' % cotizacion.responsable.username
+        send_sms(
+            phone_number='+573178551108',
+            message='ODECOPACK S.A.S,%s ha registrado una venta del proyecto %s para %s por %s' % (
+                nombre_colaborador,
+                cotizacion.descripcion_cotizacion,
+                cotizacion.cliente.nombre,
+                "${:,.0f}".format(cotizacion.valor_orden_compra)
+            )
+        )
     except Exception as e:
         raise ValidationError(
             {'_error': 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e})

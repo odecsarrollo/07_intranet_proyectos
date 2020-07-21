@@ -46,11 +46,10 @@ def simulate_send_emails(num_emails):
 def test(arg):
     print(arg)
 
-
-app.conf.beat_schedule = {
-    'add-every-15-seconds': {
-        'task': 'index.tasks.test',
-        'schedule': 15,
-        'args': ('Soy Yo',)
-    },
-}
+# app.conf.beat_schedule = {
+#     'add-every-15-seconds': {
+#         'task': 'clientes.tasks.test',
+#         'schedule': 15,
+#         'args': ('Soy Yo',)
+#     },
+# }

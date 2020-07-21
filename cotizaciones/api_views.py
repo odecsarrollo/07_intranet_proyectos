@@ -78,8 +78,11 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
         return super().update(request, *args, **kwargs)
 
     def list(self, request, *args, **kwargs):
+        from clientes.tasks import simulate_send_emails
+        print('entro a list')
+        simulate_send_emails.delay(5)
         self.serializer_class = CotizacionListSerializer
-        self.queryset = self.list_queryset
+        self.queryset = self.list_queryset[0:10]
         return super().list(request, *args, **kwargs)
 
     @action(detail=False, http_method_names=['get', ])
