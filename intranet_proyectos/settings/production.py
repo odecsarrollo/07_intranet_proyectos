@@ -20,6 +20,16 @@ AWS_S3_HOST = 's3-us-west-2.amazonaws.com'
 AWS_IS_GZIPPED = True
 AWS_S3_FILE_OVERWRITE = False
 
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_BROKER_URL = 'sqs://%s:%s@' % (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
+# Due to error on lib region N Virginia is used temporarily. please set it on Ireland "eu-west-1" after fix.
+CELERY_BROKER_TRANSPORT_OPTIONS = {
+    "region": "us-east-1",
+    'queue_name_prefix': 'proyectos_intranet-prod-',
+    'visibility_timeout': 360,
+    'polling_interval': 1
+}
+
 GZIP_CONTENT_TYPES = (
     "application/atom+xml",
     "application/javascript",

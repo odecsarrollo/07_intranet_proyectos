@@ -95,17 +95,17 @@ def cotizacion_envio_correo_notificacion_condiciones_inicio_completas(
         raise ValidationError(
             {'_error': 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e})
     try:
-        nombre_colaborador = ' %s' % cotizacion.responsable.colaborador.full_name if hasattr(
+        nombre_colaborador = '%s' % cotizacion.responsable.colaborador.full_name if hasattr(
             cotizacion.responsable,
-            'responsable'
-        ) else ' %s' % cotizacion.responsable.username
+            'colaborador'
+        ) else '%s' % cotizacion.responsable.username
         send_sms(
             phone_number='+573178551108',
-            message='ODECOPACK S.A.S,%s ha registrado una venta del proyecto %s para %s por %s' % (
+            message='Venta Proyectos: %s / %s / %s por %s' % (
                 nombre_colaborador,
                 cotizacion.descripcion_cotizacion,
                 cotizacion.cliente.nombre,
-                "${:,.0f}".format(cotizacion.valor_orden_compra)
+                "${:,.0f}".format(cotizacion.valor_orden_compra).replace('.', '_').replace(',', '.').replace('_', ',')
             )
         )
     except Exception as e:

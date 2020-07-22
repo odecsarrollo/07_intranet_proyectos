@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.core.files import File
 from django.core.mail import EmailMultiAlternatives
 from django.db.models import Q
+from django.db.models import Sum
 from django.template.loader import render_to_string
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError
@@ -125,7 +126,7 @@ def cotizacion_componentes_cambiar_estado(
         orden_compra_nro: str = None,
         orden_compra_valor: float = None,
 ) -> CotizacionComponente:
-    cotizacion_componente = CotizacionComponente.objects.get(pk=cotizacion_componente_id)
+    cotizacion_componente: CotizacionComponente = CotizacionComponente.objects.get(pk=cotizacion_componente_id)
     estado_actual = cotizacion_componente.estado
     error = True
     cambio_estado = nuevo_estado != estado_actual
@@ -191,7 +192,19 @@ def cotizacion_componentes_cambiar_estado(
                         '_error': 'No se puede pasar a estado %s si no se coloca la información de la orden de compra'
                     })
                 else:
-                    print('hola')
+                    from intranet_proyectos.services import send_sms
+                    nombre_colaborador = '%s' % cotizacion_componente.responsable.colaborador.full_name if hasattr(
+                        cotizacion_componente.responsable,
+                        'colaborador'
+                    ) else '%s' % cotizacion_componente.responsable.username
+                    send_sms(
+                        phone_number='+573178551108',
+                        message='Venta Componentes: %s - %s por %s' % (
+                            nombre_colaborador,
+                            cotizacion_componente.cliente.nombre,
+                            "${:,.0f}".format(orden_compra_valor).replace('.', '_').replace(',', '.').replace('_', ',')
+                        )
+                    )
             cotizacion_componente.orden_compra_fecha = orden_compra_fecha
             cotizacion_componente.orden_compra_nro = orden_compra_nro
             cotizacion_componente.orden_compra_valor = orden_compra_valor
