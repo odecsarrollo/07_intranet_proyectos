@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "444c0145ebc0dd44bf4a56b2b88bc8cc4936f4b02f76ef13877e0ec4e26806b1"
+            "sha256": "4a6d4e37bda7c501cee8d70ba9f4ba7732ae70ae5a25540a5dcd0e9ceb984254"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -68,7 +68,7 @@
         },
         "celery": {
             "extras": [
-                "sqs"
+                "redis"
             ],
             "hashes": [
                 "sha256:ef17d7dffde7fc73ecab3a3b6389d93d3213bac53fa7f28e68e33647ad50b916",
@@ -420,20 +420,6 @@
             ],
             "version": "==2.20"
         },
-        "pycurl": {
-            "hashes": [
-                "sha256:1957c867e2a341f5526c107c7bbc5014d6e75fdc2a14294fcb8a47663fbd2e15",
-                "sha256:50aee0469511a9708a1f1a50d510b5ec2013fc6f5e720c32bbcb3b9c7b0f45b1",
-                "sha256:667db26516e50ce4a853745906f3b149c24756d85061b9d966eb7ec43a8c48a4",
-                "sha256:7cc13d3421cbd31921d77e22d1f57c0e1a8d0fb461938a587689a93162ccef2f",
-                "sha256:a0c62dbc66b9b947832307d6cf7bdb5e4da906ce7b3efe6f74292e8f3dc5abe3",
-                "sha256:a6966e8d9ccda31c6d077c4f8673aaa88141cc73d50e110e93e627b816d17fd1",
-                "sha256:beadfa7f052626864d70eb33cec8f2aeece12dfb483c2424cc07b057f83b7d35",
-                "sha256:c5c379c8cc777dda397f86f0d0049480250ae84a82a9d99d668f461d368fb39c",
-                "sha256:ec7dd291545842295b7b56c12c90ffad2976cc7070c98d7b1517b7b6cd5994b3"
-            ],
-            "version": "==7.43.0.5"
-        },
         "pygments": {
             "hashes": [
                 "sha256:647344a061c249a3b74e230c739f434d7ea4d8b1d5f3721bc0f3558049b38f44",
@@ -568,10 +554,10 @@
         },
         "awsebcli": {
             "hashes": [
-                "sha256:a44fb91b3f6b35ea1166200df1954f8dde2228e0e1b37267b2ca6b8fa66809b5"
+                "sha256:70c247f9d54b8071d7550127e665a42a837f72812c5a1749ddb17104fbdba8db"
             ],
             "index": "pypi",
-            "version": "==3.18.1"
+            "version": "==3.18.2"
         },
         "bcrypt": {
             "hashes": [

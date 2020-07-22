@@ -26,7 +26,7 @@ pypdf2 = "==1.26.0"
 cairocffi = "==0.8.0"
 cairosvg = "==2.1.3"
 redis = "*"
-celery = {extras = ["sqs"],version = "*"}
+celery = {extras = ["redis"],version = "*"}
 
 [requires]
 python_version = "3.6"
