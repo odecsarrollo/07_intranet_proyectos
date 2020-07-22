@@ -1,3 +1,4 @@
+-i https://pypi.org/simple/
 amqp==2.6.0
 autopep8==1.5.3
 billiard==3.6.3.0
@@ -21,7 +22,7 @@ django-reversion==3.0.4
 django-silk==3.0.2
 django-storages==1.7.1
 django-webpack-loader==0.6.0
-django==2.2.6
+django==2.2.13
 djangorestframework==3.9.4
 docutils==0.15.2
 future==0.18.2
