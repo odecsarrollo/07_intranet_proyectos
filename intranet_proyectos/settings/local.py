@@ -48,8 +48,6 @@ WEBPACK_LOADER = {
     }
 }
 
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
-
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
@@ -74,9 +72,3 @@ DEFAULT_FROM_EMAIL = get_secret("EMAIL_SERVER", "DEFAULT_FROM_EMAIL")
 AWS_ACCESS_KEY_ID = get_secret("AWS", "AWS_ACCESS_KEY")
 
 AWS_SECRET_ACCESS_KEY = get_secret("AWS", "AWS_SECRET_ACCESS_KEY")
-
-broker_url = 'sqs://%s:%s@' % (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
-broker_transport_options = {
-    'region': 'us-east-1',
-    'queue_name_prefix': 'celery-'
-}

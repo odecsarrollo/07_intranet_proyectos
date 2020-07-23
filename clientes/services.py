@@ -32,7 +32,7 @@ def contacto_cliente_crear_desde_cotizacion(
             cliente_con_nit = ClienteBiable.objects.filter(nit=cliente_nit)
             if cliente_con_nit.exists():
                 raise ValidationError(
-                    {'error:': 'El nit ya existe para el cliente %s' % cliente_con_nit.first().nombre})
+                    {'_error': 'El nit ya existe para el cliente %s' % cliente_con_nit.first().nombre})
 
         cliente = ClienteBiable.objects.create(
             nombre=cliente_nombre,

@@ -1,11 +1,11 @@
-import React, {memo, Fragment} from 'react';
+import React, {Fragment, memo} from 'react';
 import {useSelector} from 'react-redux';
-import {reduxForm, formValueSelector} from 'redux-form';
-import {MyCombobox, MyTextFieldSimple, MyCheckboxSimple} from '../../../../00_utilities/components/ui/forms/fields';
-import validate from './validate_crear_contacto';
+import {formValueSelector, reduxForm} from 'redux-form';
+import {MyCheckboxSimple, MyCombobox, MyTextFieldSimple} from '../../../../00_utilities/components/ui/forms/fields';
 import {MyFormTagModal} from '../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import ContactoFormBase
     from "../../../../03_app_admin/especificas/clientes/contactos/components/forms/ContactoFormBase";
+import validate from './validate_crear_contacto';
 
 const selector = formValueSelector('crearContactoForm');
 
@@ -20,8 +20,11 @@ let CrearContactoForm = memo(props => {
         handleSubmit,
         modal_open,
         singular_name,
-        clientes
+        clientes,
+        error
     } = props;
+    console.log(error, 'el error')
+    console.log(props, 'los props')
     const myValues = useSelector(state => selector(state, 'nuevo_cliente', ''));
     const {nuevo_cliente} = myValues;
     return (
@@ -76,6 +79,7 @@ let CrearContactoForm = memo(props => {
                     case='U'/>
             </Fragment>}
             <ContactoFormBase/>
+            {error && <strong style={{color: 'red'}}>{error}</strong>}
         </MyFormTagModal>
     )
 });

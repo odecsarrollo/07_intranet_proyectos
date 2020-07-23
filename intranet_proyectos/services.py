@@ -20,7 +20,7 @@ def send_sms(
             MessageAttributes={
                 'AWS.SNS.SMS.SenderID': {
                     'DataType': 'String',
-                    'StringValue': "FabioOdeco"
+                    'StringValue': "OdecoCloud"
                 }
             }
         )
