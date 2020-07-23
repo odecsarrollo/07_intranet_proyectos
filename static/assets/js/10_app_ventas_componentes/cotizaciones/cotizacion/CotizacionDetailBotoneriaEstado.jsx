@@ -1,18 +1,17 @@
-import {Typography} from "@material-ui/core";
-import moment from "moment-timezone";
-import React, {memo, useState, Fragment} from "react";
-import {useDispatch} from 'react-redux';
-import * as actions from '../../../01_actions/01_index';
-import CotizacionEnviarFormDialog from './forms/CotizacionEnviarFormDialog'
-import CotizacionRechazadaFormDialog from './forms/CotizacionRechazadaFormDialog'
-import SiNoDialog from '../../../00_utilities/components/ui/dialog/SiNoDialog';
-import Button from "@material-ui/core/Button";
-import {notificarAction} from "../../../01_actions/01_index";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {Typography} from "@material-ui/core";
+import Button from "@material-ui/core/Button";
 import {makeStyles} from '@material-ui/core/styles';
 import clsx from 'clsx';
+import React, {Fragment, memo, useState} from "react";
+import {useDispatch} from 'react-redux';
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import {fechaToYMD} from "../../../00_utilities/common";
+import SiNoDialog from '../../../00_utilities/components/ui/dialog/SiNoDialog';
+import * as actions from '../../../01_actions/01_index';
+import {notificarAction} from '../../../01_actions/01_index';
+import CotizacionEnviarFormDialog from './forms/CotizacionEnviarFormDialog'
+import CotizacionRechazadaFormDialog from './forms/CotizacionRechazadaFormDialog'
 
 const useStyles = makeStyles(theme => ({
     button: {
@@ -51,7 +50,14 @@ const BotonCotizacion = memo(props => {
 });
 
 const FechaSiNoDialog = props => {
-    const {onChange, value, calendar_space = true, label = 'Fecha próximo Seguimiento', min = new Date()} = props;
+    const {
+        onChange,
+        value,
+        calendar_space = true,
+        label = 'Fecha próximo Seguimiento',
+        min = new Date(),
+        max = new Date(3000, 1, 1),
+    } = props;
     return <div>
         <label>
             <strong>{label}</strong>
@@ -60,7 +66,7 @@ const FechaSiNoDialog = props => {
             onChange={(v) => onChange(v)}
             format={"YYYY-MM-DD"}
             time={false}
-            max={new Date(3000, 1, 1)}
+            max={max}
             min={min}
             value={value}
         />
@@ -225,6 +231,7 @@ const CotizacionDetailBotoneriaEstado = memo(props => {
                     </div>
                 </div>
                 <FechaSiNoDialog
+                    max={new Date()}
                     onChange={setFechaOrdenCompra}
                     value={fecha_orden_compra}
                     min={null}

@@ -1,18 +1,20 @@
-from django.db.models import Q, Sum
+from django.db.models import Q
+from django.db.models import Sum
 from django.db.models.functions import Coalesce
 from django.http import HttpResponse
-from rest_framework import viewsets, permissions
+from rest_framework import permissions
+from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
+from .api_serializers import CotizacionComponenteConDetalleSerializer
+from .api_serializers import CotizacionComponenteSerializer
 from .api_serializers import CotizacionComponenteTuberiaVentasSerializer
-from .models import CotizacionComponente, ItemCotizacionComponente, CotizacionComponenteAdjunto
-from .api_serializers import (
-    CotizacionComponenteSerializer,
-    ItemCotizacionComponenteSerializer,
-    CotizacionComponenteConDetalleSerializer
-)
+from .api_serializers import ItemCotizacionComponenteSerializer
+from .models import CotizacionComponente
+from .models import CotizacionComponenteAdjunto
+from .models import ItemCotizacionComponente
 
 
 class CotizacionComponenteViewSet(viewsets.ModelViewSet):
@@ -286,10 +288,13 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
     @action(detail=False, http_method_names=['get', ])
     def cotizaciones_por_estado(self, request):
         estado = self.request.GET.get('estado')
-        lista = self.queryset.filter(
-            Q(estado=estado) |
-            Q(estado='INI')
-        )
+        if estado == 'TOD':
+            lista = self.queryset
+        else:
+            lista = self.queryset.filter(
+                Q(estado=estado) |
+                Q(estado='INI')
+            )
         user = self.request.user
 
         ver_todas = request.user.has_perm('cotizaciones_componentes.list_todos_vendedores_cotizacioncomponente')

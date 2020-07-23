@@ -100,7 +100,7 @@ def cotizacion_envio_correo_notificacion_condiciones_inicio_completas(
             'colaborador'
         ) else '%s' % cotizacion.responsable.username
         send_sms(
-            phone_number='+573178551108',
+            phone_number='+573155476246',
             message='Venta Proyectos: %s / %s / %s por %s' % (
                 nombre_colaborador,
                 cotizacion.descripcion_cotizacion,

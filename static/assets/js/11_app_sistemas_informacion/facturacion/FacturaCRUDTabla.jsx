@@ -1,4 +1,3 @@
-import Checkbox from "@material-ui/core/Checkbox";
 import React, {memo, useState, Fragment} from "react";
 import {fechaFormatoUno, pesosColombianos} from "../../00_utilities/common";
 import {makeStyles} from "@material-ui/core";

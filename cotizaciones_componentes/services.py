@@ -198,7 +198,7 @@ def cotizacion_componentes_cambiar_estado(
                         'colaborador'
                     ) else '%s' % cotizacion_componente.responsable.username
                     send_sms(
-                        phone_number='+573178551108',
+                        phone_number='+573155476246',
                         message='Venta Componentes: %s - %s por %s' % (
                             nombre_colaborador,
                             cotizacion_componente.cliente.nombre,

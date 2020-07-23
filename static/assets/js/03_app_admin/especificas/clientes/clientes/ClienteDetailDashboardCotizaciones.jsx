@@ -1,4 +1,4 @@
-import React, {memo, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import * as actions from "../../../../01_actions/01_index";
 import {useSelector, useDispatch} from "react-redux";
 import useTengoPermisos from "../../../../00_utilities/hooks/useTengoPermisos";

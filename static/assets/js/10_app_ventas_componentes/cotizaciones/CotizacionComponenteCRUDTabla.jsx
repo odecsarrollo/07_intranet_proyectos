@@ -7,7 +7,7 @@ const TablaCotizacionesDashboard = memo(props => {
         onDelete = null,
         permisos_object,
         estado_cotizacion_seleccionada,
-        setEstadoCotizacion
+        setEstadoCotizacion,
     } = props;
     const estados = [
         {indice: 1, nombre: 'En Proceso', codigo: 'PRO'},
@@ -16,6 +16,7 @@ const TablaCotizacionesDashboard = memo(props => {
         {indice: 4, nombre: 'Terminada', codigo: 'FIN'},
         {indice: 5, nombre: 'Rechazada', codigo: 'ELI'},
         {indice: 5, nombre: 'Aplazada', codigo: 'APL'},
+        {indice: 5, nombre: 'Todas', codigo: 'TOD'},
     ];
     return (
         <div>
@@ -37,6 +38,7 @@ const TablaCotizacionesDashboard = memo(props => {
                 singular_name={singular_name}
                 onDelete={onDelete}
                 permisos_object={permisos_object}
+                {...props}
             />
         </div>
     );
