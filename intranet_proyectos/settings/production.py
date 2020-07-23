@@ -11,6 +11,7 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = INSTALLED_APPS + ['storages']
 
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+ENVIAR_SMS = os.environ.get('ENVIAR_SMS', 'off') == 'on'
 
 AWS_STORAGE_BUCKET_NAME = os.environ.get('S3_BUCKET_NAME')
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY')

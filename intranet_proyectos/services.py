@@ -1,13 +1,15 @@
 import boto3
 
-from intranet_proyectos.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
+from intranet_proyectos.settings import AWS_ACCESS_KEY_ID
+from intranet_proyectos.settings import AWS_SECRET_ACCESS_KEY
+from intranet_proyectos.settings import ENVIAR_SMS
 
 
 def send_sms(
         phone_number: str,
         message: str
 ):
-    if AWS_SECRET_ACCESS_KEY and AWS_ACCESS_KEY_ID:
+    if AWS_SECRET_ACCESS_KEY and AWS_ACCESS_KEY_ID and ENVIAR_SMS:
         sns = boto3.client(
             'sns',
             aws_access_key_id=AWS_ACCESS_KEY_ID,

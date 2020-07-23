@@ -1,7 +1,8 @@
-from .base import *
-import os
-from django.core.exceptions import ImproperlyConfigured
 import json
+
+from django.core.exceptions import ImproperlyConfigured
+
+from .base import *
 
 with open("secretsLocal.json") as f:
     secrets = json.loads(f.read())
@@ -47,6 +48,8 @@ WEBPACK_LOADER = {
         'STATS_FILE': os.path.join(SITE_ROOT, 'webpack-stats-local.json'),
     }
 }
+
+ENVIAR_SMS = False
 
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

@@ -1,25 +1,65 @@
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import moment from "moment-timezone";
-import React, {useState, memo, Fragment} from 'react';
+import React, {Fragment, memo, useState} from 'react';
+import {useDispatch, useSelector} from "react-redux";
 import DateTimePicker from "react-widgets/lib/DateTimePicker";
-import {reduxForm, formValueSelector} from 'redux-form';
+import {formValueSelector, reduxForm} from 'redux-form';
 import {fechaToYMD, formatoMoneda} from "../../../../00_utilities/common";
-import validate from './orden_compra_add_validate_form';
-import * as actions from '../../../../01_actions/01_index';
 import {
     MyDateTimePickerField,
     MyFieldFileInput,
     MyTextFieldSimple
 } from '../../../../00_utilities/components/ui/forms/fields';
-import {useDispatch, useSelector} from "react-redux";
 import {MyFormTagModal} from '../../../../00_utilities/components/ui/forms/MyFormTagModal';
+import * as actions from '../../../../01_actions/01_index';
+import validate from './orden_compra_add_validate_form';
 
 const selector = formValueSelector('ordenCompraAddForm');
 
+const OrdenCompraTableItem = (props) => {
+    const {
+        fila,
+        addFormaPagoPorcentaje,
+        addFormaPagoFecha,
+        form_values
+    } = props;
+    return (<tr>
+            <td>{fila.motivo}</td>
+            <td>
+                <input
+                    type='number'
+                    value={fila.porcentaje}
+                    onChange={(event) => addFormaPagoPorcentaje(fila.id, parseFloat(event.target.value))}
+                />
+            </td>
+            <td>
+                <DateTimePicker
+                    onChange={value => addFormaPagoFecha(fila.id, value)}
+                    format={'YYYY-MM-DD'}
+                    time={false}
+                    min={form_values.orden_compra_fecha}
+                    value={fila.fecha ? new Date(fila.fecha) : new Date()}
+                />
+            </td>
+            <td className='text-right'>
+                {formatoMoneda(form_values.valor_orden_compra * (fila.porcentaje / 100), '$', 2)}
+            </td>
+        </tr>
+    )
+}
+
 let OrdenCompraAddForm = memo(props => {
     const dispatch = useDispatch();
-    const [forma_pago, setFormaPago] = useState({['n']: {id: 'n', valor: 0, porcentaje: 0, fecha: null}});
-    const form_values = useSelector(state => selector(state, 'valor_orden_compra', ''));
+    const [forma_pago, setFormaPago] = useState({
+        [1]: {id: 1, motivo: 'Orden de Compra', valor: 0, porcentaje: 0, fecha: null},
+        [2]: {id: 2, motivo: 'Anticipo', valor: 0, porcentaje: 0, fecha: null},
+        [3]: {id: 3, motivo: 'Aprobación de Planos', valor: 0, porcentaje: 0, fecha: null},
+        [4]: {id: 4, motivo: 'Avance de Obra', valor: 0, porcentaje: 0, fecha: null},
+        [5]: {id: 5, motivo: 'Pruebas Fat', valor: 0, porcentaje: 0, fecha: null},
+        [6]: {id: 6, motivo: 'Instalación', valor: 0, porcentaje: 0, fecha: null},
+        [7]: {id: 7, motivo: 'Aceptación de Proyecto', valor: 0, porcentaje: 0, fecha: null},
+    });
+
+    const form_values = useSelector(state => selector(state, 'valor_orden_compra', 'orden_compra_fecha'));
     const {
         pristine,
         submitting,
@@ -89,6 +129,7 @@ let OrdenCompraAddForm = memo(props => {
             onCancel={onCancel}
             onSubmit={handleSubmit((v) => addOrdenCompra(submitObject(v)))}
             reset={reset}
+            fullScreen={true}
             initialValues={initialValues}
             submitting={submitting || porcentaje_total !== 100}
             modal_open={modal_open}
@@ -100,7 +141,8 @@ let OrdenCompraAddForm = memo(props => {
                 label_space_xs={4}
                 name='orden_compra_fecha'
                 nombre='Fecha Orden de Compra'
-                className='col-12'
+                className='col-12 col-md-4'
+                max={new Date()}
             />
             <MyTextFieldSimple
                 nombre='Valor OC'
@@ -115,38 +157,27 @@ let OrdenCompraAddForm = memo(props => {
                 case='U'/>
             <MyFieldFileInput className='col-12 p-2' name="orden_compra_archivo"/>
             {form_values.valor_orden_compra && form_values.valor_orden_compra > 0 && <Fragment>
-                <table className='table table-responsive' style={{minHeight: '400px'}}>
+                <table className='table' style={{minHeight: '400px'}}>
                     <thead>
                     <tr>
+                        <th>Motivo</th>
                         <th>Porcentaje</th>
                         <th>Fecha</th>
                         <th>Valor</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {_.map(forma_pago, f => <tr key={f.id}>{
-                        <Fragment>
-                            <td>
-                                <input
-                                    type='number'
-                                    value={f.porcentaje}
-                                    onChange={(event) => addFormaPagoPorcentaje(f.id, parseFloat(event.target.value))}
-                                />
-                            </td>
-                            <td>
-                                <DateTimePicker
-                                    onChange={value => addFormaPagoFecha(f.id, value)}
-                                    format={'YYYY-MM-DD'}
-                                    time={false}
-                                    min={new Date()}
-                                    value={f.fecha ? new Date(f.fecha) : new Date()}
-                                />
-                            </td>
-                            <td className='text-right'>
-                                {formatoMoneda(form_values.valor_orden_compra * (f.porcentaje / 100), '$', 2)}
-                            </td>
-                        </Fragment>
-                    }</tr>)}
+
+
+                    {_.map(forma_pago, f => <OrdenCompraTableItem
+                        key={f.id}
+                        fila={f}
+                        addFormaPagoPorcentaje={addFormaPagoPorcentaje}
+                        addFormaPagoFecha={addFormaPagoFecha}
+                        form_values={form_values}
+                    />)}
+
+
                     </tbody>
                     <tfoot>
                     <tr>
@@ -156,11 +187,6 @@ let OrdenCompraAddForm = memo(props => {
                     </tr>
                     </tfoot>
                 </table>
-                {porcentaje_total !== 100 && <FontAwesomeIcon onClick={() => setFormaPago({
-                    ...forma_pago,
-                    [`n-${_.size(forma_pago) + 1}`]: {id: `n-${_.size(forma_pago) + 1}`, porcentaje: 0, valor: 0}
-                })} icon={'info-circle'} size='1x'/>
-                }
             </Fragment>}
         </MyFormTagModal>
     )
