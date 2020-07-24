@@ -55,8 +55,9 @@ let OrdenCompraAddForm = memo(props => {
         [3]: {id: 3, motivo: 'Aprobación de Planos', valor: 0, porcentaje: 0, fecha: null},
         [4]: {id: 4, motivo: 'Avance de Obra', valor: 0, porcentaje: 0, fecha: null},
         [5]: {id: 5, motivo: 'Pruebas Fat', valor: 0, porcentaje: 0, fecha: null},
-        [6]: {id: 6, motivo: 'Instalación', valor: 0, porcentaje: 0, fecha: null},
-        [7]: {id: 7, motivo: 'Aceptación de Proyecto', valor: 0, porcentaje: 0, fecha: null},
+        [6]: {id: 6, motivo: 'Contra Entrega', valor: 0, porcentaje: 0, fecha: null},
+        [7]: {id: 7, motivo: 'Instalación', valor: 0, porcentaje: 0, fecha: null},
+        [8]: {id: 8, motivo: 'Aceptación de Proyecto', valor: 0, porcentaje: 0, fecha: null},
     });
 
     const form_values = useSelector(state => selector(state, 'valor_orden_compra', 'orden_compra_fecha'));
