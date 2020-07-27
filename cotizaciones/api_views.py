@@ -78,8 +78,8 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
         return super().update(request, *args, **kwargs)
 
     def list(self, request, *args, **kwargs):
-        from clientes.tasks import simulate_send_emails
-        simulate_send_emails.delay(5)
+        # from clientes.tasks import simulate_send_emails
+        # simulate_send_emails.delay(5)
         self.serializer_class = CotizacionListSerializer
         return super().list(request, *args, **kwargs)
 
