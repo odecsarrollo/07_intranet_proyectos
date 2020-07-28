@@ -3,10 +3,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
@@ -21,6 +19,15 @@
     </p>
 {% endlocalize %}
 <p>{% if cotizacion.cotizacion_inicial %}Cotización Inicial: {{ cotizacion_inicial }}{% endif %}</p>
+<p>
+    Descripción del proyecto: {{ cotizacion.descripcion_cotizacion }}
+    {% if cotizacion.cliente %}
+        <br/>Cliente: {{ cotizacion.cliente.nombre }}
+    {% endif %}
+    {% if cotizacion.responsable %}
+        <br/>Asesor: {{ cotizacion.responsable.get_full_name }}
+    {% endif %}
+</p>
 Condiciones Definidas para el inicio:
 <ol>
     {% if cotizacion.orden_compra_fecha %}
