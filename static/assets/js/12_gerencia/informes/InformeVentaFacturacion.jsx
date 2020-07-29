@@ -1,8 +1,7 @@
-import React, {useEffect, Fragment, useState} from "react";
+import Button from "@material-ui/core/Button";
+import React, {Fragment, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../../01_actions/01_index';
-import PivotTableUI from 'react-pivottable/PivotTableUI';
-import Button from "@material-ui/core/Button";
 import {Pivot2} from '../webdatarocks.react';
 
 const InformeVentaFacturacion = (props) => {
@@ -34,7 +33,7 @@ const InformeVentaFacturacion = (props) => {
         let tipo_documento = f.tipo_documento.toString().replace(' ', '');
         if (['FEY', 'FY', 'NY'].includes(tipo_documento)) {
             linea = 'Proyectos'
-        } else if (['FEV', 'FV', 'NV'].includes(tipo_documento)) {
+        } else if (['FEV', 'FV', 'NV', 'NCE'].includes(tipo_documento)) {
             linea = 'Componentes'
         }
         return ({
