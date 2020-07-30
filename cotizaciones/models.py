@@ -1,12 +1,14 @@
 import datetime
+import random
 
 import reversion
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 from django.utils import timezone
 from model_utils.models import TimeStampedModel
 
-from clientes.models import ClienteBiable, ContactoCliente
+from clientes.models import ClienteBiable
+from clientes.models import ContactoCliente
 from cotizaciones.managers import CotizacionManager
 
 
@@ -135,29 +137,6 @@ class Cotizacion(TimeStampedModel):
         return False
 
 
-class CotizacionOrdenCompra(TimeStampedModel):
-    def archivo_upload_to(instance, filename):
-        nro_cotizacion = instance.cotizacion.id
-        return "documentos/cotizaciones/%s/ordenes_compra/%s" % (nro_cotizacion, filename)
-
-    cotizacion = models.ForeignKey(Cotizacion, related_name='ordenes_compra', on_delete=models.PROTECT)
-    valor_orden_compra = models.DecimalField(max_digits=20, decimal_places=2, default=0)
-    orden_compra_nro = models.CharField(max_length=100, null=True)
-    orden_compra_fecha = models.DateField(null=True)
-    orden_compra_archivo = models.FileField(null=True, upload_to=archivo_upload_to)
-
-
-class CotizacionOrdenCompraPlanPago(TimeStampedModel):
-    orden_compra = models.ForeignKey(
-        CotizacionOrdenCompra,
-        on_delete=models.CASCADE,
-        related_name='planes_pagos'
-    )
-    fecha = models.DateField()
-    porcentaje = models.DecimalField(max_digits=5, decimal_places=2, default=0)
-    valor = models.DecimalField(max_digits=20, decimal_places=2, default=0)
-
-
 class SeguimientoCotizacion(TimeStampedModel):
     TIPO_SEGUIMIENTO_CHOICE = (
         (0, 'Comentario'),
@@ -232,3 +211,43 @@ class CondicionInicioProyectoCotizacion(models.Model):
                 return True
             return False
         return False
+
+
+class CotizacionPagoProyectado(TimeStampedModel):
+    def archivo_upload_to(instance, filename):
+        nro_cotizacion = instance.cotizacion.id
+        return "documentos/cotizaciones/%s/ordenes_compra/%s" % (nro_cotizacion, filename)
+
+    cotizacion = models.ForeignKey(Cotizacion, related_name='pagos_proyectados', on_delete=models.PROTECT)
+    valor_orden_compra = models.DecimalField(max_digits=20, decimal_places=2, default=0)
+    orden_compra_nro = models.CharField(max_length=100, null=True)
+    orden_compra_fecha = models.DateField(null=True)
+    orden_compra_archivo = models.FileField(null=True, upload_to=archivo_upload_to)
+
+
+class CotizacionPagoProyectadoAcuerdoPago(TimeStampedModel):
+    orden_compra = models.ForeignKey(
+        CotizacionPagoProyectado,
+        on_delete=models.CASCADE,
+        related_name='acuerdos_pagos'
+    )
+    motivo = models.CharField(max_length=100)
+    porcentaje = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    fecha_proyectada = models.DateField(null=True)
+    valor_proyectado = models.DecimalField(max_digits=20, decimal_places=2, default=0)
+
+
+class CotizacionPagoProyectadoAcuerdoPagoPago(TimeStampedModel):
+    def archivo_upload_to(instance, filename):
+        nro_cotizacion = instance.acuerdo_pago.orden_compra.cotizacion.id
+        return "documentos/cotizaciones/%s/ordenes_compra/%s/acuerdo_pago_%s" % (
+            nro_cotizacion, random.randint(10000, 99999), filename)
+
+    acuerdo_pago = models.ForeignKey(
+        CotizacionPagoProyectadoAcuerdoPago,
+        on_delete=models.CASCADE,
+        related_name='pagos'
+    )
+    fecha = models.DateField(null=True)
+    valor = models.DecimalField(max_digits=20, decimal_places=2, default=0)
+    comprobante_pago = models.FileField(null=True, upload_to=archivo_upload_to)

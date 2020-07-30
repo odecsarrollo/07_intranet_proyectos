@@ -7,14 +7,19 @@ from django.db.models.functions import Substr
 from django.template.loader import render_to_string
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError
-
-from proyectos.models import Proyecto, Literal
-from .models import Cotizacion, SeguimientoCotizacion
-from clientes.models import ClienteBiable
 from reversion.models import Version
-from cotizaciones.models import CondicionInicioProyecto, CondicionInicioProyectoCotizacion
+
+from clientes.models import ClienteBiable
 from correos_servicios.models import CorreoAplicacion
-from .models import CotizacionOrdenCompra
+from cotizaciones.models import CondicionInicioProyecto
+from cotizaciones.models import CondicionInicioProyectoCotizacion
+from proyectos.models import Literal
+from proyectos.models import Proyecto
+from .models import Cotizacion
+from .models import CotizacionPagoProyectado
+from .models import CotizacionPagoProyectadoAcuerdoPago
+from .models import CotizacionPagoProyectadoAcuerdoPagoPago
+from .models import SeguimientoCotizacion
 
 
 def condicion_inicio_proyecto_crear_actualizar(
@@ -95,19 +100,21 @@ def cotizacion_envio_correo_notificacion_condiciones_inicio_completas(
         raise ValidationError(
             {'_error': 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e})
     try:
-        nombre_colaborador = '%s' % cotizacion.responsable.colaborador.full_name if hasattr(
-            cotizacion.responsable,
-            'colaborador'
-        ) else '%s' % cotizacion.responsable.username
-        send_sms(
-            phone_number='+573155476246',
-            message='Venta Proyectos: %s / %s / %s por %s' % (
-                nombre_colaborador,
-                cotizacion.descripcion_cotizacion,
-                cotizacion.cliente.nombre,
-                "${:,.0f}".format(cotizacion.valor_orden_compra).replace('.', '_').replace(',', '.').replace('_', ',')
+        if cotizacion.orden_compra_archivo is not None:
+            nombre_colaborador = '%s' % cotizacion.responsable.colaborador.full_name if hasattr(
+                cotizacion.responsable,
+                'colaborador'
+            ) else '%s' % cotizacion.responsable.username
+            send_sms(
+                phone_number='+573155476246',
+                message='Venta Proyectos: %s / %s / %s por %s' % (
+                    nombre_colaborador,
+                    cotizacion.descripcion_cotizacion,
+                    cotizacion.cliente.nombre,
+                    "${:,.0f}".format(cotizacion.valor_orden_compra).replace('.', '_').replace(',', '.').replace('_',
+                                                                                                                 ',')
+                )
             )
-        )
     except Exception as e:
         raise ValidationError(
             {'_error': 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e})
@@ -201,14 +208,14 @@ def cotizacion_condicion_inicio_orden_compra_actualizar(
     return cotizacion
 
 
-def cotizacion_add_orden_compra(
+def cotizacion_add_pago_proyectado(
         cotizacion_id: int,
         orden_compra_nro: str,
         valor_orden_compra: float,
         orden_compra_fecha: datetime,
         orden_compra_archivo
-) -> CotizacionOrdenCompra:
-    orden_compra = CotizacionOrdenCompra.objects.create(
+) -> CotizacionPagoProyectado:
+    orden_compra = CotizacionPagoProyectado.objects.create(
         orden_compra_nro=orden_compra_nro,
         valor_orden_compra=valor_orden_compra,
         orden_compra_fecha=orden_compra_fecha,
@@ -216,6 +223,26 @@ def cotizacion_add_orden_compra(
         cotizacion_id=cotizacion_id
     )
     return orden_compra
+
+
+def cotizacion_add_pago(
+        cotizacion_id: int,
+        valor: float,
+        fecha: datetime,
+        comprobante_pago,
+        acuerdo_pago_id
+) -> CotizacionPagoProyectado:
+    pago = None
+    acuerdo_pago = CotizacionPagoProyectadoAcuerdoPago.objects.get(pk=acuerdo_pago_id)
+    if acuerdo_pago.cotizacion_id == cotizacion_id:
+        print('entroooo')
+        pago = CotizacionPagoProyectadoAcuerdoPagoPago.objects.create(
+            valor=valor,
+            comprobante_pago=comprobante_pago,
+            fecha=fecha,
+            acuerdo_pago_id=acuerdo_pago_id
+        )
+    return pago
 
 
 def cotizacion_limpiar_condicion_inicio_proyecto(

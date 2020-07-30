@@ -1,6 +1,13 @@
 import json
 from math import ceil
-from django.db.models import Q, When, Case, DecimalField, Value, F, Count
+
+from django.db.models import Case
+from django.db.models import Count
+from django.db.models import DecimalField
+from django.db.models import F
+from django.db.models import Q
+from django.db.models import Value
+from django.db.models import When
 from django.db.models.functions import Coalesce
 from django.utils import timezone
 from rest_framework import viewsets
@@ -9,20 +16,21 @@ from rest_framework.response import Response
 from reversion.views import RevisionMixin
 
 from intranet_proyectos.utils_queryset import query_varios_campos
+from .api_serializers import ArchivoCotizacionSerializer
+from .api_serializers import CondicionInicioProyectoCotizacionSerializer
+from .api_serializers import CondicionInicioProyectoSerializer
+from .api_serializers import CotizacionConDetalleSerializer
 from .api_serializers import CotizacionInformeGerenciaSerializer
-from .models import Cotizacion, SeguimientoCotizacion, ArchivoCotizacion, CondicionInicioProyecto, \
-    CondicionInicioProyectoCotizacion
-from .api_serializers import (
-    CotizacionSerializer,
-    SeguimientoCotizacionSerializer,
-    ArchivoCotizacionSerializer,
-    CotizacionConDetalleSerializer,
-    CotizacionParaAbrirCarpetaSerializer,
-    CotizacionTuberiaVentaSerializer,
-    CotizacionListSerializer,
-    CondicionInicioProyectoSerializer,
-    CondicionInicioProyectoCotizacionSerializer,
-)
+from .api_serializers import CotizacionListSerializer
+from .api_serializers import CotizacionParaAbrirCarpetaSerializer
+from .api_serializers import CotizacionSerializer
+from .api_serializers import CotizacionTuberiaVentaSerializer
+from .api_serializers import SeguimientoCotizacionSerializer
+from .models import ArchivoCotizacion
+from .models import CondicionInicioProyecto
+from .models import CondicionInicioProyectoCotizacion
+from .models import Cotizacion
+from .models import SeguimientoCotizacion
 
 
 class CondicionInicioProyectoViewSet(viewsets.ModelViewSet):
@@ -49,32 +57,36 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
         'cotizaciones_adicionales__contacto_cliente',
         'cotizacion_inicial__cotizaciones_adicionales',
         'cotizaciones_adicionales__cotizaciones_adicionales',
-        'ordenes_compra'
+        'pagos_proyectados'
+    ).all()
+    detail_queryset = Cotizacion.objects.select_related(
+        'cliente',
+        'contacto_cliente',
+        'cotizacion_inicial__cliente',
+        'cotizacion_inicial__contacto_cliente',
+        'responsable'
+    ).prefetch_related(
+        'proyectos',
+        'literales',
+        'pagos_proyectados',
+        'pagos_proyectados__acuerdos_pagos',
+        'pagos_proyectados__acuerdos_pagos__pagos',
+        'condiciones_inicio_cotizacion',
+        'cotizacion_inicial__cotizaciones_adicionales',
+        'cotizaciones_adicionales__contacto_cliente',
+        'cotizaciones_adicionales__cotizaciones_adicionales',
+        'mis_documentos__creado_por',
+        'mis_seguimientos__creado_por',
     ).all()
 
     def retrieve(self, request, *args, **kwargs):
         self.serializer_class = CotizacionConDetalleSerializer
-        self.queryset = Cotizacion.objects.select_related(
-            'cliente',
-            'contacto_cliente',
-            'cotizacion_inicial__cliente',
-            'cotizacion_inicial__contacto_cliente',
-            'responsable'
-        ).prefetch_related(
-            'proyectos',
-            'literales',
-            'ordenes_compra',
-            'condiciones_inicio_cotizacion',
-            'cotizacion_inicial__cotizaciones_adicionales',
-            'cotizaciones_adicionales__contacto_cliente',
-            'cotizaciones_adicionales__cotizaciones_adicionales',
-            'mis_documentos__creado_por',
-            'mis_seguimientos__creado_por',
-        ).all()
+        self.queryset = self.detail_queryset
         return super().retrieve(request, *args, **kwargs)
 
     def update(self, request, *args, **kwargs):
         self.serializer_class = CotizacionConDetalleSerializer
+        self.queryset = self.detail_queryset
         return super().update(request, *args, **kwargs)
 
     def list(self, request, *args, **kwargs):
@@ -123,28 +135,39 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @action(detail=True, methods=['post'])
-    def adicionar_orden_compra(self, request, pk=None):
+    def adicionar_pago_proyectado(self, request, pk=None):
         self.serializer_class = CotizacionConDetalleSerializer
         orden_compra_archivo = request.FILES.get('orden_compra_archivo')
         orden_compra_fecha = request.POST.get('orden_compra_fecha', None)
         valor_orden_compra = request.POST.get('valor_orden_compra', None)
         orden_compra_nro = request.POST.get('orden_compra_nro', None)
         plan_pago = request.POST.get('plan_pago', None)
-        from .services import cotizacion_add_orden_compra
-        orden_compra = cotizacion_add_orden_compra(
+        from .services import cotizacion_add_pago_proyectado
+        pago_proyectado = cotizacion_add_pago_proyectado(
             cotizacion_id=pk,
             orden_compra_fecha=orden_compra_fecha,
             orden_compra_nro=orden_compra_nro,
             valor_orden_compra=valor_orden_compra,
             orden_compra_archivo=orden_compra_archivo
         )
-        planes_de_pagos = json.loads(plan_pago)
+        acuerdos_de_pago = json.loads(plan_pago)
         for pp in json.loads(plan_pago):
-            orden_compra.planes_pagos.create(
-                fecha=planes_de_pagos[pp].get('fecha'),
-                porcentaje=planes_de_pagos[pp].get('porcentaje'),
-                valor=planes_de_pagos[pp].get('valor')
+            pago_proyectado.acuerdos_pagos.create(
+                motivo=acuerdos_de_pago[pp].get('motivo'),
+                fecha_proyectada=acuerdos_de_pago[pp].get('fecha_proyectada'),
+                valor_proyectado=acuerdos_de_pago[pp].get('valor_proyectado'),
+                porcentaje=acuerdos_de_pago[pp].get('porcentaje')
             )
+        serializer = self.get_serializer(self.get_object())
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def adicionar_pago(self, request, pk=None):
+        self.serializer_class = CotizacionConDetalleSerializer
+        valor = request.FILES.get('comprobante_pago')
+        fecha = request.POST.get('fecha', None)
+        comprobante_pago = request.POST.get('valor', None)
+        from .services import cotizacion_add_pago_proyectado
         serializer = self.get_serializer(self.get_object())
         return Response(serializer.data)
 

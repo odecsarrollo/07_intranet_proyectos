@@ -37,7 +37,7 @@ const OrdenCompraTableItem = (props) => {
                     format={'YYYY-MM-DD'}
                     time={false}
                     min={form_values.orden_compra_fecha}
-                    value={fila.fecha ? new Date(fila.fecha) : new Date()}
+                    value={fila.fecha_proyectada ? new Date(fila.fecha_proyectada) : new Date()}
                 />
             </td>
             <td className='text-right'>
@@ -50,14 +50,14 @@ const OrdenCompraTableItem = (props) => {
 let OrdenCompraAddForm = memo(props => {
     const dispatch = useDispatch();
     const [forma_pago, setFormaPago] = useState({
-        [1]: {id: 1, motivo: 'Orden de Compra', valor: 0, porcentaje: 0, fecha: null},
-        [2]: {id: 2, motivo: 'Anticipo', valor: 0, porcentaje: 0, fecha: null},
-        [3]: {id: 3, motivo: 'Aprobación de Planos', valor: 0, porcentaje: 0, fecha: null},
-        [4]: {id: 4, motivo: 'Avance de Obra', valor: 0, porcentaje: 0, fecha: null},
-        [5]: {id: 5, motivo: 'Pruebas Fat', valor: 0, porcentaje: 0, fecha: null},
-        [6]: {id: 6, motivo: 'Contra Entrega', valor: 0, porcentaje: 0, fecha: null},
-        [7]: {id: 7, motivo: 'Instalación', valor: 0, porcentaje: 0, fecha: null},
-        [8]: {id: 8, motivo: 'Aceptación de Proyecto', valor: 0, porcentaje: 0, fecha: null},
+        [1]: {id: 1, motivo: 'Orden de Compra', valor_proyectado: 0, porcentaje: 0, fecha_proyectada: null},
+        [2]: {id: 2, motivo: 'Anticipo', valor_proyectado: 0, porcentaje: 0, fecha_proyectada: null},
+        [3]: {id: 3, motivo: 'Aprobación de Planos', valor_proyectado: 0, porcentaje: 0, fecha_proyectada: null},
+        [4]: {id: 4, motivo: 'Avance de Obra', valor_proyectado: 0, porcentaje: 0, fecha_proyectada: null},
+        [5]: {id: 5, motivo: 'Pruebas Fat', valor_proyectado: 0, porcentaje: 0, fecha_proyectada: null},
+        [6]: {id: 6, motivo: 'Contra Entrega', valor_proyectado: 0, porcentaje: 0, fecha_proyectada: null},
+        [7]: {id: 7, motivo: 'Instalación', valor_proyectado: 0, porcentaje: 0, fecha_proyectada: null},
+        [8]: {id: 8, motivo: 'Aceptación de Proyecto', valor_proyectado: 0, porcentaje: 0, fecha_proyectada: null},
     });
 
     const form_values = useSelector(state => selector(state, 'valor_orden_compra', 'orden_compra_fecha'));
@@ -75,7 +75,7 @@ let OrdenCompraAddForm = memo(props => {
         cotizacion
     } = props;
     const porcentaje_total = _.map(forma_pago).reduce((suma, elemento) => parseFloat(suma) + parseFloat(elemento['porcentaje']), 0);
-    const forma_pago_total = _.map(forma_pago).reduce((suma, elemento) => parseFloat(suma) + parseFloat(elemento['valor']), 0);
+    const forma_pago_total = _.map(forma_pago).reduce((suma, elemento) => parseFloat(suma) + parseFloat(elemento['valor_proyectado']), 0);
 
     const submitObject = (item) => {
         let datos_a_subir = new FormData();
@@ -92,7 +92,7 @@ let OrdenCompraAddForm = memo(props => {
             datos_a_subir.append(key, item);
         });
         if (item.orden_compra_archivo) {
-            if (typeof item.documento !== 'string') {
+            if (typeof item.orden_compra_archivo !== 'string') {
                 datos_a_subir.append('orden_compra_archivo', item.orden_compra_archivo[0]);
             }
         }
@@ -106,7 +106,7 @@ let OrdenCompraAddForm = memo(props => {
             [id]: {
                 ...forma_pago[id],
                 porcentaje: isNaN(valor) ? 0 : valor,
-                valor: form_values.valor_orden_compra * (isNaN(valor) ? 0 : valor / 100)
+                valor_proyectado: form_values.valor_orden_compra * (isNaN(valor) ? 0 : valor / 100)
             }
         })
     }
@@ -116,7 +116,7 @@ let OrdenCompraAddForm = memo(props => {
             ...forma_pago,
             [id]: {
                 ...forma_pago[id],
-                fecha: fechaToYMD(valor)
+                fecha_proyectada: fechaToYMD(valor)
             }
         })
     }
@@ -156,15 +156,17 @@ let OrdenCompraAddForm = memo(props => {
                 name='orden_compra_nro'
                 className="col-12 col-md-4"
                 case='U'/>
-            <MyFieldFileInput className='col-12 p-2' name="orden_compra_archivo"/>
+            <div>
+                <MyFieldFileInput className='col-12 p-2' name="orden_compra_archivo"/>
+            </div>
             {form_values.valor_orden_compra && form_values.valor_orden_compra > 0 && <Fragment>
                 <table className='table' style={{minHeight: '400px'}}>
                     <thead>
                     <tr>
                         <th>Motivo</th>
                         <th>Porcentaje</th>
-                        <th>Fecha</th>
-                        <th>Valor</th>
+                        <th>Fecha Proyectada</th>
+                        <th>Valor Proyectado</th>
                     </tr>
                     </thead>
                     <tbody>

@@ -13,9 +13,7 @@
 </p>
 {% localize off %}
     <p>
-        Se há acabado de generar esta notificación para la
-        cotización {{ cotizacion.unidad_negocio }}-{{ cotizacion.nro_cotizacion }}.
-        Ya todas las condiciones definidas para la misma se han cumplido.
+        Se há cargado una orden de compra.
     </p>
 {% endlocalize %}
 <p>{% if cotizacion.cotizacion_inicial %}Cotización Inicial: {{ cotizacion_inicial }}{% endif %}</p>
@@ -28,26 +26,7 @@
         <br/>Asesor: {{ cotizacion.responsable.get_full_name }}
     {% endif %}
 </p>
-Condiciones Definidas para el inicio:
-<ol>
-    {% if cotizacion.orden_compra_fecha %}
-        <li>ORDEN COMPRA {{ cotizacion.orden_compra_nro }} -
-            {{ cotizacion.orden_compra_fecha }} {% if cotizacion.orden_compra_archivo %}
-                (Adjunto){% endif %}</li>{% endif %}
-    {% for condicion in condiciones_inicio_cotizacion %}
-        {% if condicion.fecha_entrega %}
-            <li>{{ condicion.descripcion }} - {{ condicion.fecha_entrega }} {% if condicion.documento %}
-                (Adjunto){% endif %}</li>
-        {% endif %}
-    {% endfor %}
-</ol>
-<p> Para el proyecto se pactó con el cliente {{ cotizacion.dias_pactados_entrega_proyecto }} días a partir de la entrega
-    de los documentos definidos.
-    El último documento o el que definió el inicio del proyecto fué entregado
-    el {{ cotizacion.condiciones_inicio_fecha_ultima }} para finalmente tener una
-    fecha
-    apróximada de entrega para {{ cotizacion.fecha_entrega_pactada }}.
-</p>
+
 <div>
     <div style="padding: 5px; border-radius: 15px; border: solid black 1px">
         <h4 style="font-weight: bold">AVISO LEGAL:</h4>

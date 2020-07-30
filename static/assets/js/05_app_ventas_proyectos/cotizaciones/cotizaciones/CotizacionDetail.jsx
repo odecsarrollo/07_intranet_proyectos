@@ -1,20 +1,21 @@
+import Typography from "@material-ui/core/Typography";
 import React, {memo, useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import * as actions from "../../../01_actions/01_index";
+import {Tab, TabList, TabPanel, Tabs} from 'react-tabs';
 import CargarDatos from "../../../00_utilities/components/system/cargar_datos";
+import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
 import {SinObjeto} from "../../../00_utilities/templates/fragmentos";
+import * as actions from "../../../01_actions/01_index";
+import {ARCHIVOS_COTIZACIONES, COTIZACIONES, PROYECTOS} from "../../../permisos";
 import ValidarPermisos from "../../../permisos/validar_permisos";
-import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
-import {COTIZACIONES, PROYECTOS, ARCHIVOS_COTIZACIONES} from "../../../permisos";
+import CambioEstadoList from '../seguimientos/CotizacionSeguimientoCambioEstadoList';
 import ComentariosList from '../seguimientos/CotizacionSeguimientoComentarioList';
 import TareasList from '../seguimientos/CotizacionSeguimientoTareaList';
-import CambioEstadoList from '../seguimientos/CotizacionSeguimientoCambioEstadoList';
-import CotizacionForm from './forms/CotizacionFormDetail';
-import CotizacionInfo from './CotizacionDetailInfo';
-import CotizacionDetailDocumento from './CotizacionDetailDocumento';
-import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
-import Typography from "@material-ui/core/Typography";
+import CotizacionAcuerdoPagoList from "./CotizacionAcuerdoPagoList";
 import CotizacionCondicionInicioProyecto from "./CotizacionCondicionInicioProyecto";
+import CotizacionDetailDocumento from './CotizacionDetailDocumento';
+import CotizacionInfo from './CotizacionDetailInfo';
+import CotizacionForm from './forms/CotizacionFormDetail';
 
 const Detail = memo(props => {
     const dispatch = useDispatch();
@@ -91,6 +92,7 @@ const Detail = memo(props => {
                         <TabList>
                             {(object.estado === 'Aceptación de Terminos y Condiciones' || object.estado === 'Cierre (Aprobado)') &&
                             <Tab>Inicio Proyecto</Tab>}
+                            {object.pagos_proyectados.length > 0 && <Tab>Acuerdos Pago</Tab>}
                             {permisos.change && <Tab>Editar</Tab>}
                             {permisos_archivos_cotizacion.list && <Tab>Documentos</Tab>}
                             <Tab>Comentarios</Tab>
@@ -100,6 +102,9 @@ const Detail = memo(props => {
                         {(object.estado === 'Aceptación de Terminos y Condiciones' || object.estado === 'Cierre (Aprobado)') &&
                         <TabPanel>
                             <CotizacionCondicionInicioProyecto cotizacion={object}/>
+                        </TabPanel>}
+                        {object.pagos_proyectados.length > 0 && <TabPanel>
+                            <CotizacionAcuerdoPagoList cotizacion={object}/>
                         </TabPanel>}
                         {permisos.change && <TabPanel>
                             {object.responsable && <CotizacionForm

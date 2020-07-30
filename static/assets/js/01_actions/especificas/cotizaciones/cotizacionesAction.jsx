@@ -1,15 +1,15 @@
-import {COTIZACION_TYPES as TYPES} from '../../00_types';
 import {
-    fetchListGet,
-    updateObject,
-    fetchObject,
-    deleteObject,
-    createObject,
-    uploadArchivo,
-    fetchListGetURLParameters,
+    callApiMethodPost,
     callApiMethodPostParameters,
-    callApiMethodPost
+    createObject,
+    deleteObject,
+    fetchListGet,
+    fetchListGetURLParameters,
+    fetchObject,
+    updateObject,
+    uploadArchivo
 } from '../../00_general_fuctions'
+import {COTIZACION_TYPES as TYPES} from '../../00_types';
 
 const current_url_api = 'cotizaciones';
 export const createCotizacion = (values, options_action = {}) => {
@@ -98,7 +98,17 @@ export const adicionarOrdenCompraCotizacion = (id, values, options_action = {}) 
             dispatch({type: TYPES.update, payload: response})
         };
         const options = {...options_action, dispatches, dispatch_method: dispatch};
-        return callApiMethodPostParameters(current_url_api, id, 'adicionar_orden_compra', values, options)
+        return callApiMethodPostParameters(current_url_api, id, 'adicionar_pago_proyectado', values, options)
+    }
+};
+
+export const adicionarPagoCotizacion = (id, values, options_action = {}) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: response})
+        };
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'adicionar_pago', values, options)
     }
 };
 

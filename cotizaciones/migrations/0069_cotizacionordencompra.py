@@ -23,7 +23,6 @@ class Migration(migrations.Migration):
                 ('valor_orden_compra', models.DecimalField(decimal_places=2, default=0, max_digits=20)),
                 ('orden_compra_nro', models.CharField(max_length=100, null=True)),
                 ('orden_compra_fecha', models.DateField(null=True)),
-                ('orden_compra_archivo', models.FileField(null=True, upload_to=cotizaciones.models.CotizacionOrdenCompra.archivo_upload_to)),
                 ('cotizacion', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='ordenes_compra', to='cotizaciones.Cotizacion')),
             ],
             options={

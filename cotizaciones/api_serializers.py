@@ -1,20 +1,17 @@
-import datetime
-
 from django.utils import timezone
-
 from rest_framework import serializers
 
 from intranet_proyectos.general_mixins.custom_serializer_mixins import CustomSerializerMixin
-from proyectos.models import Proyecto, Literal
-from .models import (
-    Cotizacion,
-    SeguimientoCotizacion,
-    ArchivoCotizacion,
-    CondicionInicioProyecto,
-    CondicionInicioProyectoCotizacion,
-    CotizacionOrdenCompra,
-    CotizacionOrdenCompraPlanPago
-)
+from proyectos.models import Literal
+from proyectos.models import Proyecto
+from .models import ArchivoCotizacion
+from .models import CondicionInicioProyecto
+from .models import CondicionInicioProyectoCotizacion
+from .models import Cotizacion
+from .models import CotizacionPagoProyectado
+from .models import CotizacionPagoProyectadoAcuerdoPago
+from .models import CotizacionPagoProyectadoAcuerdoPagoPago
+from .models import SeguimientoCotizacion
 
 
 class CondicionInicioProyectoSerializer(serializers.ModelSerializer):
@@ -376,7 +373,7 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'es_adicional',
             'literales',
             'dias_para_vencer',
-            'ordenes_compra',
+            'pagos_proyectados',
         ]
         extra_kwargs = {
             'literales': {'read_only': True},
@@ -405,7 +402,7 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'fecha_entrega_pactada',
             'dias_para_vencer',
             'orden_compra_archivo',
-            'ordenes_compra',
+            'pagos_proyectados',
         ]
 
 
@@ -722,30 +719,47 @@ class ArchivoCotizacionSerializer(serializers.ModelSerializer):
         }
 
 
-class CotizacionOrdenCompraPlanPagosSerializer(serializers.ModelSerializer):
+class CotizacionPagoProyectadoAcuerdoPagoPagoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CotizacionOrdenCompraPlanPago
+        model = CotizacionPagoProyectadoAcuerdoPagoPago
         fields = [
             'id',
             'fecha',
-            'porcentaje',
+            'acuerdo_pago',
+            'comprobante_pago',
             'valor'
         ]
         read_only_fields = fields
 
 
-class CotizacionOrdenCompraSerializer(serializers.ModelSerializer):
-    planes_pagos = CotizacionOrdenCompraPlanPagosSerializer(many=True, read_only=True)
+class CotizacionPagoProyectadoAcuerdoPagoSerializer(serializers.ModelSerializer):
+    pagos = CotizacionPagoProyectadoAcuerdoPagoPagoSerializer(many=True, read_only=True)
 
     class Meta:
-        model = CotizacionOrdenCompra
+        model = CotizacionPagoProyectadoAcuerdoPago
+        fields = [
+            'id',
+            'motivo',
+            'fecha_proyectada',
+            'valor_proyectado',
+            'porcentaje',
+            'pagos',
+        ]
+        read_only_fields = fields
+
+
+class CotizacionPagoProyectadoSerializer(serializers.ModelSerializer):
+    acuerdos_pagos = CotizacionPagoProyectadoAcuerdoPagoSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = CotizacionPagoProyectado
         fields = [
             'id',
             'valor_orden_compra',
             'orden_compra_nro',
             'orden_compra_fecha',
             'orden_compra_archivo',
-            'planes_pagos',
+            'acuerdos_pagos',
         ]
         read_only_fields = fields
 
@@ -762,7 +776,7 @@ class CotizacionConDetalleSerializer(CotizacionSerializer):
         context={'quitar_campos': ['cliente_nombre', 'cliente']}
     )
     mis_documentos = ArchivoCotizacionSerializer(many=True, read_only=True)
-    ordenes_compra = CotizacionOrdenCompraSerializer(many=True, read_only=True)
+    pagos_proyectados = CotizacionPagoProyectadoSerializer(many=True, read_only=True)
 
 
 class CotizacionInformeGerenciaSerializer(serializers.ModelSerializer):
