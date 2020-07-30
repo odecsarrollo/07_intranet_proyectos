@@ -9,22 +9,39 @@ import StylesContext from "../../../00_utilities/contexts/StylesContext";
 import {adicionarPagoCotizacion} from "../../../01_actions/especificas/cotizaciones/cotizacionesAction";
 import CotizacionAcuerdoPagoAddPagoDialog from "./CotizacionAcuerdoPagoAddPagoDialog";
 
+const AcuerdoPagoTablaPagoItem = (props) => {
+    const {
+        pago
+    } = props;
+    const {table} = useContext(StylesContext);
+    return <tr style={table.tr}>
+        <td style={table.td}>{pago.valor}</td>
+    </tr>
+}
+
 const AcuerdoPago = (props) => {
     const {
         acuerdo_pago,
         openAplicarPago,
-        setOrdenCompraSeleccionada
+        setAcuerdoPagoId
     } = props;
+    const {pagos}=acuerdo_pago;
     const {table} = useContext(StylesContext);
     return <tr style={table.tr}>
         <td style={table.td}>{acuerdo_pago.motivo}</td>
         <td style={table.td}>{acuerdo_pago.fecha_proyectada}</td>
         <td style={table.td_right}>{acuerdo_pago.porcentaje > 0 ? `${numeroFormato(acuerdo_pago.porcentaje, 1)}%` : ''}</td>
         <td style={table.td_right}>{formatoDinero(acuerdo_pago.valor_proyectado, '$', 0)}</td>
-        <td style={table.td}>Aqui irían los pagos</td>
+        <td style={table.td}>
+            {pagos.length>0 && <table>
+                <tbody>
+                {pagos.map(p=><AcuerdoPagoTablaPagoItem pago={p} key={p.id}/>)}
+            </tbody>
+            </table>}
+        </td>
         <td style={table.td}><span onClick={() => {
             openAplicarPago();
-            setOrdenCompraSeleccionada(acuerdo_pago)
+            setAcuerdoPagoId(acuerdo_pago.id)
         }}>Aplicar Pago</span></td>
     </tr>
 }
@@ -45,7 +62,7 @@ const CotizacionOrdenComrpa = (props) => {
         orden_compra,
         orden_compra: {acuerdos_pagos},
         openAplicarPago,
-        setOrdenCompraSeleccionada
+        setAcuerdoPagoId
     } = props;
     const classes = useStyles();
     const {table} = useContext(StylesContext);
@@ -93,7 +110,7 @@ const CotizacionOrdenComrpa = (props) => {
                 acuerdo_pago={oc}
                 key={oc.id}
                 openAplicarPago={openAplicarPago}
-                setOrdenCompraSeleccionada={setOrdenCompraSeleccionada}
+                setAcuerdoPagoId={setAcuerdoPagoId}
             />)}
             </tbody>
         </table>
@@ -103,21 +120,24 @@ const CotizacionOrdenComrpa = (props) => {
 
 const CotizacionAcuerdoPagoList = (props) => {
     const [show_add_pago, setAddPago] = useState(false)
-    const [orden_compra_seleccionada, setOrdenCompraSeleccionada] = useState(null)
+    const [acuerdo_pago_id, setAcuerdoPagoId] = useState(null)
     const dispatch = useDispatch();
     const {cotizacion: {pagos_proyectados, id}} = props;
-    const adicionarPago = (v) => dispatch(adicionarPagoCotizacion(id, v));
+    const adicionarPago = (v) => {
+        v.append('acuerdo_pago_id',acuerdo_pago_id)
+        dispatch(adicionarPagoCotizacion(id, v));
+    };
     return <div>
         {show_add_pago && <CotizacionAcuerdoPagoAddPagoDialog
             onCancel={() => {
                 setAddPago(false);
-                setOrdenCompraSeleccionada(false);
+                setAcuerdoPagoId(null);
             }}
             modal_open={show_add_pago}
             onSubmit={adicionarPago}
         />}
         {pagos_proyectados.map(p => <CotizacionOrdenComrpa
-            setOrdenCompraSeleccionada={setOrdenCompraSeleccionada}
+            setAcuerdoPagoId={setAcuerdoPagoId}
             orden_compra={p} key={p.id}
             openAplicarPago={() => setAddPago(true)}
         />)}

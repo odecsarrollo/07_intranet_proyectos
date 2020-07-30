@@ -164,10 +164,18 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def adicionar_pago(self, request, pk=None):
         self.serializer_class = CotizacionConDetalleSerializer
-        valor = request.FILES.get('comprobante_pago')
+        comprobante_pago = request.FILES.get('comprobante_pago')
         fecha = request.POST.get('fecha', None)
-        comprobante_pago = request.POST.get('valor', None)
-        from .services import cotizacion_add_pago_proyectado
+        acuerdo_pago_id = request.POST.get('acuerdo_pago_id', None)
+        valor = request.POST.get('valor', None)
+        from .services import cotizacion_add_pago
+        cotizacion_add_pago(
+            cotizacion_id=int(pk),
+            comprobante_pago=comprobante_pago,
+            acuerdo_pago_id=acuerdo_pago_id,
+            fecha=fecha,
+            valor=valor
+        )
         serializer = self.get_serializer(self.get_object())
         return Response(serializer.data)
 

@@ -230,12 +230,11 @@ def cotizacion_add_pago(
         valor: float,
         fecha: datetime,
         comprobante_pago,
-        acuerdo_pago_id
+        acuerdo_pago_id: int
 ) -> CotizacionPagoProyectado:
     pago = None
     acuerdo_pago = CotizacionPagoProyectadoAcuerdoPago.objects.get(pk=acuerdo_pago_id)
-    if acuerdo_pago.cotizacion_id == cotizacion_id:
-        print('entroooo')
+    if acuerdo_pago.orden_compra.cotizacion_id == cotizacion_id:
         pago = CotizacionPagoProyectadoAcuerdoPagoPago.objects.create(
             valor=valor,
             comprobante_pago=comprobante_pago,
