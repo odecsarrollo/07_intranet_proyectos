@@ -8,7 +8,8 @@ const validate = values => {
         'orden_compra_archivo',
     ];
     requiredFields.map(field => {
-        if (!values[field]) {
+        const es_archivo = values[field] instanceof FileList;
+        if (!values[field] || (es_archivo && values[field].length <= 0)) {
             errors[field] = 'Requerido'
         }
     });

@@ -9,6 +9,7 @@ import {
     MyTextFieldSimple
 } from '../../../00_utilities/components/ui/forms/fields';
 import {MyFormTagModal} from '../../../00_utilities/components/ui/forms/MyFormTagModal';
+import validate from "./cotizacion_acuerdo_pago_pago_form_validate";
 
 const selector = formValueSelector('cotizacionAcuerdoPagoAddPagoDialog');
 
@@ -62,8 +63,7 @@ let CotizacionAcuerdoPagoAddPagoDialog = memo(props => {
                 label='Fecha Pago'
                 className='col-12'
                 label_space_xs={4}
-                min={new Date()}
-                max={new Date(3000, 1, 1)}
+                max={new Date()}
             />
             <MyTextFieldSimple
                 className='col-12'
@@ -81,6 +81,7 @@ let CotizacionAcuerdoPagoAddPagoDialog = memo(props => {
 
 CotizacionAcuerdoPagoAddPagoDialog = reduxForm({
     form: "cotizacionAcuerdoPagoAddPagoDialog",
+    validate,
     enableReinitialize: true
 })(CotizacionAcuerdoPagoAddPagoDialog);
 

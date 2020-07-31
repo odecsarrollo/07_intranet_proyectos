@@ -92,7 +92,7 @@ const Detail = memo(props => {
                         <TabList>
                             {(object.estado === 'Aceptación de Terminos y Condiciones' || object.estado === 'Cierre (Aprobado)') &&
                             <Tab>Inicio Proyecto</Tab>}
-                            {object.pagos_proyectados.length > 0 && <Tab>Acuerdos Pago</Tab>}
+                            {object.pagos_proyectados && object.pagos_proyectados.length > 0 && <Tab>Acuerdos Pago</Tab>}
                             {permisos.change && <Tab>Editar</Tab>}
                             {permisos_archivos_cotizacion.list && <Tab>Documentos</Tab>}
                             <Tab>Comentarios</Tab>
@@ -103,7 +103,7 @@ const Detail = memo(props => {
                         <TabPanel>
                             <CotizacionCondicionInicioProyecto cotizacion={object}/>
                         </TabPanel>}
-                        {object.pagos_proyectados.length > 0 && <TabPanel>
+                        {object.pagos_proyectados && object.pagos_proyectados.length > 0 && <TabPanel>
                             <CotizacionAcuerdoPagoList cotizacion={object}/>
                         </TabPanel>}
                         {permisos.change && <TabPanel>

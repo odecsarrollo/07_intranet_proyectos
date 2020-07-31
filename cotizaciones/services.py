@@ -213,14 +213,19 @@ def cotizacion_add_pago_proyectado(
         orden_compra_nro: str,
         valor_orden_compra: float,
         orden_compra_fecha: datetime,
-        orden_compra_archivo
+        orden_compra_archivo,
+        user_id: int
 ) -> CotizacionPagoProyectado:
+    user = User.objects.get(pk=user_id)
+    if not user.is_superuser:
+        raise ValidationError({'_error': 'Módulo en pruebas, aún no se puede usar'})
     orden_compra = CotizacionPagoProyectado.objects.create(
         orden_compra_nro=orden_compra_nro,
         valor_orden_compra=valor_orden_compra,
         orden_compra_fecha=orden_compra_fecha,
         orden_compra_archivo=orden_compra_archivo,
-        cotizacion_id=cotizacion_id
+        cotizacion_id=cotizacion_id,
+        creado_por_id=user_id
     )
     return orden_compra
 
@@ -230,7 +235,8 @@ def cotizacion_add_pago(
         valor: float,
         fecha: datetime,
         comprobante_pago,
-        acuerdo_pago_id: int
+        acuerdo_pago_id: int,
+        user_id: int
 ) -> CotizacionPagoProyectado:
     pago = None
     acuerdo_pago = CotizacionPagoProyectadoAcuerdoPago.objects.get(pk=acuerdo_pago_id)
@@ -239,9 +245,56 @@ def cotizacion_add_pago(
             valor=valor,
             comprobante_pago=comprobante_pago,
             fecha=fecha,
-            acuerdo_pago_id=acuerdo_pago_id
+            acuerdo_pago_id=acuerdo_pago_id,
+            creado_por_id=user_id
         )
     return pago
+
+
+def cotizacion_eliminar_pago(
+        cotizacion_id: int,
+        pago_id: int,
+        user_id: int
+):
+    pago = CotizacionPagoProyectadoAcuerdoPagoPago.objects.get(pk=pago_id)
+    user = User.objects.get(pk=user_id)
+    puede_eliminar_siempre = user.has_perm('cotizaciones.delete_cotizacionpagoproyectadoacuerdopagopago_siempre')
+
+    if pago.acuerdo_pago.orden_compra.cotizacion_id == int(cotizacion_id):
+        if not puede_eliminar_siempre:
+            fecha_creacion: datetime = pago.created
+            ahora = timezone.make_aware(datetime.datetime.now())
+            diferencia = (ahora - fecha_creacion)
+            minutos = diferencia.seconds / 60
+            if minutos < 10:
+                raise ValidationError(
+                    {'_error': 'Sólo alguien con permisos de eliminar pagos siempre puede eliminar este pago'})
+            if pago.creado_por_id != user_id:
+                raise ValidationError(
+                    {'_error': 'Sólo lo puede borrar el usuario quien lo creo este pago %' % (
+                        pago.creado_por.username)})
+            pago.delete()
+        else:
+            pago.delete()
+
+
+def cotizacion_eliminar_pago_proyectado(
+        cotizacion_id: int,
+        pago_proyectado_id: int,
+        user_id: int
+):
+    pago_proyectado = CotizacionPagoProyectado.objects.get(pk=pago_proyectado_id)
+    if pago_proyectado.cotizacion_id == int(cotizacion_id):
+        if not CotizacionPagoProyectadoAcuerdoPagoPago.objects.filter(
+                acuerdo_pago__orden_compra_id=pago_proyectado_id).exists():
+            pago_proyectado.delete()
+        else:
+            raise ValidationError(
+                {
+                    '_error':
+                        'No es posible eliminar esta orden de compra porque tiene información relacionada'
+                }
+            )
 
 
 def cotizacion_limpiar_condicion_inicio_proyecto(

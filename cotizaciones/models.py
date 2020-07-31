@@ -1,5 +1,4 @@
 import datetime
-import random
 
 import reversion
 from django.contrib.auth.models import User
@@ -216,13 +215,22 @@ class CondicionInicioProyectoCotizacion(models.Model):
 class CotizacionPagoProyectado(TimeStampedModel):
     def archivo_upload_to(instance, filename):
         nro_cotizacion = instance.cotizacion.id
-        return "documentos/cotizaciones/%s/ordenes_compra/%s" % (nro_cotizacion, filename)
+        ahora = timezone.datetime.now()
+        extencion = filename.split('.')[-1]
+        return "documentos/cotizaciones/%s/orden_compra_%s%s%s_%s.%s" % (nro_cotizacion, ahora.year, ahora.month, ahora.day, ahora.microsecond, extencion)
 
     cotizacion = models.ForeignKey(Cotizacion, related_name='pagos_proyectados', on_delete=models.PROTECT)
     valor_orden_compra = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     orden_compra_nro = models.CharField(max_length=100, null=True)
     orden_compra_fecha = models.DateField(null=True)
     orden_compra_archivo = models.FileField(null=True, upload_to=archivo_upload_to)
+    notificada_por_correo = models.BooleanField(default=False)
+    creado_por = models.ForeignKey(User, on_delete=models.PROTECT, related_name='pagos_proyectados_creados')
+
+    class Meta:
+        permissions = [
+            ("list_cotizacionpagoproyectado", "Can list pagos proyectados"),
+        ]
 
 
 class CotizacionPagoProyectadoAcuerdoPago(TimeStampedModel):
@@ -240,8 +248,10 @@ class CotizacionPagoProyectadoAcuerdoPago(TimeStampedModel):
 class CotizacionPagoProyectadoAcuerdoPagoPago(TimeStampedModel):
     def archivo_upload_to(instance, filename):
         nro_cotizacion = instance.acuerdo_pago.orden_compra.cotizacion.id
-        return "documentos/cotizaciones/%s/ordenes_compra/%s/acuerdo_pago_%s" % (
-            nro_cotizacion, random.randint(10000, 99999), filename)
+        ahora = timezone.datetime.now()
+        extencion = filename.split('.')[-1]
+        return "documentos/cotizaciones/%s/acuerdo_pago_%s%s%s_%s.%s" % (
+            nro_cotizacion, ahora.year, ahora.month, ahora.day, ahora.microsecond, extencion)
 
     acuerdo_pago = models.ForeignKey(
         CotizacionPagoProyectadoAcuerdoPago,
@@ -251,3 +261,11 @@ class CotizacionPagoProyectadoAcuerdoPagoPago(TimeStampedModel):
     fecha = models.DateField(null=True)
     valor = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     comprobante_pago = models.FileField(null=True, upload_to=archivo_upload_to)
+    notificada_por_correo = models.BooleanField(default=False)
+    creado_por = models.ForeignKey(User, on_delete=models.PROTECT, related_name='cotizaciones_pagos_creados')
+
+    class Meta:
+        permissions = [
+            ("list_cotizacionpagoproyectadoacuerdopagopago", "Can list acuerdos de pagos pagos"),
+            ("delete_cotizacionpagoproyectadoacuerdopagopago_siempre", "Can delete acuerdos de pagos pagos siempre"),
+        ]

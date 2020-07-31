@@ -112,6 +112,30 @@ export const adicionarPagoCotizacion = (id, values, options_action = {}) => {
     }
 };
 
+export const eliminarOrdenCompraCotizacion = (id, orden_compra_id, options_action = {}) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: response})
+        };
+        let params = new URLSearchParams();
+        params.append('orden_compra_id', orden_compra_id);
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'eliminar_pago_proyectado', params, options)
+    }
+};
+
+export const eliminarPagoCotizacion = (id, pago_id, options_action = {}) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: response})
+        };
+        let params = new URLSearchParams();
+        params.append('pago_id', pago_id);
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'eliminar_pago', params, options)
+    }
+};
+
 export const fetchCotizacionesPorAnoMes = (filtro, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {

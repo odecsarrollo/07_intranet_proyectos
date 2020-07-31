@@ -32,13 +32,13 @@ const OrdenCompraTableItem = (props) => {
                 />
             </td>
             <td>
-                <DateTimePicker
+                {fila.porcentaje > 0 && <DateTimePicker
                     onChange={value => addFormaPagoFecha(fila.id, value)}
                     format={'YYYY-MM-DD'}
                     time={false}
                     min={form_values.orden_compra_fecha}
                     value={fila.fecha_proyectada ? new Date(fila.fecha_proyectada) : new Date()}
-                />
+                />}
             </td>
             <td className='text-right'>
                 {formatoMoneda(form_values.valor_orden_compra * (fila.porcentaje / 100), '$', 2)}
@@ -101,13 +101,12 @@ let OrdenCompraAddForm = memo(props => {
     };
 
     const addFormaPagoPorcentaje = (id, valor) => {
+        const porcentaje = isNaN(valor) ? 0 : valor;
+        const fecha_proyectada = porcentaje <= 0 ? null : (form_values.fecha_proyectada ? form_values.fecha_proyectada : fechaToYMD(new Date()));
+        const valor_proyectado = form_values.valor_orden_compra * (porcentaje / 100);
         setFormaPago({
             ...forma_pago,
-            [id]: {
-                ...forma_pago[id],
-                porcentaje: isNaN(valor) ? 0 : valor,
-                valor_proyectado: form_values.valor_orden_compra * (isNaN(valor) ? 0 : valor / 100)
-            }
+            [id]: {...forma_pago[id], porcentaje, valor_proyectado, fecha_proyectada}
         })
     }
 
@@ -122,7 +121,7 @@ let OrdenCompraAddForm = memo(props => {
     }
 
     const addOrdenCompra = (value) => {
-        dispatch(actions.adicionarOrdenCompraCotizacion(cotizacion.id, value))
+        dispatch(actions.adicionarOrdenCompraCotizacion(cotizacion.id, value, {callback: onCancel}))
     }
 
     return (

@@ -148,7 +148,8 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
             orden_compra_fecha=orden_compra_fecha,
             orden_compra_nro=orden_compra_nro,
             valor_orden_compra=valor_orden_compra,
-            orden_compra_archivo=orden_compra_archivo
+            orden_compra_archivo=orden_compra_archivo,
+            user_id=self.request.user.id
         )
         acuerdos_de_pago = json.loads(plan_pago)
         for pp in json.loads(plan_pago):
@@ -174,7 +175,34 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
             comprobante_pago=comprobante_pago,
             acuerdo_pago_id=acuerdo_pago_id,
             fecha=fecha,
-            valor=valor
+            valor=valor,
+            user_id=self.request.user.id
+        )
+        serializer = self.get_serializer(self.get_object())
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def eliminar_pago(self, request, pk=None):
+        pago_id = request.POST.get('pago_id', None)
+        self.serializer_class = CotizacionConDetalleSerializer
+        from .services import cotizacion_eliminar_pago
+        cotizacion_eliminar_pago(
+            pago_id=pago_id,
+            cotizacion_id=pk,
+            user_id=self.request.user.id
+        )
+        serializer = self.get_serializer(self.get_object())
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def eliminar_pago_proyectado(self, request, pk=None):
+        orden_compra_id = request.POST.get('orden_compra_id', None)
+        self.serializer_class = CotizacionConDetalleSerializer
+        from .services import cotizacion_eliminar_pago_proyectado
+        cotizacion_eliminar_pago_proyectado(
+            cotizacion_id=pk,
+            pago_proyectado_id=orden_compra_id,
+            user_id=self.request.user.id
         )
         serializer = self.get_serializer(self.get_object())
         return Response(serializer.data)

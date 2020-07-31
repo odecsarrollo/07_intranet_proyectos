@@ -67,7 +67,7 @@ const CotizacionCondicionInicioProyecto = props => {
             singular_name='Orden Compra'
             onCancel={() => setMostrarAddNuevaOrdenCompra(false)}
         />}
-        <span onClick={() => setMostrarAddNuevaOrdenCompra(true)}>Adicionar Orden Compra</span>
+        <span onClick={() => setMostrarAddNuevaOrdenCompra(true)}>Adicionar Orden Compra Pruebas</span>
         <div className="col-12">
             <p style={{color: 'red'}}>
                 Aquí debe definir TODOS los documentos que configuran el inicio del proyecto. Automáticamente al guardar

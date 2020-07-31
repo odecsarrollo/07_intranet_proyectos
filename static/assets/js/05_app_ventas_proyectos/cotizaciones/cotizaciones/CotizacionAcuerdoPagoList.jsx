@@ -4,47 +4,17 @@ import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import React, {useContext, useState} from "react";
 import {useDispatch} from "react-redux";
-import {formatoDinero, numeroFormato} from "../../../00_utilities/common";
+import {fechaFormatoUno, formatoDinero, numeroFormato} from "../../../00_utilities/common";
+import MyDialogButtonDelete from "../../../00_utilities/components/ui/dialog/delete_dialog";
+import CustomIconTable from "../../../00_utilities/components/ui/icon/CustomIconTable";
 import StylesContext from "../../../00_utilities/contexts/StylesContext";
-import {adicionarPagoCotizacion} from "../../../01_actions/especificas/cotizaciones/cotizacionesAction";
+import {
+    adicionarPagoCotizacion,
+    eliminarOrdenCompraCotizacion,
+    eliminarPagoCotizacion
+} from "../../../01_actions/especificas/cotizaciones/cotizacionesAction";
 import CotizacionAcuerdoPagoAddPagoDialog from "./CotizacionAcuerdoPagoAddPagoDialog";
 
-const AcuerdoPagoTablaPagoItem = (props) => {
-    const {
-        pago
-    } = props;
-    const {table} = useContext(StylesContext);
-    return <tr style={table.tr}>
-        <td style={table.td}>{pago.valor}</td>
-    </tr>
-}
-
-const AcuerdoPago = (props) => {
-    const {
-        acuerdo_pago,
-        openAplicarPago,
-        setAcuerdoPagoId
-    } = props;
-    const {pagos}=acuerdo_pago;
-    const {table} = useContext(StylesContext);
-    return <tr style={table.tr}>
-        <td style={table.td}>{acuerdo_pago.motivo}</td>
-        <td style={table.td}>{acuerdo_pago.fecha_proyectada}</td>
-        <td style={table.td_right}>{acuerdo_pago.porcentaje > 0 ? `${numeroFormato(acuerdo_pago.porcentaje, 1)}%` : ''}</td>
-        <td style={table.td_right}>{formatoDinero(acuerdo_pago.valor_proyectado, '$', 0)}</td>
-        <td style={table.td}>
-            {pagos.length>0 && <table>
-                <tbody>
-                {pagos.map(p=><AcuerdoPagoTablaPagoItem pago={p} key={p.id}/>)}
-            </tbody>
-            </table>}
-        </td>
-        <td style={table.td}><span onClick={() => {
-            openAplicarPago();
-            setAcuerdoPagoId(acuerdo_pago.id)
-        }}>Aplicar Pago</span></td>
-    </tr>
-}
 
 const useStyles = makeStyles(theme => ({
     download_boton: {
@@ -55,10 +25,95 @@ const useStyles = makeStyles(theme => ({
         padding: 4,
         color: theme.palette.primary.dark
     },
+    ul: {
+        margin: 0,
+        padding: 0
+    },
+    li: {
+        listStyle: 'none',
+        margin: 0,
+        padding: 0
+    },
+    download_boton_pago: {
+        margin: 0,
+        padding: 4,
+        color: theme.palette.primary.dark
+    },
 }))
+
+const AcuerdoPago = (props) => {
+    const {
+        acuerdo_pago,
+        eliminarPago,
+        openAplicarPago,
+        setAcuerdoPagoId
+    } = props;
+    const {pagos} = acuerdo_pago;
+    const {table} = useContext(StylesContext);
+    return <tr style={table.tr}>
+        <td style={table.td}>{acuerdo_pago.motivo}</td>
+        <td style={table.td}>{acuerdo_pago.fecha_proyectada}</td>
+        <td style={table.td_right}>{acuerdo_pago.porcentaje > 0 ? `${numeroFormato(acuerdo_pago.porcentaje, 1)}%` : ''}</td>
+        <td style={table.td_right}>{formatoDinero(acuerdo_pago.valor_proyectado, '$', 0)}</td>
+        <td style={table.td}>
+            {pagos.length > 0 && <table className='table table-striped table-responsive'>
+                <thead>
+                <tr style={table.tr}>
+                    <th style={table.td}>Fecha</th>
+                    <th style={table.td}>Valor</th>
+                    <th style={table.td}>Doc.</th>
+                </tr>
+                </thead>
+                <tbody>
+                {pagos.map(p =>
+                    <tr key={p.id} style={table.tr}>
+                        <td style={table.td}>{fechaFormatoUno(p.fecha)}</td>
+                        <td style={table.td_right}>{formatoDinero(p.valor, '$', 0)}</td>
+                        <td style={table.td}>
+                            <div className="row">
+                                <div className="col-6">
+                                    <a href={p.comprobante_pago} target='_blank'>
+                                        <CustomIconTable icon='download'/>
+                                    </a>
+                                </div>
+                                <div className="col-6">
+                                    <MyDialogButtonDelete
+                                        element_name={formatoDinero(p.valor,'$',0)}
+                                        element_type='Pago'
+                                        onDelete={()=>eliminarPago(p.id)}
+                                    />
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                )}
+                </tbody>
+                <tfoot>
+                <tr style={table.tr}>
+                    <td style={table.td}>Total Pagado:</td>
+                    <td style={table.td}>{formatoDinero(pagos.map(p=>p.valor).reduce((sum,valor)=>sum+valor),'$',0)}</td>
+                    <td style={table.td}></td>
+                </tr>
+                </tfoot>
+            </table>}
+        </td>
+        <td style={table.td}>
+            <CustomIconTable
+                icon='plus'
+                onClick={() => {
+                    openAplicarPago();
+                    setAcuerdoPagoId(acuerdo_pago.id)}
+                }
+            />
+        </td>
+    </tr>
+}
+
 
 const CotizacionOrdenComrpa = (props) => {
     const {
+        eliminarPago,
+        eliminarOC,
         orden_compra,
         orden_compra: {acuerdos_pagos},
         openAplicarPago,
@@ -80,9 +135,10 @@ const CotizacionOrdenComrpa = (props) => {
             </div>
             <div className="col-md-4">
                 <Typography variant="body1" gutterBottom color="primary">
-                    Valor Orden Compra: {orden_compra.valor_orden_compra}
+                    Valor Orden Compra: {formatoDinero(orden_compra.valor_orden_compra,'$',0)}
                 </Typography>
             </div>
+            <MyDialogButtonDelete onDelete={()=>eliminarOC(orden_compra.id)} element_name={orden_compra.valor_proyectado} element_type='Orden de Compra'/>
             <a href={orden_compra.orden_compra_archivo} target='_blank'>
                 <IconButton className={classes.download_boton}>
                     <span>Descargar Orden Compra</span>
@@ -102,11 +158,12 @@ const CotizacionOrdenComrpa = (props) => {
                 <th style={table.td}>Porcentaje</th>
                 <th style={table.td}>Valor Proyectado</th>
                 <th style={table.td}>Pagos</th>
-                <th style={table.td}></th>
+                <th style={table.td}>Adicionar Pago</th>
             </tr>
             </thead>
             <tbody>
             {acuerdos_pagos.map(oc => <AcuerdoPago
+                eliminarPago={eliminarPago}
                 acuerdo_pago={oc}
                 key={oc.id}
                 openAplicarPago={openAplicarPago}
@@ -124,9 +181,16 @@ const CotizacionAcuerdoPagoList = (props) => {
     const dispatch = useDispatch();
     const {cotizacion: {pagos_proyectados, id}} = props;
     const adicionarPago = (v) => {
-        v.append('acuerdo_pago_id',acuerdo_pago_id)
-        dispatch(adicionarPagoCotizacion(id, v));
+        v.append('acuerdo_pago_id', acuerdo_pago_id)
+        dispatch(adicionarPagoCotizacion(id, v, {
+            callback: () => {
+                setAcuerdoPagoId(null);
+                setAddPago(false);
+            }
+        }));
     };
+    const eliminarPago = (pago_id)=> dispatch(eliminarPagoCotizacion(id,pago_id));
+    const eliminarOC = (oc_id)=> dispatch(eliminarOrdenCompraCotizacion(id,oc_id));
     return <div>
         {show_add_pago && <CotizacionAcuerdoPagoAddPagoDialog
             onCancel={() => {
@@ -137,9 +201,11 @@ const CotizacionAcuerdoPagoList = (props) => {
             onSubmit={adicionarPago}
         />}
         {pagos_proyectados.map(p => <CotizacionOrdenComrpa
+            eliminarPago={eliminarPago}
             setAcuerdoPagoId={setAcuerdoPagoId}
             orden_compra={p} key={p.id}
             openAplicarPago={() => setAddPago(true)}
+            eliminarOC={eliminarOC}
         />)}
     </div>
 }
