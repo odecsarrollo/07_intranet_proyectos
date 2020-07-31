@@ -514,7 +514,7 @@ class ProyectoCotizacionConDetalleSerializer(serializers.ModelSerializer):
         read_only_fields = fields
 
 
-class CotizacionCotizacionConDetalleSerializer(serializers.ModelSerializer):
+class CotizacionCotizacionConDetalleSerializer(CustomSerializerMixin, serializers.ModelSerializer):
     contacto_cliente_nombre = serializers.CharField(source='contacto_cliente.full_nombre', read_only=True)
 
     class Meta:
@@ -556,8 +556,36 @@ class CotizacionListSerializer(serializers.ModelSerializer):
     responsable_actual_nombre = serializers.CharField(source='responsable.get_full_name', read_only=True)
 
     proyectos = ProyectoCotizacionConDetalleSerializer(many=True, read_only=True)
-    cotizaciones_adicionales = CotizacionCotizacionConDetalleSerializer(many=True, read_only=True)
-    cotizacion_inicial = CotizacionCotizacionConDetalleSerializer(read_only=True)
+
+    cotizaciones_adicionales = CotizacionCotizacionConDetalleSerializer(
+        many=True,
+        read_only=True,
+        context={
+            'quitar_campos': [
+                'orden_compra_nro',
+                'estado',
+                'cliente',
+                'contacto_cliente',
+                'unidad_negocio',
+                'cotizaciones_adicionales',
+                'contacto_cliente_nombre',
+            ]
+        }
+    )
+    cotizacion_inicial = CotizacionCotizacionConDetalleSerializer(
+        read_only=True,
+        context={
+            'quitar_campos': [
+                'orden_compra_nro',
+                'estado',
+                'cliente',
+                'contacto_cliente',
+                'unidad_negocio',
+                'cotizaciones_adicionales',
+                'contacto_cliente_nombre',
+            ]
+        }
+    )
 
     def get_color_tuberia_ventas(self, obj):
         fecha_ini = obj.fecha_cambio_estado

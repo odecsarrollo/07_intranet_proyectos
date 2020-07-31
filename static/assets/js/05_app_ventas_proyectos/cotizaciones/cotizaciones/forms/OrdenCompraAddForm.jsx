@@ -185,6 +185,7 @@ let OrdenCompraAddForm = memo(props => {
                     <tr>
                         <td>{porcentaje_total}%</td>
                         <td></td>
+                        <td></td>
                         <td className='text-right'>{formatoMoneda(forma_pago_total, '$', 0)}</td>
                     </tr>
                     </tfoot>

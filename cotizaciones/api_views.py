@@ -49,6 +49,7 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
     list_queryset = Cotizacion.objects.select_related(
         'cliente',
         'contacto_cliente',
+        'cotizacion_inicial',
         'cotizacion_inicial__cliente',
         'cotizacion_inicial__contacto_cliente',
         'responsable'
@@ -137,6 +138,7 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def adicionar_pago_proyectado(self, request, pk=None):
         self.serializer_class = CotizacionConDetalleSerializer
+        self.queryset = self.detail_queryset
         orden_compra_archivo = request.FILES.get('orden_compra_archivo')
         orden_compra_fecha = request.POST.get('orden_compra_fecha', None)
         valor_orden_compra = request.POST.get('valor_orden_compra', None)
@@ -165,6 +167,7 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def adicionar_pago(self, request, pk=None):
         self.serializer_class = CotizacionConDetalleSerializer
+        self.queryset = self.detail_queryset
         comprobante_pago = request.FILES.get('comprobante_pago')
         fecha = request.POST.get('fecha', None)
         acuerdo_pago_id = request.POST.get('acuerdo_pago_id', None)
@@ -185,6 +188,7 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
     def eliminar_pago(self, request, pk=None):
         pago_id = request.POST.get('pago_id', None)
         self.serializer_class = CotizacionConDetalleSerializer
+        self.queryset = self.detail_queryset
         from .services import cotizacion_eliminar_pago
         cotizacion_eliminar_pago(
             pago_id=pago_id,
@@ -198,6 +202,7 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
     def eliminar_pago_proyectado(self, request, pk=None):
         orden_compra_id = request.POST.get('orden_compra_id', None)
         self.serializer_class = CotizacionConDetalleSerializer
+        self.queryset = self.detail_queryset
         from .services import cotizacion_eliminar_pago_proyectado
         cotizacion_eliminar_pago_proyectado(
             cotizacion_id=pk,
