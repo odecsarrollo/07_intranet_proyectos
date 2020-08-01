@@ -1,14 +1,12 @@
 import Button from "@material-ui/core/Button";
 import React, {Fragment, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import * as actions from '../../01_actions/01_index';
-import {Pivot2} from '../../00_utilities/webdatarocks.react';
+import {Pivot2} from '../../../00_utilities/webdatarocks.react';
+import * as actions from '../../../01_actions/01_index';
 
-const InformeVentaFacturacion = (props) => {
+const InformeVentaPerdida = (props) => {
     const dispatch = useDispatch();
-    const facturas = useSelector(state => state.facturas);
-    const cotizaciones_proyectos = useSelector(state => state.cotizaciones);
-    const cotizaciones_componentes = useSelector(state => state.cotizaciones_componentes);
+    const items_venta_perdida = useSelector(state => state.cotizaciones_componentes_items);
     const date = new Date()
     const [consulto, setConsulto] = useState(true);
     const [filtros, setFiltros] = useState({
@@ -25,88 +23,28 @@ const InformeVentaFacturacion = (props) => {
         }
         setYearsFiltro(years);
     }, [])
-
-
-    let data = [];
-    let data_facturacion = _.map(facturas, f => {
-        let linea = 'Notas';
-        let tipo_documento = f.tipo_documento.toString().replace(' ', '');
-        if (['FEY', 'FY', 'NY'].includes(tipo_documento)) {
-            linea = 'Proyectos'
-        } else if (['FEV', 'FV', 'NV', 'NCE'].includes(tipo_documento)) {
-            linea = 'Componentes'
-        }
-        return ({
-            Linea: linea,
-            Moneda: 'COP',
-            "Tipo Documento": f.tipo_documento,
-            "Nro Documento": `${f.tipo_documento}-${f.nro_documento}`,
-            "Facturación": f.valor_total_items,
-            Cotizaciones: 0,
-            Ventas: 0,
-            Estado: 'Facturado',
-            Cliente: f.cliente_nombre,
-            "Cliente Nit": f.cliente_nit,
-            Vendedor: f.vendedor_nombre ? `${f.vendedor_nombre} ${f.vendedor_apellido}` : 'Sin Asignar',
-            Mes: new Date(f.fecha_documento).getUTCMonth() + 1,
-            "Año": new Date(f.fecha_documento).getUTCFullYear(),
-            "Día": new Date(f.fecha_documento).getUTCDate()
-        })
-    });
-    let data_cotizaciones_proyectos = _.map(cotizaciones_proyectos, f => {
-        const es_venta = f.estado === 'Cierre (Aprobado)';
-        return ({
-            Linea: 'Proyectos',
-            Moneda: 'COP',
-            "Tipo Documento": f.unidad_negocio,
-            "Nro Documento": `${f.unidad_negocio}-${f.nro_cotizacion}`,
-            "Facturación": 0,
-            Cotizaciones: 0,
-            Ventas: es_venta ? f.valor_orden_compra : f.valor_ofertado,
-            Estado: f.estado,
-            Cliente: f.cliente_nombre,
-            "Cliente Nit": f.cliente_nit,
-            Vendedor: f.responsable_actual_nombre ? f.responsable_actual_nombre : 'Sin Asignar',
-            Mes: es_venta ? new Date(f.orden_compra_fecha).getUTCMonth() + 1 : 'N.A',
-            "Año": es_venta ? new Date(f.orden_compra_fecha).getUTCFullYear() : 'N.A',
-            "Día": es_venta ? new Date(f.orden_compra_fecha).getUTCDate() : 'N.A'
-        })
-    });
-    let data_cotizaciones_componentes = _.map(cotizaciones_componentes, f => {
-        const es_venta = f.estado === 'PRO' || f.estado === 'FIN';
-        return ({
-            Linea: 'Componentes',
-            "Tipo Documento": 'CB',
-            Moneda: f.moneda,
-            Estado: f.estado_display,
-            "Nro Documento": f.nro_consecutivo,
-            "Facturación": 0,
-            Ventas: es_venta ? f.orden_compra_valor : 0,
-            Cotizaciones: !es_venta ? f.valor_total : 0,
-            Cliente: f.cliente_nombre,
-            "Cliente Nit": f.cliente_nit,
-            Vendedor: f.responsable_nombre ? f.responsable_nombre : 'Sin Asignar',
-            Mes: es_venta ? new Date(f.orden_compra_fecha).getUTCMonth() + 1 : 'N.A',
-            "Año": es_venta ? new Date(f.orden_compra_fecha).getUTCFullYear() : 'N.A',
-            "Día": es_venta ? new Date(f.orden_compra_fecha).getUTCDate() : 'N.A'
-        })
-    });
-    data = [...data_facturacion, ...data_cotizaciones_proyectos, ...data_cotizaciones_componentes]
-    const [table_state, setTableState] = useState({
-        rows: ["vendedor"],
-        cols: ['year', 'month', 'tipo'],
-        vals: ["valor"],
-        aggregatorName: "Sum"
-    });
     const consultarInformacion = () => {
         setConsulto(false);
-        const cargarCotizaciones = () => dispatch(actions.fetchCotizacionesPorAnoMes(filtros, {callback: () => setConsulto(true)}));
-        const cargarComponentes = () => dispatch(actions.fetchCotizacionesComponentesPorAnoMes(filtros, {callback: cargarCotizaciones}));
-        dispatch(actions.fetchFacturasPorAnoMes(filtros, {callback: cargarComponentes}));
+        dispatch(actions.fetchItemsCotizacionesComponentesVentasPerdidasPorAnoMes(filtros, {callback: () => setConsulto(true)}));
     };
     useEffect(() => {
         consultarInformacion();
-    }, [])
+    }, []);
+    const data = _.map(items_venta_perdida, item => ({
+        Referencia: item.referencia,
+        "Descripción": item.descripcion,
+        "Estado Cotización": item.cotizacion_estado,
+        'Cantidad Perdida': item.cantidad_venta_perdida,
+        Motivo: item.razon_venta_perdida,
+        'Nro. Cotización': item.cotizacion_nro_consecutivo,
+        Canal: item.canal_nombre,
+        Mes: new Date(item.modified).getUTCMonth() + 1,
+        "Año": new Date(item.modified).getUTCFullYear(),
+        "Día": new Date(item.modified).getUTCDate(),
+        'Precio Unitario': item.precio_unitario,
+        'Moneda': item.cotizacion_moneda,
+        Valor: item.cantidad_venta_perdida * item.precio_unitario
+    }));
     return (
         <Fragment>
             <div className="row">
@@ -162,6 +100,7 @@ const InformeVentaFacturacion = (props) => {
                 Consultar
             </Button>}
             <Pivot2
+
                 consulto={consulto}
                 report={{
                     dataSource: {data},
@@ -173,7 +112,7 @@ const InformeVentaFacturacion = (props) => {
                             fontSize: "12px"
                         }, formula: "#value < 0"
                     }],
-                    options: {grid: {type: "classic", showTotals: "off"}},
+                    options: {grid: {type: "classic", showTotals: "off", showGrandTotals: "off"}},
                     formats: [
                         {
                             name: "",
@@ -181,12 +120,35 @@ const InformeVentaFacturacion = (props) => {
                             decimalSeparator: ',',
                             decimalPlaces: 0,
                             currencySymbol: "$"
+                        },
+                        {
+                            name: "CantidadPerdida",
+                            currencySymbol: "",
+                            currencySymbolAlign: "left",
+                            decimalPlaces: 0,
+                            decimalSeparator: ",",
+                            isPercent: false,
+                            nullValue: "",
+                            textAlign: "right",
+                            thousandsSeparator: "."
                         }
                     ],
                     slice: {
                         rows: [
                             {
-                                "uniqueName": "Linea",
+                                "uniqueName": "Moneda",
+                                "sort": "asc"
+                            },
+                            {
+                                "uniqueName": "Motivo",
+                                "sort": "asc"
+                            },
+                            {
+                                "uniqueName": "Día",
+                                "sort": "asc"
+                            },
+                            {
+                                "uniqueName": "Descripción",
                                 "sort": "asc"
                             },
                         ],
@@ -202,7 +164,12 @@ const InformeVentaFacturacion = (props) => {
                         ],
                         measures: [
                             {
-                                "uniqueName": "Facturación",
+                                "uniqueName": "Cantidad Perdida",
+                                "aggregation": "sum",
+                                "format": "CantidadPerdida"
+                            },
+                            {
+                                "uniqueName": "Valor",
                                 "aggregation": "sum"
                             }
                         ],
@@ -213,15 +180,7 @@ const InformeVentaFacturacion = (props) => {
                 }}
                 toolbar={true}
             />
-            {/*<PivotTableUI*/}
-            {/*    onChange={s => {*/}
-            {/*        delete s.data*/}
-            {/*        setTableState(s)*/}
-            {/*    }}*/}
-            {/*    data={data}*/}
-            {/*    {...table_state}*/}
-            {/*/>*/}
         </Fragment>
     )
 };
-export default InformeVentaFacturacion;
+export default InformeVentaPerdida;

@@ -399,6 +399,19 @@ class ItemCotizacionComponenteViewSet(viewsets.ModelViewSet):
     serializer_class = ItemCotizacionComponenteSerializer
 
     @action(detail=False, http_method_names=['get', ])
+    def items_venta_perdida(self, request):
+        months = self.request.GET.get('months').split(',')
+        years = self.request.GET.get('years').split(',')
+        lista = ItemCotizacionComponente.objects.exclude(razon_venta_perdida='N.A').filter(
+            (
+                    Q(modified__year__in=years) &
+                    Q(modified__month__in=months)
+            )
+        )
+        serializer = self.get_serializer(lista, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, http_method_names=['get', ])
     def items_por_cliente_historico(self, request):
         cliente_id = self.request.GET.get('cliente_id')
         parametro = self.request.GET.get('parametro')

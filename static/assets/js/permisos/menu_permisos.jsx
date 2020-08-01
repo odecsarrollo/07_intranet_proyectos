@@ -32,4 +32,5 @@ export const MENU_VENTAS_PROYECTOS_PERMISSIONS = {
 export const MENU_VENTAS_COMPONENTES_PERMISSIONS = {
     menu_ventas_componentes_cotizaciones: 'menu_ventas_componentes_cotizaciones',
     menu_ventas_componentes_clientes: 'menu_ventas_componentes_clientes',
+    menu_ventas_componentes_informe_ventas_perdidas: 'menu_ventas_componentes_informe_ventas_perdidas',
 };

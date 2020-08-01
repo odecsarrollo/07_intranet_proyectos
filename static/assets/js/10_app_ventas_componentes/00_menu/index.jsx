@@ -3,6 +3,7 @@ import DrawerListItem from '../../00_utilities/components/ui/drawer/drawer_list_
 import useTengoPermisos from "../../00_utilities/hooks/useTengoPermisos";
 import {MENU_VENTAS_COMPONENTES_PERMISSIONS} from "../../permisos";
 import DialogListaPrecio from "../lista_precios/DialogListaPrecios";
+import MenuInformes from "./MenuInforme";
 
 const Menu = () => {
     const permisos_menu = useTengoPermisos(MENU_VENTAS_COMPONENTES_PERMISSIONS);
@@ -44,6 +45,7 @@ const Menu = () => {
             texto='Lista Precios'
             icono='barcode'
         />
+        <MenuInformes permisos_menu={permisos_menu}/>
         {mostrar_lista_precios && <DialogListaPrecio
             con_precios={true}
             con_costos={false}

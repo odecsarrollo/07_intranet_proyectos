@@ -175,15 +175,17 @@
             <th>Tiem. Entre</th>
         </tr>
         {% for item in cotizacion.items.all|dictsort:"posicion" %}
-            <tr>
-                <td style="max-width: 4cm">{{ item.referencia }}</td>
-                <td style="max-width: 8cm">{{ item.descripcion|title }}</td>
-                <td class="numero">{{ item.cantidad|floatformat:2|intcomma }}</td>
-                <td class="numero">{{ item.precio_unitario|floatformat:2|intcomma }} {{ cotizacion.moneda }}</td>
-                <td>{{ item.unidad_medida }} </td>
-                <td class="numero">{{ item.valor_total|floatformat:2|intcomma }} {{ cotizacion.moneda }}</td>
-                <td>{{ item.tiempo_entrega }} </td>
-            </tr>
+            {% if item.cantidad > 0 %}
+                <tr>
+                    <td style="max-width: 4cm">{{ item.referencia }}</td>
+                    <td style="max-width: 8cm">{{ item.descripcion|title }}</td>
+                    <td class="numero">{{ item.cantidad|floatformat:2|intcomma }}</td>
+                    <td class="numero">{{ item.precio_unitario|floatformat:2|intcomma }} {{ cotizacion.moneda }}</td>
+                    <td>{{ item.unidad_medida }} </td>
+                    <td class="numero">{{ item.valor_total|floatformat:2|intcomma }} {{ cotizacion.moneda }}</td>
+                    <td>{{ item.tiempo_entrega }} </td>
+                </tr>
+            {% endif %}
         {% endfor %}
         <tr>
             <td style="border: none" colspan="5">TOTAL</td>

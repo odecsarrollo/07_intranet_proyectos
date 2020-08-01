@@ -76,6 +76,7 @@ class MenuVentasComponentesPermission(models.Model):
         permissions = (
             ('menu_ventas_componentes_cotizaciones', 'Menu Ventas Componentes Cotizaciones'),
             ('menu_ventas_componentes_clientes', 'Menu Ventas Componentes Clientes'),
+            ('menu_ventas_componentes_informe_ventas_perdidas', 'Menu Ventas Componentes Informe Ventas Perdidas'),
         )
 
 

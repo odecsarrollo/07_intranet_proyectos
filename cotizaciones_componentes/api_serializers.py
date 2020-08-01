@@ -56,10 +56,11 @@ class ItemCotizacionComponenteSerializer(CustomSerializerMixin, serializers.Mode
     forma_pago_nombre = serializers.CharField(source='forma_pago.forma', read_only=True)
     canal_nombre = serializers.CharField(source='forma_pago.canal.nombre', read_only=True)
     cotizacion_nro_consecutivo = serializers.CharField(source='cotizacion.nro_consecutivo', read_only=True)
+    cotizacion_estado = serializers.CharField(source='cotizacion.get_estado_display', read_only=True)
     cotizacion_fecha = serializers.DateTimeField(source='cotizacion.created', read_only=True)
+    cotizacion_moneda = serializers.DateTimeField(source='cotizacion.moneda', read_only=True)
 
     def update(self, instance, validated_data):
-        print(validated_data)
         cantidad_inicial = validated_data.get('cantidad_inicial')
         dias_entrega = validated_data.get('dias_entrega')
         cantidad_venta_perdida = validated_data.get('cantidad_venta_perdida')
@@ -79,7 +80,11 @@ class ItemCotizacionComponenteSerializer(CustomSerializerMixin, serializers.Mode
         fields = [
             'url',
             'id',
+            'modified',
+            'created',
             'cotizacion_nro_consecutivo',
+            'cotizacion_estado',
+            'cotizacion_moneda',
             'cotizacion_fecha',
             'componente_eurobelt',
             'posicion',
@@ -120,7 +125,9 @@ class ItemCotizacionComponenteSerializer(CustomSerializerMixin, serializers.Mode
             'cantidad',
             'unidad_medida_ori',
             'referencia_ori',
-            'descripcion_ori'
+            'descripcion_ori',
+            'modified',
+            'created',
         ]
 
 
@@ -137,23 +144,35 @@ class CotizacionComponenteSeguimientoSerializer(serializers.ModelSerializer):
 
     def get_documento_cotizacion_version(self, obj):
         if obj.documento_cotizacion:
-            return obj.documento_cotizacion.version
+            try:
+                return obj.documento_cotizacion.version
+            except FileNotFoundError as exc:
+                return None
         return None
 
     def get_documento_cotizacion_url(self, obj):
         if obj.documento_cotizacion:
-            return obj.documento_cotizacion.pdf_cotizacion.url
+            try:
+                return obj.documento_cotizacion.pdf_cotizacion.url
+            except FileNotFoundError as exc:
+                return None
         return None
 
     def get_documento_cotizacion_extension(self, obj):
         extension = ''
         if obj.documento_cotizacion:
-            extension = obj.documento_cotizacion.pdf_cotizacion.url.split('.')[-1]
+            try:
+                extension = obj.documento_cotizacion.pdf_cotizacion.url.split('.')[-1]
+            except FileNotFoundError as exc:
+                return None
         return extension.title()
 
     def get_documento_cotizacion_size(self, obj):
         if obj.documento_cotizacion:
-            return obj.documento_cotizacion.pdf_cotizacion.size
+            try:
+                return obj.documento_cotizacion.pdf_cotizacion.size
+            except FileNotFoundError as exc:
+                return None
         return None
 
     class Meta:
