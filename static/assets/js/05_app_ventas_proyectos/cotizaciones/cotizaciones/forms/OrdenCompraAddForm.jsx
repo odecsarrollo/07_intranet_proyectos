@@ -23,7 +23,6 @@ const OrdenCompraTableItem = (props) => {
         addFormaPagoFecha,
         form_values
     } = props;
-    console.log(form_values, 'los form_values');
     return (<tr>
             <td>{fila.motivo}</td>
             <td>
@@ -77,7 +76,6 @@ let OrdenCompraAddForm = memo(props => {
     } = props;
     const porcentaje_total = _.map(forma_pago).reduce((suma, elemento) => parseFloat(suma) + parseFloat(elemento['porcentaje']), 0);
     const forma_pago_total = _.map(forma_pago).reduce((suma, elemento) => parseFloat(suma) + parseFloat(elemento['valor_proyectado']), 0);
-    console.log(initialValues, 'Los initial Values')
 
     const submitObject = (item) => {
         let datos_a_subir = new FormData();

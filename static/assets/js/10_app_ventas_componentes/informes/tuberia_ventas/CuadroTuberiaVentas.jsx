@@ -136,7 +136,7 @@ const TuberiaVentaComponenteDivisa = props => {
     colaboradores = _.mapKeys(colaboradores, 'colaborador');
     const fecha_hoy = new Date();
     let facturacion_mes = _.pickBy(facturas, f => {
-        return (new Date(f.fecha_documento).getMonth() === fecha_hoy.getMonth())
+        return (new Date(f.fecha_documento).getUTCMonth() === fecha_hoy.getUTCMonth())
     })
 
     const facturacion_por_vendedor = _.groupBy(_.pickBy(facturacion_mes, e => e.colaborador !== null), 'colaborador');
