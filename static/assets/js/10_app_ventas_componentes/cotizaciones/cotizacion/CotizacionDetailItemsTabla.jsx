@@ -1,14 +1,16 @@
-import React, {memo, useContext, useState, useEffect} from "react";
-import {useDispatch} from 'react-redux';
-import StylesContext from "../../../00_utilities/contexts/StylesContext";
-import {formatoMoneda} from "../../../00_utilities/common";
-import TextField from "@material-ui/core/TextField";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import MenuItem from "@material-ui/core/MenuItem";
+import SelectField from "@material-ui/core/Select";
 import {makeStyles} from '@material-ui/core/styles';
-import MyDialogButtonDelete from "../../../00_utilities/components/ui/dialog/delete_dialog";
-import * as actions from "../../../01_actions/01_index";
+import TextField from "@material-ui/core/TextField";
+import React, {memo, useContext, useEffect, useState} from "react";
+import {useDispatch} from 'react-redux';
 
 import {SortableContainer, SortableElement, SortableHandle} from 'react-sortable-hoc';
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {formatoMoneda} from "../../../00_utilities/common";
+import MyDialogButtonDelete from "../../../00_utilities/components/ui/dialog/delete_dialog";
+import StylesContext from "../../../00_utilities/contexts/StylesContext";
+import * as actions from "../../../01_actions/01_index";
 
 const DragHandle = SortableHandle(() => <FontAwesomeIcon
     icon={'arrows-alt'}
@@ -33,14 +35,17 @@ const CotizacionDetailItemsTablaItem = memo(props => {
     const {item, editable, cargarDatos, moneda} = props;
     const dispatch = useDispatch();
     const [error, setError] = useState(null);
-    const [cantidad, setCantidad] = useState(item.cantidad);
+    const [cantidad_inicial, setCantidadInicial] = useState(item.cantidad_inicial);
+    const [cantidad_venta_perdida, setCantidadVentaPerdida] = useState(item.cantidad_venta_perdida);
+    const [razon_venta_perdida, setRazonVentaPerdida] = useState(item.razon_venta_perdida);
     const [dias_entrega, setDiasEntrega] = useState(item.dias_entrega);
     const {table} = useContext(StylesContext);
     const classes = useStyles();
 
     useEffect(() => {
         if (error !== null) {
-            setCantidad(item.cantidad);
+            setCantidadVentaPerdida(item.cantidad_venta_perdida);
+            setCantidadInicial(item.cantidad_inicial);
             setDiasEntrega(item.dias_entrega);
             dispatch(actions.notificarErrorAction('Hubo un error, comunicarse con el adminsitrador del sistema'));
             let error_text = '';
@@ -110,13 +115,13 @@ const CotizacionDetailItemsTablaItem = memo(props => {
                     disabled={!editable}
                     className={classes.textField}
                     fullWidth={true}
-                    value={cantidad}
-                    onChange={e => setCantidad(e.target.value)}
+                    value={cantidad_inicial}
+                    onChange={e => setCantidadInicial(e.target.value)}
                     onBlur={e => {
-                        if (parseFloat(item.cantidad) !== parseFloat(e.target.value)) {
+                        if (parseFloat(item.cantidad_inicial) !== parseFloat(e.target.value)) {
                             cambiarItem(item.id, {
                                 ...item,
-                                cantidad
+                                cantidad_inicial
                             });
                         }
                     }}
@@ -124,6 +129,51 @@ const CotizacionDetailItemsTablaItem = memo(props => {
                     margin="normal"
                 />
             </td>
+            <td style={{...table.td, width: '70px'}}>
+                <SelectField
+                    value={razon_venta_perdida}
+                    onChange={(e) => {
+                        if (item.razon_venta_perdida !== e.target.value) {
+                            setRazonVentaPerdida(e.target.value);
+                            if (e.target.value === 'N.A') {
+                                setCantidadVentaPerdida(0)
+                            }
+                            cambiarItem(item.id, {
+                                ...item,
+                                razon_venta_perdida: e.target.value
+                            })
+                        }
+                    }}
+                >
+                    <MenuItem value={'N.A'}>
+                        No Aplica
+                    </MenuItem>
+                    <MenuItem value={'PRECIO'}>
+                        Precio
+                    </MenuItem>
+                    <MenuItem value={'INVENTARIO'}>
+                        Inventario
+                    </MenuItem>
+                </SelectField>
+                {razon_venta_perdida !== 'N.A' && <TextField
+                    disabled={!editable}
+                    className={classes.textField}
+                    fullWidth={true}
+                    value={cantidad_venta_perdida}
+                    onChange={e => setCantidadVentaPerdida(e.target.value)}
+                    onBlur={e => {
+                        if (parseFloat(item.cantidad_venta_perdida) !== parseFloat(e.target.value)) {
+                            cambiarItem(item.id, {
+                                ...item,
+                                cantidad_venta_perdida
+                            });
+                        }
+                    }}
+                    type='number'
+                    margin="normal"
+                />}
+            </td>
+            <td style={table.td_right}>{item.cantidad}</td>
             <td style={table.td_right}>{formatoMoneda(item.valor_total, '$', moneda === 'COP' ? 0 : 2)}</td>
             <td style={{...table.td, width: '45px'}}>
                 <TextField
@@ -225,7 +275,9 @@ const CotizacionDetailItemsTabla = memo(props => {
                 <th style={table.td}>Descripción</th>
                 <th style={table.td}>Uni. Med</th>
                 <th style={table.td}>$ Unitario</th>
-                <th style={table.td}>Cant.</th>
+                <th style={table.td}>Cant. Inicial</th>
+                <th style={table.td}>Venta Perdida</th>
+                <th style={table.td}>Cant. Final</th>
                 <th style={table.td}>$ Total</th>
                 <th style={table.td}>T. Ent</th>
                 <th style={table.td}>Tipo Transporte</th>
@@ -245,6 +297,8 @@ const CotizacionDetailItemsTabla = memo(props => {
             <tfoot>
             <tr style={table.tr}>
                 <td style={table.td}>Total</td>
+                <td style={table.td}></td>
+                <td style={table.td}></td>
                 <td style={table.td}></td>
                 <td style={table.td}></td>
                 <td style={table.td}></td>

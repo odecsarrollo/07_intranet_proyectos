@@ -2,12 +2,10 @@ from rest_framework import serializers
 
 from envios_emails.api_serializers import CotizacionComponenteEnvioSerializer
 from intranet_proyectos.general_mixins.custom_serializer_mixins import CustomSerializerMixin
-from .models import (
-    CotizacionComponente,
-    ItemCotizacionComponente,
-    CotizacionComponenteAdjunto,
-    CotizacionComponenteSeguimiento
-)
+from .models import CotizacionComponente
+from .models import CotizacionComponenteAdjunto
+from .models import CotizacionComponenteSeguimiento
+from .models import ItemCotizacionComponente
 
 
 class CotizacionComponenteAdjuntoSerializer(serializers.ModelSerializer):
@@ -61,13 +59,18 @@ class ItemCotizacionComponenteSerializer(CustomSerializerMixin, serializers.Mode
     cotizacion_fecha = serializers.DateTimeField(source='cotizacion.created', read_only=True)
 
     def update(self, instance, validated_data):
-        cantidad = validated_data.get('cantidad')
+        print(validated_data)
+        cantidad_inicial = validated_data.get('cantidad_inicial')
         dias_entrega = validated_data.get('dias_entrega')
+        cantidad_venta_perdida = validated_data.get('cantidad_venta_perdida')
+        razon_venta_perdida = validated_data.get('razon_venta_perdida')
         from .services import cotizacion_componentes_item_actualizar_item
         item = cotizacion_componentes_item_actualizar_item(
             item_componente_id=instance.id,
-            cantidad=cantidad,
+            cantidad_inicial=cantidad_inicial,
             dias_entrega=dias_entrega,
+            cantidad_venta_perdida=cantidad_venta_perdida,
+            razon_venta_perdida=razon_venta_perdida
         )
         return item
 
@@ -94,6 +97,9 @@ class ItemCotizacionComponenteSerializer(CustomSerializerMixin, serializers.Mode
             'referencia',
             'unidad_medida',
             'cantidad',
+            'cantidad_inicial',
+            'cantidad_venta_perdida',
+            'razon_venta_perdida',
             'precio_unitario',
             'valor_total',
             'descripcion_ori',
@@ -105,16 +111,17 @@ class ItemCotizacionComponenteSerializer(CustomSerializerMixin, serializers.Mode
             'verificada_personalizacion',
             'verificacion_solicitada',
         ]
-        extra_kwargs = {
-            'descripcion_ori': {'read_only': True},
-            'referencia_ori': {'read_only': True},
-            'unidad_medida_ori': {'read_only': True},
-            'costo_ori': {'read_only': True},
-            'precio_unitario_ori': {'read_only': True},
-            'verificar_personalizacion': {'read_only': True},
-            'verificada_personalizacion': {'read_only': True},
-            'verificacion_solicitada': {'read_only': True},
-        }
+        read_only_fields = [
+            'verificar_personalizacion',
+            'verificada_personalizacion',
+            'verificacion_solicitada',
+            'precio_unitario_ori',
+            'costo_ori',
+            'cantidad',
+            'unidad_medida_ori',
+            'referencia_ori',
+            'descripcion_ori'
+        ]
 
 
 class CotizacionComponenteSeguimientoSerializer(serializers.ModelSerializer):
