@@ -5,23 +5,21 @@ from django.contrib.auth.models import User
 from django.core.files import File
 from django.core.mail import EmailMultiAlternatives
 from django.db.models import Q
-from django.db.models import Sum
 from django.template.loader import render_to_string
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError
 
+from bandas_eurobelt.models import BandaEurobelt
+from bandas_eurobelt.models import ComponenteBandaEurobelt
+from cargues_detalles.models import FacturaDetalle
+from catalogo_productos.models import ItemVentaCatalogo
 from contabilidad_anticipos.models import ProformaConfiguracion
 from envios_emails.models import CotizacionComponenteEnvio
 from envios_emails.services import generar_base_pdf
-from cargues_detalles.models import FacturaDetalle
-from .models import (
-    CotizacionComponente,
-    ItemCotizacionComponente,
-    CotizacionComponenteDocumento,
-    CotizacionComponenteSeguimiento
-)
-from catalogo_productos.models import ItemVentaCatalogo
-from bandas_eurobelt.models import BandaEurobelt, ComponenteBandaEurobelt
+from .models import CotizacionComponente
+from .models import CotizacionComponenteDocumento
+from .models import CotizacionComponenteSeguimiento
+from .models import ItemCotizacionComponente
 
 
 def relacionar_cotizacion_con_factura(
@@ -299,7 +297,9 @@ def cotizacion_componentes_adicionar_item(
     item.referencia = item_referencia
     item.unidad_medida = item_unidad_medida
     item.cotizacion = cotizacion_componente
+    item.cantidad_inicial = 1
     item.cantidad = 1
+    item.razon_venta_perdida = 'N.A'
     item.precio_unitario = precio_unitario
     item.valor_total = precio_unitario
     item.forma_pago_id = forma_pago_id
@@ -311,14 +311,22 @@ def cotizacion_componentes_adicionar_item(
 
 def cotizacion_componentes_item_actualizar_item(
         item_componente_id: int,
-        cantidad: float,
+        cantidad_inicial: float,
         dias_entrega: float,
+        cantidad_venta_perdida: float,
+        razon_venta_perdida: str,
 ) -> ItemCotizacionComponente:
+    print('VINO A GUARDAR')
+    print(razon_venta_perdida)
     item = ItemCotizacionComponente.objects.get(pk=item_componente_id)
-    if cantidad > 0:
-        item.cantidad = cantidad
+    if cantidad_inicial > 0:
+        cantidad_venta_perdida = 0 if razon_venta_perdida == 'N.A' else cantidad_venta_perdida
+        item.cantidad_venta_perdida = cantidad_venta_perdida
+        item.cantidad_inicial = cantidad_inicial
+        item.razon_venta_perdida = razon_venta_perdida
+        item.cantidad = cantidad_inicial - cantidad_venta_perdida
         item.dias_entrega = dias_entrega
-        item.valor_total = cantidad * item.precio_unitario
+        item.valor_total = (cantidad_inicial - cantidad_venta_perdida) * item.precio_unitario
         item.save()
     else:
         cotizacion_componentes_item_eliminar(item_componente_id=item_componente_id)

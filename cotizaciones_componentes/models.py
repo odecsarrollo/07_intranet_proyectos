@@ -1,17 +1,21 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
+from imagekit.models import ImageSpecField
+from imagekit.models import ProcessedImageField
+from imagekit.processors import ResizeToFill
+from imagekit.processors import ResizeToFit
 from model_utils.models import TimeStampedModel
 
-from clientes.models import ContactoCliente, ClienteBiable
+from bandas_eurobelt.models import BandaEurobelt
+from bandas_eurobelt.models import ComponenteBandaEurobelt
+from cargues_detalles.models import FacturaDetalle
+from catalogo_productos.models import ItemVentaCatalogo
+from clientes.models import ClienteBiable
+from clientes.models import ContactoCliente
 from cotizaciones_componentes.managers import CotizacionComponenteManager
 from geografia.models import Ciudad
-from cargues_detalles.models import FacturaDetalle
 from listas_precios.models import FormaPagoCanal
-from bandas_eurobelt.models import BandaEurobelt, ComponenteBandaEurobelt
-from catalogo_productos.models import ItemVentaCatalogo
-from imagekit.models import ProcessedImageField, ImageSpecField
-from imagekit.processors import ResizeToFit, ResizeToFill
 
 
 class CotizacionComponente(TimeStampedModel):
@@ -156,6 +160,12 @@ class CotizacionComponenteAdjunto(TimeStampedModel):
 
 
 class ItemCotizacionComponente(TimeStampedModel):
+    VENTA_PERDIDA_CHOICES = (
+        ('N.A', 'No Aplica'),
+        ('INVENTARIO', 'Inventario'),
+        ('PRECIO', 'Precio'),
+    )
+
     posicion = models.PositiveIntegerField()
     cotizacion = models.ForeignKey(CotizacionComponente, related_name="items", on_delete=models.PROTECT)
     componente_eurobelt = models.ForeignKey(
@@ -206,7 +216,10 @@ class ItemCotizacionComponente(TimeStampedModel):
     descripcion = models.CharField(max_length=400, null=True)
     referencia = models.CharField(max_length=150, null=True)
     unidad_medida = models.CharField(max_length=120, null=True)
+    cantidad_inicial = models.DecimalField(max_digits=18, decimal_places=3)
     cantidad = models.DecimalField(max_digits=18, decimal_places=3)
+    cantidad_venta_perdida = models.DecimalField(max_digits=18, decimal_places=3, default=0)
+    razon_venta_perdida = models.CharField(max_length=100, choices=VENTA_PERDIDA_CHOICES, default='N.A')
     precio_unitario = models.DecimalField(max_digits=18, decimal_places=2)
     valor_total = models.DecimalField(max_digits=18, decimal_places=2)
     transporte_tipo = models.CharField(null=True, max_length=100)
