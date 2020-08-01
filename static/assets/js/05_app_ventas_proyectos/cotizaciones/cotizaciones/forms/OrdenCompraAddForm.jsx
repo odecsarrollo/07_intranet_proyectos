@@ -23,6 +23,7 @@ const OrdenCompraTableItem = (props) => {
         addFormaPagoFecha,
         form_values
     } = props;
+    console.log(form_values, 'los form_values');
     return (<tr>
             <td>{fila.motivo}</td>
             <td>
@@ -76,7 +77,7 @@ let OrdenCompraAddForm = memo(props => {
     } = props;
     const porcentaje_total = _.map(forma_pago).reduce((suma, elemento) => parseFloat(suma) + parseFloat(elemento['porcentaje']), 0);
     const forma_pago_total = _.map(forma_pago).reduce((suma, elemento) => parseFloat(suma) + parseFloat(elemento['valor_proyectado']), 0);
-    console.log(initialValues,'Los initial Values')
+    console.log(initialValues, 'Los initial Values')
 
     const submitObject = (item) => {
         let datos_a_subir = new FormData();
@@ -168,7 +169,7 @@ let OrdenCompraAddForm = memo(props => {
                 className="col-12 col-md-4"
                 case='U'/>
             <div>
-                {((initialValues && !initialValues.orden_compra_archivo_url) ||!initialValues) &&
+                {((initialValues && !initialValues.orden_compra_archivo_url) || !initialValues) &&
                 <MyFieldFileInput className='col-12 p-2' name="orden_compra_archivo"/>}
             </div>
             {form_values.valor_orden_compra && form_values.valor_orden_compra > 0 && <Fragment>

@@ -141,7 +141,7 @@ const CotizacionCondicionInicioProyecto = props => {
                 Adicionar Orden Compra Pruebas
             </Button>
         </div>
-        {pagos_proyectados.length > 0 && pagos_proyectados.map(p => <CotizacionCondicionInicioProyectoOC
+        {pagos_proyectados && pagos_proyectados.length > 0 && pagos_proyectados.map(p => <CotizacionCondicionInicioProyectoOC
             cotizacion={cotizacion}
             orden_compra={p} key={p.id}/>)}
         {(cotizacion.orden_compra_archivo || cotizacion.valor_orden_compra > 0) && <CotizacionOrdenCompraForm

@@ -5,6 +5,7 @@ import classNames from "classnames";
 import moment from 'moment-timezone';
 import React, {Fragment, useState} from 'react';
 import {useDispatch} from "react-redux/es/hooks/useDispatch";
+import momentLocaliser from "react-widgets-moment";
 import {reduxForm} from "redux-form";
 import {fechaFormatoUno, formatBytes, pesosColombianos} from "../../../../00_utilities/common";
 import SiNoDialog from "../../../../00_utilities/components/ui/dialog/SiNoDialog";
@@ -15,6 +16,10 @@ import {
     MyTextFieldSimple
 } from "../../../../00_utilities/components/ui/forms/fields";
 import * as actions from "../../../../01_actions/01_index";
+
+moment.tz.setDefault("America/Bogota");
+moment.locale('es');
+momentLocaliser(moment);//Para convertir las oc viejas, luego podrá elimiarse
 
 let CotizacionOrdenCompraForm = (props) => {
     const {
@@ -82,14 +87,14 @@ let CotizacionOrdenCompraForm = (props) => {
             <div>
                     <span onClick={() => {
                         setTempoBaseOCVieja({
-                            orden_compra_fecha,
+                            orden_compra_fecha: moment(orden_compra_fecha).toDate(),
                             valor_orden_compra,
                             orden_compra_nro,
                             valor_ofertado,
                             orden_compra_archivo_url
                         })
                         setMostrarAddNuevaOrdenCompra(true);
-                    }}>Crear Nuevo</span>
+                    }}>Convertir</span>
             </div>
 
             {show_limpiar && <SiNoDialog
