@@ -121,6 +121,11 @@ class CondicionInicioProyectoCotizacionSerializer(serializers.ModelSerializer):
 
 # region Serializadores Cotizacion
 class CotizacionSerializer(serializers.ModelSerializer):
+    valores_oc = serializers.DecimalField(decimal_places=2, max_digits=20, read_only=True)
+    pagos = serializers.DecimalField(decimal_places=2, max_digits=20, read_only=True)
+    costo_presupuestado_adicionales = serializers.DecimalField(decimal_places=2, max_digits=20, read_only=True)
+    valores_oc_adicionales = serializers.DecimalField(decimal_places=2, max_digits=20, read_only=True)
+    pagos_adicionales = serializers.DecimalField(decimal_places=2, max_digits=20, read_only=True)
     cliente_nombre = serializers.CharField(source='cliente.nombre', read_only=True)
     cliente_id = serializers.CharField(source='cliente.id', read_only=True)
     cotizacion_inicial_nro = serializers.CharField(source='cotizacion_inicial.nro_cotizacion', read_only=True)
@@ -130,9 +135,7 @@ class CotizacionSerializer(serializers.ModelSerializer):
     )
     contacto_cliente_nombre = serializers.CharField(source='contacto_cliente.full_nombre', read_only=True)
     valor_orden_compra_mes = serializers.DecimalField(decimal_places=2, max_digits=20, read_only=True)
-    valor_orden_compra_adicionales = serializers.DecimalField(decimal_places=2, max_digits=20, read_only=True)
     valor_total_orden_compra_cotizaciones = serializers.DecimalField(decimal_places=2, max_digits=20, read_only=True)
-    costo_presupuestado_adicionales = serializers.DecimalField(decimal_places=2, max_digits=20, read_only=True)
     responsable_actual = serializers.CharField(source='responsable.username', read_only=True)
     responsable_actual_nombre = serializers.CharField(source='responsable.get_full_name', read_only=True)
     orden_compra_fecha = serializers.DateField(
@@ -326,6 +329,10 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'orden_compra_archivo',
             'created_by',
             'creado',
+            'valores_oc_adicionales',
+            'pagos_adicionales',
+            'valores_oc',
+            'pagos',
             'cotizacion_inicial',
             'cotizacion_inicial_nro',
             'cotizacion_inicial_unidad_negocio',
@@ -353,7 +360,6 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'valor_ofertado',
             'valor_orden_compra',
             'valor_orden_compra_mes',
-            'valor_orden_compra_adicionales',
             'costo_presupuestado',
             'costo_presupuestado_adicionales',
             'valor_total_orden_compra_cotizaciones',

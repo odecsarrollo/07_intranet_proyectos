@@ -83,22 +83,22 @@ const CotizacionInfo = memo(props => {
                     {cotizacion_inicial.unidad_negocio}-{cotizacion_inicial.nro_cotizacion}
                 </Link>
             </div>}
-            <div className="col-12 col-lg-3">
+            <div className="col-12 col-lg-4">
                 <CotizacionDetailInfoValoresTable cotizacion={object}/>
             </div>
             {estado === 'Cierre (Aprobado)' &&
             <Fragment>
                 {object.es_adicional &&
-                <div className="col-12 col-lg-5">
+                <div className="col-12 col-sm-6 col-md-8 col-lg-4">
                     <CotizacionDetailInfoLiteral cotizacion={object} permisos_cotizacion={permisos_cotizacion}/>
                 </div>}
 
                 {!object.es_adicional &&
                 <Fragment>
-                    <div className="col-12 col-lg-4">
+                    <div className="col-12 col-sm-6 col-md-4 col-lg-4">
                         <CotizacionDetailInfoProyecto cotizacion={object} permisos_cotizacion={permisos_cotizacion}/>
                     </div>
-                    <div className="col-12 col-lg-5">
+                    <div className="col-12 col-sm-6 col-lg-4">
                         <CotizacionDetailInfoCotizacionAdicional cotizacion={object}/>
                     </div>
                 </Fragment>}

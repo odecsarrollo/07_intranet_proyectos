@@ -70,7 +70,6 @@ def cotizacion_envio_correo_notificacion_condiciones_inicio_completas(
         "condiciones_inicio_cotizacion": cotizacion.condiciones_inicio_cotizacion.order_by('fecha_entrega').all()
     }
     text_content = render_to_string('emails/cotizacion_proyecto/correo_base.html', context=context)
-    from intranet_proyectos.services import send_sms
     msg = EmailMultiAlternatives(
         asunto,
         text_content,
@@ -105,6 +104,7 @@ def cotizacion_envio_correo_notificacion_condiciones_inicio_completas(
                 cotizacion.responsable,
                 'colaborador'
             ) else '%s' % cotizacion.responsable.username
+            from intranet_proyectos.services import send_sms
             send_sms(
                 phone_number='+573155476246',
                 message='Venta Proyectos: %s / %s / %s por %s' % (
@@ -117,7 +117,7 @@ def cotizacion_envio_correo_notificacion_condiciones_inicio_completas(
             )
     except Exception as e:
         raise ValidationError(
-            {'_error': 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e})
+            {'_error': 'Se há presentado un error al intentar enviar el mensaje de texto, envío fallido: %s' % e})
     return cotizacion
 
 
@@ -125,7 +125,7 @@ def cotizacion_verificar_condicion_inicio_proyecto_si_estan_completas(
         cotizacion_id: int
 ) -> Cotizacion:
     cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
-    con_orden_de_compra = cotizacion.orden_compra_nro is not None and cotizacion.orden_compra_fecha is not None and cotizacion.valor_orden_compra > 0 and cotizacion.orden_compra_archivo
+    ordenes_compra = cotizacion.pagos_proyectados
     condiciones_incompletas = cotizacion.condiciones_inicio_cotizacion.filter(fecha_entrega__isnull=True)
     condicion_especial = cotizacion.condiciones_inicio_cotizacion.filter(
         condicion_especial=True,
@@ -140,12 +140,12 @@ def cotizacion_verificar_condicion_inicio_proyecto_si_estan_completas(
         cotizacion.fecha_cambio_estado_cerrado = timezone.now()
         cotizacion.save()
         cotizacion_envio_correo_notificacion_condiciones_inicio_completas(cotizacion.id)
-    elif not condiciones_incompletas.exists() and con_orden_de_compra:
+    elif not condiciones_incompletas.exists() and ordenes_compra.exists():
         if cotizacion.estado == 'Cierre (Aprobado)':
             return cotizacion
         fecha_max = cotizacion.condiciones_inicio_cotizacion.aggregate(fecha_max=Max('fecha_entrega'))['fecha_max']
-        cotizacion.condiciones_inicio_fecha_ultima = max(cotizacion.orden_compra_fecha,
-                                                         fecha_max) if fecha_max else cotizacion.orden_compra_fecha
+        fecha_max_oc = cotizacion.pagos_proyectados.aggregate(fecha_max=Max('orden_compra_fecha'))['fecha_max']
+        cotizacion.condiciones_inicio_fecha_ultima = max(fecha_max_oc, fecha_max) if fecha_max else fecha_max_oc
         cotizacion.condiciones_inicio_completas = True
         cotizacion.estado = 'Cierre (Aprobado)'
         cotizacion.fecha_cambio_estado_cerrado = timezone.now()
@@ -214,7 +214,8 @@ def cotizacion_add_pago_proyectado(
         valor_orden_compra: float,
         orden_compra_fecha: datetime,
         orden_compra_archivo,
-        user_id: int
+        user_id: int,
+        no_enviar_correo=False
 ) -> CotizacionPagoProyectado:
     user = User.objects.get(pk=user_id)
     if not user.is_superuser:
@@ -227,6 +228,49 @@ def cotizacion_add_pago_proyectado(
         cotizacion_id=cotizacion_id,
         creado_por_id=user_id
     )
+    cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
+
+    correos = CorreoAplicacion.objects.filter(aplicacion='CORREO_COTIZACION_NUEVA_OC')
+    correo_from = correos.filter(tipo='FROM').first()
+    correos_to = list(correos.values_list('email', flat=True).filter(tipo='TO'))
+    correos_cc = list(correos.values_list('email', flat=True).filter(tipo='CC'))
+    correos_bcc = list(correos.values_list('email', flat=True).filter(tipo='BCC'))
+    if len(correos_to) > 0 or len(correos_cc) > 0 or len(correos_bcc) > 0:
+        if cotizacion.responsable and cotizacion.responsable.email:
+            correos_to.append(cotizacion.responsable.email)
+        asunto = 'Nueva Orden de Compra'
+        context = {
+            "cotizacion": cotizacion,
+            "orden_compra": orden_compra
+        }
+        text_content = render_to_string(
+            'emails/cotizacion_proyecto/correo_notificacion_nueva_orden_compra.html',
+            context=context
+        )
+        msg = EmailMultiAlternatives(
+            asunto,
+            text_content,
+            cc=correos_cc,
+            bcc=correos_bcc,
+            from_email='%s <%s>' % (
+                correo_from.alias_from, correo_from.email) if correo_from else 'noreply@odecopack.com',
+            to=correos_to if len(correos_to) > 0 else ['fabio.garcia.sanchez@gmail.com']
+        )
+        msg.attach_alternative(text_content, "text/html")
+        if orden_compra.orden_compra_archivo:
+            nombre_archivo = '%s%s %s.%s' % (
+                cotizacion.unidad_negocio, cotizacion.nro_cotizacion,
+                'orden_compra', orden_compra.orden_compra_archivo.name.split('.')[-1])
+            msg.attach(nombre_archivo, orden_compra.orden_compra_archivo.read())
+        try:
+            if not no_enviar_correo:  # Cuidamos no volver a enviar por correo cuando se duplique una oc vieja al modelo nuevo
+                msg.send()
+            orden_compra.notificada_por_correo = True
+            orden_compra.save()
+        except Exception as e:
+            raise ValidationError(
+                {'_error': 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e})
+    cotizacion_verificar_condicion_inicio_proyecto_si_estan_completas(cotizacion_id=cotizacion_id)
     return orden_compra
 
 
@@ -240,6 +284,7 @@ def cotizacion_add_pago(
 ) -> CotizacionPagoProyectado:
     pago = None
     acuerdo_pago = CotizacionPagoProyectadoAcuerdoPago.objects.get(pk=acuerdo_pago_id)
+    cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
     if acuerdo_pago.orden_compra.cotizacion_id == cotizacion_id:
         pago = CotizacionPagoProyectadoAcuerdoPagoPago.objects.create(
             valor=valor,
@@ -248,6 +293,46 @@ def cotizacion_add_pago(
             acuerdo_pago_id=acuerdo_pago_id,
             creado_por_id=user_id
         )
+
+    correos = CorreoAplicacion.objects.filter(aplicacion='CORREO_COTIZACION_REGISTRO_NUEVO_PAGO')
+    correo_from = correos.filter(tipo='FROM').first()
+    correos_to = list(correos.values_list('email', flat=True).filter(tipo='TO'))
+    correos_cc = list(correos.values_list('email', flat=True).filter(tipo='CC'))
+    correos_bcc = list(correos.values_list('email', flat=True).filter(tipo='BCC'))
+    if len(correos_to) > 0 or len(correos_cc) > 0 or len(correos_bcc) > 0:
+        if cotizacion.responsable and cotizacion.responsable.email:
+            correos_to.append(cotizacion.responsable.email)
+        asunto = 'Nueva Orden de Compra'
+        context = {
+            "cotizacion": cotizacion,
+            "pago": pago
+        }
+        text_content = render_to_string(
+            'emails/cotizacion_proyecto/correo_notificacion_registro_pago.html',
+            context=context
+        )
+        msg = EmailMultiAlternatives(
+            asunto,
+            text_content,
+            cc=correos_cc,
+            bcc=correos_bcc,
+            from_email='%s <%s>' % (
+                correo_from.alias_from, correo_from.email) if correo_from else 'noreply@odecopack.com',
+            to=correos_to if len(correos_to) > 0 else ['fabio.garcia.sanchez@gmail.com']
+        )
+        msg.attach_alternative(text_content, "text/html")
+        if pago.comprobante_pago:
+            nombre_archivo = '%s%s %s.%s' % (
+                cotizacion.unidad_negocio, cotizacion.nro_cotizacion,
+                'orden_compra', pago.comprobante_pago.name.split('.')[-1])
+            msg.attach(nombre_archivo, pago.comprobante_pago.read())
+        try:
+            msg.send()
+            pago.notificada_por_correo = True
+            pago.save()
+        except Exception as e:
+            raise ValidationError(
+                {'_error': 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e})
     return pago
 
 
@@ -271,7 +356,7 @@ def cotizacion_eliminar_pago(
                     {'_error': 'Sólo alguien con permisos de eliminar pagos siempre puede eliminar este pago'})
             if pago.creado_por_id != user_id:
                 raise ValidationError(
-                    {'_error': 'Sólo lo puede borrar el usuario quien lo creo este pago %' % (
+                    {'_error': 'Sólo lo puede borrar el usuario quien lo creo este pago %s' % (
                         pago.creado_por.username)})
             pago.delete()
         else:

@@ -4,8 +4,12 @@ from math import ceil
 from django.db.models import Case
 from django.db.models import Count
 from django.db.models import DecimalField
+from django.db.models import ExpressionWrapper
 from django.db.models import F
+from django.db.models import OuterRef
 from django.db.models import Q
+from django.db.models import Subquery
+from django.db.models import Sum
 from django.db.models import Value
 from django.db.models import When
 from django.db.models.functions import Coalesce
@@ -30,6 +34,7 @@ from .models import ArchivoCotizacion
 from .models import CondicionInicioProyecto
 from .models import CondicionInicioProyectoCotizacion
 from .models import Cotizacion
+from .models import CotizacionPagoProyectadoAcuerdoPagoPago
 from .models import SeguimientoCotizacion
 
 
@@ -55,11 +60,32 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
         'responsable'
     ).prefetch_related(
         'proyectos',
+        'pagos_proyectados',
         'cotizaciones_adicionales__contacto_cliente',
         'cotizacion_inicial__cotizaciones_adicionales',
         'cotizaciones_adicionales__cotizaciones_adicionales',
         'pagos_proyectados'
+    ).annotate(
+        valores_oc=Coalesce(Sum('pagos_proyectados__valor_orden_compra'), 0),
     ).all()
+    _pagos_cotizacion = CotizacionPagoProyectadoAcuerdoPagoPago.objects.values(
+        'acuerdo_pago__orden_compra__cotizacion_id'
+    ).filter(valor__gt=0).annotate(
+        total=Sum('valor')
+    ).filter(acuerdo_pago__orden_compra__cotizacion_id=OuterRef('id'))
+
+    _cotizaciones_adicionales = Cotizacion.objects.values('cotizacion_inicial__id').annotate(
+        costo_presupuestado_adicionales=Sum('costo_presupuestado'),
+        valores_oc_adicionales=Coalesce(Sum('pagos_proyectados__valor_orden_compra'), 0),
+        pagos_adicionales=ExpressionWrapper(
+            Subquery(_pagos_cotizacion.values('total')),
+            output_field=DecimalField(max_digits=12, decimal_places=4)
+        ),
+    ).filter(
+        cotizacion_inicial__id=OuterRef('id'),
+        estado='Cierre (Aprobado)'
+    ).distinct()
+
     detail_queryset = Cotizacion.objects.select_related(
         'cliente',
         'contacto_cliente',
@@ -78,6 +104,24 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
         'cotizaciones_adicionales__cotizaciones_adicionales',
         'mis_documentos__creado_por',
         'mis_seguimientos__creado_por',
+    ).annotate(
+        valores_oc=Coalesce(Sum('pagos_proyectados__valor_orden_compra'), 0),
+        pagos=ExpressionWrapper(
+            Subquery(_pagos_cotizacion.values('total')),
+            output_field=DecimalField(max_digits=12, decimal_places=4)
+        ),
+        valores_oc_adicionales=ExpressionWrapper(
+            Subquery(_cotizaciones_adicionales.values('valores_oc_adicionales')),
+            output_field=DecimalField(max_digits=12, decimal_places=4)
+        ),
+        costo_presupuestado_adicionales=ExpressionWrapper(
+            Subquery(_cotizaciones_adicionales.values('costo_presupuestado_adicionales')),
+            output_field=DecimalField(max_digits=12, decimal_places=4)
+        ),
+        pagos_adicionales=ExpressionWrapper(
+            Subquery(_cotizaciones_adicionales.values('pagos_adicionales')),
+            output_field=DecimalField(max_digits=12, decimal_places=4)
+        ),
     ).all()
 
     def retrieve(self, request, *args, **kwargs):
@@ -132,6 +176,46 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
             fecha_limite_segumiento_estado=fecha_limite_segumiento_estado,
             usuario=self.request.user
         )
+        serializer = self.get_serializer(self.get_object())
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def adicionar_pago_proyectado_desde_vieja(self, request, pk=None):
+        self.serializer_class = CotizacionConDetalleSerializer
+        self.queryset = self.detail_queryset
+        cotizacion = Cotizacion.objects.get(pk=pk)
+        orden_compra_archivo = cotizacion.orden_compra_archivo
+        if not orden_compra_archivo:
+            orden_compra_archivo = request.FILES.get('orden_compra_archivo')
+        orden_compra_fecha = request.POST.get('orden_compra_fecha', None)
+        valor_orden_compra = request.POST.get('valor_orden_compra', None)
+        orden_compra_nro = request.POST.get('orden_compra_nro', None)
+        plan_pago = request.POST.get('plan_pago', None)
+        from .services import cotizacion_add_pago_proyectado
+        pago_proyectado = cotizacion_add_pago_proyectado(
+            cotizacion_id=pk,
+            orden_compra_fecha=orden_compra_fecha,
+            orden_compra_nro=orden_compra_nro,
+            valor_orden_compra=valor_orden_compra,
+            orden_compra_archivo=orden_compra_archivo,
+            user_id=self.request.user.id,
+            no_enviar_correo=True
+        )
+
+        cotizacion.orden_compra_archivo = None
+        cotizacion.orden_compra_fecha = None
+        cotizacion.orden_compra_nro = None
+        cotizacion.valor_orden_compra = 0
+        cotizacion.save()
+
+        acuerdos_de_pago = json.loads(plan_pago)
+        for pp in json.loads(plan_pago):
+            pago_proyectado.acuerdos_pagos.create(
+                motivo=acuerdos_de_pago[pp].get('motivo'),
+                fecha_proyectada=acuerdos_de_pago[pp].get('fecha_proyectada'),
+                valor_proyectado=acuerdos_de_pago[pp].get('valor_proyectado'),
+                porcentaje=acuerdos_de_pago[pp].get('porcentaje')
+            )
         serializer = self.get_serializer(self.get_object())
         return Response(serializer.data)
 

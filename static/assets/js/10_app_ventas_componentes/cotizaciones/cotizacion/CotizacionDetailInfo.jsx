@@ -1,10 +1,10 @@
-import React, {memo, useState, Fragment} from "react";
-import Typography from "@material-ui/core/Typography";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {fechaFormatoUno, formatoMoneda, pesosColombianos} from "../../../00_utilities/common";
-import CotizacionCRUDFormDialog from "./forms/CotizacionCRUDFormDialog";
-import MyDialogButtonDelete from "../../../00_utilities/components/ui/dialog/delete_dialog";
+import Typography from "@material-ui/core/Typography";
+import React, {Fragment, memo, useState} from "react";
 import {Link} from "react-router-dom";
+import {fechaFormatoUno, formatoMoneda} from "../../../00_utilities/common";
+import MyDialogButtonDelete from "../../../00_utilities/components/ui/dialog/delete_dialog";
+import CotizacionCRUDFormDialog from "./forms/CotizacionCRUDFormDialog";
 
 const styles = {
     texto_principal: {
@@ -26,8 +26,7 @@ const CotizacionDetailInfo = memo(props => {
     const con_fecha_seguimiento = cotizacion.porcentaje_seguimineto >= 0 && cotizacion.estado !== 'FIN' && cotizacion.estado !== 'INI' && cotizacion.estado !== 'ELI';
     return (
         <Fragment>
-            {show_cotizacion_informacion_dialog &&
-            <CotizacionCRUDFormDialog
+            {show_cotizacion_informacion_dialog && <CotizacionCRUDFormDialog
                 singular_name={`Contacto Cotización ${cotizacion.nro_consecutivo}`}
                 initialValues={cotizacion}
                 modal_open={show_cotizacion_informacion_dialog}

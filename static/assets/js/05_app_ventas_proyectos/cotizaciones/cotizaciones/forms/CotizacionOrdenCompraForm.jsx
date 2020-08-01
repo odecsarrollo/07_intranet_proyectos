@@ -1,20 +1,20 @@
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import IconButton from "@material-ui/core/IconButton";
+import Typography from "@material-ui/core/Typography";
+import classNames from "classnames";
+import moment from 'moment-timezone';
 import React, {Fragment, useState} from 'react';
+import {useDispatch} from "react-redux/es/hooks/useDispatch";
+import {reduxForm} from "redux-form";
+import {fechaFormatoUno, formatBytes, pesosColombianos} from "../../../../00_utilities/common";
+import SiNoDialog from "../../../../00_utilities/components/ui/dialog/SiNoDialog";
+import BotoneriaModalForm from "../../../../00_utilities/components/ui/forms/botoneria_modal_form";
 import {
     MyDateTimePickerField,
     MyFieldFileInput,
     MyTextFieldSimple
 } from "../../../../00_utilities/components/ui/forms/fields";
-import BotoneriaModalForm from "../../../../00_utilities/components/ui/forms/botoneria_modal_form";
-import {reduxForm} from "redux-form";
-import Typography from "@material-ui/core/Typography";
 import * as actions from "../../../../01_actions/01_index";
-import {useDispatch} from "react-redux/es/hooks/useDispatch";
-import classNames from "classnames";
-import {fechaFormatoUno, formatBytes, pesosColombianos} from "../../../../00_utilities/common";
-import IconButton from "@material-ui/core/IconButton";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import SiNoDialog from "../../../../00_utilities/components/ui/dialog/SiNoDialog";
-import moment from 'moment-timezone';
 
 let CotizacionOrdenCompraForm = (props) => {
     const {
@@ -25,7 +25,9 @@ let CotizacionOrdenCompraForm = (props) => {
         handleSubmit,
         classes,
         read_only,
-        change
+        change,
+        setTempoBaseOCVieja,
+        setMostrarAddNuevaOrdenCompra
     } = props;
     const {to_string, id, orden_compra_archivo_url, orden_compra_archivo_size, orden_compra_archivo_filename} = initialValues;
     const [show_limpiar, setShowLimpiar] = useState(false);
@@ -72,11 +74,23 @@ let CotizacionOrdenCompraForm = (props) => {
         <div className="card p-4 m-1">
             <Typography variant="body1" gutterBottom color="primary">
                 ORDEN DE COMPRA <small>(Valor Ofertado: {pesosColombianos(valor_ofertado)} <FontAwesomeIcon
-                    className='puntero'
-                    icon='paste'
-                    onClick={() => change('valor_orden_compra', valor_ofertado)}/>)
+                className='puntero'
+                icon='paste'
+                onClick={() => change('valor_orden_compra', valor_ofertado)}/>)
             </small>
             </Typography>
+            <div>
+                    <span onClick={() => {
+                        setTempoBaseOCVieja({
+                            orden_compra_fecha,
+                            valor_orden_compra,
+                            orden_compra_nro,
+                            valor_ofertado,
+                            orden_compra_archivo_url
+                        })
+                        setMostrarAddNuevaOrdenCompra(true);
+                    }}>Crear Nuevo</span>
+            </div>
 
             {show_limpiar && <SiNoDialog
                 onSi={onSiLimpiarCondicionInicio}

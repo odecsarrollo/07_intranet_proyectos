@@ -1,9 +1,10 @@
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import moment from "moment-timezone";
 import React, {Fragment, memo, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import DateTimePicker from "react-widgets/lib/DateTimePicker";
 import {formValueSelector, reduxForm} from 'redux-form';
-import {fechaToYMD, formatoMoneda} from "../../../../00_utilities/common";
+import {fechaToYMD, formatoMoneda, pesosColombianos} from "../../../../00_utilities/common";
 import {
     MyDateTimePickerField,
     MyFieldFileInput,
@@ -65,17 +66,17 @@ let OrdenCompraAddForm = memo(props => {
         pristine,
         submitting,
         reset,
-        initialValues,
-        onSubmit,
+        initialValues,//LOS INITIAL VALUES SON SÓLO PARA DUPLICAR LAS OC VIEJAS, LUEGO SE PODRÁ QUITAR
         onCancel,
         handleSubmit,
         modal_open,
         singular_name,
-        permisos_object,
-        cotizacion
+        cotizacion,
+        change
     } = props;
     const porcentaje_total = _.map(forma_pago).reduce((suma, elemento) => parseFloat(suma) + parseFloat(elemento['porcentaje']), 0);
     const forma_pago_total = _.map(forma_pago).reduce((suma, elemento) => parseFloat(suma) + parseFloat(elemento['valor_proyectado']), 0);
+    console.log(initialValues,'Los initial Values')
 
     const submitObject = (item) => {
         let datos_a_subir = new FormData();
@@ -121,9 +122,12 @@ let OrdenCompraAddForm = memo(props => {
     }
 
     const addOrdenCompra = (value) => {
-        dispatch(actions.adicionarOrdenCompraCotizacion(cotizacion.id, value, {callback: onCancel}))
+        if (initialValues) {
+            dispatch(actions.adicionarOrdenCompraCotizacionDesdeVieja(cotizacion.id, value, {callback: onCancel}))
+        } else {
+            dispatch(actions.adicionarOrdenCompraCotizacion(cotizacion.id, value, {callback: onCancel}))
+        }
     }
-
     return (
         <MyFormTagModal
             onCancel={onCancel}
@@ -136,16 +140,24 @@ let OrdenCompraAddForm = memo(props => {
             pristine={pristine}
             element_type={singular_name}
         >
+            <div className="col-12">
+                Valor Ofertado: {pesosColombianos(cotizacion.valor_ofertado - cotizacion.valores_oc)} <FontAwesomeIcon
+                className='puntero'
+                icon='paste'
+                onClick={() => change('valor_orden_compra', cotizacion.valor_ofertado - cotizacion.valores_oc)}/>
+            </div>
             <MyDateTimePickerField
                 label='Fecha Entregada'
                 label_space_xs={4}
                 name='orden_compra_fecha'
                 nombre='Fecha Orden de Compra'
+                readOnly={initialValues && !!initialValues.orden_compra_fecha}
                 className='col-12 col-md-4'
                 max={new Date()}
             />
             <MyTextFieldSimple
                 nombre='Valor OC'
+                disabled={initialValues && !!initialValues.valor_orden_compra}
                 name='valor_orden_compra'
                 className="col-12 col-md-4"
                 type='number'
@@ -156,7 +168,8 @@ let OrdenCompraAddForm = memo(props => {
                 className="col-12 col-md-4"
                 case='U'/>
             <div>
-                <MyFieldFileInput className='col-12 p-2' name="orden_compra_archivo"/>
+                {((initialValues && !initialValues.orden_compra_archivo_url) ||!initialValues) &&
+                <MyFieldFileInput className='col-12 p-2' name="orden_compra_archivo"/>}
             </div>
             {form_values.valor_orden_compra && form_values.valor_orden_compra > 0 && <Fragment>
                 <table className='table' style={{minHeight: '400px'}}>

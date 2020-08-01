@@ -13,10 +13,9 @@
 </p>
 {% localize off %}
     <p>
-        Se há cargado una orden de compra.
+        Se há cargado un nuevo pago.
     </p>
 {% endlocalize %}
-<p>{% if cotizacion.cotizacion_inicial %}Cotización Inicial: {{ cotizacion_inicial }}{% endif %}</p>
 <p>
     Descripción del proyecto: {{ cotizacion.descripcion_cotizacion }}
     {% if cotizacion.cliente %}
@@ -25,6 +24,9 @@
     {% if cotizacion.responsable %}
         <br/>Asesor: {{ cotizacion.responsable.get_full_name }}
     {% endif %}
+    <br/>Fecha: {{ pago.fecha }}
+    <br/>Valor: {{ pago.valor|floatformat:2|intcomma }}
+    <br/>Cargado por: {{ pago.creado_por.username }}
 </p>
 
 <div>
