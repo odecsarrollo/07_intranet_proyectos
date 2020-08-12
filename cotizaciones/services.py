@@ -50,7 +50,11 @@ def cotizacion_versions(cotizacion_id: int) -> Version:
 def cotizacion_envio_correo_notificacion_condiciones_inicio_completas(
         cotizacion_id: int
 ) -> Cotizacion:
-    cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
+    print('entro a enviar correo de nuevo')
+    cotizacion = Cotizacion.objects.prefetch_related(
+        'pagos_proyectados',
+        'condiciones_inicio_cotizacion'
+    ).get(pk=cotizacion_id)
     correos = CorreoAplicacion.objects.filter(aplicacion='CORREO_COTIZACION_NOTIFICACION_INICIO')
     correo_from = correos.filter(tipo='FROM').first()
 
@@ -67,9 +71,11 @@ def cotizacion_envio_correo_notificacion_condiciones_inicio_completas(
         "cotizacion_inicial": '%s-%s' % (cotizacion.cotizacion_inicial.unidad_negocio,
                                          cotizacion.cotizacion_inicial.nro_cotizacion) if cotizacion.cotizacion_inicial else '',
         "cotizacion": cotizacion,
+        "pagos_proyectados": cotizacion.pagos_proyectados.all(),
         "condiciones_inicio_cotizacion": cotizacion.condiciones_inicio_cotizacion.order_by('fecha_entrega').all()
     }
-    text_content = render_to_string('emails/cotizacion_proyecto/correo_base.html', context=context)
+    text_content = render_to_string('emails/cotizacion_proyecto/correo_notificacion_venta_proyectos.html',
+                                    context=context)
     msg = EmailMultiAlternatives(
         asunto,
         text_content,
@@ -80,13 +86,16 @@ def cotizacion_envio_correo_notificacion_condiciones_inicio_completas(
         to=correos_to if len(correos_to) > 0 else ['fabio.garcia.sanchez@gmail.com']
     )
     msg.attach_alternative(text_content, "text/html")
+    pagos_proyectados = cotizacion.pagos_proyectados
+    if pagos_proyectados.exists():
+        for oc in pagos_proyectados.all():
+            if oc.orden_compra_archivo:
+                nombre_archivo = '%s%s %s.%s' % (
+                    cotizacion.unidad_negocio, cotizacion.nro_cotizacion,
+                    'Orden Compra', oc.orden_compra_archivo.name.split('.')[-1])
+                msg.attach(nombre_archivo, oc.orden_compra_archivo.read())
 
     documentos_para_enviar = cotizacion.condiciones_inicio_cotizacion.filter(require_documento=True)
-    if cotizacion.orden_compra_archivo:
-        nombre_archivo = '%s%s %s.%s' % (
-            cotizacion.unidad_negocio, cotizacion.nro_cotizacion,
-            'Orden Compra', cotizacion.orden_compra_archivo.name.split('.')[-1])
-        msg.attach(nombre_archivo, cotizacion.orden_compra_archivo.read())
     for condicion in documentos_para_enviar.all():
         if condicion.documento:
             nombre_archivo = '%s%s %s.%s' % (
@@ -99,25 +108,24 @@ def cotizacion_envio_correo_notificacion_condiciones_inicio_completas(
         raise ValidationError(
             {'_error': 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e})
     try:
-        if cotizacion.orden_compra_archivo is not None:
-            nombre_colaborador = '%s' % cotizacion.responsable.colaborador.full_name if hasattr(
-                cotizacion.responsable,
-                'colaborador'
-            ) else '%s' % cotizacion.responsable.username
-            from intranet_proyectos.services import send_sms
-            send_sms(
-                phone_number='+573155476246',
-                message='Venta Proyectos: %s / %s / %s por %s' % (
-                    nombre_colaborador,
-                    cotizacion.descripcion_cotizacion,
-                    cotizacion.cliente.nombre,
-                    "${:,.0f}".format(cotizacion.valor_orden_compra).replace('.', '_').replace(',', '.').replace('_',
-                                                                                                                 ',')
-                )
+        nombre_colaborador = '%s' % cotizacion.responsable.colaborador.full_name if hasattr(
+            cotizacion.responsable,
+            'colaborador'
+        ) else '%s' % cotizacion.responsable.username
+        from intranet_proyectos.services import send_sms
+        send_sms(
+            phone_number='+573155476246',
+            message='Venta Proyectos: %s / %s / %s por %s' % (
+                nombre_colaborador,
+                cotizacion.descripcion_cotizacion,
+                cotizacion.cliente.nombre,
+                "${:,.0f}".format(cotizacion.valor_ofertado).replace('.', '_').replace(',', '.').replace('_',
+                                                                                                         ',')
             )
+        )
     except Exception as e:
         raise ValidationError(
-            {'_error': 'Se há presentado un error al intentar enviar el mensaje de texto, envío fallido: %s' % e})
+            {'_error': 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e})
     return cotizacion
 
 
@@ -132,6 +140,7 @@ def cotizacion_verificar_condicion_inicio_proyecto_si_estan_completas(
         fecha_entrega__isnull=False
     )
     if condicion_especial.exists():
+        print('entro en 1')
         if cotizacion.estado == 'Cierre (Aprobado)':
             return cotizacion
         cotizacion.condiciones_inicio_completas = True
@@ -141,6 +150,7 @@ def cotizacion_verificar_condicion_inicio_proyecto_si_estan_completas(
         cotizacion.save()
         cotizacion_envio_correo_notificacion_condiciones_inicio_completas(cotizacion.id)
     elif not condiciones_incompletas.exists() and ordenes_compra.exists():
+        print('entro en 2')
         if cotizacion.estado == 'Cierre (Aprobado)':
             return cotizacion
         fecha_max = cotizacion.condiciones_inicio_cotizacion.aggregate(fecha_max=Max('fecha_entrega'))['fecha_max']
@@ -152,6 +162,7 @@ def cotizacion_verificar_condicion_inicio_proyecto_si_estan_completas(
         cotizacion.save()
         cotizacion_envio_correo_notificacion_condiciones_inicio_completas(cotizacion.id)
     else:
+        print('entro en 3')
         cotizacion.fecha_cambio_estado_cerrado = None
         cotizacion.condiciones_inicio_fecha_ultima = None
         cotizacion.condiciones_inicio_completas = False
@@ -373,6 +384,7 @@ def cotizacion_eliminar_pago_proyectado(
         if not CotizacionPagoProyectadoAcuerdoPagoPago.objects.filter(
                 acuerdo_pago__orden_compra_id=pago_proyectado_id).exists():
             pago_proyectado.delete()
+            cotizacion_limpiar_condicion_inicio_proyecto(cotizacion_id=cotizacion_id)
         else:
             raise ValidationError(
                 {
@@ -385,7 +397,7 @@ def cotizacion_eliminar_pago_proyectado(
 def cotizacion_limpiar_condicion_inicio_proyecto(
         cotizacion_id: int,
         condicion_inicio_proyecto_id: int = None,
-        es_orden_compra: bool = False,
+        es_orden_compra: bool = False
 ) -> Cotizacion:
     cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
     if condicion_inicio_proyecto_id is not None:
@@ -404,7 +416,8 @@ def cotizacion_limpiar_condicion_inicio_proyecto(
         condicion_especial=True,
         fecha_entrega__isnull=False
     ).exists()
-    if not con_condicion_especial:
+    con_pagos_proyectados = cotizacion.pagos_proyectados.exists()
+    if not con_condicion_especial and not con_pagos_proyectados:
         cotizacion.condiciones_inicio_completas = False
         cotizacion.condiciones_inicio_fecha_ultima = None
         cotizacion.fecha_cambio_estado_cerrado = None

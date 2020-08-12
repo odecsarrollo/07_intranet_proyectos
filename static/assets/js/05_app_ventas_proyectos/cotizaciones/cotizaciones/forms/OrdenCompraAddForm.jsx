@@ -127,6 +127,7 @@ let OrdenCompraAddForm = memo(props => {
             dispatch(actions.adicionarOrdenCompraCotizacion(cotizacion.id, value, {callback: onCancel}))
         }
     }
+    const valor_ofertado_restante = cotizacion.valor_ofertado - (cotizacion.valores_oc === undefined ? 0 : cotizacion.valores_oc)
     return (
         <MyFormTagModal
             onCancel={onCancel}
@@ -140,10 +141,12 @@ let OrdenCompraAddForm = memo(props => {
             element_type={singular_name}
         >
             <div className="col-12">
-                Valor Ofertado: {pesosColombianos(cotizacion.valor_ofertado - cotizacion.valores_oc)} <FontAwesomeIcon
-                className='puntero'
-                icon='paste'
-                onClick={() => change('valor_orden_compra', cotizacion.valor_ofertado - cotizacion.valores_oc)}/>
+                Valor
+                Ofertado: {pesosColombianos(valor_ofertado_restante)}
+                <FontAwesomeIcon
+                    className='puntero'
+                    icon='paste'
+                    onClick={() => change('valor_orden_compra', valor_ofertado_restante)}/>
             </div>
             <MyDateTimePickerField
                 label='Fecha Entregada'

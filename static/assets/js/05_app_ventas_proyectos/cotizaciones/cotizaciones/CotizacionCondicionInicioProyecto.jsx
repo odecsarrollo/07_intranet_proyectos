@@ -138,7 +138,7 @@ const CotizacionCondicionInicioProyecto = props => {
                 variant="contained"
                 onClick={() => setMostrarAddNuevaOrdenCompra(true)}
             >
-                Adicionar Orden Compra Pruebas
+                Adicionar Orden Compra
             </Button>
         </div>
         {pagos_proyectados && pagos_proyectados.length > 0 && pagos_proyectados.map(p => <CotizacionCondicionInicioProyectoOC

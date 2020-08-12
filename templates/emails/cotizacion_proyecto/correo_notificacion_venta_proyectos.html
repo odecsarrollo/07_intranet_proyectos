@@ -27,17 +27,27 @@
     {% if cotizacion.responsable %}
         <br/>Asesor: {{ cotizacion.responsable.get_full_name }}
     {% endif %}
+    <br/>Venta: {{ cotizacion.valor_ofertado }}
 </p>
 Condiciones Definidas para el inicio:
 <ol>
     {% if cotizacion.orden_compra_fecha %}
         <li>ORDEN COMPRA {{ cotizacion.orden_compra_nro }} -
             {{ cotizacion.orden_compra_fecha }} {% if cotizacion.orden_compra_archivo %}
-                (Adjunto){% endif %}</li>{% endif %}
+                (Adjunto){% endif %}
+        </li>
+    {% endif %}
+    {% for oc in pagos_proyectados %}
+        <li>ORDEN COMPRA {{ oc.orden_compra_nro }} -
+            {{ oc.orden_compra_fecha }} {% if oc.orden_compra_archivo %}
+                (Adjunto){% endif %}
+        </li>
+    {% endfor %}
     {% for condicion in condiciones_inicio_cotizacion %}
         {% if condicion.fecha_entrega %}
             <li>{{ condicion.descripcion }} - {{ condicion.fecha_entrega }} {% if condicion.documento %}
-                (Adjunto){% endif %}</li>
+                (Adjunto){% endif %}
+            </li>
         {% endif %}
     {% endfor %}
 </ol>

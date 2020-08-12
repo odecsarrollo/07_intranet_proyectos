@@ -6,9 +6,29 @@ from django.dispatch import receiver
 from .models import ArchivoCotizacion
 from .models import CondicionInicioProyectoCotizacion
 from .models import Cotizacion
-from .models import CotizacionPagoProyectadoAcuerdoPagoPago
 from .models import CotizacionPagoProyectado
+from .models import CotizacionPagoProyectadoAcuerdoPagoPago
 
+
+# region Cotización Documento Oferta
+@receiver(pre_delete, sender=Cotizacion)
+def cotizacion_archivo_pre_delete(sender, instance, **kwargs):
+    instance.cotizacion_archivo.delete(False)
+
+
+@receiver(post_init, sender=Cotizacion)
+def backup_cotizacion_archivo_path(sender, instance, **kwargs):
+    instance._current_cotizacion_archivo = instance.cotizacion_archivo
+
+
+@receiver(post_save, sender=Cotizacion)
+def delete_cotizacion_archivo(sender, instance, **kwargs):
+    if hasattr(instance, '_current_cotizacion_archivo'):
+        if instance._current_cotizacion_archivo != instance.cotizacion_archivo:
+            instance._current_cotizacion_archivo.delete(save=False)
+
+
+# endregion
 
 # region Archivo Cotización
 @receiver(pre_delete, sender=ArchivoCotizacion)
@@ -86,6 +106,8 @@ def delete_current_orden_compra_archivo_cotizacion(sender, instance, **kwargs):
     if hasattr(instance, '_current_orden_compra_archivo'):
         if instance._current_orden_compra_archivo != instance.orden_compra_archivo:
             instance._current_orden_compra_archivo.delete(save=False)
+
+
 # endregion
 
 # region Eliminación de Archivo Pago

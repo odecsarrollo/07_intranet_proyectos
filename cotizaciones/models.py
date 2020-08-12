@@ -17,6 +17,10 @@ class Cotizacion(TimeStampedModel):
         nro_cotizacion = instance.id
         return "documentos/cotizaciones/%s/%s" % (nro_cotizacion, filename)
 
+    def archivo_cotizacion_upload_to(instance, filename):
+        nro_cotizacion = instance.id
+        return "documentos/cotizaciones/%s/archivo_cotizacion_%s" % (nro_cotizacion, filename)
+
     ESTADOS_CHOICES = (
         ('Cita/Generación Interés', 'Cita/Generación Interés'),
         ('Configurando Propuesta', 'Configurando Propuesta'),
@@ -70,6 +74,8 @@ class Cotizacion(TimeStampedModel):
     dias_pactados_entrega_proyecto = models.IntegerField(null=True)
     costo_presupuestado = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     responsable = models.ForeignKey(User, on_delete=models.PROTECT, null=True)
+
+    cotizacion_archivo = models.FileField(null=True, upload_to=archivo_cotizacion_upload_to)
 
     relacionada = models.BooleanField(default=False)
     revisada = models.BooleanField(default=False)

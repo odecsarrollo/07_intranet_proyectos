@@ -783,7 +783,7 @@ class CotizacionPagoProyectadoAcuerdoPagoSerializer(serializers.ModelSerializer)
 
 
 class CotizacionPagoProyectadoSerializer(serializers.ModelSerializer):
-    acuerdos_pagos = CotizacionPagoProyectadoAcuerdoPagoSerializer(many=True, read_only=True)
+    acuerdos_pagos = CotizacionPagoProyectadoAcuerdoPagoSerializer(many=True, read_only=True, default=0)
 
     class Meta:
         model = CotizacionPagoProyectado

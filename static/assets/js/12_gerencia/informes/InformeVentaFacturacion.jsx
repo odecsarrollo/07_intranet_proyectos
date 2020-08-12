@@ -53,7 +53,9 @@ const InformeVentaFacturacion = (props) => {
             "Día": new Date(f.fecha_documento).getUTCDate()
         })
     });
-    let data_cotizaciones_proyectos = _.map(cotizaciones_proyectos, f => {
+    const cotizaciones_proyectos_ventas = _.pickBy(cotizaciones_proyectos, c => c.estado === 'Cierre (Aprobado)' && c.orden_compra_fecha !== null);
+    const cotizaciones_proyectos_cotizaciones = _.pickBy(cotizaciones_proyectos, c => c.estado !== 'Cierre (Aprobado)');
+    let data_cotizaciones_proyectos = _.map({...cotizaciones_proyectos_ventas, ...cotizaciones_proyectos_cotizaciones}, f => {
         const es_venta = f.estado === 'Cierre (Aprobado)';
         return ({
             Linea: 'Proyectos',
@@ -61,8 +63,8 @@ const InformeVentaFacturacion = (props) => {
             "Tipo Documento": f.unidad_negocio,
             "Nro Documento": `${f.unidad_negocio}-${f.nro_cotizacion}`,
             "Facturación": 0,
-            Cotizaciones: 0,
-            Ventas: es_venta ? f.valor_orden_compra : f.valor_ofertado,
+            Cotizaciones: !es_venta ? f.valor_ofertado : 0,
+            Ventas: es_venta ? (f.valor_orden_compra ? f.valor_orden_compra : f.valor_ofertado) : 0,
             Estado: f.estado,
             Cliente: f.cliente_nombre,
             "Cliente Nit": f.cliente_nit,
