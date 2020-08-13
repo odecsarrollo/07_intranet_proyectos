@@ -26,7 +26,7 @@ const List = memo(props => {
         const {add_para_otros} = permisos;
         const date_today = moment(new Date());
         const hoy = date_today.format('YYYY-MM-DD');
-        const hace_un_mes = date_today.add({days: -30}).format('YYYY-MM-DD');
+        const hace_un_mes = date_today.add({days: -15}).format('YYYY-MM-DD');
         const fecha_inicial = add_para_otros ? hoy : hace_un_mes;
         const cargarColaboradores = () => dispatch(actions.fetchColaboradores());
         const cargarMiCuenta = () => dispatch(actions.fetchMiCuenta({callback: cargarColaboradores}));
@@ -40,7 +40,10 @@ const List = memo(props => {
     };
 
     useEffect(() => {
-        cargarDatos();
+        const {list} = permisos;
+        if (list) {
+            cargarDatos();
+        }
         return () => {
             dispatch(actions.clearHorasHojasTrabajos());
         }

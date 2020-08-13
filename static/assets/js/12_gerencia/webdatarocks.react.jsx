@@ -5,8 +5,7 @@ import "webdatarocks/webdatarocks.min.css";
 export const Pivot2 = (props) => {
     let webdatarocks = null;
     let fragmentRef = useRef();
-    const [slice, setSlice] = useState(props.report.slice)
-    console.log('el slice 2', slice);
+    const [slice, setSlice] = useState(props.report.slice);
 
     useEffect(() => {
         let config = {report: {slice}};

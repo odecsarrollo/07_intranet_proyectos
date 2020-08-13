@@ -10,13 +10,16 @@ const CotizacionDetailInfoProyecto = (props) => {
     const dispatch = useDispatch();
     const {cotizacion, cotizacion: {proyectos}, permisos_cotizacion} = props;
     const [relacionar_proyecto, setRelacionarProyecto] = useState(false);
+    const [proyectos_list, setListadoProyectos] = useState([]);
 
     const relacionarQuitarProyecto = (proyecto_id) => dispatch(actions.relacionarQuitarProyectoaCotizacion(cotizacion.id, proyecto_id));
     const buscarProyecto = (busqueda) => {
-        dispatch(actions.fetchProyectosxParametro(busqueda));
+        dispatch(actions.fetchProyectosxParametro(busqueda, {
+            callback: (response) => {
+                setListadoProyectos(response);
+            }
+        }));
     };
-    let proyectos_list = useSelector(state => state.proyectos);
-    proyectos_list = _.pickBy(proyectos_list, p => !proyectos.map(e => e.id).includes(p.id));
     return (
         <div style={{
             borderRadius: '5px',
@@ -52,15 +55,14 @@ const CotizacionDetailInfoProyecto = (props) => {
                     </div>)}
                 </div>}
             </div>
-            {relacionar_proyecto &&
-            <DialogSeleccionar
+            {relacionar_proyecto && <DialogSeleccionar
                 placeholder='Proyecto a buscar'
                 id_text='id'
                 selected_item_text='id_proyecto'
                 onSearch={buscarProyecto}
                 onSelect={relacionarQuitarProyecto}
                 onCancelar={() => setRelacionarProyecto(false)}
-                listado={_.map(proyectos_list)}
+                listado={_.map(_.pickBy(proyectos_list, pl => !proyectos.map(e => e.id).includes(pl.id)))}
                 open={relacionar_proyecto}
                 select_boton_text='Relacionar'
                 titulo_modal={'Relacionar Proyecto'}

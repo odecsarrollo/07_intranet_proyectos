@@ -1,5 +1,6 @@
 import React, {useEffect, useContext, createContext} from "react";
 import {useDispatch, useSelector} from 'react-redux';
+import {loadUser, loadUserLocally} from "../../01_actions/01_index";
 import * as actions from '../../01_actions/01_index'
 
 const authContext = createContext();
@@ -24,7 +25,11 @@ function useProvideAuth() {
     // Wrap any Firebase methods we want to use making sure ...
     // ... to save the user to state.
     const signin = (username, password, option_actions = {}) => {
-        return dispatch(actions.login(username, password, option_actions));
+        return dispatch(actions.login(
+            username,
+            password,
+            option_actions,
+        ));
     };
 
     const signup = (username, password, option_actions = {}) => {
@@ -49,7 +54,16 @@ function useProvideAuth() {
     // ... latest auth object.
     const auth = useSelector(state => state.auth);
     useEffect(() => {
-        dispatch(actions.loadUser());
+        const user = localStorage.getItem('user');
+        if (user) {
+            dispatch(loadUserLocally())
+        } else {
+            dispatch(loadUser({
+                callback: (response) => {
+                    localStorage.setItem('user', JSON.stringify(response))
+                }
+            }));
+        }
     }, []);
 
     // Return the user object and auth methods

@@ -8,7 +8,7 @@ import CurrentRouteManager from "./CurrentRouteManager";
 import PropTypes from "prop-types";
 
 import {useDispatch} from "react-redux";
-import {fetchMisPermisos, loadUser} from "../../../01_actions/01_index";
+import {fetchMisPermisos, loadUser, loadUserLocally} from "../../../01_actions/01_index";
 import axios from "axios";
 
 
@@ -24,14 +24,28 @@ let RootContainer = memo(props => {
             axios.defaults.headers["Authorization"] = `Token ${localStorage.token}`;
         }
         if (isAuthenticated) {
-            dispatch(loadUser());
-            dispatch(fetchMisPermisos({
-                callback: (res) => {
-                    const my_downloaded_permissions = res.map(e => e.codename);
-                    localStorage.setItem('mis_permisos', JSON.stringify(my_downloaded_permissions));
-                    setHasPermissions(true)
-                }
-            }));
+            const mis_permisos = localStorage.getItem('mis_permisos');
+            const user = localStorage.getItem('user');
+            if (user) {
+                dispatch(loadUserLocally())
+            } else {
+                dispatch(loadUser({
+                    callback: (response) => {
+                        localStorage.setItem('user', JSON.stringify(response))
+                    }
+                }));
+            }
+            if (!mis_permisos) {
+                dispatch(fetchMisPermisos({
+                    callback: (res) => {
+                        const my_downloaded_permissions = res.map(e => e.codename);
+                        localStorage.setItem('mis_permisos', JSON.stringify(my_downloaded_permissions));
+                        setHasPermissions(true);
+                    }
+                }));
+            } else {
+                setHasPermissions(true);
+            }
         } else {
             setHasPermissions(false)
         }

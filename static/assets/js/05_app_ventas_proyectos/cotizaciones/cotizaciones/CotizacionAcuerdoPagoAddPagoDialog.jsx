@@ -22,12 +22,10 @@ let CotizacionAcuerdoPagoAddPagoDialog = memo(props => {
         onSubmit,
         onCancel,
         handleSubmit,
-        modal_open,
-        singular_name,
+        modal_open
     } = props;
     const values = useSelector(state => selector(state, 'valor', ''));
     const submitObject = (values) => {
-        console.log(values, 'los values')
         let datos_a_subir = new FormData();
         let datos_formulario = _.omit(values, 'comprobante_pago');
         let {fecha} = datos_formulario;

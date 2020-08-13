@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User, Permission, Group
 from django.db.models import Q
 from knox.models import AuthToken
-from knox.settings import knox_settings
 from rest_framework import viewsets, generics, permissions, serializers
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -11,9 +10,6 @@ from .api_serializers import (
     UserSerializer,
     UsuarioConDetalleSerializer
 )
-from permisos.api_serializers import PermissionSerializer
-from django.utils.text import capfirst
-
 
 class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = User.objects.select_related(

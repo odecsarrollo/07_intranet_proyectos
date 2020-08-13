@@ -33,7 +33,10 @@ const HojaTrabajoCRUD = memo(props => {
     };
 
     useEffect(() => {
-        cargarDatos();
+        const {list} = permisos;
+        if (list) {
+            cargarDatos();
+        }
         return () => {
             dispatch(actions.clearHojasTrabajos());
         }

@@ -43,6 +43,7 @@ export default function auth(state = initialState, action) {
             axios.defaults.headers = _.omit(axios.defaults.headers, 'Authorization');
             localStorage.removeItem("token");
             localStorage.removeItem("my_permissions");
+            localStorage.removeItem("user");
             return {
                 ...state,
                 isAuthenticated: false,
@@ -52,7 +53,6 @@ export default function auth(state = initialState, action) {
         case 'LOGIN_SUCCESSFUL':
             const token = action.data.token;
             localStorage.setItem("token", token);
-            localStorage.setItem("mi_cuenta", action.data.mi_cuenta ? JSON.stringify(action.data.mi_cuenta) : null);
             localStorage.setItem("mis_permisos", []);
             axios.defaults.headers["Authorization"] = `Token ${token}`;
             return {...state, ...action.data, isAuthenticated: true, isLoading: false, errors: null};
@@ -62,15 +62,15 @@ export default function auth(state = initialState, action) {
         case 'LOGOUT_SUCCESSFUL':
             axios.defaults.headers = _.omit(axios.defaults.headers, 'Authorization');
             localStorage.removeItem("token");
-            localStorage.removeItem("mi_cuenta");
             localStorage.removeItem("mis_permisos");
+            localStorage.removeItem("user");
             return _.omit({
                 ...state,
                 errors: action.data,
                 user: initialState.user,
                 isAuthenticated: false,
                 isLoading: false,
-            }, ['token', 'my_permissions', 'mi_cuenta']);
+            }, ['token', 'my_permissions', 'user']);
 
         default:
             return state;

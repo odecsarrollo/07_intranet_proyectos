@@ -60,6 +60,13 @@ export const loadUser = (options_action = {}) => {
     }
 };
 
+export const loadUserLocally = () => {
+    const user = localStorage.getItem('user');
+    return (dispatch) => {
+        dispatch({type: 'USER_LOADED', user: JSON.parse(user)})
+    }
+};
+
 export const login = (username, password, options_action = {}) => {
     return (dispatch) => {
         const callback_error = (error) => {
