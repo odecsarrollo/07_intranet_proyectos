@@ -58,7 +58,7 @@ const CotizacionInfo = memo(props => {
                 {object.contacto_cliente_nombre &&
                 <Fragment>
                     <Link
-                        to={`/app/ventas_proyectos/clientes/clientes/detail/${object.cliente}`}>{object.contacto_cliente_nombre}
+                        to={`/app/ventas_proyectos/clientes/detail/${object.cliente}`}>{object.contacto_cliente_nombre}
                     </Link><br/>
                 </Fragment>}
             </div>

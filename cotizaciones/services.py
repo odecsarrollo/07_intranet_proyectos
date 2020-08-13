@@ -229,8 +229,6 @@ def cotizacion_add_pago_proyectado(
         no_enviar_correo=False
 ) -> CotizacionPagoProyectado:
     user = User.objects.get(pk=user_id)
-    if not user.is_superuser:
-        raise ValidationError({'_error': 'Módulo en pruebas, aún no se puede usar'})
     orden_compra = CotizacionPagoProyectado.objects.create(
         orden_compra_nro=orden_compra_nro,
         valor_orden_compra=valor_orden_compra,
