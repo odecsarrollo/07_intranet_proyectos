@@ -228,7 +228,6 @@ def cotizacion_add_pago_proyectado(
         user_id: int,
         no_enviar_correo=False
 ) -> CotizacionPagoProyectado:
-    user = User.objects.get(pk=user_id)
     orden_compra = CotizacionPagoProyectado.objects.create(
         orden_compra_nro=orden_compra_nro,
         valor_orden_compra=valor_orden_compra,
@@ -245,8 +244,6 @@ def cotizacion_add_pago_proyectado(
     correos_cc = list(correos.values_list('email', flat=True).filter(tipo='CC'))
     correos_bcc = list(correos.values_list('email', flat=True).filter(tipo='BCC'))
     if len(correos_to) > 0 or len(correos_cc) > 0 or len(correos_bcc) > 0:
-        if cotizacion.responsable and cotizacion.responsable.email:
-            correos_to.append(cotizacion.responsable.email)
         asunto = 'Nueva Orden de Compra'
         context = {
             "cotizacion": cotizacion,
