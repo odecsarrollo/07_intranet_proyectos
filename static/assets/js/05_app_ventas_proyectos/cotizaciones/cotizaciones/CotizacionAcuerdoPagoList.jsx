@@ -183,7 +183,7 @@ const CotizacionOrdenComrpa = (props) => {
             </div>
             <MyDialogButtonDelete onDelete={() => eliminarOC(orden_compra.id)}
                                   element_name={orden_compra.valor_proyectado} element_type='Orden de Compra'/>
-            <a href={orden_compra.orden_compra_archivo} target='_blank'>
+            {orden_compra.orden_compra_archivo && <a href={orden_compra.orden_compra_archivo} target='_blank'>
                 <IconButton className={classes.download_boton}>
                     <span>Descargar Orden Compra</span>
                     <FontAwesomeIcon
@@ -192,7 +192,7 @@ const CotizacionOrdenComrpa = (props) => {
                         size='1x'
                     />
                 </IconButton>
-            </a>
+            </a>}
         </div>
         <table className='table table-responsive table-striped'>
             <thead>

@@ -552,6 +552,7 @@ class LiteralCotizacionConDetalle(serializers.ModelSerializer):
 
 
 class CotizacionListSerializer(serializers.ModelSerializer):
+    valores_oc = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     color_tuberia_ventas = serializers.SerializerMethodField()
     porcentaje_tuberia_ventas = serializers.SerializerMethodField()
 
@@ -659,6 +660,7 @@ class CotizacionListSerializer(serializers.ModelSerializer):
             'unidad_negocio',
             'fecha_limite_segumiento_estado',
             'valor_ofertado',
+            'valores_oc',
         ]
         read_only_fields = fields
 
@@ -828,7 +830,6 @@ class CotizacionInformeGerenciaSerializer(serializers.ModelSerializer):
             'unidad_negocio',
             'estado',
             'valor_ofertado',
-            'valor_orden_compra',
             'cliente_nombre',
             'cliente_nit',
             'responsable_actual_nombre',

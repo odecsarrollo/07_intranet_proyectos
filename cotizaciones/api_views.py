@@ -36,6 +36,7 @@ from .models import CondicionInicioProyecto
 from .models import CondicionInicioProyectoCotizacion
 from .models import Cotizacion
 from .models import CotizacionPagoProyectado
+from .models import CotizacionPagoProyectadoAcuerdoPago
 from .models import CotizacionPagoProyectadoAcuerdoPagoPago
 from .models import SeguimientoCotizacion
 
@@ -140,16 +141,74 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
         # from clientes.tasks import simulate_send_emails
         # simulate_send_emails.delay(5)
         self.serializer_class = CotizacionListSerializer
+        if self.request.user.is_superuser:
+            cotizaciones_para_convertir = Cotizacion.objects.filter(
+                Q(estado='Cierre (Aprobado)') &
+                (
+                        Q(valor_orden_compra__gt=0) |
+                        Q(orden_compra_nro__isnull=False) |
+                        Q(orden_compra_fecha__isnull=False) |
+                        Q(orden_compra_archivo=False)
+                )
+            ).all()
+            for cpc in cotizaciones_para_convertir:
+                pago_proyectado = CotizacionPagoProyectado()
+                pago_proyectado.valor_orden_compra = cpc.valor_orden_compra
+                pago_proyectado.orden_compra_fecha = cpc.orden_compra_fecha
+                pago_proyectado.orden_compra_nro = cpc.orden_compra_nro
+                pago_proyectado.orden_compra_archivo = cpc.orden_compra_archivo
+                pago_proyectado.notificada_por_correo = True
+                pago_proyectado.cotizacion_id = cpc.id
+                pago_proyectado.creado_por_id = 1
+                pago_proyectado.save()
+
+                CotizacionPagoProyectadoAcuerdoPago.objects.create(
+                    orden_compra=pago_proyectado,
+                    motivo='MIGRADO',
+                    porcentaje=100,
+                    creado_por_id=1,
+                    valor_proyectado=pago_proyectado.valor_orden_compra
+                )
+                cpc.valor_orden_compra = 0
+                cpc.orden_compra_fecha = None
+                cpc.orden_compra_nro = None
+                cpc.orden_compra_archivo = None
+                cpc.save()
+
         return super().list(request, *args, **kwargs)
 
     @action(detail=False, http_method_names=['get', ])
     def cotizaciones_por_ano_mes(self, request):
         months = self.request.GET.get('months').split(',')
         years = self.request.GET.get('years').split(',')
+
+        _ordenes_compra = CotizacionPagoProyectado.objects.values('cotizacion_id').annotate(
+            valor=Sum('valor_orden_compra')
+        ).filter(
+            cotizacion_id=OuterRef('id'),
+            cotizacion__estado='Cierre (Aprobado)',
+            orden_compra_fecha__year__in=years,
+            orden_compra_fecha__month__in=months
+        ).distinct()
+
         self.serializer_class = CotizacionInformeGerenciaSerializer
         self.queryset = Cotizacion.objects.select_related(
             'cliente',
             'responsable'
+        ).annotate(
+            valor_oc_nuevas=ExpressionWrapper(
+                Subquery(_ordenes_compra.values('valor')),
+                output_field=DecimalField(max_digits=12, decimal_places=4)
+            ),
+            valor_oc_viejas=Case(
+                When(
+                    Q(orden_compra_fecha__year__in=years) &
+                    Q(orden_compra_fecha__month__in=months),
+                    then=Coalesce(F('valor_orden_compra'), 0)
+                ),
+                default=Value(0),
+                output_field=DecimalField(max_digits=20, decimal_places=2)
+            )
         ).all()
         lista = self.queryset.filter(
             Q(
@@ -464,7 +523,9 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
             'cotizacion_inicial__cliente',
             'cotizacion_inicial__contacto_cliente',
             'responsable'
-        ).all()
+        ).annotate(
+            nro_pagos_proyectados=Count('pagos_proyectados')
+        )
         self.serializer_class = CotizacionTuberiaVentaSerializer
         qs = self.get_queryset().annotate(
             numero_condiciones_inicio=Count('condiciones_inicio_cotizacion')
@@ -478,6 +539,7 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
             ]) |
             (
                     Q(estado='Cierre (Aprobado)') &
+                    Q(nro_pagos_proyectados__lte=0) &
                     (
                             Q(orden_compra_nro__isnull=True) |
                             Q(valor_orden_compra__isnull=True) |
@@ -523,7 +585,8 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
             valor_orden_compra_mes_vieja=Case(
                 When(
                     Q(orden_compra_fecha__year=year) &
-                    Q(orden_compra_fecha__month=month),
+                    Q(orden_compra_fecha__month=month) &
+                    Q(estado='Cierre (Aprobado)'),
                     then=Coalesce(F('valor_orden_compra'), 0)
                 ),
                 default=Value(0),

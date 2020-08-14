@@ -248,48 +248,60 @@ const Tabla = memo((props) => {
                                 Cell: row => <div className='text-right'>
                                     {
                                         row.original.valor_orden_compra > 0 ?
-                                            pesosColombianos(row.original.valor_orden_compra) :
+                                            pesosColombianos(row.original.valores_oc) :
                                             pesosColombianos(row.value)
                                     }
                                 </div>
                             },
                             {
-                                Header: "Fecha OC",
-                                accessor: "orden_compra_fecha",
+                                Header: "$ Orden Compra",
+                                accessor: "valores_oc",
                                 maxWidth: 100,
                                 Cell: row => <div className='text-right'>
                                     {
-                                        row.value &&
-                                        row.value
+                                        row.original.valor_orden_compra > 0 ?
+                                            pesosColombianos(row.original.valores_oc) :
+                                            pesosColombianos(row.value)
                                     }
                                 </div>
                             },
-                            {
-                                Header: "Año OC",
-                                maxWidth: 80,
-                                accessor: "orden_compra_fecha",
-                                Cell: row => <div className='text-right'>
-                                    {
-                                        row.value &&
-                                        new Date(row.value).getFullYear()
-                                    }
-                                </div>
-                            },
-                            {
-                                Header: "Mes. OC",
-                                maxWidth: 80,
-                                accessor: "orden_compra_fecha",
-                                Cell: row => {
-                                    return (
-                                        <div className='text-right'>
-                                            {
-                                                row.value &&
-                                                new Date(row.value).getMonth()
-                                            }
-                                        </div>
-                                    )
-                                }
-                            },
+                            // {
+                            //     Header: "Fecha OC",
+                            //     accessor: "orden_compra_fecha",
+                            //     maxWidth: 100,
+                            //     Cell: row => <div className='text-right'>
+                            //         {
+                            //             row.value &&
+                            //             row.value
+                            //         }
+                            //     </div>
+                            // },
+                            // {
+                            //     Header: "Año OC",
+                            //     maxWidth: 80,
+                            //     accessor: "orden_compra_fecha",
+                            //     Cell: row => <div className='text-right'>
+                            //         {
+                            //             row.value &&
+                            //             new Date(row.value).getFullYear()
+                            //         }
+                            //     </div>
+                            // },
+                            // {
+                            //     Header: "Mes. OC",
+                            //     maxWidth: 80,
+                            //     accessor: "orden_compra_fecha",
+                            //     Cell: row => {
+                            //         return (
+                            //             <div className='text-right'>
+                            //                 {
+                            //                     row.value &&
+                            //                     new Date(row.value).getMonth()
+                            //                 }
+                            //             </div>
+                            //         )
+                            //     }
+                            // },
                         ]
                     },
                     {
