@@ -741,6 +741,7 @@ class ArchivoCotizacionSerializer(serializers.ModelSerializer):
             'created',
             'nombre_archivo',
             'creado_por_username',
+            'get_tipo_display',
             'archivo',
             'size',
             'archivo_url',
@@ -778,6 +779,7 @@ class CotizacionPagoProyectadoAcuerdoPagoSerializer(serializers.ModelSerializer)
             'valor_proyectado',
             'porcentaje',
             'pagos',
+            'requisitos'
         ]
         read_only_fields = fields
 
@@ -793,7 +795,7 @@ class CotizacionPagoProyectadoSerializer(serializers.ModelSerializer):
             'orden_compra_nro',
             'orden_compra_fecha',
             'orden_compra_archivo',
-            'acuerdos_pagos',
+            'acuerdos_pagos'
         ]
         read_only_fields = fields
 

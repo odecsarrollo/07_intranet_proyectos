@@ -1,6 +1,6 @@
 import React, {memo, useState, Fragment} from 'react';
 import MyDialogButtonDelete from '../../../00_utilities/components/ui/dialog/delete_dialog';
-import {fechaFormatoUno, formatBytes} from "../../../00_utilities/common";
+import {fechaFormatoUno, formatBytes} from "../../common";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import IconButton from '@material-ui/core/IconButton';
 import PropTypes from "prop-types";
@@ -13,6 +13,7 @@ const FileListItem = memo(props => {
         setAdicionarDocumento,
         permisos,
         item,
+        tiene_tipo,
         item: {
             id,
             nombre_archivo,
@@ -20,13 +21,15 @@ const FileListItem = memo(props => {
             size,
             created,
             creado_por_username,
-            archivo_url
+            archivo_url,
+            get_tipo_display
         }
     } = props;
 
     return (
         <tr>
             <td style={{padding: '4px'}}>{nombre_archivo}</td>
+            {tiene_tipo && <td style={{padding: '4px'}}>{get_tipo_display}</td>}
             <td style={{padding: '4px'}}>.{extension.toUpperCase()}</td>
             <td style={{padding: '4px'}}>{formatBytes(size, 1)}</td>
             <td style={{padding: '4px'}}>{fechaFormatoUno(created)}</td>
@@ -91,13 +94,17 @@ const FileList = memo(props => {
         permisos,
         lista_documentos,
         onDeleteFile = null,
-        onUploadFile = null
+        onUploadFile = null,
+        tiene_tipo = false,
+        tipos_list
     } = props;
     const [item_seleccionado, setItemSeleccionado] = useState(null);
     const [adicionar_documento, setAdicionarDocumento] = useState(false);
     return (
         <Fragment>
             {adicionar_documento && <UploadDocumentoForm
+                tipos_list={tipos_list}
+                tiene_tipo={tiene_tipo}
                 onSubmit={v =>
                     onUploadFile(v, () => {
                         setAdicionarDocumento(false);
@@ -117,6 +124,7 @@ const FileList = memo(props => {
                 <thead>
                 <tr>
                     <th style={{padding: '2px'}}>Nombre</th>
+                    {tiene_tipo && <th style={{padding: '2px'}}>Tipo</th>}
                     <th style={{padding: '2px'}}>Extensión</th>
                     <th style={{padding: '2px'}}>Tamaño</th>
                     <th style={{padding: '2px'}}>Fecha</th>
@@ -129,6 +137,7 @@ const FileList = memo(props => {
                 <tbody>
                 {lista_documentos.map(e => <FileListItem
                     item={e} key={e.id}
+                    tiene_tipo={tiene_tipo}
                     permisos={permisos}
                     onDeleteArchivo={onDeleteFile}
                     setAdicionarDocumento={setAdicionarDocumento}
@@ -141,9 +150,11 @@ const FileList = memo(props => {
 });
 
 FileList.propTypes = {
-    lista_documentos: PropTypes.array,
+    lista_documentos: PropTypes.array.isRequired,
     onDeleteFile: PropTypes.func,
-    permisos: PropTypes.object,
+    tiene_tipo: PropTypes.bool,
+    tipos_list: PropTypes.array,
+    permisos: PropTypes.object.isRequired,
     onUploadFile: PropTypes.func
 };
 

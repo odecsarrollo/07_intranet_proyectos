@@ -15,6 +15,7 @@ from cotizaciones.models import CondicionInicioProyecto
 from cotizaciones.models import CondicionInicioProyectoCotizacion
 from proyectos.models import Literal
 from proyectos.models import Proyecto
+from .models import ArchivoCotizacion
 from .models import Cotizacion
 from .models import CotizacionPagoProyectado
 from .models import CotizacionPagoProyectadoAcuerdoPago
@@ -917,3 +918,34 @@ def cotizacion_envio_correo_relacionar_literal(
         except Exception as e:
             raise ValidationError(
                 {'_error': 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e})
+
+
+def acuerdo_pago_cambiar_fecha_proyectada(
+        cotizacion_id: int,
+        acuerdo_pago_id: int,
+        nueva_fecha_proyectada: datetime
+):
+    acuerdo_pago = CotizacionPagoProyectadoAcuerdoPago.objects.get(pk=acuerdo_pago_id)
+    if acuerdo_pago.orden_compra.cotizacion_id != int(cotizacion_id):
+        raise ValidationError({'_error': 'Este acuerdo de pago no pertenece a esta cotización, por favor revisar'})
+    nueva_fecha_proyectada = datetime.datetime.strptime(nueva_fecha_proyectada, "%Y-%m-%d").date()
+    if acuerdo_pago.fecha_proyectada != nueva_fecha_proyectada:
+        acuerdo_pago.fecha_proyectada = nueva_fecha_proyectada
+        acuerdo_pago.save()
+
+
+def cotizacion_upload_documento(
+        cotizacion_id: int,
+        nombre_archivo: str,
+        user_id: int,
+        archivo,
+        tipo: str = 'OTROS',
+) -> ArchivoCotizacion:
+    archivo_cotizacion = ArchivoCotizacion()
+    archivo_cotizacion.archivo = archivo
+    archivo_cotizacion.cotizacion_id = cotizacion_id
+    archivo_cotizacion.nombre_archivo = nombre_archivo
+    archivo_cotizacion.creado_por_id = user_id
+    archivo_cotizacion.tipo = tipo
+    archivo_cotizacion.save()
+    return archivo_cotizacion

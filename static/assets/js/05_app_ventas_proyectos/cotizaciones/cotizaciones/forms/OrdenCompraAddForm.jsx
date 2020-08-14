@@ -21,6 +21,7 @@ const OrdenCompraTableItem = (props) => {
         fila,
         addFormaPagoPorcentaje,
         addFormaPagoFecha,
+        addRequisitos,
         form_values
     } = props;
     return (<tr>
@@ -32,6 +33,16 @@ const OrdenCompraTableItem = (props) => {
                     onChange={(event) => addFormaPagoPorcentaje(fila.id, parseFloat(event.target.value))}
                 />
             </td>
+            <td>
+                {fila.porcentaje > 0 &&
+                <textarea
+                    value={fila.requisitos}
+                    onChange={(event) => addRequisitos(fila.id, event.target.value)}
+                    rows={4}
+                    cols={40}
+                />}
+            </td>
+
             <td>
                 {fila.porcentaje > 0 && <DateTimePicker
                     onChange={value => addFormaPagoFecha(fila.id, value)}
@@ -51,14 +62,41 @@ const OrdenCompraTableItem = (props) => {
 let OrdenCompraAddForm = memo(props => {
     const dispatch = useDispatch();
     const [forma_pago, setFormaPago] = useState({
-        [1]: {id: 1, motivo: 'Orden de Compra', valor_proyectado: 0, porcentaje: 0, fecha_proyectada: null},
-        [2]: {id: 2, motivo: 'Anticipo', valor_proyectado: 0, porcentaje: 0, fecha_proyectada: null},
-        [3]: {id: 3, motivo: 'Aprobación de Planos', valor_proyectado: 0, porcentaje: 0, fecha_proyectada: null},
-        [4]: {id: 4, motivo: 'Avance de Obra', valor_proyectado: 0, porcentaje: 0, fecha_proyectada: null},
-        [5]: {id: 5, motivo: 'Pruebas Fat', valor_proyectado: 0, porcentaje: 0, fecha_proyectada: null},
-        [6]: {id: 6, motivo: 'Contra Entrega', valor_proyectado: 0, porcentaje: 0, fecha_proyectada: null},
-        [7]: {id: 7, motivo: 'Instalación', valor_proyectado: 0, porcentaje: 0, fecha_proyectada: null},
-        [8]: {id: 8, motivo: 'Aceptación de Proyecto', valor_proyectado: 0, porcentaje: 0, fecha_proyectada: null},
+        [2]: {id: 2, motivo: 'Anticipo', valor_proyectado: 0, porcentaje: 0, fecha_proyectada: null, requisitos: ''},
+        [3]: {
+            id: 3,
+            motivo: 'Aprobación de Planos',
+            valor_proyectado: 0,
+            porcentaje: 0,
+            fecha_proyectada: null,
+            requisitos: ''
+        },
+        [4]: {
+            id: 4,
+            motivo: 'Avance de Obra',
+            valor_proyectado: 0,
+            porcentaje: 0,
+            fecha_proyectada: null,
+            requisitos: ''
+        },
+        [5]: {id: 5, motivo: 'Pruebas Fat', valor_proyectado: 0, porcentaje: 0, fecha_proyectada: null, requisitos: ''},
+        [6]: {
+            id: 6,
+            motivo: 'Contra Entrega',
+            valor_proyectado: 0,
+            porcentaje: 0,
+            fecha_proyectada: null,
+            requisitos: ''
+        },
+        [7]: {id: 7, motivo: 'Instalación', valor_proyectado: 0, porcentaje: 0, fecha_proyectada: null, requisitos: ''},
+        [8]: {
+            id: 8,
+            motivo: 'Aceptación de Proyecto',
+            valor_proyectado: 0,
+            porcentaje: 0,
+            fecha_proyectada: null,
+            requisitos: ''
+        },
     });
 
     const form_values = useSelector(state => selector(state, 'valor_orden_compra', 'orden_compra_fecha'));
@@ -110,6 +148,16 @@ let OrdenCompraAddForm = memo(props => {
         })
     }
 
+    const addRequisitos = (id, valor) => {
+        setFormaPago({
+            ...forma_pago,
+            [id]: {
+                ...forma_pago[id],
+                requisitos: valor
+            }
+        })
+    }
+
     const addFormaPagoFecha = (id, valor) => {
         setFormaPago({
             ...forma_pago,
@@ -149,7 +197,7 @@ let OrdenCompraAddForm = memo(props => {
                     onClick={() => change('valor_orden_compra', valor_ofertado_restante)}/>
             </div>
             <MyDateTimePickerField
-                label='Fecha Entregada'
+                label='Fecha en la OC'
                 label_space_xs={4}
                 name='orden_compra_fecha'
                 nombre='Fecha Orden de Compra'
@@ -179,6 +227,7 @@ let OrdenCompraAddForm = memo(props => {
                     <tr>
                         <th>Motivo</th>
                         <th>Porcentaje</th>
+                        <th>Requisitos</th>
                         <th>Fecha Proyectada</th>
                         <th>Valor Proyectado</th>
                     </tr>
@@ -191,6 +240,7 @@ let OrdenCompraAddForm = memo(props => {
                         fila={f}
                         addFormaPagoPorcentaje={addFormaPagoPorcentaje}
                         addFormaPagoFecha={addFormaPagoFecha}
+                        addRequisitos={addRequisitos}
                         form_values={form_values}
                     />)}
 

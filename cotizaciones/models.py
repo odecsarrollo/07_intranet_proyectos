@@ -160,14 +160,23 @@ class SeguimientoCotizacion(TimeStampedModel):
 
 
 class ArchivoCotizacion(TimeStampedModel):
+    CHOICES_TIPO_ARCHIVO = (
+        ('OTROS', 'Otros'),
+        ('COTIZACION', 'Cotización'),
+        ('ORDENCOMPRA', 'Orden de Compra'),
+        ('CONTRATO', 'Contrato'),
+        ('POLIZA', 'Póliza'),
+    )
+
     def archivo_upload_to(instance, filename):
         nro_cotizacion = instance.cotizacion.id
-        return "documentos/cotizaciones/%s/%s" % (nro_cotizacion, filename)
+        return "documentos/cotizaciones/%s/%s_%s" % (nro_cotizacion, instance.tipo, filename)
 
     nombre_archivo = models.CharField(max_length=300)
     archivo = models.FileField(null=True, upload_to=archivo_upload_to)
     cotizacion = models.ForeignKey(Cotizacion, related_name='mis_documentos', on_delete=models.PROTECT)
     creado_por = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True)
+    tipo = models.CharField(max_length=20, choices=CHOICES_TIPO_ARCHIVO, default='OTROS')
 
     class Meta:
         permissions = [
@@ -218,12 +227,14 @@ class CondicionInicioProyectoCotizacion(models.Model):
         return False
 
 
+# Realmente una orden de compra
 class CotizacionPagoProyectado(TimeStampedModel):
     def archivo_upload_to(instance, filename):
         nro_cotizacion = instance.cotizacion.id
         ahora = timezone.datetime.now()
         extencion = filename.split('.')[-1]
-        return "documentos/cotizaciones/%s/orden_compra_%s%s%s_%s.%s" % (nro_cotizacion, ahora.year, ahora.month, ahora.day, ahora.microsecond, extencion)
+        return "documentos/cotizaciones/%s/orden_compra_%s%s%s_%s.%s" % (
+            nro_cotizacion, ahora.year, ahora.month, ahora.day, ahora.microsecond, extencion)
 
     cotizacion = models.ForeignKey(Cotizacion, related_name='pagos_proyectados', on_delete=models.PROTECT)
     valor_orden_compra = models.DecimalField(max_digits=20, decimal_places=2, default=0)
@@ -239,6 +250,7 @@ class CotizacionPagoProyectado(TimeStampedModel):
         ]
 
 
+@reversion.register(fields=['fecha_proyectada', 'creado_por'])
 class CotizacionPagoProyectadoAcuerdoPago(TimeStampedModel):
     orden_compra = models.ForeignKey(
         CotizacionPagoProyectado,
@@ -247,8 +259,15 @@ class CotizacionPagoProyectadoAcuerdoPago(TimeStampedModel):
     )
     motivo = models.CharField(max_length=100)
     porcentaje = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    requisitos = models.TextField(null=True)
     fecha_proyectada = models.DateField(null=True)
     valor_proyectado = models.DecimalField(max_digits=20, decimal_places=2, default=0)
+    creado_por = models.ForeignKey(User, on_delete=models.PROTECT)
+
+    class Meta:
+        permissions = [
+            ("change_fecha_proyectada_cotizacionpagoproyectadoacuerdopago", "Can change fecha proyectada acuerdo pago"),
+        ]
 
 
 class CotizacionPagoProyectadoAcuerdoPagoPago(TimeStampedModel):

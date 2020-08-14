@@ -1,3 +1,6 @@
+export const ACUERDO_PAGO_COTIZACIONES = {
+    change_fecha_proyectada: 'change_fecha_proyectada_cotizacionpagoproyectadoacuerdopago'
+};
 export const UNIDADES_MEDIDAS_CATALOGOS = {
     add: 'add_unidadmedidacatalogo',
     delete: 'delete_unidadmedidacatalogo',

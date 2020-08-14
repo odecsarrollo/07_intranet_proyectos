@@ -1,6 +1,10 @@
 import React, {memo} from 'react';
 import {reduxForm} from 'redux-form';
-import {MyTextFieldSimple, MyFieldFileInput} from '../../../../00_utilities/components/ui/forms/fields';
+import {
+    MyTextFieldSimple,
+    MyFieldFileInput,
+    MyCombobox
+} from '../../../../00_utilities/components/ui/forms/fields';
 import Button from '@material-ui/core/Button';
 import validate from './validate';
 
@@ -10,6 +14,8 @@ let Form = memo(props => {
         onSubmit,
         submitting,
         pristine,
+        tiene_tipo = false,
+        tipos_list,
         initialValues
     } = props;
     const onChangeFile = (f, v) => {
@@ -20,8 +26,22 @@ let Form = memo(props => {
     return (
         <form onSubmit={handleSubmit((v) => onSubmit(v))}>
             <div className="row">
+                {tiene_tipo && tipos_list &&
+                <MyCombobox
+                    label_space_xs={3}
+                    className='col-12 col-md-6'
+                    name='tipo'
+                    label='Tipo'
+                    busy={false}
+                    autoFocus={false}
+                    data={tipos_list}
+                    textField='name'
+                    filter='contains'
+                    valuesField='id'
+                    placeholder='Seleccionar Tipo...'
+                />}
                 <MyTextFieldSimple
-                    className="col-11"
+                    className="col-11 col-md-7"
                     nombre='Nombre'
                     name='nombre_archivo'
                     case='U'/>

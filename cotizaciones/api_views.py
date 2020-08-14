@@ -1,3 +1,4 @@
+import datetime
 import json
 from math import ceil
 
@@ -34,6 +35,7 @@ from .models import ArchivoCotizacion
 from .models import CondicionInicioProyecto
 from .models import CondicionInicioProyectoCotizacion
 from .models import Cotizacion
+from .models import CotizacionPagoProyectado
 from .models import CotizacionPagoProyectadoAcuerdoPagoPago
 from .models import SeguimientoCotizacion
 
@@ -180,6 +182,21 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @action(detail=True, methods=['post'])
+    def cambiar_fecha_proyectada_acuerdo_pago(self, request, pk=None):
+        self.serializer_class = CotizacionConDetalleSerializer
+        self.queryset = self.detail_queryset
+        from .services import acuerdo_pago_cambiar_fecha_proyectada
+        fecha_proyectada = request.POST.get('fecha_proyectada', None)
+        acuerdo_pago_id = request.POST.get('acuerdo_pago_id', None)
+        acuerdo_pago_cambiar_fecha_proyectada(
+            cotizacion_id=pk,
+            acuerdo_pago_id=acuerdo_pago_id,
+            nueva_fecha_proyectada=fecha_proyectada
+        )
+        serializer = self.get_serializer(self.get_object())
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
     def adicionar_pago_proyectado_desde_vieja(self, request, pk=None):
         self.serializer_class = CotizacionConDetalleSerializer
         self.queryset = self.detail_queryset
@@ -239,9 +256,15 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
         )
         acuerdos_de_pago = json.loads(plan_pago)
         for pp in json.loads(plan_pago):
+            fecha_proyectada = acuerdos_de_pago[pp].get('fecha_proyectada')
+            fecha_proyectada_date = datetime.datetime.strptime(
+                fecha_proyectada,
+                "%Y-%m-%d"
+            ).date() if fecha_proyectada else None
             pago_proyectado.acuerdos_pagos.create(
                 motivo=acuerdos_de_pago[pp].get('motivo'),
-                fecha_proyectada=acuerdos_de_pago[pp].get('fecha_proyectada'),
+                creado_por_id=self.request.user.id,
+                fecha_proyectada=fecha_proyectada_date,
                 valor_proyectado=acuerdos_de_pago[pp].get('valor_proyectado'),
                 porcentaje=acuerdos_de_pago[pp].get('porcentaje')
             )
@@ -481,6 +504,15 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
         month = int(filtro_mes) if filtro_mes else timezone.datetime.now().month
         current_date = timezone.datetime.now()
         current_quarter = int(ceil(current_date.month / 3))
+        _ordenes_compra = CotizacionPagoProyectado.objects.values('cotizacion_id').annotate(
+            valor_oc=Sum('valor_orden_compra')
+        ).filter(
+            cotizacion_id=OuterRef('id'),
+            cotizacion__estado='Cierre (Aprobado)',
+            orden_compra_fecha__year=year,
+            orden_compra_fecha__month=month
+        ).distinct()
+
         qsBase = Cotizacion.objects.select_related(
             'cliente',
             'contacto_cliente',
@@ -488,7 +520,7 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
             'cotizacion_inicial__contacto_cliente',
             'responsable'
         ).annotate(
-            valor_orden_compra_mes=Case(
+            valor_orden_compra_mes_vieja=Case(
                 When(
                     Q(orden_compra_fecha__year=year) &
                     Q(orden_compra_fecha__month=month),
@@ -497,17 +529,47 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
                 default=Value(0),
                 output_field=DecimalField(max_digits=20, decimal_places=2)
             ),
+            valor_orden_compra_mes_nueva=ExpressionWrapper(
+                Subquery(_ordenes_compra.values('valor_oc')),
+                output_field=DecimalField(max_digits=12, decimal_places=4)
+            )
+        ).annotate(
+            valor_orden_compra_mes=Coalesce(F('valor_orden_compra_mes_vieja'), 0) + Coalesce(
+                F('valor_orden_compra_mes_nueva'), 0)
         )
         qs2 = qsBase.filter(
             estado='Cierre (Aprobado)'
         )
 
         qs3 = None
-
-        if not filtro_ano or not filtro_mes:
-            qs2 = qs2.annotate(valor_orden_compra_trimestre=Coalesce(F('valor_orden_compra'), 0)).filter(
+        filtro_mes_o_ano = filtro_ano and filtro_mes
+        if not filtro_mes_o_ano:
+            _ordenes_compra_trimestre = CotizacionPagoProyectado.objects.values('cotizacion_id').annotate(
+                valor_oc=Sum('valor_orden_compra')
+            ).filter(
+                cotizacion_id=OuterRef('id'),
                 orden_compra_fecha__year=year,
                 orden_compra_fecha__quarter=current_quarter
+            ).distinct()
+
+            qs2 = qs2.annotate(
+                valor_orden_compra_trimestre_vieja=
+                Case(
+                    When(
+                        Q(orden_compra_fecha__year=year) &
+                        Q(orden_compra_fecha__quarter=current_quarter),
+                        then=Coalesce(F('valor_orden_compra'), 0)
+                    ),
+                    default=Value(0),
+                    output_field=DecimalField(max_digits=20, decimal_places=2)
+                ),
+                valor_orden_compra_trimestre_nueva=ExpressionWrapper(
+                    Subquery(_ordenes_compra_trimestre.values('valor_oc')),
+                    output_field=DecimalField(max_digits=12, decimal_places=4)
+                )
+            ).annotate(
+                valor_orden_compra_trimestre=Coalesce(F('valor_orden_compra_trimestre_vieja'), 0) + Coalesce(
+                    F('valor_orden_compra_trimestre_nueva'), 0)
             )
             qs3 = qsBase.filter(
                 estado__in=[
@@ -518,28 +580,28 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
                     'Aceptación de Terminos y Condiciones',
                 ]
             )
-        qsFinal = None
-        if qs2:
-            qsFinal = qs2
-        if qs3:
-            if qsFinal:
-                qsFinal = qsFinal | qs3
-            else:
-                qsFinal = qs3
+        if filtro_mes_o_ano:
+            # Sólo ira el valor de las ordenes de compra
+            qsFinal = qs2.filter(Q(valor_orden_compra_mes__gt=0))
+        else:
+            qs2 = qs2.filter(Q(valor_orden_compra_mes__gt=0) | Q(valor_orden_compra_trimestre__gt=0))
+            qsFinal = qs2 | qs3
         serializer = self.get_serializer(qsFinal, many=True)
         return Response(serializer.data)
 
     @action(detail=True, methods=['post'])
     def upload_archivo(self, request, pk=None):
         nombre_archivo = self.request.POST.get('nombre')
+        tipo = self.request.POST.get('tipo')
         cotizacion = self.get_object()
-        archivo = self.request.FILES['archivo']
-        archivo_cotizacion = ArchivoCotizacion()
-        archivo_cotizacion.archivo = archivo
-        archivo_cotizacion.cotizacion = cotizacion
-        archivo_cotizacion.nombre_archivo = nombre_archivo
-        archivo_cotizacion.creado_por = self.request.user
-        archivo_cotizacion.save()
+        from .services import cotizacion_upload_documento
+        archivo = cotizacion_upload_documento(
+            cotizacion_id=pk,
+            user_id=self.request.user.id,
+            nombre_archivo=nombre_archivo,
+            archivo=self.request.FILES['archivo'],
+            tipo=tipo
+        )
         serializer = self.get_serializer(cotizacion)
         return Response(serializer.data)
 

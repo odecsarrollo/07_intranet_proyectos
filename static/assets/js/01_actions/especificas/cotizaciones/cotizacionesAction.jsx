@@ -92,6 +92,19 @@ export const adicionarCondicionInicioProyectoCotizacion = (id, condicion_inicio_
     }
 };
 
+export const cambiarFechaAcuerdoPagoCotizacion = (id, acuerdo_pago_id, fecha_proyectada, options_action = {}) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        params.append('fecha_proyectada', fecha_proyectada);
+        params.append('acuerdo_pago_id', acuerdo_pago_id);
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: response})
+        };
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'cambiar_fecha_proyectada_acuerdo_pago', params, options)
+    }
+};
+
 export const adicionarOrdenCompraCotizacion = (id, values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {

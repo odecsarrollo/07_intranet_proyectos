@@ -30,6 +30,14 @@ const table_styles = {
         tr: {
             padding: '0',
             margin: '0',
+        },
+        td_break_line: {
+            padding: '0',
+            margin: '0',
+            paddingLeft: '3px',
+            paddingRight: '3px',
+            border: '1px solid black',
+            whiteSpace: 'pre'
         }
     },
 };

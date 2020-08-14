@@ -31,6 +31,7 @@ const CotizacionDetailDocumento = (props) => {
             let formData = new FormData();
             formData.append('archivo', file);
             formData.append('nombre', e.nombre_archivo);
+            formData.append('tipo', e.tipo);
             dispatch(
                 actions.uploadArchivoCotizacion(
                     cotizacion.id,
@@ -70,6 +71,8 @@ const CotizacionDetailDocumento = (props) => {
     };
     return (
         <ArchivosCotizacionList
+            tiene_tipo={true}
+            tipos_list={[{id: 'POLIZA', name: 'Póliza'}]}
             lista_documentos={mis_documentos}
             permisos={permisos}
             onUploadFile={onUploadFile}

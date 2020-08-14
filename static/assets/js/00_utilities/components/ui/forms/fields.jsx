@@ -393,14 +393,17 @@ const renderSelect = ({input, nombre, name, options}) => (
 
 
 export const MySelectField = (props) => {
+    const {className = 'col-12'} = props;
     return (
-        <Field
-            options={props.options}
-            fullWidth={true}
-            name={props.name}
-            nombre={props.nombre}
-            component={renderSelect}
-        />
+        <div className={className}>
+            <Field
+                options={props.options}
+                fullWidth={true}
+                name={props.name}
+                nombre={props.nombre}
+                component={renderSelect}
+            />
+        </div>
     )
 };
 MySelectField.propTypes = {

@@ -148,6 +148,7 @@ const Tabla = memo((props) => {
     }
     const colores = _.uniq(_.map(props.list, e => e.color_tuberia_ventas).filter(h => h));
     const [cotizacion_seleccionada, setCotizacionSeleccionada] = useState(null);
+    console.log(listado,'Informacion para revisar')
     return (
         <div className='row'>
             {cotizacion_seleccionada && <FechaProximoSeguimiento cotizacion={props.list[cotizacion_seleccionada]}
