@@ -77,9 +77,7 @@ const FileListItem = memo(props => {
                 permisos.delete &&
                 <td style={{padding: '2px'}} className='text-center'>
                     <MyDialogButtonDelete
-                        onDelete={() => {
-                            onDeleteArchivo(id, () => setItemSeleccionado(null))
-                        }}
+                        onDelete={() => onDeleteArchivo(id, () => setItemSeleccionado(null))}
                         element_name={nombre_archivo}
                         element_type='Archivo'
                     />

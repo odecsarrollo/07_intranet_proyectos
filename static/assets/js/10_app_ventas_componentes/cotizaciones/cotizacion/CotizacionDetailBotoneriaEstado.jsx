@@ -140,8 +140,7 @@ const CotizacionDetailBotoneriaEstado = memo(props => {
             onCancel={() => setShowEnviar(false)}
             onSubmit={enviarCotizacion}
         />}
-        {show_terminar &&
-        <SiNoDialog
+        {show_terminar && <SiNoDialog
             can_on_si={fecha_proximo_seguimiento !== null}
             onSi={() => {
                 setEstado(
@@ -160,8 +159,7 @@ const CotizacionDetailBotoneriaEstado = memo(props => {
         >
             Deséa TERMINAR esta cotización?
         </SiNoDialog>}
-        {show_editar_confirmacion &&
-        <SiNoDialog
+        {show_editar_confirmacion && <SiNoDialog
             onSi={() => {
                 setEstado(
                     'INI',

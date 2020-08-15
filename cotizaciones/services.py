@@ -233,10 +233,18 @@ def cotizacion_add_pago_proyectado(
         orden_compra_nro=orden_compra_nro,
         valor_orden_compra=valor_orden_compra,
         orden_compra_fecha=orden_compra_fecha,
-        orden_compra_archivo=orden_compra_archivo,
         cotizacion_id=cotizacion_id,
         creado_por_id=user_id
     )
+    ArchivoCotizacion.objects.create(
+        cotizacion_id=orden_compra.cotizacion_id,
+        orden_compra_id=orden_compra.id,
+        creado_por_id=user_id,
+        tipo='ORDENCOMPRA',
+        archivo=orden_compra_archivo,
+        nombre_archivo='OC_%s' % orden_compra.orden_compra_nro
+    )
+
     cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
 
     correos = CorreoAplicacion.objects.filter(aplicacion='CORREO_COTIZACION_NUEVA_OC')
@@ -264,11 +272,11 @@ def cotizacion_add_pago_proyectado(
             to=correos_to if len(correos_to) > 0 else ['fabio.garcia.sanchez@gmail.com']
         )
         msg.attach_alternative(text_content, "text/html")
-        if orden_compra.orden_compra_archivo:
+        if orden_compra.orden_compra_documento:
             nombre_archivo = '%s%s %s.%s' % (
                 cotizacion.unidad_negocio, cotizacion.nro_cotizacion,
-                'orden_compra', orden_compra.orden_compra_archivo.name.split('.')[-1])
-            msg.attach(nombre_archivo, orden_compra.orden_compra_archivo.read())
+                'orden_compra', orden_compra.orden_compra_documento.archivo.name.split('.')[-1])
+            msg.attach(nombre_archivo, orden_compra.orden_compra_documento.archivo.read())
         try:
             if not no_enviar_correo:  # Cuidamos no volver a enviar por correo cuando se duplique una oc vieja al modelo nuevo
                 msg.send()
@@ -343,6 +351,28 @@ def cotizacion_add_pago(
     return pago
 
 
+def archivo_cotizacion_eliminar(
+        archivo_cotizacion_id: int
+):
+    archivo_cotizacion = ArchivoCotizacion.objects.get(pk=archivo_cotizacion_id)
+    if archivo_cotizacion.tipo == 'ORDENCOMPRA':
+        raise ValidationError(
+            {
+                '_error': 'Los archivos de tipo %s no se pueden eliminar por este medio' % archivo_cotizacion.get_tipo_display()})
+    if archivo_cotizacion.tipo == 'COTIZACION':
+        documentos_cotizacion = ArchivoCotizacion.objects.exclude(
+            pk=archivo_cotizacion_id
+        ).filter(
+            cotizacion_id=archivo_cotizacion.cotizacion_id,
+            tipo='COTIZACION'
+        )
+        if not documentos_cotizacion.exists():
+            raise ValidationError(
+                {
+                    '_error': 'Para eliminar debe existir al menos 2 documentos tipo %s. Cree uno nuevo y elimine el que no desee' % archivo_cotizacion.get_tipo_display()})
+    archivo_cotizacion.delete()
+
+
 def cotizacion_eliminar_pago(
         cotizacion_id: int,
         pago_id: int,
@@ -378,7 +408,9 @@ def cotizacion_eliminar_pago_proyectado(
     pago_proyectado = CotizacionPagoProyectado.objects.get(pk=pago_proyectado_id)
     if pago_proyectado.cotizacion_id == int(cotizacion_id):
         if not CotizacionPagoProyectadoAcuerdoPagoPago.objects.filter(
-                acuerdo_pago__orden_compra_id=pago_proyectado_id).exists():
+                acuerdo_pago__orden_compra_id=pago_proyectado_id
+        ).exists():
+            pago_proyectado.orden_compra_documento.delete()
             pago_proyectado.delete()
             cotizacion_limpiar_condicion_inicio_proyecto(cotizacion_id=cotizacion_id)
         else:

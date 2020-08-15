@@ -175,6 +175,12 @@ class ArchivoCotizacion(TimeStampedModel):
     nombre_archivo = models.CharField(max_length=300)
     archivo = models.FileField(null=True, upload_to=archivo_upload_to)
     cotizacion = models.ForeignKey(Cotizacion, related_name='mis_documentos', on_delete=models.PROTECT)
+    orden_compra = models.OneToOneField(
+        'CotizacionPagoProyectado',
+        null=True,
+        related_name='orden_compra_documento',
+        on_delete=models.PROTECT
+    )
     creado_por = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True)
     tipo = models.CharField(max_length=20, choices=CHOICES_TIPO_ARCHIVO, default='OTROS')
 

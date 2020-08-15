@@ -284,49 +284,11 @@ class CotizacionSerializer(serializers.ModelSerializer):
         if not obj.fecha_cambio_estado:
             return None
 
-    def get_orden_compra_archivo_url(self, obj):
-        if obj.orden_compra_archivo:
-            try:
-                return obj.orden_compra_archivo.url
-            except FileNotFoundError:
-                return None
-        return None
-
-    def get_orden_compra_archivo_extension(self, obj):
-        if obj.orden_compra_archivo:
-            try:
-                extension = obj.orden_compra_archivo.url.split('.')[-1]
-                return extension.title()
-            except FileNotFoundError:
-                return None
-        return None
-
-    def get_orden_compra_archivo_size(self, obj):
-        if obj.orden_compra_archivo:
-            try:
-                return obj.orden_compra_archivo.size
-            except FileNotFoundError:
-                return None
-        return None
-
-    def get_orden_compra_archivo_filename(self, obj):
-        if obj.orden_compra_archivo:
-            try:
-                return obj.orden_compra_archivo.name.split('/')[-1]
-            except FileNotFoundError:
-                return None
-        return None
-
     class Meta:
         model = Cotizacion
         fields = [
             'url',
             'id',
-            'orden_compra_archivo_url',
-            'orden_compra_archivo_filename',
-            'orden_compra_archivo_extension',
-            'orden_compra_archivo_size',
-            'orden_compra_archivo',
             'created_by',
             'creado',
             'valores_oc_adicionales',
@@ -719,18 +681,27 @@ class ArchivoCotizacionSerializer(serializers.ModelSerializer):
 
     def get_archivo_url(self, obj):
         if obj.archivo:
-            return obj.archivo.url
+            try:
+                return obj.archivo.url
+            except FileNotFoundError:
+                return None
         return None
 
     def get_extension(self, obj):
         if obj.archivo:
-            extension = obj.archivo.url.split('.')[-1]
-            return extension.title()
+            try:
+                extension = obj.archivo.url.split('.')[-1]
+                return extension.title()
+            except FileNotFoundError:
+                return None
         return None
 
     def get_size(self, obj):
         if obj.archivo:
-            return obj.archivo.size
+            try:
+                return obj.archivo.size
+            except FileNotFoundError:
+                return None
         return None
 
     class Meta:
@@ -740,6 +711,7 @@ class ArchivoCotizacionSerializer(serializers.ModelSerializer):
             'id',
             'cotizacion',
             'extension',
+            'tipo',
             'created',
             'nombre_archivo',
             'creado_por_username',
@@ -788,6 +760,43 @@ class CotizacionPagoProyectadoAcuerdoPagoSerializer(serializers.ModelSerializer)
 
 class CotizacionPagoProyectadoSerializer(serializers.ModelSerializer):
     acuerdos_pagos = CotizacionPagoProyectadoAcuerdoPagoSerializer(many=True, read_only=True, default=0)
+    orden_compra_archivo_filename = serializers.SerializerMethodField()
+    orden_compra_archivo_size = serializers.SerializerMethodField()
+    orden_compra_archivo_extension = serializers.SerializerMethodField()
+    orden_compra_archivo = serializers.SerializerMethodField()
+
+    def get_orden_compra_archivo(self, obj):
+        if hasattr(obj, 'orden_compra_documento') and obj.orden_compra_documento.archivo:
+            try:
+                return obj.orden_compra_documento.archivo.url
+            except FileNotFoundError:
+                return None
+        return None
+
+    def get_orden_compra_archivo_extension(self, obj):
+        if hasattr(obj, 'orden_compra_documento') and obj.orden_compra_documento.archivo:
+            try:
+                extension = obj.orden_compra_documento.archivo.url.split('.')[-1]
+                return extension.title()
+            except FileNotFoundError:
+                return None
+        return None
+
+    def get_orden_compra_archivo_size(self, obj):
+        if hasattr(obj, 'orden_compra_documento') and obj.orden_compra_documento.archivo:
+            try:
+                return obj.orden_compra_documento.archivo.size
+            except FileNotFoundError:
+                return None
+        return None
+
+    def get_orden_compra_archivo_filename(self, obj):
+        if hasattr(obj, 'orden_compra_documento') and obj.orden_compra_documento.archivo:
+            try:
+                return obj.orden_compra_documento.archivo.name.split('/')[-1]
+            except FileNotFoundError:
+                return None
+        return None
 
     class Meta:
         model = CotizacionPagoProyectado
@@ -796,6 +805,9 @@ class CotizacionPagoProyectadoSerializer(serializers.ModelSerializer):
             'valor_orden_compra',
             'orden_compra_nro',
             'orden_compra_fecha',
+            'orden_compra_archivo_filename',
+            'orden_compra_archivo_size',
+            'orden_compra_archivo_extension',
             'orden_compra_archivo',
             'acuerdos_pagos'
         ]

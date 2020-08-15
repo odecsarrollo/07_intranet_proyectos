@@ -15,6 +15,7 @@ from django.db.models import Value
 from django.db.models import When
 from django.db.models.functions import Coalesce
 from django.utils import timezone
+from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -175,6 +176,22 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
                 cpc.orden_compra_archivo = None
                 cpc.save()
 
+            if not cotizaciones_para_convertir.exists():
+                pago_proyectados = CotizacionPagoProyectado.objects.filter(
+                    orden_compra_documento__isnull=True,
+                ).all()
+                for pp in pago_proyectados:
+                    if pp.orden_compra_archivo:
+                        ArchivoCotizacion.objects.create(
+                            cotizacion_id=pp.cotizacion_id,
+                            orden_compra_id=pp.id,
+                            creado_por_id=pp.creado_por_id,
+                            tipo='ORDENCOMPRA',
+                            archivo=pp.orden_compra_archivo,
+                            nombre_archivo='OC_%s' % pp.orden_compra_nro
+                        )
+                        pp.orden_compra_archivo = None
+                        pp.save()
         return super().list(request, *args, **kwargs)
 
     @action(detail=False, http_method_names=['get', ])
@@ -657,8 +674,9 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
         nombre_archivo = self.request.POST.get('nombre')
         tipo = self.request.POST.get('tipo')
         cotizacion = self.get_object()
+        self.serializer_class = CotizacionConDetalleSerializer
         from .services import cotizacion_upload_documento
-        archivo = cotizacion_upload_documento(
+        cotizacion_upload_documento(
             cotizacion_id=pk,
             user_id=self.request.user.id,
             nombre_archivo=nombre_archivo,
@@ -724,6 +742,13 @@ class SeguimientoCotizacionViewSet(viewsets.ModelViewSet):
 class ArchivoCotizacionViewSet(viewsets.ModelViewSet):
     queryset = ArchivoCotizacion.objects.select_related('cotizacion', 'creado_por').all()
     serializer_class = ArchivoCotizacionSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        from .services import archivo_cotizacion_eliminar
+        archivo_cotizacion_eliminar(
+            archivo_cotizacion_id=self.get_object().id
+        )
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     def perform_create(self, serializer):
         serializer.save(creado_por=self.request.user)

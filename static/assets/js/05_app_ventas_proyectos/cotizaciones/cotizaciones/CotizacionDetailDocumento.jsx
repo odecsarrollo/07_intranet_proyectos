@@ -57,7 +57,7 @@ const CotizacionDetailDocumento = (props) => {
         }
     };
     const onDeleteFile = (archivo_id, callback) => {
-        dispatch(
+        return dispatch(
             actions.deleteArchivoCotizacion(
                 archivo_id,
                 {
@@ -72,7 +72,7 @@ const CotizacionDetailDocumento = (props) => {
     return (
         <ArchivosCotizacionList
             tiene_tipo={true}
-            tipos_list={[{id: 'POLIZA', name: 'Póliza'}]}
+            tipos_list={[{id: 'POLIZA', name: 'Póliza'}, {id: 'COTIZACION', name: 'Cotización'}]}
             lista_documentos={mis_documentos}
             permisos={permisos}
             onUploadFile={onUploadFile}

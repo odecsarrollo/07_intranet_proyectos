@@ -10,26 +10,6 @@ from .models import CotizacionPagoProyectado
 from .models import CotizacionPagoProyectadoAcuerdoPagoPago
 
 
-# region Cotización Documento Oferta
-@receiver(pre_delete, sender=Cotizacion)
-def cotizacion_archivo_pre_delete(sender, instance, **kwargs):
-    instance.cotizacion_archivo.delete(False)
-
-
-@receiver(post_init, sender=Cotizacion)
-def backup_cotizacion_archivo_path(sender, instance, **kwargs):
-    instance._current_cotizacion_archivo = instance.cotizacion_archivo
-
-
-@receiver(post_save, sender=Cotizacion)
-def delete_cotizacion_archivo(sender, instance, **kwargs):
-    if hasattr(instance, '_current_cotizacion_archivo'):
-        if instance._current_cotizacion_archivo != instance.cotizacion_archivo:
-            instance._current_cotizacion_archivo.delete(save=False)
-
-
-# endregion
-
 # region Archivo Cotización
 @receiver(pre_delete, sender=ArchivoCotizacion)
 def archivo_pre_delete(sender, instance, **kwargs):
@@ -66,46 +46,6 @@ def delete_documento_condicion_inicio(sender, instance, **kwargs):
     if hasattr(instance, '_current_documento'):
         if instance._current_documento != instance.documento:
             instance._current_documento.delete(save=False)
-
-
-# endregion
-
-# region Archivo Orden Compra Viejo
-@receiver(pre_delete, sender=Cotizacion)
-def orden_compra_archivo_cotizacion_v_pre_delete(sender, instance, **kwargs):
-    instance.orden_compra_archivo.delete(False)
-
-
-@receiver(post_init, sender=Cotizacion)
-def backup_orden_compra_archivo_cotizacion_v_path(sender, instance, **kwargs):
-    instance._current_documento = instance.orden_compra_archivo
-
-
-@receiver(post_save, sender=Cotizacion)
-def delete_orden_compra_archivo_cotizacion_v(sender, instance, **kwargs):
-    if hasattr(instance, '_current_orden_compra_archivo'):
-        if instance._current_orden_compra_archivo != instance.orden_compra_archivo:
-            instance._current_orden_compra_archivo.delete(save=False)
-
-
-# endregion
-
-# region Eliminación Archivo de Orden Compra
-@receiver(pre_delete, sender=CotizacionPagoProyectado)
-def orden_compra_archivo_cotizacion_pre_delete(sender, instance, **kwargs):
-    instance.orden_compra_archivo.delete(False)
-
-
-@receiver(post_init, sender=CotizacionPagoProyectado)
-def backup_orden_compra_archivo_cotizacion_path(sender, instance, **kwargs):
-    instance._current_orden_compra_archivo = instance.orden_compra_archivo
-
-
-@receiver(post_save, sender=CotizacionPagoProyectado)
-def delete_current_orden_compra_archivo_cotizacion(sender, instance, **kwargs):
-    if hasattr(instance, '_current_orden_compra_archivo'):
-        if instance._current_orden_compra_archivo != instance.orden_compra_archivo:
-            instance._current_orden_compra_archivo.delete(save=False)
 
 
 # endregion
