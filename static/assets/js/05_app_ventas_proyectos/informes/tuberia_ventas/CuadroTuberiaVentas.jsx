@@ -37,6 +37,7 @@ const InformeTunelVentas = memo(props => {
         'Evaluación Técnica y Económica': {id: 4, nombre: 'Evaluación Técnica y Económica'},
         'Aceptación de Terminos y Condiciones': {id: 5, nombre: 'Aceptación de Terminos y Condiciones'},
         'Cierre (Aprobado)': {id: 6, nombre: 'Cierre Trimestre (Aprobado)'},
+        'Aplazado': {id: 7, nombre: 'Aplazado'},
     };
     const cotizaciones = _.map(object_list, e => {
         return {...e, orden: orden_estados[e.estado] ? orden_estados[e.estado].id : 0}
@@ -132,7 +133,9 @@ const InformeTunelVentas = memo(props => {
                 <thead>
                 <tr>
                     <th>Responsable</th>
-                    {_.map(_.omit(orden_estados, 'Cierre (Aprobado)'), e => <th key={e.id}>{e.nombre}</th>)}
+                    <th>Aplazado</th>
+                    {_.map(_.omit(orden_estados, ['Cierre (Aprobado)', 'Aplazado']), e => <th
+                        key={e.id}>{e.nombre}</th>)}
                     <th>Cierre (Aprobado) Mes Actual</th>
                     <th>Total de la Tubería</th>
                     <th>Cierre Trimestre (Aprobado)</th>
@@ -153,6 +156,12 @@ const InformeTunelVentas = memo(props => {
                     const total_valor = orden_tres + orden_cuatro + orden_cinco + orden_seis;
                     return <tr key={r ? r : 'Sin Nombre'}>
                         <td className='text-center'>{r}</td>
+                        <td className='text-center puntero'
+                            onClick={() => filtro_cotizaciones('Aplazado', r)}>
+                            <div>
+                                {_.size(_.pickBy(cotizaciones_x_responsable, e => e.orden === 7))}
+                            </div>
+                        </td>
                         <td className='text-center puntero'
                             onClick={() => filtro_cotizaciones('Cita/Generación Interés', r)}>
                             <div>
@@ -230,6 +239,11 @@ const InformeTunelVentas = memo(props => {
                         <div>
                             Cantidad: <br/>
                             Valor:
+                        </div>
+                    </td>
+                    <td className='text-center'>
+                        <div>
+
                         </div>
                     </td>
                     <td className='text-center'>

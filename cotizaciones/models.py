@@ -8,19 +8,11 @@ from model_utils.models import TimeStampedModel
 
 from clientes.models import ClienteBiable
 from clientes.models import ContactoCliente
-from cotizaciones.managers import CotizacionManager
+from cotizaciones.managers import CotizacionManagerDos
 
 
 @reversion.register()
 class Cotizacion(TimeStampedModel):
-    def archivo_upload_to(instance, filename):
-        nro_cotizacion = instance.id
-        return "documentos/cotizaciones/%s/%s" % (nro_cotizacion, filename)
-
-    def archivo_cotizacion_upload_to(instance, filename):
-        nro_cotizacion = instance.id
-        return "documentos/cotizaciones/%s/archivo_cotizacion_%s" % (nro_cotizacion, filename)
-
     ESTADOS_CHOICES = (
         ('Cita/Generación Interés', 'Cita/Generación Interés'),
         ('Configurando Propuesta', 'Configurando Propuesta'),
@@ -66,16 +58,10 @@ class Cotizacion(TimeStampedModel):
     )
     observacion = models.TextField(null=True, blank=True)
     valor_ofertado = models.DecimalField(max_digits=20, decimal_places=2, default=0)
-    valor_orden_compra = models.DecimalField(max_digits=20, decimal_places=2, default=0)
-    orden_compra_nro = models.CharField(max_length=100, null=True)
-    orden_compra_fecha = models.DateField(null=True)
-    orden_compra_archivo = models.FileField(null=True, upload_to=archivo_upload_to)
     fecha_entrega_pactada_cotizacion = models.DateField(null=True)
     dias_pactados_entrega_proyecto = models.IntegerField(null=True)
     costo_presupuestado = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     responsable = models.ForeignKey(User, on_delete=models.PROTECT, null=True)
-
-    cotizacion_archivo = models.FileField(null=True, upload_to=archivo_cotizacion_upload_to)
 
     relacionada = models.BooleanField(default=False)
     revisada = models.BooleanField(default=False)
@@ -91,7 +77,7 @@ class Cotizacion(TimeStampedModel):
     condiciones_inicio_completas = models.BooleanField(default=False)
 
     objects = models.Manager()
-    sumatorias = CotizacionManager()
+    base = CotizacionManagerDos()
 
     class Meta:
         permissions = [
@@ -170,7 +156,9 @@ class ArchivoCotizacion(TimeStampedModel):
 
     def archivo_upload_to(instance, filename):
         nro_cotizacion = instance.cotizacion.id
-        return "documentos/cotizaciones/%s/%s_%s" % (nro_cotizacion, instance.tipo, filename)
+        ahora = timezone.datetime.now()
+        return "documentos/cotizaciones/%s/%s_%s%s%s%s_%s" % (
+            nro_cotizacion, instance.tipo, ahora.year, ahora.month, ahora.day, ahora.microsecond, filename)
 
     nombre_archivo = models.CharField(max_length=300)
     archivo = models.FileField(null=True, upload_to=archivo_upload_to)
@@ -235,18 +223,10 @@ class CondicionInicioProyectoCotizacion(models.Model):
 
 # Realmente una orden de compra
 class CotizacionPagoProyectado(TimeStampedModel):
-    def archivo_upload_to(instance, filename):
-        nro_cotizacion = instance.cotizacion.id
-        ahora = timezone.datetime.now()
-        extencion = filename.split('.')[-1]
-        return "documentos/cotizaciones/%s/orden_compra_%s%s%s_%s.%s" % (
-            nro_cotizacion, ahora.year, ahora.month, ahora.day, ahora.microsecond, extencion)
-
     cotizacion = models.ForeignKey(Cotizacion, related_name='pagos_proyectados', on_delete=models.PROTECT)
     valor_orden_compra = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     orden_compra_nro = models.CharField(max_length=100, null=True)
     orden_compra_fecha = models.DateField(null=True)
-    orden_compra_archivo = models.FileField(null=True, upload_to=archivo_upload_to)
     notificada_por_correo = models.BooleanField(default=False)
     creado_por = models.ForeignKey(User, on_delete=models.PROTECT, related_name='pagos_proyectados_creados')
 

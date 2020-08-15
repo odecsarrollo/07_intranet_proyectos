@@ -80,29 +80,18 @@ class ProyectoQuerySet(models.QuerySet):
             ).all()
 
         if tipo in [0, 2]:
-            cotizaciones = Cotizacion.objects.values('proyectos__id_proyecto').annotate(
-                costo_presupuestado_cotizaciones=ExpressionWrapper(
-                    Sum('costo_presupuestado'),
-                    output_field=DecimalField(max_digits=4)
-                ),
-                valor_orden_compra_cotizaciones=ExpressionWrapper(
-                    Sum('valor_orden_compra'),
-                    output_field=DecimalField(max_digits=4)
-                )
+            _cotizaciones = Cotizacion.objects.values('proyectos__id_proyecto').annotate(
+                costo_presupuestado=Coalesce(Sum('costo_presupuestado'), 0),
+                valores_oc=Coalesce(Sum('pagos_proyectados__valor_orden_compra'), 0),
             ).filter(
                 proyectos__id_proyecto=OuterRef('id_proyecto'),
                 estado='Cierre (Aprobado)'
             ).distinct()
 
-            cotizaciones_adicionales = Cotizacion.objects.values('cotizacion_inicial__proyectos__id_proyecto').annotate(
-                costo_presupuestado_cotizaciones=ExpressionWrapper(
-                    Sum('costo_presupuestado'),
-                    output_field=DecimalField(max_digits=4)
-                ),
-                valor_orden_compra_cotizaciones=ExpressionWrapper(
-                    Sum('valor_orden_compra'),
-                    output_field=DecimalField(max_digits=4)
-                )
+            _cotizaciones_adicionales = Cotizacion.objects.values(
+                'cotizacion_inicial__proyectos__id_proyecto').annotate(
+                costo_presupuestado=Sum('costo_presupuestado'),
+                valores_oc=Coalesce(Sum('pagos_proyectados__valor_orden_compra'), 0),
             ).filter(
                 cotizacion_inicial__proyectos__id_proyecto=OuterRef('id_proyecto'),
                 estado='Cierre (Aprobado)'
@@ -110,29 +99,16 @@ class ProyectoQuerySet(models.QuerySet):
 
             qs = qs.annotate(
                 costo_presupuestado_cotizaciones=Coalesce(
-                    ExpressionWrapper(
-                        Subquery(cotizaciones.values('costo_presupuestado_cotizaciones')),
-                        output_field=DecimalField(max_digits=4)
-                    ), 0
+                    Subquery(_cotizaciones.values('costo_presupuestado')), 0
                 ),
                 valor_orden_compra_cotizaciones=Coalesce(
-                    ExpressionWrapper(
-                        Subquery(cotizaciones.values('valor_orden_compra_cotizaciones')),
-                        output_field=DecimalField(max_digits=4)
-                    ), 0
+                    Subquery(_cotizaciones.values('valores_oc')), 0
                 ),
                 costo_presupuestado_cotizaciones_adicional=Coalesce(
-                    ExpressionWrapper(
-                        Subquery(cotizaciones_adicionales.values('costo_presupuestado_cotizaciones')),
-                        output_field=DecimalField(max_digits=4)
-                    ), 0
+                    Subquery(_cotizaciones_adicionales.values('costo_presupuestado')), 0
                 ),
                 valor_orden_compra_cotizaciones_adicional=Coalesce(
-                    ExpressionWrapper(
-                        Subquery(cotizaciones_adicionales.values('valor_orden_compra_cotizaciones')),
-                        output_field=DecimalField(max_digits=4)
-                    ), 0
-                ),
+                    Subquery(_cotizaciones_adicionales.values('valores_oc')), 0),
             ).all()
         return qs
 

@@ -138,12 +138,6 @@ class CotizacionSerializer(serializers.ModelSerializer):
     valor_total_orden_compra_cotizaciones = serializers.DecimalField(decimal_places=2, max_digits=20, read_only=True)
     responsable_actual = serializers.CharField(source='responsable.username', read_only=True)
     responsable_actual_nombre = serializers.CharField(source='responsable.get_full_name', read_only=True)
-    orden_compra_fecha = serializers.DateField(
-        format="%Y-%m-%d",
-        input_formats=['%Y-%m-%dT%H:%M:%S.%fZ', 'iso-8601'],
-        allow_null=True,
-        required=False
-    )
     fecha_entrega_pactada_cotizacion = serializers.DateField(
         format="%Y-%m-%d",
         input_formats=['%Y-%m-%dT%H:%M:%S.%fZ', 'iso-8601'],
@@ -158,11 +152,6 @@ class CotizacionSerializer(serializers.ModelSerializer):
     )
     color_tuberia_ventas = serializers.SerializerMethodField()
     porcentaje_tuberia_ventas = serializers.SerializerMethodField()
-
-    orden_compra_archivo_url = serializers.SerializerMethodField()
-    orden_compra_archivo_extension = serializers.SerializerMethodField()
-    orden_compra_archivo_size = serializers.SerializerMethodField()
-    orden_compra_archivo_filename = serializers.SerializerMethodField()
 
     to_string = serializers.SerializerMethodField()
     creado = serializers.DateTimeField(
@@ -210,10 +199,7 @@ class CotizacionSerializer(serializers.ModelSerializer):
         cliente = validated_data.get('cliente', None)
         contacto_cliente = validated_data.get('contacto_cliente', None)
         costo_presupuestado = validated_data.get('costo_presupuestado', 0)
-        orden_compra_nro = validated_data.get('orden_compra_nro', None)
         valor_ofertado = validated_data.get('valor_ofertado', 0)
-        orden_compra_fecha = validated_data.get('orden_compra_fecha', 0)
-        valor_orden_compra = validated_data.get('valor_orden_compra', 0)
         estado_observacion_adicional = validated_data.get('estado_observacion_adicional', None)
         dias_pactados_entrega_proyecto = validated_data.get('dias_pactados_entrega_proyecto', None)
         cotizacion = cotizacion_actualizar(
@@ -230,12 +216,9 @@ class CotizacionSerializer(serializers.ModelSerializer):
             cliente_id=None if cliente is None else cliente.id,
             contacto_cliente_id=None if contacto_cliente is None else contacto_cliente.id,
             valor_ofertado=valor_ofertado,
-            valor_orden_compra=valor_orden_compra,
             costo_presupuestado=costo_presupuestado,
-            orden_compra_nro=orden_compra_nro,
             estado_observacion_adicional=estado_observacion_adicional,
-            dias_pactados_entrega_proyecto=dias_pactados_entrega_proyecto,
-            orden_compra_fecha=orden_compra_fecha
+            dias_pactados_entrega_proyecto=dias_pactados_entrega_proyecto
         )
         return cotizacion
 
@@ -320,16 +303,13 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'estado_observacion_adicional',
             'observacion',
             'valor_ofertado',
-            'valor_orden_compra',
             'valor_orden_compra_mes',
             'costo_presupuestado',
             'costo_presupuestado_adicionales',
             'valor_total_orden_compra_cotizaciones',
-            'orden_compra_nro',
             'proyectos',
             'cotizaciones_adicionales',
             'abrir_carpeta',
-            'orden_compra_fecha',
             'fecha_cambio_estado',
             'fecha_entrega_pactada',
             'fecha_entrega_pactada_cotizacion',
@@ -357,19 +337,16 @@ class CotizacionSerializer(serializers.ModelSerializer):
             'cotizaciones_adicionales': {'read_only': True},
             'mis_documentos': {'read_only': True},
             'cotizacion_inicial': {'allow_null': True},
-            'orden_compra_nro': {'allow_null': True},
             'observacion': {'allow_null': True},
             'estado_observacion_adicional': {'allow_null': True},
             'fecha_limite_segumiento_estado': {'allow_null': True},
             'dias_pactados_entrega_proyecto': {'allow_null': True},
-            'orden_compra_archivo': {'allow_null': True},
         }
         read_only_fields = [
             'condiciones_inicio_completas',
             'condiciones_inicio_fecha_ultima',
             'fecha_entrega_pactada',
             'dias_para_vencer',
-            'orden_compra_archivo',
             'pagos_proyectados',
         ]
 
@@ -430,7 +407,6 @@ class CotizacionTuberiaVentaSerializer(serializers.ModelSerializer):
             'nro_cotizacion',
             'valor_orden_compra_mes',
             'valor_orden_compra_trimestre',
-            'valor_orden_compra',
             'unidad_negocio',
             'cliente_nombre',
             'cliente',
@@ -489,10 +465,9 @@ class CotizacionCotizacionConDetalleSerializer(CustomSerializerMixin, serializer
         model = Cotizacion
         fields = [
             'id',
-            'orden_compra_nro',
-            'nro_cotizacion',
             'estado',
             'cliente',
+            'nro_cotizacion',
             'contacto_cliente',
             'unidad_negocio',
             'cotizaciones_adicionales',
@@ -514,7 +489,7 @@ class LiteralCotizacionConDetalle(serializers.ModelSerializer):
 
 
 class CotizacionListSerializer(serializers.ModelSerializer):
-    valores_oc = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    valores_oc = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True,default=0)
     color_tuberia_ventas = serializers.SerializerMethodField()
     porcentaje_tuberia_ventas = serializers.SerializerMethodField()
 
@@ -531,11 +506,9 @@ class CotizacionListSerializer(serializers.ModelSerializer):
         read_only=True,
         context={
             'quitar_campos': [
-                'orden_compra_nro',
                 'estado',
                 'cliente',
                 'contacto_cliente',
-                'unidad_negocio',
                 'cotizaciones_adicionales',
                 'contacto_cliente_nombre',
             ]
@@ -545,11 +518,9 @@ class CotizacionListSerializer(serializers.ModelSerializer):
         read_only=True,
         context={
             'quitar_campos': [
-                'orden_compra_nro',
                 'estado',
                 'cliente',
                 'contacto_cliente',
-                'unidad_negocio',
                 'cotizaciones_adicionales',
                 'contacto_cliente_nombre',
             ]
@@ -604,12 +575,8 @@ class CotizacionListSerializer(serializers.ModelSerializer):
             'cotizaciones_adicionales',
             'cotizacion_inicial',
             'descripcion_cotizacion',
-            'orden_compra_nro',
-            'orden_compra_fecha',
-            'valor_orden_compra',
             'fecha_entrega_pactada_cotizacion',
             'estado',
-            'orden_compra_fecha',
             'cliente_nombre',
             'cliente_nit',
             'cliente',
@@ -845,6 +812,5 @@ class CotizacionInformeGerenciaSerializer(serializers.ModelSerializer):
             'cliente_nombre',
             'cliente_nit',
             'responsable_actual_nombre',
-            'orden_compra_fecha',
         ]
         read_only_fields = fields

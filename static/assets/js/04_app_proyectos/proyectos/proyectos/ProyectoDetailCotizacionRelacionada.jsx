@@ -59,14 +59,14 @@ const ProyectoDetailCotizacionRelacionada = props => {
                 <td style={table.td_right}>{fechaFormatoUno(c.created)}</td>
                 <td style={table.td_right}>{fechaFormatoUno(c.fecha_entrega_pactada)}</td>
                 <td style={table.td_right}>{c.orden_compra_nro}</td>
-                <td style={table.td_right}>{pesosColombianos(c.valor_orden_compra)}</td>
+                <td style={table.td_right}>{pesosColombianos(c.valores_oc)}</td>
                 <td style={table.td_right}>{pesosColombianos(c.costo_presupuestado)}</td>
             </tr>)}
             </tbody>
             <tfoot>
             <tr>
                 <td style={table.td} colSpan={5}>Total</td>
-                <td style={table.td_right}>{pesosColombianos(cotizaciones_proyecto.map(c => c.valor_orden_compra).reduce(((total, actual) => total + actual)))}</td>
+                <td style={table.td_right}>{pesosColombianos(cotizaciones_proyecto.map(c => c.valores_oc).reduce(((total, actual) => total + actual)))}</td>
                 <td style={table.td_right}>{pesosColombianos(cotizaciones_proyecto.map(c => c.costo_presupuestado).reduce(((total, actual) => total + actual)))}</td>
             </tr>
             </tfoot>

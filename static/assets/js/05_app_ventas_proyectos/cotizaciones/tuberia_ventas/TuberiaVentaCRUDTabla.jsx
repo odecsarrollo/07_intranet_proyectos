@@ -205,12 +205,6 @@ const Tabla = memo((props) => {
                             Header: "Caracteristicas",
                             columns: [
                                 {
-                                    Header: "Nro. Coti",
-                                    accessor: "nro_cotizacion",
-                                    maxWidth: 70,
-                                    id: "nro_cotizacion"
-                                },
-                                {
                                     Header: "Uni. Nego",
                                     accessor: "unidad_negocio",
                                     maxWidth: 70,
@@ -218,6 +212,15 @@ const Tabla = memo((props) => {
                                     filterMethod: (filter, row) => {
                                         return row[filter.id].includes(filter.value.toUpperCase())
                                     }
+                                },
+                                {
+                                    Header: "Nro. Coti",
+                                    accessor: 'nro_cotizacion',
+                                    filterMethod: (filter, row) => {
+                                        return row[filter.id] && row[filter.id].toString().includes(filter.value.toUpperCase())
+                                    },
+                                    maxWidth: 70,
+                                    filterable: true
                                 },
                                 {
                                     Header: "Cliente",
@@ -258,6 +261,9 @@ const Tabla = memo((props) => {
                                     maxWidth: 140,
                                     filterable: true,
                                     accessor: "responsable_actual_nombre",
+                                    filterMethod: (filter, row) => {
+                                        return row[filter.id].includes(filter.value.toUpperCase())
+                                    },
                                     Cell: row => {
                                         return (
                                             <div style={{
@@ -341,8 +347,8 @@ const Tabla = memo((props) => {
                                     maxWidth: 100,
                                     Cell: row => <div className='text-right'>
                                         {
-                                            row.original.valor_orden_compra > 0 ?
-                                                pesosColombianos(row.original.valor_orden_compra) :
+                                            row.original.valores_oc > 0 ?
+                                                pesosColombianos(row.original.valores_oc) :
                                                 pesosColombianos(row.value)
                                         }
                                     </div>

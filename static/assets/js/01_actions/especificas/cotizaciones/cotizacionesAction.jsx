@@ -115,16 +115,6 @@ export const adicionarOrdenCompraCotizacion = (id, values, options_action = {}) 
     }
 };
 
-export const adicionarOrdenCompraCotizacionDesdeVieja = (id, values, options_action = {}) => {
-    return (dispatch) => {
-        const dispatches = (response) => {
-            dispatch({type: TYPES.update, payload: response})
-        };
-        const options = {...options_action, dispatches, dispatch_method: dispatch};
-        return callApiMethodPostParameters(current_url_api, id, 'adicionar_pago_proyectado_desde_vieja', values, options)
-    }
-};
-
 export const adicionarPagoCotizacion = (id, values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
@@ -237,16 +227,6 @@ export const limpiarCondicionInicioCotizacion = (id, condicion_inicio_proyecto_i
         };
         const options = {...options_action, dispatches, dispatch_method: dispatch};
         return callApiMethodPostParameters(current_url_api, id, 'limpiar_condicion_inicio_proyecto', params, options)
-    }
-};
-
-export const actualizarOrdenCompraCotizacion = (id, values, options_action = {}) => {
-    return (dispatch) => {
-        const dispatches = (response) => {
-            dispatch({type: TYPES.update, payload: response})
-        };
-        const options = {...options_action, dispatches, dispatch_method: dispatch, content_type: 'application/json'};
-        return callApiMethodPostParameters(current_url_api, id, 'actualizar_orden_compra', values, options)
     }
 };
 

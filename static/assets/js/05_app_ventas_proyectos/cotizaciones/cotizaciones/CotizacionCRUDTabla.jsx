@@ -62,17 +62,25 @@ const Tabla = memo((props) => {
                         columns: [
                             {
                                 Header: "Nro. Coti",
-                                accessor: "nro_cotizacion",
-                                filterable: true,
-                                maxWidth: 70
+                                accessor: 'unidad_negocio',
+                                filterMethod: (filter, row) => {
+                                    return row[filter.id].includes(filter.value.toUpperCase())
+                                },
+                                maxWidth: 50,
+                                filterable: true
+                            },
+                            {
+                                Header: "Nro. Coti",
+                                accessor: 'nro_cotizacion',
+                                filterMethod: (filter, row) => {
+                                    return row[filter.id] && row[filter.id].toString().includes(filter.value.toUpperCase())
+                                },
+                                maxWidth: 70,
+                                filterable: true
                             },
                             {
                                 Header: "Nro. OP",
                                 maxWidth: 80,
-                                filterable: true,
-                                filterMethod: (filter, row) => {
-                                    return row[filter.id] && row[filter.id].includes(filter.value.toUpperCase())
-                                },
                                 Cell: row => {
                                     const proyectos = row.original.proyectos;
                                     return (
@@ -90,10 +98,11 @@ const Tabla = memo((props) => {
                             {
                                 Header: "Cot. Ini",
                                 accessor: "cotizacion_inicial",
-                                maxWidth: 70,
+                                maxWidth: 100,
                                 filterable: true,
                                 filterMethod: (filter, row) => {
-                                    return row[filter.id].includes(filter.value.toUpperCase())
+                                    const text = row[filter.id] ? `${row[filter.id].unidad_negocio}-${row[filter.id].nro_cotizacion}` : null;
+                                    return text && text.includes(filter.value.toUpperCase())
                                 },
                                 Cell: row => {
                                     const cotizacion_inicial = row.original.cotizacion_inicial;
@@ -119,16 +128,6 @@ const Tabla = memo((props) => {
                                             }
                                         </div>
                                     )
-                                    return <div></div>
-                                }
-                            },
-                            {
-                                Header: "Uni. Nego",
-                                accessor: "unidad_negocio",
-                                maxWidth: 70,
-                                filterable: true,
-                                filterMethod: (filter, row) => {
-                                    return row[filter.id].includes(filter.value.toUpperCase())
                                 }
                             },
                             {
@@ -167,23 +166,19 @@ const Tabla = memo((props) => {
                             },
                             {
                                 Header: "Responsable",
-                                maxWidth: 80,
+                                maxWidth: 140,
                                 filterable: true,
-                                accessor: "responsable_actual",
+                                accessor: "responsable_actual_nombre",
                                 filterMethod: (filter, row) => {
-                                    const {_original: {responsable_actual}} = row;
-                                    if (responsable_actual) {
-                                        return (
-                                            responsable_actual.toUpperCase().includes(filter.value.toUpperCase())
-                                        )
-                                    } else {
-                                        return false
-                                    }
+                                    return row[filter.id].includes(filter.value.toUpperCase())
                                 },
                                 Cell: row => {
-                                    return <span>
-                                        {row.original.responsable_actual ? row.original.responsable_actual : ''}
-                                            </span>
+                                    return (
+                                        <div style={{
+                                            fontSize: '0.6rem',
+                                            whiteSpace: 'normal'
+                                        }}>{row.value}</div>
+                                    )
                                 }
                             },
                             {
@@ -247,7 +242,7 @@ const Tabla = memo((props) => {
                                 maxWidth: 100,
                                 Cell: row => <div className='text-right'>
                                     {
-                                        row.original.valor_orden_compra > 0 ?
+                                        row.original.valores_oc > 0 ?
                                             pesosColombianos(row.original.valores_oc) :
                                             pesosColombianos(row.value)
                                     }
@@ -259,7 +254,7 @@ const Tabla = memo((props) => {
                                 maxWidth: 100,
                                 Cell: row => <div className='text-right'>
                                     {
-                                        row.original.valor_orden_compra > 0 ?
+                                        row.original.valores_oc > 0 ?
                                             pesosColombianos(row.original.valores_oc) :
                                             pesosColombianos(row.value)
                                     }

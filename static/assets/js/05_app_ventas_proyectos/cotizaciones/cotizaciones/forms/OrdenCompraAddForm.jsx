@@ -168,13 +168,7 @@ let OrdenCompraAddForm = memo(props => {
         })
     }
 
-    const addOrdenCompra = (value) => {
-        if (initialValues) {
-            dispatch(actions.adicionarOrdenCompraCotizacionDesdeVieja(cotizacion.id, value, {callback: onCancel}))
-        } else {
-            dispatch(actions.adicionarOrdenCompraCotizacion(cotizacion.id, value, {callback: onCancel}))
-        }
-    }
+    const addOrdenCompra = (value) => dispatch(actions.adicionarOrdenCompraCotizacion(cotizacion.id, value, {callback: onCancel}));
     const valor_ofertado_restante = cotizacion.valor_ofertado - (cotizacion.valores_oc === undefined ? 0 : cotizacion.valores_oc)
     return (
         <MyFormTagModal

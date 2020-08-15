@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='cotizacion',
             name='cotizacion_archivo',
-            field=models.FileField(null=True, upload_to=cotizaciones.models.Cotizacion.archivo_cotizacion_upload_to),
+            field=models.FileField(null=True),
         ),
     ]

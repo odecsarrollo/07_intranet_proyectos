@@ -15,7 +15,6 @@ import SiNoDialog from "../../../00_utilities/components/ui/dialog/SiNoDialog";
 import * as actions from "../../../01_actions/01_index";
 import {eliminarOrdenCompraCotizacion} from "../../../01_actions/01_index";
 import CotizacionCondicionInicioProyectoItemForm from './forms/CotizacionCondicionInicioProyectoItemForm';
-import CotizacionOrdenCompraForm from "./forms/CotizacionOrdenCompraForm";
 import OrdenCompraAddForm from "./forms/OrdenCompraAddForm";
 
 const useStyles = makeStyles(theme => ({
@@ -143,25 +142,19 @@ const CotizacionCondicionInicioProyecto = props => {
     const [mostrar_add_nueva_orden_compra, setMostrarAddNuevaOrdenCompra] = useState(false);
     const [mostrar_add_nueva_cotizacion, setMostrarAddNuevaCotizacion] = useState(false);
     const [archivo_cotizacion, setArchivoCotizacion] = useState(null);
-    const [tempo_base_oc_vieja, setTempoBaseOCVieja] = useState(null);
     const {
         cotizacion,
         cotizacion: {
             mis_documentos,
             pagos_proyectados,
-            condiciones_inicio_cotizacion,
-            orden_compra_fecha,
-            valor_orden_compra,
-            orden_compra_nro,
-            orden_compra_archivo
+            condiciones_inicio_cotizacion
         }
     } = props;
     const cerrado = cotizacion.estado === 'Cierre (Aprobado)';
     const cotizaciones_archivos = mis_documentos && mis_documentos.filter(d => d.tipo === 'COTIZACION');
-    const requiere_cotizacion = cotizacion.estado === 'Aceptación de Terminos y Condiciones' && mis_documentos.filter(d => d.tipo === 'COTIZACION').length === 0;
+    const requiere_cotizacion = mis_documentos && cotizacion.estado === 'Aceptación de Terminos y Condiciones' && mis_documentos.filter(d => d.tipo === 'COTIZACION').length === 0;
 
     let list = useSelector(state => state.condiciones_inicios_proyectos);
-    const read_only_orden_compra = (orden_compra_fecha && valor_orden_compra > 0 && orden_compra_nro && orden_compra_archivo);
     const cargarDatos = () => {
         dispatch(actions.fetchCondicionesIniciosProyectos());
     };
@@ -227,12 +220,10 @@ const CotizacionCondicionInicioProyecto = props => {
         </SiNoDialog>}
         {mostrar_add_nueva_orden_compra && <OrdenCompraAddForm
             cotizacion={cotizacion}
-            initialValues={tempo_base_oc_vieja}
             modal_open={mostrar_add_nueva_orden_compra}
             singular_name='Orden Compra'
             onCancel={() => {
                 setMostrarAddNuevaOrdenCompra(false);
-                setTempoBaseOCVieja(null);
             }}
         />}
 
@@ -261,14 +252,6 @@ const CotizacionCondicionInicioProyecto = props => {
         )}
         {pagos_proyectados && pagos_proyectados.length > 0 && pagos_proyectados.map(p =>
             <CotizacionCondicionInicioProyectoOC cotizacion={cotizacion} orden_compra={p} key={p.id}/>)}
-        {(cotizacion.orden_compra_archivo || cotizacion.valor_orden_compra > 0) && <CotizacionOrdenCompraForm
-            initialValues={cotizacion}
-            read_only={read_only_orden_compra}
-            classes={classes}
-            setTempoBaseOCVieja={setTempoBaseOCVieja}
-            setMostrarAddNuevaOrdenCompra={setMostrarAddNuevaOrdenCompra}
-        />}
-
         {!requiere_cotizacion && <Fragment>
             <div className="col-12">
                 <p style={{color: 'red'}}>

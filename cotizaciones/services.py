@@ -198,24 +198,6 @@ def condicion_inicio_proyecto_cotizacion_actualizar(
     return condicion_inicio_proyecto_cotizacion
 
 
-def cotizacion_condicion_inicio_orden_compra_actualizar(
-        cotizacion_id: int,
-        orden_compra_nro: str,
-        orden_compra_fecha: datetime.date,
-        valor_orden_compra,
-        orden_compra_archivo,
-) -> Cotizacion:
-    cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
-    cotizacion.orden_compra_fecha = orden_compra_fecha
-    cotizacion.valor_orden_compra = valor_orden_compra
-    cotizacion.orden_compra_nro = orden_compra_nro
-    if orden_compra_archivo:
-        cotizacion.orden_compra_archivo = orden_compra_archivo
-    cotizacion.save()
-    cotizacion = cotizacion_verificar_condicion_inicio_proyecto_si_estan_completas(cotizacion_id=cotizacion_id)
-    return cotizacion
-
-
 def cotizacion_add_pago_proyectado(
         cotizacion_id: int,
         orden_compra_nro: str,
@@ -431,11 +413,6 @@ def cotizacion_limpiar_condicion_inicio_proyecto(
             condicion_inicio.fecha_entrega = None
             condicion_inicio.documento = None
             condicion_inicio.save()
-    if es_orden_compra:
-        cotizacion.orden_compra_fecha = None
-        cotizacion.valor_orden_compra = 0
-        cotizacion.orden_compra_nro = None
-        cotizacion.orden_compra_archivo = None
     con_condicion_especial = cotizacion.condiciones_inicio_cotizacion.filter(
         condicion_especial=True,
         fecha_entrega__isnull=False
@@ -560,11 +537,8 @@ def cotizacion_actualizar(
         cliente_id: int,
         contacto_cliente_id: int,
         observacion: str = None,
-        orden_compra_fecha: datetime.date = None,
         valor_ofertado: float = None,
         costo_presupuestado: float = None,
-        valor_orden_compra: float = None,
-        orden_compra_nro: str = None,
         estado_observacion_adicional: str = None,
         dias_pactados_entrega_proyecto: int = None,
 ) -> Cotizacion:
@@ -656,18 +630,11 @@ def cotizacion_actualizar(
                     estado)})
         else:
             cotizacion.dias_pactados_entrega_proyecto = dias_pactados_entrega_proyecto
-
-        cotizacion.orden_compra_fecha = orden_compra_fecha
-        cotizacion.orden_compra_nro = orden_compra_nro
-        cotizacion.valor_orden_compra = valor_orden_compra
         cotizacion.save()
 
         if estado == 'Aceptación de Terminos y Condiciones':
             cotizacion = cotizacion_verificar_condicion_inicio_proyecto_si_estan_completas(cotizacion_id=cotizacion_id)
     else:
-        cotizacion.orden_compra_fecha = None
-        cotizacion.valor_orden_compra = 0
-        cotizacion.orden_compra_nro = None
         cotizacion.dias_pactados_entrega_proyecto = None
 
     cotizacion.responsable_id = responsable_id
@@ -676,8 +643,6 @@ def cotizacion_actualizar(
     cotizacion.origen_cotizacion = origen_cotizacion
     cotizacion.fecha_entrega_pactada_cotizacion = fecha_entrega_pactada_cotizacion
     cotizacion.fecha_limite_segumiento_estado = fecha_limite_segumiento_estado
-    cotizacion.orden_compra_nro = orden_compra_nro
-
     cotizacion.save()
     if cambio_estado:
         SeguimientoCotizacion.objects.create(
