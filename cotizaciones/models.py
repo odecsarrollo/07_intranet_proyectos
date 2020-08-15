@@ -175,6 +175,7 @@ class ArchivoCotizacion(TimeStampedModel):
     class Meta:
         permissions = [
             ("list_archivocotizacion", "Can see list archivos cotizaciones"),
+            ("delete_tipo_cotizacion_archivocotizacion", "Can delete archivos cotizaciones tipo cotización"),
         ]
 
 
@@ -232,7 +233,7 @@ class CotizacionPagoProyectado(TimeStampedModel):
 
     class Meta:
         permissions = [
-            ("list_cotizacionpagoproyectado", "Can list pagos proyectados"),
+            ("list_cotizacionpagoproyectado", "Can list pagos proyectados")
         ]
 
 

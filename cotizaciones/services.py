@@ -89,11 +89,11 @@ def cotizacion_envio_correo_notificacion_condiciones_inicio_completas(
     pagos_proyectados = cotizacion.pagos_proyectados
     if pagos_proyectados.exists():
         for oc in pagos_proyectados.all():
-            if oc.orden_compra_archivo:
+            if hasattr(oc, 'orden_compra_documento'):
                 nombre_archivo = '%s%s %s.%s' % (
                     cotizacion.unidad_negocio, cotizacion.nro_cotizacion,
-                    'Orden Compra', oc.orden_compra_archivo.name.split('.')[-1])
-                msg.attach(nombre_archivo, oc.orden_compra_archivo.read())
+                    'Orden Compra', oc.orden_compra_documento.archivo.name.split('.')[-1])
+                msg.attach(nombre_archivo, oc.orden_compra_documento.archivo.read())
 
     documentos_para_enviar = cotizacion.condiciones_inicio_cotizacion.filter(require_documento=True)
     for condicion in documentos_para_enviar.all():

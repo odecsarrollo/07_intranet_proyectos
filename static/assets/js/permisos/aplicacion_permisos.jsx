@@ -1,3 +1,6 @@
+export const PAGO_PROYECTADO_OC = {
+    delete: 'delete_cotizacionpagoproyectado'
+};
 export const ACUERDO_PAGO_COTIZACIONES = {
     change_fecha_proyectada: 'change_fecha_proyectada_cotizacionpagoproyectadoacuerdopago'
 };
@@ -476,6 +479,7 @@ export const ARCHIVOS_COTIZACIONES = {
     change: 'change_archivocotizacion',
     list: 'list_archivocotizacion',
     detail: 'view_archivocotizacion',
+    delete_archivo_cotizacion: 'delete_tipo_cotizacion_archivocotizacion',
 };
 
 export const ARCHIVOS_LITERALES = {

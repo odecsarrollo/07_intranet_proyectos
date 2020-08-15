@@ -17,7 +17,7 @@ import {
     eliminarPagoCotizacion
 } from "../../../01_actions/especificas/cotizaciones/cotizacionesAction";
 import CotizacionAcuerdoPagoAddPagoDialog from "./CotizacionAcuerdoPagoAddPagoDialog"
-import {ACUERDO_PAGO_COTIZACIONES} from "../../../permisos";
+import {ACUERDO_PAGO_COTIZACIONES, PAGO_PROYECTADO_OC} from "../../../permisos";
 import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
 
 
@@ -157,6 +157,7 @@ const CotizacionOrdenComrpa = (props) => {
         eliminarPago,
         eliminarOC,
         orden_compra,
+        permisos,
         orden_compra: {acuerdos_pagos},
         openAplicarPago,
         setAcuerdoPagoId,
@@ -181,8 +182,10 @@ const CotizacionOrdenComrpa = (props) => {
                     Valor Orden Compra: {formatoDinero(orden_compra.valor_orden_compra, '$', 0)}
                 </Typography>
             </div>
-            <MyDialogButtonDelete onDelete={() => eliminarOC(orden_compra.id)}
-                                  element_name={orden_compra.valor_proyectado} element_type='Orden de Compra'/>
+            {permisos.delete && <MyDialogButtonDelete
+                onDelete={() => eliminarOC(orden_compra.id)}
+                element_name={orden_compra.valor_proyectado}
+                element_type='Orden de Compra'/>}
             {orden_compra.orden_compra_archivo && <a href={orden_compra.orden_compra_archivo} target='_blank'>
                 <IconButton className={classes.download_boton}>
                     <span>Descargar Orden Compra</span>
@@ -228,6 +231,7 @@ const CotizacionAcuerdoPagoList = (props) => {
     const [acuerdo_pago_id, setAcuerdoPagoId] = useState(null)
     const dispatch = useDispatch();
     const {cotizacion: {pagos_proyectados, id}} = props;
+    const permisos_ordenes_compra = useTengoPermisos(PAGO_PROYECTADO_OC);
     const adicionarPago = (v) => {
         v.append('acuerdo_pago_id', acuerdo_pago_id)
         dispatch(adicionarPagoCotizacion(id, v, {
@@ -286,6 +290,7 @@ const CotizacionAcuerdoPagoList = (props) => {
             onSubmit={adicionarPago}
         />}
         {pagos_proyectados.map(p => <CotizacionOrdenComrpa
+            permisos={permisos_ordenes_compra}
             setShowChangeFechaProyectada={setShowChangeFechaProyectada}
             eliminarPago={eliminarPago}
             setAcuerdoPagoId={setAcuerdoPagoId}

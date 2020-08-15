@@ -12,25 +12,37 @@ class CotizacionComponenteEnvioSerializer(serializers.ModelSerializer):
     archivo_name = serializers.SerializerMethodField()
 
     def get_archivo_url(self, obj):
-        if obj.archivo:
-            return obj.archivo.pdf_cotizacion.url
-        return None
+        try:
+            if obj.archivo:
+                return obj.archivo.pdf_cotizacion.url
+            return None
+        except FileNotFoundError:
+            return None
 
     def get_archivo_name(self, obj):
-        if obj.archivo:
-            return obj.archivo.pdf_cotizacion.name.split('/')[-1]
-        return None
+        try:
+            if obj.archivo:
+                return obj.archivo.pdf_cotizacion.name.split('/')[-1]
+            return None
+        except FileNotFoundError:
+            return None
 
     def get_extension(self, obj):
         extension = ''
-        if obj.archivo:
-            extension = obj.archivo.pdf_cotizacion.url.split('.')[-1]
-        return extension.title()
+        try:
+            if obj.archivo:
+                extension = obj.archivo.pdf_cotizacion.url.split('.')[-1]
+            return extension.title()
+        except FileNotFoundError:
+            return None
 
     def get_size(self, obj):
-        if obj.archivo:
-            return obj.archivo.pdf_cotizacion.size
-        return None
+        try:
+            if obj.archivo:
+                return obj.archivo.pdf_cotizacion.size
+            return None
+        except FileNotFoundError:
+            return None
 
     class Meta:
         model = CotizacionComponenteEnvio

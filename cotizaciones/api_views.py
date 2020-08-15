@@ -14,6 +14,7 @@ from django.utils import timezone
 from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.decorators import action
+from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from reversion.views import RevisionMixin
 
@@ -527,6 +528,13 @@ class ArchivoCotizacionViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(creado_por=self.request.user)
+
+    def update(self, request, *args, **kwargs):
+        archivo: ArchivoCotizacion = self.get_object()
+        if archivo.tipo in ['ORDENCOMPRA', 'COTIZACION']:
+            raise ValidationError(
+                {'_error': 'Los documentos de tipo %s no se pueden modificar.' % archivo.get_tipo_display()})
+        return super().update(request, *args, **kwargs)
 
     @action(detail=False, http_method_names=['get', ])
     def listar_x_cotizacion(self, request):

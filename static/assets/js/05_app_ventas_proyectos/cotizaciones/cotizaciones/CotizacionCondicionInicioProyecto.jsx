@@ -16,6 +16,8 @@ import * as actions from "../../../01_actions/01_index";
 import {eliminarOrdenCompraCotizacion} from "../../../01_actions/01_index";
 import CotizacionCondicionInicioProyectoItemForm from './forms/CotizacionCondicionInicioProyectoItemForm';
 import OrdenCompraAddForm from "./forms/OrdenCompraAddForm";
+import {ARCHIVOS_COTIZACIONES, PAGO_PROYECTADO_OC} from "../../../permisos";
+import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
 
 const useStyles = makeStyles(theme => ({
     delete_boton: {
@@ -50,6 +52,7 @@ const CondicionInicioWrapper = (props) => {
         tipo,
         archivo_url,
         onDelete,
+        can_delete,
         element_name,
         element_type
     } = props;
@@ -60,7 +63,7 @@ const CondicionInicioWrapper = (props) => {
                 {tipo}
             </Typography>
             {children}
-            {onDelete && <div className={classes.limpiar_boton}>
+            {onDelete && can_delete && <div className={classes.limpiar_boton}>
                 <MyDialogButtonDelete
                     onDelete={onDelete}
                     element_name={element_name}
@@ -82,7 +85,8 @@ const CondicionInicioWrapper = (props) => {
 const CotizacionCondicionInicioProyectoCotizacion = props => {
     const {
         cotizacion,
-        cotizacion_documento
+        cotizacion_documento,
+        permisos
     } = props;
     const dispatch = useDispatch();
     const eliminarCotizacion = () => {
@@ -102,6 +106,7 @@ const CotizacionCondicionInicioProyectoCotizacion = props => {
         element_type='Archivo Cotización'
         element_name={cotizacion_documento.nombre_archivo}
         tipo='COTIZACIÓN'
+        can_delete={permisos.delete_archivo_cotizacion}
         onDelete={eliminarCotizacion}
         archivo_url={cotizacion_documento.archivo_url}
     >
@@ -111,7 +116,7 @@ const CotizacionCondicionInicioProyectoCotizacion = props => {
     </CondicionInicioWrapper>
 }
 const CotizacionCondicionInicioProyectoOC = props => {
-    const {cotizacion} = props;
+    const {cotizacion, permisos} = props;
     const {orden_compra_fecha, valor_orden_compra, orden_compra_nro, orden_compra_archivo, id} = props.orden_compra;
     const classes = useStyles();
     const dispatch = useDispatch();
@@ -121,6 +126,7 @@ const CotizacionCondicionInicioProyectoOC = props => {
         element_name={`${formatoDinero(valor_orden_compra, '$', 0)}`}
         tipo='ORDEN COMPRA'
         onDelete={eliminarOC}
+        can_delete={permisos.delete}
         archivo_url={orden_compra_archivo}
     >
         <div className={classNames("col-12", classes.info_archivo)}>
@@ -132,13 +138,15 @@ const CotizacionCondicionInicioProyectoOC = props => {
         <div className={classNames("col-12", classes.info_archivo)}>
             Nro. Orden de Compra: {orden_compra_nro}
         </div>
-
     </CondicionInicioWrapper>
 };
 
 const CotizacionCondicionInicioProyecto = props => {
     const dispatch = useDispatch();
     const classes = useStyles();
+    const permisos_archivos = useTengoPermisos(ARCHIVOS_COTIZACIONES);
+    console.log(permisos_archivos,'MIS PERMISOS')
+    const permisos_ordenes_compra = useTengoPermisos(PAGO_PROYECTADO_OC);
     const [mostrar_add_nueva_orden_compra, setMostrarAddNuevaOrdenCompra] = useState(false);
     const [mostrar_add_nueva_cotizacion, setMostrarAddNuevaCotizacion] = useState(false);
     const [archivo_cotizacion, setArchivoCotizacion] = useState(null);
@@ -248,10 +256,19 @@ const CotizacionCondicionInicioProyecto = props => {
             </Button>
         </div>
         {cotizaciones_archivos && cotizaciones_archivos.length > 0 && cotizaciones_archivos.map(c =>
-            <CotizacionCondicionInicioProyectoCotizacion cotizacion={cotizacion} cotizacion_documento={c} key={c.id}/>
+            <CotizacionCondicionInicioProyectoCotizacion
+                cotizacion={cotizacion}
+                cotizacion_documento={c}
+                key={c.id}
+                permisos={permisos_archivos}
+            />
         )}
         {pagos_proyectados && pagos_proyectados.length > 0 && pagos_proyectados.map(p =>
-            <CotizacionCondicionInicioProyectoOC cotizacion={cotizacion} orden_compra={p} key={p.id}/>)}
+            <CotizacionCondicionInicioProyectoOC
+                cotizacion={cotizacion}
+                orden_compra={p} key={p.id}
+                permisos={permisos_ordenes_compra}/>
+        )}
         {!requiere_cotizacion && <Fragment>
             <div className="col-12">
                 <p style={{color: 'red'}}>

@@ -17,25 +17,34 @@ class CotizacionComponenteAdjuntoSerializer(serializers.ModelSerializer):
     imagen_thumbnail = serializers.ImageField(read_only=True)
 
     def get_adjunto_url(self, obj):
-        if obj.adjunto:
-            return obj.adjunto.url
-        if obj.imagen:
-            return obj.imagen.url
+        try:
+            if obj.adjunto:
+                return obj.adjunto.url
+            if obj.imagen:
+                return obj.imagen.url
+        except FileNotFoundError:
+            return None
         return None
 
     def get_extension(self, obj):
         extension = ''
-        if obj.adjunto:
-            extension = obj.adjunto.url.split('.')[-1]
-        if obj.imagen:
-            extension = obj.imagen.url.split('.')[-1]
-        return extension.title()
+        try:
+            if obj.adjunto and obj.adjunto.url:
+                extension = obj.adjunto.url.split('.')[-1]
+            if obj.imagen and obj.imagen.url:
+                extension = obj.imagen.url.split('.')[-1]
+            return extension.title()
+        except FileNotFoundError:
+            return extension
 
     def get_size(self, obj):
-        if obj.adjunto:
-            return obj.adjunto.size
-        if obj.imagen:
-            return obj.imagen.size
+        try:
+            if obj.adjunto:
+                return obj.adjunto.size
+            if obj.imagen:
+                return obj.imagen.size
+        except FileNotFoundError:
+            return None
         return None
 
     class Meta:
@@ -129,25 +138,37 @@ class CotizacionComponenteSeguimientoSerializer(serializers.ModelSerializer):
         return obj.get_tipo_seguimiento_display()
 
     def get_documento_cotizacion_version(self, obj):
-        if obj.documento_cotizacion:
-            return obj.documento_cotizacion.version
-        return None
+        try:
+            if obj.documento_cotizacion:
+                return obj.documento_cotizacion.version
+            return None
+        except FileNotFoundError:
+            return None
 
     def get_documento_cotizacion_url(self, obj):
-        if obj.documento_cotizacion:
-            return obj.documento_cotizacion.pdf_cotizacion.url
-        return None
+        try:
+            if obj.documento_cotizacion:
+                return obj.documento_cotizacion.pdf_cotizacion.url
+            return None
+        except FileNotFoundError:
+            return None
 
     def get_documento_cotizacion_extension(self, obj):
         extension = ''
-        if obj.documento_cotizacion:
-            extension = obj.documento_cotizacion.pdf_cotizacion.url.split('.')[-1]
-        return extension.title()
+        try:
+            if obj.documento_cotizacion:
+                extension = obj.documento_cotizacion.pdf_cotizacion.url.split('.')[-1]
+            return extension.title()
+        except FileNotFoundError:
+            return None
 
     def get_documento_cotizacion_size(self, obj):
-        if obj.documento_cotizacion:
-            return obj.documento_cotizacion.pdf_cotizacion.size
-        return None
+        try:
+            if obj.documento_cotizacion:
+                return obj.documento_cotizacion.pdf_cotizacion.size
+            return None
+        except FileNotFoundError:
+            return None
 
     class Meta:
         model = CotizacionComponenteSeguimiento
