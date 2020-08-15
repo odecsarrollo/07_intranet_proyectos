@@ -330,14 +330,22 @@ def cotizacion_add_pago(
 
 
 def archivo_cotizacion_eliminar(
-        archivo_cotizacion_id: int
+        archivo_cotizacion_id: int,
+        user_id: int
 ):
     archivo_cotizacion = ArchivoCotizacion.objects.get(pk=archivo_cotizacion_id)
+    user = User.objects.get(pk=user_id)
     if archivo_cotizacion.tipo == 'ORDENCOMPRA':
         raise ValidationError(
             {
                 '_error': 'Los archivos de tipo %s no se pueden eliminar por este medio' % archivo_cotizacion.get_tipo_display()})
     if archivo_cotizacion.tipo == 'COTIZACION':
+        puede_eliminar = user.has_perm('cotizaciones.delete_tipo_cotizacion_archivocotizacion')
+        if not puede_eliminar:
+            raise ValidationError(
+                {
+                    '_error': 'No tiene permiso para eliminar archivos de tipo %s' % archivo_cotizacion.get_tipo_display()})
+
         documentos_cotizacion = ArchivoCotizacion.objects.exclude(
             pk=archivo_cotizacion_id
         ).filter(
@@ -383,7 +391,16 @@ def cotizacion_eliminar_pago_proyectado(
         pago_proyectado_id: int,
         user_id: int
 ):
+    user = User.objects.get(pk=user_id)
     pago_proyectado = CotizacionPagoProyectado.objects.get(pk=pago_proyectado_id)
+    puede_eliminar = user.has_perm('cotizaciones.delete_cotizacionpagoproyectado')
+    if not puede_eliminar:
+        raise ValidationError(
+            {
+                '_error':
+                    'No tiene permiso para eliminar Ordens de Compra'
+            }
+        )
     if pago_proyectado.cotizacion_id == int(cotizacion_id):
         if not CotizacionPagoProyectadoAcuerdoPagoPago.objects.filter(
                 acuerdo_pago__orden_compra_id=pago_proyectado_id
