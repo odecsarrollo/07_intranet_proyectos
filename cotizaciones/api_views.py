@@ -142,56 +142,6 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
         # from clientes.tasks import simulate_send_emails
         # simulate_send_emails.delay(5)
         self.serializer_class = CotizacionListSerializer
-        if self.request.user.is_superuser:
-            cotizaciones_para_convertir = Cotizacion.objects.filter(
-                Q(estado='Cierre (Aprobado)') &
-                (
-                        Q(valor_orden_compra__gt=0) |
-                        Q(orden_compra_nro__isnull=False) |
-                        Q(orden_compra_fecha__isnull=False) |
-                        Q(orden_compra_archivo=False)
-                )
-            ).all()
-            for cpc in cotizaciones_para_convertir:
-                pago_proyectado = CotizacionPagoProyectado()
-                pago_proyectado.valor_orden_compra = cpc.valor_orden_compra
-                pago_proyectado.orden_compra_fecha = cpc.orden_compra_fecha
-                pago_proyectado.orden_compra_nro = cpc.orden_compra_nro
-                pago_proyectado.orden_compra_archivo = cpc.orden_compra_archivo
-                pago_proyectado.notificada_por_correo = True
-                pago_proyectado.cotizacion_id = cpc.id
-                pago_proyectado.creado_por_id = 1
-                pago_proyectado.save()
-
-                CotizacionPagoProyectadoAcuerdoPago.objects.create(
-                    orden_compra=pago_proyectado,
-                    motivo='MIGRADO',
-                    porcentaje=100,
-                    creado_por_id=1,
-                    valor_proyectado=pago_proyectado.valor_orden_compra
-                )
-                cpc.valor_orden_compra = 0
-                cpc.orden_compra_fecha = None
-                cpc.orden_compra_nro = None
-                cpc.orden_compra_archivo = None
-                cpc.save()
-
-            if not cotizaciones_para_convertir.exists():
-                pago_proyectados = CotizacionPagoProyectado.objects.filter(
-                    orden_compra_documento__isnull=True,
-                ).all()
-                for pp in pago_proyectados:
-                    if pp.orden_compra_archivo:
-                        ArchivoCotizacion.objects.create(
-                            cotizacion_id=pp.cotizacion_id,
-                            orden_compra_id=pp.id,
-                            creado_por_id=pp.creado_por_id,
-                            tipo='ORDENCOMPRA',
-                            archivo=pp.orden_compra_archivo,
-                            nombre_archivo='OC_%s' % pp.orden_compra_nro
-                        )
-                        pp.orden_compra_archivo = None
-                        pp.save()
         return super().list(request, *args, **kwargs)
 
     @action(detail=False, http_method_names=['get', ])

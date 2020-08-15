@@ -51,7 +51,6 @@ def cotizacion_versions(cotizacion_id: int) -> Version:
 def cotizacion_envio_correo_notificacion_condiciones_inicio_completas(
         cotizacion_id: int
 ) -> Cotizacion:
-    print('entro a enviar correo de nuevo')
     cotizacion = Cotizacion.objects.prefetch_related(
         'pagos_proyectados',
         'condiciones_inicio_cotizacion'
@@ -141,7 +140,6 @@ def cotizacion_verificar_condicion_inicio_proyecto_si_estan_completas(
         fecha_entrega__isnull=False
     )
     if condicion_especial.exists():
-        print('entro en 1')
         if cotizacion.estado == 'Cierre (Aprobado)':
             return cotizacion
         cotizacion.condiciones_inicio_completas = True
@@ -151,7 +149,6 @@ def cotizacion_verificar_condicion_inicio_proyecto_si_estan_completas(
         cotizacion.save()
         cotizacion_envio_correo_notificacion_condiciones_inicio_completas(cotizacion.id)
     elif not condiciones_incompletas.exists() and ordenes_compra.exists():
-        print('entro en 2')
         if cotizacion.estado == 'Cierre (Aprobado)':
             return cotizacion
         fecha_max = cotizacion.condiciones_inicio_cotizacion.aggregate(fecha_max=Max('fecha_entrega'))['fecha_max']
@@ -163,7 +160,6 @@ def cotizacion_verificar_condicion_inicio_proyecto_si_estan_completas(
         cotizacion.save()
         cotizacion_envio_correo_notificacion_condiciones_inicio_completas(cotizacion.id)
     else:
-        print('entro en 3')
         cotizacion.fecha_cambio_estado_cerrado = None
         cotizacion.condiciones_inicio_fecha_ultima = None
         cotizacion.condiciones_inicio_completas = False

@@ -157,7 +157,7 @@ const CotizacionCondicionInicioProyecto = props => {
         }
     } = props;
     const cerrado = cotizacion.estado === 'Cierre (Aprobado)';
-    const cotizaciones_archivos = mis_documentos.filter(d => d.tipo === 'COTIZACION');
+    const cotizaciones_archivos = mis_documentos && mis_documentos.filter(d => d.tipo === 'COTIZACION');
     const requiere_cotizacion = cotizacion.estado === 'Aceptación de Terminos y Condiciones' && mis_documentos.filter(d => d.tipo === 'COTIZACION').length === 0;
 
     let list = useSelector(state => state.condiciones_inicios_proyectos);

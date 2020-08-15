@@ -5,8 +5,6 @@ from django.dispatch import receiver
 
 from .models import ArchivoCotizacion
 from .models import CondicionInicioProyectoCotizacion
-from .models import Cotizacion
-from .models import CotizacionPagoProyectado
 from .models import CotizacionPagoProyectadoAcuerdoPagoPago
 
 
