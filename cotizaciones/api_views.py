@@ -9,7 +9,6 @@ from django.db.models import OuterRef
 from django.db.models import Q
 from django.db.models import Subquery
 from django.db.models import Sum
-from django.db.models.functions import Coalesce
 from django.utils import timezone
 from rest_framework import status
 from rest_framework import viewsets
@@ -25,10 +24,15 @@ from .api_serializers import CondicionInicioProyectoSerializer
 from .api_serializers import CotizacionConDetalleSerializer
 from .api_serializers import CotizacionInformeGerenciaSerializer
 from .api_serializers import CotizacionListSerializer
+from .api_serializers import CotizacionPagoProyectadoAcuerdoPagoInformeGerenciaSerializer
+from .api_serializers import CotizacionPagoProyectadoAcuerdoPagoSerializer
+from .api_serializers import CotizacionPagoProyectadoInformeGerencialSerializer
+from .api_serializers import CotizacionPagoProyectadoSerializer
 from .api_serializers import CotizacionParaAbrirCarpetaSerializer
 from .api_serializers import CotizacionSerializer
 from .api_serializers import CotizacionTuberiaVentaSerializer
 from .api_serializers import SeguimientoCotizacionSerializer
+from .api_serializers import CotizacionPagoProyectadoAcuerdoPago
 from .models import ArchivoCotizacion
 from .models import CondicionInicioProyecto
 from .models import CondicionInicioProyectoCotizacion
@@ -68,43 +72,18 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
 
     # region No Detail Actions
     @action(detail=False, http_method_names=['get', ])
-    def cotizaciones_por_ano_mes(self, request):
-        months = self.request.GET.get('months').split(',')
-        years = self.request.GET.get('years').split(',')
-
-        _ordenes_compra = CotizacionPagoProyectado.objects.values('cotizacion_id').annotate(
-            valor=Sum('valor_orden_compra')
-        ).filter(
-            cotizacion_id=OuterRef('id'),
-            cotizacion__estado='Cierre (Aprobado)',
-            orden_compra_fecha__year__in=years,
-            orden_compra_fecha__month__in=months
-        ).distinct()
-
+    def cotizaciones_informe_gerencial(self, request):
         self.serializer_class = CotizacionInformeGerenciaSerializer
-        self.queryset = Cotizacion.objects.select_related(
+        lista = Cotizacion.objects.select_related(
             'cliente',
             'responsable'
-        ).annotate(
-            valor_oc_nuevas=ExpressionWrapper(
-                Subquery(_ordenes_compra.values('valor')),
-                output_field=DecimalField(max_digits=12, decimal_places=4)
-            )
+        ).filter(
+            estado__in=[
+                'Cotización Enviada',
+                'Evaluación Técnica y Económica',
+                'Aceptación de Terminos y Condiciones'
+            ]
         ).all()
-        lista = self.queryset.filter(
-            Q(
-                orden_compra_fecha__year__in=years,
-                orden_compra_fecha__month__in=months,
-                estado='Cierre (Aprobado)'
-            ) |
-            Q(
-                estado__in=[
-                    'Cotización Enviada',
-                    'Evaluación Técnica y Económica',
-                    'Aceptación de Terminos y Condiciones'
-                ]
-            )
-        )
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
@@ -541,4 +520,51 @@ class ArchivoCotizacionViewSet(viewsets.ModelViewSet):
         cotizacion_id = request.GET.get('cotizacion_id')
         qs = self.get_queryset().filter(cotizacion_id=cotizacion_id)
         serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)
+
+
+class CotizacionPagoProyectadoAcuerdoPagoViewSet(viewsets.ModelViewSet):
+    queryset = CotizacionPagoProyectadoAcuerdoPago.objects.all()
+    serializer_class = CotizacionPagoProyectadoAcuerdoPagoSerializer
+
+    @action(detail=False, http_method_names=['get', ])
+    def acuerdos_pago_cotizacion_informe_gerencial(self, request):
+        lista = CotizacionPagoProyectadoAcuerdoPago.objects.select_related(
+            'orden_compra',
+            'orden_compra__cotizacion',
+            'orden_compra__cotizacion__cliente',
+            'orden_compra__cotizacion__responsable',
+        ).prefetch_related(
+            'orden_compra__cotizacion__proyectos'
+        ).annotate(
+            recaudo=Sum('pagos__valor')
+        ).exclude(
+            motivo="MIGRADO"
+        ).filter(
+            Q(orden_compra__cotizacion__estado='Cierre (Aprobado)') &
+            (Q(valor_proyectado__gt=0) | Q(recaudo__gt=0))
+        )
+        self.serializer_class = CotizacionPagoProyectadoAcuerdoPagoInformeGerenciaSerializer
+        serializer = self.get_serializer(lista, many=True)
+        return Response(serializer.data)
+
+
+class CotizacionPagoProyectadoViewSet(viewsets.ModelViewSet):
+    queryset = CotizacionPagoProyectado.objects.all()
+    serializer_class = CotizacionPagoProyectadoInformeGerencialSerializer
+
+    @action(detail=False, http_method_names=['get', ])
+    def ordenes_compra_cotizacion_informe_gerencial(self, request):
+        months = self.request.GET.get('months').split(',')
+        years = self.request.GET.get('years').split(',')
+        lista = CotizacionPagoProyectado.objects.prefetch_related(
+            'cotizacion',
+            'cotizacion__responsable',
+            'cotizacion__cliente',
+        ).filter(
+            orden_compra_fecha__year__in=years,
+            orden_compra_fecha__month__in=months,
+            cotizacion__estado='Cierre (Aprobado)'
+        )
+        serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)

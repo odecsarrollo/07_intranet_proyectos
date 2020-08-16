@@ -18,8 +18,6 @@ const ConsecutivoProyecto = (props) => {
     const permisos_cotizaciones = useTengoPermisos(COTIZACIONES);
     let cotizaciones_list = useSelector(state => state.cotizaciones);
     let proyectos_list = useSelector(state => state.proyectos);
-    console.log(cotizaciones_list)
-    console.log(proyectos_list)
     useEffect(() => {
         cargarDatos();
         return () => dispatch(actions.clearCotizaciones());

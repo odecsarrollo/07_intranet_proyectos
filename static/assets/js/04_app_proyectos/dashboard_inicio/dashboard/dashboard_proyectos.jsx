@@ -96,7 +96,6 @@ class Dashboard extends Component {
         const {slideIndex, labelModo} = this.state;
         const {fases_tareas, literales, mis_permisos} = this.props;
         const permisos_literales = permisosAdapterDos(mis_permisos, fases_literales_view)
-        console.log(permisos_literales)
         const can_see = permisos_literales.list;
 
         return (

@@ -1,3 +1,18 @@
+export const ORDENES_COMPRAS_COTIZACIONES_ACUERDOS_PAGOS = {
+    add: 'add_cotizacionpagoproyectado',
+    delete: 'delete_cotizacionpagoproyectado',
+    change: 'change_cotizacionpagoproyectado',
+    list: 'list_cotizacionpagoproyectado',
+    detail: 'view_cotizacionpagoproyectado',
+};
+export const ORDENES_COMPRAS_COTIZACIONES = {
+    add: 'add_cotizacionpagoproyectado',
+    delete: 'delete_cotizacionpagoproyectado',
+    change: 'change_cotizacionpagoproyectado',
+    list: 'list_cotizacionpagoproyectado',
+    detail: 'view_cotizacionpagoproyectado',
+};
+
 export const PAGO_PROYECTADO_OC = {
     delete: 'delete_cotizacionpagoproyectado'
 };

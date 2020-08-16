@@ -9,6 +9,7 @@ const InformeVentaFacturacion = (props) => {
     const facturas = useSelector(state => state.facturas);
     const cotizaciones_proyectos = useSelector(state => state.cotizaciones);
     const cotizaciones_componentes = useSelector(state => state.cotizaciones_componentes);
+    const cotizaciones_ordenes_compras = useSelector(state => state.cotizaciones_ordenes_compras);
     const date = new Date()
     const [consulto, setConsulto] = useState(true);
     const [filtros, setFiltros] = useState({
@@ -28,6 +29,24 @@ const InformeVentaFacturacion = (props) => {
 
 
     let data = [];
+    let data_venta_proyectos = _.map(cotizaciones_ordenes_compras, f => {
+        return ({
+            Linea: 'Proyectos',
+            Moneda: 'COP',
+            "Tipo Documento": 'Orden Compra',
+            "Nro Documento": f.orden_compra_nro,
+            "Facturación": 0,
+            Cotizaciones: 0,
+            Ventas: f.valor_orden_compra,
+            Estado: 'Vendido',
+            Cliente: f.cotizacion_cliente_nombre,
+            "Cliente Nit": f.cotizacion_cliente_nit,
+            Vendedor: f.cotizacion_responsable,
+            Mes: new Date(f.orden_compra_fecha).getUTCMonth() + 1,
+            "Año": new Date(f.orden_compra_fecha).getUTCFullYear(),
+            "Día": new Date(f.orden_compra_fecha).getUTCDate()
+        })
+    });
     let data_facturacion = _.map(facturas, f => {
         let linea = 'Notas';
         let tipo_documento = f.tipo_documento.toString().replace(' ', '');
@@ -53,25 +72,22 @@ const InformeVentaFacturacion = (props) => {
             "Día": new Date(f.fecha_documento).getUTCDate()
         })
     });
-    const cotizaciones_proyectos_ventas = _.pickBy(cotizaciones_proyectos, c => c.estado === 'Cierre (Aprobado)' && c.orden_compra_fecha !== null);
-    const cotizaciones_proyectos_cotizaciones = _.pickBy(cotizaciones_proyectos, c => c.estado !== 'Cierre (Aprobado)');
-    let data_cotizaciones_proyectos = _.map({...cotizaciones_proyectos_ventas, ...cotizaciones_proyectos_cotizaciones}, f => {
-        const es_venta = f.estado === 'Cierre (Aprobado)';
+    let data_cotizaciones_proyectos = _.map(cotizaciones_proyectos, f => {
         return ({
             Linea: 'Proyectos',
             Moneda: 'COP',
             "Tipo Documento": f.unidad_negocio,
             "Nro Documento": `${f.unidad_negocio}-${f.nro_cotizacion}`,
             "Facturación": 0,
-            Cotizaciones: !es_venta ? f.valor_ofertado : 0,
-            Ventas: es_venta ? (f.valor_orden_compra ? f.valor_orden_compra : f.valor_ofertado) : 0,
+            Cotizaciones: f.valor_ofertado,
+            Ventas: 0,
             Estado: f.estado,
             Cliente: f.cliente_nombre,
             "Cliente Nit": f.cliente_nit,
             Vendedor: f.responsable_actual_nombre ? f.responsable_actual_nombre : 'Sin Asignar',
-            Mes: es_venta ? new Date(f.orden_compra_fecha).getUTCMonth() + 1 : 'N.A',
-            "Año": es_venta ? new Date(f.orden_compra_fecha).getUTCFullYear() : 'N.A',
-            "Día": es_venta ? new Date(f.orden_compra_fecha).getUTCDate() : 'N.A'
+            Mes: 'N.A',
+            "Año": 'N.A',
+            "Día": 'N.A'
         })
     });
     let data_cotizaciones_componentes = _.map(cotizaciones_componentes, f => {
@@ -80,7 +96,7 @@ const InformeVentaFacturacion = (props) => {
             Linea: 'Componentes',
             "Tipo Documento": 'CB',
             Moneda: f.moneda,
-            Estado: f.estado_display,
+            Estado: es_venta ? 'Vendido' : f.estado_display,
             "Nro Documento": f.nro_consecutivo,
             "Facturación": 0,
             Ventas: es_venta ? f.orden_compra_valor : 0,
@@ -93,7 +109,7 @@ const InformeVentaFacturacion = (props) => {
             "Día": es_venta ? new Date(f.orden_compra_fecha).getUTCDate() : 'N.A'
         })
     });
-    data = [...data_facturacion, ...data_cotizaciones_proyectos, ...data_cotizaciones_componentes]
+    data = [...data_facturacion, ...data_cotizaciones_proyectos, ...data_cotizaciones_componentes, ...data_venta_proyectos]
     const [table_state, setTableState] = useState({
         rows: ["vendedor"],
         cols: ['year', 'month', 'tipo'],
@@ -102,8 +118,9 @@ const InformeVentaFacturacion = (props) => {
     });
     const consultarInformacion = () => {
         setConsulto(false);
-        const cargarCotizaciones = () => dispatch(actions.fetchCotizacionesPorAnoMes(filtros, {callback: () => setConsulto(true)}));
-        const cargarComponentes = () => dispatch(actions.fetchCotizacionesComponentesPorAnoMes(filtros, {callback: cargarCotizaciones}));
+        const cargarOrdenesCompraCotizaciones = () => dispatch(actions.fetchOrdenesComprasCotizacionesInformeGerenciaAnoMes(filtros, {callback: () => setConsulto(true)}))
+        const cargarCotizacionesProyectos = () => dispatch(actions.fetchCotizacionesInformeGerencia({callback: cargarOrdenesCompraCotizaciones}));
+        const cargarComponentes = () => dispatch(actions.fetchCotizacionesComponentesPorAnoMes(filtros, {callback: cargarCotizacionesProyectos}));
         dispatch(actions.fetchFacturasPorAnoMes(filtros, {callback: cargarComponentes}));
     };
     useEffect(() => {

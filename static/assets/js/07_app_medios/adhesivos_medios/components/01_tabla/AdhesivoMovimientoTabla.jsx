@@ -25,7 +25,6 @@ const Tabla = memo((props) => {
                                 maxWidth: 80,
                                 filterable: true,
                                 filterMethod: (filter, row) => {
-                                    console.log(row[filter.id]);
                                     return row[filter.id] && row[filter.id].includes(filter.value.toUpperCase())
                                 }
 
@@ -36,7 +35,6 @@ const Tabla = memo((props) => {
                                 maxWidth: 150,
                                 filterable: true,
                                 filterMethod: (filter, row) => {
-                                    console.log(row[filter.id]);
                                     return row[filter.id] && row[filter.id].includes(filter.value.toUpperCase())
                                 }
 

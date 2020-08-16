@@ -149,7 +149,7 @@ export const eliminarPagoCotizacion = (id, pago_id, options_action = {}) => {
     }
 };
 
-export const fetchCotizacionesPorAnoMes = (filtro, options_action = {}) => {
+export const fetchCotizacionesInformeGerencia = (options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {
             dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
@@ -160,19 +160,7 @@ export const fetchCotizacionesPorAnoMes = (filtro, options_action = {}) => {
             dispatch_method: dispatch,
             clear_action_type: limpiar_coleccion ? TYPES.clear : null
         };
-        let months = '['
-        let years = '['
-        filtro.months.map(m =>
-            months = `${months}${m},`
-        )
-        months = `${months}]`.replace(',]', ']').replace('[', '').replace(']', '')
-
-        filtro.years.map(y =>
-            years = `${years}${y},`
-        )
-        years = `${years}]`.replace(',]', ']').replace('[', '').replace(']', '')
-        let filtro_url = `months=${months}&years=${years}`;
-        return fetchListGetURLParameters(`${current_url_api}/cotizaciones_por_ano_mes/?${filtro_url}`, options);
+        return fetchListGet(`${current_url_api}/cotizaciones_informe_gerencial`, options);
     }
 };
 

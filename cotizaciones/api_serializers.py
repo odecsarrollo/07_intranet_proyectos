@@ -489,7 +489,7 @@ class LiteralCotizacionConDetalle(serializers.ModelSerializer):
 
 
 class CotizacionListSerializer(serializers.ModelSerializer):
-    valores_oc = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True,default=0)
+    valores_oc = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True, default=0)
     color_tuberia_ventas = serializers.SerializerMethodField()
     porcentaje_tuberia_ventas = serializers.SerializerMethodField()
 
@@ -708,6 +708,52 @@ class CotizacionPagoProyectadoAcuerdoPagoPagoSerializer(serializers.ModelSeriali
         read_only_fields = fields
 
 
+class CotizacionProyectosInformeGerenciaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Proyecto
+        fields = [
+            'id',
+            'id_proyecto',
+            'nombre',
+        ]
+
+        read_only_fields = fields
+
+
+class CotizacionPagoProyectadoAcuerdoPagoInformeGerenciaSerializer(serializers.ModelSerializer):
+    cliente_nombre = serializers.CharField(source='orden_compra.cotizacion.cliente.nombre', read_only=True)
+    cliente_nit = serializers.CharField(source='orden_compra.cotizacion.cliente.nit', read_only=True)
+    responsable = serializers.CharField(source='orden_compra.cotizacion.responsable.get_full_name', read_only=True)
+    orden_compra_fecha = serializers.CharField(source='orden_compra.orden_compra_fecha', read_only=True)
+    orden_compra_nro = serializers.CharField(source='orden_compra.orden_compra_nro', read_only=True)
+    recaudo = serializers.DecimalField(max_digits=12, decimal_places=2, default=0)
+    proyectos = CotizacionProyectosInformeGerenciaSerializer(
+        source='orden_compra.cotizacion.proyectos',
+        many=True,
+        read_only=True
+    )
+
+    class Meta:
+        model = CotizacionPagoProyectadoAcuerdoPago
+        fields = [
+            'id',
+            'motivo',
+            'cliente_nombre',
+            'proyectos',
+            'orden_compra_fecha',
+            'orden_compra_nro',
+            'proyectos',
+            'cliente_nit',
+            'responsable',
+            'recaudo',
+            'fecha_proyectada',
+            'valor_proyectado',
+            'porcentaje',
+            'requisitos'
+        ]
+        read_only_fields = fields
+
+
 class CotizacionPagoProyectadoAcuerdoPagoSerializer(serializers.ModelSerializer):
     pagos = CotizacionPagoProyectadoAcuerdoPagoPagoSerializer(many=True, read_only=True)
 
@@ -725,8 +771,28 @@ class CotizacionPagoProyectadoAcuerdoPagoSerializer(serializers.ModelSerializer)
         read_only_fields = fields
 
 
-class CotizacionPagoProyectadoSerializer(serializers.ModelSerializer):
-    acuerdos_pagos = CotizacionPagoProyectadoAcuerdoPagoSerializer(many=True, read_only=True, default=0)
+class CotizacionPagoProyectadoInformeGerencialSerializer(serializers.ModelSerializer):
+    cotizacion_estado = serializers.CharField(source='cotizacion.estado', read_only=True)
+    cotizacion_cliente_nombre = serializers.CharField(source='cotizacion.cliente.nombre', read_only=True)
+    cotizacion_cliente_nit = serializers.CharField(source='cotizacion.cliente.nit', read_only=True)
+    cotizacion_responsable = serializers.CharField(source='cotizacion.responsable.get_full_name', read_only=True)
+
+    class Meta:
+        model = CotizacionPagoProyectado
+        fields = [
+            'id',
+            'valor_orden_compra',
+            'orden_compra_fecha',
+            'orden_compra_nro',
+            'cotizacion_estado',
+            'cotizacion_cliente_nit',
+            'cotizacion_cliente_nombre',
+            'cotizacion_responsable',
+        ]
+        read_only_fields = fields
+
+
+class CotizacionPagoProyectadoSerializer(CustomSerializerMixin, serializers.ModelSerializer):
     orden_compra_archivo_filename = serializers.SerializerMethodField()
     orden_compra_archivo_size = serializers.SerializerMethodField()
     orden_compra_archivo_extension = serializers.SerializerMethodField()
@@ -781,6 +847,10 @@ class CotizacionPagoProyectadoSerializer(serializers.ModelSerializer):
         read_only_fields = fields
 
 
+class CotizacionPagoProyectadoConDetalleSerializer(CotizacionPagoProyectadoSerializer):
+    acuerdos_pagos = CotizacionPagoProyectadoAcuerdoPagoSerializer(many=True, read_only=True, default=0)
+
+
 class CotizacionConDetalleSerializer(CotizacionSerializer):
     literales = LiteralCotizacionConDetalle(many=True, read_only=True)
     proyectos = ProyectoCotizacionConDetalleSerializer(many=True, read_only=True)
@@ -793,7 +863,7 @@ class CotizacionConDetalleSerializer(CotizacionSerializer):
         context={'quitar_campos': ['cliente_nombre', 'cliente']}
     )
     mis_documentos = ArchivoCotizacionSerializer(many=True, read_only=True)
-    pagos_proyectados = CotizacionPagoProyectadoSerializer(many=True, read_only=True)
+    pagos_proyectados = CotizacionPagoProyectadoConDetalleSerializer(many=True, read_only=True)
 
 
 class CotizacionInformeGerenciaSerializer(serializers.ModelSerializer):

@@ -24,7 +24,6 @@ class Form extends Component {
         const datos_formulario = _.omit(item, 'imagen');
         let datos_a_subir = new FormData();
         _.mapKeys(datos_formulario, (item, key) => {
-            console.log(item);
             datos_a_subir.append(key, item);
         });
         if (item.imagen) {

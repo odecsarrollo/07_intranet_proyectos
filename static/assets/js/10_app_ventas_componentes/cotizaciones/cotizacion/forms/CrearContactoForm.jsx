@@ -23,8 +23,6 @@ let CrearContactoForm = memo(props => {
         clientes,
         error
     } = props;
-    console.log(error, 'el error')
-    console.log(props, 'los props')
     const myValues = useSelector(state => selector(state, 'nuevo_cliente', ''));
     const {nuevo_cliente} = myValues;
     return (

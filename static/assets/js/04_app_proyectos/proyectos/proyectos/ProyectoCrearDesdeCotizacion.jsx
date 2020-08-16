@@ -245,7 +245,6 @@ const CotizacionAbrirCarpetaLista = memo(props => {
     const cargarDatos = () => dispatch(actions.fetchCotizacionesPidiendoCarpeta({
         callback: response => {
             setLista(_.mapKeys(response, 'id'));
-            console.log('cargó las carpetas')
         }
     }));
 

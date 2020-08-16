@@ -1,3 +1,21 @@
+export const ORDEN_COMPRA_COTIZACION_ACUERDO_PAGO_TYPES = {
+    create: 'create_orden_compra_cotizacion_acuerdo_pago',
+    delete: 'delete_orden_compra_cotizacion_acuerdo_pago',
+    fetch_all: 'fetch_ordenes_compras_cotizaciones_acuerdos_pagos',
+    fetch: 'fetch_orden_compra_cotizacion_acuerdo_pago',
+    clear: 'clear_ordenes_compras_cotizaciones_acuerdos_pagos',
+    update: 'update_orden_compra_cotizacion_acuerdo_pago',
+};
+
+export const ORDEN_COMPRA_COTIZACION_TYPES = {
+    create: 'create_orden_compra_cotizacion',
+    delete: 'delete_orden_compra_cotizacion',
+    fetch_all: 'fetch_ordenes_compras_cotizaciones',
+    fetch: 'fetch_orden_compra_cotizacion',
+    clear: 'clear_ordenes_compras_cotizaciones',
+    update: 'update_orden_compra_cotizacion',
+};
+
 export const UNIDAD_MEDIDA_CATALOGO_TYPES = {
     create: 'create_unidad_medida_catalogo',
     delete: 'delete_unidad_medida_catalogo',

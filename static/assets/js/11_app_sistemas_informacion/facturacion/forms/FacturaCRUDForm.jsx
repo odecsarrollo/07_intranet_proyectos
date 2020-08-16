@@ -19,7 +19,6 @@ let FacturaCRUDForm = memo(props => {
         modal_open,
         singular_name,
     } = props;
-    console.log(initialValues)
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(actions.fetchColaboradoresnVendedores());

@@ -144,12 +144,17 @@ const ConsecutivoProyectoTabla = (props) => {
         }
         return () => dispatch(actions.clearProyectos());
     }, [rango_actual, busqueda_abierto]);
-
     if (busqueda_tipo_proyecto !== 'TODO') {
         list = _.pickBy(list, proyecto => proyecto.id_proyecto.substring(0, 2) === busqueda_tipo_proyecto)
     }
     if (busqueda_abierto !== 'TODO') {
-        list = _.pickBy(list, proyecto => proyecto.mis_literales.filter(l => l.abierto === (busqueda_abierto === 'SI')).length > 0)
+        list = _.pickBy(
+            list,
+            proyecto => proyecto.mis_literales.filter(
+                l => l.abierto === (busqueda_abierto === 'SI')
+                ).length > 0 ||
+                proyecto.mis_literales.length === 0
+        )
     }
     let literales_sin_sincronizar = [];
     _.map(list, proyecto => {

@@ -145,7 +145,6 @@ const CotizacionCondicionInicioProyecto = props => {
     const dispatch = useDispatch();
     const classes = useStyles();
     const permisos_archivos = useTengoPermisos(ARCHIVOS_COTIZACIONES);
-    console.log(permisos_archivos,'MIS PERMISOS')
     const permisos_ordenes_compra = useTengoPermisos(PAGO_PROYECTADO_OC);
     const [mostrar_add_nueva_orden_compra, setMostrarAddNuevaOrdenCompra] = useState(false);
     const [mostrar_add_nueva_cotizacion, setMostrarAddNuevaCotizacion] = useState(false);

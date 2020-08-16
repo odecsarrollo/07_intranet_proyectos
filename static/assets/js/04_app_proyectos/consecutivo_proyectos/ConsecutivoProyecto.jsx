@@ -1,6 +1,5 @@
-import React, {useEffect} from 'react';
-import {useDispatch, useSelector} from "react-redux";
-import * as actions from "../../01_actions/01_index";
+import React from 'react';
+import {useSelector} from "react-redux";
 import {PROYECTOS} from "../../permisos";
 import Tabla from './ConsecutivoProyectoTabla';
 

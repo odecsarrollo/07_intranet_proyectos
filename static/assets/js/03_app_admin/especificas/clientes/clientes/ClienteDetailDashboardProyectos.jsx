@@ -8,7 +8,6 @@ const ClienteDetailDashboardProyectos = (props) => {
     const dispatch = useDispatch();
     const {cliente_id} = props;
     const proyectos = useSelector(state => state.proyectos);
-    console.log(proyectos);
     const permisos = useTengoPermisos(PROYECTOS);
     const cargarDatos = () => {
         dispatch(actions.fetchProyectosCliente(cliente_id));

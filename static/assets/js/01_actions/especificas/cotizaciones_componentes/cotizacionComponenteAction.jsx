@@ -100,7 +100,6 @@ export const adicionarSeguimientoCotizacionComponente = (
         params.append('descripcion', descripcion);
         params.append('tipo_seguimiento', tipo_seguimiento);
         if (fecha) {
-            console.log(typeof fecha)
             params.append('fecha', fecha);
         }
         if (fecha_verificacion_proximo_seguimiento) {

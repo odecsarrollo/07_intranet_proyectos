@@ -19,11 +19,15 @@ export * from './clientes/clientesAction';
 export * from './clientes/clientesContactosAction';
 export * from './clientes/canalesDistribucionAction';
 export * from './clientes/tiposIndustriasAction';
+
 export * from './cotizaciones/cotizacionesAction';
+export * from './cotizaciones/ordenesCompraCotizacionesAction';
+export * from './cotizaciones/ordenesCompraCotizacionAcuerdoPagoAction';
 export * from './cotizaciones/cotizacionesSeguimientoAction';
 export * from './cotizaciones/archivosCotizacionesAction';
 export * from './cotizaciones/condicionesInicioProyectoAction';
 export * from './cotizaciones/condicionesIniciosProyectosCotizacionesAction';
+
 export * from './configuraciones/configuracionCostosAction';
 export * from './geografia/paisesAction';
 export * from './geografia/ciudadesAction';

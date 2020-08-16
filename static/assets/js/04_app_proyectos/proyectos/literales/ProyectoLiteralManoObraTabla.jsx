@@ -11,7 +11,6 @@ const SelectTable = selectTableHOC(Table);
 
 const Tabla = (props) => {
     let data = props.list;
-    console.log(data)
     const {
         selection,
         getTrGroupProps,

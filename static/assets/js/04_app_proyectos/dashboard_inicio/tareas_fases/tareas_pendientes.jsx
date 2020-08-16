@@ -96,7 +96,6 @@ class TareasPendientesList extends Component {
             label_modo,
             modo
         } = this.props;
-        console.log(fases_tareas)
         const {estado, literal} = this.state;
         const lista_tareas_actual = this.obtenerListaTareas(fases_tareas);
 

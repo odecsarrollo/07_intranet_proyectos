@@ -91,7 +91,8 @@ import facturaCargueDetalleReducer from './especificas/cargues_detalles/facturas
 import itemsFacturaCargueDetalleReducer from './especificas/cargues_detalles/itemFacturaReducer';
 
 import seguimientoCargueReducer from './especificas/cargues_catalogos/seguimientoCargueReducer';
-
+import ordenesCompraCotizacionesReducer from './especificas/cotizaciones/ordenesCompraCotizacionesReducer';
+import acuerdosPagosOrdenesCompraCotizacionesReducer from './especificas/cotizaciones/ordenesCompraCotizacionesReducer';
 
 import apiRestReducer from './generales/ApiRestServicesReducer';
 
@@ -128,8 +129,12 @@ const rootReducer = combineReducers({
         clientes_tipos_industrias: clientesTiposIndustriasReducer,
         clientes_contactos: clientesContactosReducer,
         clientes_canales: clientesCanalesDistribucionReducer,
+
         cotizaciones: cotizacionesReducer,
         cotizaciones_seguimientos: cotizacionesSeguimientosReducer,
+        cotizaciones_ordenes_compras: ordenesCompraCotizacionesReducer,
+        cotizaciones_ordenes_compras_acuerdos_pagos: acuerdosPagosOrdenesCompraCotizacionesReducer,
+
         configuracion_costos: configuracionCostos,
         archivos_cotizaciones: cotizacionesArchivosReducer,
         condiciones_inicios_proyectos: cotizacionesCondicionesInicioProyectosReducer,

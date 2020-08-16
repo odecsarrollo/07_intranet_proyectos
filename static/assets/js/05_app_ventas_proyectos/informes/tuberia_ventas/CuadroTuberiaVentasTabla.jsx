@@ -1,4 +1,5 @@
 import React, {memo} from 'react';
+import {Link} from "react-router-dom";
 import crudHOC from "../../../00_utilities/components/HOC_CRUD2";
 import InformationDisplayDialog from "../../../00_utilities/components/ui/dialog/InformationDisplayDialog";
 
@@ -51,7 +52,14 @@ const Tabla = (props) => {
                         maxWidth: 100,
                         minWidth: 100,
                         filterMethod: (filter, row) => `${row._original.unidad_negocio}-${row._original.nro_cotizacion}`.includes(filter.value.toUpperCase()),
-                        Cell: row => <div>{row.original.unidad_negocio}-{row.original.nro_cotizacion}</div>
+                        Cell: row => <div>
+                            <Link
+                                to={`/app/ventas_proyectos/cotizaciones/cotizaciones/detail/${row.original.id}`}
+                                target={'_blank'}
+                            >
+                                {row.original.unidad_negocio}-{row.original.nro_cotizacion}
+                            </Link>
+                        </div>
                     },
                     {
                         Header: "Cliente",
@@ -111,7 +119,7 @@ const List = memo((props) => {
 });
 
 const InformeTunelVentasTabla = memo(props => {
-    const {cotizaciones_seleccionardas: {campo_valor, lista, estado, responsable}, limpiarLista} = props;
+    const {cotizaciones_seleccionardas: {campo_valor, lista, estado, responsable, id}, limpiarLista} = props;
     return <InformationDisplayDialog
         onCerrar={limpiarLista}
         is_open={lista.length > 0}

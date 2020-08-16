@@ -35,7 +35,7 @@ const FileListItem = memo(props => {
             <td style={{padding: '4px'}}>{fechaFormatoUno(created)}</td>
             <td style={{padding: '4px'}}>{creado_por_username}</td>
             <td style={{padding: '2px'}} className='text-center'>
-                <a href={archivo_url}>
+                <a href={archivo_url} target='_blank'>
                     <IconButton
                         style={{
                             margin: 0,
