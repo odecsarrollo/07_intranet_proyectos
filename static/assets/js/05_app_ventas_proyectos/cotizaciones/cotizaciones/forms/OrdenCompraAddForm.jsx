@@ -36,6 +36,7 @@ const OrdenCompraTableItem = (props) => {
             <td>
                 {fila.porcentaje > 0 &&
                 <textarea
+                    placeholder={`Indique aqui las condiciones requeridas para la aprobación de ${fila.motivo}`}
                     value={fila.requisitos}
                     onChange={(event) => addRequisitos(fila.id, event.target.value)}
                     rows={4}
