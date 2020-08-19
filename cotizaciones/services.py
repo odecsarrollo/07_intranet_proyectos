@@ -102,6 +102,12 @@ def cotizacion_envio_correo_notificacion_condiciones_inicio_completas(
                 cotizacion.unidad_negocio, cotizacion.nro_cotizacion,
                 condicion.descripcion, condicion.documento.name.split('.')[-1])
             msg.attach(nombre_archivo, condicion.documento.read())
+
+    documento_cotizaciones_para_enviar = cotizacion.mis_documentos.filter(tipo='COTIZACION')
+    for documento_cotizacion in documento_cotizaciones_para_enviar.all():
+        if documento_cotizacion.archivo:
+            msg.attach(documento_cotizacion.archivo.name.split('.')[-1], documento_cotizacion.archivo.read())
+
     try:
         msg.send()
     except Exception as e:
