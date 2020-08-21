@@ -5,7 +5,7 @@ import InformeAcuerdoPagoProyecto from './InformeAcuerdoPagoProyecto';
 const InformeIndex = memo((props) => {
     return (
         <Fragment>
-            <InformeVentaFacturacion/>
+            <InformeAcuerdoPagoProyecto/>
         </Fragment>
     )
 });

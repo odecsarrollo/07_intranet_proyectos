@@ -106,7 +106,7 @@ def cotizacion_envio_correo_notificacion_condiciones_inicio_completas(
     documento_cotizaciones_para_enviar = cotizacion.mis_documentos.filter(tipo='COTIZACION')
     for documento_cotizacion in documento_cotizaciones_para_enviar.all():
         if documento_cotizacion.archivo:
-            msg.attach(documento_cotizacion.archivo.name.split('.')[-1], documento_cotizacion.archivo.read())
+            msg.attach(documento_cotizacion.archivo.name, documento_cotizacion.archivo.read())
 
     try:
         msg.send()

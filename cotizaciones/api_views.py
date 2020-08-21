@@ -542,7 +542,8 @@ class CotizacionPagoProyectadoAcuerdoPagoViewSet(viewsets.ModelViewSet):
             motivo="MIGRADO"
         ).filter(
             Q(orden_compra__cotizacion__estado='Cierre (Aprobado)') &
-            (Q(valor_proyectado__gt=0) | Q(recaudo__gt=0))
+            (Q(valor_proyectado__gt=0) | Q(recaudo__gt=0)) &
+            Q(fecha_proyectada__isnull=False)
         )
         self.serializer_class = CotizacionPagoProyectadoAcuerdoPagoInformeGerenciaSerializer
         serializer = self.get_serializer(lista, many=True)

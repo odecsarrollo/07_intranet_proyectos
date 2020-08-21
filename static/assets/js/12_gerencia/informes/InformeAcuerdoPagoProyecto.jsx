@@ -21,6 +21,9 @@ const InformeAcuerdoPagoProyecto = props => {
     }
     const data = _.map(acuerdos_pagos, a => ({
         ...a,
+        "año": a.fecha_proyectada ? new Date(a.fecha_proyectada).getUTCFullYear() : '',
+        "mes": a.fecha_proyectada ? new Date(a.fecha_proyectada).getUTCMonth() : '',
+        "dia": a.fecha_proyectada ? new Date(a.fecha_proyectada).getUTCDay() : '',
         motivo: motivos_nuevo_nombre[a.motivo],
         por_cobrar: a.valor_proyectado - a.recaudo,
         proyectos: a.proyectos.map(p =>
@@ -40,62 +43,71 @@ const InformeAcuerdoPagoProyecto = props => {
         return () => dispatch(clearOrdenesComprasCotizacionesAcuerdosPagos());
     }, [])
     return <div>
-        {/*<Pivot2*/}
-        {/*    consulto={consulto}*/}
-        {/*    report={{*/}
-        {/*        dataSource: {data},*/}
-        {/*        options: {grid: {type: "classic", showTotals: "off"}},*/}
-        {/*        formats: [*/}
-        {/*            {*/}
-        {/*                name: "",*/}
-        {/*                thousandsSeparator: '.',*/}
-        {/*                decimalSeparator: ',',*/}
-        {/*                decimalPlaces: 0,*/}
-        {/*                currencySymbol: "$"*/}
-        {/*            }*/}
-        {/*        ],*/}
-        {/*        slice: {*/}
-        {/*            rows: [*/}
-        {/*                {*/}
-        {/*                    "uniqueName": "orden_compra_nro",*/}
-        {/*                    "sort": "asc"*/}
-        {/*                },*/}
-        {/*                {*/}
-        {/*                    "uniqueName": "cliente_nombre",*/}
-        {/*                    "sort": "asc"*/}
-        {/*                },*/}
-        {/*                {*/}
-        {/*                    "uniqueName": "proyectos",*/}
-        {/*                    "sort": "asc"*/}
-        {/*                },*/}
-        {/*            ],*/}
-        {/*            columns: [*/}
-        {/*                {*/}
-        {/*                    "uniqueName": "motivo",*/}
-        {/*                    "sort": "asc"*/}
-        {/*                }*/}
-        {/*            ],*/}
-        {/*            measures: [*/}
-        {/*                {*/}
-        {/*                    "uniqueName": "valor_proyectado",*/}
-        {/*                    "aggregation": "sum"*/}
-        {/*                }*/}
-        {/*            ],*/}
-        {/*            drills: {*/}
-        {/*                "drillAll": false*/}
-        {/*            }*/}
-        {/*        },*/}
-        {/*    }}*/}
-        {/*    toolbar={true}*/}
-        {/*/>*/}
-        <PivotTableUI
-            onChange={s => {
-                delete s.data
-                setTableState(s)
+        <Pivot2
+            consulto={consulto}
+            report={{
+                dataSource: {data},
+                options: {grid: {type: "flat", showTotals: "off", showGrandTotals: "off"}},
+                slice: {
+                    rows: [
+                        {
+                            "uniqueName": "año",
+                            "sort": "asc"
+                        },
+                        {
+                            "uniqueName": "mes",
+                            "sort": "asc"
+                        },
+                        {
+                            "uniqueName": "dia",
+                            "sort": "asc"
+                        },
+                        {
+                            "uniqueName": "orden_compra_nro",
+                            "sort": "asc"
+                        },
+                        {
+                            "uniqueName": "cliente_nombre",
+                            "sort": "asc"
+                        },
+                        {
+                            "uniqueName": "cliente_nit",
+                            "sort": "asc"
+                        },
+                        {
+                            "uniqueName": "proyectos",
+                            "sort": "asc"
+                        },
+                        {
+                            "uniqueName": "motivo",
+                            "sort": "asc"
+                        },
+                        {
+                            "uniqueName": "porcentaje",
+                            "sort": "asc"
+                        },
+                    ],
+                    measures: [
+                        {
+                            "uniqueName": "valor_proyectado",
+                            "aggregation": "sum"
+                        }
+                    ],
+                    drills: {
+                        "drillAll": false
+                    }
+                },
             }}
-            data={data}
-            {...table_state}
+            toolbar={true}
         />
+        {/*<PivotTableUI*/}
+        {/*    onChange={s => {*/}
+        {/*        delete s.data*/}
+        {/*        setTableState(s)*/}
+        {/*    }}*/}
+        {/*    data={data}*/}
+        {/*    {...table_state}*/}
+        {/*/>*/}
     </div>
 }
 

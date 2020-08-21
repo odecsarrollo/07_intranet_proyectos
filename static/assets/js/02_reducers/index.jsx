@@ -92,7 +92,8 @@ import itemsFacturaCargueDetalleReducer from './especificas/cargues_detalles/ite
 
 import seguimientoCargueReducer from './especificas/cargues_catalogos/seguimientoCargueReducer';
 import ordenesCompraCotizacionesReducer from './especificas/cotizaciones/ordenesCompraCotizacionesReducer';
-import acuerdosPagosOrdenesCompraCotizacionesReducer from './especificas/cotizaciones/ordenesCompraCotizacionesReducer';
+import acuerdosPagosOrdenesCompraCotizacionesReducer
+    from './especificas/cotizaciones/ordenesCompraCotizacionAcuerdoPagoReducer';
 
 import apiRestReducer from './generales/ApiRestServicesReducer';
 
