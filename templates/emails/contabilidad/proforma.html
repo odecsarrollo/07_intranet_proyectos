@@ -144,7 +144,7 @@
                     <td style="border: none" colspan="2">SUBTOTAL</td>
                     <td style="border: none"></td>
                     <td style="border: none"></td>
-                    <td class="numero">{{ anticipo.valor_total_sin_impuesto|floatformat:2|intcomma|add:anticipo.impuesto|floatformat:2|intcomma }} {{ anticipo.divisa }}</td>
+                    <td class="numero">{{ subtotal|floatformat:2|intcomma }} {{ anticipo.divisa }}</td>
                 </tr>
             </table>
         </div>

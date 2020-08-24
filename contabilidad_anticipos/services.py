@@ -233,7 +233,8 @@ def proforma_cobro_generar_pdf(
     configuracion = ProformaConfiguracion.objects.first()
     context = {
         "configuracion": configuracion,
-        "anticipo": anticipo
+        "anticipo": anticipo,
+        "subtotal": anticipo.valor_total_sin_impuesto + anticipo.impuesto
     }
     output_anticipo = generar_base_pdf(
         request,
