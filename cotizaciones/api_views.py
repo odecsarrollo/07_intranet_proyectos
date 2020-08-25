@@ -378,6 +378,46 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
         serializer = self.get_serializer(self.get_object())
         return Response(serializer.data)
 
+    # @action(detail=True, methods=['post'])
+    # def adicionar_pago_proyectado_desde_vieja(self, request, pk=None):
+    #     self.serializer_class = CotizacionConDetalleSerializer
+    #     self.queryset = self.detail_queryset
+    #     cotizacion = Cotizacion.objects.get(pk=pk)
+    #     orden_compra_archivo = cotizacion.orden_compra_archivo
+    #     if not orden_compra_archivo:
+    #         orden_compra_archivo = request.FILES.get('orden_compra_archivo')
+    #     orden_compra_fecha = request.POST.get('orden_compra_fecha', None)
+    #     valor_orden_compra = request.POST.get('valor_orden_compra', None)
+    #     orden_compra_nro = request.POST.get('orden_compra_nro', None)
+    #     plan_pago = request.POST.get('plan_pago', None)
+    #     from .services import cotizacion_add_pago_proyectado
+    #     pago_proyectado = cotizacion_add_pago_proyectado(
+    #         cotizacion_id=pk,
+    #         orden_compra_fecha=orden_compra_fecha,
+    #         orden_compra_nro=orden_compra_nro,
+    #         valor_orden_compra=valor_orden_compra,
+    #         orden_compra_archivo=orden_compra_archivo,
+    #         user_id=self.request.user.id,
+    #         no_enviar_correo=True
+    #     )
+    #
+    #     cotizacion.orden_compra_archivo = None
+    #     cotizacion.orden_compra_fecha = None
+    #     cotizacion.orden_compra_nro = None
+    #     cotizacion.valor_orden_compra = 0
+    #     cotizacion.save()
+    #
+    #     acuerdos_de_pago = json.loads(plan_pago)
+    #     for pp in json.loads(plan_pago):
+    #         pago_proyectado.acuerdos_pagos.create(
+    #             motivo=acuerdos_de_pago[pp].get('motivo'),
+    #             fecha_proyectada=acuerdos_de_pago[pp].get('fecha_proyectada'),
+    #             valor_proyectado=acuerdos_de_pago[pp].get('valor_proyectado'),
+    #             porcentaje=acuerdos_de_pago[pp].get('porcentaje')
+    #         )
+    #     serializer = self.get_serializer(self.get_object())
+    #     return Response(serializer.data)
+
     @action(detail=True, methods=['post'])
     def adicionar_pago_proyectado(self, request, pk=None):
         self.serializer_class = CotizacionConDetalleSerializer
@@ -408,7 +448,8 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
                 creado_por_id=self.request.user.id,
                 fecha_proyectada=fecha_proyectada_date,
                 valor_proyectado=acuerdos_de_pago[pp].get('valor_proyectado'),
-                porcentaje=acuerdos_de_pago[pp].get('porcentaje')
+                porcentaje=acuerdos_de_pago[pp].get('porcentaje'),
+                requisitos=acuerdos_de_pago[pp].get('requisitos')
             )
         serializer = self.get_serializer(self.get_object())
         return Response(serializer.data)
