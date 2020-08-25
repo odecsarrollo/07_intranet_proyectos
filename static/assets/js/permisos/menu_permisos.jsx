@@ -1,3 +1,9 @@
+export const MENU_GERENCIA_PERMISSIONS = {
+    menu_gerencia_informe_ventas: 'menu_gerencia_informe_ventas',
+    menu_gerencia_informe_acuerdo_pagos_valores: 'menu_gerencia_informe_acuerdo_pagos_valores',
+}
+
+
 export const MENU_ADMIN_PERMISSIONS = {
     admin_permisos: 'menu_admin_permisos',
     admin_permisos_grupos: 'menu_admin_permisos_grupos',

@@ -59,6 +59,15 @@ class MenuProyectosPermission(models.Model):
         )
 
 
+class MenuGerenciaPermission(models.Model):
+    class Meta:
+        managed = False
+        permissions = (
+            ('menu_gerencia_informe_ventas', 'Menu Gerencia Informe Ventas'),
+            ('menu_gerencia_informe_acuerdo_pagos_valores', 'Menu Gerencia Acuerdos de Pagos Valores'),
+        )
+
+
 class MenuVentasProyectosPermission(models.Model):
     class Meta:
         managed = False
