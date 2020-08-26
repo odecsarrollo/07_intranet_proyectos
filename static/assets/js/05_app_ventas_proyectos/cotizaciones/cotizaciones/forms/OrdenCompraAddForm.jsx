@@ -111,7 +111,8 @@ let OrdenCompraAddForm = memo(props => {
         modal_open,
         singular_name,
         cotizacion,
-        change
+        change,
+        convertir_anterior = false
     } = props;
     const porcentaje_total = _.map(forma_pago).reduce((suma, elemento) => parseFloat(suma) + parseFloat(elemento['porcentaje']), 0);
     const forma_pago_total = _.map(forma_pago).reduce((suma, elemento) => parseFloat(suma) + parseFloat(elemento['valor_proyectado']), 0);
@@ -169,7 +170,13 @@ let OrdenCompraAddForm = memo(props => {
         })
     }
 
-    const addOrdenCompra = (value) => dispatch(actions.adicionarOrdenCompraCotizacion(cotizacion.id, value, {callback: onCancel}));
+    const addOrdenCompra = (value) => {
+        if (initialValues) {
+            dispatch(actions.adicionarOrdenCompraCotizacionDesdeVieja(cotizacion.id, value, {callback: onCancel}))
+        } else {
+            dispatch(actions.adicionarOrdenCompraCotizacion(cotizacion.id, value, {callback: onCancel}))
+        }
+    }
     const valor_ofertado_restante = cotizacion.valor_ofertado - (cotizacion.valores_oc === undefined ? 0 : cotizacion.valores_oc)
     return (
         <MyFormTagModal
@@ -180,7 +187,7 @@ let OrdenCompraAddForm = memo(props => {
             initialValues={initialValues}
             submitting={submitting || porcentaje_total !== 100}
             modal_open={modal_open}
-            pristine={pristine}
+            pristine={pristine && !convertir_anterior}
             element_type={singular_name}
         >
             <div className="col-12">
@@ -211,6 +218,7 @@ let OrdenCompraAddForm = memo(props => {
                 nombre='Nro. Orden Compra'
                 name='orden_compra_nro'
                 className="col-12 col-md-4"
+                disabled={initialValues && !!initialValues.orden_compra_nro}
                 case='U'/>
             <div>
                 {((initialValues && !initialValues.orden_compra_archivo_url) || !initialValues) &&

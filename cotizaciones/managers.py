@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import DecimalField
 from django.db.models import ExpressionWrapper
+from django.db.models import Min
 from django.db.models import OuterRef
 from django.db.models import Subquery
 from django.db.models import Sum
@@ -85,7 +86,10 @@ class CotizacionQuerySet(models.QuerySet):
             'proyectos__mis_literales__cotizaciones',
             'cotizaciones_adicionales',
             'cotizaciones_adicionales__contacto_cliente',
-        ).annotate(valores_oc=Coalesce(Sum('pagos_proyectados__valor_orden_compra'), 0))
+        ).annotate(
+            fecha_oc=Min('pagos_proyectados__orden_compra_fecha'),
+            valores_oc=Coalesce(Sum('pagos_proyectados__valor_orden_compra'), 0)
+        )
 
     def lista_tuberia_ventas(self):
         return self.filter(role='E')

@@ -115,6 +115,16 @@ export const adicionarOrdenCompraCotizacion = (id, values, options_action = {}) 
     }
 };
 
+export const adicionarOrdenCompraCotizacionDesdeVieja = (id, values, options_action = {}) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: response})
+        };
+        const options = {...options_action, dispatches, dispatch_method: dispatch};
+        return callApiMethodPostParameters(current_url_api, id, 'adicionar_pago_proyectado_desde_vieja', values, options)
+    }
+};
+
 export const adicionarPagoCotizacion = (id, values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {

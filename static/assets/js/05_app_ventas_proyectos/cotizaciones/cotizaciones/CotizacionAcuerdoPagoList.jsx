@@ -19,7 +19,13 @@ import {
 import CotizacionAcuerdoPagoAddPagoDialog from "./CotizacionAcuerdoPagoAddPagoDialog"
 import {ACUERDO_PAGO_COTIZACIONES, PAGO_PROYECTADO_OC} from "../../../permisos";
 import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
+import OrdenCompraAddForm from "./forms/OrdenCompraAddForm";
 
+import momentLocaliser from "react-widgets-moment";
+import moment from 'moment-timezone';
+moment.tz.setDefault("America/Bogota");
+moment.locale('es');
+momentLocaliser(moment);//Para convertir las oc viejas, luego podrá elimiarse
 
 const useStyles = makeStyles(theme => ({
     download_boton: {
@@ -152,7 +158,7 @@ const AcuerdoPago = (props) => {
 }
 
 
-const CotizacionOrdenComrpa = (props) => {
+const CotizacionOrdenCompra = (props) => {
     const {
         eliminarPago,
         eliminarOC,
@@ -161,11 +167,20 @@ const CotizacionOrdenComrpa = (props) => {
         orden_compra: {acuerdos_pagos},
         openAplicarPago,
         setAcuerdoPagoId,
-        setShowChangeFechaProyectada
+        setShowChangeFechaProyectada,
+        onConvertirFormasPagos
     } = props;
     const classes = useStyles();
     const {table} = useContext(StylesContext);
+    const permitir_convertir = acuerdos_pagos && acuerdos_pagos.length === 1 && acuerdos_pagos[0].motivo === 'MIGRADO';
     return <div className="row card p-4 m-1">
+        {/*{permitir_convertir && <span onClick={() => onConvertirFormasPagos(*/}
+        {/*    moment(orden_compra.orden_compra_fecha).toDate(),*/}
+        {/*    orden_compra.valor_orden_compra,*/}
+        {/*    orden_compra.orden_compra_nro,*/}
+        {/*    orden_compra.orden_compra_archivo,*/}
+        {/*    orden_compra.id*/}
+        {/*)}>Convertir</span>}*/}
         <div className="row">
             <div className="col-md-4">
                 <Typography variant="body1" gutterBottom color="primary">
@@ -228,9 +243,11 @@ const CotizacionAcuerdoPagoList = (props) => {
     const [show_add_pago, setAddPago] = useState(false)
     const [show_change_fecha_proyectada, setShowChangeFechaProyectada] = useState(false);
     const [fecha_proyectada_pago, setFechaProyectadaPago] = useState(null);
-    const [acuerdo_pago_id, setAcuerdoPagoId] = useState(null)
+    const [acuerdo_pago_id, setAcuerdoPagoId] = useState(null);
+    const [mostrar_add_nueva_orden_compra, setMostrarAddNuevaOrdenCompra] = useState(false);
+    const [tempo_base_oc_vieja, setTempoBaseOCVieja] = useState(null);
     const dispatch = useDispatch();
-    const {cotizacion: {pagos_proyectados, id}} = props;
+    const {cotizacion: {pagos_proyectados, id}, cotizacion} = props;
     const permisos_ordenes_compra = useTengoPermisos(PAGO_PROYECTADO_OC);
     const adicionarPago = (v) => {
         v.append('acuerdo_pago_id', acuerdo_pago_id)
@@ -241,6 +258,24 @@ const CotizacionAcuerdoPagoList = (props) => {
             }
         }));
     };
+
+    const onConvertirFormasPagos = (
+        orden_compra_fecha,
+        valor_orden_compra,
+        orden_compra_nro,
+        orden_compra_archivo_url,
+        orden_compra_anterior_id
+    ) => {
+        setTempoBaseOCVieja({
+            orden_compra_fecha,
+            valor_orden_compra,
+            orden_compra_nro,
+            orden_compra_archivo_url,
+            orden_compra_anterior_id
+        })
+        setMostrarAddNuevaOrdenCompra(true);
+    };
+
     const eliminarPago = (pago_id) => dispatch(eliminarPagoCotizacion(id, pago_id));
     const eliminarOC = (oc_id) => dispatch(eliminarOrdenCompraCotizacion(id, oc_id));
     const acuerdos_pagos = useCallback(
@@ -248,6 +283,17 @@ const CotizacionAcuerdoPagoList = (props) => {
         [show_change_fecha_proyectada]
     );
     return <div>
+        {mostrar_add_nueva_orden_compra && <OrdenCompraAddForm
+            cotizacion={cotizacion}
+            initialValues={tempo_base_oc_vieja}
+            modal_open={mostrar_add_nueva_orden_compra}
+            singular_name='Orden Compra'
+            onCancel={() => {
+                setMostrarAddNuevaOrdenCompra(false);
+                setTempoBaseOCVieja(null);
+            }}
+        />}
+
         {show_change_fecha_proyectada && <SiNoDialog
             can_on_si={fecha_proyectada_pago !== null}
             onSi={() => {
@@ -289,7 +335,7 @@ const CotizacionAcuerdoPagoList = (props) => {
             modal_open={show_add_pago}
             onSubmit={adicionarPago}
         />}
-        {pagos_proyectados.map(p => <CotizacionOrdenComrpa
+        {pagos_proyectados.map(p => <CotizacionOrdenCompra
             permisos={permisos_ordenes_compra}
             setShowChangeFechaProyectada={setShowChangeFechaProyectada}
             eliminarPago={eliminarPago}
@@ -297,6 +343,7 @@ const CotizacionAcuerdoPagoList = (props) => {
             orden_compra={p} key={p.id}
             openAplicarPago={() => setAddPago(true)}
             eliminarOC={eliminarOC}
+            onConvertirFormasPagos={onConvertirFormasPagos}
         />)}
     </div>
 }
