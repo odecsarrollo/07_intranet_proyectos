@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User, Permission, Group
 from django.db.models import Q
 from knox.models import AuthToken
-from rest_framework import viewsets, generics, permissions, serializers
+from rest_framework import viewsets, permissions, serializers
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from .api_serializers import (
@@ -10,6 +10,7 @@ from .api_serializers import (
     UserSerializer,
     UsuarioConDetalleSerializer
 )
+
 
 class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = User.objects.select_related(
@@ -152,6 +153,7 @@ class LoginViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'], permission_classes=[permissions.AllowAny, ])
     def cargar_usuario(self, request) -> Response:
+        self.queryset = self.queryset.using('read_only')
         if self.request.user.is_anonymous:
             serializer = UsuarioConDetalleSerializer(None, context={'request': request})
             return Response(serializer.data)

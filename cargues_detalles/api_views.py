@@ -35,12 +35,13 @@ class FacturaDetalleViewSet(viewsets.ModelViewSet):
         return super().retrieve(request, *args, **kwargs)
 
     def list(self, request, *args, **kwargs):
+        self.queryset = self.queryset.using('read_only')
         return super().list(request, *args, **kwargs)
 
     @action(detail=False, http_method_names=['get', ])
     def facturas_por_cliente(self, request):
         cliente_id = self.request.GET.get('cliente_id')
-        lista = self.queryset.filter(cliente_id=cliente_id)
+        lista = self.queryset.using('read_only').filter(cliente_id=cliente_id)
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
@@ -48,9 +49,9 @@ class FacturaDetalleViewSet(viewsets.ModelViewSet):
     def facturacion_componentes_trimestre(self, request):
         import datetime
         before_date = datetime.datetime.now() - datetime.timedelta(days=100)
-        colaboradores = self.queryset.values_list('colaborador_id', flat=True).filter(
+        colaboradores = self.queryset.using('read_only').values_list('colaborador_id', flat=True).filter(
             tipo_documento__in=['FV', 'FEV']).distinct()
-        lista = self.queryset.filter(
+        lista = self.queryset.using('read_only').filter(
             Q(tipo_documento__in=['FV', 'FEV', 'NCE', 'NV']) &
             Q(fecha_documento__gte=datetime.datetime(before_date.year, before_date.month, 1).date()) &
             (Q(colaborador_id__in=colaboradores) | Q(colaborador_id__isnull=True))
@@ -60,7 +61,7 @@ class FacturaDetalleViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, http_method_names=['get', ])
     def facturacion_por_ano_mes(self, request):
-        items = MovimientoVentaDetalle.objects.values('factura_id').filter(
+        items = MovimientoVentaDetalle.objects.using('read_only').values('factura_id').filter(
             no_afecta_ingreso=False,
             factura_id=OuterRef('id')
         ).annotate(
@@ -71,7 +72,7 @@ class FacturaDetalleViewSet(viewsets.ModelViewSet):
         )
         months = self.request.GET.get('months').split(',')
         years = self.request.GET.get('years').split(',')
-        lista = self.queryset.annotate(
+        lista = self.queryset.using('read_only').annotate(
             valor_total_items=ExpressionWrapper(
                 Subquery(items.values('total_items')),
                 output_field=DecimalField(max_digits=12)
@@ -86,7 +87,7 @@ class FacturaDetalleViewSet(viewsets.ModelViewSet):
     def facturacion_por_rango_fechas(self, request):
         fecha_inicial = self.request.GET.get('fecha_inicial')
         fecha_final = self.request.GET.get('fecha_final')
-        lista = self.queryset.filter(
+        lista = self.queryset.using('read_only').filter(
             fecha_documento__gte=fecha_inicial,
             fecha_documento__lte=fecha_final
         )
@@ -122,7 +123,7 @@ class MovimientoVentaDetalleViewSet(viewsets.ModelViewSet):
     def por_rango_fechas(self, request):
         fecha_inicial = self.request.GET.get('fecha_inicial')
         fecha_final = self.request.GET.get('fecha_final')
-        lista = self.queryset.filter(
+        lista = self.queryset.using('read_only').filter(
             factura__fecha_documento__gte=fecha_inicial,
             factura__fecha_documento__lte=fecha_final
         )
@@ -144,7 +145,7 @@ class MovimientoVentaDetalleViewSet(viewsets.ModelViewSet):
     def items_por_cliente_historico(self, request):
         cliente_id = self.request.GET.get('cliente_id')
         parametro = self.request.GET.get('parametro')
-        lista = self.queryset.filter(
+        lista = self.queryset.using('read_only').filter(
             Q(factura__cliente_id=cliente_id) &
             (Q(item__id_referencia__icontains=parametro) | Q(item__descripcion__icontains=parametro))
         ).distinct()

@@ -55,6 +55,10 @@ class HojaTrabajoDiarioViewSet(viewsets.ModelViewSet):
     ).all()
     serializer_class = HojaTrabajoDiarioSerializer
 
+    def list(self, request, *args, **kwargs):
+        self.queryset = self.queryset.using('read_only')
+        return super().list(request, *args, **kwargs)
+
     def retrieve(self, request, *args, **kwargs):
         self.serializer_class = HojaTrabajoDiarioConDetalleSerializer
         return super().retrieve(request, *args, **kwargs)
@@ -67,7 +71,7 @@ class HojaTrabajoDiarioViewSet(viewsets.ModelViewSet):
 
         gestiona_otros = request.user.has_perm('mano_obra.para_otros_hojatrabajodiario')
         listar_autogestionados = request.user.has_perm('mano_obra.list_hojatrabajodiario_solo_autogestionados')
-
+        self.queryset = self.queryset.using('read_only')
         if gestiona_otros:
             qs = self.queryset
         elif listar_autogestionados:
@@ -142,7 +146,7 @@ class HoraHojaTrabajoViewSet(HoraHojaTrabajoPDFMixin, viewsets.ModelViewSet):
     @action(detail=False, http_method_names=['get', ])
     def horas_por_literal(self, request):
         literal_id = request.GET.get('literal_id')
-        lista = self.queryset.filter(literal_id=literal_id).all()
+        lista = self.queryset.using('read_only').filter(literal_id=literal_id).all()
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
@@ -150,7 +154,7 @@ class HoraHojaTrabajoViewSet(HoraHojaTrabajoPDFMixin, viewsets.ModelViewSet):
     def autogestionadas_x_fechas(self, request):
         fecha_inicial = request.GET.get('fecha_inicial')
         fecha_final = request.GET.get('fecha_final')
-        lista = self.queryset.filter(autogestionada=True).all()
+        lista = self.queryset.using('read_only').filter(autogestionada=True).all()
         if fecha_inicial and fecha_final:
             lista = lista.filter(hoja__fecha__gte=fecha_inicial, hoja__fecha__lte=fecha_final)
         else:
@@ -163,7 +167,7 @@ class HoraHojaTrabajoViewSet(HoraHojaTrabajoPDFMixin, viewsets.ModelViewSet):
         fecha_inicial = request.GET.get('fecha_inicial')
         fecha_final = request.GET.get('fecha_final')
         colaborador_id = request.GET.get('colaborador_id')
-        qs = self.queryset
+        qs = self.queryset.using('read_only')
 
         if fecha_final and fecha_final and qs:
             qs = qs.filter(hoja__fecha__gte=fecha_inicial, hoja__fecha__lte=fecha_final)

@@ -28,6 +28,10 @@ class CategoriaProductoViewSet(viewsets.ModelViewSet):
         self.serializer_class = CategoriaProductoConDetalleSerializer
         return super().update(request, *args, **kwargs)
 
+    def list(self, request, *args, **kwargs):
+        self.queryset = self.queryset.using('read_only')
+        return super().list(request, *args, **kwargs)
+
     @action(detail=True, methods=['post'])
     def adicionar_quitar_categoria_dos_banda_eurobelt(self, request, pk=None):
         from .services import categoria_producto_adicionar_quitar_relacion_categorias_dos_banda_eurobelt

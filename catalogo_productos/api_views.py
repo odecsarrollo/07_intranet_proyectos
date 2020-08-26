@@ -25,7 +25,7 @@ class ItemVentaCatalogoViewSet(viewsets.ModelViewSet):
     def listar_x_parametro(self, request):
         parametro = request.GET.get('parametro')
         search_fields = ['nombre_catalogo', 'referencia_catalogo', 'margen__proveedor__nombre']
-        qs = query_varios_campos(self.queryset, search_fields, parametro)
+        qs = query_varios_campos(self.queryset.using('read_only'), search_fields, parametro)
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
@@ -33,7 +33,7 @@ class ItemVentaCatalogoViewSet(viewsets.ModelViewSet):
     def listar_x_parametro_activos(self, request):
         parametro = request.GET.get('parametro')
         search_fields = ['nombre_catalogo', 'referencia_catalogo']
-        qs = query_varios_campos(self.queryset, search_fields, parametro).filter(
+        qs = query_varios_campos(self.queryset.using('read_only'), search_fields, parametro).filter(
             Q(activo=True) &
             (
                     (Q(unidades_disponibles__gt=0) & Q(origen='SIS_INF'))
@@ -51,7 +51,7 @@ class ItemVentaCatalogoViewSet(viewsets.ModelViewSet):
         search_fields = ['nombre_catalogo', 'referencia_catalogo', 'margen__proveedor__nombre']
         qs = self.queryset
         if parametro and parametro.upper() != 'TODO':
-            qs = query_varios_campos(self.queryset, search_fields, parametro)
+            qs = query_varios_campos(self.queryset.using('read_only'), search_fields, parametro)
         # if con_costos_mayores_sistema_informacion:
         #qs = qs.filter(item_sistema_informacion__isnull=False)
         qs = qs.filter(origen=origen)

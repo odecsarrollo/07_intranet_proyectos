@@ -58,6 +58,10 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
         self.serializer_class = CotizacionComponenteConDetalleSerializer
         return super().update(request, *args, **kwargs)
 
+    def list(self, request, *args, **kwargs):
+        self.queryset = self.queryset.using('read_only')
+        return super().list(request, *args, **kwargs)
+
     def destroy(self, request, *args, **kwargs):
         cotizacion = self.get_object()
         if cotizacion.estado == 'INI' and (cotizacion.nro_consecutivo is None):
@@ -319,7 +323,7 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
     @action(detail=False, http_method_names=['get', ])
     def cotizaciones_tuberia_ventas(self, request):
         self.serializer_class = CotizacionComponenteTuberiaVentasSerializer
-        lista = CotizacionComponente.objects.prefetch_related(
+        lista = CotizacionComponente.objects.using('read_only').prefetch_related(
             'responsable',
             'responsable__mi_colaborador',
             'creado_por',
@@ -336,7 +340,7 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
     def cotizaciones_por_cliente_para_relacionar_factura(self, request):
         cliente_id = self.request.GET.get('cliente_id')
         self.serializer_class = CotizacionComponenteConDetalleSerializer
-        lista = self.queryset.filter(
+        lista = self.queryset.using('read_only').filter(
             Q(cliente_id=cliente_id) &
             Q(estado__in=['PRO', 'FIN', 'ENV', 'REC'])
         )
@@ -353,7 +357,7 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
     def cotizaciones_en_edicion_asesor(self, request):
         user = self.request.user
         self.serializer_class = CotizacionComponenteConDetalleSerializer
-        lista = self.queryset.filter(estado='INI')
+        lista = self.queryset.using('read_only').filter(estado='INI')
         if not user.is_superuser:
             lista = self.queryset.filter(estado='INI').filter(
                 (Q(responsable__isnull=True) & Q(creado_por=user)) |
@@ -402,7 +406,7 @@ class ItemCotizacionComponenteViewSet(viewsets.ModelViewSet):
     def items_por_cliente_historico(self, request):
         cliente_id = self.request.GET.get('cliente_id')
         parametro = self.request.GET.get('parametro')
-        lista = self.queryset.filter(
+        lista = self.queryset.using('read_only').filter(
             Q(cotizacion__cliente_id=cliente_id) &
             (
                     Q(descripcion__icontains=parametro) |

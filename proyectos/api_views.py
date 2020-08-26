@@ -40,13 +40,17 @@ class ArchivoLiteralViewSet(viewsets.ModelViewSet):
     queryset = ArchivoLiteral.objects.select_related('literal', 'creado_por').all()
     serializer_class = ArchivoLiteralSerializer
 
+    def list(self, request, *args, **kwargs):
+        self.queryset = self.queryset.using('read_only')
+        return super().list(request, *args, **kwargs)
+
     def perform_create(self, serializer):
         serializer.save(creado_por=self.request.user)
 
     @action(detail=False, http_method_names=['get', ])
     def listar_x_literal(self, request):
         literal_id = request.GET.get('literal_id')
-        qs = self.get_queryset().filter(literal_id=literal_id)
+        qs = self.queryset.using('read_only').filter(literal_id=literal_id)
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
@@ -55,13 +59,17 @@ class ArchivoProyectosViewSet(viewsets.ModelViewSet):
     queryset = ArchivoProyecto.objects.select_related('proyecto', 'creado_por').all()
     serializer_class = ArchivoProyectoSerializer
 
+    def list(self, request, *args, **kwargs):
+        self.queryset = self.queryset.using('read_only')
+        return super().list(request, *args, **kwargs)
+
     def perform_create(self, serializer):
         serializer.save(creado_por=self.request.user)
 
     @action(detail=False, http_method_names=['get', ])
     def listar_x_proyecto(self, request):
         proyecto_id = request.GET.get('proyecto_id')
-        qs = self.get_queryset().filter(proyecto_id=proyecto_id)
+        qs = self.queryset.using('read_only').filter(proyecto_id=proyecto_id)
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
@@ -101,6 +109,7 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         self.serializer_class = ProyectoSerializer
+        self.queryset = self.queryset.using('read_only')
         from .services import proyecto_correr_actualizacion_clientes
         proyecto_correr_actualizacion_clientes()
         return super().list(request, *args, **kwargs)
@@ -108,7 +117,7 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
     @action(detail=False, http_method_names=['get', ])
     def proyectos_por_cliente(self, request):
         cliente_id = self.request.GET.get('cliente_id')
-        lista = self.queryset.filter(cliente_id=cliente_id)
+        lista = self.queryset.using('read_only').filter(cliente_id=cliente_id)
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
@@ -118,14 +127,14 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
             cantidad_conexiones=Count('cotizaciones')
         ).prefetch_related('cotizaciones').filter(
             cantidad_conexiones__gt=0
-        ).all()
+        ).using('read_only').all()
         serializer = self.get_serializer(self.queryset, many=True)
         return Response(serializer.data)
 
     @action(detail=False, http_method_names=['get', ])
     def listar_rangos_consecutivos_por_ano(self, request):
         listado = []
-        qs = Proyecto.objects.values_list('id_proyecto', flat=True).exclude(id_proyecto__in=['OP99999', 'OP10168'])
+        qs = Proyecto.objects.using('read_only').values_list('id_proyecto', flat=True).exclude(id_proyecto__in=['OP99999', 'OP10168'])
         [listado.append(x[0:4]) for x in qs.all()]
         listado_dic = {}
         for x in set(listado):
@@ -141,7 +150,7 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
         tipo_proyecto = request.GET.get('tipo_proyecto')
         abierto = request.GET.get('abierto')
         rango_actual = request.GET.get('rango_actual')
-        qs = Proyecto.objects.select_related('cliente').prefetch_related(
+        qs = Proyecto.objects.using('read_only').select_related('cliente').prefetch_related(
             'cotizaciones',
             'cotizaciones__cotizaciones_adicionales',
             'mis_literales',
@@ -163,7 +172,7 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'])
     def listar_consecutivo_proyectos_id(self, request, pk=None):
-        qs = Proyecto.objects.select_related('cliente').prefetch_related(
+        qs = Proyecto.objects.using('read_only').select_related('cliente').prefetch_related(
             'cotizaciones',
             'cotizaciones__cotizaciones_adicionales',
             'mis_literales',
@@ -183,7 +192,7 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
         qs = None
         search_fields = ['id_proyecto', 'nombre']
         if search_fields:
-            qs = query_varios_campos(self.queryset, search_fields, parametro)
+            qs = query_varios_campos(self.queryset.using('read_only'), search_fields, parametro)
         self.serializer_class = ProyectoConDetalleSerializer
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
@@ -212,13 +221,13 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
     @action(detail=False, http_method_names=['get', ])
     def abiertos(self, request):
         self.serializer_class = ProyectoSerializer
-        lista = self.get_queryset().filter(abierto=True).all()
+        lista = self.queryset.using('read_only').filter(abierto=True).all()
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
     @action(detail=False, http_method_names=['get', ])
     def con_literales_abiertos(self, request):
-        self.queryset = Proyecto.objects.all()
+        self.queryset = Proyecto.objects.using('read_only').all()
         self.serializer_class = ProyectoMaestraSerializer
         lista = self.queryset.filter(
             Q(abierto=True) &
@@ -290,13 +299,17 @@ class LiteralViewSet(viewsets.ModelViewSet):
     ).all()
     serializer_class = LiteralSerializer
 
+    def list(self, request, *args, **kwargs):
+        self.queryset = self.queryset.using('read_only')
+        return super().list(request, *args, **kwargs)
+
     @action(detail=False, http_method_names=['get', ])
     def listar_literales_x_parametro(self, request):
         parametro = request.GET.get('parametro')
         qs = None
         search_fields = ['id_literal', 'descripcion']
         if search_fields:
-            qs = query_varios_campos(self.queryset, search_fields, parametro)
+            qs = query_varios_campos(self.queryset.using('read_only'), search_fields, parametro)
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
@@ -413,12 +426,12 @@ class LiteralViewSet(viewsets.ModelViewSet):
     @action(detail=False, http_method_names=['get', ])
     def abiertos(self, request):
         lista = self.get_queryset().filter(abierto=True).all()
-        serializer = self.get_serializer(lista, many=True)
+        serializer = self.get_serializer(lista.using('read_only'), many=True)
         return Response(serializer.data)
 
     @action(detail=False, http_method_names=['get', ])
     def con_seguimiento(self, request):
-        tareas_vencidas = TareaFase.objects.values('fase_literal__literal_id').annotate(
+        tareas_vencidas = TareaFase.objects.using('read_only').values('fase_literal__literal_id').annotate(
             cantidad=ExpressionWrapper(
                 Count('id'),
                 output_field=IntegerField()
@@ -430,7 +443,7 @@ class LiteralViewSet(viewsets.ModelViewSet):
             estado=4
         ).distinct()
 
-        tareas_totales = TareaFase.objects.values('fase_literal__literal_id').annotate(
+        tareas_totales = TareaFase.objects.using('read_only').values('fase_literal__literal_id').annotate(
             cantidad=ExpressionWrapper(
                 Count('id'),
                 output_field=IntegerField()
@@ -439,7 +452,7 @@ class LiteralViewSet(viewsets.ModelViewSet):
             fase_literal__literal_id=OuterRef('id')
         ).distinct()
 
-        tareas_nueva = TareaFase.objects.values('fase_literal__literal_id').annotate(
+        tareas_nueva = TareaFase.objects.using('read_only').values('fase_literal__literal_id').annotate(
             cantidad=ExpressionWrapper(
                 Count('id'),
                 output_field=IntegerField()
@@ -449,7 +462,7 @@ class LiteralViewSet(viewsets.ModelViewSet):
             estado=1
         ).distinct()
 
-        tareas_pendientes = TareaFase.objects.values('fase_literal__literal_id').annotate(
+        tareas_pendientes = TareaFase.objects.using('read_only').values('fase_literal__literal_id').annotate(
             cantidad=ExpressionWrapper(
                 Count('id'),
                 output_field=IntegerField()
@@ -459,7 +472,7 @@ class LiteralViewSet(viewsets.ModelViewSet):
             estado=2
         ).distinct()
 
-        tareas_en_proceso = TareaFase.objects.values('fase_literal__literal_id').annotate(
+        tareas_en_proceso = TareaFase.objects.using('read_only').values('fase_literal__literal_id').annotate(
             cantidad=ExpressionWrapper(
                 Count('id'),
                 output_field=IntegerField()
@@ -469,7 +482,7 @@ class LiteralViewSet(viewsets.ModelViewSet):
             estado=3
         ).distinct()
 
-        tareas_terminadas = TareaFase.objects.values('fase_literal__literal_id').annotate(
+        tareas_terminadas = TareaFase.objects.using('read_only').values('fase_literal__literal_id').annotate(
             cantidad=ExpressionWrapper(
                 Count('id'),
                 output_field=IntegerField()
@@ -479,7 +492,7 @@ class LiteralViewSet(viewsets.ModelViewSet):
             fase_literal__literal_id=OuterRef('id')
         ).distinct()
 
-        lista = self.get_queryset().annotate(
+        lista = self.queryset.using('read_only').annotate(
             cantidad_tareas_vencidas=
             Coalesce(
                 ExpressionWrapper(
@@ -534,11 +547,11 @@ class LiteralViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, http_method_names=['get', ])
     def proyecto_abierto(self, request):
-        literales_abiertos = Literal.objects.filter(
+        literales_abiertos = Literal.objects.using('read_only').filter(
             proyecto_id=OuterRef('proyecto_id'),
             abierto=True
         )
-        lista = self.get_queryset().annotate(
+        lista = self.queryset.using('read_only').annotate(
             proyecto_con_literales_abierto=Exists(literales_abiertos)
         ).filter(
             proyecto__abierto=True,
@@ -553,12 +566,12 @@ class LiteralViewSet(viewsets.ModelViewSet):
         self.serializer_class = LiteralMaestraSerializer
         qs = None
         if proyecto_id:
-            qs = self.get_queryset().filter(proyecto_id=proyecto_id)
+            qs = self.queryset.using('read_only').filter(proyecto_id=proyecto_id)
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
     @action(detail=False, http_method_names=['get', ])
     def sin_sincronizar(self, request):
-        lista = self.get_queryset().filter(en_cguno=False).all()
+        lista = self.queryset.using('read_only').filter(en_cguno=False).all()
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)

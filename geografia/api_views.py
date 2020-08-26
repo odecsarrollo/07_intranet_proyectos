@@ -18,15 +18,27 @@ class PaisViewSet(viewsets.ModelViewSet):
     queryset = Pais.objects.all()
     serializer_class = PaisSerializer
 
+    def list(self, request, *args, **kwargs):
+        self.queryset = self.queryset.using('read_only')
+        return super().list(request, *args, **kwargs)
+
 
 class DepartamentoViewSet(viewsets.ModelViewSet):
     queryset = Departamento.objects.select_related('pais').all()
     serializer_class = DepartamentoSerializer
 
+    def list(self, request, *args, **kwargs):
+        self.queryset = self.queryset.using('read_only')
+        return super().list(request, *args, **kwargs)
+
 
 class CiudadViewSet(viewsets.ModelViewSet):
     queryset = Ciudad.objects.select_related('departamento', 'departamento__pais').all()
     serializer_class = CiudadSerializer
+
+    def list(self, request, *args, **kwargs):
+        self.queryset = self.queryset.using('read_only')
+        return super().list(request, *args, **kwargs)
 
     @action(detail=False, methods=['post'])
     def crear_ciudad_desde_cotizacion(self, request, pk=None):

@@ -10,9 +10,13 @@ class ColaboradorViewSet(viewsets.ModelViewSet):
     queryset = Colaborador.objects.all()
     serializer_class = ColaboradorSerializer
 
+    def list(self, request, *args, **kwargs):
+        self.queryset = self.queryset.using('read_only')
+        return super().list(request, *args, **kwargs)
+
     @action(detail=False, methods=['get'])
     def vendedores(self, request):
-        qs = self.queryset.filter(es_vendedor=True)
+        qs = self.queryset.using('read_only').filter(es_vendedor=True)
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 

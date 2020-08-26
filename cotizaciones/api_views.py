@@ -67,7 +67,7 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
         return super().update(request, *args, **kwargs)
 
     def list(self, request, *args, **kwargs):
-        self.queryset = Cotizacion.base.lista_cotizaciones()
+        self.queryset = Cotizacion.base.lista_cotizaciones().using('read_only')
         self.serializer_class = CotizacionListSerializer
         return super().list(request, *args, **kwargs)
 
@@ -75,7 +75,7 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
     @action(detail=False, http_method_names=['get', ])
     def cotizaciones_informe_gerencial(self, request):
         self.serializer_class = CotizacionInformeGerenciaSerializer
-        lista = Cotizacion.objects.select_related(
+        lista = Cotizacion.objects.using('read_only').select_related(
             'cliente',
             'responsable'
         ).filter(
@@ -100,14 +100,14 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
                     Q(cotizacion_inicial__isnull=False) &
                     Q(estado='Cierre (Aprobado)')
             )
-        ).all()
+        ).using('read_only').all()
         serializer = self.get_serializer(self.queryset, many=True)
         return Response(serializer.data)
 
     @action(detail=False, http_method_names=['get', ])
     def listar_cotizacion_abrir_carpeta(self, request):
         self.serializer_class = CotizacionParaAbrirCarpetaSerializer
-        qs = Cotizacion.objects.prefetch_related(
+        qs = Cotizacion.objects.using('read_only').prefetch_related(
             'cliente',
             'cotizacion_inicial__cliente'
         ).exclude(revisada=True).filter(estado='Cierre (Aprobado)')
@@ -116,6 +116,7 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
 
     @action(detail=False, http_method_names=['get', ])
     def listar_cotizaciones_x_parametro(self, request):
+        self.queryset = self.queryset.using('read_only')
         parametro = request.GET.get('parametro')
         qs = None
         search_fields = ['nro_cotizacion', 'unidad_negocio', 'estado']
@@ -127,14 +128,14 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
 
     @action(detail=False, http_method_names=['get', ])
     def listar_cotizaciones_agendadas(self, request):
-        qs = self.get_queryset().filter(fecha_entrega_pactada_cotizacion__isnull=False,
-                                        estado__in=['Cita/Generación Interés', 'Configurando Propuesta'])
+        qs = self.queryset.using('read_only').filter(fecha_entrega_pactada_cotizacion__isnull=False,
+                                                     estado__in=['Cita/Generación Interés', 'Configurando Propuesta'])
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
     @action(detail=False, http_method_names=['get', ])
     def listar_cotizaciones_tuberia_ventas(self, request):
-        self.queryset = Cotizacion.objects.select_related(
+        self.queryset = Cotizacion.objects.using('read_only').select_related(
             'cliente',
             'contacto_cliente',
             'cotizacion_inicial__cliente',
@@ -144,7 +145,7 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
             nro_pagos_proyectados=Count('pagos_proyectados')
         )
         self.serializer_class = CotizacionTuberiaVentaSerializer
-        qs = self.get_queryset().annotate(
+        qs = self.queryset.using('read_only').annotate(
             numero_condiciones_inicio=Count('condiciones_inicio_cotizacion')
         ).filter(
             Q(estado__in=[
@@ -177,7 +178,7 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
         month = int(filtro_mes) if filtro_mes else timezone.datetime.now().month
         current_date = timezone.datetime.now()
         current_quarter = int(ceil(current_date.month / 3))
-        _ordenes_compra = CotizacionPagoProyectado.objects.values('cotizacion_id').annotate(
+        _ordenes_compra = CotizacionPagoProyectado.objects.using('read_only').values('cotizacion_id').annotate(
             valor_oc=Sum('valor_orden_compra')
         ).filter(
             cotizacion_id=OuterRef('id'),
@@ -186,7 +187,7 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
             orden_compra_fecha__month=month
         ).distinct()
 
-        qsBase = Cotizacion.objects.select_related(
+        qsBase = Cotizacion.objects.using('read_only').select_related(
             'cliente',
             'contacto_cliente',
             'cotizacion_inicial__cliente',
@@ -533,13 +534,13 @@ class SeguimientoCotizacionViewSet(viewsets.ModelViewSet):
     @action(detail=False, http_method_names=['get', ])
     def listar_x_cotizacion(self, request):
         cotizacion_id = request.GET.get('cotizacion_id')
-        qs = self.get_queryset().filter(cotizacion_id=cotizacion_id)
+        qs = self.queryset.using('read_only').filter(cotizacion_id=cotizacion_id)
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
     @action(detail=False, http_method_names=['get', ])
     def listar_tareas_pendientes(self, request):
-        qs = SeguimientoCotizacion.objects.filter(
+        qs = SeguimientoCotizacion.objects.using('read_only').filter(
             tipo_seguimiento=2,
             tarea_terminada=False
         ).all()
@@ -557,7 +558,8 @@ class ArchivoCotizacionViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         from .services import archivo_cotizacion_eliminar
         archivo_cotizacion_eliminar(
-            archivo_cotizacion_id=self.get_object().id
+            archivo_cotizacion_id=self.get_object().id,
+            user_id=self.request.user.id
         )
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -574,7 +576,7 @@ class ArchivoCotizacionViewSet(viewsets.ModelViewSet):
     @action(detail=False, http_method_names=['get', ])
     def listar_x_cotizacion(self, request):
         cotizacion_id = request.GET.get('cotizacion_id')
-        qs = self.get_queryset().filter(cotizacion_id=cotizacion_id)
+        qs = self.queryset.using('read_only').filter(cotizacion_id=cotizacion_id)
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
@@ -585,7 +587,7 @@ class CotizacionPagoProyectadoAcuerdoPagoViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, http_method_names=['get', ])
     def acuerdos_pago_cotizacion_informe_gerencial(self, request):
-        lista = CotizacionPagoProyectadoAcuerdoPago.objects.select_related(
+        lista = CotizacionPagoProyectadoAcuerdoPago.objects.using('read_only').select_related(
             'orden_compra',
             'orden_compra__cotizacion',
             'orden_compra__cotizacion__cliente',
@@ -614,7 +616,7 @@ class CotizacionPagoProyectadoViewSet(viewsets.ModelViewSet):
     def ordenes_compra_cotizacion_informe_gerencial(self, request):
         months = self.request.GET.get('months').split(',')
         years = self.request.GET.get('years').split(',')
-        lista = CotizacionPagoProyectado.objects.prefetch_related(
+        lista = CotizacionPagoProyectado.objects.using('read_only').prefetch_related(
             'cotizacion',
             'cotizacion__responsable',
             'cotizacion__cliente',

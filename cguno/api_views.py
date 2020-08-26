@@ -44,7 +44,7 @@ class ColaboradorBiableViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def mi_colaborador(self, request):
-        qs = self.get_queryset().filter(
+        qs = self.queryset.using('read_only').filter(
             usuario_id=request.user.id
         ).distinct()
         serializer = self.get_serializer(qs, many=True)
@@ -52,19 +52,19 @@ class ColaboradorBiableViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, http_method_names=['get', ])
     def en_proyectos(self, request):
-        lista = self.queryset.filter(en_proyectos=True).all()
+        lista = self.queryset.using('read_only').filter(en_proyectos=True).all()
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
     @action(detail=False, http_method_names=['get', ])
     def en_proyectos_para_gestion_horas_trabajadas(self, request):
-        lista = self.queryset.filter(en_proyectos=True, autogestion_horas_trabajadas=False).all()
+        lista = self.queryset.using('read_only').filter(en_proyectos=True, autogestion_horas_trabajadas=False).all()
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
     @action(detail=False, http_method_names=['get', ])
     def en_proyectos_autogestion_horas_trabajadas(self, request):
-        lista = self.queryset.filter(en_proyectos=True, autogestion_horas_trabajadas=True).all()
+        lista = self.queryset.using('read_only').filter(en_proyectos=True, autogestion_horas_trabajadas=True).all()
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
 
@@ -149,6 +149,6 @@ class ColaboradorCostoMesBiableViewSet(viewsets.ModelViewSet):
         fecha_final = request.GET.get('fecha_final')
         qs = None
         if fecha_final and fecha_final:
-            qs = self.queryset.filter(lapso__gte=fecha_inicial, lapso__lte=fecha_final)
+            qs = self.queryset.using('read_only').filter(lapso__gte=fecha_inicial, lapso__lte=fecha_final)
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)

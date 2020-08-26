@@ -13,6 +13,6 @@ class CorreoAplicacionViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def por_aplicacion(self, request):
         aplicacion = self.request.GET.get('aplicacion')
-        qs = self.get_queryset().filter(aplicacion=aplicacion).distinct()
+        qs = self.queryset.using('read_only').filter(aplicacion=aplicacion).distinct()
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)

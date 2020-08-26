@@ -21,7 +21,7 @@ class PermissionViewSet(viewsets.ModelViewSet):
         permissions_list = self.queryset.filter(
             Q(user=request.user) |
             Q(group__user=request.user)
-        ).distinct()
+        ).distinct().using('read_only')
         serializer = self.get_serializer(permissions_list, many=True)
         return Response(serializer.data)
 

@@ -62,7 +62,7 @@ class BandaEurobeltCostoEnsambladoViewSet(viewsets.ModelViewSet):
     serializer_class = BandaEurobeltCostoEnsambladoSerializer
 
     def list(self, request, *args, **kwargs):
-        costo = BandaEurobeltCostoEnsamblado.objects.filter(
+        costo = BandaEurobeltCostoEnsamblado.objects.using('read_only').filter(
             con_aleta=False,
             con_empujador=False,
             con_torneado=False
@@ -75,7 +75,7 @@ class BandaEurobeltCostoEnsambladoViewSet(viewsets.ModelViewSet):
                 con_torneado=False
             )
 
-        costo = BandaEurobeltCostoEnsamblado.objects.filter(
+        costo = BandaEurobeltCostoEnsamblado.objects.using('read_only').filter(
             con_aleta=True,
             con_empujador=False,
             con_torneado=False
@@ -88,7 +88,7 @@ class BandaEurobeltCostoEnsambladoViewSet(viewsets.ModelViewSet):
                 con_torneado=False
             )
 
-        costo = BandaEurobeltCostoEnsamblado.objects.filter(
+        costo = BandaEurobeltCostoEnsamblado.objects.using('read_only').filter(
             con_aleta=True,
             con_empujador=True,
             con_torneado=False
@@ -101,7 +101,7 @@ class BandaEurobeltCostoEnsambladoViewSet(viewsets.ModelViewSet):
                 con_torneado=False
             )
 
-        costo = BandaEurobeltCostoEnsamblado.objects.filter(
+        costo = BandaEurobeltCostoEnsamblado.objects.using('read_only').filter(
             con_aleta=True,
             con_empujador=True,
             con_torneado=True
@@ -114,7 +114,7 @@ class BandaEurobeltCostoEnsambladoViewSet(viewsets.ModelViewSet):
                 con_torneado=True
             )
 
-        costo = BandaEurobeltCostoEnsamblado.objects.filter(
+        costo = BandaEurobeltCostoEnsamblado.objects.using('read_only').filter(
             con_aleta=True,
             con_empujador=False,
             con_torneado=True
@@ -127,7 +127,7 @@ class BandaEurobeltCostoEnsambladoViewSet(viewsets.ModelViewSet):
                 con_torneado=True
             )
 
-        costo = BandaEurobeltCostoEnsamblado.objects.filter(
+        costo = BandaEurobeltCostoEnsamblado.objects.using('read_only').filter(
             con_aleta=False,
             con_empujador=True,
             con_torneado=False
@@ -140,7 +140,7 @@ class BandaEurobeltCostoEnsambladoViewSet(viewsets.ModelViewSet):
                 con_torneado=False
             )
 
-        costo = BandaEurobeltCostoEnsamblado.objects.filter(
+        costo = BandaEurobeltCostoEnsamblado.objects.using('read_only').filter(
             con_aleta=False,
             con_empujador=True,
             con_torneado=True
@@ -153,7 +153,7 @@ class BandaEurobeltCostoEnsambladoViewSet(viewsets.ModelViewSet):
                 con_torneado=True
             )
 
-        costo = BandaEurobeltCostoEnsamblado.objects.filter(
+        costo = BandaEurobeltCostoEnsamblado.objects.using('read_only').filter(
             con_aleta=False,
             con_empujador=False,
             con_torneado=True
@@ -189,7 +189,7 @@ class BandaEurobeltViewSet(viewsets.ModelViewSet):
     @action(detail=False, http_method_names=['get', ])
     def listar_x_componente(self, request):
         componente_id = request.GET.get('componente_id')
-        qs = self.queryset.filter(componentes__id=componente_id)
+        qs = self.queryset.using('read_only').filter(componentes__id=componente_id)
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
@@ -197,7 +197,7 @@ class BandaEurobeltViewSet(viewsets.ModelViewSet):
     def listar_x_parametro(self, request):
         parametro = request.GET.get('parametro')
         search_fields = ['nombre', 'referencia']
-        qs = query_varios_campos(self.queryset, search_fields, parametro)
+        qs = query_varios_campos(self.queryset.using('read_only'), search_fields, parametro)
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
@@ -205,7 +205,7 @@ class BandaEurobeltViewSet(viewsets.ModelViewSet):
     def listar_x_parametro_activos(self, request):
         parametro = request.GET.get('parametro')
         search_fields = ['nombre', 'referencia']
-        qs = query_varios_campos(self.queryset, search_fields, parametro).filter(activo=True)
+        qs = query_varios_campos(self.queryset.using('read_only'), search_fields, parametro).filter(activo=True)
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
@@ -249,6 +249,10 @@ class CategoriaDosViewSet(viewsets.ModelViewSet):
         self.serializer_class = CategoriaDosConDetalleSerializer
         return super().update(request, *args, **kwargs)
 
+    def list(self, request, *args, **kwargs):
+        self.queryset = self.queryset.using('read_only')
+        return super().list(request, *args, **kwargs)
+
     @action(detail=True, methods=['post'])
     def adicionar_quitar_categoria_producto(self, request, pk=None):
         from .services import categoria_dos_adicionar_quitar_relacion_categoria_producto
@@ -274,6 +278,10 @@ class TipoBandaViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         self.serializer_class = CategoriaDosConDetalleSerializer
         return super().update(request, *args, **kwargs)
+
+    def list(self, request, *args, **kwargs):
+        self.queryset = self.queryset.using('read_only')
+        return super().list(request, *args, **kwargs)
 
     @action(detail=True, methods=['post'])
     def adicionar_quitar_categoria_producto(self, request, pk=None):
@@ -323,6 +331,10 @@ class ComponenteViewSet(viewsets.ModelViewSet):
                 '_error': 'El componente no puede ser eliminado porque existen bandas (%s) que lo contienen' % componente.bandas.count()})
         return super().destroy(request, *args, **kwargs)
 
+    def list(self, request, *args, **kwargs):
+        self.queryset = self.queryset.using('read_only')
+        return super().list(request, *args, **kwargs)
+
     @action(detail=True, methods=['post'])
     def adicionar_quitar_serie_compatible(self, request, pk=None):
         from .services import componente_banda_eurobelt_adicionar_quitar_serie_compatible
@@ -351,7 +363,7 @@ class ComponenteViewSet(viewsets.ModelViewSet):
     def listar_x_parametro(self, request):
         parametro = request.GET.get('parametro')
         search_fields = ['nombre', 'referencia']
-        qs = query_varios_campos(self.queryset, search_fields, parametro)
+        qs = query_varios_campos(self.queryset.using('read_only'), search_fields, parametro)
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
@@ -359,7 +371,7 @@ class ComponenteViewSet(viewsets.ModelViewSet):
     def listar_x_parametro_activos(self, request):
         parametro = request.GET.get('parametro')
         search_fields = ['nombre', 'referencia']
-        qs = query_varios_campos(self.queryset, search_fields, parametro).filter(activo=True)
+        qs = query_varios_campos(self.queryset.using('read_only'), search_fields, parametro).filter(activo=True)
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
@@ -367,3 +379,7 @@ class ComponenteViewSet(viewsets.ModelViewSet):
 class GrupoEnsambladoViewSet(viewsets.ModelViewSet):
     queryset = GrupoEnsambladoBandaEurobelt.objects.all()
     serializer_class = GrupoEnsambladoSerializer
+
+    def list(self, request, *args, **kwargs):
+        self.queryset = self.queryset.using('read_only')
+        return super().list(request, *args, **kwargs)
