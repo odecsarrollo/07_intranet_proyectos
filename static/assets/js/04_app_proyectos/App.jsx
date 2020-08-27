@@ -28,12 +28,19 @@ import ReporteTres from "./proyectos/reportes/reporte_3/containers/reporte_3";
 
 import CotizacionesVsProyectos from "./cotizaciones_vs_proyectos/CotizacionVsProyecto";
 
+import TipoEquipoCRUD from './configuracion/tipos_equipos/TipoEquipoCRUD';
+import TipoEquipoDetail from './configuracion/tipos_equipos/TipoEquipoDetail';
+
 const App = () => {
     return (
         <Loading>
             <DrawerMenu lista_menu={<Menu/>} titulo='Ventas'>
                 <Switch>
                     <Route exact path='/app/proyectos/' component={ConcecutivoProyectosList}/>
+
+                    <Route exact path='/app/proyectos/configuracion/tipos_equipos' component={TipoEquipoCRUD}/>
+                    <Route exact path='/app/proyectos/configuracion/tipos_equipos/:id' component={TipoEquipoDetail}/>
+
 
                     <Route exact path='/app/proyectos/fases/list' component={FasesProyectosList}/>
 

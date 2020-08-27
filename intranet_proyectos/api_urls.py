@@ -23,6 +23,7 @@ from cotizaciones_componentes.api_urls import router as cotizaciones_componentes
 from correos_servicios.api_urls import router as correos_servicios_router
 from colaboradores.api_urls import router as colaboradores_router
 from cargues_detalles.api_urls import router as cargues_detalles_router
+from proyectos_equipos.urls import router as proyectos_equipos_router
 
 router = DefaultRouter()
 router.extend(proyectos_router)
@@ -49,3 +50,4 @@ router.extend(cotizaciones_componentes_router)
 router.extend(correos_servicios_router)
 router.extend(colaboradores_router)
 router.extend(cargues_detalles_router)
+router.extend(proyectos_equipos_router)

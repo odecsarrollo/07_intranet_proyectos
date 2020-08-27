@@ -136,6 +136,12 @@ const IndexApp = memo(props => {
                         icono='coins'
                         classes={classes}
                     />}
+                    {modulo_gerencia && <Boton
+                        nombre='Postventa'
+                        link='/app/postventa/'
+                        icono='coins'
+                        classes={classes}
+                    />}
                     <Boton
                         nombre='Mi Cuenta'
                         link='/app/cuenta/'

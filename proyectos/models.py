@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils import timezone
 from model_utils.models import TimeStampedModel
 from clientes.models import ClienteBiable
 from cotizaciones.models import Cotizacion

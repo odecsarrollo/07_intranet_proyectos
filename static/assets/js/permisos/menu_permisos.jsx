@@ -28,6 +28,7 @@ export const MENU_PROYECTOS_PERMISSIONS = {
     menu_proyectos_mano_obra_verificar_horas: 'menu_proyectos_mano_obra_verificar_horas',
     menu_proyectos_mano_obra_hojas_trabajo: 'menu_proyectos_mano_obra_hojas_trabajo',
     menu_proyectos_mano_obra_horas_hojas_trabajo: 'menu_proyectos_mano_obra_horas_hojas_trabajo',
+    menu_proyectos_configuracion_tipos_equipos: 'menu_proyectos_configuracion_tipos_equipos',
 };
 export const MENU_VENTAS_PROYECTOS_PERMISSIONS = {
     menu_ventas_proyectos_configuraciones: 'menu_ventas_proyectos_configuraciones',

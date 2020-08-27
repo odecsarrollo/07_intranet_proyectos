@@ -1,3 +1,11 @@
+export const TIPOS_EQUIPOS = {
+    add: 'add_tipoequipo',
+    delete: 'delete_tipoequipo',
+    change: 'change_tipoequipo',
+    list: 'list_tipoequipo',
+    detail: 'view_tipoequipo',
+};
+
 export const ORDENES_COMPRAS_COTIZACIONES_ACUERDOS_PAGOS = {
     add: 'add_cotizacionpagoproyectado',
     delete: 'delete_cotizacionpagoproyectado',

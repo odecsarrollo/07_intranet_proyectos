@@ -35,7 +35,6 @@ from .api_serializers import (
 from mano_obra.models import HoraHojaTrabajo, HoraTrabajoColaboradorLiteralInicial
 from .mixins import LiteralesPDFMixin
 
-
 class ArchivoLiteralViewSet(viewsets.ModelViewSet):
     queryset = ArchivoLiteral.objects.select_related('literal', 'creado_por').all()
     serializer_class = ArchivoLiteralSerializer
@@ -134,7 +133,8 @@ class ProyectoViewSet(LiteralesPDFMixin, viewsets.ModelViewSet):
     @action(detail=False, http_method_names=['get', ])
     def listar_rangos_consecutivos_por_ano(self, request):
         listado = []
-        qs = Proyecto.objects.using('read_only').values_list('id_proyecto', flat=True).exclude(id_proyecto__in=['OP99999', 'OP10168'])
+        qs = Proyecto.objects.using('read_only').values_list('id_proyecto', flat=True).exclude(
+            id_proyecto__in=['OP99999', 'OP10168'])
         [listado.append(x[0:4]) for x in qs.all()]
         listado_dic = {}
         for x in set(listado):
@@ -575,3 +575,5 @@ class LiteralViewSet(viewsets.ModelViewSet):
         lista = self.queryset.using('read_only').filter(en_cguno=False).all()
         serializer = self.get_serializer(lista, many=True)
         return Response(serializer.data)
+
+

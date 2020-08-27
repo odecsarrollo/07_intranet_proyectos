@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react';
 import MenuConsultas from './consultas';
 import MenuManoObra from './manoObra';
+import MenuConfiguracion from './MenuConfiguracion';
 import DrawerListItem from '../../00_utilities/components/ui/drawer/drawer_list_item';
 import useTengoPermisos from "../../00_utilities/hooks/useTengoPermisos";
 import {MENU_PROYECTOS_PERMISSIONS} from "../../permisos";
@@ -20,6 +21,7 @@ const Menu = () => {
         />
         <MenuManoObra permisos_menu={permisos_menu}/>
         <MenuConsultas permisos_menu={permisos_menu}/>
+        <MenuConfiguracion permisos_menu={permisos_menu}/>
         {/*{menu_proyectos_proyectos && <DrawerListItem*/}
         {/*    size='lg'*/}
         {/*    link='/app/proyectos/proyectos/list'*/}

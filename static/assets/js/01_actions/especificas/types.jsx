@@ -1,3 +1,12 @@
+export const TIPO_EQUIPO_TYPES = {
+    create: 'create_tipo_equipo',
+    delete: 'delete_tipo_equipo',
+    fetch_all: 'fetch_tipos_equipos',
+    fetch: 'fetch_tipo_equipo',
+    clear: 'clear_tipos_equipos',
+    update: 'update_tipo_equipo',
+};
+
 export const ORDEN_COMPRA_COTIZACION_ACUERDO_PAGO_TYPES = {
     create: 'create_orden_compra_cotizacion_acuerdo_pago',
     delete: 'delete_orden_compra_cotizacion_acuerdo_pago',

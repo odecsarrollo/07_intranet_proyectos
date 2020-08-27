@@ -55,6 +55,7 @@ MY_APPS = [
     'envios_emails.apps.EnviosEmailsConfig',
     'correos_servicios.apps.CorreosServiciosConfig',
     'colaboradores.apps.ColaboradoresConfig',
+    'proyectos_equipos.apps.ProyectosEquiposConfig',
 ]
 
 THIRD_PART_APPS = [

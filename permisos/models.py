@@ -56,6 +56,7 @@ class MenuProyectosPermission(models.Model):
             ('menu_proyectos_mano_obra_verificar_horas', 'Menu Proyectos Mano Obra Verificar Horas'),
             ('menu_proyectos_mano_obra_hojas_trabajo', 'Menu Proyectos Mano Obra Hojas de Trabajo'),
             ('menu_proyectos_mano_obra_horas_hojas_trabajo', 'Menu Proyectos Mano Obra Horas Hojas de Trabajo'),
+            ('menu_proyectos_configuracion_tipos_equipos', 'Menu Proyectos Configuracion Tipos Equipos'),
         )
 
 

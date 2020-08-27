@@ -4,7 +4,13 @@ from cargues_detalles.api_serializers import ItemsLiteralDetalleSerializer
 from cotizaciones.models import Cotizacion
 from intranet_proyectos.general_mixins.custom_serializer_mixins import CustomSerializerMixin
 from mano_obra.api_serializers import HoraHojaTrabajoSerializer, HoraTrabajoColaboradorLiteralInicialSerializer
-from .models import Proyecto, Literal, MiembroLiteral, ArchivoLiteral, ArchivoProyecto, FacturaLiteral
+from .models import (Proyecto,
+                     Literal,
+                     MiembroLiteral,
+                     ArchivoLiteral,
+                     ArchivoProyecto,
+                     FacturaLiteral,
+                     )
 
 
 class FacturaLiteralSerializer(serializers.ModelSerializer):
@@ -464,6 +470,7 @@ class ConsecutivoProyectoCotizacionAdicionalSerializer(serializers.ModelSerializ
 
 class ConsecutivoProyectoCotizacionSerializer(serializers.ModelSerializer):
     cotizaciones_adicionales = ConsecutivoProyectoCotizacionAdicionalSerializer(many=True, read_only=True)
+
     class Meta:
         model = Cotizacion
         fields = [
