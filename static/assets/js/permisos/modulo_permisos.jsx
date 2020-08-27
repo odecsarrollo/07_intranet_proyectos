@@ -8,4 +8,5 @@ export const MODULO_PERMISSIONS = {
     modulo_contabilidad: 'modulo_contabilidad',
     modulo_bandas_eurobelt: 'modulo_bandas_eurobelt',
     modulo_gerencia: 'modulo_gerencia',
+    modulo_postventa: 'modulo_postventa',
 };

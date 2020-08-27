@@ -1,3 +1,11 @@
+export const EQUIPOS_PROYECTOS = {
+    add: 'add_equipoproyecto',
+    delete: 'delete_equipoproyecto',
+    change: 'change_equipoproyecto',
+    list: 'list_equipoproyecto',
+    detail: 'view_equipoproyecto',
+};
+
 export const TIPOS_EQUIPOS = {
     add: 'add_tipoequipo',
     delete: 'delete_tipoequipo',

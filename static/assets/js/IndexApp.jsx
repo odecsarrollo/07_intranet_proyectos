@@ -71,7 +71,8 @@ const IndexApp = memo(props => {
         modulo_sistemas,
         modulo_contabilidad,
         modulo_bandas_eurobelt,
-        modulo_gerencia
+        modulo_gerencia,
+        modulo_postventa
     } = permisos_modulos;
     return <Loading>
         <div className="mt-3">
@@ -136,7 +137,7 @@ const IndexApp = memo(props => {
                         icono='coins'
                         classes={classes}
                     />}
-                    {modulo_gerencia && <Boton
+                    {modulo_postventa && <Boton
                         nombre='Postventa'
                         link='/app/postventa/'
                         icono='coins'

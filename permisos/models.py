@@ -102,4 +102,5 @@ class ModuloPermission(models.Model):
             ('modulo_contabilidad', 'Modulo Contabilidad'),
             ('modulo_bandas_eurobelt', 'Modulo Eurobelt'),
             ('modulo_gerencia', 'Modulo Gerencia'),
+            ('modulo_postventa', 'Modulo PostVenta'),
         )

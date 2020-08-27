@@ -1,5 +1,8 @@
 export * from './sistema_informacion_origen/sistemaInformacionOrigenAction';
-export * from './proyectos/tiposEquiposAction';
+
+export * from './proyectos_equipos/tiposEquiposAction';
+export * from './proyectos_equipos/equiposProyectosAction';
+
 export * from './proyectos/proyectosAction';
 export * from './proyectos/literalesAction';
 export * from './proyectos/miembrosLiteralesAction';

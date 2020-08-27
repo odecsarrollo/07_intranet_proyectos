@@ -1,3 +1,12 @@
+export const EQUIPO_PROYECTO_TYPES = {
+    create: 'create_equipo_proyecto',
+    delete: 'delete_equipo_proyecto',
+    fetch_all: 'fetch_equipos_proyectos',
+    fetch: 'fetch_equipo_proyecto',
+    clear: 'clear_equipos_proyectos',
+    update: 'update_equipo_proyecto',
+};
+
 export const TIPO_EQUIPO_TYPES = {
     create: 'create_tipo_equipo',
     delete: 'delete_tipo_equipo',

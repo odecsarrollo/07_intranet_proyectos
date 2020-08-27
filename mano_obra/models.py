@@ -39,6 +39,8 @@ class HoraHojaTrabajo(TimeStampedModel):
         permissions = [
             ("list_horahojatrabajo", "Can see list horas trabajos diario"),
             ("verificar_horahojatrabajo", "Can verificar horas trabajos diario"),
+            ("delete_autogestionadas_otro_horahojatrabajo", "Can delete horas trabajos diario autogestionadas por otros"),
+            ("update_autogestionadas_otro_horahojatrabajo", "Can update horas trabajos diario autogestionadas por otros"),
         ]
 
     @property

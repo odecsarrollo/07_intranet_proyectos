@@ -69,7 +69,35 @@ class TipoEquipoConDetalleSerializer(TipoEquipoSerializer):
 
 class EquipoProyectoSerializer(serializers.ModelSerializer):
     to_string = serializers.SerializerMethodField()
+    creado_por = serializers.HiddenField(default=serializers.CurrentUserDefault())
     creado_por_nombre = serializers.CharField(source='creado_por.username', read_only=True)
+
+    # def is_valid(self, raise_exception=False):
+    #     return super().is_valid(raise_exception)
+    #
+    # def validate(self, attrs):
+    #     return super().validate(attrs)
+    #
+    # def create(self, validated_data):
+    #     creado_por = validated_data.get('creado_por', None)
+    #     nro_identificacion = validated_data.get('nro_identificacion', None)
+    #     nombre = validated_data.get('nombre', None)
+    #     literal = validated_data.get('literal', None)
+    #     fecha_entrega = validated_data.get('fecha_entrega', None)
+    #     tipo_equipo = validated_data.get('tipo_equipo', None)
+    #     from .services import equipo_proyecto_create
+    #     equipo_nuevo = equipo_proyecto_create(
+    #         creado_por_id=creado_por.id,
+    #         nro_identificacion=nro_identificacion,
+    #         literal_id=literal.id,
+    #         nombre=nombre,
+    #         fecha_entrega=fecha_entrega,
+    #         tipo_equipo_id=tipo_equipo.id
+    #     )
+    #     return equipo_nuevo
+    #
+    # def update(self, instance, validated_data):
+    #     return super().update(instance, validated_data)
 
     def get_to_string(self, obj):
         return obj.nombre
@@ -84,7 +112,7 @@ class EquipoProyectoSerializer(serializers.ModelSerializer):
             'tipo_equipo',
             'fecha_entrega',
             'nro_identificacion',
-
+            'creado_por',
         ]
 
 

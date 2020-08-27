@@ -101,6 +101,16 @@ class HoraHojaTrabajoViewSet(HoraHojaTrabajoPDFMixin, viewsets.ModelViewSet):
     ).all()
     serializer_class = HoraHojaTrabajoSerializer
 
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance.autogestionada and instance.creado_por != request.user:
+            elimina_autogestionadas = request.user.has_perm('mano_obra.delete_autogestionadas_otro_horahojatrabajo')
+            if not elimina_autogestionadas:
+                raise serializers.ValidationError(
+                    {'_error': 'No puede eliminar esta hora de trabajo, es gestionada por el usuario que la creó'}
+                )
+        return super().destroy(request, *args, **kwargs)
+
     def perform_destroy(self, instance):
         if not instance.verificado or (not instance.autogestionada and instance.verificado):
             tasa = instance.hoja.tasa
@@ -131,6 +141,15 @@ class HoraHojaTrabajoViewSet(HoraHojaTrabajoPDFMixin, viewsets.ModelViewSet):
     def perform_create(self, serializer):
         instance = serializer.save(creado_por=self.request.user)
         self.ajusta_horas(instance)
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance.autogestionada and instance.creado_por != self.request.user:
+            update_autogestionadas = self.request.user.has_perm('mano_obra.update_autogestionadas_otro_horahojatrabajo')
+            if not update_autogestionadas:
+                raise serializers.ValidationError(
+                    {'_error': 'No puede editar una hora de trabajo gestionada por otro usuario'})
+        return super().update(request, *args, **kwargs)
 
     def perform_update(self, serializer):
         instance = serializer.save()

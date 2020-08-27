@@ -3,7 +3,6 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .models import TipoEquipo
-from .models import TipoEquipoDocumento
 from .serializers import (
     EquipoProyectoConDetalleSerializer,
     EquipoProyectoSerializer,
@@ -42,32 +41,42 @@ class TipoEquipoViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'])
     def upload_archivo(self, request, pk=None):
-        nombre_archivo = self.request.POST.get('nombre')
         self.serializer_class = TipoEquipoConDetalleSerializer
+        nombre_archivo = self.request.POST.get('nombre')
         archivo = self.request.FILES['archivo']
-        TipoEquipoDocumento.objects.create(
-            tipo_equipo_id=pk,
-            archivo=archivo,
+        from .services import tipo_equipo_upload_documento
+        tipo_equipo_upload_documento(
             nombre_archivo=nombre_archivo,
-            creado_por_id=self.request.user.id
+            archivo=archivo,
+            creado_por_id=self.request.user.id,
+            tipo_equipo_id=pk
         )
         serializer = self.get_serializer(self.get_object())
         return Response(serializer.data)
 
     @action(detail=True, methods=['post'])
     def delete_archivo(self, request, pk=None):
-        archivo_id = self.request.POST.get('archivo_id')
         self.serializer_class = TipoEquipoConDetalleSerializer
-        TipoEquipoDocumento.objects.filter(pk=archivo_id, tipo_equipo_id=pk).delete()
+        archivo_id = self.request.POST.get('archivo_id')
+        from .services import tipo_equipo_delete_documento
+        tipo_equipo_delete_documento(
+            archivo_id=archivo_id,
+            tipo_equipo_id=pk
+        )
         serializer = self.get_serializer(self.get_object())
         return Response(serializer.data)
 
     @action(detail=True, methods=['post'])
     def editar_archivo(self, request, pk=None):
+        self.serializer_class = TipoEquipoConDetalleSerializer
         nombre_archivo = self.request.POST.get('nombre')
         archivo_id = self.request.POST.get('archivo_id')
-        self.serializer_class = TipoEquipoConDetalleSerializer
-        TipoEquipoDocumento.objects.filter(pk=archivo_id, tipo_equipo_id=pk).update(nombre_archivo=nombre_archivo)
+        from .services import tipo_equipo_update_documento
+        tipo_equipo_update_documento(
+            tipo_equipo_id=pk,
+            archivo_id=archivo_id,
+            nombre_archivo=nombre_archivo
+        )
         serializer = self.get_serializer(self.get_object())
         return Response(serializer.data)
 

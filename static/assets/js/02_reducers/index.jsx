@@ -18,7 +18,10 @@ import fasesLiteralesReducer from './especificas/proyectos/fasesLiteralesReducer
 import tareasFasesReducer from './especificas/proyectos/tareasFasesReducer';
 import literalesReducer from "./especificas/proyectos/literalesReducer";
 import itemsLiteralesReducer from "./especificas/proyectos/itemsliteralesReducer";
-import tiposEquiposReducer from "./especificas/proyectos/tiposEquiposReducer";
+
+import tiposEquiposReducer from "./especificas/proyectos_equipos/tiposEquiposReducer";
+import equiposProyectosReducer from "./especificas/proyectos_equipos/equiposProyectosReducer";
+
 import colaboradoresReducer from "./especificas/cguno/colaboradoresReducer";
 import centrosCostosColaboradoresReducer from "./especificas/cguno/centrosCostosColaboradoresReducer";
 import itemsCgunoReducer from "./especificas/proyectos/itemsBiableReducer";
@@ -187,6 +190,7 @@ const rootReducer = combineReducers({
 
         seguimientos_cargues: seguimientoCargueReducer,
         tipos_equipos: tiposEquiposReducer,
+        equipos_proyectos: equiposProyectosReducer,
     })
 ;
 
