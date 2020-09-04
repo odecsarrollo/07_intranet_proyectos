@@ -3,6 +3,7 @@ const validate = values => {
 
     const requiredFields = [
         'nombre',
+        'sigla',
     ];
     requiredFields.map(field => {
         if (!values[field]) {

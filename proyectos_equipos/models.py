@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
+from model_utils.models import TimeStampedModel
 
 from proyectos.models import Literal
 
@@ -9,6 +10,7 @@ class TipoEquipo(models.Model):
     nombre = models.CharField(max_length=120)
     activo = models.BooleanField(default=True)
     creado_por = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True, db_column='crt_by')
+    sigla = models.CharField(unique=True, max_length=2)
 
     class Meta:
         db_table = 'tip_equip_proy'
@@ -36,16 +38,95 @@ class TipoEquipoDocumento(models.Model):
         ]
 
 
-class EquipoProyecto(models.Model):
-    nro_identificacion = models.BigIntegerField(unique=True, db_column='nro_id')
+class TipoEquipoClase(models.Model):
+    tipo_equipo = models.ForeignKey(
+        TipoEquipo,
+        on_delete=models.PROTECT,
+        related_name='clases_tipo_equipo',
+        db_column='tip_equ'
+    )
+    nombre = models.CharField(max_length=120)
+    sigla = models.CharField(unique=True, max_length=2)
+    activo = models.BooleanField(default=True)
+
+    class Meta:
+        db_table = 'tip_equip_clase'
+        unique_together = (('sigla', 'tipo_equipo'),)
+        permissions = [
+            ("list_tipoequipoclase", "Can list clases tipo equipo"),
+        ]
+
+
+class TipoEquipoCampo(models.Model):
+    TIPO_CHOICES = (
+        ('NUMBER', 'Número'),
+        ('TEXT', 'Texto'),
+        ('LIST', 'Lista'),
+    )
+    label = models.CharField(max_length=120)
+    tamano = models.PositiveIntegerField(default=100)
+    tamano_columna = models.PositiveIntegerField(default=12)
+    orden = models.PositiveIntegerField(default=0)
+    unidad_medida = models.CharField(max_length=100, db_column='um', null=True)
+    tipo = models.CharField(max_length=20, choices=TIPO_CHOICES, default='TEXT', db_column='tip')
+    tipo_equipo = models.ForeignKey(
+        TipoEquipo,
+        on_delete=models.PROTECT,
+        related_name='campos',
+        db_column='tip_equ'
+    )
+    opciones_list = models.TextField(null=True, db_column='lst_opt')
+
+    class Meta:
+        db_table = 'tip_equip_campos'
+        permissions = [
+            ("list_tipoequipocampo", "Can list campos tipo equipo"),
+        ]
+
+
+class EquipoProyecto(TimeStampedModel):
+    identificador = models.CharField(max_length=100, unique=True, db_column='ident')
+    nro_consecutivo = models.PositiveIntegerField(db_column='nro_conse')
+    literal = models.ForeignKey(
+        Literal,
+        related_name='equipos',
+        on_delete=models.PROTECT
+    )
     fecha_entrega = models.DateField(null=True, db_column='fec_entre')
-    literal = models.ForeignKey(Literal, related_name='equipos', on_delete=models.PROTECT)
+    fecha_fabricacion = models.DateField(null=True, db_column='fec_fabri')
     nombre = models.CharField(max_length=200)
-    tipo_equipo = models.ForeignKey(TipoEquipo, related_name='equipos', on_delete=models.PROTECT, db_column='tip_equ')
+    tipo_equipo_clase = models.ForeignKey(
+        TipoEquipoClase,
+        related_name='equipos',
+        on_delete=models.PROTECT,
+        db_column='tip_equ_cla'
+    )
     creado_por = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True, db_column='crt_by')
 
     class Meta:
         db_table = 'equip_proy'
+        unique_together = (('literal', 'nro_consecutivo'),)
         permissions = [
             ("list_equipoproyecto", "Can list equipos proyectos"),
+        ]
+
+
+class TipoEquipoCampoEquipo(models.Model):
+    equipo = models.ForeignKey(
+        EquipoProyecto,
+        on_delete=models.PROTECT,
+        related_name='campos_valores',
+        db_column='equ'
+    )
+    tamano = models.CharField(max_length=20)
+    tipo = models.CharField(max_length=20)
+    label = models.CharField(max_length=120)
+    valor = models.CharField(max_length=200)
+    unidad_medida = models.CharField(max_length=100, db_column='um')
+    opciones_list = models.TextField(null=True, db_column='lst_opt')
+
+    class Meta:
+        db_table = 'equip_proy_campos'
+        permissions = [
+            ("list_tipoequipocampoequipo", "Can list equipo poryecto campos"),
         ]

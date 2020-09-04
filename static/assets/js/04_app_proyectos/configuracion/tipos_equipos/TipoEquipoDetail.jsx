@@ -6,6 +6,9 @@ import * as actions from "../../../01_actions/01_index";
 import {TIPOS_EQUIPOS} from "../../../permisos";
 import ValidarPermisos from "../../../permisos/validar_permisos";
 import TipoEquipoDetailDocumento from './TipoEquipoDetailDocumento';
+import TipoEquipoClases from '../tipos_equipos_clases/TipoEquipoClaseCRUD';
+import TipoEquipoCampos from '../tipos_equipos_campos/TipoEquipoCampoCRUD';
+import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 
 const TipoEquipoDetail = props => {
     const dispatch = useDispatch();
@@ -34,14 +37,37 @@ const TipoEquipoDetail = props => {
                     className: 'col-12 col-md-4 col-xl-3'
                 },
                 {
+                    label: 'Sigla',
+                    text_value: tipo_equipo.sigla,
+                    className: 'col-12 col-md-4 col-xl-3'
+                },
+                {
                     label: 'Activo',
                     icon_value: tipo_equipo.activo ? 'check-circle' : null,
                     className: 'col-12 col-md-4 col-xl-3'
                 },
             ]}
         >
-            <TipoEquipoDetailDocumento tipo_equipo={tipo_equipo} permisos={permisos}
-                                       cargarTipoEquipo={() => cargarDatos()}/>
+            <Tabs>
+                <TabList>
+                    <Tab>Documentos</Tab>
+                    <Tab>Clases</Tab>
+                    <Tab>Campos</Tab>
+                </TabList>
+                <TabPanel>
+                    <TipoEquipoDetailDocumento
+                        tipo_equipo={tipo_equipo}
+                        permisos={permisos}
+                        cargarTipoEquipo={() => cargarDatos()}
+                    />
+                </TabPanel>
+                <TabPanel>
+                    <TipoEquipoClases tipo_equipo={tipo_equipo}/>
+                </TabPanel>
+                <TabPanel>
+                    <TipoEquipoCampos tipo_equipo={tipo_equipo}/>
+                </TabPanel>
+            </Tabs>
         </DetailLayout>
     </ValidarPermisos>
 };

@@ -5,6 +5,7 @@ import {
     fetchObject,
     deleteObject,
     createObject,
+    fetchListGetURLParameters
 } from '../../00_general_fuctions'
 
 const current_url_api = 'equipo_proyectos';
@@ -38,6 +39,20 @@ export const fetchEquiposProyectos = (options_action = {}) => {
             clear_action_type: limpiar_coleccion ? TYPES.clear : null
         };
         return fetchListGet(current_url_api, options);
+    }
+};
+export const fetchEquiposProyectosxLiteral = (literal_id, options_action = {}) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: TYPES.fetch_all, payload: {...response, ...options_action}})
+        };
+        const {limpiar_coleccion = true} = options_action;
+        const options = {
+            dispatches, ...options_action,
+            dispatch_method: dispatch,
+            clear_action_type: limpiar_coleccion ? TYPES.clear : null
+        };
+        return fetchListGetURLParameters(`${current_url_api}/listar_por_literal?literal_id=${literal_id}`, options);
     }
 };
 export const fetchEquipoProyecto = (id, options_action = {}) => {

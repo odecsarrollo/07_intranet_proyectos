@@ -56,6 +56,7 @@ MY_APPS = [
     'correos_servicios.apps.CorreosServiciosConfig',
     'colaboradores.apps.ColaboradoresConfig',
     'proyectos_equipos.apps.ProyectosEquiposConfig',
+    'postventa.apps.PostventaConfig',
 ]
 
 THIRD_PART_APPS = [
@@ -173,4 +174,4 @@ REST_KNOX = {
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_URLS_REGEX = r'^/api/.*$'
 CORS_ALLOW_CREDENTIALS = True
-#FIRST_DAY_OF_WEEK = 1
+# FIRST_DAY_OF_WEEK = 1

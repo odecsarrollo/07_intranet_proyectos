@@ -2,6 +2,8 @@ from rest_framework import serializers
 
 from proyectos_equipos.models import EquipoProyecto
 from proyectos_equipos.models import TipoEquipo
+from proyectos_equipos.models import TipoEquipoCampo
+from proyectos_equipos.models import TipoEquipoClase
 from proyectos_equipos.models import TipoEquipoDocumento
 
 
@@ -43,11 +45,55 @@ class TipoEquipoDocumentoSerializer(serializers.ModelSerializer):
         read_only_fields = fields
 
 
+class TipoEquipoClaseSerializer(serializers.ModelSerializer):
+    to_string = serializers.SerializerMethodField()
+
+    def get_to_string(self, obj):
+        return obj.nombre
+
+    class Meta:
+        model = TipoEquipoClase
+        fields = [
+            'id',
+            'to_string',
+            'nombre',
+            'tipo_equipo',
+            'sigla',
+            'activo'
+        ]
+        read_only_fields = ['documentos', 'creado_por']
+
+
+class TipoEquipoCampoSerializer(serializers.ModelSerializer):
+    to_string = serializers.SerializerMethodField()
+
+    def get_to_string(self, obj):
+        return obj.label
+
+    class Meta:
+        model = TipoEquipoCampo
+        fields = [
+            'id',
+            'to_string',
+            'label',
+            'tamano',
+            'tamano_columna',
+            'unidad_medida',
+            'tipo',
+            'orden',
+            'get_tipo_display',
+            'tipo_equipo',
+            'opciones_list'
+        ]
+        read_only_fields = ['documentos', 'creado_por']
+
+
 class TipoEquipoSerializer(serializers.ModelSerializer):
     to_string = serializers.SerializerMethodField()
     creado_por_nombre = serializers.CharField(source='creado_por.username', read_only=True)
 
     def get_to_string(self, obj):
+        print(obj.__dict__)
         return obj.nombre
 
     class Meta:
@@ -57,14 +103,24 @@ class TipoEquipoSerializer(serializers.ModelSerializer):
             'to_string',
             'nombre',
             'activo',
+            'sigla',
             'documentos',
+            'clases_tipo_equipo',
+            'campos',
             'creado_por',
             'creado_por_nombre'
+        ]
+        read_only_fields = [
+            'documentos',
+            'creado_por',
+            'clases_tipo_equipo'
         ]
 
 
 class TipoEquipoConDetalleSerializer(TipoEquipoSerializer):
     documentos = TipoEquipoDocumentoSerializer(many=True, read_only=True)
+    clases_tipo_equipo = TipoEquipoClaseSerializer(many=True, read_only=True)
+    campos = TipoEquipoCampoSerializer(many=True, read_only=True)
 
 
 class EquipoProyectoSerializer(serializers.ModelSerializer):
@@ -72,35 +128,25 @@ class EquipoProyectoSerializer(serializers.ModelSerializer):
     creado_por = serializers.HiddenField(default=serializers.CurrentUserDefault())
     creado_por_nombre = serializers.CharField(source='creado_por.username', read_only=True)
 
-    # def is_valid(self, raise_exception=False):
-    #     return super().is_valid(raise_exception)
-    #
-    # def validate(self, attrs):
-    #     return super().validate(attrs)
-    #
-    # def create(self, validated_data):
-    #     creado_por = validated_data.get('creado_por', None)
-    #     nro_identificacion = validated_data.get('nro_identificacion', None)
-    #     nombre = validated_data.get('nombre', None)
-    #     literal = validated_data.get('literal', None)
-    #     fecha_entrega = validated_data.get('fecha_entrega', None)
-    #     tipo_equipo = validated_data.get('tipo_equipo', None)
-    #     from .services import equipo_proyecto_create
-    #     equipo_nuevo = equipo_proyecto_create(
-    #         creado_por_id=creado_por.id,
-    #         nro_identificacion=nro_identificacion,
-    #         literal_id=literal.id,
-    #         nombre=nombre,
-    #         fecha_entrega=fecha_entrega,
-    #         tipo_equipo_id=tipo_equipo.id
-    #     )
-    #     return equipo_nuevo
-    #
-    # def update(self, instance, validated_data):
-    #     return super().update(instance, validated_data)
+    def create(self, validated_data):
+        print(validated_data)
+        print(validated_data.get('literal'))
+        print(validated_data.get('tipo_equipo_clase'))
+        nombre = validated_data.get('nombre')
+        creado_por = validated_data.get('creado_por')
+        literal = validated_data.get('literal')
+        tipo_equipo_clase = validated_data.get('tipo_equipo_clase')
+        from .services import equipo_proyecto_create
+        equipo = equipo_proyecto_create(
+            nombre=nombre,
+            literal_id=literal.id,
+            tipo_equipo_clase_id=tipo_equipo_clase.id,
+            creado_por_id=creado_por.id
+        )
+        return equipo
 
     def get_to_string(self, obj):
-        return obj.nombre
+        return '%s - %s' % (obj.identificador, obj.nombre)
 
     class Meta:
         model = EquipoProyecto
@@ -109,12 +155,16 @@ class EquipoProyectoSerializer(serializers.ModelSerializer):
             'to_string',
             'nombre',
             'literal',
-            'tipo_equipo',
             'fecha_entrega',
-            'nro_identificacion',
+            'fecha_fabricacion',
+            'tipo_equipo_clase',
+            'identificador',
+            'nro_consecutivo',
             'creado_por',
+            'creado_por_nombre',
         ]
+        read_only_fields = ['identificador', 'nro_consecutivo']
 
 
-class EquipoProyectoConDetalleSerializer(serializers.ModelSerializer):
-    tipo_equipo = TipoEquipoSerializer(read_only=True)
+class EquipoProyectoConDetalleSerializer(EquipoProyectoSerializer):
+    tipo_equipo_clase = TipoEquipoClaseSerializer(read_only=True)

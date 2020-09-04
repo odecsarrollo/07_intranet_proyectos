@@ -33,8 +33,13 @@ let TipoEquipoCRUDForm = memo(props => {
                 nombre='Nombre'
                 name='nombre'
                 case='U'/>
+            <MyTextFieldSimple
+                className="col-12 col-md-6"
+                nombre='Sigla'
+                name='sigla'
+                case='U'/>
             <MyCheckboxSimple
-                className="col-12"
+                className="col-12 col-md-6"
                 nombre='Activo'
                 name='activo'
             />

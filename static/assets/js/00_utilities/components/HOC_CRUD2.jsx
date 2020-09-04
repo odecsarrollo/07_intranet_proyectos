@@ -20,6 +20,7 @@ function crudHOC(CreateForm, Tabla) {
             posSummitMethod = null,
             list,
             plural_name,
+            isPasive = false,
             permisos_object,
             con_titulo = true,
             cargarDatos = null
@@ -124,7 +125,12 @@ function crudHOC(CreateForm, Tabla) {
             if (method_pool.fetchObjectMethod === null) {
                 console.log('No se ha asignado ningún método para FETCH OBJECT')
             } else {
-                return method_pool.fetchObjectMethod(item.id, {callback});
+                if (isPasive) {
+                    setItemSeleccionado(method_pool.fetchObjectMethod(item.id));
+                    setModalOpen(true);
+                } else {
+                    return method_pool.fetchObjectMethod(item.id, {callback});
+                }
             }
         };
 

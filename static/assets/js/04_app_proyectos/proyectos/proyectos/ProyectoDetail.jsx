@@ -6,7 +6,6 @@ import TablaProyectoLiterales from '../literales/ProyectoLiteralTabla';
 import FormProyecto from './forms/ProyectoDetailForm';
 import FacturasProyecto from './ProyectoFacturaList';
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
-import 'react-tabs/style/react-tabs.css';
 import ProyectoDetailDocumento from './ProyectoDetailDocumento';
 import {
     PROYECTOS,
@@ -154,6 +153,7 @@ const Detail = memo((props) => {
                 <div className="col-12">
                     <Tabs>
                         <TabList>
+                            <Tab>Equipos</Tab>
                             <Tab onClick={() => cargarDatos()}>Literales</Tab>
                             {proyecto.cotizaciones.length > 0 &&
                             <Tab onClick={() => cargarDatos()}>Cotizaciones Relacionadas</Tab>}
@@ -161,7 +161,9 @@ const Detail = memo((props) => {
                             {permisos_archivos_proyecto.list && <Tab>Documentos</Tab>}
                             {facturas.length > 0 && <Tab>Facturas</Tab>}
                         </TabList>
-
+                        <TabPanel>
+                            Aqui van los esquipos de todos los literales, soló ira una lista
+                        </TabPanel>
                         <TabPanel>
                             <div className="row">
                                 <div className="col-12 col-lg-4">

@@ -16,6 +16,7 @@ import {
 } from "../../../permisos";
 import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
 import LiteralDetailDocumento from './LiteralDetailDocumento';
+import EquipoCRUD from "../equipos/EquipoCRUD";
 
 const Detail = memo(props => {
     const {
@@ -71,62 +72,54 @@ const Detail = memo(props => {
                         <div className="col-12">
                             <h5 className='h5-response'>{literal.descripcion}</h5>
                         </div>
-                        {
-                            literal.cotizacion &&
-                            <Fragment>
-                                <div className="col-12 col-md-6">
-                                    <h6 className='h6-response'>Cotización: <small>
-                                        <Link
-                                            to={`/app/ventas/cotizaciones/cotizaciones/detail/${literal.cotizacion}`}>
-                                            {literal.cotizacion_nro}
-                                        </Link>
-                                    </small>
-                                    </h6>
-                                </div>
-                                <div className="col-12 col-md-6">
-                                    <h6 className='h6-response'>Fecha Entrega: <small>
-                                        {fechaFormatoUno(literal.cotizacion_fecha_entrega)}
-                                    </small>
-                                    </h6>
-                                </div>
-                            </Fragment>
-                        }
-                        {
-                            permisos_proyecto.costo_materiales &&
-                            <div className="col-12 col-md-4">
-                                <h6 className='h6-response'>Costo
-                                    Materiales: <small>{pesosColombianos(literal.costo_materiales)}</small>
+                        {literal.cotizacion && <Fragment>
+                            <div className="col-12 col-md-6">
+                                <h6 className='h6-response'>Cotización: <small>
+                                    <Link
+                                        to={`/app/ventas/cotizaciones/cotizaciones/detail/${literal.cotizacion}`}>
+                                        {literal.cotizacion_nro}
+                                    </Link>
+                                </small>
                                 </h6>
                             </div>
-                        }
-                        {
-                            permisos_proyecto.costo_mano_obra &&
-                            <div className="col-12 col-md-4">
-                                <h6 className='h6-response'>Costo
-                                    Mano
-                                    Obra: <small>{pesosColombianos(Number(literal.costo_mano_obra) + Number(literal.costo_mano_obra_inicial))}</small>
+                            <div className="col-12 col-md-6">
+                                <h6 className='h6-response'>Fecha Entrega: <small>
+                                    {fechaFormatoUno(literal.cotizacion_fecha_entrega)}
+                                </small>
                                 </h6>
                             </div>
-                        }
-                        {
-                            permisos_proyecto.costo &&
-                            <div className="col-12 col-md-4">
-                                <h6 className='h6-response'>Costo
-                                    Total: <small>{pesosColombianos(Number(literal.costo_mano_obra_inicial) + Number(literal.costo_mano_obra) + Number(literal.costo_materiales))}</small>
-                                </h6>
-                            </div>
-                        }
+                        </Fragment>}
+                        {permisos_proyecto.costo_materiales && <div className="col-12 col-md-4">
+                            <h6 className='h6-response'>Costo
+                                Materiales: <small>{pesosColombianos(literal.costo_materiales)}</small>
+                            </h6>
+                        </div>}
+                        {permisos_proyecto.costo_mano_obra && <div className="col-12 col-md-4">
+                            <h6 className='h6-response'>Costo
+                                Mano
+                                Obra: <small>{pesosColombianos(Number(literal.costo_mano_obra) + Number(literal.costo_mano_obra_inicial))}</small>
+                            </h6>
+                        </div>}
+                        {permisos_proyecto.costo && <div className="col-12 col-md-4">
+                            <h6 className='h6-response'>Costo
+                                Total: <small>{pesosColombianos(Number(literal.costo_mano_obra_inicial) + Number(literal.costo_mano_obra) + Number(literal.costo_materiales))}</small>
+                            </h6>
+                        </div>}
                     </div>
                 </div>
             </div>
             <Tabs>
                 <TabList>
+                    <Tab>Equipos</Tab>
                     <Tab>Materiales</Tab>
                     <Tab>Mano de Obra</Tab>
                     <Tab>Seguimiento</Tab>
                     {permisos_literales.change && <Tab>Editar</Tab>}
                     {permisos_archivos_literal.list && <Tab>Documentos</Tab>}
                 </TabList>
+                <TabPanel>
+                    <EquipoCRUD literal={literal}/>
+                </TabPanel>
                 <TabPanel>
                     <ListadoMaterialesLiteralTabla
                         materiales={materiales}

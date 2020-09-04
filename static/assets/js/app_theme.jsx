@@ -9,6 +9,7 @@ import './../../css/custom.css';
 import 'react-pivottable/pivottable.css';
 import 'webdatarocks/webdatarocks.min.css';
 import 'webdatarocks/webdatarocks.toolbar.min';
+import 'react-tabs/style/react-tabs.css';
 
 import {createMuiTheme} from '@material-ui/core/styles';
 import red from '@material-ui/core/colors/red';

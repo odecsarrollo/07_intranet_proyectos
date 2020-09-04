@@ -14,7 +14,13 @@ from .models import EquipoProyecto
 
 class TipoEquipoViewSet(viewsets.ModelViewSet):
     queryset = TipoEquipo.objects.select_related('creado_por').all()
-    queryset_detalle = TipoEquipo.objects.select_related('creado_por').prefetch_related('documentos').all()
+    queryset_detalle = TipoEquipo.objects.select_related(
+        'creado_por'
+    ).prefetch_related(
+        'documentos',
+        'clases_tipo_equipo',
+        'campos'
+    ).all()
     serializer_class = TipoEquipoSerializer
 
     def perform_create(self, serializer):
@@ -38,6 +44,13 @@ class TipoEquipoViewSet(viewsets.ModelViewSet):
         self.queryset = self.queryset_detalle
         self.serializer_class = TipoEquipoConDetalleSerializer
         return super().update(request, *args, **kwargs)
+
+    @action(detail=False, methods=['get'])
+    def listar_para_crear_equipos(self, request):
+        self.queryset = self.queryset_detalle.filter(activo=True).using('read_only')
+        self.serializer_class = TipoEquipoConDetalleSerializer
+        serializer = self.get_serializer(self.queryset, many=True)
+        return Response(serializer.data)
 
     @action(detail=True, methods=['post'])
     def upload_archivo(self, request, pk=None):
@@ -80,10 +93,120 @@ class TipoEquipoViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(self.get_object())
         return Response(serializer.data)
 
+    @action(detail=True, methods=['post'])
+    def eliminar_clase(self, request, pk=None):
+        self.serializer_class = TipoEquipoConDetalleSerializer
+        tipo_equipo_clase_id = self.request.POST.get('tipo_equipo_clase_id')
+        from .services import tipo_equipo_clase_eliminar
+        tipo_equipo_clase_eliminar(
+            tipo_equipo_id=pk,
+            tipo_equipo_clase_id=tipo_equipo_clase_id
+        )
+        serializer = self.get_serializer(self.get_object())
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def crear_clase(self, request, pk=None):
+        self.serializer_class = TipoEquipoConDetalleSerializer
+        sigla = self.request.POST.get('sigla')
+        nombre = self.request.POST.get('nombre')
+        from .services import tipo_equipo_clase_crear
+        tipo_equipo_clase_crear(
+            tipo_equipo_id=pk,
+            sigla=sigla,
+            nombre=nombre
+        )
+        serializer = self.get_serializer(self.get_object())
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def actualizar_clase(self, request, pk=None):
+        self.serializer_class = TipoEquipoConDetalleSerializer
+        sigla = self.request.POST.get('sigla')
+        tipo_equipo_clase_id = self.request.POST.get('tipo_equipo_clase_id')
+        nombre = self.request.POST.get('nombre')
+        activo = self.request.POST.get('activo') == 'true'
+        from .services import tipo_equipo_clase_update
+        tipo_equipo_clase_update(
+            tipo_equipo_id=pk,
+            sigla=sigla,
+            tipo_equipo_clase_id=tipo_equipo_clase_id,
+            nombre=nombre,
+            activo=activo
+        )
+        serializer = self.get_serializer(self.get_object())
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def crear_campo(self, request, pk=None):
+        self.serializer_class = TipoEquipoConDetalleSerializer
+        label = self.request.POST.get('label')
+        tamano = self.request.POST.get('tamano')
+        tamano_columna = self.request.POST.get('tamano_columna')
+        unidad_medida = self.request.POST.get('unidad_medida')
+        tipo = self.request.POST.get('tipo')
+        opciones_list = self.request.POST.get('opciones_list')
+        orden = self.request.POST.get('orden')
+        from .services import tipo_equipo_campo_crear
+        tipo_equipo_campo_crear(
+            tipo_equipo_id=pk,
+            label=label,
+            tamano=tamano,
+            tamano_columna=tamano_columna,
+            unidad_medida=unidad_medida,
+            tipo=tipo,
+            opciones_list=opciones_list,
+            orden=orden
+        )
+        serializer = self.get_serializer(self.get_object())
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def actualizar_campo(self, request, pk=None):
+        self.serializer_class = TipoEquipoConDetalleSerializer
+        label = self.request.POST.get('label')
+        tamano = self.request.POST.get('tamano')
+        tamano_columna = self.request.POST.get('tamano_columna')
+        unidad_medida = self.request.POST.get('unidad_medida')
+        tipo = self.request.POST.get('tipo')
+        tipo_equipo_campo_id = self.request.POST.get('tipo_equipo_campo_id')
+        opciones_list = self.request.POST.get('opciones_list')
+        orden = self.request.POST.get('orden')
+        from .services import tipo_equipo_campo_actualizar
+        tipo_equipo_campo_actualizar(
+            tipo_equipo_campo_id=tipo_equipo_campo_id,
+            tipo_equipo_id=pk,
+            label=label,
+            tamano=tamano,
+            tamano_columna=tamano_columna,
+            unidad_medida=unidad_medida,
+            tipo=tipo,
+            opciones_list=opciones_list,
+            orden=orden
+        )
+        serializer = self.get_serializer(self.get_object())
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def eliminar_campo(self, request, pk=None):
+        self.serializer_class = TipoEquipoConDetalleSerializer
+        tipo_equipo_campo_id = self.request.POST.get('tipo_equipo_campo_id')
+        from .services import tipo_equipo_campo_eliminar
+        tipo_equipo_campo_eliminar(
+            tipo_equipo_id=pk,
+            tipo_equipo_campo_id=tipo_equipo_campo_id
+        )
+        serializer = self.get_serializer(self.get_object())
+        return Response(serializer.data)
+
 
 class EquipoProyectoViewSet(viewsets.ModelViewSet):
     queryset = EquipoProyecto.objects.select_related('creado_por').all()
-    queryset_detalle = EquipoProyecto.objects.select_related('creado_por').prefetch_related('documentos').all()
+    queryset_detalle = EquipoProyecto.objects.select_related(
+        'creado_por',
+        'tipo_equipo_clase'
+    ).prefetch_related(
+        'documentos').all()
     serializer_class = EquipoProyectoSerializer
 
     def list(self, request, *args, **kwargs):
@@ -97,10 +220,16 @@ class EquipoProyectoViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         self.queryset = self.queryset_detalle
-        self.serializer_class = EquipoProyectoConDetalleSerializer
         return super().create(request, *args, **kwargs)
 
     def update(self, request, *args, **kwargs):
         self.queryset = self.queryset_detalle
         self.serializer_class = EquipoProyectoConDetalleSerializer
         return super().update(request, *args, **kwargs)
+
+    @action(detail=False, methods=['get'])
+    def listar_por_literal(self, request):
+        literal_id = self.request.GET.get('literal_id')
+        self.queryset = self.queryset.filter(literal_id=literal_id).using('read_only')
+        serializer = self.get_serializer(self.queryset, many=True)
+        return Response(serializer.data)

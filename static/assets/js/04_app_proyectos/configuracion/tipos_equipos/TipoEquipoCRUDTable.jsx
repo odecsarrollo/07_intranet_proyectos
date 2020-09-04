@@ -44,6 +44,11 @@ const Tabla = memo(props => {
                                 },
                                 Cell: row => <div>{row.value ? row.value : 'SIN DEFINIR'}</div>
                             },
+                            {
+                                Header: "Sigla",
+                                accessor: "sigla",
+                                maxWidth: 70
+                            },
                         ]
                     },
                     {

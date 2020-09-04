@@ -30,7 +30,7 @@ const FileListItem = memo(props => {
         <tr>
             <td style={{padding: '4px'}}>{nombre_archivo}</td>
             {tiene_tipo && <td style={{padding: '4px'}}>{get_tipo_display}</td>}
-            <td style={{padding: '4px'}}>.{extension.toUpperCase()}</td>
+            <td style={{padding: '4px'}}>.{extension ? extension.toUpperCase() : ''}</td>
             <td style={{padding: '4px'}}>{formatBytes(size, 1)}</td>
             <td style={{padding: '4px'}}>{fechaFormatoUno(created)}</td>
             <td style={{padding: '4px'}}>{creado_por_username}</td>
