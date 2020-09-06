@@ -1,3 +1,19 @@
+export const POSTVENTA_EVENTOS_EQUIPOS = {
+    add: 'add_postventaeventoequipo',
+    delete: 'delete_postventaeventoequipo',
+    change: 'change_postventaeventoequipo',
+    list: 'list_postventaeventoequipo',
+    detail: 'view_postventaeventoequipo',
+};
+
+export const TIPOS_EQUIPOS_CLASES = {
+    add: 'add_tipoequipoclase',
+    delete: 'delete_tipoequipoclase',
+    change: 'change_tipoequipoclase',
+    list: 'list_tipoequipoclase',
+    detail: 'view_tipoequipoclase',
+};
+
 export const EQUIPOS_PROYECTOS = {
     add: 'add_equipoproyecto',
     delete: 'delete_equipoproyecto',

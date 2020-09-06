@@ -20,6 +20,7 @@ import literalesReducer from "./especificas/proyectos/literalesReducer";
 import itemsLiteralesReducer from "./especificas/proyectos/itemsliteralesReducer";
 
 import tiposEquiposReducer from "./especificas/proyectos_equipos/tiposEquiposReducer";
+import tiposEquiposClasesReducer from "./especificas/proyectos_equipos/tiposEquiposClasesReducer";
 import equiposProyectosReducer from "./especificas/proyectos_equipos/equiposProyectosReducer";
 
 import colaboradoresReducer from "./especificas/cguno/colaboradoresReducer";
@@ -90,6 +91,10 @@ import cotizacionesComponentesItems from './especificas/cotizaciones_componentes
 
 
 import correosAplicacionesReducer from './especificas/correos_servicios/correosAplicacionesReducer';
+
+
+import eventosEquipoProyectoReducer from './especificas/postventa/eventosEquipoProyectoReducer';
+
 
 import facturaCargueDetalleReducer from './especificas/cargues_detalles/facturasReducer';
 import itemsFacturaCargueDetalleReducer from './especificas/cargues_detalles/itemFacturaReducer';
@@ -190,7 +195,10 @@ const rootReducer = combineReducers({
 
         seguimientos_cargues: seguimientoCargueReducer,
         tipos_equipos: tiposEquiposReducer,
+        tipos_equipos_clases: tiposEquiposClasesReducer,
         equipos_proyectos: equiposProyectosReducer,
+
+        postventa_ordenes_servicio: eventosEquipoProyectoReducer,
     })
 ;
 

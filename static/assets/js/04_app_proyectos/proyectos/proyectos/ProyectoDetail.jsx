@@ -22,8 +22,6 @@ import Typography from "@material-ui/core/Typography";
 import CargarDatos from "../../../00_utilities/components/system/cargar_datos";
 import SiNoDialog from "../../../00_utilities/components/ui/dialog/SiNoDialog";
 import Button from "@material-ui/core/Button";
-import CotizacionDetailDocumento
-    from "../../../05_app_ventas_proyectos/cotizaciones/cotizaciones/CotizacionDetailDocumento";
 import ValidarPermisos from "../../../permisos/validar_permisos";
 
 const style = {
@@ -67,6 +65,7 @@ const style = {
 const Detail = memo((props) => {
     const dispatch = useDispatch();
     const {id} = props.match.params;
+    const {history} = props;
     const [select_literal_id, setSelectLiteralId] = useState(null);
     const [mostrar_literal_info, setMostrarLiteralInfo] = useState(false);
     const [show_enviar_aperturas, setEnviarAperturas] = useState(false);
@@ -186,6 +185,7 @@ const Detail = memo((props) => {
                                 {literal_seleccionado &&
                                 <div className="col-12 col-lg-8">
                                     <LiteralDetail
+                                        history={history}
                                         callbackCargarDatosProyecto={cargarDatos}
                                         clearCurrentLiteral={clearCurrentLiteral}
                                         literal={literal_seleccionado}

@@ -1,8 +1,6 @@
 import React, {Fragment, memo, useState} from "react";
-import Checkbox from '@material-ui/core/Checkbox';
 import MyDialogButtonDelete from '../../../00_utilities/components/ui/dialog/delete_dialog';
 import IconButtonTableSee from '../../../00_utilities/components/ui/icon/table_icon_button_detail';
-import IconButtonTableEdit from '../../../00_utilities/components/ui/icon/table_icon_button_edit';
 import {Link} from 'react-router-dom'
 
 import ReactTable from "react-table";
@@ -64,22 +62,11 @@ const Tabla = memo(props => {
 
                             },
                             {
-                                Header: "Editar",
-                                show: permisos_object.change,
-                                maxWidth: 60,
-                                Cell: row =>
-                                    <IconButtonTableEdit
-                                        onClick={() => {
-                                            onSelectItemEdit(row.original);
-                                        }}/>
-
-                            },
-                            {
                                 Header: "Ver",
                                 show: permisos_object.detail,
                                 maxWidth: 60,
                                 Cell: row =>
-                                    <Link to={`/app/proyectos/configuracion/tipos_equipos/${row.original.id}`}>
+                                    <Link to={`/app/proyectos/equipos/${row.original.id}`}>
                                         <IconButtonTableSee/>
                                     </Link>
 

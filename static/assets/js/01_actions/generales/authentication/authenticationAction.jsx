@@ -12,6 +12,13 @@ export const clear_authentication_errors = () => {
 };
 
 
+export const clearPermissions = () => {
+    return (dispatch) => {
+        dispatch({type: "CLEAR_PERMISSIONS", data: null});
+    }
+};
+
+
 export const logout = (options_action = {}) => {
     return (dispatch) => {
         const callback_error = (error) => {

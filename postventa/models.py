@@ -6,7 +6,7 @@ from model_utils.models import TimeStampedModel
 from pilkit.processors import ResizeToFit
 
 from proyectos_equipos.models import EquipoProyecto
-from proyectos_equipos.models import TipoEquipo
+from proyectos_equipos.models import TipoEquipo, TipoEquipoClase
 
 
 class PostventaRutinaTipoEquipo(models.Model):
@@ -14,7 +14,15 @@ class PostventaRutinaTipoEquipo(models.Model):
         TipoEquipo,
         on_delete=models.PROTECT,
         related_name='rutinas_postventa',
-        db_column='tip_equ'
+        db_column='tip_equ',
+        null=True
+    )
+    tipo_equipo_clase = models.ForeignKey(
+        TipoEquipoClase,
+        on_delete=models.PROTECT,
+        related_name='rutinas_postventa',
+        db_column='tip_equ_cla',
+        null=True
     )
     descripcion = models.TextField(db_column='desc')
     mes = models.PositiveIntegerField()
@@ -28,6 +36,7 @@ class PostventaRutinaTipoEquipo(models.Model):
 
 class PostventaGarantia(TimeStampedModel):
     equipo = models.ForeignKey(EquipoProyecto, on_delete=models.PROTECT, related_name='garantias', db_column='equ')
+    descripcion = models.TextField(db_column='desc')
     fecha_inicial = models.DateField(db_column='fec_ini')
     fecha_final = models.DateField(db_column='fec_fin')
     creado_por = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True, db_column='crt_by')
@@ -40,17 +49,26 @@ class PostventaEventoEquipo(TimeStampedModel):
         ('FIN', 'Finalizado'),
     )
     TIPO_CHOICES = (
-        ('NUMBER', 'Número'),
-        ('TEXT', 'Texto'),
-        ('LIST', 'Lista'),
+        ('MONTAJE', 'Montaje'),
+        ('MODIFICACION', 'Modificación'),
+        ('GARANTIA', 'Garantía'),
+        ('AJUSTE', 'Ajuste'),
+        ('ASISTENCIA_TECNICA', 'Asistencia Técnica'),
+        ('REPARACION', 'Reparación'),
+    )
+    equipo = models.ForeignKey(
+        EquipoProyecto,
+        on_delete=models.PROTECT,
+        related_name='ordenes_servicio'
     )
     descripcion = models.TextField(db_column='desc')
     fecha_solicitud = models.DateField(db_column='fec_sol')
     fecha_inicial = models.DateField(db_column='fec_ini')
     fecha_final = models.DateField(db_column='fec_fin', null=True)
-    creado_por = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True, db_column='crt_by')
     tipo = models.CharField(choices=TIPO_CHOICES, max_length=120)
     estado = models.CharField(choices=ESTADO_CHOICES, max_length=120)
+    tecnico_a_cargo = models.CharField(max_length=200, db_column='tec_a_car')
+    creado_por = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True, db_column='crt_by')
 
 
 def postventa_evento_equipo_documento_upload_to(instance, filename):

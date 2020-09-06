@@ -23,7 +23,8 @@ const Detail = memo(props => {
         literal,
         clearCurrentLiteral,
         callbackCargarDatosProyecto,
-        proyecto
+        proyecto,
+        history
     } = props;
     const dispatch = useDispatch();
     const {
@@ -118,7 +119,7 @@ const Detail = memo(props => {
                     {permisos_archivos_literal.list && <Tab>Documentos</Tab>}
                 </TabList>
                 <TabPanel>
-                    <EquipoCRUD literal={literal}/>
+                    <EquipoCRUD literal={literal} history={history}/>
                 </TabPanel>
                 <TabPanel>
                     <ListadoMaterialesLiteralTabla

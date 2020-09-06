@@ -24,6 +24,7 @@ from correos_servicios.urls import router as correos_servicios_router
 from colaboradores.urls import router as colaboradores_router
 from cargues_detalles.urls import router as cargues_detalles_router
 from proyectos_equipos.urls import router as proyectos_equipos_router
+from postventa.urls import router as postventa_router
 
 router = DefaultRouter()
 router.extend(proyectos_router)
@@ -51,3 +52,4 @@ router.extend(correos_servicios_router)
 router.extend(colaboradores_router)
 router.extend(cargues_detalles_router)
 router.extend(proyectos_equipos_router)
+router.extend(postventa_router)

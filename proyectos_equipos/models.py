@@ -19,25 +19,6 @@ class TipoEquipo(models.Model):
         ]
 
 
-class TipoEquipoDocumento(models.Model):
-    def documento_upload_to(instance, filename):
-        ahora = timezone.datetime.now()
-        return "documentos/tipos_equipos/%s/%s%s%s%s%s" % (
-            instance.tipo_equipo.id, ahora.year, ahora.month, ahora.day, ahora.microsecond, filename)
-
-    tipo_equipo = models.ForeignKey(TipoEquipo, related_name='documentos', on_delete=models.PROTECT,
-                                    db_column='tip_equ')
-    nombre_archivo = models.CharField(max_length=120, db_column='nombre')
-    archivo = models.FileField(upload_to=documento_upload_to, db_column='file')
-    creado_por = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True, db_column='crt_by')
-
-    class Meta:
-        db_table = 'tip_equip_docs'
-        permissions = [
-            ("list_tipoequipodocumento", "Can list documentos tipo equipo"),
-        ]
-
-
 class TipoEquipoClase(models.Model):
     tipo_equipo = models.ForeignKey(
         TipoEquipo,
@@ -57,6 +38,41 @@ class TipoEquipoClase(models.Model):
         ]
 
 
+class TipoEquipoDocumento(models.Model):
+    def documento_upload_to(instance, filename):
+        ahora = timezone.datetime.now()
+        if instance.tipo_equipo is not None:
+            return "documentos/tipos_equipos/%s/%s%s%s%s%s" % (
+                instance.tipo_equipo.id, ahora.year, ahora.month, ahora.day, ahora.microsecond, filename)
+        else:
+            return "documentos/tipos_equipos_clases/%s/%s%s%s%s%s" % (
+                instance.tipo_equipo_clase.id, ahora.year, ahora.month, ahora.day, ahora.microsecond, filename)
+
+    tipo_equipo = models.ForeignKey(
+        TipoEquipo,
+        related_name='documentos',
+        on_delete=models.PROTECT,
+        db_column='tip_equ',
+        null=True
+    )
+    tipo_equipo_clase = models.ForeignKey(
+        TipoEquipoClase,
+        on_delete=models.PROTECT,
+        related_name='documentos',
+        db_column='tip_equ_cla',
+        null=True
+    )
+    nombre_archivo = models.CharField(max_length=120, db_column='nombre')
+    archivo = models.FileField(upload_to=documento_upload_to, db_column='file')
+    creado_por = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True, db_column='crt_by')
+
+    class Meta:
+        db_table = 'tip_equip_docs'
+        permissions = [
+            ("list_tipoequipodocumento", "Can list documentos tipo equipo"),
+        ]
+
+
 class TipoEquipoCampo(models.Model):
     TIPO_CHOICES = (
         ('NUMBER', 'Número'),
@@ -73,9 +89,18 @@ class TipoEquipoCampo(models.Model):
         TipoEquipo,
         on_delete=models.PROTECT,
         related_name='campos',
-        db_column='tip_equ'
+        db_column='tip_equ',
+        null=True
+    )
+    tipo_equipo_clase = models.ForeignKey(
+        TipoEquipoClase,
+        on_delete=models.PROTECT,
+        related_name='campos',
+        db_column='tip_equ_cla',
+        null=True
     )
     opciones_list = models.TextField(null=True, db_column='lst_opt')
+    obligatorio = models.BooleanField(default=True)
 
     class Meta:
         db_table = 'tip_equip_campos'
@@ -118,12 +143,13 @@ class TipoEquipoCampoEquipo(models.Model):
         related_name='campos_valores',
         db_column='equ'
     )
-    tamano = models.CharField(max_length=20)
+    tamano = models.PositiveIntegerField()
+    tamano_columna = models.PositiveIntegerField(default=12)
     tipo = models.CharField(max_length=20)
     label = models.CharField(max_length=120)
     valor = models.CharField(max_length=200)
     unidad_medida = models.CharField(max_length=100, db_column='um')
-    opciones_list = models.TextField(null=True, db_column='lst_opt')
+    orden = models.PositiveIntegerField(default=0)
 
     class Meta:
         db_table = 'equip_proy_campos'

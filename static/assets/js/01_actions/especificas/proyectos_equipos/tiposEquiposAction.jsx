@@ -196,3 +196,45 @@ export const updateTipoEquipo = (id, values, options_action = {}) => {
         return updateObject(current_url_api, id, values, options);
     }
 };
+
+
+export const createRutinaTipoEquipo = (id, campo_values, options_action = {}) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        _.mapKeys(campo_values, (v, k) => {
+            params.append(k, v);
+        });
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: {...response, ...options_action}})
+        };
+        const options = {...options_action, dispatch_method: dispatch, dispatches};
+        return callApiMethodPostParameters(current_url_api, id, 'crear_rutina', params, options)
+    }
+};
+
+export const updateRutinaTipoEquipo = (id, rutina_id, clase_values, options_action = {}) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        _.mapKeys(clase_values, (v, k) => {
+            params.append(k, v);
+        });
+        params.append('rutina_id', rutina_id);
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: {...response, ...options_action}})
+        };
+        const options = {...options_action, dispatch_method: dispatch, dispatches};
+        return callApiMethodPostParameters(current_url_api, id, 'actualizar_rutina', params, options)
+    }
+};
+
+export const deleteRutinaTipoEquipo = (id, rutina_id, options_action = {}) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        params.append('rutina_id', rutina_id);
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: {...response, ...options_action}})
+        };
+        const options = {...options_action, dispatch_method: dispatch, dispatches};
+        return callApiMethodPostParameters(current_url_api, id, 'eliminar_rutina', params, options)
+    }
+};

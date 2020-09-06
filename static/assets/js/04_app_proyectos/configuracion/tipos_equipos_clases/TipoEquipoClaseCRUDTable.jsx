@@ -1,5 +1,7 @@
 import React, {Fragment, memo} from "react";
+import {Link} from "react-router-dom";
 import MyDialogButtonDelete from '../../../00_utilities/components/ui/dialog/delete_dialog';
+import IconButtonTableSee from "../../../00_utilities/components/ui/icon/table_icon_button_detail";
 import IconButtonTableEdit from '../../../00_utilities/components/ui/icon/table_icon_button_edit';
 
 import ReactTable from "react-table";
@@ -73,6 +75,16 @@ const TipoEquipoClaseCRUDTable = memo(props => {
                                         onClick={() => {
                                             onSelectItemEdit(row.original);
                                         }}/>
+
+                            },
+                            {
+                                Header: "Ver",
+                                show: permisos_object.detail,
+                                maxWidth: 60,
+                                Cell: row =>
+                                    <Link to={`/app/proyectos/configuracion/tipos_equipos_clases/${row.original.id}`}>
+                                        <IconButtonTableSee/>
+                                    </Link>
 
                             }
                         ]

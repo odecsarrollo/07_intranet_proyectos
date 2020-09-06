@@ -1,6 +1,5 @@
 const validate = values => {
     const errors = {};
-
     const requiredFields = [
         'nombre',
         'sigla',

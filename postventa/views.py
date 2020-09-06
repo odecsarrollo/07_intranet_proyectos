@@ -1,3 +1,8 @@
-from django.shortcuts import render
+from rest_framework import viewsets
+from .models import PostventaEventoEquipo
+from .serializers import PostventaEventoEquipoSerializer
 
-# Create your views here.
+
+class PostventaEventoEquipoViewSet(viewsets.ModelViewSet):
+    queryset = PostventaEventoEquipo.objects.all()
+    serializer_class = PostventaEventoEquipoSerializer

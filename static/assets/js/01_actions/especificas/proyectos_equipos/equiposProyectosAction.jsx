@@ -5,7 +5,7 @@ import {
     fetchObject,
     deleteObject,
     createObject,
-    fetchListGetURLParameters
+    fetchListGetURLParameters, callApiMethodPostParameters
 } from '../../00_general_fuctions'
 
 const current_url_api = 'equipo_proyectos';
@@ -77,5 +77,31 @@ export const updateEquipoProyecto = (id, values, options_action = {}) => {
         };
         const options = {dispatches, ...options_action, dispatch_method: dispatch};
         return updateObject(current_url_api, id, values, options);
+    }
+};
+
+export const createGarantiaEquipoProyecto = (id, form_values, options_action = {}) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        _.mapKeys(form_values, (v, k) => {
+            params.append(k, v);
+        });
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: {...response, ...options_action}})
+        };
+        const options = {...options_action, dispatch_method: dispatch, dispatches};
+        return callApiMethodPostParameters(current_url_api, id, 'crear_garantia', params, options)
+    }
+};
+
+export const deleteGarantiaEquipoProyecto = (id, garantia_id, options_action = {}) => {
+    return (dispatch) => {
+        let params = new URLSearchParams();
+        params.append('garantia_id', garantia_id);
+        const dispatches = (response) => {
+            dispatch({type: TYPES.update, payload: {...response, ...options_action}})
+        };
+        const options = {...options_action, dispatch_method: dispatch, dispatches};
+        return callApiMethodPostParameters(current_url_api, id, 'eliminar_garantia', params, options)
     }
 };

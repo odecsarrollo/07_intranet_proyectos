@@ -71,7 +71,9 @@ export default function auth(state = initialState, action) {
                 isAuthenticated: false,
                 isLoading: false,
             }, ['token', 'my_permissions', 'user']);
-
+        case 'CLEAR_PERMISSIONS':
+            localStorage.removeItem("mis_permisos");
+            return state;
         default:
             return state;
     }

@@ -14,6 +14,7 @@ let Login = props => {
     const dispatch = useDispatch();
     const onSubmit = (e) => {
         const {username, password} = e;
+        dispatch(actions.clearPermissions());
         dispatch(actions.login(username, password));
     };
     const {

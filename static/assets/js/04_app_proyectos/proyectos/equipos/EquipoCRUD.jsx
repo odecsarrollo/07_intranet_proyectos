@@ -14,7 +14,7 @@ import useTengoPermisos from "../../../00_utilities/hooks/useTengoPermisos";
 
 const List = memo(props => {
     const dispatch = useDispatch();
-    const {literal} = props;
+    const {literal, history} = props;
     const permisos = useTengoPermisos(EQUIPOS_PROYECTOS);
     const cargarDatos = () => {
         if (permisos.list) {
@@ -40,6 +40,7 @@ const List = memo(props => {
     return (
         <Fragment>
             <CRUD
+                posCreateMethod={(res) => history.push(`/app/proyectos/equipos/${res.id}`)}
                 method_pool={method_pool}
                 list={list}
                 permisos_object={permisos}

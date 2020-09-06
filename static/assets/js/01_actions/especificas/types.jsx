@@ -1,3 +1,21 @@
+export const POSTVENTA_EVENTO_EQUIPO_TYPES = {
+    create: 'create_postventa_evento_equipo',
+    delete: 'delete_postventa_evento_equipo',
+    fetch_all: 'fetch_postventa_eventos_equipos',
+    fetch: 'fetch_postventa_evento_equipo',
+    clear: 'clear_postventa_eventos_equipos',
+    update: 'update_postventa_evento_equipo',
+};
+
+export const TIPO_EQUIPO_CLASE_TYPES = {
+    create: 'create_tipo_equipo_clase',
+    delete: 'delete_tipo_equipo_clase',
+    fetch_all: 'fetch_tipos_equipos_clases',
+    fetch: 'fetch_tipo_equipo_clase',
+    clear: 'clear_tipos_equipos_clases',
+    update: 'update_tipo_equipo_clase',
+};
+
 export const EQUIPO_PROYECTO_TYPES = {
     create: 'create_equipo_proyecto',
     delete: 'delete_equipo_proyecto',

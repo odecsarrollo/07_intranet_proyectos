@@ -1,16 +1,16 @@
-import React, {useEffect} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import React from "react";
+import {useDispatch} from "react-redux";
 import ArchivosTipoEquipoList from "../../../00_utilities/components/ui/FileList";
 import * as actions from "../../../01_actions/01_index";
 
-const EquipoDetailDocumento = props => {
-    const {tipo_equipo: {documentos, id}, permisos, cargarTipoEquipo} = props;
+const TipoEquipoClaseDetailDocumento = props => {
+    const {tipo_equipo_clase: {documentos, id}, permisos, cargarTipoEquipo} = props;
     const dispatch = useDispatch();
     const onUploadFile = (valores, callback) => {
         if (valores.id) {
             delete valores.archivo;
             dispatch(
-                actions.updateArchivoTipoEquipo(
+                actions.updateArchivoTipoEquipoClase(
                     id,
                     valores.id,
                     valores.nombre_archivo,
@@ -31,12 +31,12 @@ const EquipoDetailDocumento = props => {
             formData.append('archivo', file);
             formData.append('nombre', e.nombre_archivo);
             dispatch(
-                actions.uploadArchivoTipoEquipo(
+                actions.uploadArchivoTipoEquipoClase(
                     id,
                     formData,
                     {
                         callback: () => {
-                            dispatch(actions.fetchTipoEquipo(id, {
+                            dispatch(actions.fetchTipoEquipoClase(id, {
                                 callback: () => {
                                     dispatch(actions.notificarAction(`La ha subido el archivo para el proyecto`));
                                     callback();
@@ -50,7 +50,7 @@ const EquipoDetailDocumento = props => {
     };
     const onDeleteFile = (archivo_id, callback) => {
         dispatch(
-            actions.deleteArchivoTipoEquipo(
+            actions.deleteArchivoTipoEquipoClase(
                 id,
                 archivo_id,
                 {
@@ -72,4 +72,4 @@ const EquipoDetailDocumento = props => {
     )
 };
 
-export default EquipoDetailDocumento;
+export default TipoEquipoClaseDetailDocumento;

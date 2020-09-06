@@ -1,7 +1,7 @@
 import React, {memo} from 'react';
 import {useSelector} from "react-redux";
 import {formValueSelector, reduxForm} from 'redux-form';
-import {MyTextFieldSimple, MyCombobox} from '../../../../00_utilities/components/ui/forms/fields';
+import {MyTextFieldSimple, MyCombobox, MyCheckboxSimple} from '../../../../00_utilities/components/ui/forms/fields';
 import validate from './validate';
 import {MyFormTagModal} from '../../../../00_utilities/components/ui/forms/MyFormTagModal';
 
@@ -71,6 +71,11 @@ let TipoEquipoCampoCRUDForm = memo(props => {
                 name='orden'
                 type='number'
             />
+            <MyTextFieldSimple
+                className="col-12 col-md-6"
+                nombre='Unidad Medida'
+                name='unidad_medida'
+            />
             {myValues.tipo === 'LIST' && <MyTextFieldSimple
                 className="col-12 col-md-6"
                 multiline={true}
@@ -78,11 +83,7 @@ let TipoEquipoCampoCRUDForm = memo(props => {
                 name='opciones_list'
                 rows={5}
                 case='U'/>}
-            <MyTextFieldSimple
-                className="col-12 col-md-6"
-                nombre='Unidad Medida'
-                name='unidad_medida'
-            />
+            <MyCheckboxSimple name='obligatorio' label='Obligatorio' className='col-12'/>
         </MyFormTagModal>
     )
 });

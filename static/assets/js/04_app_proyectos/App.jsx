@@ -19,6 +19,7 @@ import VerificarHorasList from './mano_obra/verificar_horas/HoraTrabajoVerificar
 
 import ProyectosCGUnoList from "./proyectos/proyectos/ProyectoCRUD";
 import ProyectosCGUnoDetail from "./proyectos/proyectos/ProyectoDetail";
+import EquipoProyectoDetail from "./proyectos/equipos/EquipoDetail";
 
 import FasesProyectosList from "./proyectos/fases/containers/fases_list_container";
 
@@ -30,6 +31,7 @@ import CotizacionesVsProyectos from "./cotizaciones_vs_proyectos/CotizacionVsPro
 
 import TipoEquipoCRUD from './configuracion/tipos_equipos/TipoEquipoCRUD';
 import TipoEquipoDetail from './configuracion/tipos_equipos/TipoEquipoDetail';
+import TipoEquipoClaseDetail from './configuracion/tipos_equipos_clases/TipoEquipoClaseDetail';
 
 const App = () => {
     return (
@@ -40,6 +42,7 @@ const App = () => {
 
                     <Route exact path='/app/proyectos/configuracion/tipos_equipos' component={TipoEquipoCRUD}/>
                     <Route exact path='/app/proyectos/configuracion/tipos_equipos/:id' component={TipoEquipoDetail}/>
+                    <Route exact path='/app/proyectos/configuracion/tipos_equipos_clases/:id' component={TipoEquipoClaseDetail}/>
 
 
                     <Route exact path='/app/proyectos/fases/list' component={FasesProyectosList}/>
@@ -61,6 +64,7 @@ const App = () => {
                     <Route exact path='/app/proyectos/proyectos/reporte_costos' component={ReporteCosto}/>
                     <Route exact path='/app/proyectos/proyectos/reporte_dos' component={ReporteDos}/>
                     <Route exact path='/app/proyectos/proyectos/reporte_tres' component={ReporteTres}/>
+                    <Route exact path='/app/proyectos/equipos/:id' component={EquipoProyectoDetail}/>
 
                     <Route exact path='/app/proyectos/cotizaciones_vs_proyectos/list'
                            component={CotizacionesVsProyectos}/>

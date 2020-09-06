@@ -8,6 +8,7 @@ import ValidarPermisos from "../../../permisos/validar_permisos";
 import TipoEquipoDetailDocumento from './TipoEquipoDetailDocumento';
 import TipoEquipoClases from '../tipos_equipos_clases/TipoEquipoClaseCRUD';
 import TipoEquipoCampos from '../tipos_equipos_campos/TipoEquipoCampoCRUD';
+import TipoEquipoRutinas from '../tipos_equipos_rutinas/TipoEquipoRutinaCRUD';
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 
 const TipoEquipoDetail = props => {
@@ -53,6 +54,7 @@ const TipoEquipoDetail = props => {
                     <Tab>Documentos</Tab>
                     <Tab>Clases</Tab>
                     <Tab>Campos</Tab>
+                    <Tab>Rutinas</Tab>
                 </TabList>
                 <TabPanel>
                     <TipoEquipoDetailDocumento
@@ -66,6 +68,9 @@ const TipoEquipoDetail = props => {
                 </TabPanel>
                 <TabPanel>
                     <TipoEquipoCampos tipo_equipo={tipo_equipo}/>
+                </TabPanel>
+                <TabPanel>
+                    <TipoEquipoRutinas tipo_equipo={tipo_equipo}/>
                 </TabPanel>
             </Tabs>
         </DetailLayout>
