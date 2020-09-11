@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 
 const CotizacionDetailInfoCotizacionAdicional = (props) => {
     const {cotizacion: {cotizaciones_adicionales}} = props;
+    console.log(cotizaciones_adicionales, 'cosassss')
     return (
         <div style={{
             borderRadius: '5px',
@@ -12,7 +13,7 @@ const CotizacionDetailInfoCotizacionAdicional = (props) => {
         }}>
             <strong>Cotizaciones Adicionales: </strong>
             <div className="col-12">
-                {cotizaciones_adicionales.length > 0 && <div className='row'>
+                {cotizaciones_adicionales !== undefined && cotizaciones_adicionales.length > 0 && <div className='row'>
                     {_.orderBy(cotizaciones_adicionales, ['nro_cotizacion', 'asc']).map(c => <div
                         key={c.id}
                         style={{position: 'relative'}}

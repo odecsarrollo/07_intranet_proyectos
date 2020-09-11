@@ -37,7 +37,7 @@ const CotizacionDetailInfoProyecto = (props) => {
                 Relacionar
             </span>}
             <div className="col-12">
-                {proyectos.length > 0 && <div className='row'>
+                {proyectos !== undefined && proyectos.length > 0 && <div className='row'>
                     {_.orderBy(proyectos, ['id_proyecto', 'asc']).map(p => <div
                         key={p.id}
                         style={{position: 'relative'}}
