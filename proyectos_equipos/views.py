@@ -5,6 +5,7 @@ from rest_framework.response import Response
 
 from .models import TipoEquipo
 from .models import TipoEquipoClase
+from .serializers import EquipoProyectoBusquedaRapidaSerializer
 from .serializers import (
     EquipoProyectoConDetalleSerializer,
     EquipoProyectoSerializer,
@@ -421,8 +422,7 @@ class EquipoProyectoViewSet(viewsets.ModelViewSet):
     queryset_detalle = EquipoProyecto.objects.select_related(
         'creado_por',
         'tipo_equipo_clase'
-    ).prefetch_related(
-        'documentos').all()
+    ).all()
     serializer_class = EquipoProyectoSerializer
 
     def list(self, request, *args, **kwargs):
@@ -467,6 +467,14 @@ class EquipoProyectoViewSet(viewsets.ModelViewSet):
         self.queryset = self.queryset_detalle
         self.serializer_class = EquipoProyectoConDetalleSerializer
         return super().update(request, *args, **kwargs)
+
+    @action(detail=False, http_method_names=['get', ])
+    def listar_x_identificador(self, request):
+        identificador = request.GET.get('identificador')
+        self.serializer_class = EquipoProyectoBusquedaRapidaSerializer
+        qs = EquipoProyecto.objects.filter(identificador__icontains=identificador).using('read_only')
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)
 
     @action(detail=False, methods=['get'])
     def listar_por_literal(self, request):

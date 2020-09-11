@@ -23,6 +23,7 @@ import OrdenCompraAddForm from "./forms/OrdenCompraAddForm";
 
 import momentLocaliser from "react-widgets-moment";
 import moment from 'moment-timezone';
+
 moment.tz.setDefault("America/Bogota");
 moment.locale('es');
 momentLocaliser(moment);//Para convertir las oc viejas, luego podrá elimiarse
@@ -174,13 +175,13 @@ const CotizacionOrdenCompra = (props) => {
     const {table} = useContext(StylesContext);
     const permitir_convertir = acuerdos_pagos && acuerdos_pagos.length === 1 && acuerdos_pagos[0].motivo === 'MIGRADO';
     return <div className="row card p-4 m-1">
-        {/*{permitir_convertir && <span onClick={() => onConvertirFormasPagos(*/}
-        {/*    moment(orden_compra.orden_compra_fecha).toDate(),*/}
-        {/*    orden_compra.valor_orden_compra,*/}
-        {/*    orden_compra.orden_compra_nro,*/}
-        {/*    orden_compra.orden_compra_archivo,*/}
-        {/*    orden_compra.id*/}
-        {/*)}>Convertir</span>}*/}
+        {permitir_convertir && <span onClick={() => onConvertirFormasPagos(
+            moment(orden_compra.orden_compra_fecha).toDate(),
+            orden_compra.valor_orden_compra,
+            orden_compra.orden_compra_nro,
+            orden_compra.orden_compra_archivo,
+            orden_compra.id
+        )}>Convertir</span>}
         <div className="row">
             <div className="col-md-4">
                 <Typography variant="body1" gutterBottom color="primary">

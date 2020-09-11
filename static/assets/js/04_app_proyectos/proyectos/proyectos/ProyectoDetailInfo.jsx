@@ -41,7 +41,7 @@ const InfoProyecto = (props) => {
             </div>
             <div className="col-12">
                 <div className="row">
-                    <div className="col-12 col-lg-3">
+                    <div className="col-12">
                         <ProyectoDetailCotizacionesInfo proyecto={proyecto}/>
                     </div>
                 </div>

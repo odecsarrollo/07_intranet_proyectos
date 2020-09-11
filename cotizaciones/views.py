@@ -157,11 +157,7 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
             ]) |
             (
                     Q(estado='Cierre (Aprobado)') &
-                    Q(nro_pagos_proyectados=0) &
-                    (
-                            Q(condiciones_inicio_cotizacion__fecha_entrega__isnull=True) &
-                            Q(numero_condiciones_inicio__gt=0)
-                    )
+                    Q(nro_pagos_proyectados=0)
             )
         )
         if not self.request.user.has_perm('cotizaciones.list_all_cotizaciones_activas'):

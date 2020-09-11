@@ -4,7 +4,7 @@ import {
     updateObject,
     fetchObject,
     deleteObject,
-    createObject,
+    createObject, fetchListGetURLParameters,
 } from '../../00_general_fuctions'
 
 const current_url_api = 'postventa_ordenes_servicios';
@@ -40,6 +40,7 @@ export const fetchPostventaEventosEquipos = (options_action = {}) => {
         return fetchListGet(current_url_api, options);
     }
 };
+
 export const fetchPostventaEventoEquipo = (id, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {

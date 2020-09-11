@@ -110,6 +110,11 @@ class TipoEquipoSerializer(serializers.ModelSerializer):
     to_string = serializers.SerializerMethodField()
     creado_por_nombre = serializers.CharField(source='creado_por.username', read_only=True)
 
+    def validate_sigla(self, value):
+        if len(value) != 2:
+            raise serializers.ValidationError('Debe tener 2 caracteres')
+        return value
+
     def get_to_string(self, obj):
         return obj.nombre
 
@@ -141,6 +146,21 @@ class TipoEquipoConDetalleSerializer(CustomSerializerMixin, TipoEquipoSerializer
     clases_tipo_equipo = TipoEquipoClaseConDetalleSerializer(many=True, read_only=True)
     campos = TipoEquipoCampoSerializer(many=True, read_only=True)
     rutinas_postventa = PostventaRutinaTipoEquipoSerializer(many=True, read_only=True)
+
+
+class EquipoProyectoBusquedaRapidaSerializer(serializers.ModelSerializer):
+    to_string = serializers.SerializerMethodField()
+
+    def get_to_string(self, obj):
+        return '%s - %s' % (obj.identificador, obj.nombre)
+
+    class Meta:
+        model = EquipoProyecto
+        fields = [
+            'id',
+            'to_string'
+        ]
+        read_only_field = fields
 
 
 class EquipoProyectoSerializer(serializers.ModelSerializer):

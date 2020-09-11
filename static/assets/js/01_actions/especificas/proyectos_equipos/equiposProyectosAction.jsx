@@ -9,6 +9,18 @@ import {
 } from '../../00_general_fuctions'
 
 const current_url_api = 'equipo_proyectos';
+
+export function fetchEquiposProyectosxIdentificador(identificador, options_action = {}) {
+    return function (dispatch) {
+        const FULL_URL = `${current_url_api}/listar_x_identificador/?identificador=${identificador}`;
+        const options = {
+            ...options_action,
+            dispatch_method: dispatch
+        };
+        return fetchListGetURLParameters(FULL_URL, options);
+    }
+}
+
 export const createEquipoProyecto = (values, options_action = {}) => {
     return (dispatch) => {
         const dispatches = (response) => {

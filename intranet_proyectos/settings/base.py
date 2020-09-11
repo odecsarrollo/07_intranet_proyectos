@@ -57,6 +57,7 @@ MY_APPS = [
     'colaboradores.apps.ColaboradoresConfig',
     'proyectos_equipos.apps.ProyectosEquiposConfig',
     'postventa.apps.PostventaConfig',
+    'documentaciones_procesos.apps.DocumentacionesProcesosConfig'
 ]
 
 THIRD_PART_APPS = [

@@ -21,6 +21,7 @@ import AppSistemas from './09_app_sistemas/App';
 import AppGerencia from './12_gerencia/App';
 import AppCuenta from './authentication/mi_cuenta/Dashboard';
 import AppPostventa from './13_postventa/App';
+import AppDocumentacion from './14_documentacion/App';
 
 let App = () => {
     return (
@@ -42,6 +43,7 @@ let App = () => {
                                     <Route path='/app/cuenta' component={AppCuenta}/>
                                     <Route path='/app/gerencia' component={AppGerencia}/>
                                     <Route path='/app/postventa' component={AppPostventa}/>
+                                    <Route path='/app/documentacion' component={AppDocumentacion}/>
                                     <Route path='/app' component={AppIndex}/>
                                     <Route path='/' component={AppIndex}/>
                                 </Switch>

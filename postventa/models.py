@@ -63,11 +63,11 @@ class PostventaEventoEquipo(TimeStampedModel):
     )
     descripcion = models.TextField(db_column='desc')
     fecha_solicitud = models.DateField(db_column='fec_sol')
-    fecha_inicial = models.DateField(db_column='fec_ini')
-    fecha_final = models.DateField(db_column='fec_fin', null=True)
+    fecha_inicio = models.DateField(db_column='fec_ini', null=True)
+    fecha_terminacion = models.DateField(db_column='fec_ter', null=True)
     tipo = models.CharField(choices=TIPO_CHOICES, max_length=120)
     estado = models.CharField(choices=ESTADO_CHOICES, max_length=120)
-    tecnico_a_cargo = models.CharField(max_length=200, db_column='tec_a_car')
+    tecnico_a_cargo = models.CharField(max_length=200, db_column='tec_a_car', null=True)
     creado_por = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True, db_column='crt_by')
 
 
@@ -78,8 +78,8 @@ def postventa_evento_equipo_documento_upload_to(instance, filename):
 
 
 class PostventaEventoEquipoDocumento(models.Model):
-    equipo = models.ForeignKey(
-        EquipoProyecto,
+    evento = models.ForeignKey(
+        PostventaEventoEquipo,
         related_name='documentos',
         on_delete=models.PROTECT,
         db_column='equ'

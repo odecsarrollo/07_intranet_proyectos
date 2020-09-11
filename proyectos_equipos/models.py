@@ -27,7 +27,7 @@ class TipoEquipoClase(models.Model):
         db_column='tip_equ'
     )
     nombre = models.CharField(max_length=120)
-    sigla = models.CharField(unique=True, max_length=2)
+    sigla = models.CharField(unique=True, max_length=3)
     activo = models.BooleanField(default=True)
 
     class Meta:

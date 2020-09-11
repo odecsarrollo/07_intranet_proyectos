@@ -252,6 +252,9 @@ def tipo_equipo_clase_crear(
         nombre: str,
         sigla: str
 ):
+    if len(sigla) != 3:
+        raise ValidationError({'sigla': 'Debe tener 3 caracteres'})
+
     if TipoEquipoClase.objects.filter(
             sigla=sigla,
             tipo_equipo_id=tipo_equipo_id
@@ -272,6 +275,9 @@ def tipo_equipo_clase_update(
         sigla: str,
         activo: bool
 ):
+    if len(sigla) != 3:
+        raise ValidationError({'sigla': 'Debe tener 3 caracteres'})
+
     if TipoEquipoClase.objects.exclude(pk=tipo_equipo_clase_id).filter(
             sigla=sigla,
             tipo_equipo_id=tipo_equipo_id

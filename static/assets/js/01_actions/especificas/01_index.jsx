@@ -4,6 +4,8 @@ export * from './proyectos_equipos/tiposEquiposAction';
 export * from './proyectos_equipos/tiposEquiposClasesAction';
 export * from './proyectos_equipos/equiposProyectosAction';
 
+export * from './postventa/eventosEquipoProyectoAction';
+
 export * from './proyectos/proyectosAction';
 export * from './proyectos/literalesAction';
 export * from './proyectos/miembrosLiteralesAction';
