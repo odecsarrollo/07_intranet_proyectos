@@ -190,14 +190,14 @@ let OrdenCompraAddForm = memo(props => {
             pristine={pristine && !convertir_anterior}
             element_type={singular_name}
         >
-            <div className="col-12">
+            {!initialValues && <div className="col-12">
                 Valor
                 Ofertado: {pesosColombianos(valor_ofertado_restante)}
                 <FontAwesomeIcon
                     className='puntero'
                     icon='paste'
                     onClick={() => change('valor_orden_compra', valor_ofertado_restante)}/>
-            </div>
+            </div>}
             <MyDateTimePickerField
                 label='Fecha en la OC'
                 label_space_xs={4}
@@ -218,7 +218,6 @@ let OrdenCompraAddForm = memo(props => {
                 nombre='Nro. Orden Compra'
                 name='orden_compra_nro'
                 className="col-12 col-md-4"
-                disabled={initialValues && !!initialValues.orden_compra_nro}
                 case='U'/>
             <div>
                 {((initialValues && !initialValues.orden_compra_archivo_url) || !initialValues) &&
