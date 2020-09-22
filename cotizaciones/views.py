@@ -382,37 +382,32 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
         self.serializer_class = CotizacionConDetalleSerializer
         self.queryset = Cotizacion.base.detalle_cotizacion()
         orden_compra_anterior_id = request.POST.get('orden_compra_anterior_id', None)
-        pago_proyectado_anterior = CotizacionPagoProyectado.objects.get(pk=orden_compra_anterior_id)
+        pago_proyectado_a_cambiar = CotizacionPagoProyectado.objects.get(pk=orden_compra_anterior_id)
         if not (
-                pago_proyectado_anterior.orden_compra_documento and pago_proyectado_anterior.orden_compra_documento.archivo):
+                pago_proyectado_a_cambiar.orden_compra_documento and pago_proyectado_a_cambiar.orden_compra_documento.archivo):
             orden_compra_archivo = request.FILES.get('orden_compra_archivo')
-        else:
-            orden_compra_archivo = pago_proyectado_anterior.orden_compra_documento.archivo
-        orden_compra_fecha = request.POST.get('orden_compra_fecha', None)
-        valor_orden_compra = request.POST.get('valor_orden_compra', None)
+            pago_proyectado_a_cambiar.orden_compra_documento = orden_compra_archivo
         orden_compra_nro = request.POST.get('orden_compra_nro', None)
         plan_pago = request.POST.get('plan_pago', None)
-        from .services import cotizacion_add_pago_proyectado
 
         try:
             with transaction.atomic():
-                pago_proyectado = cotizacion_add_pago_proyectado(
-                    cotizacion_id=pk,
-                    orden_compra_fecha=orden_compra_fecha,
-                    orden_compra_nro=orden_compra_nro,
-                    valor_orden_compra=valor_orden_compra,
-                    orden_compra_archivo=orden_compra_archivo,
-                    user_id=self.request.user.id,
-                    no_enviar_correo=True
-                )
+                pago_proyectado_a_cambiar.orden_compra_nro = orden_compra_nro
+                pago_proyectado_a_cambiar.save()
                 acuerdos_de_pago = json.loads(plan_pago)
+
+                CotizacionPagoProyectadoAcuerdoPago.objects.filter(
+                    orden_compra_id=pago_proyectado_a_cambiar.id,
+                    motivo='MIGRADO'
+                ).delete()
+
                 for pp in json.loads(plan_pago):
                     fecha_proyectada = acuerdos_de_pago[pp].get('fecha_proyectada')
                     fecha_proyectada_date = datetime.datetime.strptime(
                         fecha_proyectada,
                         "%Y-%m-%d"
                     ).date() if fecha_proyectada else None
-                    pago_proyectado.acuerdos_pagos.create(
+                    pago_proyectado_a_cambiar.acuerdos_pagos.create(
                         motivo=acuerdos_de_pago[pp].get('motivo'),
                         creado_por_id=self.request.user.id,
                         fecha_proyectada=fecha_proyectada_date,
@@ -420,11 +415,6 @@ class CotizacionViewSet(RevisionMixin, viewsets.ModelViewSet):
                         porcentaje=acuerdos_de_pago[pp].get('porcentaje'),
                         requisitos=acuerdos_de_pago[pp].get('requisitos')
                     )
-
-                pago_proyectado_anterior.orden_compra_documento.delete() if pago_proyectado_anterior.orden_compra_documento else None,
-                CotizacionPagoProyectadoAcuerdoPago.objects.filter(
-                    orden_compra_id=pago_proyectado_anterior.id).delete(),
-                pago_proyectado_anterior.delete()
         except Exception as e:
             raise ValidationError({'_error': e})
         serializer = self.get_serializer(self.get_object())
