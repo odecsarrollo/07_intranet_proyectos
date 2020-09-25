@@ -635,8 +635,9 @@ def cotizacion_actualizar(
         else:
             cotizacion.costo_presupuestado = costo_presupuestado
     else:
-        cotizacion.valor_ofertado = 0
-        cotizacion.costo_presupuestado = 0
+        if estado not in ['Aplazado', 'Cancelado']:
+            cotizacion.valor_ofertado = 0
+            cotizacion.costo_presupuestado = 0
 
     # Valida cuándo se puede crear un número de cotización
     if estado not in ['Aplazado', 'Cancelado', 'Cita/Generación Interés']:
