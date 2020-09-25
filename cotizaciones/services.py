@@ -634,10 +634,6 @@ def cotizacion_actualizar(
                 '_error': 'Para el estado de Aceptación de Terminos y Condiciones es necesario tener un costo presupuestado del proyecto'})
         else:
             cotizacion.costo_presupuestado = costo_presupuestado
-    else:
-        if estado not in ['Aplazado', 'Cancelado']:
-            cotizacion.valor_ofertado = 0
-            cotizacion.costo_presupuestado = 0
 
     # Valida cuándo se puede crear un número de cotización
     if estado not in ['Aplazado', 'Cancelado', 'Cita/Generación Interés']:
