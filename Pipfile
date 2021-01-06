@@ -24,7 +24,7 @@ django-cors-headers = "==3.0.1"
 mysqlclient = "==1.4.2.post1"
 pypdf2 = "==1.26.0"
 cairocffi = "==0.8.0"
-cairosvg = "==2.1.3"
+cairosvg = "==2.5.1"
 redis = "*"
 celery = {extras = ["redis"],version = "*"}
 
