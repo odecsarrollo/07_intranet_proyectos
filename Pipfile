@@ -7,7 +7,7 @@ verify_ssl = true
 awsebcli = "*"
 
 [packages]
-django = "==2.2.6"
+django = "==2.2.21"
 djangorestframework = "==3.9.4"
 django-webpack-loader = "==0.6.0"
 django-storages = "==1.7.1"
