@@ -79,7 +79,7 @@
     "webpack-cli": "^3.3.2",
     "webpack-bundle-tracker": "^0.3.0",
     "webpack-dev-server": "^3.5.1",
-    "xlsx": "^0.14.3"
+    "xlsx": "^0.17.0"
   },
   "scripts": {
     "dev": "node server.js",
