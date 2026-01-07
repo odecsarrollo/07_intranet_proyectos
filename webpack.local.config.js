@@ -7,7 +7,7 @@ var config = require('./webpack.base.config.js');
 config.entry = {
     'app': [
         'react-hot-loader/patch',
-        'webpack-dev-server/client?http://localhost:3000',
+        'webpack-dev-server/client?http://127.0.0.1:3000/',
         'webpack/hot/only-dev-server',
         './static/assets/js/index'
     ]

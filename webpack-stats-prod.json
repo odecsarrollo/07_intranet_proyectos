@@ -1,1 +1,19 @@
-{"status":"done","chunks":{"app":[{"name":"app-9b1b969a3a944807990e.css","path":"/Users/bholguin/Documents/Odecopack/07_intranet_proyectos/static/assets/bundles/dist/app-9b1b969a3a944807990e.css"},{"name":"app-9b1b969a3a944807990e.js","path":"/Users/bholguin/Documents/Odecopack/07_intranet_proyectos/static/assets/bundles/dist/app-9b1b969a3a944807990e.js"}]}}
+{
+  "status": "done",
+  "assets": {
+    "app-b62b6267df00f3752a5a.css": {
+      "name": "app-b62b6267df00f3752a5a.css",
+      "path": "/Users/bholguin/Documents/Odecopack/07_intranet_proyectos/static/assets/bundles/dist/app-b62b6267df00f3752a5a.css"
+    },
+    "app-b62b6267df00f3752a5a.js": {
+      "name": "app-b62b6267df00f3752a5a.js",
+      "path": "/Users/bholguin/Documents/Odecopack/07_intranet_proyectos/static/assets/bundles/dist/app-b62b6267df00f3752a5a.js"
+    }
+  },
+  "chunks": {
+    "app": [
+      "app-b62b6267df00f3752a5a.css",
+      "app-b62b6267df00f3752a5a.js"
+    ]
+  }
+}
