@@ -1,5 +1,5 @@
 from django.db import models
-from knox.auth import User
+from django.contrib.auth.models import User
 from model_utils.models import TimeStampedModel
 
 from contabilidad_anticipos.models import ProformaAnticipo

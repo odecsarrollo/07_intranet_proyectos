@@ -155,9 +155,10 @@ TIME_ZONE = 'America/Bogota'
 
 USE_I18N = True
 
-USE_L10N = True
-
 USE_TZ = True
+
+# Django 4.2+ requires DEFAULT_AUTO_FIELD
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SITE_ID = 1
 

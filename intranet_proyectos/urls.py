@@ -13,9 +13,8 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.conf.urls import url, include
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from .api_urls import router
@@ -25,13 +24,13 @@ from knox.views import LogoutView
 from .views import send_emails
 
 urlpatterns = [
-    url(r'^send_emails$', send_emails),
+    re_path(r'^send_emails$', send_emails),
     path('admin/', admin.site.urls),
     path('api/auth/logout', LogoutView.as_view()),
     path('api/', include(router.urls)),
-    url(r'^app/*', IndexView.as_view(), name='index'),
+    re_path(r'^app/*', IndexView.as_view(), name='index'),
     path('', include('index.urls')),
-    url(r'^silk/', include('silk.urls', namespace='silk')),
+    re_path(r'^silk/', include(('silk.urls', 'silk'), namespace='silk')),
 ]
 
 if settings.DEBUG:

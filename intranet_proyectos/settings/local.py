@@ -1,18 +1,25 @@
 import json
+import os
 
 from django.core.exceptions import ImproperlyConfigured
 
 from .base import *
 
-with open("secretsLocal.json") as f:
-    secrets = json.loads(f.read())
+# Intentar cargar secretsLocal.json si existe, sino usar valores por defecto
+secrets = {}
+secrets_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "secretsLocal.json")
+if os.path.exists(secrets_path):
+    with open(secrets_path) as f:
+        secrets = json.loads(f.read())
 
 
-def get_secret(setting, variable, secrets=secrets):
-    """ Get the environment setting or return exception """
+def get_secret(setting, variable, secrets=secrets, default=None):
+    """ Get the environment setting or return default/exception """
     try:
         return secrets[setting][variable]
     except KeyError:
+        if default is not None:
+            return default
         error_msg = "Set the {0} environment variable".format(setting)
         raise ImproperlyConfigured(error_msg)
 
@@ -66,24 +73,24 @@ ENVIAR_SMS = False
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-EMAIL_HOST = get_secret("EMAIL_SERVER", "EMAIL_HOST")
+EMAIL_HOST = get_secret("EMAIL_SERVER", "EMAIL_HOST", default="localhost")
 
-EMAIL_HOST_PASSWORD = get_secret("EMAIL_SERVER", "EMAIL_HOST_PASSWORD")
+EMAIL_HOST_PASSWORD = get_secret("EMAIL_SERVER", "EMAIL_HOST_PASSWORD", default="")
 
-EMAIL_HOST_USER = get_secret("EMAIL_SERVER", "EMAIL_HOST_USER")
+EMAIL_HOST_USER = get_secret("EMAIL_SERVER", "EMAIL_HOST_USER", default="")
 
-EMAIL_PORT = get_secret("EMAIL_SERVER", "EMAIL_PORT")
+EMAIL_PORT = get_secret("EMAIL_SERVER", "EMAIL_PORT", default="587")
 
 EMAIL_SUBJECT_PREFIX = '[%s] ' % 'Odecopack'
 
-EMAIL_USE_TLS = str_to_bool(get_secret("EMAIL_SERVER", "EMAIL_USE_TLS"))
+EMAIL_USE_TLS = str_to_bool(get_secret("EMAIL_SERVER", "EMAIL_USE_TLS", default="False"))
 
-SERVER_EMAIL = get_secret("EMAIL_SERVER", "SERVER_EMAIL")
+SERVER_EMAIL = get_secret("EMAIL_SERVER", "SERVER_EMAIL", default="noreply@odecopack.com")
 
-EMAIL_USE_SSL = str_to_bool(get_secret("EMAIL_SERVER", "EMAIL_USE_SSL"))
+EMAIL_USE_SSL = str_to_bool(get_secret("EMAIL_SERVER", "EMAIL_USE_SSL", default="False"))
 
-DEFAULT_FROM_EMAIL = get_secret("EMAIL_SERVER", "DEFAULT_FROM_EMAIL")
+DEFAULT_FROM_EMAIL = get_secret("EMAIL_SERVER", "DEFAULT_FROM_EMAIL", default="noreply@odecopack.com")
 
-AWS_ACCESS_KEY_ID = get_secret("AWS", "AWS_ACCESS_KEY")
+AWS_ACCESS_KEY_ID = get_secret("AWS", "AWS_ACCESS_KEY", default="")
 
-AWS_SECRET_ACCESS_KEY = get_secret("AWS", "AWS_SECRET_ACCESS_KEY")
+AWS_SECRET_ACCESS_KEY = get_secret("AWS", "AWS_SECRET_ACCESS_KEY", default="")

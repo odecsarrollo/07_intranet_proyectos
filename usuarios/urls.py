@@ -6,4 +6,4 @@ from .views import (
 
 router = routers.DefaultRouter()
 router.register(r'usuarios', UsuarioViewSet)
-router.register(r'authentication', LoginViewSet)
+router.register(r'authentication', LoginViewSet, basename='authentication')

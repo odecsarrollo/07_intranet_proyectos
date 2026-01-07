@@ -15,14 +15,16 @@ class ItemVentaCatalogoManager(models.Manager):
             ),
             costo=Case(
                 When(origen='LP_INTRANET', then='costo_catalogo'),
-                default='item_sistema_informacion__ultimo_costo'
+                default='item_sistema_informacion__ultimo_costo',
+                output_field=DecimalField(max_digits=12, decimal_places=2)
             ),
             costo_sistema_informacion=Case(
                 When(
                     item_sistema_informacion__unidad_medida_en_inventario=F('unidad_medida_en_inventario'),
                     then='item_sistema_informacion__ultimo_costo'
                 ),
-                default=0
+                default=Value(0),
+                output_field=DecimalField(max_digits=12, decimal_places=2)
             ),
             # Moneda Pesos Colombianos
             costo_cop=ExpressionWrapper(
@@ -39,14 +41,16 @@ class ItemVentaCatalogoManager(models.Manager):
                     item_sistema_informacion__unidad_medida_en_inventario=F('unidad_medida_en_inventario'),
                     then='costo_sistema_informacion'
                 ),
-                default='costo_cop'
+                default='costo_cop',
+                output_field=DecimalField(max_digits=12, decimal_places=2)
             ),
             costo_a_usar_aereo=Case(
                 When(
                     costo_sistema_informacion__gte=F('costo_cop_aereo'),
                     item_sistema_informacion__unidad_medida_en_inventario=F('unidad_medida_en_inventario'),
                     then='costo_sistema_informacion'),
-                default='costo_cop_aereo'
+                default='costo_cop_aereo',
+                output_field=DecimalField(max_digits=12, decimal_places=2)
             ),
             precio_base=ExpressionWrapper(
                 Sum(F('costo_a_usar') / (1 - (F('margen__margen_deseado') / 100))),
@@ -80,7 +84,8 @@ class ItemVentaCatalogoManager(models.Manager):
                     item_sistema_informacion__unidad_medida_en_inventario=F('unidad_medida_en_inventario'),
                     then=(F('costo_sistema_informacion') / F('margen__proveedor__moneda__cambio')) * F('tasa_usd')
                 ),
-                default='costo_usd'
+                default='costo_usd',
+                output_field=DecimalField(max_digits=12, decimal_places=4)
             ),
             costo_a_usar_aereo_usd=Case(
                 When(
@@ -88,7 +93,8 @@ class ItemVentaCatalogoManager(models.Manager):
                     item_sistema_informacion__unidad_medida_en_inventario=F('unidad_medida_en_inventario'),
                     then=(F('costo_sistema_informacion') / F('margen__proveedor__moneda__cambio')) * F('tasa_usd')
                 ),
-                default='costo_usd_aereo'
+                default='costo_usd_aereo',
+                output_field=DecimalField(max_digits=12, decimal_places=4)
             ),
             precio_base_usd=ExpressionWrapper(
                 Sum(F('costo_a_usar_usd') / (1 - (F('margen__margen_deseado') / 100))),
