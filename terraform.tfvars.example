@@ -1,0 +1,14 @@
+# Terraform Variables Example
+# Copy this file to terraform.tfvars and fill with actual values
+# DO NOT commit terraform.tfvars to version control
+
+project_name = "intranet-proyectos"
+environment  = "production"
+
+# Database credentials
+db_username = "admin"
+db_password = "your-secure-password-here"
+
+# Administrator email
+admin_email = "admin@example.com"
+
