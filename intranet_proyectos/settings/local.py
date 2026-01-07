@@ -27,7 +27,19 @@ def get_secret(setting, variable, secrets=secrets, default=None):
 DEBUG = True
 THIRD_PART_APPS = []
 
+# CSRF trusted origins for development
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:8000',
+    'http://localhost:8000',
+    'http://127.0.0.1:3000',
+    'http://localhost:3000',
+]
+
 INSTALLED_APPS = INSTALLED_APPS + THIRD_PART_APPS
+
+# X-Frame-Options for development - desactivar el middleware para permitir iframes
+# Remover el middleware de X-Frame-Options en desarrollo para evitar problemas con iframes
+MIDDLEWARE = [m for m in MIDDLEWARE if m != 'django.middleware.clickjacking.XFrameOptionsMiddleware']
 
 MIDDLEWARE = MIDDLEWARE + [
     'silk.middleware.SilkyMiddleware',

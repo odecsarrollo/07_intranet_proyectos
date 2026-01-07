@@ -1,19 +1,19 @@
 {
   "status": "done",
   "assets": {
-    "app-b62b6267df00f3752a5a.css": {
-      "name": "app-b62b6267df00f3752a5a.css",
-      "path": "/Users/bholguin/Documents/Odecopack/07_intranet_proyectos/static/assets/bundles/dist/app-b62b6267df00f3752a5a.css"
+    "app-cd000fc87702ea6c2c1e.css": {
+      "name": "app-cd000fc87702ea6c2c1e.css",
+      "path": "/Users/bholguin/Documents/Odecopack/07_intranet_proyectos/static/assets/bundles/dist/app-cd000fc87702ea6c2c1e.css"
     },
-    "app-b62b6267df00f3752a5a.js": {
-      "name": "app-b62b6267df00f3752a5a.js",
-      "path": "/Users/bholguin/Documents/Odecopack/07_intranet_proyectos/static/assets/bundles/dist/app-b62b6267df00f3752a5a.js"
+    "app-cd000fc87702ea6c2c1e.js": {
+      "name": "app-cd000fc87702ea6c2c1e.js",
+      "path": "/Users/bholguin/Documents/Odecopack/07_intranet_proyectos/static/assets/bundles/dist/app-cd000fc87702ea6c2c1e.js"
     }
   },
   "chunks": {
     "app": [
-      "app-b62b6267df00f3752a5a.css",
-      "app-b62b6267df00f3752a5a.js"
+      "app-cd000fc87702ea6c2c1e.css",
+      "app-cd000fc87702ea6c2c1e.js"
     ]
   }
 }

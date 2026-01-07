@@ -1,7 +1,8 @@
 import React from 'react';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
 import {Provider} from 'react-redux';
-import {hot} from 'react-hot-loader';
+// Hot reload deshabilitado temporalmente - descomentar cuando se reactive
+// import {hot} from 'react-hot-loader';
 import StylesContextProvider from './00_utilities/contexts/StylesContextProvider';
 import {ProvideAuth} from "./00_utilities/hooks";
 import RootContainer from './00_utilities/components/system/RootContainer';
@@ -23,7 +24,7 @@ import AppCuenta from './authentication/mi_cuenta/Dashboard';
 import AppPostventa from './13_postventa/App';
 import AppDocumentacion from './14_documentacion/App';
 
-let App = () => {
+const App = () => {
     return (
         <Provider store={store}>
             <ProvideAuth>
@@ -56,5 +57,6 @@ let App = () => {
     )
 };
 
-App = hot(module)(App);
+// Hot reload deshabilitado temporalmente - descomentar cuando se reactive
+// App = hot(module)(App);
 export default App;

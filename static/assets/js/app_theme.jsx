@@ -11,7 +11,7 @@ import 'webdatarocks/webdatarocks.min.css';
 import 'webdatarocks/webdatarocks.toolbar.min';
 import 'react-tabs/style/react-tabs.css';
 
-import {createMuiTheme} from '@material-ui/core/styles';
+import {createTheme} from '@material-ui/core/styles';
 import red from '@material-ui/core/colors/red';
 import orange from '@material-ui/core/colors/orange';
 import indigo from '@material-ui/core/colors/indigo';
@@ -19,7 +19,7 @@ import indigo from '@material-ui/core/colors/indigo';
 
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {
-    faCodeMerge,
+    // faCodeMerge, // No disponible en free-solid-svg-icons - usar faCodeBranch o faGitAlt
     faEyeSlash,
     faBarcode,
     faReceipt,
@@ -28,11 +28,14 @@ import {
     faCogs,
     faShoppingCart,
     faPuzzlePiece,
-    faSignOut,
-    faSpinnerThird,
+    // faSignOut, // No disponible en free-solid-svg-icons - usar faSignOutAlt
+    faSignOutAlt,
+    // faSpinnerThird, // No disponible en free-solid-svg-icons - usar faSpinner
+    faSpinner,
     faBars,
     faHome,
-    faAlarmClock,
+    // faAlarmClock, // No disponible en free-solid-svg-icons - usar faClock
+    faClock,
     faAngleLeft,
     faAngleDown,
     faSearch,
@@ -45,7 +48,8 @@ import {
     faUser,
     faLock,
     faObjectGroup,
-    faUserHardHat,
+    // faUserHardHat, // No disponible en free-solid-svg-icons - usar faHardHat
+    faHardHat,
     faSuitcase,
     faMoneyBillAlt,
     faFile,
@@ -68,7 +72,8 @@ import {
     faDesktop,
     faMap,
     faExchangeAlt,
-    faConveyorBelt,
+    // faConveyorBelt, // No disponible en free-solid-svg-icons - usar faBoxes
+    faBoxes,
     faComments,
     faSuitcaseRolling,
     faCoins,
@@ -79,7 +84,8 @@ import {
     faArrowCircleUp,
     faArrowCircleDown,
     faFileImage,
-    faInboxOut,
+    // faInboxOut, // No disponible en free-solid-svg-icons - usar faInbox
+    faInbox,
     faThumbsDown,
     faThumbsUp,
     faHistory,
@@ -88,8 +94,10 @@ import {
     faLink,
     faEraser,
     faPaste,
-    faAnalytics,
-    faAbacus
+    // faAnalytics, // No disponible en free-solid-svg-icons - usar faChartLine
+    faChartLine,
+    // faAbacus // No disponible en free-solid-svg-icons - usar faCalculator
+    faCalculator
 } from '@fortawesome/free-solid-svg-icons';
 // import {far} from "@fortawesome/pro-regular-svg-icons"; // Comentado - requiere FontAwesome Pro
 // library.add(far); // Comentado - requiere FontAwesome Pro
@@ -103,13 +111,13 @@ library.add(
     faShoppingCart,
     faSuitcaseRolling,
     faPuzzlePiece,
-    faSignOut,
-    faSpinnerThird,
+    faSignOutAlt, // Reemplazo de faSignOut
+    faSpinner, // Reemplazo de faSpinnerThird
     faComments,
     faBars,
     faCoins,
     faHome,
-    faAlarmClock,
+    faClock, // Reemplazo de faAlarmClock
     faAngleLeft,
     faAngleDown,
     faSearch,
@@ -123,7 +131,7 @@ library.add(
     faLock,
     faReceipt,
     faObjectGroup,
-    faUserHardHat,
+    faHardHat, // Reemplazo de faUserHardHat
     faSuitcase,
     faMoneyBillAlt,
     faFile,
@@ -146,7 +154,7 @@ library.add(
     faDesktop,
     faMap,
     faExchangeAlt,
-    faConveyorBelt,
+    faBoxes, // Reemplazo de faConveyorBelt
     faLaptopCode,
     faInfoCircle,
     faPhone,
@@ -154,7 +162,7 @@ library.add(
     faArrowCircleUp,
     faArrowCircleDown,
     faFileImage,
-    faInboxOut,
+    faInbox, // Reemplazo de faInboxOut
     faThumbsDown,
     faThumbsUp,
     faHistory,
@@ -163,13 +171,12 @@ library.add(
     faLink,
     faEraser,
     faPaste,
-    faCodeMerge,
-    faAnalytics,
-    faAbacus
+    faChartLine, // Reemplazo de faAnalytics
+    faCalculator // Reemplazo de faAbacus
 );
 
 
-const theme = createMuiTheme({
+const theme = createTheme({
     typography: {
         useNextVariants: true,
         fontFamily: [

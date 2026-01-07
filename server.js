@@ -23,8 +23,9 @@ var before = function(app, server) {
 
 new WebpackDevServer(webpack(config), {
     publicPath: config.output.publicPath,
-    hot: true,
-    inline: true,
+    // Hot reload deshabilitado temporalmente debido a problemas con WebSocket en proxy de Django
+    hot: false,
+    inline: false,
     historyApiFallback: true,
     headers: {
         "Access-Control-Allow-Methods": "GET, POST, OPTIONS",

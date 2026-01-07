@@ -18,6 +18,8 @@ from django.urls import path, re_path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
 from .api_urls import router
 from index.views import IndexView
 from knox.views import LogoutView
@@ -26,8 +28,23 @@ import requests
 from .views import send_emails
 
 
+@csrf_exempt
+@require_http_methods(["GET", "POST", "OPTIONS", "PUT", "DELETE"])
 def proxy_to_webpack_dev_server(request, path):
     """Proxy requests to webpack-dev-server for sockjs-node and hot reload"""
+    # Handle OPTIONS preflight requests
+    if request.method == 'OPTIONS':
+        origin = request.META.get('HTTP_ORIGIN', '')
+        if not origin:
+            origin = f"http://{request.get_host()}"
+        response = HttpResponse(status=200)
+        response['Access-Control-Allow-Origin'] = origin
+        response['Access-Control-Allow-Credentials'] = 'true'
+        response['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS, PUT, DELETE'
+        response['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, Cache-Control, X-Requested-With'
+        response['Access-Control-Max-Age'] = '86400'
+        return response
+    
     try:
         url = f'http://127.0.0.1:3000/sockjs-node/{path}'
         # Get query parameters from request
@@ -41,15 +58,26 @@ def proxy_to_webpack_dev_server(request, path):
             # Fallback to request host if no origin header
             origin = f"http://{request.get_host()}"
         
-        response = requests.get(
-            url,
-            headers={
-                'Host': 'localhost:3000',
-                'Origin': origin,
-                'Referer': request.META.get('HTTP_REFERER', ''),
-            },
-            timeout=5
-        )
+        # Prepare request headers
+        headers = {
+            'Host': 'localhost:3000',
+            'Origin': origin,
+            'Referer': request.META.get('HTTP_REFERER', ''),
+        }
+        
+        # Copy additional headers if present
+        if 'HTTP_USER_AGENT' in request.META:
+            headers['User-Agent'] = request.META['HTTP_USER_AGENT']
+        
+        # Make request based on method
+        if request.method == 'GET':
+            response = requests.get(url, headers=headers, timeout=5)
+        elif request.method == 'POST':
+            # Get request body if present
+            body = request.body if hasattr(request, 'body') else None
+            response = requests.post(url, data=body, headers=headers, timeout=5)
+        else:
+            response = requests.request(request.method, url, headers=headers, timeout=5)
         
         django_response = HttpResponse(
             content=response.content,
@@ -60,8 +88,12 @@ def proxy_to_webpack_dev_server(request, path):
         # Add CORS headers - must specify exact origin when using credentials
         django_response['Access-Control-Allow-Origin'] = origin
         django_response['Access-Control-Allow-Credentials'] = 'true'
-        django_response['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
-        django_response['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+        django_response['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS, PUT, DELETE'
+        django_response['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, Cache-Control, X-Requested-With'
+        
+        # Copy relevant headers from webpack-dev-server response
+        if 'Content-Type' in response.headers:
+            django_response['Content-Type'] = response.headers['Content-Type']
         
         return django_response
     except requests.exceptions.RequestException as e:
@@ -72,6 +104,8 @@ def proxy_to_webpack_dev_server(request, path):
         response = HttpResponse(status=404)
         response['Access-Control-Allow-Origin'] = origin
         response['Access-Control-Allow-Credentials'] = 'true'
+        response['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS, PUT, DELETE'
+        response['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, Cache-Control, X-Requested-With'
         return response
 
 
