@@ -47,11 +47,13 @@ packages:
     libpng-devel: []
     freetype-devel: []
     gcc-c++: []
-    python34-devel: []
-    postgresql93-devel: []
+    python36-devel: []
+    postgresql-devel: []
     libffi-devel: []
     cairo: []
     pango: []
+    pango-devel: []
+    cairo-devel: []
 ```
 
 **Propósito**: Instala dependencias del sistema necesarias para:
@@ -59,9 +61,13 @@ packages:
 - Compilación de paquetes Python nativos
 - Procesamiento de imágenes (Pillow, WeasyPrint)
 - Librerías gráficas (Cairo, Pango) para generación de PDFs
-- Desarrollo Python (python34-devel)
+- Desarrollo Python (python36-devel para Python 3.6)
 
-**Nota**: Aunque el proyecto usa MySQL, se instala `postgresql93-devel` (posiblemente para compatibilidad con otras dependencias).
+**Nota**:
+
+- Se usa `python36-devel` porque el proyecto requiere Python 3.6
+- Aunque el proyecto usa MySQL, se instala `postgresql-devel` (posiblemente para compatibilidad con otras dependencias)
+- Se incluyen `pango-devel` y `cairo-devel` para compilar dependencias de WeasyPrint
 
 ### 3. Comandos de Django (03_python.config)
 
@@ -371,6 +377,45 @@ Según `.gitignore`, estos archivos NO se incluyen:
 **Importante**: Asegurarse de que `webpack-stats-prod.json` SÍ esté incluido (no está en .gitignore).
 
 ## Problemas Comunes y Soluciones
+
+### 0. Error: "Yum does not have python34-devel available for installation"
+
+**Síntoma**:
+
+```
+[INFO] Error occurred during build: Yum does not have python34-devel available for installation
+[ERROR] EbExtension build failed
+```
+
+**Causa**:
+
+- El paquete `python34-devel` es para Python 3.4, que ya no está disponible en versiones recientes de Amazon Linux
+- El proyecto usa Python 3.6, por lo que necesita `python36-devel`
+
+**Solución**:
+
+- Actualizar `.ebextensions/02_packages.config` cambiando `python34-devel` por `python36-devel`
+- También actualizar `postgresql93-devel` a `postgresql-devel` (versión más reciente)
+- Agregar `pango-devel` y `cairo-devel` si faltan para WeasyPrint
+
+**Archivo corregido**:
+
+```yaml
+packages:
+  yum:
+    git: []
+    libjpeg-turbo-devel: []
+    libpng-devel: []
+    freetype-devel: []
+    gcc-c++: []
+    python36-devel: [] # Cambiado de python34-devel
+    postgresql-devel: [] # Cambiado de postgresql93-devel
+    libffi-devel: []
+    cairo: []
+    pango: []
+    pango-devel: [] # Agregado
+    cairo-devel: [] # Agregado
+```
 
 ### 1. Error en Migraciones
 
