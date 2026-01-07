@@ -90,10 +90,9 @@ import {
     faPaste,
     faAnalytics,
     faAbacus
-} from '@fortawesome/pro-solid-svg-icons';
-import {far} from "@fortawesome/pro-regular-svg-icons";
-
-library.add(far);
+} from '@fortawesome/free-solid-svg-icons';
+// import {far} from "@fortawesome/pro-regular-svg-icons"; // Comentado - requiere FontAwesome Pro
+// library.add(far); // Comentado - requiere FontAwesome Pro
 
 library.add(
     faEyeSlash,
