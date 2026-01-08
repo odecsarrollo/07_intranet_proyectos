@@ -20,9 +20,7 @@ let RootContainer = memo(props => {
     const {auth: {isAuthenticated, isLoading}} = authentication;
     const notifications = useSelector(state => state.notifications);
     useEffect(() => {
-        if (localStorage.token) {
-            axios.defaults.headers["Authorization"] = `Token ${localStorage.token}`;
-        }
+        // Ya no necesitamos configurar el header aquí, el interceptor lo maneja automáticamente
         if (isAuthenticated) {
             const mis_permisos = localStorage.getItem('mis_permisos');
             const user = localStorage.getItem('user');

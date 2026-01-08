@@ -7,6 +7,23 @@ const axios_instance = axios.create({
     baseURL: '/api/',
 });
 
+// Interceptor para agregar el token automáticamente a todas las peticiones
+// Se ejecuta después de que se configuren los defaults, así que siempre agregará el token
+axios_instance.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            // Usar config.headers directamente para asegurar que el token se agregue a esta request específica
+            config.headers = config.headers || {};
+            config.headers.Authorization = `Token ${token}`;
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
+
 export function createRequest(request, options = {}) {
     const {
         dispatches = null,
@@ -117,8 +134,12 @@ export function fetchListGet(url, options) {
     console.log(`%cFETCH LIST - %c${url.toUpperCase()}`, 'color:red', 'color:blue');
     const mensaje_cargando = `Consultando ${url.toUpperCase()}`;
     const FULL_URL = `${url}/?format=json`;
-    const headers = {"Content-Type": "application/json"};
-    axios_instance.defaults.headers = headers;
+    // No sobrescribir headers, el interceptor ya agrega el token
+    // Solo establecer Content-Type si no existe
+    if (!axios_instance.defaults.headers.common) {
+        axios_instance.defaults.headers.common = {};
+    }
+    axios_instance.defaults.headers.common["Content-Type"] = "application/json";
     const request = axios_instance.get(FULL_URL);
     return createRequest(request, {...options, mensaje_cargando});
 }

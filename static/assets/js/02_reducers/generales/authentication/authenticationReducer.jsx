@@ -53,8 +53,9 @@ export default function auth(state = initialState, action) {
         case 'LOGIN_SUCCESSFUL':
             const token = action.data.token;
             localStorage.setItem("token", token);
-            localStorage.setItem("mis_permisos", []);
+            localStorage.setItem("mis_permisos", JSON.stringify([])); // Fix: usar JSON.stringify
             axios.defaults.headers["Authorization"] = `Token ${token}`;
+            // El interceptor en axios_instance manejará automáticamente el token
             return {...state, ...action.data, isAuthenticated: true, isLoading: false, errors: null};
 
         case 'AUTHENTICATION_ERROR':
