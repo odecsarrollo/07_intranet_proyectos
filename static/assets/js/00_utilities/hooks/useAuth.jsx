@@ -54,17 +54,25 @@ function useProvideAuth() {
     // ... latest auth object.
     const auth = useSelector(state => state.auth);
     useEffect(() => {
+        const token = localStorage.getItem('token');
         const user = localStorage.getItem('user');
-        if (user) {
-            dispatch(loadUserLocally())
+        // Solo intentar cargar el usuario si hay un token
+        if (token) {
+            if (user) {
+                dispatch(loadUserLocally())
+            } else {
+                dispatch(loadUser({
+                    callback: (response) => {
+                        localStorage.setItem('user', JSON.stringify(response))
+                    }
+                }));
+            }
         } else {
-            dispatch(loadUser({
-                callback: (response) => {
-                    localStorage.setItem('user', JSON.stringify(response))
-                }
-            }));
+            // Si no hay token, establecer el estado como no autenticado inmediatamente
+            // Solo hacerlo si el estado inicial indica que está cargando
+            dispatch({type: 'NOT_USER_LOADED'});
         }
-    }, []);
+    }, [dispatch]);
 
     // Return the user object and auth methods
     return {

@@ -41,6 +41,14 @@ let RootContainer = memo(props => {
                         const my_downloaded_permissions = res.map(e => e.codename);
                         localStorage.setItem('mis_permisos', JSON.stringify(my_downloaded_permissions));
                         setHasPermissions(true);
+                    },
+                    callback_error: (error) => {
+                        // Si hay un error 401/403, el usuario no está autenticado
+                        // El reducer de autenticación debería manejar esto, pero por seguridad
+                        // también lo manejamos aquí
+                        if (error && error.response && (error.response.status === 401 || error.response.status === 403)) {
+                            setHasPermissions(false);
+                        }
                     }
                 }));
             } else {
@@ -66,6 +74,11 @@ let RootContainer = memo(props => {
                 </Suspense>
             </Fragment>
         )
+    }
+    // Si está autenticado pero no tiene permisos, mostrar loading mientras se cargan
+    // Si después de un tiempo no se cargan, puede ser un error y deberíamos mostrar login
+    if (isAuthenticated && !has_permissions) {
+        return <div className='m-5 p-5'>Cargando permisos...</div>
     }
     return null
 });
