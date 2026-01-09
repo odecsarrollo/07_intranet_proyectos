@@ -5,6 +5,8 @@ db.sqlite3
 /cositas.txt
 /node_modules
 /venv_intranet_proyectos/
+/venv/
+venv/
 media/*
 /webpack-stats.json
 start_backend.ps1
