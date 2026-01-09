@@ -81,11 +81,10 @@ DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
 # DATABASE_ROUTERS = ['intranet_proyectos.settings.database_router.PrimaryReplicaRouter')
 
 # Configuración de base de datos
-# Si DB_HOST_REPLICA no está configurado, usar el mismo host que default
+# En producción, si la réplica no está disponible, usar el mismo host que default
 # para evitar errores de conexión durante migraciones
-DB_HOST_REPLICA = os.environ.get('DB_HOST_REPLICA')
-if not DB_HOST_REPLICA:
-    DB_HOST_REPLICA = os.environ.get('DB_HOST')
+# Nota: Si necesitas usar una réplica real, asegúrate de que sea accesible
+DB_HOST_REPLICA = os.environ.get('DB_HOST_REPLICA') or os.environ.get('DB_HOST')
 
 DATABASES = {
     'default': {
