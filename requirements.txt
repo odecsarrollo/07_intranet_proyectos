@@ -33,7 +33,7 @@ jinja2==2.11.2
 jmespath==0.10.0
 kombu==4.6.11
 markupsafe==1.1.1
-mysqlclient==1.4.2.post1
+mysqlclient>=2.0.3
 pdfrw==0.4
 pilkit==2.0
 pillow==7.2.0
