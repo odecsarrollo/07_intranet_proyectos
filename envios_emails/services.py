@@ -1,6 +1,7 @@
 from io import BytesIO
 from django.template.loader import get_template
-from weasyprint import CSS, HTML
+# Importación lazy de weasyprint para evitar errores en macOS
+# from weasyprint import CSS, HTML
 from PyPDF2 import PdfFileReader, PdfFileWriter
 
 
@@ -12,6 +13,7 @@ def get_page_body(boxes):
 
 
 def generar_base_pdf(request, encabezado_url: str, contexto_documento: dict, template: str) -> BytesIO:
+    from weasyprint import CSS, HTML  # Importación lazy
     html_get_template = get_template('emails/base/base_pagina_carta.html').render()
     html = HTML(
         string=html_get_template,

@@ -2,7 +2,8 @@ from django.db.models import ExpressionWrapper, OuterRef, Subquery, DecimalField
 from django.db.models.functions import Coalesce
 
 from django.template.loader import get_template
-from weasyprint import HTML, CSS
+# Importación lazy de weasyprint para evitar errores en macOS
+# from weasyprint import HTML, CSS
 
 from .models import Literal
 from cargues_detalles.models import ItemsLiteralDetalle
@@ -116,6 +117,7 @@ class LiteralesPDFMixin(object):
         return context
 
     def generar_pdf(self, request, fecha_inicial, fecha_final, con_mo_saldo_inicial, proyecto):
+        from weasyprint import HTML, CSS  # Importación lazy
         context = self.generar_resultados(fecha_inicial, fecha_final, con_mo_saldo_inicial, proyecto)
         context['user'] = request.user
         html_get_template = get_template('reportes/proyectos/costos.html').render(context)
@@ -127,6 +129,7 @@ class LiteralesPDFMixin(object):
         return main_doc
 
     def generar_pdf_costos_dos(self, request, fecha_inicial, fecha_final, con_mo_saldo_inicial):
+        from weasyprint import HTML, CSS  # Importación lazy
         context = self.generar_resultados(fecha_inicial, fecha_final, con_mo_saldo_inicial, None)
         context['user'] = request.user
         html_get_template = get_template('reportes/proyectos/costos_dos.html').render(context)
@@ -138,6 +141,7 @@ class LiteralesPDFMixin(object):
         return main_doc
 
     def generar_pdf_costos_tres(self, request, fecha_inicial, fecha_final, con_mo_saldo_inicial):
+        from weasyprint import HTML, CSS  # Importación lazy
         context = self.generar_resultados(fecha_inicial, fecha_final, con_mo_saldo_inicial, None)
         context['user'] = request.user
         html_get_template = get_template('reportes/proyectos/costos_tres.html').render(context)

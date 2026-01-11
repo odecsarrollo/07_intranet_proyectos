@@ -2,7 +2,8 @@ from django.db.models import ExpressionWrapper, OuterRef, Subquery, DecimalField
 from django.db.models.functions import Coalesce
 
 from django.template.loader import get_template
-from weasyprint import HTML, CSS
+# Importación lazy de weasyprint para evitar errores en macOS
+# from weasyprint import HTML, CSS
 
 from .models import HoraHojaTrabajo
 
@@ -73,6 +74,7 @@ class HoraHojaTrabajoPDFMixin(object):
                 hoja__fecha__gte=fecha_inicial
             )
 
+        from weasyprint import HTML, CSS  # Importación lazy
         context = {
             'user': request.user,
             'con_literal': request.user,

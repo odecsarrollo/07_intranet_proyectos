@@ -1,10 +1,13 @@
 import json
+import os
 
 from django.core.exceptions import ImproperlyConfigured
 
 from .base import *
 
-with open("secretsLocal.json") as f:
+# Ruta al archivo secretsLocal.json relativa al directorio del proyecto
+secrets_path = os.path.join(SITE_ROOT, "secretsLocal.json")
+with open(secrets_path) as f:
     secrets = json.loads(f.read())
 
 
