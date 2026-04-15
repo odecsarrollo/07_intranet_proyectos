@@ -46,9 +46,12 @@ services:
         condition: service_healthy
     ports:
       - "8000:8000"
+    # :U = Podman ajusta propietario del directorio del host al usuario del contenedor
+    # (evita PermissionError en collectstatic con Podman rootless). :Z = SELinux.
+    # Antes del primer up: mkdir -p media staticfiles
     volumes:
-      - ./media:/app/media
-      - ./staticfiles:/app/staticfiles
+      - ./media:/app/media:U,Z
+      - ./staticfiles:/app/staticfiles:U,Z
 
   worker:
     build: .
