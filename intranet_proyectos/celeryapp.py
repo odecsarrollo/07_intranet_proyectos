@@ -3,11 +3,10 @@ import os
 from celery import Celery
 
 # Establecer las opciones de django para la aplicación de celery.
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'intranet_proyectos.settings.local')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "intranet_proyectos.settings")
 
 # Crear la aplicación de Celery
 app = Celery('intranet_proyectos')
-print('ENTROOOOO')
 
 # Especificamos que las variables de configuración de Celery se encuentran
 # en el fichero `settings.py` de Django.
