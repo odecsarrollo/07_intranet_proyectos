@@ -52,9 +52,12 @@ EMAIL_USE_SSL = str_to_bool(os.environ.get("EMAIL_USE_SSL", "False"))
 SERVER_EMAIL = os.environ.get("SERVER_EMAIL", "")
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "")
 
-# Celery / Redis (local)
-CELERY_RESULT_BACKEND = "django-db"
+# Celery / Redis (local). No usar django-db como backend de resultados aquí: requeriría
+# django-celery-results + migraciones; Redis evita ese fallo al arrancar el worker.
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://redis:6379/0")
+CELERY_RESULT_BACKEND = os.environ.get(
+    "CELERY_RESULT_BACKEND", "redis://redis:6379/1"
+)
 
 # Static/media locales (Nginx)
 STATIC_URL = "/static/"
