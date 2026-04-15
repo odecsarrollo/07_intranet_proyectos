@@ -1,8 +1,10 @@
 version: "3.8"
 
+# En Oracle Linux, nombres cortos (mariadb, redis) suelen resolverse a
+# container-registry.oracle.com y exigen login. Forzar Docker Hub:
 services:
   db:
-    image: mariadb:10.11
+    image: docker.io/library/mariadb:10.11
     environment:
       MARIADB_DATABASE: ${DB_NAME:-proyectos_intranet}
       MARIADB_USER: ${DB_USER:-proyectos}
@@ -17,7 +19,7 @@ services:
       retries: 20
 
   redis:
-    image: redis:6-alpine
+    image: docker.io/library/redis:6-alpine
     command: ["redis-server", "--appendonly", "yes"]
     volumes:
       - redis_data:/data
