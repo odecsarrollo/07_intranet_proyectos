@@ -1,7 +1,13 @@
 from .base import *
 
-# Producción on-prem (todo local): sin S3, static/media servidos por Nginx.
+# Producción on-prem (todo local): sin S3; estáticos vía WhiteNoise (Gunicorn no sirve /static/).
 DEBUG = False
+
+_mw = list(MIDDLEWARE)
+if "whitenoise.middleware.WhiteNoiseMiddleware" not in _mw:
+    # Inmediatamente después de SecurityMiddleware (requerido por WhiteNoise)
+    _mw.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
+MIDDLEWARE = _mw
 
 ADMIN_NAME = os.environ.get("ADMIN_NAME")
 ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL")
@@ -59,11 +65,12 @@ CELERY_RESULT_BACKEND = os.environ.get(
     "CELERY_RESULT_BACKEND", "redis://redis:6379/1"
 )
 
-# Static/media locales (Nginx)
+# Static/media locales
 STATIC_URL = "/static/"
 MEDIA_URL = "/media/"
 STATIC_ROOT = os.environ.get("STATIC_ROOT", os.path.join(SITE_ROOT, "staticfiles"))
 MEDIA_ROOT = os.environ.get("MEDIA_ROOT", os.path.join(SITE_ROOT, "media"))
+STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
 WEBPACK_LOADER = {
     "DEFAULT": {

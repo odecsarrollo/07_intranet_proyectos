@@ -1,3 +1,13 @@
+# Etapa 1: compilar frontend React/Webpack (genera static/assets/bundles/dist y webpack-stats-prod.json)
+# Si falla (p. ej. FontAwesome Pro sin .npmrc), ejecuta en tu PC: npm ci && npm run build_prod
+# y vuelve a construir la imagen; los artefactos irán en el contexto de build.
+FROM node:18-bullseye AS frontend
+WORKDIR /build
+COPY package.json package-lock.json ./
+RUN npm ci --legacy-peer-deps
+COPY . .
+RUN npm run build_prod
+
 FROM python:3.6-buster
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -11,7 +21,6 @@ RUN sed -i 's|http://deb.debian.org/debian|http://archive.debian.org/debian|g' /
     sed -i '/buster-updates/d' /etc/apt/sources.list && \
     printf 'Acquire::Check-Valid-Until "false";\n' > /etc/apt/apt.conf.d/99no-check-valid-until
 
-# System deps for mysqlclient, Pillow, WeasyPrint (cairo/pango), cryptography, etc.
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     default-libmysqlclient-dev \
@@ -34,7 +43,10 @@ COPY requirements.txt /app/requirements.txt
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
 COPY . /app
+COPY --from=frontend /build/static/assets/bundles/dist /app/static/assets/bundles/dist
+COPY --from=frontend /build/webpack-stats-prod.json /app/webpack-stats-prod.json
 
-# Gunicorn will bind to 0.0.0.0:8000 by default in compose.
-CMD ["gunicorn", "intranet_proyectos.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3", "--timeout", "120"]
+COPY deploy/docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
 
+CMD ["/docker-entrypoint.sh"]

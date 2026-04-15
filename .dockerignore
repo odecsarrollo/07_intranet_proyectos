@@ -1,0 +1,14 @@
+.git
+.idea
+**/__pycache__
+*.pyc
+db.sqlite3
+venv
+venv_intranet_proyectos
+node_modules
+media
+staticfiles
+.env
+secretsLocal.json
+*.md
+.elasticbeanstalk
