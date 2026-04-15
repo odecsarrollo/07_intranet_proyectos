@@ -1,0 +1,51 @@
+# Imagen solo backend: NO descarga Node ni compila Webpack (ahorra mucho espacio en disco).
+# En tu PC, antes de desplegar: npm ci && npm run build_prod
+# Debe existir: static/assets/bundles/dist/* y webpack-stats-prod.json en la raíz del proyecto.
+# Sube esos archivos al servidor (git commit o rsync) y luego: podman-compose build.
+
+FROM python:3.6-buster
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+RUN sed -i 's|http://deb.debian.org/debian|http://archive.debian.org/debian|g' /etc/apt/sources.list && \
+    sed -i 's|http://security.debian.org/debian-security|http://archive.debian.org/debian-security|g' /etc/apt/sources.list && \
+    sed -i '/buster-updates/d' /etc/apt/sources.list && \
+    printf 'Acquire::Check-Valid-Until "false";\n' > /etc/apt/apt.conf.d/99no-check-valid-until
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    default-libmysqlclient-dev \
+    pkg-config \
+    libffi-dev \
+    libssl-dev \
+    libjpeg62-turbo-dev \
+    zlib1g-dev \
+    libpng-dev \
+    libcairo2 \
+    libcairo2-dev \
+    libpango-1.0-0 \
+    libpango1.0-dev \
+    libgdk-pixbuf2.0-0 \
+    libgdk-pixbuf2.0-dev \
+    shared-mime-info \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt /app/requirements.txt
+RUN pip install --upgrade pip && pip install -r requirements.txt
+
+COPY . /app
+
+RUN test -f /app/webpack-stats-prod.json \
+    && test -d /app/static/assets/bundles/dist \
+    && test -n "$(ls -A /app/static/assets/bundles/dist 2>/dev/null)" \
+    || (echo "ERROR: Falta el build del frontend. En tu PC ejecuta: npm ci && npm run build_prod" \
+        && echo "y copia static/assets/bundles/dist/ y webpack-stats-prod.json al servidor." \
+        && exit 1)
+
+COPY deploy/docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
+CMD ["/docker-entrypoint.sh"]

@@ -30,7 +30,11 @@ services:
       retries: 20
 
   web:
-    build: .
+    # Dockerfile.prebuilt = sin imagen Node (evita "no space left on device" en servidores pequeños).
+    # Compila el frontend en tu PC: npm ci && npm run build_prod, luego sube el repo con dist/.
+    build:
+      context: .
+      dockerfile: Dockerfile.prebuilt
     env_file:
       - .env
     environment:
@@ -55,7 +59,9 @@ services:
       - ./staticfiles:/app/staticfiles:U,Z
 
   worker:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.prebuilt
     env_file:
       - .env
     environment:
