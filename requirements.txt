@@ -52,4 +52,5 @@ toml==0.10.1
 urllib3>=1.26.0,<2.0.0
 weasyprint==0.42.3
 webencodings==0.5.1
-zipp>=3.8.0
+# zipp 3.8+ requiere Python >=3.7. En Python 3.6 máx. ~3.6.0.
+zipp>=3.2.0,<3.8.0
