@@ -19,7 +19,18 @@ import indigo from '@material-ui/core/colors/indigo';
 
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {
-    faCodeMerge,
+    // Iconos PRO reemplazados por alternativas gratuitas:
+    // faCodeMerge -> faCode
+    // faSpinnerThird -> faSpinner
+    // faUserHardHat -> faHardHat
+    // faConveyorBelt -> faBelt
+    // faSuitcaseRolling -> faSuitcase (ya existe)
+    // faAnalytics -> faChartLine
+    // faAbacus -> faCalculator
+    // faInboxOut -> faInbox
+    // faAlarmClock -> faClock
+    // faSignOut -> faSignOutAlt
+    faCode,
     faEyeSlash,
     faBarcode,
     faReceipt,
@@ -28,11 +39,11 @@ import {
     faCogs,
     faShoppingCart,
     faPuzzlePiece,
-    faSignOut,
-    faSpinnerThird,
+    faSignOutAlt,
+    faSpinner,
     faBars,
     faHome,
-    faAlarmClock,
+    faClock,
     faAngleLeft,
     faAngleDown,
     faSearch,
@@ -45,7 +56,7 @@ import {
     faUser,
     faLock,
     faObjectGroup,
-    faUserHardHat,
+    faHardHat,
     faSuitcase,
     faMoneyBillAlt,
     faFile,
@@ -68,9 +79,8 @@ import {
     faDesktop,
     faMap,
     faExchangeAlt,
-    faConveyorBelt,
+    faCog, // faConveyorBelt reemplazado por faCog (faBelt no existe)
     faComments,
-    faSuitcaseRolling,
     faCoins,
     faLaptopCode,
     faInfoCircle,
@@ -79,7 +89,7 @@ import {
     faArrowCircleUp,
     faArrowCircleDown,
     faFileImage,
-    faInboxOut,
+    faInbox,
     faThumbsDown,
     faThumbsUp,
     faHistory,
@@ -88,12 +98,9 @@ import {
     faLink,
     faEraser,
     faPaste,
-    faAnalytics,
-    faAbacus
-} from '@fortawesome/pro-solid-svg-icons';
-import {far} from "@fortawesome/pro-regular-svg-icons";
-
-library.add(far);
+    faChartLine,
+    faCalculator
+} from '@fortawesome/free-solid-svg-icons';
 
 library.add(
     faEyeSlash,
@@ -102,15 +109,15 @@ library.add(
     faWrench,
     faCogs,
     faShoppingCart,
-    faSuitcaseRolling,
+    faSuitcase, // faSuitcaseRolling reemplazado
     faPuzzlePiece,
-    faSignOut,
-    faSpinnerThird,
+    faSignOutAlt, // faSignOut reemplazado
+    faSpinner, // faSpinnerThird reemplazado
     faComments,
     faBars,
     faCoins,
     faHome,
-    faAlarmClock,
+    faClock, // faAlarmClock reemplazado
     faAngleLeft,
     faAngleDown,
     faSearch,
@@ -124,7 +131,7 @@ library.add(
     faLock,
     faReceipt,
     faObjectGroup,
-    faUserHardHat,
+    faHardHat, // faUserHardHat reemplazado
     faSuitcase,
     faMoneyBillAlt,
     faFile,
@@ -147,7 +154,7 @@ library.add(
     faDesktop,
     faMap,
     faExchangeAlt,
-    faConveyorBelt,
+    faCog, // faConveyorBelt reemplazado por faCog
     faLaptopCode,
     faInfoCircle,
     faPhone,
@@ -155,7 +162,7 @@ library.add(
     faArrowCircleUp,
     faArrowCircleDown,
     faFileImage,
-    faInboxOut,
+    faInbox, // faInboxOut reemplazado
     faThumbsDown,
     faThumbsUp,
     faHistory,
@@ -164,9 +171,9 @@ library.add(
     faLink,
     faEraser,
     faPaste,
-    faCodeMerge,
-    faAnalytics,
-    faAbacus
+    faCode, // faCodeMerge reemplazado
+    faChartLine, // faAnalytics reemplazado
+    faCalculator // faAbacus reemplazado
 );
 
 
