@@ -17,6 +17,9 @@ services:
       interval: 10s
       timeout: 5s
       retries: 20
+    # Acceso desde otros PCs en la LAN (Workbench, etc.). Restringe en firewall por IP/subred.
+    ports:
+      - "0.0.0.0:3306:3306"
 
   redis:
     image: docker.io/library/redis:6-alpine
