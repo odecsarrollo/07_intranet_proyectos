@@ -51,9 +51,9 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    # Escuchar en todas las interfaces del host (necesario para acceder por IP LAN)
+    # Escuchar solo en localhost: acceso externo debe ser vía Nginx (80/443)
     ports:
-      - "0.0.0.0:8000:8000"
+      - "127.0.0.1:8000:8000"
     # :U = Podman ajusta propietario del directorio del host al usuario del contenedor
     # (evita PermissionError en collectstatic con Podman rootless). :Z = SELinux.
     # Antes del primer up: mkdir -p media staticfiles
