@@ -58,11 +58,13 @@ services:
     ports:
       - "0.0.0.0:8000:8000"
     # :U = Podman ajusta propietario del directorio del host al usuario del contenedor
-    # (evita PermissionError en collectstatic con Podman rootless). :Z = SELinux.
+    # (evita PermissionError en collectstatic con Podman rootless).
+    # SELinux: :Z = volumen privado del contenedor (Nginx en el host NO puede leer → 403).
+    # :z = etiqueta compartida; necesario si Nginx sirve /media/ o /static/ desde el mismo path.
     # Antes del primer up: mkdir -p media staticfiles
     volumes:
-      - ./media:/app/media:U,Z
-      - ./staticfiles:/app/staticfiles:U,Z
+      - ./media:/app/media:U,z
+      - ./staticfiles:/app/staticfiles:U,z
 
   worker:
     build:
