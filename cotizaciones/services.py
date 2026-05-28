@@ -1,4 +1,5 @@
 import datetime
+import logging
 
 from django.contrib.auth.models import User
 from django.core.mail import EmailMultiAlternatives
@@ -21,6 +22,8 @@ from .models import CotizacionPagoProyectado
 from .models import CotizacionPagoProyectadoAcuerdoPago
 from .models import CotizacionPagoProyectadoAcuerdoPagoPago
 from .models import SeguimientoCotizacion
+
+logger = logging.getLogger(__name__)
 
 
 def condicion_inicio_proyecto_crear_actualizar(
@@ -130,8 +133,13 @@ def cotizacion_envio_correo_notificacion_condiciones_inicio_completas(
             )
         )
     except Exception as e:
-        raise ValidationError(
-            {'_error': 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e})
+        # El SMS es "best effort": no debe tumbar el cierre
+        # ni revertir la transacción (el correo ya se pudo haber enviado).
+        logger.exception(
+            "Fallo enviando SMS para cotizacion_id=%s: %s",
+            cotizacion_id,
+            e
+        )
     return cotizacion
 
 
