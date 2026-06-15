@@ -66,6 +66,9 @@ CELERY_RESULT_BACKEND = os.environ.get(
 )
 
 # Static/media locales
+# On-prem: Gunicorn sirve /static/ (WhiteNoise) y /media/ (SERVE_MEDIA); Nginx solo hace proxy.
+# Evita 403 recurrentes cuando Podman/collectstatic dejan staticfiles/media en root:root 2770.
+SERVE_MEDIA = True
 STATIC_URL = "/static/"
 MEDIA_URL = "/media/"
 STATIC_ROOT = os.environ.get("STATIC_ROOT", os.path.join(SITE_ROOT, "staticfiles"))

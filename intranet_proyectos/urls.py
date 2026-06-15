@@ -15,16 +15,29 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.static import serve as media_serve
 from .api_urls import router
 from index.views import IndexView
 from knox.views import LogoutView
 
 from .views import send_emails
 
-urlpatterns = [
+urlpatterns = []
+
+# On-prem: servir uploads desde MEDIA_ROOT (evita 403 SELinux en Nginx con alias).
+if getattr(settings, "SERVE_MEDIA", False):
+    urlpatterns.append(
+        re_path(
+            r"^media/(?P<path>.*)$",
+            media_serve,
+            {"document_root": settings.MEDIA_ROOT},
+        )
+    )
+
+urlpatterns += [
     url(r'^send_emails$', send_emails),
     path('admin/', admin.site.urls),
     path('api/auth/logout', LogoutView.as_view()),
@@ -36,4 +49,3 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

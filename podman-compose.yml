@@ -59,8 +59,9 @@ services:
       - "0.0.0.0:8000:8000"
     # :U = Podman ajusta propietario del directorio del host al usuario del contenedor
     # (evita PermissionError en collectstatic con Podman rootless).
-    # SELinux: :Z = volumen privado del contenedor (Nginx en el host NO puede leer → 403).
-    # :z = etiqueta compartida; necesario si Nginx sirve /media/ o /static/ desde el mismo path.
+    # :z = volumen compartido (SELinux). Nginx debe hacer proxy a :8000 para /static/ y /media/
+    # (ver intranet_proyectos.conf), no alias a estos directorios — evita 403 tras cada up.
+    # Opcional en host: sudo ./deploy/fix-nginx-static-perms.sh (backups/rsync o si usas alias).
     # Antes del primer up: mkdir -p media staticfiles
     volumes:
       - ./media:/app/media:U,z
