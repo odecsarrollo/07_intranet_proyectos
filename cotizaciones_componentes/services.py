@@ -4,6 +4,7 @@ from io import BytesIO
 from django.contrib.auth.models import User
 from django.core.files import File
 from django.core.mail import EmailMultiAlternatives
+from django.db import transaction
 from django.db.models import Q
 from django.db.models import Sum
 from django.template.loader import render_to_string
@@ -359,6 +360,38 @@ def cotizacion_componentes_item_cambiar_posicion(
     return item_uno
 
 
+def _cotizacion_componente_pdf_valido(cotizacion_componente: CotizacionComponente) -> bool:
+    pdf = cotizacion_componente.pdf
+    return pdf is not None and bool(pdf.pdf_cotizacion)
+
+
+def _cotizacion_componentes_crear_documento_pdf(
+        request,
+        cotizacion_componente: CotizacionComponente,
+        version: int,
+) -> CotizacionComponenteDocumento:
+    filename = "%s_v%s.pdf" % (cotizacion_componente.nro_consecutivo, version)
+    documento = CotizacionComponenteDocumento()
+    documento.cotizacion_componente = cotizacion_componente
+    documento.version = version
+    documento.creado_por = request.user
+    documento.save()
+    try:
+        output_documento = cotizacion_componentes_generar_pdf(
+            cotizacion_componente=cotizacion_componente,
+            request=request,
+        )
+        documento.pdf_cotizacion.save(filename, File(output_documento))
+        documento.save()
+    except (PermissionError, OSError, ValueError) as e:
+        documento.delete()
+        raise ValidationError({
+            '_error': 'No se pudo guardar el PDF de la cotización. Revise permisos de media/: %s' % e
+        })
+    return documento
+
+
+@transaction.atomic
 def cotizacion_componentes_enviar(
         request,
         cotizacion_componente: CotizacionComponente,
@@ -366,6 +399,8 @@ def cotizacion_componentes_enviar(
         emails_destino: list = None,
         fecha_verificacion_proximo_seguimiento: datetime = None,
 ) -> CotizacionComponente:
+    emails_destino = list(emails_destino or [])
+
     if cotizacion_componente.estado not in ['INI', 'ENV', 'REC']:
         raise ValidationError(
             {'_error': 'No es posible enviar una cotización en estado %s' % cotizacion_componente.estado})
@@ -388,21 +423,12 @@ def cotizacion_componentes_enviar(
             else:
                 cotizacion_componente.responsable = cotizacion_componente.creado_por
         cotizacion_componente.save()
-        filename = "%s_v%s.pdf" % (
-            cotizacion_componente.nro_consecutivo,
-            version
-        )
-        documento = CotizacionComponenteDocumento()
-        documento.cotizacion_componente = cotizacion_componente
-        documento.version = version
-        documento.creado_por = request.user
-        documento.save()
-        output_documento = cotizacion_componentes_generar_pdf(
-            cotizacion_componente=cotizacion_componente,
-            request=request
-        )
-        documento.pdf_cotizacion.save(filename, File(output_documento))
-        documento.save()
+        _cotizacion_componentes_crear_documento_pdf(request, cotizacion_componente, version)
+    elif not _cotizacion_componente_pdf_valido(cotizacion_componente):
+        _cotizacion_componentes_crear_documento_pdf(request, cotizacion_componente, version)
+
+    if not _cotizacion_componente_pdf_valido(cotizacion_componente):
+        raise ValidationError({'_error': 'La cotización no tiene un PDF válido para enviar.'})
 
     context = {
         "cotizacion_componente": cotizacion_componente
@@ -447,7 +473,11 @@ def cotizacion_componentes_enviar(
             to=emails_destino
         )
         msg.attach_alternative(text_content, "text/html")
-        msg.attach('%s.pdf' % nombre_cotizacion, cotizacion_componente.pdf.pdf_cotizacion.read())
+        try:
+            pdf_bytes = cotizacion_componente.pdf.pdf_cotizacion.read()
+        except (ValueError, OSError) as e:
+            raise ValidationError({'_error': 'No se pudo leer el PDF de la cotización: %s' % e})
+        msg.attach('%s.pdf' % nombre_cotizacion, pdf_bytes)
         archivos_para_enviar = cotizacion_componente.adjuntos.filter(Q(imagen='') | Q(imagen=None))
         imagenes_para_enviar = cotizacion_componente.adjuntos.filter(Q(adjunto='') | Q(adjunto=None))
         [msg.attach('%s.%s' % (adjunto.nombre_adjunto, adjunto.adjunto.name.split('.')[-1]), adjunto.adjunto.read()) for

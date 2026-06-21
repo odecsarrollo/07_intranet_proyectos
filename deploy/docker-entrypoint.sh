@@ -9,4 +9,9 @@ for _dir in "${STATIC_ROOT:-/app/staticfiles}" "${MEDIA_ROOT:-/app/media}"; do
     chmod -R a+rX "$_dir" 2>/dev/null || true
   fi
 done
+# Escritura para nuevos PDFs de cotizaciones (Podman rootless mapea UID distinto de root en el host).
+_vc="${MEDIA_ROOT:-/app/media}/cotizaciones/ventas_componentes"
+if [ -d "$_vc" ]; then
+  chmod -R a+rwX "$_vc" 2>/dev/null || true
+fi
 exec gunicorn intranet_proyectos.wsgi:application --bind 0.0.0.0:8000 --workers 3 --timeout 120

@@ -153,7 +153,7 @@ class CotizacionComponenteViewSet(viewsets.ModelViewSet):
         email_tres = request.POST.get('email_tres', None)
         email_cuatro = request.POST.get('email_cuatro', None)
         email_asesor = request.POST.get('email_asesor', None)
-        no_enviar = request.POST.get('no_enviar', None)
+        no_enviar = str(request.POST.get('no_enviar', '') or '').lower() in ('true', '1', 'on', 'yes')
         fecha_verificacion_proximo_seguimiento = request.POST.get('fecha_verificacion_proximo_seguimiento', None)
 
         emails_destino = []
