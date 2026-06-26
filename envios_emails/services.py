@@ -1,7 +1,41 @@
+import os
 from io import BytesIO
+from urllib.parse import urljoin
+
+from django.conf import settings
 from django.template.loader import get_template
 from weasyprint import CSS, HTML
 from PyPDF2 import PdfFileReader, PdfFileWriter
+
+
+def _pdf_base_url(request):
+    """
+    WeasyPrint descarga CSS/imágenes vía HTTP usando base_url.
+    Detrás de Nginx, request.build_absolute_uri() usa el dominio público;
+    en on-prem el servidor no puede alcanzar su propia IP (hairpin NAT) y el PDF cuelga.
+    """
+    configured = getattr(settings, 'PDF_GENERATION_BASE_URL', None)
+    if configured:
+        return configured.rstrip('/') + '/'
+    return request.build_absolute_uri('/')
+
+
+def _resolve_asset_url(url_or_path, base_url):
+    if not url_or_path:
+        return url_or_path
+    if url_or_path.startswith(('http://', 'https://', 'file://')):
+        return url_or_path
+    if url_or_path.startswith('/media/'):
+        media_path = os.path.join(settings.MEDIA_ROOT, url_or_path[len('/media/'):])
+        if os.path.isfile(media_path):
+            return 'file://' + media_path
+    if url_or_path.startswith('/'):
+        return urljoin(base_url, url_or_path.lstrip('/'))
+    return url_or_path
+
+
+def _pdf_css_path(relative_path):
+    return os.path.join(settings.SITE_ROOT, relative_path)
 
 
 def get_page_body(boxes):
@@ -12,17 +46,21 @@ def get_page_body(boxes):
 
 
 def generar_base_pdf(request, encabezado_url: str, contexto_documento: dict, template: str) -> BytesIO:
+    base_url = _pdf_base_url(request)
+    encabezado_resuelto = _resolve_asset_url(encabezado_url, base_url)
     html_get_template = get_template('emails/base/base_pagina_carta.html').render()
     html = HTML(
         string=html_get_template,
-        base_url=request.build_absolute_uri()
+        base_url=base_url
     )
-    main_doc_base = html.render(stylesheets=[CSS('static/css/pdf_carta_email.css')])
-    context = {"encabezado_url": encabezado_url}
+    main_doc_base = html.render(
+        stylesheets=[CSS(_pdf_css_path('static/css/pdf_carta_email.css'))]
+    )
+    context = {"encabezado_url": encabezado_resuelto}
     html_get_template = get_template('emails/base/encabezado.html').render(context)
     html = HTML(
         string=html_get_template,
-        base_url=request.build_absolute_uri()
+        base_url=base_url
     )
     header_logo = html.render(stylesheets=[CSS(string='div {position: fixed; top: 0, margin:0, padding:0}')])
 
@@ -45,7 +83,7 @@ def generar_base_pdf(request, encabezado_url: str, contexto_documento: dict, tem
     html_get_template_documento = get_template(template).render(contexto_documento)
     html_documento = HTML(
         string=html_get_template_documento,
-        base_url=request.build_absolute_uri()
+        base_url=base_url
     )
     width = '215mm'
     height = '279mm'

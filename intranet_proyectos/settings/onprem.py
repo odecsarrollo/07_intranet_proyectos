@@ -65,6 +65,12 @@ CELERY_RESULT_BACKEND = os.environ.get(
     "CELERY_RESULT_BACKEND", "redis://redis:6379/1"
 )
 
+# WeasyPrint (imprimir/enviar cotización): usar URL interna, no el dominio público.
+# El servidor on-prem no puede hacer HTTP a su propia IP pública (hairpin NAT).
+PDF_GENERATION_BASE_URL = os.environ.get(
+    "PDF_GENERATION_BASE_URL", "http://127.0.0.1:8000"
+)
+
 # Static/media locales
 # On-prem: Gunicorn sirve /static/ (WhiteNoise) y /media/ (SERVE_MEDIA); Nginx solo hace proxy.
 # Evita 403 recurrentes cuando Podman/collectstatic dejan staticfiles/media en root:root 2770.
