@@ -12,7 +12,7 @@
     "@fortawesome/pro-solid-svg-icons": "^5.12.1",
     "@fortawesome/react-fontawesome": "^0.1.4",
     "accounting": "^0.4.1",
-    "ajv": "^6.10.0",
+    "ajv": "^6.12.3",
     "ajv-errors": "^1.0.1",
     "ajv-keywords": "^3.4.0",
     "crud-django-reactjs": "^1.0.17",
